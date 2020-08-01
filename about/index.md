@@ -7,6 +7,8 @@ date: 2019-07-06 01:29:35
  - <http://blog.csdn.net/kingson_wu>
  - <https://segmentfault.com/u/kingson_wu>
  - <https://stackoverflow.com/users/5069228/kingson-wu>
+ - <https://kingson4wu.oschina.io/>, <https://kingson4wu.gitee.io/>
+ - <https://kingson4wu.github.io/>
 
 ### 规划中
 1. 项目类冲突如何解决（类加载顺序；代码打包方式的影响）

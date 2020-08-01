@@ -378,9 +378,9 @@ changyan:
 # You can get your appid and appkey from https://leancloud.cn
 # more info please open https://valine.js.org
 valine:
-  enable: false
-  appid:  # your leancloud application appid
-  appkey:  # your leancloud application appkey
+  enable: true
+  appid:  LR34RG5CRdFgzK8ijwc5Hq0B-gzGzoHsz
+  appkey:  qqtIlANIluHpfpOnxTUnYrku
   notify: false # mail notifier , https://github.com/xCss/Valine/wiki
   verify: false # Verification code
   placeholder: Just go go # comment box placeholder
@@ -813,7 +813,7 @@ images: images
 version: 5.1.4
 
 gitalk:
-  enable: true
+  enable: false
   githubID: kingson4wu 
   repo: kingson4wu.github.io
   ClientID: 3416434437f9f4e049bd

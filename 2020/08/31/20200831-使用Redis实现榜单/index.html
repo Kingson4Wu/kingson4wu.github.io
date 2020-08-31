@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="LIFE,">
+  <meta name="keywords" content="业务方案,榜单,Redis,">
 
 
 
@@ -81,18 +81,18 @@
 
 
 
-<meta name="description" content="《战争之王》 https://movie.douban.com/review/8808554/ Let me tell you what’s gonna happen.This way you can prepare yourself.Soon there’s gonna be a knock on that door and you will be called outside. In the">
-<meta name="keywords" content="LIFE">
+<meta name="description" content="前言 使用redis实现 基于直播间业务场景 不阐述详细实现细节  相关Redis数据结构和命令Redis 集合(Set) Sismember 命令判断成员元素是否是集合的成员。Redis 有序集合(sorted set) Zrevrank 命令返回有序集中成员的排名。其中有序集成员按分数值递减(从大到小)排序。 Zincrby 命令对有序集合中指定成员的分数加上增量 increment Zrev">
+<meta name="keywords" content="业务方案,榜单,Redis">
 <meta property="og:type" content="article">
-<meta property="og:title" content="电影摘要">
-<meta property="og:url" content="http://yoursite.com/2020/01/01/电影摘要/index.html">
+<meta property="og:title" content="使用Redis实现榜单">
+<meta property="og:url" content="http://yoursite.com/2020/08/31/20200831-使用Redis实现榜单/index.html">
 <meta property="og:site_name" content="拉巴力的纸皮箱">
-<meta property="og:description" content="《战争之王》 https://movie.douban.com/review/8808554/ Let me tell you what’s gonna happen.This way you can prepare yourself.Soon there’s gonna be a knock on that door and you will be called outside. In the">
+<meta property="og:description" content="前言 使用redis实现 基于直播间业务场景 不阐述详细实现细节  相关Redis数据结构和命令Redis 集合(Set) Sismember 命令判断成员元素是否是集合的成员。Redis 有序集合(sorted set) Zrevrank 命令返回有序集中成员的排名。其中有序集成员按分数值递减(从大到小)排序。 Zincrby 命令对有序集合中指定成员的分数加上增量 increment Zrev">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-08-01T02:26:30.000Z">
+<meta property="og:updated_time" content="2020-08-31T13:15:47.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="电影摘要">
-<meta name="twitter:description" content="《战争之王》 https://movie.douban.com/review/8808554/ Let me tell you what’s gonna happen.This way you can prepare yourself.Soon there’s gonna be a knock on that door and you will be called outside. In the">
+<meta name="twitter:title" content="使用Redis实现榜单">
+<meta name="twitter:description" content="前言 使用redis实现 基于直播间业务场景 不阐述详细实现细节  相关Redis数据结构和命令Redis 集合(Set) Sismember 命令判断成员元素是否是集合的成员。Redis 有序集合(sorted set) Zrevrank 命令返回有序集中成员的排名。其中有序集成员按分数值递减(从大到小)排序。 Zincrby 命令对有序集合中指定成员的分数加上增量 increment Zrev">
 
 
 
@@ -122,13 +122,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2020/01/01/电影摘要/">
+  <link rel="canonical" href="http://yoursite.com/2020/08/31/20200831-使用Redis实现榜单/">
 
 
 
 
 
-  <title>电影摘要 | 拉巴力的纸皮箱</title>
+  <title>使用Redis实现榜单 | 拉巴力的纸皮箱</title>
   
 
 
@@ -287,7 +287,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/01/01/电影摘要/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/08/31/20200831-使用Redis实现榜单/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Kingson Wu">
@@ -304,7 +304,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">电影摘要</h1>
+          <h1 class="post-title" itemprop="name headline">使用Redis实现榜单</h1>
         
 
         <div class="post-meta">
@@ -316,8 +316,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-01-01T17:21:30+08:00">
-                2020-01-01
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-08-31T21:14:24+08:00">
+                2020-08-31
               </time>
             
 
@@ -335,8 +335,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/01/01/电影摘要/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2020/01/01/电影摘要/" itemprop="commentCount"></span>
+                <a href="/2020/08/31/20200831-使用Redis实现榜单/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/08/31/20200831-使用Redis实现榜单/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -364,10 +364,32 @@
       
 
       
-        <h2 id="《战争之王》"><a href="#《战争之王》" class="headerlink" title="《战争之王》"></a>《战争之王》</h2><ul>
-<li><a href="https://movie.douban.com/review/8808554/" target="_blank" rel="noopener">https://movie.douban.com/review/8808554/</a></li>
-<li>Let me tell you what’s gonna happen.This way you can prepare yourself.Soon there’s gonna be a knock on that door and you will be called outside. In the hall there will be a man who outranks you.First,he’ll compliment you on the fine job you’ve done, that you’re making the world a safer place,that you’re to receive a commendation and a promotion.And then he’s going to tell you that I am to be released. You’re going to protest.You’ll probably threaten to resign.But in the end I will be released.The reason I’ll be released is the same reason you think I’ll be convicted.I do rub shoulders with some of the most vile,sadistic men calling themselves leaders today.But some of those men are the enemies of your enemies.And while the biggest arms dealer in the world is your boss, the President of the United States, who ships more merchandise in a day than I do in a year,sometimes it’s embarrassing to have his fingerprints on the guns. Sometimes he needs a freelancer like me to supply forces he can’t be seen supplying. So , you call me evil. But unfortunately for you,I’m a necessary evil.<br>　　- 让我告诉你将会发生什么事情，好让你有个心理准备。很快会有人来敲门叫你出去，大厅里有个比你官衔高的人。首先，他会称赞你所做的一切，世界因为你变得更安全，你会获得表扬或晋升。然后他会告诉你，我会被释放。你会反对，也许还威胁要辞职，但最后我还是会被释放。我被释放的理由跟你认为我会被定罪的理由一样，我和世界上称自己为领导人的人打交道。这些人其中有些是你敌人的敌人，世界上最大的军火商是你的老板，美国的总统，他一天卖的比我一年还多，有时候在枪支上找到他的指纹是一件很尴尬的事，有时他需要像我这样的自由工作者供应一些他不方便出面供应的货物。所以，你说我是恶魔，但不幸的是，对你我是一个必须存在的恶魔。</li>
-</ul>
+        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><ol>
+<li>使用redis实现</li>
+<li>基于直播间业务场景</li>
+<li>不阐述详细实现细节</li>
+</ol>
+<h3 id="相关Redis数据结构和命令"><a href="#相关Redis数据结构和命令" class="headerlink" title="相关Redis数据结构和命令"></a>相关Redis数据结构和命令</h3><h4 id="Redis-集合-Set"><a href="#Redis-集合-Set" class="headerlink" title="Redis 集合(Set)"></a>Redis 集合(Set)</h4><ol>
+<li>Sismember 命令判断成员元素是否是集合的成员。<h4 id="Redis-有序集合-sorted-set"><a href="#Redis-有序集合-sorted-set" class="headerlink" title="Redis 有序集合(sorted set)"></a>Redis 有序集合(sorted set)</h4></li>
+<li>Zrevrank 命令返回有序集中成员的排名。其中有序集成员按分数值递减(从大到小)排序。</li>
+<li>Zincrby 命令对有序集合中指定成员的分数加上增量 increment</li>
+<li>Zrevrangebyscore 返回有序集中指定分数区间内的所有的成员。有序集成员按分数值递减(从大到小)的次序排列</li>
+<li>Zremrangebyrank 命令用于移除有序集中，指定排名(rank)区间内的所有成员。<h4 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h4></li>
+<li>查找特定前缀key：scan命令</li>
+</ol>
+<h3 id="如何实现"><a href="#如何实现" class="headerlink" title="如何实现"></a>如何实现</h3><h4 id="榜单保存"><a href="#榜单保存" class="headerlink" title="榜单保存"></a>榜单保存</h4><ol>
+<li>使用 Redis 有序集合(sorted set)保存榜单数据</li>
+<li>如果是按时间排序的榜单，把时间戳存到score字段；如果是按礼物数量排序，把数量存到score；其他排序场景同理<h4 id="榜单添加数据操作幂等"><a href="#榜单添加数据操作幂等" class="headerlink" title="榜单添加数据操作幂等"></a>榜单添加数据操作幂等</h4></li>
+<li>使用数据库日志表（唯一索引） （最严格可靠）</li>
+<li>使用一个set保存所有的消息ID，并使用sismember防止重复处理（并发场景可能不幂等）<h4 id="数据清理"><a href="#数据清理" class="headerlink" title="数据清理"></a>数据清理</h4></li>
+<li>使用一个set保存现有所有在线的房间榜单；定时任务检查房间是否在播，不在线的进行清理（同时可以监听房间下播时间）</li>
+<li>保存一定数量的redis榜单：Zremrangebyrank 命令用于移除有序集中，指定排名(rank)区间内的所有成员</li>
+<li>使用scan命令 查找特定前缀key的榜单，同1或2操作进行清理</li>
+</ol>
+<h3 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h3><ol>
+<li>房间榜单的标识是房间id有时可能不够，因为通过榜单有时是和本场开播挂钩的，同一个房间多次开播，可能导致不同场次的数据导致榜单错误。<br>增加房间开播id标识可以解决。</li>
+<li>老生常谈的哲学问题:二八定理。花费大量时间来得到较低的收益，实现时要从业务看是否值得。但不代表在做设计方案时不去考虑，这是严谨性的问题。<br>按极端的方式考虑，实际实现按业务需要进行选择折中。</li>
+</ol>
 
       
     </div>
@@ -385,7 +407,11 @@
       
         <div class="post-tags">
           
-            <a href="/tags/LIFE/" rel="tag"># LIFE</a>
+            <a href="/tags/业务方案/" rel="tag"># 业务方案</a>
+          
+            <a href="/tags/榜单/" rel="tag"># 榜单</a>
+          
+            <a href="/tags/Redis/" rel="tag"># Redis</a>
           
         </div>
       
@@ -398,8 +424,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/12/28/《天下足球》曲目/" rel="next" title="《天下足球》曲目">
-                <i class="fa fa-chevron-left"></i> 《天下足球》曲目
+              <a href="/2020/08/20/20200820-关于CDN缓存/" rel="next" title="关于CDN缓存总结摘要">
+                <i class="fa fa-chevron-left"></i> 关于CDN缓存总结摘要
               </a>
             
           </div>
@@ -407,10 +433,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/03/26/20200326-移动端下一种折中分页方法/" rel="prev" title="移动端下一种折中的分页方法">
-                移动端下一种折中的分页方法 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -545,7 +567,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#《战争之王》"><span class="nav-number">1.</span> <span class="nav-text">《战争之王》</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#相关Redis数据结构和命令"><span class="nav-number">2.</span> <span class="nav-text">相关Redis数据结构和命令</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Redis-集合-Set"><span class="nav-number">2.1.</span> <span class="nav-text">Redis 集合(Set)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Redis-有序集合-sorted-set"><span class="nav-number">2.2.</span> <span class="nav-text">Redis 有序集合(sorted set)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#其他"><span class="nav-number">2.3.</span> <span class="nav-text">其他</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何实现"><span class="nav-number">3.</span> <span class="nav-text">如何实现</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#榜单保存"><span class="nav-number">3.1.</span> <span class="nav-text">榜单保存</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#榜单添加数据操作幂等"><span class="nav-number">3.2.</span> <span class="nav-text">榜单添加数据操作幂等</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#数据清理"><span class="nav-number">3.3.</span> <span class="nav-text">数据清理</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#扩展"><span class="nav-number">4.</span> <span class="nav-text">扩展</span></a></li></ol></div>
             
 
           </div>

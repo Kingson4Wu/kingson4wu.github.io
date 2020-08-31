@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2020-08-20T14:26:01.000Z</updated>
+  <updated>2020-08-31T13:15:47.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,38 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>使用Redis实现榜单</title>
+    <link href="http://yoursite.com/2020/08/31/20200831-%E4%BD%BF%E7%94%A8Redis%E5%AE%9E%E7%8E%B0%E6%A6%9C%E5%8D%95/"/>
+    <id>http://yoursite.com/2020/08/31/20200831-使用Redis实现榜单/</id>
+    <published>2020-08-31T13:14:24.000Z</published>
+    <updated>2020-08-31T13:15:47.000Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><ol><li>使用redis实现</li><li>基于直播间业务场景</li><li>不阐述详细实现细节</li></ol><h3 id="相关Redis数据结构和命令"><a href="#相关Redis数据结构和命令" class="headerlink" title="相关Redis数据结构和命令"></a>相关Redis数据结构和命令</h3><h4 id="Redis-集合-Set"><a href="#Redis-集合-Set" class="headerlink" title="Redis 集合(Set)"></a>Redis 集合(Set)</h4><ol><li>Sismember 命令判断成员元素是否是集合的成员。<h4 id="Redis-有序集合-sorted-set"><a href="#Redis-有序集合-sorted-set" class="headerlink" title="Redis 有序集合(sorted set)"></a>Redis 有序集合(sorted set)</h4></li><li>Zrevrank 命令返回有序集中成员的排名。其中有序集成员按分数值递减(从大到小)排序。</li><li>Zincrby 命令对有序集合中指定成员的分数加上增量 increment</li><li>Zrevrangebyscore 返回有序集中指定分数区间内的所有的成员。有序集成员按分数值递减(从大到小)的次序排列</li><li>Zremrangebyrank 命令用于移除有序集中，指定排名(rank)区间内的所有成员。<h4 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h4></li><li>查找特定前缀key：scan命令</li></ol><h3 id="如何实现"><a href="#如何实现" class="headerlink" title="如何实现"></a>如何实现</h3><h4 id="榜单保存"><a href="#榜单保存" class="headerlink" title="榜单保存"></a>榜单保存</h4><ol><li>使用 Redis 有序集合(sorted set)保存榜单数据</li><li>如果是按时间排序的榜单，把时间戳存到score字段；如果是按礼物数量排序，把数量存到score；其他排序场景同理<h4 id="榜单添加数据操作幂等"><a href="#榜单添加数据操作幂等" class="headerlink" title="榜单添加数据操作幂等"></a>榜单添加数据操作幂等</h4></li><li>使用数据库日志表（唯一索引） （最严格可靠）</li><li>使用一个set保存所有的消息ID，并使用sismember防止重复处理（并发场景可能不幂等）<h4 id="数据清理"><a href="#数据清理" class="headerlink" title="数据清理"></a>数据清理</h4></li><li>使用一个set保存现有所有在线的房间榜单；定时任务检查房间是否在播，不在线的进行清理（同时可以监听房间下播时间）</li><li>保存一定数量的redis榜单：Zremrangebyrank 命令用于移除有序集中，指定排名(rank)区间内的所有成员</li><li>使用scan命令 查找特定前缀key的榜单，同1或2操作进行清理</li></ol><h3 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h3><ol><li>房间榜单的标识是房间id有时可能不够，因为通过榜单有时是和本场开播挂钩的，同一个房间多次开播，可能导致不同场次的数据导致榜单错误。<br>增加房间开播id标识可以解决。</li><li>老生常谈的哲学问题:二八定理。花费大量时间来得到较低的收益，实现时要从业务看是否值得。但不代表在做设计方案时不去考虑，这是严谨性的问题。<br>按极端的方式考虑，实际实现按业务需要进行选择折中。</li></ol>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h3 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;使用redis实现&lt;/li&gt;
+&lt;li&gt;基于直播间业务场景&lt;/li&gt;
+&lt;li&gt;不阐述详细实现细节&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 i
+      
+    
+    </summary>
+    
+    
+      <category term="业务方案" scheme="http://yoursite.com/tags/%E4%B8%9A%E5%8A%A1%E6%96%B9%E6%A1%88/"/>
+    
+      <category term="榜单" scheme="http://yoursite.com/tags/%E6%A6%9C%E5%8D%95/"/>
+    
+      <category term="Redis" scheme="http://yoursite.com/tags/Redis/"/>
+    
+  </entry>
   
   <entry>
     <title>关于CDN缓存总结摘要</title>
@@ -515,36 +547,6 @@
       <category term="LIFE" scheme="http://yoursite.com/tags/LIFE/"/>
     
       <category term="BOOK" scheme="http://yoursite.com/tags/BOOK/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>关于幂等的若干问题</title>
-    <link href="http://yoursite.com/2020/07/09/20200709-%E5%85%B3%E4%BA%8E%E5%B9%82%E7%AD%89%E7%9A%84%E8%8B%A5%E5%B9%B2%E9%97%AE%E9%A2%98/"/>
-    <id>http://yoursite.com/2020/07/09/20200709-关于幂等的若干问题/</id>
-    <published>2020-07-08T16:11:51.000Z</published>
-    <updated>2020-08-01T02:26:30.000Z</updated>
-    
-    <content type="html"><![CDATA[<ol><li><p>请求已经处理成功，当业务调用方重试时，幂等id不变，但其他参数有变化时。</p><p>该返回成功的结果吗？或者说应该对所有的参数进行校验，判断和之前的参数是否一致？</p></li></ol>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;ol&gt;
-&lt;li&gt;&lt;p&gt;请求已经处理成功，当业务调用方重试时，幂等id不变，但其他参数有变化时。&lt;/p&gt;
-&lt;p&gt;该返回成功的结果吗？或者说应该对所有的参数进行校验，判断和之前的参数是否一致？&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-
-      
-    
-    </summary>
-    
-    
-      <category term="业务方案" scheme="http://yoursite.com/tags/%E4%B8%9A%E5%8A%A1%E6%96%B9%E6%A1%88/"/>
-    
-      <category term="幂等" scheme="http://yoursite.com/tags/%E5%B9%82%E7%AD%89/"/>
     
   </entry>
   

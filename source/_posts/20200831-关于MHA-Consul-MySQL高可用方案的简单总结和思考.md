@@ -78,9 +78,11 @@ MHA工作原理总结为以下几条：
 	- MySQL默认的复制即是异步的，主库先提交事务，然后立即响应客户端。
 	- 如果主库crash，且主库上已经提交的事务还没有同步到相应的从库上，那么当从库提升为主时，会导致新主上的数据不完整。
 	- 性能最好
+	
 2. 全同步复制（Fully synchronous replication）
 	- 当主库执行完一个事务，且所有的从库都同步完之后才响应客户端。
-	- 性能查
+	- 性能差
+	
 3. 半同步复制（Semisynchronous replication）
 	- AFTER_COMMIT；即参数 rpl_semi_sync_master_wait_point = after_commit
 	- 介于异步复制和全同步复制之间，主库提交完事务之后不立即响应客户端，而是等待至少一个从库接收到并写到relay log中才响应客户端。相对于异步复制，半同步复制提高了数据的安全性，同时它也造成了一定程度的延迟，这个延迟最少是一个TCP/IP往返的时间。所以，半同步复制最好在低延时的网络中使用。
@@ -89,11 +91,11 @@ MHA工作原理总结为以下几条：
 
 4. 增强半同步（Loss-less Semi-Synchronous）
 	- AFTER_SYNC；即参数 rpl_semi_sync_master_wait_point = after_sync
-	- after sync是MySQL5.7官方新加的用以解决MySQL5.6半同步缺陷的选项，也是官方推荐的方式。
-  - 原理：客户端发送过来一个请求，经过mysql的SQL分析，存储引擎处理，写入binlog，然后写入从库的relaylog，存储引擎层提交，最后返回给客户端。
-  - 优点：主库把SQL操作先发给从库的relay log，然后再提交，再响应给客户端，这个过程即使在storage commit之后主crash了，日志也已经写入到relay log中，从库和主库数据一致。
-  - 在commit之前等待Slave ACK，可以堆积事务，利于group commit，有利于提升性能。
-	- 在master接受到Slave ACK之前，数据的变化对其他会话时不可见的，因为此时并未提交，从而也不会产生数据不一致的影响。
+	- after sync是MySQL5.7官方新加以解决MySQL5.6半同步缺陷的选项，也是官方推荐的方式。
+	- 原理：客户端发送过来一个请求，经过mysql的SQL分析，存储引擎处理，写入binlog，然后		写入从库的relaylog，存储引擎层提交，最后返回给客户端。
+	- 优点：主库把SQL操作先发给从库的relay log，然后再提交，再响应给客户端，这个过程即使		在storage commit之后主crash了，日志也已经写入到relay log中，从库和主库数据一致。
+	- 在commit之前等待Slave ACK，可以堆积事务，利于group commit，有利于提升性能。
+	- 在master接受到Slave ACK之前，数据的变化对其他会话时不可见的，因为此时并未提交，从	而也不会产生数据不一致的影响。
 	- 同样，Ack超时，也将退化为异步复制模式
 
 5. 组复制 MySQL Group Replication（MGR）
@@ -113,25 +115,30 @@ MHA工作原理总结为以下几条：
 + 一致性要求高的，比如金融类的（相比其他业务TPS较低），可以考虑开启增强半同步复制
 
 ### 其他
+
 1. MySQL 5.7新增了rpl_semi_sync_master_wait_for_slave_count系统变量，可以用来控制主库接收多少个从库写事务成功反馈，给高可用架构切换提供了灵活性。	当该变量值为2时，主库需等待两个从库的ACK。
 
 ## Consul
 
 ### 介绍
+
 + Consul is a tool for service discovery and configuration. Consul is distributed, highly available, and extremely scalable
 + Consul是一个服务管理软件。支持多数据中心下，分布式高可用的，服务发现和配置共享。采用 Raft 算法,用来保证服务的高可用。
 + Consul使用Gossip Protocol来管理成员资格并向集群广播消息。所有这些都是通过使用Serf库提供的。
 + 关于raft算法原理，可以后续再讲。
 
 ### 和MHA的结合使用
+
 1. checkmysql 脚本部署到每台 consul server 中, 实现了多点检测 MySQL 是否正常;
 2. checkmysql 脚本在超过半数的情况下调用 masterha_manager_consul 脚本进行主从切换;
 
 #### 主从切换
+
 + MHA 是切换工具，控制数据库主从切换和数据补齐；
 + 检测主库，故障时进行切换并通知Consul下发新的主库配置到应用服务。
 
 #### 从库上下线
+
 + Consul可以对从库进行健康检查，通过配置下发控制从库上下线。
 
 ## 扩展

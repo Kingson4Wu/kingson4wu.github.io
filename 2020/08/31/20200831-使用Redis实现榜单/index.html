@@ -81,18 +81,18 @@
 
 
 
-<meta name="description" content="前言 使用redis实现 基于直播间业务场景 不阐述详细实现细节  相关Redis数据结构和命令Redis 集合(Set) Sismember 命令判断成员元素是否是集合的成员。Redis 有序集合(sorted set) Zrevrank 命令返回有序集中成员的排名。其中有序集成员按分数值递减(从大到小)排序。 Zincrby 命令对有序集合中指定成员的分数加上增量 increment Zrev">
+<meta name="description" content="一、前言 使用redis实现 基于直播间业务场景 不阐述详细实现细节  二、相关Redis数据结构和命令Redis 集合(Set) Sismember 命令判断成员元素是否是集合的成员。  Redis 有序集合(sorted set) Zrevrank 命令返回有序集中成员的排名。其中有序集成员按分数值递减(从大到小)排序。 Zincrby 命令对有序集合中指定成员的分数加上增量 incremen">
 <meta name="keywords" content="业务方案,榜单,Redis">
 <meta property="og:type" content="article">
 <meta property="og:title" content="使用Redis实现榜单">
 <meta property="og:url" content="http://yoursite.com/2020/08/31/20200831-使用Redis实现榜单/index.html">
 <meta property="og:site_name" content="拉巴力的纸皮箱">
-<meta property="og:description" content="前言 使用redis实现 基于直播间业务场景 不阐述详细实现细节  相关Redis数据结构和命令Redis 集合(Set) Sismember 命令判断成员元素是否是集合的成员。Redis 有序集合(sorted set) Zrevrank 命令返回有序集中成员的排名。其中有序集成员按分数值递减(从大到小)排序。 Zincrby 命令对有序集合中指定成员的分数加上增量 increment Zrev">
+<meta property="og:description" content="一、前言 使用redis实现 基于直播间业务场景 不阐述详细实现细节  二、相关Redis数据结构和命令Redis 集合(Set) Sismember 命令判断成员元素是否是集合的成员。  Redis 有序集合(sorted set) Zrevrank 命令返回有序集中成员的排名。其中有序集成员按分数值递减(从大到小)排序。 Zincrby 命令对有序集合中指定成员的分数加上增量 incremen">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-08-31T13:15:47.000Z">
+<meta property="og:updated_time" content="2020-08-31T13:29:13.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="使用Redis实现榜单">
-<meta name="twitter:description" content="前言 使用redis实现 基于直播间业务场景 不阐述详细实现细节  相关Redis数据结构和命令Redis 集合(Set) Sismember 命令判断成员元素是否是集合的成员。Redis 有序集合(sorted set) Zrevrank 命令返回有序集中成员的排名。其中有序集成员按分数值递减(从大到小)排序。 Zincrby 命令对有序集合中指定成员的分数加上增量 increment Zrev">
+<meta name="twitter:description" content="一、前言 使用redis实现 基于直播间业务场景 不阐述详细实现细节  二、相关Redis数据结构和命令Redis 集合(Set) Sismember 命令判断成员元素是否是集合的成员。  Redis 有序集合(sorted set) Zrevrank 命令返回有序集中成员的排名。其中有序集成员按分数值递减(从大到小)排序。 Zincrby 命令对有序集合中指定成员的分数加上增量 incremen">
 
 
 
@@ -364,29 +364,37 @@
       
 
       
-        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><ol>
+        <h3 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h3><ol>
 <li>使用redis实现</li>
 <li>基于直播间业务场景</li>
 <li>不阐述详细实现细节</li>
 </ol>
-<h3 id="相关Redis数据结构和命令"><a href="#相关Redis数据结构和命令" class="headerlink" title="相关Redis数据结构和命令"></a>相关Redis数据结构和命令</h3><h4 id="Redis-集合-Set"><a href="#Redis-集合-Set" class="headerlink" title="Redis 集合(Set)"></a>Redis 集合(Set)</h4><ol>
-<li>Sismember 命令判断成员元素是否是集合的成员。<h4 id="Redis-有序集合-sorted-set"><a href="#Redis-有序集合-sorted-set" class="headerlink" title="Redis 有序集合(sorted set)"></a>Redis 有序集合(sorted set)</h4></li>
+<h3 id="二、相关Redis数据结构和命令"><a href="#二、相关Redis数据结构和命令" class="headerlink" title="二、相关Redis数据结构和命令"></a>二、相关Redis数据结构和命令</h3><h4 id="Redis-集合-Set"><a href="#Redis-集合-Set" class="headerlink" title="Redis 集合(Set)"></a>Redis 集合(Set)</h4><ol>
+<li>Sismember 命令判断成员元素是否是集合的成员。</li>
+</ol>
+<h4 id="Redis-有序集合-sorted-set"><a href="#Redis-有序集合-sorted-set" class="headerlink" title="Redis 有序集合(sorted set)"></a>Redis 有序集合(sorted set)</h4><ol>
 <li>Zrevrank 命令返回有序集中成员的排名。其中有序集成员按分数值递减(从大到小)排序。</li>
 <li>Zincrby 命令对有序集合中指定成员的分数加上增量 increment</li>
 <li>Zrevrangebyscore 返回有序集中指定分数区间内的所有的成员。有序集成员按分数值递减(从大到小)的次序排列</li>
-<li>Zremrangebyrank 命令用于移除有序集中，指定排名(rank)区间内的所有成员。<h4 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h4></li>
+<li>Zremrangebyrank 命令用于移除有序集中，指定排名(rank)区间内的所有成员。</li>
+</ol>
+<h4 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h4><ol>
 <li>查找特定前缀key：scan命令</li>
 </ol>
-<h3 id="如何实现"><a href="#如何实现" class="headerlink" title="如何实现"></a>如何实现</h3><h4 id="榜单保存"><a href="#榜单保存" class="headerlink" title="榜单保存"></a>榜单保存</h4><ol>
+<h3 id="三、如何实现"><a href="#三、如何实现" class="headerlink" title="三、如何实现"></a>三、如何实现</h3><h4 id="榜单保存"><a href="#榜单保存" class="headerlink" title="榜单保存"></a>榜单保存</h4><ol>
 <li>使用 Redis 有序集合(sorted set)保存榜单数据</li>
-<li>如果是按时间排序的榜单，把时间戳存到score字段；如果是按礼物数量排序，把数量存到score；其他排序场景同理<h4 id="榜单添加数据操作幂等"><a href="#榜单添加数据操作幂等" class="headerlink" title="榜单添加数据操作幂等"></a>榜单添加数据操作幂等</h4></li>
+<li>如果是按时间排序的榜单，把时间戳存到score字段；如果是按礼物数量排序，把数量存到score；其他排序场景同理</li>
+</ol>
+<h4 id="榜单添加数据操作幂等"><a href="#榜单添加数据操作幂等" class="headerlink" title="榜单添加数据操作幂等"></a>榜单添加数据操作幂等</h4><ol>
 <li>使用数据库日志表（唯一索引） （最严格可靠）</li>
-<li>使用一个set保存所有的消息ID，并使用sismember防止重复处理（并发场景可能不幂等）<h4 id="数据清理"><a href="#数据清理" class="headerlink" title="数据清理"></a>数据清理</h4></li>
+<li>使用一个set保存所有的消息ID，并使用sismember防止重复处理（并发场景可能不幂等）</li>
+</ol>
+<h4 id="数据清理"><a href="#数据清理" class="headerlink" title="数据清理"></a>数据清理</h4><ol>
 <li>使用一个set保存现有所有在线的房间榜单；定时任务检查房间是否在播，不在线的进行清理（同时可以监听房间下播时间）</li>
 <li>保存一定数量的redis榜单：Zremrangebyrank 命令用于移除有序集中，指定排名(rank)区间内的所有成员</li>
 <li>使用scan命令 查找特定前缀key的榜单，同1或2操作进行清理</li>
 </ol>
-<h3 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h3><ol>
+<h3 id="四、扩展"><a href="#四、扩展" class="headerlink" title="四、扩展"></a>四、扩展</h3><ol>
 <li>房间榜单的标识是房间id有时可能不够，因为通过榜单有时是和本场开播挂钩的，同一个房间多次开播，可能导致不同场次的数据导致榜单错误。<br>增加房间开播id标识可以解决。</li>
 <li>老生常谈的哲学问题:二八定理。花费大量时间来得到较低的收益，实现时要从业务看是否值得。但不代表在做设计方案时不去考虑，这是严谨性的问题。<br>按极端的方式考虑，实际实现按业务需要进行选择折中。</li>
 </ol>
@@ -433,6 +441,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/08/31/20200831-关于MHA-Consul-MySQL高可用方案的简单总结和思考/" rel="prev" title="关于MHA_Consul_MySQL高可用方案的简单总结和思考">
+                关于MHA_Consul_MySQL高可用方案的简单总结和思考 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -514,7 +526,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">35</span>
+                  <span class="site-state-item-count">36</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -527,7 +539,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">30</span>
+                  <span class="site-state-item-count">36</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -567,7 +579,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#相关Redis数据结构和命令"><span class="nav-number">2.</span> <span class="nav-text">相关Redis数据结构和命令</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Redis-集合-Set"><span class="nav-number">2.1.</span> <span class="nav-text">Redis 集合(Set)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Redis-有序集合-sorted-set"><span class="nav-number">2.2.</span> <span class="nav-text">Redis 有序集合(sorted set)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#其他"><span class="nav-number">2.3.</span> <span class="nav-text">其他</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何实现"><span class="nav-number">3.</span> <span class="nav-text">如何实现</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#榜单保存"><span class="nav-number">3.1.</span> <span class="nav-text">榜单保存</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#榜单添加数据操作幂等"><span class="nav-number">3.2.</span> <span class="nav-text">榜单添加数据操作幂等</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#数据清理"><span class="nav-number">3.3.</span> <span class="nav-text">数据清理</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#扩展"><span class="nav-number">4.</span> <span class="nav-text">扩展</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、前言"><span class="nav-number">1.</span> <span class="nav-text">一、前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、相关Redis数据结构和命令"><span class="nav-number">2.</span> <span class="nav-text">二、相关Redis数据结构和命令</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Redis-集合-Set"><span class="nav-number">2.1.</span> <span class="nav-text">Redis 集合(Set)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Redis-有序集合-sorted-set"><span class="nav-number">2.2.</span> <span class="nav-text">Redis 有序集合(sorted set)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#其他"><span class="nav-number">2.3.</span> <span class="nav-text">其他</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、如何实现"><span class="nav-number">3.</span> <span class="nav-text">三、如何实现</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#榜单保存"><span class="nav-number">3.1.</span> <span class="nav-text">榜单保存</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#榜单添加数据操作幂等"><span class="nav-number">3.2.</span> <span class="nav-text">榜单添加数据操作幂等</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#数据清理"><span class="nav-number">3.3.</span> <span class="nav-text">数据清理</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、扩展"><span class="nav-number">4.</span> <span class="nav-text">四、扩展</span></a></li></ol></div>
             
 
           </div>

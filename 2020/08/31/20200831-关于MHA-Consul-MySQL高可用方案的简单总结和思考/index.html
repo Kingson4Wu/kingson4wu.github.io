@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="MHA,Consul,MySQL,HA,容灾,半同步复制,">
+  <meta name="keywords" content="容灾,Consul,MHA,MySQL,HA,半同步复制,">
 
 
 
@@ -82,7 +82,7 @@
 
 
 <meta name="description" content="概述MHA + Consul + MySQL的高可用方案，网上已经有很多资料，这里只是做一下简要的总结和思考。文章部分文字摘自Reference中的链接。直接先上一张图   图中的灾备架构适用于同城主备架构的业务，比如金钱业务； DB层是一主多从，主库至在其中一个机房，并在DB集群上搭建跨IDC的MHA；同样Consul也是跨IDC的集群； 业务的写主流量配置在主库机房的一侧，当主库故障发生DB切">
-<meta name="keywords" content="MHA,Consul,MySQL,HA,容灾,半同步复制">
+<meta name="keywords" content="容灾,Consul,MHA,MySQL,HA,半同步复制">
 <meta property="og:type" content="article">
 <meta property="og:title" content="关于MHA_Consul_MySQL高可用方案的简单总结和思考">
 <meta property="og:url" content="http://yoursite.com/2020/08/31/20200831-关于MHA-Consul-MySQL高可用方案的简单总结和思考/index.html">
@@ -94,7 +94,7 @@
 <meta property="og:image" content="http://yoursite.com/2020/08/31/20200831-关于MHA-Consul-MySQL高可用方案的简单总结和思考/after_sync.png">
 <meta property="og:image" content="http://yoursite.com/2020/08/31/20200831-关于MHA-Consul-MySQL高可用方案的简单总结和思考/MySQL_copy.png">
 <meta property="og:image" content="http://yoursite.com/2020/08/31/20200831-关于MHA-Consul-MySQL高可用方案的简单总结和思考/MySQL_%E6%9D%83%E9%99%90.png">
-<meta property="og:updated_time" content="2020-09-03T13:49:29.000Z">
+<meta property="og:updated_time" content="2020-09-06T14:44:00.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="关于MHA_Consul_MySQL高可用方案的简单总结和思考">
 <meta name="twitter:description" content="概述MHA + Consul + MySQL的高可用方案，网上已经有很多资料，这里只是做一下简要的总结和思考。文章部分文字摘自Reference中的链接。直接先上一张图   图中的灾备架构适用于同城主备架构的业务，比如金钱业务； DB层是一主多从，主库至在其中一个机房，并在DB集群上搭建跨IDC的MHA；同样Consul也是跨IDC的集群； 业务的写主流量配置在主库机房的一侧，当主库故障发生DB切">
@@ -439,7 +439,7 @@ MHA工作原理总结为以下几条：
 <li><p>全同步复制（Fully synchronous replication）</p>
 <ul>
 <li>当主库执行完一个事务，且所有的从库都同步完之后才响应客户端。</li>
-<li>性能查</li>
+<li>性能差</li>
 </ul>
 </li>
 <li><p>半同步复制（Semisynchronous replication）</p>
@@ -453,13 +453,11 @@ MHA工作原理总结为以下几条：
 <li><p>增强半同步（Loss-less Semi-Synchronous）</p>
 <ul>
 <li>AFTER_SYNC；即参数 rpl_semi_sync_master_wait_point = after_sync</li>
-<li>after sync是MySQL5.7官方新加的用以解决MySQL5.6半同步缺陷的选项，也是官方推荐的方式。<ul>
-<li>原理：客户端发送过来一个请求，经过mysql的SQL分析，存储引擎处理，写入binlog，然后写入从库的relaylog，存储引擎层提交，最后返回给客户端。</li>
-<li>优点：主库把SQL操作先发给从库的relay log，然后再提交，再响应给客户端，这个过程即使在storage commit之后主crash了，日志也已经写入到relay log中，从库和主库数据一致。</li>
+<li>after sync是MySQL5.7官方新加以解决MySQL5.6半同步缺陷的选项，也是官方推荐的方式。</li>
+<li>原理：客户端发送过来一个请求，经过mysql的SQL分析，存储引擎处理，写入binlog，然后        写入从库的relaylog，存储引擎层提交，最后返回给客户端。</li>
+<li>优点：主库把SQL操作先发给从库的relay log，然后再提交，再响应给客户端，这个过程即使        在storage commit之后主crash了，日志也已经写入到relay log中，从库和主库数据一致。</li>
 <li>在commit之前等待Slave ACK，可以堆积事务，利于group commit，有利于提升性能。</li>
-</ul>
-</li>
-<li>在master接受到Slave ACK之前，数据的变化对其他会话时不可见的，因为此时并未提交，从而也不会产生数据不一致的影响。</li>
+<li>在master接受到Slave ACK之前，数据的变化对其他会话时不可见的，因为此时并未提交，从    而也不会产生数据不一致的影响。</li>
 <li>同样，Ack超时，也将退化为异步复制模式</li>
 </ul>
 </li>
@@ -494,7 +492,7 @@ MHA工作原理总结为以下几条：
 </ol>
 <h4 id="主从切换"><a href="#主从切换" class="headerlink" title="主从切换"></a>主从切换</h4><ul>
 <li>MHA 是切换工具，控制数据库主从切换和数据补齐；</li>
-<li>检测主库，故障时进行切换并通知Consul下发新的主库配置到应用服务。</li>
+<li>MHA 进行故障检测，故障时进行切换并通知Consul下发新的主库配置到应用服务。</li>
 </ul>
 <h4 id="从库上下线"><a href="#从库上下线" class="headerlink" title="从库上下线"></a>从库上下线</h4><ul>
 <li>Consul可以对从库进行健康检查，通过配置下发控制从库上下线。</li>
@@ -544,8 +542,14 @@ MHA工作原理总结为以下几条：
 <h3 id="自动切换安全吗？"><a href="#自动切换安全吗？" class="headerlink" title="自动切换安全吗？"></a>自动切换安全吗？</h3><ol>
 <li>直接启用masterha_manager 自动切换脚本并不安全，主要因为在网络抖动的情况下并不能保证数据库真的不能访问。不能仅通过一个点的检测就判断数据库不可访问。</li>
 <li>通过 Consul( Consul 提供 dns 接口)集群的特性, 增加多点检测机制, 在 n 个集群的环境中, 有超过半数的检测点检测到数据库有问题, 就认为数据库不可访问, 这时调用 masterha_manager 脚本进行切换。</li>
+<li>网络问题千变万化，在发生切换事件之后，需有相应的方案对主从流水数据进行对账或修正（确定基于binlog与应用日志的重要数据校验与补偿机制）。</li>
+<li>发生切换事件之后，在确定数据已经无异常之前，需要防止再自动切回去，造成严重的数据异常。所以一般情况下，只能自动切一次，直到人工介入确认无异常，重新设置为自动切模式。当然，有完善的监控比对数据异常机制的情况下，可以考虑做成自动化，无需依赖人工介入。</li>
 </ol>
 <h3 id="MHA切换之后，主库禁写后，现有的连接是否还能继续写入"><a href="#MHA切换之后，主库禁写后，现有的连接是否还能继续写入" class="headerlink" title="MHA切换之后，主库禁写后，现有的连接是否还能继续写入?"></a>MHA切换之后，主库禁写后，现有的连接是否还能继续写入?</h3><p><img src="/2020/08/31/20200831-关于MHA-Consul-MySQL高可用方案的简单总结和思考/MySQL_%E6%9D%83%E9%99%90.png" alt><br>mha切库禁写时，直接锁住整个实例，新操作无法写入，直接就设置read_only。</p>
+<h3 id="自动切的时机如何把握？"><a href="#自动切的时机如何把握？" class="headerlink" title="自动切的时机如何把握？"></a>自动切的时机如何把握？</h3><ol>
+<li>自动切的最佳时机很难人为，必须经过多种故障场景的测试，确定合适尽可能安全的切换策略和参数。</li>
+<li>在实践中，初期可以先告警人工介入决定是否切换；确定好合适的切换策略和参数后，自动切在非核心业务中稳定正确运行一段时间后才在核心业务运用。</li>
+</ol>
 <h3 id="MHA能保证数据一定不丢吗？"><a href="#MHA能保证数据一定不丢吗？" class="headerlink" title="MHA能保证数据一定不丢吗？"></a>MHA能保证数据一定不丢吗？</h3><ul>
 <li>在MHA自动故障切换过程中，MHA试图从宕机的主服务器上保存二进制日志，最大程度的保证数据的不丢失。但如上所述，网络等问题时无解的，理论上还是存在丢的可能性。一致性要求高的，比如金钱类的（相比其他业务TPS较低），可以考虑开启半同步复制，大大降低数据丢失的风险。</li>
 </ul>
@@ -591,15 +595,15 @@ MHA工作原理总结为以下几条：
       
         <div class="post-tags">
           
-            <a href="/tags/MHA/" rel="tag"># MHA</a>
+            <a href="/tags/容灾/" rel="tag"># 容灾</a>
           
             <a href="/tags/Consul/" rel="tag"># Consul</a>
+          
+            <a href="/tags/MHA/" rel="tag"># MHA</a>
           
             <a href="/tags/MySQL/" rel="tag"># MySQL</a>
           
             <a href="/tags/HA/" rel="tag"># HA</a>
-          
-            <a href="/tags/容灾/" rel="tag"># 容灾</a>
           
             <a href="/tags/半同步复制/" rel="tag"># 半同步复制</a>
           
@@ -623,6 +627,10 @@ MHA工作原理总结为以下几条：
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/09/05/20200905-如何解决脑裂问题/" rel="prev" title="如何解决脑裂问题">
+                如何解决脑裂问题 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -704,7 +712,7 @@ MHA工作原理总结为以下几条：
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">36</span>
+                  <span class="site-state-item-count">37</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -717,7 +725,7 @@ MHA工作原理总结为以下几条：
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">36</span>
+                  <span class="site-state-item-count">38</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -757,7 +765,7 @@ MHA工作原理总结为以下几条：
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#解决什么问题"><span class="nav-number">1.1.</span> <span class="nav-text">解决什么问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#每个组件各自的作用"><span class="nav-number">1.2.</span> <span class="nav-text">每个组件各自的作用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MHA"><span class="nav-number">2.</span> <span class="nav-text">MHA</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#介绍"><span class="nav-number">2.1.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#图中的MHA阐述"><span class="nav-number">2.2.</span> <span class="nav-text">图中的MHA阐述</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MySQL-半同步复制"><span class="nav-number">3.</span> <span class="nav-text">MySQL 半同步复制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#主从复制的基本原理"><span class="nav-number">3.1.</span> <span class="nav-text">主从复制的基本原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#主从复制的方式"><span class="nav-number">3.2.</span> <span class="nav-text">主从复制的方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#after-commit-VS-after-sync"><span class="nav-number">3.3.</span> <span class="nav-text">after_commit VS after_sync</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">3.4.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#其他"><span class="nav-number">3.5.</span> <span class="nav-text">其他</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Consul"><span class="nav-number">4.</span> <span class="nav-text">Consul</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#介绍-1"><span class="nav-number">4.1.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#和MHA的结合使用"><span class="nav-number">4.2.</span> <span class="nav-text">和MHA的结合使用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#主从切换"><span class="nav-number">4.2.1.</span> <span class="nav-text">主从切换</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#从库上下线"><span class="nav-number">4.2.2.</span> <span class="nav-text">从库上下线</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#扩展"><span class="nav-number">5.</span> <span class="nav-text">扩展</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CMDB"><span class="nav-number">5.1.</span> <span class="nav-text">CMDB</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#脑裂"><span class="nav-number">5.2.</span> <span class="nav-text">脑裂</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#如何避免脑裂问题"><span class="nav-number">5.2.1.</span> <span class="nav-text">如何避免脑裂问题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#结合raft的思考"><span class="nav-number">5.2.2.</span> <span class="nav-text">结合raft的思考</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Q-amp-A"><span class="nav-number">6.</span> <span class="nav-text">Q&amp;A</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么Dump和I-O线程不能多线程？"><span class="nav-number">6.1.</span> <span class="nav-text">为什么Dump和I/O线程不能多线程？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#增强半同步是否会导致从有数据而主却没有？"><span class="nav-number">6.2.</span> <span class="nav-text">增强半同步是否会导致从有数据而主却没有？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MHA本身就支持自动切，为什么还要使用Consul？"><span class="nav-number">6.3.</span> <span class="nav-text">MHA本身就支持自动切，为什么还要使用Consul？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#自动切换安全吗？"><span class="nav-number">6.4.</span> <span class="nav-text">自动切换安全吗？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MHA切换之后，主库禁写后，现有的连接是否还能继续写入"><span class="nav-number">6.5.</span> <span class="nav-text">MHA切换之后，主库禁写后，现有的连接是否还能继续写入?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MHA能保证数据一定不丢吗？"><span class="nav-number">6.6.</span> <span class="nav-text">MHA能保证数据一定不丢吗？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#新的主库和原主库数据一致性问题如何解决？"><span class="nav-number">6.7.</span> <span class="nav-text">新的主库和原主库数据一致性问题如何解决？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#不一致如何止损？"><span class="nav-number">6.8.</span> <span class="nav-text">不一致如何止损？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">7.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#解决什么问题"><span class="nav-number">1.1.</span> <span class="nav-text">解决什么问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#每个组件各自的作用"><span class="nav-number">1.2.</span> <span class="nav-text">每个组件各自的作用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MHA"><span class="nav-number">2.</span> <span class="nav-text">MHA</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#介绍"><span class="nav-number">2.1.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#图中的MHA阐述"><span class="nav-number">2.2.</span> <span class="nav-text">图中的MHA阐述</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MySQL-半同步复制"><span class="nav-number">3.</span> <span class="nav-text">MySQL 半同步复制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#主从复制的基本原理"><span class="nav-number">3.1.</span> <span class="nav-text">主从复制的基本原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#主从复制的方式"><span class="nav-number">3.2.</span> <span class="nav-text">主从复制的方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#after-commit-VS-after-sync"><span class="nav-number">3.3.</span> <span class="nav-text">after_commit VS after_sync</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">3.4.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#其他"><span class="nav-number">3.5.</span> <span class="nav-text">其他</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Consul"><span class="nav-number">4.</span> <span class="nav-text">Consul</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#介绍-1"><span class="nav-number">4.1.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#和MHA的结合使用"><span class="nav-number">4.2.</span> <span class="nav-text">和MHA的结合使用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#主从切换"><span class="nav-number">4.2.1.</span> <span class="nav-text">主从切换</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#从库上下线"><span class="nav-number">4.2.2.</span> <span class="nav-text">从库上下线</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#扩展"><span class="nav-number">5.</span> <span class="nav-text">扩展</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CMDB"><span class="nav-number">5.1.</span> <span class="nav-text">CMDB</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#脑裂"><span class="nav-number">5.2.</span> <span class="nav-text">脑裂</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#如何避免脑裂问题"><span class="nav-number">5.2.1.</span> <span class="nav-text">如何避免脑裂问题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#结合raft的思考"><span class="nav-number">5.2.2.</span> <span class="nav-text">结合raft的思考</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Q-amp-A"><span class="nav-number">6.</span> <span class="nav-text">Q&amp;A</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#为什么Dump和I-O线程不能多线程？"><span class="nav-number">6.1.</span> <span class="nav-text">为什么Dump和I/O线程不能多线程？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#增强半同步是否会导致从有数据而主却没有？"><span class="nav-number">6.2.</span> <span class="nav-text">增强半同步是否会导致从有数据而主却没有？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MHA本身就支持自动切，为什么还要使用Consul？"><span class="nav-number">6.3.</span> <span class="nav-text">MHA本身就支持自动切，为什么还要使用Consul？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#自动切换安全吗？"><span class="nav-number">6.4.</span> <span class="nav-text">自动切换安全吗？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MHA切换之后，主库禁写后，现有的连接是否还能继续写入"><span class="nav-number">6.5.</span> <span class="nav-text">MHA切换之后，主库禁写后，现有的连接是否还能继续写入?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#自动切的时机如何把握？"><span class="nav-number">6.6.</span> <span class="nav-text">自动切的时机如何把握？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MHA能保证数据一定不丢吗？"><span class="nav-number">6.7.</span> <span class="nav-text">MHA能保证数据一定不丢吗？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#新的主库和原主库数据一致性问题如何解决？"><span class="nav-number">6.8.</span> <span class="nav-text">新的主库和原主库数据一致性问题如何解决？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#不一致如何止损？"><span class="nav-number">6.9.</span> <span class="nav-text">不一致如何止损？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">7.</span> <span class="nav-text">Reference</span></a></li></ol></div>
             
 
           </div>

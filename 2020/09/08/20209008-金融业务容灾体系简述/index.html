@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT">
+  <meta name="keywords" content="金钱相关,容灾,">
 
 
 
@@ -81,16 +81,22 @@
 
 
 
-<meta name="description" content="为啥不吃三文鱼">
-<meta property="og:type" content="website">
-<meta property="og:title" content="拉巴力的纸皮箱">
-<meta property="og:url" content="http://yoursite.com/archives/2019/07/index.html">
+<meta name="description" content="概述 本文针对金融类(如用户虚拟货币)这类对数据准确性很敏感的业务的容灾架构； 案例中的服务架构为同城主备架构； 内容包括：容灾架构、故障切换、故障恢复、演练方案等； 涉及技术点：MySQL、MHA、Consul等； 本文基于 关于MHA-Consul-MySQL高可用方案的简单总结和思考 如何解决脑裂问题   由于某种原因，某些细节不会描述。 关于系统可用性，收藏了一张网图  容灾架构   红色">
+<meta name="keywords" content="金钱相关,容灾">
+<meta property="og:type" content="article">
+<meta property="og:title" content="金融业务容灾体系简述">
+<meta property="og:url" content="http://yoursite.com/2020/09/08/20209008-金融业务容灾体系简述/index.html">
 <meta property="og:site_name" content="拉巴力的纸皮箱">
-<meta property="og:description" content="为啥不吃三文鱼">
+<meta property="og:description" content="概述 本文针对金融类(如用户虚拟货币)这类对数据准确性很敏感的业务的容灾架构； 案例中的服务架构为同城主备架构； 内容包括：容灾架构、故障切换、故障恢复、演练方案等； 涉及技术点：MySQL、MHA、Consul等； 本文基于 关于MHA-Consul-MySQL高可用方案的简单总结和思考 如何解决脑裂问题   由于某种原因，某些细节不会描述。 关于系统可用性，收藏了一张网图  容灾架构   红色">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/2020/09/08/20209008-金融业务容灾体系简述/availability.png">
+<meta property="og:image" content="http://yoursite.com/2020/09/08/20209008-金融业务容灾体系简述/Network_Topology.png">
+<meta property="og:image" content="http://yoursite.com/2020/09/08/20209008-金融业务容灾体系简述/Architecture.png">
+<meta property="og:updated_time" content="2020-09-08T13:56:01.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="拉巴力的纸皮箱">
-<meta name="twitter:description" content="为啥不吃三文鱼">
+<meta name="twitter:title" content="金融业务容灾体系简述">
+<meta name="twitter:description" content="概述 本文针对金融类(如用户虚拟货币)这类对数据准确性很敏感的业务的容灾架构； 案例中的服务架构为同城主备架构； 内容包括：容灾架构、故障切换、故障恢复、演练方案等； 涉及技术点：MySQL、MHA、Consul等； 本文基于 关于MHA-Consul-MySQL高可用方案的简单总结和思考 如何解决脑裂问题   由于某种原因，某些细节不会描述。 关于系统可用性，收藏了一张网图  容灾架构   红色">
+<meta name="twitter:image" content="http://yoursite.com/2020/09/08/20209008-金融业务容灾体系简述/availability.png">
 
 
 
@@ -120,13 +126,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/archives/2019/07/">
+  <link rel="canonical" href="http://yoursite.com/2020/09/08/20209008-金融业务容灾体系简述/">
 
 
 
 
 
-  <title>归档 | 拉巴力的纸皮箱</title>
+  <title>金融业务容灾体系简述 | 拉巴力的纸皮箱</title>
   
 
 
@@ -145,7 +151,7 @@
     
   
 
-  <div class="container sidebar-position-left page-archive">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -271,71 +277,287 @@
           <div id="content" class="content">
             
 
+  <div id="posts" class="posts-expand">
+    
+
+  
+
   
   
   
-  <div class="post-block archive">
-    <div id="posts" class="posts-collapse">
-      <span class="archive-move-on"></span>
-
-      <span class="archive-page-counter">
-        
-        
-         
-        
-        OK! 目前共计 39 篇日志。 继续努力。
-      </span>
-
-      
-
-        
-        
-        
-
-        
-          
-          <div class="collection-title">
-            <h1 class="archive-year" id="archive-year-2019">2019</h1>
-          </div>
-        
-        
-
-        
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/09/08/20209008-金融业务容灾体系简述/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Kingson Wu">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/2019/07/06/warriors/" itemprop="url">
-              
-                <span itemprop="name">Warriors</span>
-              
-            </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">金融业务容灾体系简述</h1>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2019-07-06T10:33:54+08:00" content="2019-07-06">
-          07-06
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-09-08T00:04:32+08:00">
+                2020-09-08
+              </time>
+            
 
-    </header>
-  </article>
+            
 
+            
+          </span>
 
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/09/08/20209008-金融业务容灾体系简述/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/09/08/20209008-金融业务容灾体系简述/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
+      
 
+      
+        <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><ul>
+<li>本文针对金融类(如用户虚拟货币)这类对数据准确性很敏感的业务的容灾架构；</li>
+<li>案例中的服务架构为同城主备架构；</li>
+<li>内容包括：容灾架构、故障切换、故障恢复、演练方案等；</li>
+<li>涉及技术点：MySQL、MHA、Consul等；</li>
+<li>本文基于<ol>
+<li><a href="https://kingson4wu.gitee.io/2020/08/31/20200831-%E5%85%B3%E4%BA%8EMHA-Consul-MySQL%E9%AB%98%E5%8F%AF%E7%94%A8%E6%96%B9%E6%A1%88%E7%9A%84%E7%AE%80%E5%8D%95%E6%80%BB%E7%BB%93%E5%92%8C%E6%80%9D%E8%80%83/" target="_blank" rel="noopener">关于MHA-Consul-MySQL高可用方案的简单总结和思考</a></li>
+<li><a href="https://kingson4wu.gitee.io/2020/09/05/20200905-%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%E8%84%91%E8%A3%82%E9%97%AE%E9%A2%98/" target="_blank" rel="noopener">如何解决脑裂问题</a></li>
+</ol>
+</li>
+<li>由于某种原因，某些细节不会描述。</li>
+<li>关于系统可用性，收藏了一张网图<br><img src="/2020/09/08/20209008-金融业务容灾体系简述/availability.png" alt></li>
+</ul>
+<h2 id="容灾架构"><a href="#容灾架构" class="headerlink" title="容灾架构"></a>容灾架构</h2><p><img src="/2020/09/08/20209008-金融业务容灾体系简述/Network_Topology.png" alt></p>
+<p><img src="/2020/09/08/20209008-金融业务容灾体系简述/Architecture.png" alt></p>
+<ol>
+<li>红色线条为正常情况下的服务主链路；</li>
+<li>同城主备架构： 主－IDC-A；从－IDC-B;</li>
+<li>域名灾备：前端通过主域名访问后端接口，当响应超时或者返回50x的时候，前端将切换到备用域名访问后端接口；<ul>
+<li>异常情况可能是后端服务异常或者用户所在地区网络不稳定等原因；</li>
+<li>针对不幂等的接口，应设置成只切换域名不进行重试；</li>
+<li>后端服务可以根据自身服务的异常情况，返回50x，让前端切换到备用域名</li>
+</ul>
+</li>
+<li>主域名为CDN域名，连接北京两个机房，备用域名是非CDN域名，直接连接北京第三个机房；<ul>
+<li>使用CDN域名的原因：不把回源点暴露出去，从而把核心机房暴露出去。</li>
+</ul>
+</li>
+<li>使用MHA＋Consul作为DB的切换方案；</li>
+<li>每个IDC的gateway配置服务的主权重都是在IDC-A；发生故障切换时，gateway将把服务主权重切换到IDC-B，而通过外网进入IDC-A的流量，服务通过返回50x由前端切换到备用域名。</li>
+</ol>
+<h2 id="详细描述"><a href="#详细描述" class="headerlink" title="详细描述"></a>详细描述</h2><h3 id="故障切换"><a href="#故障切换" class="headerlink" title="故障切换"></a>故障切换</h3><h4 id="触发故障切换的场景"><a href="#触发故障切换的场景" class="headerlink" title="触发故障切换的场景"></a>触发故障切换的场景</h4><ol>
+<li>机房孤岛 (MHA＋Consul出发切换)</li>
+<li>网络抖动 (由决策服务通过健康检查手段决策)</li>
+<li>服务自身异常或机器问题等 (MHA＋Consul出发切换)</li>
+</ol>
+<h4 id="1-MHA-Consul切换"><a href="#1-MHA-Consul切换" class="headerlink" title="1) MHA+Consul切换"></a>1) MHA+Consul切换</h4><ul>
+<li>触发条件：1或3 (主库不可访问)</li>
+<li>MHA＋Consul切换后，决策服务切换gateway的服务权重</li>
+</ul>
+<h4 id="2-决策服务切换"><a href="#2-决策服务切换" class="headerlink" title="2) 决策服务切换"></a>2) 决策服务切换</h4><ul>
+<li>触发条件：2 (网络抖动)</li>
+<li>决策服务健康检查异常后，通过MHA+Consul主动切换主库，并切换gateway的服务权重</li>
+</ul>
+<h3 id="机房容灾场景（单机房故障）"><a href="#机房容灾场景（单机房故障）" class="headerlink" title="机房容灾场景（单机房故障）"></a>机房容灾场景（单机房故障）</h3><h4 id="1-机房内外网不通"><a href="#1-机房内外网不通" class="headerlink" title="1) 机房内外网不通"></a>1) 机房内外网不通</h4><ol>
+<li>IDC-A故障<ol>
+<li>服务权重通过gateway切换到IDC-B</li>
+<li>外网无法进入IDC-A，只能进入IDC-B</li>
+<li>CDN域名检测异常后剔除IDC-A的服务节点</li>
+<li>故障瞬间由于IDC-A不通，cdn结点会重试到IDC-B或者返回前端50x，前端访问备用域名。</li>
+</ol>
+</li>
+<li>IDC-B故障<ol>
+<li>服务权重无需调整</li>
+<li>外网无法进入IDC-B，只能进入IDC-A</li>
+<li>CDN域名检测异常后剔除IDC-B的服务节点</li>
+<li>故障瞬间由于IDC-B不通，cdn结点会重试到IDC-A或者返回前端50x，前端访问备用域名。</li>
+</ol>
+</li>
+</ol>
+<h4 id="2-机房孤岛（内网不通，外网通）"><a href="#2-机房孤岛（内网不通，外网通）" class="headerlink" title="2) 机房孤岛（内网不通，外网通）"></a>2) 机房孤岛（内网不通，外网通）</h4><ol>
+<li>IDC-A故障<ol>
+<li>服务权重通过gateway切换到IDC-B</li>
+<li>通过外网进入IDC-A的流量，服务自杀返回50x，前端访问备用域名<ul>
+<li>服务自杀参考：<a href="https://kingson4wu.gitee.io/2020/09/05/20200905-%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%E8%84%91%E8%A3%82%E9%97%AE%E9%A2%98/" target="_blank" rel="noopener">如何解决脑裂问题</a></li>
+</ul>
+</li>
+</ol>
+</li>
+<li>IDC-B故障<ol>
+<li>服务权重无需调整</li>
+<li>通过外网进入IDC-B的流量，服务自杀返回50x，前端访问备用域名</li>
+</ol>
+</li>
+</ol>
+<h4 id="3-机房网络抖动"><a href="#3-机房网络抖动" class="headerlink" title="3) 机房网络抖动"></a>3) 机房网络抖动</h4><p>机房服务异常（内外网都通，但该机房服务有问题，网络不稳定，丢包率高等，需机房切换）。<br>流量进入服务之后处理同2）只是切换策略不同。</p>
+<h3 id="决策服务"><a href="#决策服务" class="headerlink" title="决策服务"></a>决策服务</h3><ol>
+<li>通过Consul判断是否孤岛</li>
+<li>通过接口调用失败率，apm，监控网络丢包率等指标判断</li>
+<li>相关服务同步切</li>
+</ol>
+<h4 id="单元化"><a href="#单元化" class="headerlink" title="单元化"></a>单元化</h4><ol>
+<li>切换需要把相互依赖的服务整体进行切换，尽量避免跨机房调用。</li>
+</ol>
+<h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><h3 id="gateway如何实现"><a href="#gateway如何实现" class="headerlink" title="gateway如何实现"></a>gateway如何实现</h3><ul>
+<li>可以考虑结合服务发现，以localproxy代替nginx代替服务权重配置</li>
+</ul>
+<h3 id="其他主意事项"><a href="#其他主意事项" class="headerlink" title="其他主意事项"></a>其他主意事项</h3><ol>
+<li>定时任务是否要切换</li>
+<li>MQ消费或生产是否要切换</li>
+<li>服务强依赖要单元化，比如强依赖方主备，自己的服务做双活也没用</li>
+<li>MQ类发送异步进行</li>
+</ol>
+<h3 id="演练方式"><a href="#演练方式" class="headerlink" title="演练方式"></a>演练方式</h3><ol start="0">
+<li>前期：tcpcpoy线上流量，复制线上服务部署单独一台演练环境，包括应用和db</li>
+<li>kill服务，killDB</li>
+<li>iptables屏蔽端口<ul>
+<li>iptable和kill应用不一样。前者会有readtimeout，后者直接reset peer</li>
+<li>kill应用的方式基本是平稳的，使用iptable屏蔽端口的方式，可能会有connectTimeout或readTimeout。</li>
+</ul>
+</li>
+<li>线上停机房<ul>
+<li>停专线一定是孤岛，不存在一边内网通，另一边内网不通的情况，是一个内网（看上图的网络拓扑图）。</li>
+</ul>
+</li>
+</ol>
+<h3 id="Q-amp-A"><a href="#Q-amp-A" class="headerlink" title="Q&amp;A"></a>Q&amp;A</h3><ol>
+<li>备用机房（IDC-B）正常情况下无流量？<ul>
+<li>配置万分之一的流量，确保切换前已经可用。</li>
+<li>确保切换之前备机房是可用的，是否可用通过观察日志情况。</li>
+<li>备用机房异常应该及时告警。</li>
+</ul>
+</li>
+<li>为什么跨机房同步使用MySQL主从同步而使用otter？<ul>
+<li>一般主从同步只在同机房或者同城进行。</li>
+<li>otter是阿里开源的一个分布式数据库同步系统，尤其是在跨机房数据库同步方面，有很强大的功能。 </li>
+<li>？？？？</li>
+</ul>
+</li>
+<li>相关服务一同切换是否合理<ol>
+<li>机房异常一同切换可行；</li>
+<li>如果只是单个服务异常，别的服务也要跟着切库不一定合理。决策服务应该支持业务自行配制切换策略。</li>
+</ol>
+</li>
+</ol>
+
+      
     </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/金钱相关/" rel="tag"># 金钱相关</a>
+          
+            <a href="/tags/容灾/" rel="tag"># 容灾</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/09/05/20200905-如何解决脑裂问题/" rel="next" title="如何解决脑裂问题">
+                <i class="fa fa-chevron-left"></i> 如何解决脑裂问题
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/09/08/20200908-金融业务容灾切换后监控和修正方案/" rel="prev" title="金融业务容灾切换后监控和修正方案">
+                金融业务容灾切换后监控和修正方案 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
 
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -343,6 +565,13 @@
 
 
           
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
 
         </div>
         
@@ -363,8 +592,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -424,6 +662,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#容灾架构"><span class="nav-number">2.</span> <span class="nav-text">容灾架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#详细描述"><span class="nav-number">3.</span> <span class="nav-text">详细描述</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#故障切换"><span class="nav-number">3.1.</span> <span class="nav-text">故障切换</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#触发故障切换的场景"><span class="nav-number">3.1.1.</span> <span class="nav-text">触发故障切换的场景</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-MHA-Consul切换"><span class="nav-number">3.1.2.</span> <span class="nav-text">1) MHA+Consul切换</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-决策服务切换"><span class="nav-number">3.1.3.</span> <span class="nav-text">2) 决策服务切换</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#机房容灾场景（单机房故障）"><span class="nav-number">3.2.</span> <span class="nav-text">机房容灾场景（单机房故障）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-机房内外网不通"><span class="nav-number">3.2.1.</span> <span class="nav-text">1) 机房内外网不通</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-机房孤岛（内网不通，外网通）"><span class="nav-number">3.2.2.</span> <span class="nav-text">2) 机房孤岛（内网不通，外网通）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-机房网络抖动"><span class="nav-number">3.2.3.</span> <span class="nav-text">3) 机房网络抖动</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#决策服务"><span class="nav-number">3.3.</span> <span class="nav-text">决策服务</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#单元化"><span class="nav-number">3.3.1.</span> <span class="nav-text">单元化</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实现"><span class="nav-number">3.4.</span> <span class="nav-text">实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#gateway如何实现"><span class="nav-number">3.5.</span> <span class="nav-text">gateway如何实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#其他主意事项"><span class="nav-number">3.6.</span> <span class="nav-text">其他主意事项</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#演练方式"><span class="nav-number">3.7.</span> <span class="nav-text">演练方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Q-amp-A"><span class="nav-number">3.8.</span> <span class="nav-text">Q&amp;A</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -564,6 +818,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 

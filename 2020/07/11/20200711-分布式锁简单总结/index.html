@@ -89,7 +89,7 @@
 <meta property="og:site_name" content="拉巴力的纸皮箱">
 <meta property="og:description" content="实现方式 数据库的行级排它锁（如select * from x for update）； 基于zookeeper的瞬间顺序节点； 最小节点获得锁   基于 Redis 的 SETNX 命令。 使用lua脚本保证原子性    本文要讲的是第3种方式。 实现原理 使用setnx创建一个key，如果key不存在，则创建成功返回1，否则返回0。根据是否获得锁决定是否执行业务逻辑，执行完后删除key来实现释">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-08-01T02:26:30.000Z">
+<meta property="og:updated_time" content="2020-09-08T14:43:54.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="分布式锁简单总结">
 <meta name="twitter:description" content="实现方式 数据库的行级排它锁（如select * from x for update）； 基于zookeeper的瞬间顺序节点； 最小节点获得锁   基于 Redis 的 SETNX 命令。 使用lua脚本保证原子性    本文要讲的是第3种方式。 实现原理 使用setnx创建一个key，如果key不存在，则创建成功返回1，否则返回0。根据是否获得锁决定是否执行业务逻辑，执行完后删除key来实现释">
@@ -419,20 +419,30 @@ end</code></li>
 <li>ZK 天生设计定位就是分布式协调，强一致性。锁的模型健壮、简单易用、适合做分布式锁。<br>如果获取不到锁，只需要添加一个监听器就可以了，不用一直轮询，性能消耗较小。<br>但是 ZK 也有其缺点：如果有较多的客户端频繁的申请加锁、释放锁，对于 ZK 集群的压力会比较大。</li>
 </ol>
 <h3 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h3><ul>
-<li>可以尝试使用Redisson实现分布式锁</li>
-<li>Redis的作者antirez给出了一个更好的实现，称为Redlock，算是Redis官方对于实现分布式锁的指导规范。Redlock的算法描述就放在Redis的官网上：<br><a href="https://redis.io/topics/distlock" target="_blank" rel="noopener">https://redis.io/topics/distlock</a></li>
-<li>举个场景的例子来详细说明：一提到分布式锁问题，大多数人想到的方案是基于Redis的Master-Slave模式来实现。这个实现方案行不行？分布式锁本质是一个CP需求，基于Redis的实现是一个AP需求，乍一看基于Redis的实现是无法满足的。脱离业务场景来谈架构都是耍流氓。<br>从技术战略的需求层面来看，如果分布式锁在极端情况下获取锁的不一致，社交业务场景能够接受，那么基于Redis的实现是完全可行的。如果业务是交易场景，分布式锁在极端情况下获取锁的不一致性无法接受，那么基于Redis的实现方案是不可行的。在锁强一致性的场景下，需要采取基于CP模型的etcd等方案来实现。</li>
-<li>redis-cli提供了EVAL与EVALSHA命令执行Lua脚本:<ol>
-<li>EVAL<ul>
-<li>EVAL script numkeys key [key …] arg [arg …]</li>
-<li>key和arg两类参数用于向脚本传递数据, 他们的值可在脚本中使用KEYS和ARGV两个table访问: KEYS表示要操作的键名, ARGV表示非键名参数(并非强制).<ol start="2">
+<li><p>可以尝试使用Redisson实现分布式锁</p>
+</li>
+<li><p>Redis的作者antirez给出了一个更好的实现，称为Redlock，算是Redis官方对于实现分布式锁的指导规范。Redlock的算法描述就放在Redis的官网上：<br><a href="https://redis.io/topics/distlock" target="_blank" rel="noopener">https://redis.io/topics/distlock</a></p>
+</li>
+<li><p>举个场景的例子来详细说明：一提到分布式锁问题，大多数人想到的方案是基于Redis的Master-Slave模式来实现。这个实现方案行不行？分布式锁本质是一个CP需求，基于Redis的实现是一个AP需求，乍一看基于Redis的实现是无法满足的。脱离业务场景来谈架构都是耍流氓。<br>从技术战略的需求层面来看，如果分布式锁在极端情况下获取锁的不一致，社交业务场景能够接受，那么基于Redis的实现是完全可行的。如果业务是交易场景，分布式锁在极端情况下获取锁的不一致性无法接受，那么基于Redis的实现方案是不可行的。在锁强一致性的场景下，需要采取基于CP模型的etcd等方案来实现。</p>
+</li>
+<li><p>redis-cli提供了EVAL与EVALSHA命令执行Lua脚本:</p>
+<ol>
+<li><p>EVAL</p>
+<ul>
+<li><p>EVAL script numkeys key [key …] arg [arg …]</p>
+</li>
+<li><p>key和arg两类参数用于向脚本传递数据, 他们的值可在脚本中使用KEYS和ARGV两个table访问: KEYS表示要操作的键名, ARGV表示非键名参数(并非强制).</p>
+<ol start="2">
 <li>EVALSHA</li>
 </ol>
 </li>
-<li>EVALSHA命令允许通过脚本的SHA1来执行(节省带宽), Redis在执行EVAL/SCRIPT LOAD后会计算脚本SHA1缓存, EVALSHA根据SHA1取出缓存脚本执行.</li>
+<li><p>EVALSHA命令允许通过脚本的SHA1来执行(节省带宽), Redis在执行EVAL/SCRIPT LOAD后会计算脚本SHA1缓存, EVALSHA根据SHA1取出缓存脚本执行.</p>
+</li>
 </ul>
 </li>
 </ol>
+</li>
+<li><p>redis一般都是单机房部署，如果要控制多个机房只有一个锁，考虑使用Consul来实现分布式锁。      </p>
 </li>
 </ul>
 <h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><ol>
@@ -568,7 +578,7 @@ end</code></li>
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">37</span>
+                  <span class="site-state-item-count">39</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

@@ -92,7 +92,7 @@
 <meta property="og:image" content="http://yoursite.com/2020/09/08/20200908-金融业务容灾体系简述/availability.png">
 <meta property="og:image" content="http://yoursite.com/2020/09/08/20200908-金融业务容灾体系简述/Network_Topology.png">
 <meta property="og:image" content="http://yoursite.com/2020/09/08/20200908-金融业务容灾体系简述/Architecture.png">
-<meta property="og:updated_time" content="2020-09-12T06:43:48.000Z">
+<meta property="og:updated_time" content="2020-09-24T15:09:13.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="金融业务容灾体系简述">
 <meta name="twitter:description" content="概述 本文针对金融类(如用户虚拟货币)这类对数据准确性很敏感的业务的容灾架构； 案例中的服务架构为同城主备架构； 内容包括：容灾架构、故障切换、故障恢复、演练方案等； 涉及技术点：MySQL、MHA、Consul等； 本文基于 关于MHA-Consul-MySQL高可用方案的简单总结和思考 如何解决脑裂问题   由于某种原因，某些细节不会描述。 关于系统可用性，收藏了一张网图  容灾架构   红色">
@@ -455,7 +455,7 @@
 <h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><h3 id="gateway如何实现"><a href="#gateway如何实现" class="headerlink" title="gateway如何实现"></a>gateway如何实现</h3><ul>
 <li>可以考虑结合服务发现，以localproxy代替nginx代替服务权重配置</li>
 </ul>
-<h3 id="其他主意事项"><a href="#其他主意事项" class="headerlink" title="其他主意事项"></a>其他主意事项</h3><ol>
+<h3 id="其他注意事项"><a href="#其他注意事项" class="headerlink" title="其他注意事项"></a>其他注意事项</h3><ol>
 <li>定时任务是否要切换</li>
 <li>MQ消费或生产是否要切换</li>
 <li>服务强依赖要单元化，比如强依赖方主备，自己的服务做双活也没用</li>
@@ -464,6 +464,11 @@
 <li><a href="https://blog.csdn.net/mj158518/article/details/49847119" target="_blank" rel="noopener">nginx的重试机制</a></li>
 </ul>
 </li>
+</ol>
+<h3 id="其他技巧"><a href="#其他技巧" class="headerlink" title="其他技巧"></a>其他技巧</h3><ol>
+<li>服务所依赖的外部服务分为强依赖和弱依赖。弱依赖可以继续降级，而强依赖则不可以。</li>
+<li>强依赖可以进一步划分成读依赖和写依赖。通常情况下写依赖是几乎不可能优化的，只能依赖其高可用，比如扣费服务。而读依赖则有优化空间，读依赖可以分为实时性依赖和非实时性依赖，后者可以通过缓存来解决强依赖的问题，比如用户的信息。这部分数据通常的强依赖的，但是又可以缓存下来。</li>
+<li>强实时性读依赖的，故障情况下，可以考虑降级成非实时性依赖。比如采取先读远端数据，失败时降级成读缓存的策略。</li>
 </ol>
 <h3 id="演练方式"><a href="#演练方式" class="headerlink" title="演练方式"></a>演练方式</h3><ol start="0">
 <li>前期：tcpcpoy线上流量，复制线上服务部署单独一台演练环境，包括应用和db</li>
@@ -623,7 +628,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">41</span>
+                  <span class="site-state-item-count">43</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -636,7 +641,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">44</span>
+                  <span class="site-state-item-count">46</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -676,7 +681,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#容灾架构"><span class="nav-number">2.</span> <span class="nav-text">容灾架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#详细描述"><span class="nav-number">3.</span> <span class="nav-text">详细描述</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#故障切换"><span class="nav-number">3.1.</span> <span class="nav-text">故障切换</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#触发故障切换的场景"><span class="nav-number">3.1.1.</span> <span class="nav-text">触发故障切换的场景</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-MHA-Consul切换"><span class="nav-number">3.1.2.</span> <span class="nav-text">1) MHA+Consul切换</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-决策服务切换"><span class="nav-number">3.1.3.</span> <span class="nav-text">2) 决策服务切换</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#机房容灾场景（单机房故障）"><span class="nav-number">3.2.</span> <span class="nav-text">机房容灾场景（单机房故障）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-机房内外网不通"><span class="nav-number">3.2.1.</span> <span class="nav-text">1) 机房内外网不通</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-机房孤岛（内网不通，外网通）"><span class="nav-number">3.2.2.</span> <span class="nav-text">2) 机房孤岛（内网不通，外网通）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-机房网络抖动"><span class="nav-number">3.2.3.</span> <span class="nav-text">3) 机房网络抖动</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#决策服务"><span class="nav-number">3.3.</span> <span class="nav-text">决策服务</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#单元化"><span class="nav-number">3.3.1.</span> <span class="nav-text">单元化</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实现"><span class="nav-number">3.4.</span> <span class="nav-text">实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#gateway如何实现"><span class="nav-number">3.5.</span> <span class="nav-text">gateway如何实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#其他主意事项"><span class="nav-number">3.6.</span> <span class="nav-text">其他主意事项</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#演练方式"><span class="nav-number">3.7.</span> <span class="nav-text">演练方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Q-amp-A"><span class="nav-number">3.8.</span> <span class="nav-text">Q&amp;A</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#容灾架构"><span class="nav-number">2.</span> <span class="nav-text">容灾架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#详细描述"><span class="nav-number">3.</span> <span class="nav-text">详细描述</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#故障切换"><span class="nav-number">3.1.</span> <span class="nav-text">故障切换</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#触发故障切换的场景"><span class="nav-number">3.1.1.</span> <span class="nav-text">触发故障切换的场景</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-MHA-Consul切换"><span class="nav-number">3.1.2.</span> <span class="nav-text">1) MHA+Consul切换</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-决策服务切换"><span class="nav-number">3.1.3.</span> <span class="nav-text">2) 决策服务切换</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#机房容灾场景（单机房故障）"><span class="nav-number">3.2.</span> <span class="nav-text">机房容灾场景（单机房故障）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-机房内外网不通"><span class="nav-number">3.2.1.</span> <span class="nav-text">1) 机房内外网不通</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-机房孤岛（内网不通，外网通）"><span class="nav-number">3.2.2.</span> <span class="nav-text">2) 机房孤岛（内网不通，外网通）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-机房网络抖动"><span class="nav-number">3.2.3.</span> <span class="nav-text">3) 机房网络抖动</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#决策服务"><span class="nav-number">3.3.</span> <span class="nav-text">决策服务</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#单元化"><span class="nav-number">3.3.1.</span> <span class="nav-text">单元化</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实现"><span class="nav-number">3.4.</span> <span class="nav-text">实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#gateway如何实现"><span class="nav-number">3.5.</span> <span class="nav-text">gateway如何实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#其他注意事项"><span class="nav-number">3.6.</span> <span class="nav-text">其他注意事项</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#其他技巧"><span class="nav-number">3.7.</span> <span class="nav-text">其他技巧</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#演练方式"><span class="nav-number">3.8.</span> <span class="nav-text">演练方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Q-amp-A"><span class="nav-number">3.9.</span> <span class="nav-text">Q&amp;A</span></a></li></ol></li></ol></div>
             
 
           </div>

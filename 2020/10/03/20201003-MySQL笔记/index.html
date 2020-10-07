@@ -84,15 +84,15 @@
 <meta name="description" content="思维导图 InnoDB 事务隔离级别   隔离级别 脏读 不可重复读 幻读    未提交读(RUC) NO NO NO   已提交读(RC) YES NO NO   可重复读(RR) YES YES NO   可串行化 YES YES YES   InnoDB 锁类型共享/排它锁(Shared and Exclusive Locks)在InnoDb中实现了两个标准的行级锁，可以简单的看为两个读写锁">
 <meta name="keywords" content="MySQL">
 <meta property="og:type" content="article">
-<meta property="og:title" content="20201003-MySQL笔记">
+<meta property="og:title" content="MySQL笔记">
 <meta property="og:url" content="http://yoursite.com/2020/10/03/20201003-MySQL笔记/index.html">
 <meta property="og:site_name" content="拉巴力的纸皮箱">
 <meta property="og:description" content="思维导图 InnoDB 事务隔离级别   隔离级别 脏读 不可重复读 幻读    未提交读(RUC) NO NO NO   已提交读(RC) YES NO NO   可重复读(RR) YES YES NO   可串行化 YES YES YES   InnoDB 锁类型共享/排它锁(Shared and Exclusive Locks)在InnoDb中实现了两个标准的行级锁，可以简单的看为两个读写锁">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/2020/10/03/20201003-MySQL笔记/MySQL.png">
-<meta property="og:updated_time" content="2020-10-06T16:23:14.000Z">
+<meta property="og:updated_time" content="2020-10-07T02:06:23.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="20201003-MySQL笔记">
+<meta name="twitter:title" content="MySQL笔记">
 <meta name="twitter:description" content="思维导图 InnoDB 事务隔离级别   隔离级别 脏读 不可重复读 幻读    未提交读(RUC) NO NO NO   已提交读(RC) YES NO NO   可重复读(RR) YES YES NO   可串行化 YES YES YES   InnoDB 锁类型共享/排它锁(Shared and Exclusive Locks)在InnoDb中实现了两个标准的行级锁，可以简单的看为两个读写锁">
 <meta name="twitter:image" content="http://yoursite.com/2020/10/03/20201003-MySQL笔记/MySQL.png">
 
@@ -130,7 +130,7 @@
 
 
 
-  <title>20201003-MySQL笔记 | 拉巴力的纸皮箱</title>
+  <title>MySQL笔记 | 拉巴力的纸皮箱</title>
   
 
 
@@ -306,7 +306,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">20201003-MySQL笔记</h1>
+          <h1 class="post-title" itemprop="name headline">MySQL笔记</h1>
         
 
         <div class="post-meta">
@@ -553,6 +553,7 @@
 <li>尽量避免大事务，占有的资源锁越多，越容易出现死锁。建议拆成小事务。</li>
 <li>降低隔离级别。如果业务允许(上面4.3也分析了，某些业务并不能允许)，将隔离级别调低也是较好的选择，比如将隔离级别从RR调整为RC，可以避免掉很多因为gap锁造成的死锁。</li>
 <li>为表添加合理的索引。防止没有索引出现表锁，出现的死锁的概率会突增。</li>
+<li>在删除之前，可以通过快照查询(不加锁)，如果查询没有结果，则直接插入，如果有通过主键进行删除。如果查询的索引不含有唯一属性，不会降级成记录锁，而是间隙锁，插入时容易死锁。</li>
 </ol>
 <h2 id="Q-amp-A"><a href="#Q-amp-A" class="headerlink" title="Q&amp;A"></a>Q&amp;A</h2><h3 id="InnoDB选择什么列作为主键"><a href="#InnoDB选择什么列作为主键" class="headerlink" title="InnoDB选择什么列作为主键"></a>InnoDB选择什么列作为主键</h3><ol>
 <li>不能为空的列；</li>
@@ -587,7 +588,7 @@
 </ol>
 <h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
 <li><a href="https://www.yuque.com/yinjianwei/vyrvkf/bq2ib3" target="_blank" rel="noopener">MySQL 体系结构-概述</a></li>
-<li><a href="https://www.yuque.com/yinjianwei/vyrvkf/miwe1h" target="_blank" rel="noopener">ySQL 体系结构-主要文件</a></li>
+<li><a href="https://www.yuque.com/yinjianwei/vyrvkf/miwe1h" target="_blank" rel="noopener">MySQL 体系结构-主要文件</a></li>
 <li><a href="https://www.cnblogs.com/wt645631686/p/8258070.html" target="_blank" rel="noopener">MySQL 参数- Innodb_File_Per_Table（独立表空间）</a></li>
 <li><a href="https://mp.weixin.qq.com/s/yzXbbutzVJ1hIZgVszIBgw" target="_blank" rel="noopener">为什么开发人员必须要了解数据库锁？</a></li>
 <li><a href="https://mp.weixin.qq.com/s?__biz=MjM5ODYxMDA5OQ==&mid=2651962952&idx=1&sn=aa1d3aaa3a61a811a8656cbfaa45c0a0&chksm=bd2d0b948a5a82822c8a87c2b154a2fb3bdd76a21288db2e1ac97cbb35fd08b43dd5f69c0b58&mpshare=1&scene=1&srcid=&sharer_sharetime=1572482536085&sharer_shareid=dcfe0eae58d1da3d4cc1d60a98c3905c#rd" target="_blank" rel="noopener">主键，不少人以为自己懂了，却不透彻…</a></li>

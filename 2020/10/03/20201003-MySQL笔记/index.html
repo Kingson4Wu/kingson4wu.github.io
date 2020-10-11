@@ -90,7 +90,7 @@
 <meta property="og:description" content="思维导图 InnoDB 事务隔离级别   隔离级别 脏读 不可重复读 幻读    未提交读(RUC) NO NO NO   已提交读(RC) YES NO NO   可重复读(RR) YES YES NO   可串行化 YES YES YES   InnoDB 锁类型共享/排它锁(Shared and Exclusive Locks)在InnoDb中实现了两个标准的行级锁，可以简单的看为两个读写锁">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/2020/10/03/20201003-MySQL笔记/MySQL.png">
-<meta property="og:updated_time" content="2020-10-07T02:06:23.000Z">
+<meta property="og:updated_time" content="2020-10-11T03:30:57.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="MySQL笔记">
 <meta name="twitter:description" content="思维导图 InnoDB 事务隔离级别   隔离级别 脏读 不可重复读 幻读    未提交读(RUC) NO NO NO   已提交读(RC) YES NO NO   可重复读(RR) YES YES NO   可串行化 YES YES YES   InnoDB 锁类型共享/排它锁(Shared and Exclusive Locks)在InnoDb中实现了两个标准的行级锁，可以简单的看为两个读写锁">
@@ -414,17 +414,17 @@
 <thead>
 <tr>
 <th>.</th>
-<th>X</th>
-<th>S</th>
+<th>X（行级）</th>
+<th>S（行级）</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>X</td>
+<td>X（行级）</td>
 <td>冲突</td>
 <td>冲突</td>
 </tr>
 <tr>
-<td>S</td>
+<td>S（行级）</td>
 <td>冲突</td>
 <td>兼容</td>
 </tr>
@@ -449,8 +449,8 @@
 <th>.</th>
 <th>IX</th>
 <th>IS</th>
-<th>X</th>
-<th>S</th>
+<th>X（表级）</th>
+<th>S（表级）</th>
 </tr>
 </thead>
 <tbody><tr>
@@ -468,14 +468,14 @@
 <td>兼容</td>
 </tr>
 <tr>
-<td>X</td>
+<td>X（表级）</td>
 <td>冲突</td>
 <td>冲突</td>
 <td>冲突</td>
 <td>冲突</td>
 </tr>
 <tr>
-<td>S</td>
+<td>S（表级）</td>
 <td>冲突</td>
 <td>兼容</td>
 <td>冲突</td>
@@ -540,6 +540,7 @@
 <li><code>select * from information_schema.INNODB_LOCKS</code> TODO</li>
 <li><code>show variables like &#39;%tx_isolation%&#39;;</code>查看事务隔离级别</li>
 <li><code>show engine innodb status</code> 输出innodb监控可以查看到意向锁的信息</li>
+<li><code>show status like &#39;innodb_row_lock%&#39;;</code>查看锁情况</li>
 </ol>
 <h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><ol>
 <li>在 MySQL 数据库中，Database 和 Schema 是一对一的，所以 Database 和 Schema 是一个概念。</li>
@@ -646,6 +647,10 @@
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/2020/10/11/20201011-Redis笔记/" rel="prev" title="Redis笔记">
+                Redis笔记 <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -726,7 +731,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">43</span>
+                  <span class="site-state-item-count">44</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

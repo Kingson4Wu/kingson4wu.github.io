@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="容灾,MHA,Consul,MySQL,HA,半同步复制,">
+  <meta name="keywords" content="容灾,Consul,MHA,MySQL,HA,半同步复制,">
 
 
 
@@ -82,7 +82,7 @@
 
 
 <meta name="description" content="概述MHA + Consul + MySQL的高可用方案，网上已经有很多资料，这里只是做一下简要的总结和思考。文章部分文字摘自Reference中的链接。直接先上一张图   图中的灾备架构适用于同城主备架构的业务，比如金钱业务； DB层是一主多从，主库至在其中一个机房，并在DB集群上搭建跨IDC的MHA；同样Consul也是跨IDC的集群； 业务的写主流量配置在主库机房的一侧，当主库故障发生DB切">
-<meta name="keywords" content="容灾,MHA,Consul,MySQL,HA,半同步复制">
+<meta name="keywords" content="容灾,Consul,MHA,MySQL,HA,半同步复制">
 <meta property="og:type" content="article">
 <meta property="og:title" content="关于MHA_Consul_MySQL高可用方案的简单总结和思考">
 <meta property="og:url" content="http://yoursite.com/2020/08/31/20200831-关于MHA-Consul-MySQL高可用方案的简单总结和思考/index.html">
@@ -94,7 +94,7 @@
 <meta property="og:image" content="http://yoursite.com/2020/08/31/20200831-关于MHA-Consul-MySQL高可用方案的简单总结和思考/after_sync.png">
 <meta property="og:image" content="http://yoursite.com/2020/08/31/20200831-关于MHA-Consul-MySQL高可用方案的简单总结和思考/MySQL_copy.png">
 <meta property="og:image" content="http://yoursite.com/2020/08/31/20200831-关于MHA-Consul-MySQL高可用方案的简单总结和思考/MySQL_%E6%9D%83%E9%99%90.png">
-<meta property="og:updated_time" content="2020-09-06T14:44:00.000Z">
+<meta property="og:updated_time" content="2020-10-07T08:08:50.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="关于MHA_Consul_MySQL高可用方案的简单总结和思考">
 <meta name="twitter:description" content="概述MHA + Consul + MySQL的高可用方案，网上已经有很多资料，这里只是做一下简要的总结和思考。文章部分文字摘自Reference中的链接。直接先上一张图   图中的灾备架构适用于同城主备架构的业务，比如金钱业务； DB层是一主多从，主库至在其中一个机房，并在DB集群上搭建跨IDC的MHA；同样Consul也是跨IDC的集群； 业务的写主流量配置在主库机房的一侧，当主库故障发生DB切">
@@ -511,6 +511,7 @@ MHA工作原理总结为以下几条：
 <h4 id="如何避免脑裂问题"><a href="#如何避免脑裂问题" class="headerlink" title="如何避免脑裂问题"></a>如何避免脑裂问题</h4><ol>
 <li>如何让IDC的服务可以判断自身是否孤岛，从而拒绝服务，避免数据问题呢？</li>
 <li>其中一个方案使用Consul作为选主服务来解决。后续另开文章叙述。</li>
+<li>使用etcd：<a href="https://mp.weixin.qq.com/s/VFJg14JcapijOyhfJJMYUg" target="_blank" rel="noopener">etcd 实现故障时主备秒级切换高可用架构</a></li>
 </ol>
 <h4 id="结合raft的思考"><a href="#结合raft的思考" class="headerlink" title="结合raft的思考"></a>结合raft的思考</h4><ul>
 <li>为了避免脑裂，需要有选主机制，一般超半数的投票才能成为leader；Consul就是基于raft是实现的；</li>
@@ -597,9 +598,9 @@ MHA工作原理总结为以下几条：
           
             <a href="/tags/容灾/" rel="tag"># 容灾</a>
           
-            <a href="/tags/MHA/" rel="tag"># MHA</a>
-          
             <a href="/tags/Consul/" rel="tag"># Consul</a>
+          
+            <a href="/tags/MHA/" rel="tag"># MHA</a>
           
             <a href="/tags/MySQL/" rel="tag"># MySQL</a>
           
@@ -712,7 +713,7 @@ MHA工作原理总结为以下几条：
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">43</span>
+                  <span class="site-state-item-count">44</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

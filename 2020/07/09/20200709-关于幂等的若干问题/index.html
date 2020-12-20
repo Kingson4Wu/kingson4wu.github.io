@@ -81,18 +81,18 @@
 
 
 
-<meta name="description" content="请求已经处理成功，当业务调用方重试时，幂等id不变，但其他参数有变化时。 该返回成功的结果吗？或者说应该对所有的参数进行校验，判断和之前的参数是否一致？">
+<meta name="description" content="请求已经处理成功，当业务调用方重试时，幂等id不变，但其他参数有变化时。 该返回成功的结果吗？或者说应该对所有的参数进行校验，判断和之前的参数是否一致？ 与幂等相关的不可变参数组成签名，并保存到数据库，后续可依据判断参数是否变化？">
 <meta name="keywords" content="业务方案,幂等">
 <meta property="og:type" content="article">
 <meta property="og:title" content="关于幂等的若干问题">
 <meta property="og:url" content="http://yoursite.com/2020/07/09/20200709-关于幂等的若干问题/index.html">
 <meta property="og:site_name" content="拉巴力的纸皮箱">
-<meta property="og:description" content="请求已经处理成功，当业务调用方重试时，幂等id不变，但其他参数有变化时。 该返回成功的结果吗？或者说应该对所有的参数进行校验，判断和之前的参数是否一致？">
+<meta property="og:description" content="请求已经处理成功，当业务调用方重试时，幂等id不变，但其他参数有变化时。 该返回成功的结果吗？或者说应该对所有的参数进行校验，判断和之前的参数是否一致？ 与幂等相关的不可变参数组成签名，并保存到数据库，后续可依据判断参数是否变化？">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-08-01T02:26:30.000Z">
+<meta property="og:updated_time" content="2020-11-05T00:02:19.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="关于幂等的若干问题">
-<meta name="twitter:description" content="请求已经处理成功，当业务调用方重试时，幂等id不变，但其他参数有变化时。 该返回成功的结果吗？或者说应该对所有的参数进行校验，判断和之前的参数是否一致？">
+<meta name="twitter:description" content="请求已经处理成功，当业务调用方重试时，幂等id不变，但其他参数有变化时。 该返回成功的结果吗？或者说应该对所有的参数进行校验，判断和之前的参数是否一致？ 与幂等相关的不可变参数组成签名，并保存到数据库，后续可依据判断参数是否变化？">
 
 
 
@@ -365,8 +365,10 @@
 
       
         <ol>
-<li><p>请求已经处理成功，当业务调用方重试时，幂等id不变，但其他参数有变化时。</p>
-<p>该返回成功的结果吗？或者说应该对所有的参数进行校验，判断和之前的参数是否一致？</p>
+<li>请求已经处理成功，当业务调用方重试时，幂等id不变，但其他参数有变化时。<ul>
+<li>该返回成功的结果吗？或者说应该对所有的参数进行校验，判断和之前的参数是否一致？</li>
+<li>与幂等相关的不可变参数组成签名，并保存到数据库，后续可依据判断参数是否变化？</li>
+</ul>
 </li>
 </ol>
 
@@ -486,7 +488,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">47</span>
+                  <span class="site-state-item-count">51</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -499,7 +501,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">48</span>
+                  <span class="site-state-item-count">50</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

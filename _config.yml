@@ -81,9 +81,11 @@ theme: next
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   type: git
-  repository: https://gitee.com/kingson4wu/kingson4wu
-  branch: master
-
+  #repository: https://gitee.com/kingson4wu/kingson4wu
+  #branch: master
+  repository: git@github.com:Kingson4Wu/kingson4wu.github.io.git
+  branch: main
+#https://github.com/hexojs/hexo-deployer-git
 
 live2d:
   enable: true
@@ -121,3 +123,6 @@ sequence:
   options: 
     theme: 
     css_class:  
+
+include:
+  - .nojekyll

@@ -1,7 +1,7 @@
 ---
-title: 20210705-《SRE：Google运维解密》-笔记
+title: 《SRE：Google运维解密》-笔记
 date: 2021-07-05 14:46:52
-tags:[IT-BOOK]
+tags: [IT-BOOK]
 ---
 
 ## 序言

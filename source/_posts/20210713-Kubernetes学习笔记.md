@@ -22,6 +22,7 @@ tags: [IT-BOOK,Kubernetes]
 2. Docker是其目前支持的底层容器技术之一
 3. 服务弹性扩容机制应对突发流量
 4. Kubernetes视为云计算时代的操作系统
+5. k8s解决进程部署的问题，service mesh解决进程通信的问题
 
 ## 核心组件
 

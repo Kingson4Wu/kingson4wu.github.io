@@ -22,7 +22,7 @@ tags: [IT-BOOK,Kubernetes]
 2. Docker是其目前支持的底层容器技术之一
 3. 服务弹性扩容机制应对突发流量
 4. Kubernetes视为云计算时代的操作系统
-5. k8s解决进程部署的问题，service mesh解决进程通信的问题
+5. k8s解决进程（服务）部署、容器编排的问题，service mesh解决进程（服务）通信的问题
 
 ## 核心组件
 
@@ -926,6 +926,8 @@ Istio提供了真正可供操作、非侵入式的方案，相对于Spring Cloud
 	- 第二阶段：DevOps、持续交付、微服务、容器
 	- 第三阶段：DevOps、持续交付、容器、服务网格、微服务、声明式API对云原生的解构
 
++ 云原生应用：docker 应用打包、发布、运行，Kubernetes 服务部署和集群管理，Istio 构建服务治理能力。
+
 ---
 
 ## TODO
@@ -946,4 +948,7 @@ Istio提供了真正可供操作、非侵入式的方案，相对于Spring Cloud
 + [一文详细讲述---Linux网络虚拟化](https://zhuanlan.zhihu.com/p/363293333)
 + [K8S 网络详解 3 CNI 与 CNM 网络模型](https://www.jianshu.com/p/ea77ece7158d)
 + [Kubernetes利用CNI-bridge插件打通网络](https://blog.csdn.net/qq_36183935/article/details/90735049)
++ [60道重要的Kubernetes面试题](https://mp.weixin.qq.com/s/G1kNSmXLaAzAOQ-ja2pKVQ)
++ [一文带你理解云原生](https://mp.weixin.qq.com/s/yX0hgIOLuaKsAcrWfOfcUQ) -- 很全面的总结！！！
++ [一文深入理解 Kubernetes](https://mp.weixin.qq.com/s/OXiqHvWJkmqz7FbclDd1jA)
 

@@ -1,7 +1,7 @@
 ---
 title: 《SRE：Google运维解密》-笔记
 date: 2021-07-05 14:46:52
-tags: [IT-BOOK]
+tags: [IT-BOOK, SRE]
 ---
 
 ## 序言
@@ -1212,3 +1212,4 @@ Chubby全球服务的高可靠性实际上提供了一种安全假象，因为�
 
 + [一文帮你理解 Google SRE 体系](https://mp.weixin.qq.com/s/LITm9MuQ8bs8XRg9QyPeLQ)
 + [我对 SRE 的理解](https://mp.weixin.qq.com/s/GqhKuJ8yzZuLdRzS_MSCcw)
++ [云原生背景运维转型之 SRE 实践](https://mp.weixin.qq.com/s/nD3qFgmNkBfiLA8r7wapfA)

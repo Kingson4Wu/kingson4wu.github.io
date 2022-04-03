@@ -46,3 +46,4 @@ CLOSE_WAIT 表示被动等待程序关闭的网络连接数量
 ### Reference
 + [服务器TIME_WAIT和CLOSE_WAIT详解和解决办法](https://www.cnblogs.com/sunxucool/p/3449068.html)
 + [HttpClient连接池抛出大量ConnectionPoolTimeoutException: Timeout waiting for connection异常排查](https://blog.csdn.net/shootyou/article/details/6615051)
++ [httpclient SocketTimeout ConnectTimeout ConnectionRequestTimeout](https://blog.csdn.net/btlas/article/details/53710854)

@@ -4,6 +4,8 @@ date: 2020-07-06 19:44:20
 tags: [业务方案,ThreadContext,RPC]
 ---
 
+![](photo/Gerrard.jpeg)
+
 在业务开发中，经常会使用RPC请求获取数据。有时候在同一条逻辑链路中，会多次使用RPC返回的数据。
 
 ### 业务场景

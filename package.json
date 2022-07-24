@@ -3,11 +3,11 @@
   "version": "0.0.0",
   "private": true,
   "hexo": {
-    "version": "6.1.0"
+    "version": "6.2.0"
   },
   "dependencies": {
     "gitalk": "^1.7.2",
-    "hexo": "^6.1.0",
+    "hexo": "^6.2.0",
     "hexo-asset-image": "github:CodeFalling/hexo-asset-image",
     "hexo-deployer-git": "^3.0.0",
     "hexo-filter-flowchart": "^1.0.4",
@@ -22,7 +22,7 @@
     "hexo-helper-live2d": "^3.1.1",
     "hexo-renderer-ejs": "^2.0.0",
     "hexo-renderer-marked": "^5.0.0",
-    "hexo-renderer-stylus": "^2.0.1",
+    "hexo-renderer-stylus": "^2.1.0",
     "hexo-renderer-swig": "^1.1.0",
     "hexo-server": "^3.0.0",
     "live2d-widget-model-tororo": "^1.0.5"
@@ -31,9 +31,9 @@
     "ajv": "^8.11.0",
     "ajv-keywords": "^5.1.0",
     "babel-eslint": "^10.1.0",
-    "eslint": "^8.11.0",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
+    "eslint": "^8.20.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "react-flip-move": "^3.0.4"
   }
 }

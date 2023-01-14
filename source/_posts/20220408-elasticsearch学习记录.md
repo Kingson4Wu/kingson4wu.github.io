@@ -701,6 +701,11 @@ https://www.elastic.co/guide/en/elasticsearch/reference/7.10/setup.html
 ```
 ### （2）如果连接的ES是HTTPS的，那么需要安装代理导出的证书
 ```shell keytool -import -alias whistle -keystore cacerts -file rootCA.crt ```
+ 
+## 扩展
+### 基于MySQL如何自动同步到ES
+1. 使用canal监听MySQL的binlog
+2. 也可以考虑使用https://github.com/go-mysql-org/go-mysql-elasticsearch
 
 
 

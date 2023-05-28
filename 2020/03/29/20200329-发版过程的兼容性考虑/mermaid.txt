@@ -1,0 +1,8 @@
+```mermaid
+graph TD
+B(用户) --> |请求| C(nginx)
+C -->|流量| D["service A"]--> G((新代码))
+C -->|流量| E[service B]
+C -->|流量| F[service C]
+```
+

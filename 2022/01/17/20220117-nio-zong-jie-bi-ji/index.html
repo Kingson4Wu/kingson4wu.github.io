@@ -1,0 +1,1296 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/uploads/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="NIO,Netty," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="拉巴力的纸皮箱" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="Java I&#x2F;O   I&#x2F;O NIO    面向流 面向缓冲   阻塞IO 非阻塞IO   无 选择器    I&#x2F;O 与 NIO 一个比较重要的区别是我们使用 I&#x2F;O 的时候往往会引入多线程，每个连接使用一个单独的线程，而 NIO 则是使用单线程或者只使用少量的多线程，每个连接共用一个线程。而由于 NIO 的非阻塞需要一直轮询，比较消耗系统资源，所以异步非阻">
+<meta property="og:type" content="article">
+<meta property="og:title" content="NIO总结笔记">
+<meta property="og:url" content="http://yoursite.com/2022/01/17/20220117-nio-zong-jie-bi-ji/index.html">
+<meta property="og:site_name" content="拉巴力的纸皮箱">
+<meta property="og:description" content="Java I&#x2F;O   I&#x2F;O NIO    面向流 面向缓冲   阻塞IO 非阻塞IO   无 选择器    I&#x2F;O 与 NIO 一个比较重要的区别是我们使用 I&#x2F;O 的时候往往会引入多线程，每个连接使用一个单独的线程，而 NIO 则是使用单线程或者只使用少量的多线程，每个连接共用一个线程。而由于 NIO 的非阻塞需要一直轮询，比较消耗系统资源，所以异步非阻">
+<meta property="og:locale">
+<meta property="article:published_time" content="2022-01-17T06:55:32.000Z">
+<meta property="article:modified_time" content="2023-05-07T14:41:07.767Z">
+<meta property="article:author" content="Kingson Wu">
+<meta property="article:tag" content="NIO">
+<meta property="article:tag" content="Netty">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2022/01/17/20220117-nio-zong-jie-bi-ji/"/>
+
+
+
+
+
+  <title>NIO总结笔记 | 拉巴力的纸皮箱</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">拉巴力的纸皮箱</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/01/17/20220117-nio-zong-jie-bi-ji/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">NIO总结笔记</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-01-17T14:55:32+08:00">
+                2022-01-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2022/01/17/20220117-nio-zong-jie-bi-ji/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2022/01/17/20220117-nio-zong-jie-bi-ji/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="Java-I-x2F-O"><a href="#Java-I-x2F-O" class="headerlink" title="Java I&#x2F;O"></a>Java I&#x2F;O</h2><table>
+<thead>
+<tr>
+<th>I&#x2F;O</th>
+<th>NIO</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>面向流</td>
+<td>面向缓冲</td>
+</tr>
+<tr>
+<td>阻塞IO</td>
+<td>非阻塞IO</td>
+</tr>
+<tr>
+<td>无</td>
+<td>选择器</td>
+</tr>
+</tbody></table>
+<ul>
+<li>I&#x2F;O 与 NIO 一个比较重要的区别是我们使用 I&#x2F;O 的时候往往会引入多线程，每个连接使用一个单独的线程，而 NIO 则是使用单线程或者只使用少量的多线程，每个连接共用一个线程。而由于 NIO 的非阻塞需要一直轮询，比较消耗系统资源，所以异步非阻塞模式 AIO 就诞生了。</li>
+</ul>
+<h3 id="5-种-I-x2F-O模型"><a href="#5-种-I-x2F-O模型" class="headerlink" title="5 种 I&#x2F;O模型"></a>5 种 I&#x2F;O模型</h3><ol>
+<li>blocking I&#x2F;O</li>
+<li>nonblocking I&#x2F;O</li>
+<li>I&#x2F;O multiplexing (select and poll)</li>
+<li>signal driven I&#x2F;O (SIGIO)</li>
+<li>asynchronous I&#x2F;O (the POSIX aio_functions)。</li>
+</ol>
+<ul>
+<li>不同的操作系统对上述模型支持不同，UNIX 支持 IO 多路复用。不同系统叫法不同，freebsd 里面叫 kqueue，Linux 叫 epoll。而 Windows2000 的时候就诞生了 IOCP 用以支持 asynchronous I&#x2F;O。</li>
+<li>Java 是一种跨平台语言，为了支持异步 I&#x2F;O，诞生了 NIO，Java1.4 引入的 NIO1.0 是基于 I&#x2F;O 复用的，它在各个平台上会选择不同的复用方式。Linux 用的 epoll，BSD 上用 kqueue，Windows 上是重叠 I&#x2F;O。</li>
+<li>IO多路复用，Java NIO的核心类库多路复用器Selector就是基于epoll的多路复用技术实现。</li>
+<li>IO复用的系统调用方式：select，pselect，poll，epoll（IO复用属于同步IO）</li>
+<li>同步阻塞BIO，同步非阻塞NIO，异步非阻塞AIO<br> 同步IO和异步IO的区别就在于：数据拷贝的时候进程是否阻塞！<br>阻塞IO和非阻塞IO的区别就在于：应用程序的调用是否立即返回！</li>
+</ul>
+<h3 id="Java-I-x2F-O-的相关方法"><a href="#Java-I-x2F-O-的相关方法" class="headerlink" title="Java I&#x2F;O 的相关方法"></a>Java I&#x2F;O 的相关方法</h3><ol>
+<li>同步并阻塞 (I&#x2F;O 方法)：服务器实现模式为一个连接启动一个线程，每个线程亲自处理 I&#x2F;O 并且一直等待 I&#x2F;O 直到完成，即客户端有连接请求时服务器端就需要启动一个线程进行处理。但是如果这个连接不做任何事情就会造成不必要的线程开销，当然可以通过线程池机制改善这个缺点。I&#x2F;O 的局限是它是面向流的、阻塞式的、串行的一个过程。对每一个客户端的 Socket 连接 I&#x2F;O 都需要一个线程来处理，而且在此期间，这个线程一直被占用，直到 Socket 关闭。在这期间，TCP 的连接、数据的读取、数据的返回都是被阻塞的。也就是说这期间大量浪费了 CPU 的时间片和线程占用的内存资源。此外，每建立一个 Socket 连接时，同时创建一个新线程对该 Socket 进行单独通信 (采用阻塞的方式通信)。这种方式具有很快的响应速度，并且控制起来也很简单。在连接数较少的时候非常有效，但是如果对每一个连接都产生一个线程无疑是对系统资源的一种浪费，如果连接数较多将会出现资源不足的情况；</li>
+<li>同步非阻塞 (NIO 方法)：服务器实现模式为一个请求启动一个线程，每个线程亲自处理 I&#x2F;O，但是另外的线程轮询检查是否 I&#x2F;O 准备完毕，不必等待 I&#x2F;O 完成，即客户端发送的连接请求都会注册到多路复用器上，多路复用器轮询到连接有 I&#x2F;O 请求时才启动一个线程进行处理。NIO 则是面向缓冲区，非阻塞式的，基于选择器的，用一个线程来轮询监控多个数据传输通道，哪个通道准备好了 (即有一组可以处理的数据) 就处理哪个通道。服务器端保存一个 Socket 连接列表，然后对这个列表进行轮询，如果发现某个 Socket 端口上有数据可读时，则调用该 Socket 连接的相应读操作；如果发现某个 Socket 端口上有数据可写时，则调用该 Socket 连接的相应写操作；如果某个端口的 Socket 连接已经中断，则调用相应的析构方法关闭该端口。这样能充分利用服务器资源，效率得到大幅度提高；</li>
+<li>异步非阻塞 (AIO 方法，JDK7 发布)：服务器实现模式为一个有效请求启动一个线程，客户端的 I&#x2F;O 请求都是由操作系统先完成了再通知服务器应用去启动线程进行处理，每个线程不必亲自处理 I&#x2F;O，而是委派操作系统来处理，并且也不需要等待 I&#x2F;O 完成，如果完成了操作系统会另行通知的。该模式采用了 Linux 的 epoll 模型。</li>
+</ol>
+<ul>
+<li>在连接数不多的情况下，传统 I&#x2F;O 模式编写较为容易，使用上也较为简单。但是随着连接数的不断增多，传统 I&#x2F;O 处理每个连接都需要消耗一个线程，而程序的效率，当线程数不多时是随着线程数的增加而增加，但是到一定的数量之后，是随着线程数的增加而减少的。所以传统阻塞式 I&#x2F;O 的瓶颈在于不能处理过多的连接。非阻塞式 I&#x2F;O 出现的目的就是为了解决这个瓶颈。非阻塞 IO 处理连接的线程数和连接数没有联系，例如系统处理 10000 个连接，非阻塞 I&#x2F;O 不需要启动 10000 个线程，你可以用 1000 个，也可以用 2000 个线程来处理。因为非阻塞 IO 处理连接是异步的，当某个连接发送请求到服务器，服务器把这个连接请求当作一个请求“事件”，并把这个“事件”分配给相应的函数处理。我们可以把这个处理函数放到线程中去执行，执行完就把线程归还，这样一个线程就可以异步的处理多个事件。而阻塞式 I&#x2F;O 的线程的大部分时间都被浪费在等待请求上了。</li>
+</ul>
+<h3 id="AIO-相关的类和接口"><a href="#AIO-相关的类和接口" class="headerlink" title="AIO 相关的类和接口"></a>AIO 相关的类和接口</h3><ul>
+<li><code>java.nio.channels.AsynchronousChannel</code>：标记一个 Channel 支持异步 IO 操作；</li>
+<li><code>java.nio.channels.AsynchronousServerSocketChannel</code>：ServerSocket 的 AIO 版本，创建 TCP 服务端，绑定地址，监听端口等；</li>
+<li><code>java.nio.channels.AsynchronousSocketChannel</code>：面向流的异步 Socket Channel，表示一个连接；</li>
+<li><code>java.nio.channels.AsynchronousChannelGroup</code>：异步 Channel 的分组管理，目的是为了资源共享。一个 AsynchronousChannelGroup 绑定一个线程池，这个线程池执行两个任务：处理 IO 事件和派发 CompletionHandler。AsynchronousServerSocketChannel 创建的时候可以传入一个 AsynchronousChannelGroup，那么通过 AsynchronousServerSocketChannel 创建的 AsynchronousSocketChannel 将同属于一个组，共享资源；</li>
+<li><code>java.nio.channels.CompletionHandler</code>：异步 IO 操作结果的回调接口，用于定义在 IO 操作完成后所作的回调工作。AIO 的 API 允许两种方式来处理异步操作的结果：返回的 Future 模式或者注册 CompletionHandler，推荐用 CompletionHandler 的方式，这些 handler 的调用是由 AsynchronousChannelGroup 的线程池派发的。这里线程池的大小是性能的关键因素。</li>
+</ul>
+<h3 id="Reactor线程模型"><a href="#Reactor线程模型" class="headerlink" title="Reactor线程模型"></a>Reactor线程模型</h3><p>常用的Reactor线程模型有三种，分别如下：</p>
+<ol>
+<li>Reactor单线程模型；</li>
+<li>Reactor多线程模型；</li>
+<li>主从Reactor多线程模型    <ul>
+<li>Netty的线程模型并非固定不变，通过在启动辅助类中创建不同的EventLoopGroup实例并通过适当的参数配置，就可以支持上述三种Reactor线程模型。</li>
+</ul>
+</li>
+</ol>
+<h3 id="Netty线程模型"><a href="#Netty线程模型" class="headerlink" title="Netty线程模型"></a>Netty线程模型</h3><ul>
+<li><a target="_blank" rel="noopener" href="http://www.infoq.com/cn/articles/netty-threading-model">http://www.infoq.com/cn/articles/netty-threading-model</a></li>
+<li>主从Reactor线程模型</li>
+<li>Netty线程开发最佳实践<ul>
+<li>2.4.1. 时间可控的简单业务直接在IO线程上处理<br>  如果业务非常简单，执行时间非常短，不需要与外部网元交互、访问数据库和磁盘，不需要等待其它资源，则建议直接在业务ChannelHandler中执行，不需要再启业务的线程或者线程池。避免线程上下文切换，也不存在线程并发问题。</li>
+<li>2.4.2. 复杂和时间不可控业务建议投递到后端业务线程池统一处理<br>  对于此类业务，不建议直接在业务ChannelHandler中启动线程或者线程池处理，建议将不同的业务统一封装成Task，统一投递到后端的业务线程池中进行处理。<br>  过多的业务ChannelHandler会带来开发效率和可维护性问题，不要把Netty当作业务容器，对于大多数复杂的业务产品，仍然需要集成或者开发自己的业务容器，做好和Netty的架构分层。</li>
+<li>2.4.3. 业务线程避免直接操作ChannelHandler<br>  对于ChannelHandler，IO线程和业务线程都可能会操作，因为业务通常是多线程模型，这样就会存在多线程操作ChannelHandler。为了尽量避免多线程并发问题，建议按照Netty自身的做法，通过将操作封装成独立的Task由NioEventLoop统一执行，而不是业务线程直接操作<br>  <code>ctx.executor().execute(new Runnable()&#123;&#125;)</code><br>  如果你确认并发访问的数据或者并发操作是安全的，则无需多此一举，这个需要根据具体的业务场景进行判断，灵活处理。</li>
+</ul>
+</li>
+</ul>
+<h3 id="Netty的“零拷贝”"><a href="#Netty的“零拷贝”" class="headerlink" title="Netty的“零拷贝”"></a>Netty的“零拷贝”</h3><ul>
+<li>Netty的接收和发送ByteBuffer采用DIRECT BUFFERS，使用堆外直接内存进行Socket读写，不需要进行字节缓冲区的二次拷贝。</li>
+<li>Netty提供了组合Buffer对象，可以聚合多个ByteBuffer对象，用户可以像操作一个Buffer那样方便的对组合Buffer进行操作，避免了传统通过内存拷贝的方式将几个小Buffer合并成一个大的Buffer。</li>
+<li>Netty的文件传输采用了transferTo方法，它可以直接将文件缓冲区的数据发送到目标Channel，避免了传统通过循环write方式导致的内存拷贝问题。</li>
+</ul>
+<h3 id="Netty-灵活的TCP参数配置能力"><a href="#Netty-灵活的TCP参数配置能力" class="headerlink" title="Netty - 灵活的TCP参数配置能力"></a>Netty - 灵活的TCP参数配置能力</h3><ul>
+<li>SO_RCVBUF和SO_SNDBUF：通常建议值为128K或者256K；</li>
+<li>SO_TCPNODELAY：NAGLE算法通过将缓冲区内的小封包自动相连，组成较大的封包，阻止大量小封包的发送阻塞网络，从而提高网络应用效率。但是对于时延敏感的应用场景需要关闭该优化算法；</li>
+<li>软中断：如果Linux内核版本支持RPS（2.6.35以上版本），开启RPS后可以实现软中断，提升网络吞吐量。RPS根据数据包的源地址，目的地址以及目的和源端口，计算出一个hash值，然后根据这个hash值来选择软中断运行的cpu，从上层来看，也就是说将每个连接和cpu绑定，并通过这个hash值，来均衡软中断在多个cpu上，提升网络并行处理性能。</li>
+</ul>
+<h3 id="心跳实现"><a href="#心跳实现" class="headerlink" title="心跳实现"></a>心跳实现</h3><ul>
+<li>使用TCP协议层的Keeplive机制，但是该机制默认的心跳时间是2小时，依赖操作系统实现不够灵活</li>
+<li>应用层实现自定义心跳机制，比如Netty实现心跳机制<ul>
+<li>服务端添加IdleStateHandler心跳检测处理器，并添加自定义处理Handler类实现userEventTriggered()方法作为超时事件的逻辑处理</li>
+</ul>
+</li>
+</ul>
+<h3 id="Netty中比较常用的帧解码器"><a href="#Netty中比较常用的帧解码器" class="headerlink" title="Netty中比较常用的帧解码器"></a>Netty中比较常用的帧解码器</h3><ol>
+<li>固定长度帧解码器 - FixedLengthFrameDecoder<ul>
+<li>适用场景：每个上层数据包的长度，都是固定的，比如 100。在这种场景下，只需要把这个解码器加到 pipeline 中，Netty 会把底层帧，拆分成一个个长度为 100 的数据包 (ByteBuf)，发送到下一个 channelHandler入站处理器。</li>
+</ul>
+</li>
+<li>行分割帧解码器 - LineBasedFrameDecoder<ul>
+<li>适用场景：每个上层数据包，使用换行符或者回车换行符做为边界分割符。发送端发送的时候，每个数据包之间以换行符&#x2F;回车换行符作为分隔。在这种场景下，只需要把这个解码器加到 pipeline 中，Netty 会使用换行分隔符，把底层帧分割成一个一个完整的应用层数据包，发送到下一站。前面的例子，已经对这个解码器进行了演示。</li>
+</ul>
+</li>
+<li>自定义分隔符帧解码器 - DelimiterBasedFrameDecoder<ul>
+<li>DelimiterBasedFrameDecoder 是LineBasedFrameDecoder的通用版本。不同之处在于，这个解码器，可以自定义分隔符，而不是局限于换行符。如果使用这个解码器，在发送的时候，末尾必须带上对应的分隔符。</li>
+</ul>
+</li>
+<li>自定义长度帧解码器 - LengthFieldBasedFrameDecoder<ul>
+<li>这是一种基于灵活长度的解码器。在数据包中，加了一个长度字段（长度域），保存上层包的长度。解码的时候，会按照这个长度，进行上层ByteBuf应用包的提取。</li>
+<li>LengthFieldPrepender(编码)：如果协议中的第一个字段为长度字段，netty提供了LengthFieldPrepender编码器，它可以计算当前待发送消息的二进制字节长度，将该长度添加到ByteBuf的缓冲区头中</li>
+</ul>
+</li>
+</ol>
+<h3 id="Netty-API"><a href="#Netty-API" class="headerlink" title="Netty API"></a>Netty API</h3><h4 id="JDK-ByteBuffer-VS-Netty-ByteBuf"><a href="#JDK-ByteBuffer-VS-Netty-ByteBuf" class="headerlink" title="JDK ByteBuffer VS Netty ByteBuf"></a>JDK ByteBuffer VS Netty ByteBuf</h4><ul>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/u013828625/article/details/79845512">https://blog.csdn.net/u013828625/article/details/79845512</a></li>
+<li>Netty中的ByteBuf则完全对JDK中的ByteBuffer的缺点进行了改进</li>
+<li>网络数据的基本单位永远是 byte(字节)。Java NIO 提供 ByteBuffer 作为字节的容器，但该类过于复杂，有点难用。ByteBuf是Netty当中的最重要的工具类，它与JDK的ByteBuffer原理基本上相同，也分为堆内与堆外俩种类型，但是ByteBuf做了极大的优化，具有更简单的API，更多的工具方法和优秀的内存池设计。</li>
+<li>ByteBuf 维护俩不同索引：一个用于读取，一个用于写入：从 ByteBuf 读取时，其 readerIndex 将会被递增已经被读取的字节数；当写入 ByteBuf 时，writerIndex 也会被递增</li>
+</ul>
+<h4 id="SimpleChannelInboundHandler"><a href="#SimpleChannelInboundHandler" class="headerlink" title="SimpleChannelInboundHandler"></a>SimpleChannelInboundHandler</h4><ul>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/ffaiss/p/9843442.html">SimpleChannelInboundHandler与ChannelInboundHandlerAdapter</a></li>
+<li><a target="_blank" rel="noopener" href="https://developer.aliyun.com/article/97235">Netty随记之ChannelInboundHandlerAdapter、SimpleChannelInboundHandler</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/lemon-flm/p/7813914.html">Netty——高级发送和接收数据handler处理器</a></li>
+<li>每一个Handler都一定会处理出站或者入站（也可能两者都处理）数据，例如对于入站的Handler可能会继承SimpleChannelInboundHandler或者ChannelInboundHandlerAdapter，而SimpleChannelInboundHandler又是继承于ChannelInboundHandlerAdapter，最大的区别在于SimpleChannelInboundHandler会对没有外界引用的资源进行一定的清理，并且入站的消息可以通过泛型来规定。</li>
+<li>对于两者关系：<br><code>public abstract class SimpleChannelInboundHandler&lt;I&gt; extends ChannelInboundHandlerAdapter</code></li>
+<li><code>public void channelRead(ChannelHandlerContext ctx, Object msg) </code> , msg 是ByteBuf类型（未decode转化类型的情况），使用 SimpleChannelInboundHandler 会被自动释放</li>
+</ul>
+<ol>
+<li>ChannelInboundHandlerAdapter<ul>
+<li>ChannelInboundHandlerAdapter是ChannelInboundHandler的一个简单实现，默认情况下不会做任何处理，只是简单的将操作通过fire*方法传递到ChannelPipeline中的下一个ChannelHandler中让链中的下一个ChannelHandler去处理。</li>
+<li>需要注意的是信息经过channelRead方法处理之后不会自动释放（因为信息不会被自动释放所以能将消息传递给下一个ChannelHandler处理）。</li>
+</ul>
+</li>
+<li>SimpleChannelInboundHandler<ul>
+<li>SimpleChannelInboundHandler支持泛型的消息处理，默认情况下消息处理完将会被自动释放，无法提供fire*方法传递给ChannelPipeline中的下一个ChannelHandler,如果想要传递给下一个ChannelHandler需要调用ReferenceCountUtil#retain方法。</li>
+<li>channelRead0方法在将来将会重命名为messageReceived</li>
+</ul>
+</li>
+</ol>
+<h4 id="channelRead-和channelReadComplete"><a href="#channelRead-和channelReadComplete" class="headerlink" title="channelRead()和channelReadComplete()"></a>channelRead()和channelReadComplete()</h4><ul>
+<li><a target="_blank" rel="noopener" href="https://segmentfault.com/q/1010000018753423">channelRead()和channelReadComplete() 方法的区别是什么？</a></li>
+<li>channelRead表示接收消息，可以看到msg转换成了ByteBuf，然后打印，也就是把Client传过来的消息打印了一下，你会发现每次打印完后，channelReadComplete也会调用，如果你试着传一个超长的字符串过来，超过1024个字母长度，你会发现channelRead会调用多次，而channelReadComplete只调用一次。</li>
+</ul>
+<h4 id="ctx-write-vd-ctx-channel-write"><a href="#ctx-write-vd-ctx-channel-write" class="headerlink" title="ctx.write() vd ctx.channel().write()"></a>ctx.write() vd ctx.channel().write()</h4><ul>
+<li>Any difference between ctx.write() and ctx.channel().write() in netty?:<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/20366418/any-difference-between-ctx-write-and-ctx-channel-write-in-netty">https://stackoverflow.com/questions/20366418/any-difference-between-ctx-write-and-ctx-channel-write-in-netty</a></li>
+<li>Yes there is… Channel.write(..) always start from the tail of the ChannelPipeline and so pass through all the ChannelOutboundHandlers. ChannelHandlerContext.write(…) starts from the current position of the ChannelHandler which is bound to the ChannelHandlerContext and so only pass those ChannelOutboundHandlers that are in front of it.</li>
+</ul>
+<h4 id="自定义消息协议"><a href="#自定义消息协议" class="headerlink" title="自定义消息协议"></a>自定义消息协议</h4><ul>
+<li><p>len : 表示消息的长度,通常用4个字节保存</p>
+</li>
+<li><p>head : 消息头部</p>
+</li>
+<li><p>body : 消息内容</p>
+</li>
+<li><p>在实际的项目中,消息格式可能会增加一些标志,例如,开始标记,结束标志,消息序列号,消息的协议类型(json或者二进制等)</p>
+</li>
+</ul>
+<h3 id="Netty-没用JDK1-7的AIO"><a href="#Netty-没用JDK1-7的AIO" class="headerlink" title="Netty 没用JDK1.7的AIO"></a>Netty 没用JDK1.7的AIO</h3><ul>
+<li>为什么Netty不用AIO而用NIO?</li>
+</ul>
+<pre>
+According to the book the main reasons were:
+1. Not faster than NIO (epoll) on unix systems (which is true)
+There is no daragram suppport
+2. Unnecessary threading model (too much abstraction without usage)
+3. I agree that AIO will not easily replace NIO, but it is useful for windows developers nonetheless.
+<https: 2515 github.com netty issues>
+We obviously did not consider Windows as a serious platform so far, and that's why we were neglecting NIO.2 AIO API which was implemented using IOCP on Windows. (On Linux, it wasn't any faster because it was using the same OS facility - epoll.)
+</https:></pre>
+
+<h3 id="Netty-Epoll"><a href="#Netty-Epoll" class="headerlink" title="Netty-Epoll"></a>Netty-Epoll</h3><ul>
+<li>Selector 实现原理:<a target="_blank" rel="noopener" href="http://www.jianshu.com/p/2b71ea919d49">http://www.jianshu.com/p/2b71ea919d49</a></li>
+</ul>
+<ul>
+<li>epoll的两种工作模式：<br>  + LT：level-trigger，水平触发模式，只要某个socket处于readable&#x2F;writable状态，无论什么时候进行epoll_wait都会返回该socket。<br>  当epoll_wait检测到描述符事件发生并将此事件通知应用程序，应用程序可以不立即处理该事件。下次调用epoll_wait时，会再次响应应用程序并通知此事件。<br>  + ET：edge-trigger，边缘触发模式，只有某个socket从unreadable变为readable或从unwritable变为writable时，epoll_wait才会返回该socket。<br>  当epoll_wait检测到描述符事件发生并将此事件通知应用程序，应用程序必须立即处理该事件。如果不处理，下次调用epoll_wait时，不会再次响应应用程序并通知此事件。<br>  ET模式在很大程度上减少了epoll事件被重复触发的次数，因此效率要比LT模式高。epoll工作在ET模式的时候，必须使用非阻塞套接口，以避免由于一个文件句柄的阻塞读&#x2F;阻塞写操作把处理多个文件描述符的任务饿死。<ul>
+<li>在Linux系统中JDK NIO使用的是 LT ，而Netty epoll使用的是 ET。</li>
+</ul>
+</li>
+</ul>
+<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><ul>
+<li>JDK中有自带的ByteBuffer类，但是netty中的 ByteBuf 算是对Byte Buffer的重新实现。他们没有关联关系。</li>
+<li>netty推荐使用<code>io.netty.buffer.Unpooled</code>来进行Buff的创建工作。Unpooled是一个工具类，可以为ByteBuf分配空间、拷贝或者封装操作</li>
+<li>DirectBuffer：使用 DirectBuffer 是一种更加接近系统底层的方法，所以，它的速度比普通的 ByteBuffer 更快。DirectBuffer 相对于 ByteBuffer 而言，读写访问速度快很多，但是创建和销毁 DirectBuffer 的花费却比 ByteBuffer 高。</li>
+<li>Netty的并发处理能力主要体现在两个方面：<ol>
+<li>利用Java语言自身的多线程机制实现消息的并行处理；</li>
+<li>利用Java NIO类库的Selector实现多路复用，一个NIO线程可以同时并发处理成百上千个通信链路，实现海量客户端的并发接入和处理。</li>
+</ol>
+</li>
+<li>netty.pipeline执行顺序：在给定的示例配置中，当事件进入到入站时，处理程序计算顺序为(代码行：从上到下)。当一个事件出站时，顺序是(代码行：从下到上)。</li>
+</ul>
+<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><ul>
+<li><a target="_blank" rel="noopener" href="http://www.infoq.com/cn/articles/netty-high-performance">Netty系列之Netty高性能之道</a>  </li>
+<li><a target="_blank" rel="noopener" href="http://blog.csdn.net/linsongbin1/article/details/77915686">Netty实战-自定义解码器处理半包消息</a></li>
+<li>TODO nio-demo&#x2F;docs</li>
+<li>TODO nio_demo&#x2F;netty-definitive-guide&#x2F;netty-definitive-guide-notes.md</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/NIO/" rel="tag"># NIO</a>
+          
+            <a href="/tags/Netty/" rel="tag"># Netty</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2022/01/14/20220114-ru-he-zuo-shu-ju-ku-qian-yi/" rel="next" title="如何做数据库迁移">
+                <i class="fa fa-chevron-left"></i> 如何做数据库迁移
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2022/02/08/20220208-java11-ji-chu-yuan-li-he-shi-jian/" rel="prev" title="Java11基础原理和实践">
+                Java11基础原理和实践 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.png"
+                alt="" />
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+<a href="/archives/">                
+<!--<a href="/archives/%7C%7C%20archive">-->
+              
+                  <span class="site-state-item-count">110</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">122</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Java-I-x2F-O"><span class="nav-number">1.</span> <span class="nav-text">Java I&#x2F;O</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E7%A7%8D-I-x2F-O%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.1.</span> <span class="nav-text">5 种 I&#x2F;O模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java-I-x2F-O-%E7%9A%84%E7%9B%B8%E5%85%B3%E6%96%B9%E6%B3%95"><span class="nav-number">1.2.</span> <span class="nav-text">Java I&#x2F;O 的相关方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AIO-%E7%9B%B8%E5%85%B3%E7%9A%84%E7%B1%BB%E5%92%8C%E6%8E%A5%E5%8F%A3"><span class="nav-number">1.3.</span> <span class="nav-text">AIO 相关的类和接口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Reactor%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.4.</span> <span class="nav-text">Reactor线程模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Netty%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.5.</span> <span class="nav-text">Netty线程模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Netty%E7%9A%84%E2%80%9C%E9%9B%B6%E6%8B%B7%E8%B4%9D%E2%80%9D"><span class="nav-number">1.6.</span> <span class="nav-text">Netty的“零拷贝”</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Netty-%E7%81%B5%E6%B4%BB%E7%9A%84TCP%E5%8F%82%E6%95%B0%E9%85%8D%E7%BD%AE%E8%83%BD%E5%8A%9B"><span class="nav-number">1.7.</span> <span class="nav-text">Netty - 灵活的TCP参数配置能力</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BF%83%E8%B7%B3%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.8.</span> <span class="nav-text">心跳实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Netty%E4%B8%AD%E6%AF%94%E8%BE%83%E5%B8%B8%E7%94%A8%E7%9A%84%E5%B8%A7%E8%A7%A3%E7%A0%81%E5%99%A8"><span class="nav-number">1.9.</span> <span class="nav-text">Netty中比较常用的帧解码器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Netty-API"><span class="nav-number">1.10.</span> <span class="nav-text">Netty API</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#JDK-ByteBuffer-VS-Netty-ByteBuf"><span class="nav-number">1.10.1.</span> <span class="nav-text">JDK ByteBuffer VS Netty ByteBuf</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SimpleChannelInboundHandler"><span class="nav-number">1.10.2.</span> <span class="nav-text">SimpleChannelInboundHandler</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#channelRead-%E5%92%8CchannelReadComplete"><span class="nav-number">1.10.3.</span> <span class="nav-text">channelRead()和channelReadComplete()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ctx-write-vd-ctx-channel-write"><span class="nav-number">1.10.4.</span> <span class="nav-text">ctx.write() vd ctx.channel().write()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E6%B6%88%E6%81%AF%E5%8D%8F%E8%AE%AE"><span class="nav-number">1.10.5.</span> <span class="nav-text">自定义消息协议</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Netty-%E6%B2%A1%E7%94%A8JDK1-7%E7%9A%84AIO"><span class="nav-number">1.11.</span> <span class="nav-text">Netty 没用JDK1.7的AIO</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Netty-Epoll"><span class="nav-number">1.12.</span> <span class="nav-text">Netty-Epoll</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B6%E4%BB%96"><span class="nav-number">1.13.</span> <span class="nav-text">其他</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Reference"><span class="nav-number">1.14.</span> <span class="nav-text">Reference</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kingson Wu</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'LR34RG5CRdFgzK8ijwc5Hq0B-gzGzoHsz',
+        appKey: 'qqtIlANIluHpfpOnxTUnYrku',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"model":{"jsonPath":"/live2dw/assets/tororo.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"log":false});</script></body>
+</html>

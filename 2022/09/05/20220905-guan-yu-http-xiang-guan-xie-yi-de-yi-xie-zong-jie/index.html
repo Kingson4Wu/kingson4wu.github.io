@@ -1,0 +1,1343 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/uploads/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="HTTP,HTTP/3,HTTP/2,HTTPS," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="拉巴力的纸皮箱" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="粗浅概括 HTTP - TCP HTTPS - TCP + TLS  SPDY -&gt; TCP + TLS + 多路复用、头部压缩等特性 –&gt; 发展成 HTTP&#x2F;2 SPDY是Speedy的音，是更快的意思   HTTP&#x2F;2 - TCP + TLS(理论上可选) + 多路复用、头部压缩等特性 QUIC - UDP –&gt; 发展成 HTTP&#x2F;3 HTTP&amp;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关于HTTP相关协议的一些总结">
+<meta property="og:url" content="http://yoursite.com/2022/09/05/20220905-guan-yu-http-xiang-guan-xie-yi-de-yi-xie-zong-jie/index.html">
+<meta property="og:site_name" content="拉巴力的纸皮箱">
+<meta property="og:description" content="粗浅概括 HTTP - TCP HTTPS - TCP + TLS  SPDY -&gt; TCP + TLS + 多路复用、头部压缩等特性 –&gt; 发展成 HTTP&#x2F;2 SPDY是Speedy的音，是更快的意思   HTTP&#x2F;2 - TCP + TLS(理论上可选) + 多路复用、头部压缩等特性 QUIC - UDP –&gt; 发展成 HTTP&#x2F;3 HTTP&amp;">
+<meta property="og:locale">
+<meta property="article:published_time" content="2022-09-05T14:01:12.000Z">
+<meta property="article:modified_time" content="2023-05-07T14:41:07.789Z">
+<meta property="article:author" content="Kingson Wu">
+<meta property="article:tag" content="HTTP">
+<meta property="article:tag" content="HTTP&#x2F;3">
+<meta property="article:tag" content="HTTP&#x2F;2">
+<meta property="article:tag" content="HTTPS">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2022/09/05/20220905-guan-yu-http-xiang-guan-xie-yi-de-yi-xie-zong-jie/"/>
+
+
+
+
+
+  <title>关于HTTP相关协议的一些总结 | 拉巴力的纸皮箱</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">拉巴力的纸皮箱</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/09/05/20220905-guan-yu-http-xiang-guan-xie-yi-de-yi-xie-zong-jie/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">关于HTTP相关协议的一些总结</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-09-05T22:01:12+08:00">
+                2022-09-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2022/09/05/20220905-guan-yu-http-xiang-guan-xie-yi-de-yi-xie-zong-jie/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2022/09/05/20220905-guan-yu-http-xiang-guan-xie-yi-de-yi-xie-zong-jie/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="粗浅概括"><a href="#粗浅概括" class="headerlink" title="粗浅概括"></a>粗浅概括</h2><ul>
+<li>HTTP - TCP</li>
+<li>HTTPS - TCP + TLS </li>
+<li>SPDY -&gt; TCP + TLS + 多路复用、头部压缩等特性 –&gt; 发展成 HTTP&#x2F;2<ul>
+<li>SPDY是Speedy的音，是更快的意思</li>
+</ul>
+</li>
+<li>HTTP&#x2F;2 - TCP + TLS(理论上可选) + 多路复用、头部压缩等特性</li>
+<li>QUIC - UDP –&gt; 发展成 HTTP&#x2F;3</li>
+<li>HTTP&#x2F;3 - UDP</li>
+</ul>
+<h2 id="其他基础"><a href="#其他基础" class="headerlink" title="其他基础"></a>其他基础</h2><ul>
+<li>RTT(Round-Trip Time): 往返时延。在计算机网络中它是一个重要的性能指标，表示从发送端发送数据开始，到发送端收到来自接收端的确认（接收端收到数据后便立即发送确认），总共经历的时延。</li>
+</ul>
+<h2 id="HTTP"><a href="#HTTP" class="headerlink" title="HTTP"></a>HTTP</h2><ul>
+<li>请求-响应模式（半双工）</li>
+</ul>
+<ul>
+<li>安全问题</li>
+</ul>
+<h3 id="“队头堵塞”-（线头阻塞）（Head-of-line-blocking）（HOLB）"><a href="#“队头堵塞”-（线头阻塞）（Head-of-line-blocking）（HOLB）" class="headerlink" title="“队头堵塞” （线头阻塞）（Head-of-line blocking）（HOLB）"></a>“队头堵塞” （线头阻塞）（Head-of-line blocking）（HOLB）</h3><ul>
+<li>HTTP 1.1 默认启用长TCP连接，但所有的请求-响应都是按序进行的(串行发送和接收)</li>
+<li>HTTP 1.1 的管道机制：客户端可以同时发送多个请求，但服务端也需要按请求的顺序依次给出响应的；</li>
+<li>客户端在未收到之前所发出所有请求的响应之前，将会阻塞后面的请求(排队等待)，这称为”队头堵塞”</li>
+</ul>
+<h3 id="管道机制-Pipelining"><a href="#管道机制-Pipelining" class="headerlink" title="管道机制(Pipelining)"></a>管道机制(Pipelining)</h3><ul>
+<li>在管道机制下，服务端如何控制按顺序返回响应的？<ul>
+<li>HTTP是应用层协议，当然由各个应用程序按照规范自行实现了</li>
+<li>比如使用nginx，或jetty等，若服务端需要支持管道机制，都要底层逻辑自行实现，避免暴露给业务层</li>
+<li>那么因为要按顺序响应，那么当最前的请求的处理较慢时，同样会对服务端产生阻塞。</li>
+</ul>
+</li>
+<li>Pipelining需要客户端和服务端同时支持</li>
+<li>几乎所有的浏览器都是默认关闭或者不支持Pipelining的：对性能的提高有限、大文件会阻塞优先级更高的小文件等</li>
+<li>只有GET和HEAD要求可以进行管线化，而POST则有所限制</li>
+</ul>
+<h2 id="HTTPS"><a href="#HTTPS" class="headerlink" title="HTTPS"></a>HTTPS</h2><ul>
+<li><p>HTTPS（HTTP over TLS&#x2F;SSL）,TLS&#x2F;SSL(会话层)</p>
+</li>
+<li><p>SSL（Secure Socket Layer）是安全套接层，TLS（Transport Layer Security）是传输层安全协议，建立在SSL3.0协议规范，是 SSL3.0 的后续版本。</p>
+</li>
+<li><p>TLS可以用在TCP上，也可以用在无连接的UDP报文上。协议规定了身份认证、算法协商、密钥交换等的实现。</p>
+</li>
+<li><p>SSL是TLS的前身，现在已不再更新</p>
+</li>
+</ul>
+<h3 id="jks、pfx和cer-证书文件"><a href="#jks、pfx和cer-证书文件" class="headerlink" title="jks、pfx和cer 证书文件"></a>jks、pfx和cer 证书文件</h3><ul>
+<li>jks是JAVA的keytools证书工具支持的证书私钥格式。</li>
+<li>pfx是微软支持的私钥格式。</li>
+<li>cer是证书的公钥。</li>
+</ul>
+<h3 id="权威证书颁发的公钥匙一般是预装的"><a href="#权威证书颁发的公钥匙一般是预装的" class="headerlink" title="权威证书颁发的公钥匙一般是预装的"></a>权威证书颁发的公钥匙一般是预装的</h3><ul>
+<li><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/yungyu16/p/13329305.html">SSL&#x2F;TLS协议详解(中)——证书颁发机构</a></p>
+</li>
+<li><p>当我们安装浏览器或操作系统时，将会附有一组证书颁发机构，例如DigiCert。当浏览器自带DigiCert时，这意味着浏览器具有DigiCert的公钥，网站可以向DigiCert索取证书和签名。因此，DigiCert将使用DigiCerts私钥在服务器证书上进行加密签名。当我们发起连接时，服务器将发送嵌入了其公钥的证书。由于浏览器具有DigiCert的公钥，因此可以在服务器证书上验证DigiCert的签名，同时也说明证书上写的服务器的公钥是可信的。</p>
+</li>
+<li><p>根据RSA的加密原理，如果用CA的公钥解密成功，说明该证书的确是用CA的私钥加密的，可以认为被验证方是可信的。</p>
+</li>
+</ul>
+<h2 id="HTTP-x2F-2"><a href="#HTTP-x2F-2" class="headerlink" title="HTTP&#x2F;2"></a>HTTP&#x2F;2</h2><ul>
+<li>全双工</li>
+<li>二进制格式传输、多路复用、header压缩、服务端推送、优先级和依赖关系、重置、流量控制</li>
+</ul>
+<h3 id="多路复用-Multiplexing"><a href="#多路复用-Multiplexing" class="headerlink" title="多路复用(Multiplexing)"></a>多路复用(Multiplexing)</h3><ul>
+<li>客户端发送多个请求和服务端给出多个响应的顺序不受限制, 避免”队头堵塞” </li>
+<li>每个数据流都有一个唯一的编号，从而让请求和响应对应起来</li>
+<li>客户端和服务器 可以发生信号取消某个数据流，并保持这个连接</li>
+<li>客户端还可以提升提升某个数据流优先级</li>
+</ul>
+<h3 id="加密"><a href="#加密" class="headerlink" title="加密"></a>加密</h3><ul>
+<li>HTTP&#x2F;2 沒规定一定要使用加密（例如 SSL），但目前大部分浏览器的 HTTP&#x2F;2 都需要在 HTTPs上运行</li>
+<li>gRPC 虽然使用 HTTP&#x2F;2，但默认并没有需要配置加密证书</li>
+</ul>
+<h3 id="重用连接（针对浏览器）"><a href="#重用连接（针对浏览器）" class="headerlink" title="重用连接（针对浏览器）"></a>重用连接（针对浏览器）</h3><ul>
+<li>使用HTTP1.1协议，浏览器为了快速，针对同一域名设置了一定的并发数，稍微加快速度</li>
+<li>使用HTTP&#x2F;2，浏览器针对同一个域名的资源，只建立一个tcp连接通道</li>
+</ul>
+<h3 id="头部压缩"><a href="#头部压缩" class="headerlink" title="头部压缩"></a>头部压缩</h3><ul>
+<li>头部压缩也存在一些缺点 ，不管是Client还是Server，都要维护索引表，以确定每个索引值对应HTTP header的信息，通过占用更多内存换取数据量传输的减少（空间换时间）。</li>
+</ul>
+<h3 id="推送"><a href="#推送" class="headerlink" title="推送"></a>推送</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/OyogMagLsm2jh2pgg0Symw">Chrome将禁用HTTP&#x2F;2服务器推送（Server Push）支持</a><ul>
+<li>这功能逻辑本身就有问题，比如资源存放在单个业务服务器上，并行推送多个静态资源只会降低响应速度，性能不升反降。而对于前后端分离的业务来说，HTTP&#x2F;2 本身就支持多路复用，server push 只能稍微降低浏览器解析 html 的时间，对现代浏览器来说性能提升可以忽略不计。</li>
+</ul>
+</li>
+</ul>
+<h2 id="HTTP-x2F-3"><a href="#HTTP-x2F-3" class="headerlink" title="HTTP&#x2F;3"></a>HTTP&#x2F;3</h2><ul>
+<li><p>HTTP&#x2F;1.x 有连接无法复用、队头阻塞、协议开销大和安全因素等多个缺陷</p>
+</li>
+<li><p>HTTP&#x2F;2 通过多路复用、二进制流、Header 压缩等等技术，极大地提高了性能，但是还是存在着问题的</p>
+</li>
+<li><p>QUIC 基于 UDP 实现，是 HTTP&#x2F;3 中的底层支撑协议，该协议基于 UDP，又取了 TCP 中的精华，实现了即快又可靠的协议</p>
+</li>
+<li><p>HTTP3.0，也称作HTTP over QUIC。HTTP3.0的核心是QUIC(读音quick)协议，由Google在2015年提出的SPDY v3演化而来的新协议，传统的HTTP协议是基于传输层TCP的协议，而QUIC是基于传输层UDP上的协议，可以定义成：HTTP3.0基于UDP的安全可靠的HTTP2.0协议。</p>
+</li>
+<li><p>在网络条件较差的情况下，HTTP&#x2F;3在增强网页浏览体验方面的效果非常好 </p>
+</li>
+<li><p>TCP从来就不适合处理有损无线环境中的数据传输</p>
+</li>
+<li><p>TCP中的行头阻塞</p>
+</li>
+</ul>
+<h3 id="TCP的限制"><a href="#TCP的限制" class="headerlink" title="TCP的限制"></a>TCP的限制</h3><ol>
+<li>TCP可能会间歇性地挂起数据传输<ul>
+<li>TCP流的行头阻塞（HoL）: 序列号较低的数据段丢包问题，导致阻塞</li>
+</ul>
+</li>
+<li>TCP不支持流级复用</li>
+<li>TCP会产生冗余通信<ul>
+<li>TCP连接握手会有冗余的消息交换序列，即使是与已知主机建立的连接也是如此。</li>
+</ul>
+</li>
+</ol>
+<h3 id="新特性"><a href="#新特性" class="headerlink" title="新特性"></a>新特性</h3><ul>
+<li>选择UDP作为底层传输层协议。抛弃TCP的缺点（TCP传输确认、重传慢启动等），同时。此外QUIC是用户层协议，不需要每次协议升级时修改内核；</li>
+<li>流复用和流控：解决了行头阻塞问题。</li>
+<li>灵活的拥塞控制机制、更好的错误处理能力、更快的握手</li>
+<li>新的HTTP头压缩机制，称为QPACK，是对HTTP&#x2F;2中使用的HPACK的增强（QUIC流是不按顺序传递的，在不同的流中可能包含不同的HTTP头）</li>
+</ul>
+<h3 id="采用HTTP-x2F-3的限制"><a href="#采用HTTP-x2F-3的限制" class="headerlink" title="采用HTTP&#x2F;3的限制"></a>采用HTTP&#x2F;3的限制</h3><ul>
+<li>不仅涉及到应用层的变化，还涉及到底层传输层的变化</li>
+<li>UDP会话会被防火墙的默认数据包过滤策略所影响</li>
+<li>中间层，如防火墙、代理、NAT设备等需要兼容</li>
+<li>需迫使中间层厂商标准化</li>
+<li>HTTP&#x2F;3在现有的UDP之上，以QUIC的形式在传输层处理，增加了HTTP&#x2F;3在整个协议栈中的占用空间。这使得HTTP&#x2F;3较为笨重，不适合某些IoT设备</li>
+<li>NGINX和Apache等主流web服务器需要支持</li>
+</ul>
+<h2 id="Q-amp-A"><a href="#Q-amp-A" class="headerlink" title="Q&amp;A"></a>Q&amp;A</h2><h3 id="HTTP-与-TCP-backlog关系"><a href="#HTTP-与-TCP-backlog关系" class="headerlink" title="HTTP 与 TCP backlog关系"></a>HTTP 与 TCP backlog关系</h3><ol>
+<li>没直接关系</li>
+<li>HTTP是应用层协议，TCP backlog 是应用程序在操作系统层接收tcp连接的队列数</li>
+<li>比如tomcat，作为一个HTTP应用服务，TCP backlog对应其acceptCount的配置</li>
+</ol>
+<h3 id="关于-HTTP-keepalive"><a href="#关于-HTTP-keepalive" class="headerlink" title="关于 HTTP keepalive"></a>关于 HTTP keepalive</h3><ul>
+<li><p>要利用HTTP的keep-alive机制，需要服务器端和客户端同时支持</p>
+</li>
+<li><p>HTTP是应用层协议，具体的表现行为取决于HTTP服务器以及HTTP client的实现</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/Kingson_Wu/article/details/72512825">wireshark抓包简单查看HTTP keep-alive原理</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/Kingson_Wu/article/details/80102077">继续深入理解HTTP keepalive</a></p>
+</li>
+</ul>
+<ol>
+<li>keepalive 是否开启服务端控制还是客户端控制？<ul>
+<li>keepalive可以由双方共同控制，需要双方都开启才能生效，HTTP1.1客户端默认开启，客户端想关闭可以通过设置Connection: Close，服务端同样想关闭可以设置Connection: Close。双方哪方先收到Connection: Close 则由收到方关闭（前提是双方的实现都支持，比如telnet就不支持）</li>
+</ul>
+</li>
+<li>keepalive的时间是由服务端控制还是客户端控制？<ul>
+<li>时间主要还是由服务端控制，时间一到由服务端主动关闭，当然客户端如果有实现设置一定时间后，由客户端主动关闭也可以。一般的HTTPclient库都有提供相应的配置，设置关闭长期不使用的连接，如connectionManager.closeIdleConnections(readTimeout * 2, TimeUnit.MILLISECONDS);</li>
+<li><a target="_blank" rel="noopener" href="https://my.oschina.net/greki/blog/83350">HTTPs://my.oschina.net/greki/blog/83350</a></li>
+</ul>
+</li>
+<li>keepalive时间一到，是由客户端主动关闭还是服务端主动关闭？<ul>
+<li>哪方的时间短，由哪一方来关闭，除非双方的实现有更明确的协议</li>
+</ul>
+</li>
+<li>如果客户端不是HTTPclient，使用telnet连接服务端？<ul>
+<li>telnet客户端除了连接时进行三次握手，用来发送数据接收数据，基本无其他实现逻辑。即接收到服务器的响应之后，不会有相关HTTP协议的处理。</li>
+</ul>
+</li>
+</ol>
+<h3 id="HTTP-keepalive-VS-TCP-keepalive"><a href="#HTTP-keepalive-VS-TCP-keepalive" class="headerlink" title="HTTP keepalive VS TCP keepalive"></a>HTTP keepalive VS TCP keepalive</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/385597183">HTTPs://zhuanlan.zhihu.com/p/385597183</a>; <a target="_blank" rel="noopener" href="https://juejin.cn/post/6992845852192702477">HTTPs://juejin.cn/post/6992845852192702477</a></li>
+<li>HTTP 的 Keep-Alive，是由应用层（用户态）  实现的，称为 HTTP 长连接；</li>
+<li>TCP 的 Keepalive，是由 TCP 层（内核态）  实现的，称为 TCP 保活机制；</li>
+<li>HTTP协议的Keep-Alive意图在于短时间内连接复用，希望可以短时间内在同一个连接上进行多次请求&#x2F;响应。</li>
+<li>TCP的KeepAlive机制意图在于保活、心跳，检测连接错误。当一个TCP连接两端长时间没有数据传输时(通常默认配置是2小时)，发送keepalive探针，探测链接是否存活。</li>
+<li>tcp的keepalive是在ESTABLISH状态的时候，双方如何检测连接的可用行。而HTTP的keep-alive说的是如何避免进行重复的TCP三次握手和四次挥手的环节。</li>
+<li>总之，HTTP的Keep-Alive和TCP的KeepAlive不是一回事。</li>
+</ul>
+<h3 id="Chrome中HTTP下载续传原理"><a href="#Chrome中HTTP下载续传原理" class="headerlink" title="Chrome中HTTP下载续传原理"></a>Chrome中HTTP下载续传原理</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://kingson4wu.github.io/2022/08/30/20220830-Chrome%E4%B8%8B%E8%BD%BD%E6%96%87%E4%BB%B6%E6%97%B6%E6%9A%82%E5%81%9C%E5%92%8C%E7%BB%A7%E7%BB%AD%E6%98%AF%E4%BB%80%E4%B9%88%E5%8E%9F%E7%90%86%EF%BC%9F/">Chrome下载文件时暂停和继续是什么原理？</a></li>
+</ul>
+<h3 id="HTTP连接复用时，同一个连接上的多个请求和响应如何对应上？"><a href="#HTTP连接复用时，同一个连接上的多个请求和响应如何对应上？" class="headerlink" title="HTTP连接复用时，同一个连接上的多个请求和响应如何对应上？"></a>HTTP连接复用时，同一个连接上的多个请求和响应如何对应上？</h3><ul>
+<li>“队头堵塞”（Head-of-line blocking）：所有的请求-响应都是按序进行的（HTTP）</li>
+<li>多路复用(Multiplexing)：每个数据流都有一个唯一的编号，从而让请求和响应对应起来（HTTP&#x2F;2）</li>
+</ul>
+<h3 id="可以外网使用HTTP-x2F-3，再转发到内网的HTTP服务？"><a href="#可以外网使用HTTP-x2F-3，再转发到内网的HTTP服务？" class="headerlink" title="可以外网使用HTTP&#x2F;3，再转发到内网的HTTP服务？"></a>可以外网使用HTTP&#x2F;3，再转发到内网的HTTP服务？</h3><ul>
+<li>上层nginx使用HTTP3，下层应用服务器（如spring boot jetty等）还是使用HTTP，其实理论上是可以的。nginx转发时要由接受到的udp包改成tcp发送。（内网丢包概率一般应该比外网丢包低很多），如果采用这种转发方式，这就意味着内网无法使用四层负载转发，因为底层协议不一样（udp和tcp）</li>
+<li>现在主流的代理服务Nginx&#x2F;Apache都没有实现QUIC，一些比较小众的代理服务如Caddy就实现了</li>
+</ul>
+<h3 id="使用HTTPS还存在中间人攻击？"><a href="#使用HTTPS还存在中间人攻击？" class="headerlink" title="使用HTTPS还存在中间人攻击？"></a>使用HTTPS还存在中间人攻击？</h3><ul>
+<li><p>结论：可以避免。只要不信任不安全的HTTPs网站，就不会被中间人攻击</p>
+</li>
+<li><p>中间人攻击:<a target="_blank" rel="noopener" href="https://urlify.cn/zQj6f2">HTTPs://urlify.cn/zQj6f2</a></p>
+</li>
+<li><p>既然证书是公开的，如果要发起中间人攻击，我在官网上下载一份证书作为我的服务器证书，那客户端肯定会认同这个证书是合法的，如何避免这种证书冒用的情况？<br>其实这就是非加密对称中公私钥的用处，虽然中间人可以得到证书，但私钥是无法获取的，一份公钥是不可能推算出其对应的私钥，中间人即使拿到证书也无法伪装成合法服务端，因为无法对客户端传入的加密数据进行解密。</p>
+</li>
+<li><p>只要客户端是我们自己的终端，我们授权的情况下，便可以组建中间人网络，而抓包工具便是作为中间人的代理。</p>
+</li>
+</ul>
+<pre>
+Q: 为什么需要证书？
+A: 防止”中间人“攻击，同时可以为网站提供身份证明。
+
+Q: 使用 HTTPS 会被抓包吗？
+A: 会被抓包，HTTPS 只防止用户在不知情的情况下通信被监听，如果用户主动授信，是可以构建“中间人”网络，代理软件可以对传输内容进行解密。
+</pre> 
+
+<h2 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h2><h3 id="cURL-发-HTTP-x2F-2请求"><a href="#cURL-发-HTTP-x2F-2请求" class="headerlink" title="cURL 发 HTTP&#x2F;2请求"></a>cURL 发 HTTP&#x2F;2请求</h3><ol>
+<li>Mac OS Curl HTTP&#x2F;2 支持<br><code> brew install curl --with-ngHTTP2</code></li>
+</ol>
+<pre>
+/usr/local/Cellar/curl/7.50.3/bin/curl --HTTP2 -kI  HTTPs://localhost:8443/user/1
+HTTP/2 200
+server: Jetty(9.3.10.v20160621)
+date: Sun, 30 Oct 2016 02:08:46 GMT
+content-type: application/json;charset=UTF-8
+content-length: 23
+</pre>
+
+<ol start="2">
+<li>linux:<a target="_blank" rel="noopener" href="https://www.sysgeek.cn/curl-with-HTTP2-support/">HTTPs://www.sysgeek.cn/curl-with-HTTP2-support/</a></li>
+</ol>
+<h3 id="HTTP-x2F-3-握手优化"><a href="#HTTP-x2F-3-握手优化" class="headerlink" title="HTTP&#x2F;3 握手优化"></a>HTTP&#x2F;3 握手优化</h3><ul>
+<li>1倍时延 &#x3D; 一次单向传输时延 &#x3D; 0.5 RTT</li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/Xo9HgZXfn28VibIE9OFHqw">HTTPS 的 7 次握手以及 9 倍时延</a></li>
+<li>HTTPS: 7 次握手以及 9 倍时延 (4.5 RTT); HTTP&#x2F;3: 3 次握手以及 5 倍时延 (2.5 RTT)<pre>
+当客户端想要通过 HTTPS 请求访问服务端时，整个过程需要经过 7 次握手并消耗 9 倍的延迟。如果客户端和服务端因为物理距离上的限制，RTT 约为 40ms 时，第一次请求需要 ~180ms；不过如果我们想要访问美国的服务器，RTT 约为 200ms 时，这时 HTTPS 请求的耗时为 ~900ms，这就是一个比较高的耗时了。我们来总结一下 HTTPS 协议需要 9 倍时延才能完成通信的原因：</pre></li>
+</ul>
+<p>TCP 协议需要通过三次握手建立 TCP 连接保证通信的可靠性（1.5-RTT）；<br>TLS 协议会在 TCP 协议之上通过四次握手建立 TLS 连接保证通信的安全性（2-RTT）；<br>HTTP 协议会在 TCP 和 TLS 上通过一次往返发送请求并接收响应（1-RTT）；<br>需要注意的是，本文对往返延时的计算都基于特定的场景以及特定的协议版本，网络协议的版本在不断更新和演进，过去忽略的问题最开始都会通过补丁的方式更新，但是最后仍然会需要从底层完成重写。</p>
+<p>HTTP&#x2F;3 就是一个这样的例子，它会使用基于 UDP 的 QUIC 协议进行握手，将 TCP 和 TLS 的握手过程结合起来，把 7 次握手减少到了 3 次握手，直接建立了可靠并且安全的传输通道，将原本 ~900ms 的耗时降低至 ~500ms，<br></p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/XiongMaoMengNan/p/8425724.html">HTTP协议篇(一)：多路复用、数据流</a></li>
+<li><a target="_blank" rel="noopener" href="https://developer.aliyun.com/article/436989">HTTP管线化(HTTP pipelining)</a></li>
+<li><a target="_blank" rel="noopener" href="https://imququ.com/post/HTTP2-resource.html">HTTP&#x2F;2 资料汇总</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.codetd.com/article/10088188">HTTP，HTTPs，spdy，HTTP2等协议的主要区别详解</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.infoq.cn/article/IgME_4ebP3d46m3tHbaT">一文看完 HTTP3 的演化历程</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/i-QUbVRVicqzMSZ9FUVCfQ">深入解读HTTP3的原理及应用</a></li>
+<li><a target="_blank" rel="noopener" href="https://urlify.cn/zQj6f2">HTTPS 原理分析——带着疑问层层深入</a></li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/HTTP/" rel="tag"># HTTP</a>
+          
+            <a href="/tags/HTTP-3/" rel="tag"># HTTP/3</a>
+          
+            <a href="/tags/HTTP-2/" rel="tag"># HTTP/2</a>
+          
+            <a href="/tags/HTTPS/" rel="tag"># HTTPS</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2022/08/30/20220830-chrome-xia-zai-wen-jian-shi-zan-ting-he-ji-xu-shi-shi-me-yuan-li/" rel="next" title="Chrome下载文件时暂停和继续是什么原理？">
+                <i class="fa fa-chevron-left"></i> Chrome下载文件时暂停和继续是什么原理？
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2022/09/06/20220906-you-liao-tcp-de-keepalive-ying-yong-ceng-huan-xu-yao-shi-xian-bao-huo-luo-ji-ma/" rel="prev" title="有了TCP的keepalive，应用层还需要实现保活逻辑吗？">
+                有了TCP的keepalive，应用层还需要实现保活逻辑吗？ <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.png"
+                alt="" />
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+<a href="/archives/">                
+<!--<a href="/archives/%7C%7C%20archive">-->
+              
+                  <span class="site-state-item-count">110</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">122</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B2%97%E6%B5%85%E6%A6%82%E6%8B%AC"><span class="nav-number">1.</span> <span class="nav-text">粗浅概括</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E5%9F%BA%E7%A1%80"><span class="nav-number">2.</span> <span class="nav-text">其他基础</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HTTP"><span class="nav-number">3.</span> <span class="nav-text">HTTP</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E2%80%9C%E9%98%9F%E5%A4%B4%E5%A0%B5%E5%A1%9E%E2%80%9D-%EF%BC%88%E7%BA%BF%E5%A4%B4%E9%98%BB%E5%A1%9E%EF%BC%89%EF%BC%88Head-of-line-blocking%EF%BC%89%EF%BC%88HOLB%EF%BC%89"><span class="nav-number">3.1.</span> <span class="nav-text">“队头堵塞” （线头阻塞）（Head-of-line blocking）（HOLB）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%A1%E9%81%93%E6%9C%BA%E5%88%B6-Pipelining"><span class="nav-number">3.2.</span> <span class="nav-text">管道机制(Pipelining)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HTTPS"><span class="nav-number">4.</span> <span class="nav-text">HTTPS</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#jks%E3%80%81pfx%E5%92%8Ccer-%E8%AF%81%E4%B9%A6%E6%96%87%E4%BB%B6"><span class="nav-number">4.1.</span> <span class="nav-text">jks、pfx和cer 证书文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9D%83%E5%A8%81%E8%AF%81%E4%B9%A6%E9%A2%81%E5%8F%91%E7%9A%84%E5%85%AC%E9%92%A5%E5%8C%99%E4%B8%80%E8%88%AC%E6%98%AF%E9%A2%84%E8%A3%85%E7%9A%84"><span class="nav-number">4.2.</span> <span class="nav-text">权威证书颁发的公钥匙一般是预装的</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HTTP-x2F-2"><span class="nav-number">5.</span> <span class="nav-text">HTTP&#x2F;2</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8-Multiplexing"><span class="nav-number">5.1.</span> <span class="nav-text">多路复用(Multiplexing)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A0%E5%AF%86"><span class="nav-number">5.2.</span> <span class="nav-text">加密</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%87%8D%E7%94%A8%E8%BF%9E%E6%8E%A5%EF%BC%88%E9%92%88%E5%AF%B9%E6%B5%8F%E8%A7%88%E5%99%A8%EF%BC%89"><span class="nav-number">5.3.</span> <span class="nav-text">重用连接（针对浏览器）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%B4%E9%83%A8%E5%8E%8B%E7%BC%A9"><span class="nav-number">5.4.</span> <span class="nav-text">头部压缩</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%A8%E9%80%81"><span class="nav-number">5.5.</span> <span class="nav-text">推送</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HTTP-x2F-3"><span class="nav-number">6.</span> <span class="nav-text">HTTP&#x2F;3</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#TCP%E7%9A%84%E9%99%90%E5%88%B6"><span class="nav-number">6.1.</span> <span class="nav-text">TCP的限制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B0%E7%89%B9%E6%80%A7"><span class="nav-number">6.2.</span> <span class="nav-text">新特性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%87%87%E7%94%A8HTTP-x2F-3%E7%9A%84%E9%99%90%E5%88%B6"><span class="nav-number">6.3.</span> <span class="nav-text">采用HTTP&#x2F;3的限制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Q-amp-A"><span class="nav-number">7.</span> <span class="nav-text">Q&amp;A</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#HTTP-%E4%B8%8E-TCP-backlog%E5%85%B3%E7%B3%BB"><span class="nav-number">7.1.</span> <span class="nav-text">HTTP 与 TCP backlog关系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E4%BA%8E-HTTP-keepalive"><span class="nav-number">7.2.</span> <span class="nav-text">关于 HTTP keepalive</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HTTP-keepalive-VS-TCP-keepalive"><span class="nav-number">7.3.</span> <span class="nav-text">HTTP keepalive VS TCP keepalive</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Chrome%E4%B8%ADHTTP%E4%B8%8B%E8%BD%BD%E7%BB%AD%E4%BC%A0%E5%8E%9F%E7%90%86"><span class="nav-number">7.4.</span> <span class="nav-text">Chrome中HTTP下载续传原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HTTP%E8%BF%9E%E6%8E%A5%E5%A4%8D%E7%94%A8%E6%97%B6%EF%BC%8C%E5%90%8C%E4%B8%80%E4%B8%AA%E8%BF%9E%E6%8E%A5%E4%B8%8A%E7%9A%84%E5%A4%9A%E4%B8%AA%E8%AF%B7%E6%B1%82%E5%92%8C%E5%93%8D%E5%BA%94%E5%A6%82%E4%BD%95%E5%AF%B9%E5%BA%94%E4%B8%8A%EF%BC%9F"><span class="nav-number">7.5.</span> <span class="nav-text">HTTP连接复用时，同一个连接上的多个请求和响应如何对应上？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%AF%E4%BB%A5%E5%A4%96%E7%BD%91%E4%BD%BF%E7%94%A8HTTP-x2F-3%EF%BC%8C%E5%86%8D%E8%BD%AC%E5%8F%91%E5%88%B0%E5%86%85%E7%BD%91%E7%9A%84HTTP%E6%9C%8D%E5%8A%A1%EF%BC%9F"><span class="nav-number">7.6.</span> <span class="nav-text">可以外网使用HTTP&#x2F;3，再转发到内网的HTTP服务？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8HTTPS%E8%BF%98%E5%AD%98%E5%9C%A8%E4%B8%AD%E9%97%B4%E4%BA%BA%E6%94%BB%E5%87%BB%EF%BC%9F"><span class="nav-number">7.7.</span> <span class="nav-text">使用HTTPS还存在中间人攻击？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%A9%E5%B1%95"><span class="nav-number">8.</span> <span class="nav-text">扩展</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#cURL-%E5%8F%91-HTTP-x2F-2%E8%AF%B7%E6%B1%82"><span class="nav-number">8.1.</span> <span class="nav-text">cURL 发 HTTP&#x2F;2请求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HTTP-x2F-3-%E6%8F%A1%E6%89%8B%E4%BC%98%E5%8C%96"><span class="nav-number">8.2.</span> <span class="nav-text">HTTP&#x2F;3 握手优化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">9.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kingson Wu</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'LR34RG5CRdFgzK8ijwc5Hq0B-gzGzoHsz',
+        appKey: 'qqtIlANIluHpfpOnxTUnYrku',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"model":{"jsonPath":"/live2dw/assets/tororo.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"log":false});</script></body>
+</html>

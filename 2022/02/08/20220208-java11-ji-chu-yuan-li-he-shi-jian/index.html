@@ -1,0 +1,1291 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/uploads/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Java9,Java11,模块系统," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="拉巴力的纸皮箱" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="一、为什么选择java11Java 11 是 Java 8 之后的首个 LTS 版本（Long-term support 长期支持版本），所以有不少开发者表示会选择升级至 Java 11。  1、目前相对来说，Java 8 太旧，Java 17 太新，Java11 刚刚好；2、支持以类路径方式运行，适合过渡阶段升级；3、其他原因（下文会说明） 二、模块系统模块系统是Java 9的旗舰功能，使用ja">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java11基础原理和实践">
+<meta property="og:url" content="http://yoursite.com/2022/02/08/20220208-java11-ji-chu-yuan-li-he-shi-jian/index.html">
+<meta property="og:site_name" content="拉巴力的纸皮箱">
+<meta property="og:description" content="一、为什么选择java11Java 11 是 Java 8 之后的首个 LTS 版本（Long-term support 长期支持版本），所以有不少开发者表示会选择升级至 Java 11。  1、目前相对来说，Java 8 太旧，Java 17 太新，Java11 刚刚好；2、支持以类路径方式运行，适合过渡阶段升级；3、其他原因（下文会说明） 二、模块系统模块系统是Java 9的旗舰功能，使用ja">
+<meta property="og:locale">
+<meta property="og:image" content="http://yoursite.com/2022/02/08/20220208-Java11%E5%9F%BA%E7%A1%80%E5%8E%9F%E7%90%86%E5%92%8C%E5%AE%9E%E8%B7%B5/java11.png">
+<meta property="og:image" content="http://yoursite.com/2022/02/08/20220208-Java11%E5%9F%BA%E7%A1%80%E5%8E%9F%E7%90%86%E5%92%8C%E5%AE%9E%E8%B7%B5/java11_classloader.png">
+<meta property="article:published_time" content="2022-02-07T16:08:24.000Z">
+<meta property="article:modified_time" content="2023-05-07T14:41:07.767Z">
+<meta property="article:author" content="Kingson Wu">
+<meta property="article:tag" content="Java9">
+<meta property="article:tag" content="Java11">
+<meta property="article:tag" content="模块系统">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/2022/02/08/20220208-Java11%E5%9F%BA%E7%A1%80%E5%8E%9F%E7%90%86%E5%92%8C%E5%AE%9E%E8%B7%B5/java11.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2022/02/08/20220208-java11-ji-chu-yuan-li-he-shi-jian/"/>
+
+
+
+
+
+  <title>Java11基础原理和实践 | 拉巴力的纸皮箱</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">拉巴力的纸皮箱</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/02/08/20220208-java11-ji-chu-yuan-li-he-shi-jian/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java11基础原理和实践</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-02-08T00:08:24+08:00">
+                2022-02-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2022/02/08/20220208-java11-ji-chu-yuan-li-he-shi-jian/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2022/02/08/20220208-java11-ji-chu-yuan-li-he-shi-jian/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="一、为什么选择java11"><a href="#一、为什么选择java11" class="headerlink" title="一、为什么选择java11"></a>一、为什么选择java11</h1><p>Java 11 是 Java 8 之后的首个 LTS 版本（Long-term support 长期支持版本），所以有不少开发者表示会选择升级至 Java 11。</p>
+<p><img src="/2022/02/08/20220208-Java11%E5%9F%BA%E7%A1%80%E5%8E%9F%E7%90%86%E5%92%8C%E5%AE%9E%E8%B7%B5/java11.png"></p>
+<p>1、目前相对来说，Java 8 太旧，Java 17 太新，Java11 刚刚好；<br>2、支持以类路径方式运行，适合过渡阶段升级；<br>3、其他原因（下文会说明）</p>
+<h1 id="二、模块系统"><a href="#二、模块系统" class="headerlink" title="二、模块系统"></a>二、模块系统</h1><p>模块系统是Java 9的旗舰功能，使用java9，有必要了解一下。</p>
+<h2 id="java9之前存在哪些痛点"><a href="#java9之前存在哪些痛点" class="headerlink" title="java9之前存在哪些痛点"></a>java9之前存在哪些痛点</h2><h3 id="1、没有封装"><a href="#1、没有封装" class="headerlink" title="1、没有封装"></a>1、没有封装</h3><p>类一旦公开，意味着没有封装。</p>
+<p>如果将一个类设置为protected，那么就可以防止其他类访问该类，除非这些类与该类位于相同的包中。但这样做会产生一个有趣的问题：如果想从组件的另一个包中访问该类，同时仍然防止其他类使用该类，那么应该怎么做呢？事实是无法做到。</p>
+<p>让类公开，意味着对系统中的所有类型都是公开的，也就意味着没有封装。</p>
+<p>Java在过去经历过相当多的安全漏洞。这些漏洞都有一个共同的特点：不知何故，攻击者可以绕过JVM的安全沙盒并访问JDK中的敏感类。从安全的角度来看，在JDK中对危险的内部类进行强封装是一个很大的改进。同时，减少运行时中可用类的数量会降低攻击面。在应用程序运行时中保留大量暂时不使用的类是一种不恰当的做法。而通过使用模块化JDK，可以确定应用程序所需的模块。</p>
+<h3 id="2、编译时无法感知依赖缺失或类重复"><a href="#2、编译时无法感知依赖缺失或类重复" class="headerlink" title="2、编译时无法感知依赖缺失或类重复"></a>2、编译时无法感知依赖缺失或类重复</h3><p>Java确实使用了显式的import语句。但不幸的是，从严格意义上讲，这些导入是编译时结构，一旦将代码打包到JAR中，就无法确定哪些JAR包含当前JAR运行所需的类型。</p>
+<p>在Java 9出现之前，JAR文件似乎是最接近模块的，它们拥有名称、对相关代码进行了分组并且提供了定义良好的公共接口。</p>
+<p>（1）依赖缺失<br>所有类按照-classpath参数定义的顺序加载类。由于类会延迟加载，JVM无法在应用程序启动时有效地验证类路径的完整性，即无法预先知道类路径是否是完整的，或者是否应该添加另一个JAR。</p>
+<p>（2）类重复<br>当类路径上有重复类时，则会出现更为隐蔽的问题。出现相同库的两个版本（如Guava 19和Guava 18）是非常常见的，这两个库JAR以一种未定义的顺序压缩到类路径中。库类的任一版本都可能会被首先加载。此外，有些类还可能会使用来自（可能不兼容的）其他版本的类。此时就会导致运行时异常。</p>
+<h2 id="关于类重复"><a href="#关于类重复" class="headerlink" title="关于类重复"></a>关于类重复</h2><p>目前存在以下方法缓解或解决</p>
+<h3 id="1、通过插件检查类重复"><a href="#1、通过插件检查类重复" class="headerlink" title="1、通过插件检查类重复"></a>1、通过插件检查类重复</h3><p>在编译时，检测类是否重复，比如使用插件 maven enforcer plugin，但本质上是通过解压全部jar包，检查所有文件是否存在重复类来判断的，效率可想而知。</p>
+<h3 id="2、通过构建工具保证只存在一个版本的jar包"><a href="#2、通过构建工具保证只存在一个版本的jar包" class="headerlink" title="2、通过构建工具保证只存在一个版本的jar包"></a>2、通过构建工具保证只存在一个版本的jar包</h3><p>构建工具冲突失败策略设置如gradle中</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">configurations</span>.all &#123;</span><br><span class="line">    resolutionStrategy &#123;  failOnVersionConflict() &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这种设置仅仅是针对jar包冲突，不能保证不同名的jar包是否存在相同的类。</p>
+<p>处理jar包冲突有两种策略：</p>
+<p>1）强制指定版本：版本冲突太多，指定版本的情况，后续有新的版本间接依赖也无法直接发现。<br>2）取最高版本：同样有可能引起高版本导致不兼容的问题。</p>
+<p>要彻底解决，只有项目依赖完全模块化。</p>
+<h2 id="构建工具"><a href="#构建工具" class="headerlink" title="构建工具"></a>构建工具</h2><p>Maven、Gradle等构建工具，在运行时没有任何作用。Maven构建了想要运行的工件，但是最后仍然需要配置Java运行时，以便运行正确的模块路径和类路径。虽然手动配置模块路径比类路径要容易得多，但它仍然是重复的工作，因为相关信息已经在pom.xml文件中了。</p>
+<h2 id="模块化的好处"><a href="#模块化的好处" class="headerlink" title="模块化的好处"></a>模块化的好处</h2><p>模块化 可以 在编译时和运行时获得所有这些信息所带来的优势。这可以防止对来自其他非引用模块的代码的意外依赖。通过检查（传递）依赖关系，工具链可以知道运行模块需要哪些附加模块并进行优化。</p>
+<p>Java平台模块系统带来了如下最重要的好处：</p>
+<p>1．可靠的配置在编译或运行代码之前，模块系统会检查给定的模块组合是否满足所有依赖关系，从而导致更少的运行时错误。<br>2．强封装型模块显式地选择了向其他模块公开的内容，从而防止对内部实现细节的意外依赖。<br>3．可扩展开发显式边界能够让开发团队并行工作，同时可创建可维护的代码库。只有显式导出的公共类型是共享的，这创建了由模块系统自动执行的边界。<br>4．安全性在JVM的最深层次上执行强封装，从而减少Java运行时的攻击面，同时无法获得对敏感内部类的反射访问。<br>5．优化由于模块系统知道哪些模块是在一起的，包括平台模块，因此在JVM启动期间不需要考虑其他代码。同时，其也为创建模块分发的最小配置提供了可能性。此外，还可以在一组模块上应用整个程序的优化。</p>
+<p>在模块出现之前，这样做是非常困难的，因为没有可用的显式依赖信息，一个类可以引用类路径中任何其他类。</p>
+<p>此外还有：<br>（1）JDK9的模块化可以减少Java程序打包的体积，同时拥有更好的隔离线与封装性。<br>在JDK9之前，JVM的基础类以前都是在rt.jar这个包里，这个包也是JRE运行的基石。这不仅是违反了单一职责原则，同样程序在编译的时候会将很多无用的类也一并打包，造成臃肿。在JDK9中，整个JDK都基于模块化进行构建，以前的rt.jar, tool.jar被拆分成数十个模块，编译的时候只编译实际用到的模块，同时各个类加载器各司其职，只加载自己负责的模块。<br>（2）经过破坏后的双亲委派模型更加高效，减少了很多类加载器之间不必要的委派操作</p>
+<h2 id="模块系统的基础"><a href="#模块系统的基础" class="headerlink" title="模块系统的基础"></a>模块系统的基础</h2><p>本质上就是一个jar包切成多模块（更细的jar包）来引用</p>
+<h3 id="1、module-info-java描述文件-关键字说明"><a href="#1、module-info-java描述文件-关键字说明" class="headerlink" title="1、module-info.java描述文件 关键字说明"></a>1、module-info.java描述文件 关键字说明</h3><p>requires代表依赖的模块，只有依赖的模块存在才能通过编译并运行.需要注意的是，所有模块均自动隐式依赖java.base模块，不需要显示声明<br>exports指出需要暴露的包，如果某个包没有被exports，那么其他模块是无法访问的。</p>
+<p>Readability:指的是必须exports的包才可被其他模块访问<br>Accessibility:指的是即使是exports的包，其中的类的可访问下也要基于java的访问修饰符，仅有public修饰的才可被其他模块访问</p>
+<p>Implied Readability(隐式Readability, requires transitive):<br>Readability默认情况下是不会被传递的<br>requires transitive，传递性依赖生效</p>
+<p>由于requires transitive的存在，就可以支持聚合模块。有些聚合模块可以没有任何代码，就一个module-info.java描述文件，比如java.se, java.se.ee模块<br>不建议直接引用java.se模块，因为它就相当于java9以前版本的rt.jar的内容。</p>
+<p>Qualified Exports(有限制的exports)<br>比如我只想exports某个包给部分模块,而不是所有模块</p>
+<h3 id="2、模块化基础"><a href="#2、模块化基础" class="headerlink" title="2、模块化基础"></a>2、模块化基础</h3><p>（1）模块拥有一个名称，并对相关的代码以及可能的其他资源进行分组，同时使用一个模块描述符进行描述。模块描述符保存在一个名为module-info.java的文件中。<br>（2）模块描述符还可以包含exports语句。强封装性是模块的默认特性。只有当显式地导出一个包时（比如示例中的java.util.prefs），才可以从其他模块中访问该包<br>可访问性和可读性的结合可以确保在模块系统中实现强封装性。<br>（3）其他模块无法使用未导出包中的任何类型——即使包中的类型是公共的。这是对Java语言可访问性规则的根本变化。<br>（4）Java 9出现之后，public意味着仅对模块中的其他包公开。只有当导出包包含了公开类型时，其他模块才可以使用这些类型。这就是强封装的意义所在。</p>
+<p>在模块出现之前，强封装实现类的唯一方法是将这些类放置到单个包中，并标记为私有。这种做法使得包变得非常笨重，实际上，将类公开只是为了实现不同包之间的访问。通过使用模块，可以以任何方式构建包，并仅导出模块使用者真正必须访问的包。如果愿意的话，还可以将导出的包构成模块的API。</p>
+<p>（5）模块提供了导出包的显式信息，从而能够高效地对模块路径进行索引。当从给定的包中查找类型时，Java运行时和编译器可以准确地知道从模块路径中解析哪个模块。而在以前，对整个类路径进行扫描是找到任意类型的唯一方法。</p>
+<p>在解析过程中还会完成一些额外的检查。例如，具有相同名称的两个模块在启动时（而不是在运行过程出现类加载失败时）会产生错误。此外，还会检查导出包的唯一性。</p>
+<p>模块解析过程以及额外的检查确保了应用程序在一个可靠的环境中运行，降低了运行时失败的可能性。</p>
+<p>（6）通过使用未命名模块，尚未模块化的代码可以继续在JDK 9上运行。<br>当将代码放在类路径上时，会自动使用未命名模块。这也意味着需要构建一个正确的类路径。可一旦使用了未命名模块，前面讨论的模块系统所带来的保障和好处也就没有了。</p>
+<p>当在Java 9中使用类路径时，还需要注意两件事情。首先，由于平台是模块化的，因此对内部实现类进行了强封装。</p>
+<p>（7）模块系统执行的另一个检查是循环依赖。<br>在编译时，模块之间的可读性关系必须是非循环的。而在模块中，仍然可以在类之间创建循环关系</p>
+<p>（8）通过使用ServiceLoader API可在模块描述符和代码中表示服务<br>使用这个功能可以对代码的实现进行良好的封装</p>
+<h3 id="3、以非模块化方式开发和运行应用"><a href="#3、以非模块化方式开发和运行应用" class="headerlink" title="3、以非模块化方式开发和运行应用"></a>3、以非模块化方式开发和运行应用</h3><p>在java9中也是允许你以非模块化方式开发和运行应用的(也就是说，模块化开发是可选的)，如果你的应用中没有module-info.java，那么这就是一个unnamed module. java9对于unnamed module的处理方式就是所有的jdk模块均直接可用(模块图中是以java.se模块作为root模块的，也意味着单独处于java.se.ee下的一些包，比如JAXB API是无法访问到的)。</p>
+<p>但是需要注意的是，在java8以及之前的版本中，我们可以访问jdk中的一些不推荐访问的内部类，比如com.sun.image.codec.jpeg,但在java9模块化之后被强封装了，所以在java9中无法使用这些内部类，也就是说无法通过编译，但是java9为了保持兼容性，允许之前引用这些内部类的已有的jar或已编译的类正确运行。换言之，就是java9不允许源码中引用这些类，无法通过编译，但是之前版本中引用这些类的已编译class文件是允许正常运行的。</p>
+<h1 id="三、迁移"><a href="#三、迁移" class="headerlink" title="三、迁移"></a>三、迁移</h1><p>（1）为了便于将基于类路径的应用程序迁移到Java 9，在对平台模块中的类应用深度反射时，或者使用反射来访问非导出包中的类型时，JVM默认显示警告</p>
+<p>（2）那些在JDK 8和更早的版本上运行没有任何问题的代码现在会在控制台上显示一个醒目的警告——即使是在生产环境中也是如此。这表明严重破坏了强封装。除了这个警告之外，应用程序仍然照常运行。如警告消息所示，在下一个Java版本中行为将发生变化。将来，即使是类路径上的代码，JDK也会强制执行平台模块的强封装。</p>
+<p>（3）可以使用–add-opens标志授予对模块中特定包的类路径深度反射访问。同样，当类路径上的代码尝试访问非导出包中的类型时，可以使用–add-exports来强制导出包。</p>
+<p>（4）为了使逐步迁移成为可能，可以混合使用类路径和模块路径。但这不是一种理想的情况，因为只能部分受益于Java模块系统的优点。但是，“小步”迁移是非常有帮助的。</p>
+<h2 id="自动模块"><a href="#自动模块" class="headerlink" title="自动模块"></a>自动模块</h2><p>Java模块系统提供了一个有用的功能来处理非模块的代码：自动模块。只需将现有的JAR文件从类路径移动到模块路径，而不改变其内容，就可以创建一个自动模块。这样一来，JAR就转换为一个模块，同时模块系统动态生成模块描述符。相比之下，显式模块始终有一个用户自定义的模块描述符。</p>
+<p>自动模块的行为不同于显式模块。自动模块具有以下特征：</p>
+<p>（1）不包含module-info.class；<br>（2）它有一个在META-INF&#x2F;MANIFEST.MF中指定或者来自其文件名的模块名称。<br>（3）通过requires transitive请求所有其他已解析模块。<br>（4）导出所有包。<br>（5）读取路径（或者更准确地讲，读取前面所讨论的未命名模块）。<br>（6）它不能与其他模块拆分包。</p>
+<p>自动模块并不是一个设计良好的模块。虽然请求所有的模块并导出所有的包听起来不像是正确的模块化，但至少是可用的。</p>
+<p>自动模块中仍然没有明确的信息来告诉模块系统真正需要哪些模块，这意味着JVM在启动时不会警告自动模块的依赖项丢失。</p>
+<p>作为开发人员，负责确保模块路径（或类路径）包含所有必需的依赖项。这与使用类路径没有太大区别。</p>
+<p>模块图中的所有模块都需要通过自动模块传递。这实际上意味着，如果请求一个自动模块，那么就可以“免费”获得所有其他模块的隐式可读性。</p>
+<p>当使用自动模块时，也会遇到拆分包。在大型应用程序中，由于依赖关系管理不善，通常会发现拆分包。拆分包始终是一个错误，因为它们在类路径上不能可靠地工作。</p>
+<h2 id="未命名模块"><a href="#未命名模块" class="headerlink" title="未命名模块"></a>未命名模块</h2><p>模块路径上的非模块化JAR变成了自动模块。而类路径变成了未命名模块。</p>
+<p>类路径上的所有代码都是未命名模块的一部分。</p>
+<p>存在一个很大的限制：未命名模块本身只能通过自动模块读取（只有自动模块可以读取类路径）</p>
+<p>当读取未命名模块时自动模块和显式模块之间的区别。显式模块只能读取其他显式模块和自动模块。而自动模块可读取所有模块，包括未命名模块。</p>
+<p>未命名模块的可读性只是一种在混合类路径&#x2F;模块路径迁移方案中有助于自动模块的机制。</p>
+<p>JVM为什么没有那么“聪明”呢？它有权访问自动模块中的所有代码，那么为什么不分析依赖关系呢？如果想要分析这些代码是否调用其他模块，JVM需要对所有代码执行字节码分析。虽然这不难实现，但却是一个昂贵的操作，可能会大量增加大型应用程序的启动时间。而且，这样的分析不会发现通过反射产生的依赖关系。由于存在这些限制，JVM不可能也永远不会这样做。相反，JDK附带了另一个工具jdeps，它可以执行字节码分析。</p>
+<p>现代构建工具通常有一个“在重复依赖项上失败”的设置，这使得依赖关系管理问题变得更加清晰，从而迫使尽早解决这些问题。强烈建议使用这个设置。关于该问题，Java模块系统比类路径要严格得多。当它检测到一个包从模块路径上的两个模块导出时，就会拒绝启动。相比于以前使用类路径时所遇到的不可靠情况，这种快速失败（fail-fast）机制要好得多。在开发过程中失败好过在生产过程中失败，尤其是当一些不幸的用户碰到一个由于模糊的类路径问题而被破坏的代码路径时。但这也意味着我们必须处理这些问题。盲目地将所有JAR从类路径移至模块路径可能导致在生成的自动模块之间出现拆分包。而这些拆分包将被模块系统所拒绝。</p>
+<p>为了使迁移变得容易一些，当涉及自动模块和未命名模块时，上述规则存在一个例外，即承认很多类路径是不正确的，并且包含拆分包。当（自动）模块和未命名模块都包含相同的包时，将使用来自（自动）模块的包，而未命名模块中的包被忽略。</p>
+<p>如果在迁移到Java 9时遇到了拆分包问题，那么是无法绕过的。即使从用户角度来看基于类路径的应用程序可以正确工作，你也必须处理这些问题。</p>
+<p>拆分包会导致无法以模块系统的方式启动服务</p>
+<h2 id="未命名模块（unnamed-module）和自动模块（automatic-module）总结"><a href="#未命名模块（unnamed-module）和自动模块（automatic-module）总结" class="headerlink" title="未命名模块（unnamed module）和自动模块（automatic module）总结"></a>未命名模块（unnamed module）和自动模块（automatic module）总结</h2><p>（1）一个未经模块化改造的 jar 文件是转为未命名模块还是自动模块，取决于这个 jar 文件出现的路径，如果是类路径，那么就会转为未命名模块，如果是模块路径，那么就会转为自动模块。注意，自动模块也属于命名模块的范畴，其名称是模块系统基于 jar 文件名自动推导得出的<br>（2）两者还有一个关键区别，分裂包规则适用于自动模块，但对未命名模块无效，也即多个未命名模块可以导出同一个包，但自动模块不允许。<br>（3） 未命名模块和自动模块存在的意义在于，无论传入的 jar 文件是否一个合法的模块（包含 module descriptor），Java 内部都可以统一的以模块的方式进行处理，这也是 Java 9 兼容老版本应用的架构原理。运行老版本应用时，所有 jar 文件都出现在类路径下，也就是转为未命名模块，对于未命名模块而言，默认导出所有包并且依赖所有模块，因此应用可以正常运行。<br>（4）基于未命名模块和自动模块，相应的就产生了两种老版本应用的迁移策略，或者说模块化策略。<br>（5）等所有 jar 包都完成模块化改造，应用改为 -m 方式启动，这也标志着应用已经迁移为真正的 Java 9 应用<br>（6）-cp 和 -m 可以同时存在 并运行？？可以（类路径和模块系统可以混合运行）</p>
+<h2 id="java9-自动模块-的意义"><a href="#java9-自动模块-的意义" class="headerlink" title="java9 自动模块 的意义"></a>java9 自动模块 的意义</h2><p>（1）个人理解，只是为了让开发者能像模块一样使用起来，引入。实际上封装性方面和类路径没任何区别。<br>（2）未命名模块和自动模块存在的意义在于，无论传入的 jar 文件是否一个合法的模块（包含 module descriptor），Java 内部都可以统一的以模块的方式进行处理，这也是 Java 9 兼容老版本应用的架构原理。</p>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>（1）如何用最快的速度判别它是不是一个模块？它又是如何定义的？<br>试试看 jar -d -f <jar_file>。<br>（2）通过JDK11内置jdeps工具查找过期以及废弃API以及对应的替换<br><code>./jdk-11.0.10.jdk/Contents/Home/bin/jdeps --jdk-internals ./build/libs/service.jar</code><br><code>./jdk-11.0.10.jdk/Contents/Home/bin/jdeps --jdk-internals -R --class-path ./build/deploy/* ./build/libs/*</code><br><code>jdeps --jdk-internals -R --class-path &#39;libs/*&#39; $project</code><br>libs是你的所有依赖的目录，$project是你的项目jar包<br>（3）我们可以在线上使用OpenJDK，开发时，使用任意的JDK。<br><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/87157172">https://zhuanlan.zhihu.com/p/87157172</a></jar_file></p>
+<h2 id="库迁移"><a href="#库迁移" class="headerlink" title="库迁移"></a>库迁移</h2><p>迁移库和迁移应用程序之间最大的区别在于库被许多应用程序使用。这些应用程序可能运行在不同版本的Java上，所以库通常需要在各种Java版本上工作。期望库的用户在你迁移库的同时切换到Java 9是不现实的。</p>
+<p>库的迁移过程由以下步骤组成：</p>
+<p>1）确保库可以作为自动模块在Java 9上运行。<br>2）使用Java 9编译器编译库（主要使用满足需求的最低Java版本），而不使用新的Java 9功能。<br>3）添加一个模块描述符，并将库转换为显式模块。<br>4）重构库的结构，以便增加封装性，识别API，并尽可能分割成多个模块（可选）。<br>5）开始使用库中的Java 9功能，同时保持向后兼容Java 9的早期版本。</p>
+<p>库管理需要使用java8编译，模块描述需要用java9编译，且不能使用新特性，否则java8编译不过</p>
+<p>项目模块化后，很多第三库（基于反射的），深度反射项目代码，或jdk，可能不能用，要进行特殊处理</p>
+<p>历史解决jar包冲突问题得改造成模块化</p>
+<h1 id="四、模块系统实践例子"><a href="#四、模块系统实践例子" class="headerlink" title="四、模块系统实践例子"></a>四、模块系统实践例子</h1><h2 id="1、相同模块不同版本，新版废弃方法"><a href="#1、相同模块不同版本，新版废弃方法" class="headerlink" title="1、相同模块不同版本，新版废弃方法"></a>1、相同模块不同版本，新版废弃方法</h2><p>结论：运行时才会报错</p>
+<p>module_2-1.0  依赖 module_1-1.0 printInfo.print2()方法，项目依赖 module_1-2.0 printInfo.print3()；<br>build的时候并不能识别到错误，只有运行时才会发现错误 java.lang.NoSuchMethodError: com.kxw.module1.info.PrintInfo.print2()V</p>
+<h2 id="2、不同模块含重复类"><a href="#2、不同模块含重复类" class="headerlink" title="2、不同模块含重复类"></a>2、不同模块含重复类</h2><p>结论：不同模块可以存在相同类，在引入时指定模块，可以正确加载到对应类</p>
+<p>（1）如果同时引入两个不同模块（不管是直接还是间接），编译时会检测引入的模块是否包含可读的相同路径<br>编译报错：错误: 未命名的模块同时从 com.kxw.module.four 和 com.kxw.module.three 读取程序包 com.kxw.module.config</p>
+<p>（2）如果模块存在相同类，但是却没有通过export声明，仅内部使用，那么编译时将无法检测，但运行时报 （两个模块都没有export的情况，结果一样）<br>Error occurred during initialization of boot layer<br>java.lang.LayerInstantiationException: Package com.kxw.module.config in both module com.kxw.module.three and</p>
+<p>没声明（export）的情况下，运行时怎么检测有相同的package？<br>报：Checks for split packages between modules defined to the built-in class loaders.<br> ModuleBootstrap#checkSplitPackages 会检查所有module的package是否重复，通过String other &#x3D; packageToModule.putIfAbsent(p, name);来实现</p>
+<p>结论：只要是一个模块，且被引入，有相同包名都可以在启动时被检测出来并报错 （为什么编译时不做的呢？main方法不明确？还是要指定主模块？）</p>
+<p>注意：类路径加载的模块都是未命名模块，且不会因为包冲突而报错 </p>
+<h1 id="五、classloader的变化"><a href="#五、classloader的变化" class="headerlink" title="五、classloader的变化"></a>五、classloader的变化</h1><h2 id="1、类加载器变化概览"><a href="#1、类加载器变化概览" class="headerlink" title="1、类加载器变化概览"></a>1、类加载器变化概览</h2><h3 id="双亲委派机制"><a href="#双亲委派机制" class="headerlink" title="双亲委派机制"></a>双亲委派机制</h3><p>（1）任意一个 ClassLoader 在尝试加载一个类的时候，都会先尝试调用其父类的相关方法去加载类，如果其父类不能加载该类，则交由子类去完成。 这样的好处：对于任意使用者自定义的 ClassLoader，都会先去尝试让 jvm 的 Bootstrap ClassLoader 去尝试加载(自定义的 ClassLoader 都继承了它们)。那么就能保证 jvm 的类会被优先加载，限制了使用者对 jvm 系统的影响。</p>
+<p>（2）jdk9中的双亲委派机制仍然存在，只是在委派之前会优先寻找模块所属的加载器进行加载。</p>
+<h3 id="jdk9之前"><a href="#jdk9之前" class="headerlink" title="jdk9之前"></a>jdk9之前</h3><p>Boostrap -&gt; Extension -&gt; Application</p>
+<p>（1）bootstrap classloader加载rt.jar，jre&#x2F;lib&#x2F;endorsed （用来加载 jvm 自身需要的类，c++ 实现，用来加载 rt.jar）<br>（2）ext classloader加载jre&#x2F;lib&#x2F;ext （ 在 jdk9 中已经被移除。）<br>（3）application classloader加载-cp指定的类 (负责加载ClassPath路径下的类)</p>
+<h3 id="jdk9及之后"><a href="#jdk9及之后" class="headerlink" title="jdk9及之后"></a>jdk9及之后</h3><p>Application -&gt; Platform -&gt; Boostrap</p>
+<p>（1）bootstrap classloader加载lib&#x2F;modules 中的核心模块 （主要用来加载 java.base 中的核心系统类）<br>（2）ext classloader被废弃，新增platform classloader，加载lib&#x2F;modules的非核心模块 （用来加载 jdk 中的非核心模块类）<br>（3）application classloader加载-cp，-mp指定的类 （用来加载一般的应用类）</p>
+<h4 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h4><p>JDK9开始，AppClassLoader父类不再是 URLClassLoader；而是BuiltinClassLoader</p>
+<p>之前对于动态加载的类，我们总是通过将这个类通过反射调用URLClassLoader加到classpath里面进行加载。这么加载在JDK11中已经无法实现，并且这样加载的类不能卸载。 对于动态加载的类，我们在OpenJDK11中只能自定义类加载器去加载，而不是通过获取APPClassLoader去加载。同时，这么做也有助于你随时能将动态加载的类卸载，因为并没有加载到APPClassLoader。</p>
+<p>建议使用自定义的类加载器继承SecureClassLoader去加载类：java.security.SecureClassLoader</p>
+<h3 id="BuiltinClassLoader"><a href="#BuiltinClassLoader" class="headerlink" title="BuiltinClassLoader"></a>BuiltinClassLoader</h3><p>BuiltinClassLoader 是 jdk9 中代替 URLClassLoader 的加载器，是 PlatformClassLoader 与 AppClassLoader 的父类。其继承了 SecureClassLoader，其核心的方法主要是 loadClassOrNull(…) 方法</p>
+<h3 id="如何自定义加载器"><a href="#如何自定义加载器" class="headerlink" title="如何自定义加载器"></a>如何自定义加载器</h3><p>（1）java9之前</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ArthasClassloader</span> <span class="keyword">extends</span> <span class="title class_">URLClassLoader</span> &#123;</span><br><span class="line"><span class="keyword">public</span> <span class="title function_">ArthasClassloader</span><span class="params">(URL[] urls)</span> &#123;</span><br><span class="line"><span class="built_in">super</span>(urls, ClassLoader.getSystemClassLoader().getParent());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">protected</span> <span class="keyword">synchronized</span> Class&lt;?&gt; loadClass(String name, <span class="type">boolean</span> resolve) <span class="keyword">throws</span> ClassNotFoundException &#123;</span><br><span class="line"><span class="keyword">final</span> Class&lt;?&gt; loadedClass = findLoadedClass(name);</span><br><span class="line"><span class="keyword">if</span> (loadedClass != <span class="literal">null</span>) &#123;</span><br><span class="line"><span class="keyword">return</span> loadedClass;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 优先从parent（SystemClassLoader）里加载系统类，避免抛出ClassNotFoundException</span></span><br><span class="line"><span class="keyword">if</span> (name != <span class="literal">null</span> &amp;&amp; (name.startsWith(<span class="string">&quot;sun.&quot;</span>) || name.startsWith(<span class="string">&quot;java.&quot;</span>))) &#123;</span><br><span class="line"><span class="keyword">return</span> <span class="built_in">super</span>.loadClass(name, resolve);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">Class&lt;?&gt; aClass = findClass(name);</span><br><span class="line"><span class="keyword">if</span> (resolve) &#123;</span><br><span class="line">resolveClass(aClass);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> aClass;</span><br><span class="line">&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line"><span class="comment">// ignore</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> <span class="built_in">super</span>.loadClass(name, resolve);</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>（2）java9之后</p>
+<p>TODO</p>
+<h2 id="2、扩展机制"><a href="#2、扩展机制" class="headerlink" title="2、扩展机制"></a>2、扩展机制</h2><p>（1）版本9之前的Java SE允许扩展机制，可以通过将JAR放置在系统属性java.ext.dirs指定的目录中来扩展运行时映像。 如果未设置此系统属性，则使用jre\lib\ext目录作为其默认值。 该机制通过扩展类加载器（这是引导类加载器的子类）和系统类加载器的父级加载了该目录中的所有JAR。 它加载所有应用程序类。 这些JAR的内容对于在此运行时映像上编译或运行的所有应用程序都可见。</p>
+<p>（2）Java SE 9不支持扩展机制。 如果需要类似的功能，可以将这些JAR放在类路径的前面。 使用名为JAVA_HOME\lib\ext的目录或设置名为java.ext.dirs的系统属性会导致JDK 9中的错误。</p>
+<p>（3）在JDK 9之前，扩展类加载器和应用程序类加载器是java.net.URLClassLoader类的一个实例。 在JDK 9中，平台类加载器（以前的扩展类加载器）和应用程序类加载器是内部JDK类的实例。 如果你的代码依赖于URLClassLoader类的特定方法，代码可能会在JDK 9中崩溃。</p>
+<h2 id="3、类加载器的加载流程"><a href="#3、类加载器的加载流程" class="headerlink" title="3、类加载器的加载流程"></a>3、类加载器的加载流程</h2><p><img src="/2022/02/08/20220208-Java11%E5%9F%BA%E7%A1%80%E5%8E%9F%E7%90%86%E5%92%8C%E5%AE%9E%E8%B7%B5/java11_classloader.png"></p>
+<h3 id="在JDK-9之前"><a href="#在JDK-9之前" class="headerlink" title="在JDK 9之前"></a>在JDK 9之前</h3><p>a. JDK使用三个类加载器来加载类<br>b. JDK类加载器以分层方式工作 —— 引导类加载器位于层次结构的顶部。 类加载器将类加载请求委托给上层类加载器。</p>
+<p>例如，如果应用程序类加载器需要加载一个类，它将请求委托给扩展类加载器，扩展类加载器又将请求委托给引导类加载器。 如果引导类加载器无法加载类，扩展类加载器将尝试加载它。 如果扩展类加载器无法加载类，则应用程序类加载器尝试加载它。 如果应用程序类加载器无法加载它，则抛出ClassNotFoundException异常。</p>
+<p>c. 引导类加载器是扩展类加载器的父类。 扩展类加载器是应用程序类加载器的父类。 引导类加载器没有父类。 默认情况下，应用程序类加载器将是你创建的其他类加载器的父类。</p>
+<h3 id="在JDK-9之前的类加载机制"><a href="#在JDK-9之前的类加载机制" class="headerlink" title="在JDK 9之前的类加载机制"></a>在JDK 9之前的类加载机制</h3><p>（1）【Boostrap】引导类加载器加载由Java平台组成的引导类，包括JAVA_HOME\lib\rt.jar中的类和其他几个运行时JAR。 它完全在虚拟机中实现。 可以使用-Xbootclasspath&#x2F;p和-Xbootclasspath&#x2F;a命令行选项来附加引导目录。 可以使用-Xbootclasspath选项指定引导类路径，该选项将替换默认的引导类路径。 在运行时，sun.boot.class.path系统属性包含引导类路径的只读值。 JDK通过null表示这个类加载器。 也就是说，你不能得到它的引用。 例如，Object类由引导类加载器加载，并且Object.class.getClassLoader()表达式将返回null。</p>
+<p>（2）【Extension】扩展类加载器用于通过java.ext.dirs系统属性指定的目录中的位于JAR中的扩展机制加载可用的类。要获得扩展类加载器的引用，需要获取应用程序类加载器的引用，并在该引用上使用getParent()方法。</p>
+<p>（3）【Application】应用程序类加载器从由CLASSPATH环境变量指定的应用程序类路径或命令行选项-cp或-classpath加载类。应用程序类加载器也称为系统类加载器，这是一种误称，它暗示它加载系统类。可以使用ClassLoader类的静态方法getSystemClassLoader()获取对应用程序类加载器的引用。</p>
+<h3 id="在JDK-9及之后"><a href="#在JDK-9及之后" class="headerlink" title="在JDK 9及之后"></a>在JDK 9及之后</h3><p>a. JDK9保持三级分层类加载器架构以实现向后兼容。但是，从模块系统加载类的方式有一些变化。<br>b. 在JDK 9中，应用程序类加载器【Application】可以委托给平台类加载器【Platform】以及引导类加载器【Boostrap】；平台类加载器【Platform】可以委托给引导类加载器【Boostrap】和应用程序类加载器【Application】。</p>
+<p>（1）在JDK 9中，引导类加载器是由类库和代码在虚拟机中实现的(不再是c++实现)。 为了向后兼容，它在程序中仍然由null表示。 例如，Object.class.getClassLoader()仍然返回null。 但是，并不是所有的Java SE平台和JDK模块都由引导类加载器加载。 举几个例子，引导类加载器加载的模块是java.base，java.logging，java.prefs和java.desktop。 其他Java SE平台和JDK模块由平台类加载器和应用程序类加载器加载，这在下面介绍。 JDK 9中不再支持用于指定引导类路径，-Xbootclasspath和-Xbootclasspath&#x2F;p选项以及系统属性sun.boot.class.path。-Xbootclasspath&#x2F;a选项仍然受支持，其值存储在jdk.boot.class.path.append的系统属性中。</p>
+<p>（2）JDK 9不再支持扩展机制。 但是，它将扩展类加载器保留在名为平台类加载器的新名称下。 ClassLoader类包含一个名为getPlatformClassLoader()的静态方法，该方法返回对平台类加载器的引用。 下表包含平台类加载器加载的模块列表。 平台类加载器用于另一目的。 默认情况下，由引导类加载器加载的类将被授予所有权限。 但是，几个类不需要所有权限。 这些类在JDK 9中已经被取消了特权，并且它们被平台类加载器加载以提高安全性。<br>下面是JDK 9中由平台加载器加载的模块列表。</p>
+<p>（3）应用程序类加载器加载在模块路径上找到的应用程序模块和一些提供工具或导出工具API的JDK模块，如下表所示。 仍然可以使用ClassLoader类的getSystemClassLoader()的静态方法来获取应用程序类加载器的引用。</p>
+<h3 id="在JDK-9及之后的的类加载机制"><a href="#在JDK-9及之后的的类加载机制" class="headerlink" title="在JDK 9及之后的的类加载机制"></a>在JDK 9及之后的的类加载机制</h3><p>三个内置的类加载器一起协作来加载类。</p>
+<p>（1）当应用程序类加载器需要加载类时，它将搜索定义到所有类加载器的模块。 如果有合适的模块定义在这些类加载器中，则该类加载器将加载类，这意味着应用程序类加载器现在可以委托给引导类加载器和平台类加载器。 如果在为这些类加载器定义的命名模块中找不到类，则应用程序类加载器将委托给其父类，即平台类加载器。 如果类尚未加载，则应用程序类加载器将搜索类路径。 如果它在类路径中找到类，它将作为其未命名模块的成员加载该类。 如果在类路径中找不到类，则抛出ClassNotFoundException异常。</p>
+<p>（2）当平台类加载器需要加载类时，它将搜索定义到所有类加载器的模块。 如果一个合适的模块被定义为这些类加载器中，则该类加载器加载该类。 这意味着平台类加载器可以委托给引导类加载器以及应用程序类加载器。 如果在为这些类加载器定义的命名模块中找不到一个类，那么平台类加载器将委托给它的父类，即引导类加载器。</p>
+<p>（3）当引导类加载器需要加载一个类时，它会搜索自己的命名模块列表。 如果找不到类，它将通过命令行选项-Xbootclasspath&#x2F;a指定的文件和目录列表进行搜索。 如果它在引导类路径上找到一个类，它将作为其未命名模块的成员加载该类。</p>
+<p>JDK 9包含一个名为-Xlog::modules的选项，用于在虚拟机加载时记录调试或跟踪消息，可以看到类加载器及其加载的模块和类。其格式如下：</p>
+<p><code>-Xlog:modules=&lt;debug|trace&gt;</code><br><code>java -Xlog:modules=trace --module-path lib --module com.jdojo.prime.client/com.jdojo.prime.client.Main &gt; test.txt</code></p>
+<h3 id="JDK-9各类加载器对应加载的模块"><a href="#JDK-9各类加载器对应加载的模块" class="headerlink" title="JDK 9各类加载器对应加载的模块"></a>JDK 9各类加载器对应加载的模块</h3><p>（1）bootstrap classloader加载lib&#x2F;modules</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">java.base java.security.sasl</span><br><span class="line">java.datatransfer java.xml</span><br><span class="line">java.desktop jdk.httpserver</span><br><span class="line">java.instrument jdk.internal.vm.ci</span><br><span class="line">java.logging jdk.management</span><br><span class="line">java.management jdk.management.agent</span><br><span class="line">java.management.rmi jdk.naming.rmi</span><br><span class="line">java.naming jdk.net</span><br><span class="line">java.prefs jdk.sctp</span><br><span class="line">java.rmi jdk.unsupported</span><br></pre></td></tr></table></figure>
+<p>（2）platform classloader，加载lib&#x2F;modules</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">java.activation* jdk.accessibility</span><br><span class="line">java.compiler* jdk.charsets</span><br><span class="line">java.corba* jdk.crypto.cryptoki</span><br><span class="line">java.scripting jdk.crypto.ec</span><br><span class="line">java.se jdk.dynalink</span><br><span class="line">java.se.ee jdk.incubator.httpclient</span><br><span class="line">java.security.jgss jdk.internal.vm.compiler*</span><br><span class="line">java.smartcardio jdk.jsobject</span><br><span class="line">java.sql jdk.localedata</span><br><span class="line">java.sql.rowset jdk.naming.dns</span><br><span class="line">java.transaction* jdk.scripting.nashorn</span><br><span class="line">java.xml.bind* jdk.security.auth</span><br><span class="line">java.xml.crypto jdk.security.jgss</span><br><span class="line">java.xml.ws* jdk.xml.dom</span><br><span class="line">java.xml.ws.annotation* jdk.zipfs</span><br></pre></td></tr></table></figure>
+<p>（3）application classloader加载-cp，-mp指定的类</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">jdk.aot jdk.jdeps</span><br><span class="line">jdk.attach jdk.jdi</span><br><span class="line">jdk.compiler jdk.jdwp.agent</span><br><span class="line">jdk.editpad jdk.jlink</span><br><span class="line">jdk.hotspot.agent jdk.jshell</span><br><span class="line">jdk.internal.ed jdk.jstatd</span><br><span class="line">jdk.internal.jvmstat jdk.pack</span><br><span class="line">jdk.internal.le jdk.policytool</span><br><span class="line">jdk.internal.opt jdk.rmic</span><br><span class="line">jdk.jartool jdk.scripting.nashorn.shell</span><br><span class="line">jdk.javadoc jdk.xml.bind*</span><br><span class="line">jdk.jcmd jdk.xml.ws*</span><br><span class="line">jdk.jconsole</span><br></pre></td></tr></table></figure>
+<h2 id="4、其他"><a href="#4、其他" class="headerlink" title="4、其他"></a>4、其他</h2><p>（1）如果你想访问classpath下的内容，你可以读取环境变量：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">String</span> <span class="variable">pathSeparator</span> <span class="operator">=</span> System</span><br><span class="line">.getProperty(<span class="string">&quot;path.separator&quot;</span>);</span><br><span class="line">String[] classPathEntries = System</span><br><span class="line">.getProperty(<span class="string">&quot;java.class.path&quot;</span>)</span><br><span class="line">.split(pathSeparator);</span><br></pre></td></tr></table></figure>
+<p>（2）设置虚拟机参数为”-XX:+TraceClassLoading”来获取类加载信息<br>（3）如何判断类是有未命名模块加载，还是正常模块加载的 ：clazz.getModule()</p>
+<h1 id="六、垃圾回收器"><a href="#六、垃圾回收器" class="headerlink" title="六、垃圾回收器"></a>六、垃圾回收器</h1><h2 id="JDK-11-默认使用G1"><a href="#JDK-11-默认使用G1" class="headerlink" title="JDK 11 默认使用G1"></a>JDK 11 默认使用G1</h2><p>G1会比CMS有更多的内存消耗，多了两个内存结构：</p>
+<p>Remembered Sets：每个区块Region都有一个与之对应的Remembered Set来记录不同区块间对象引用（其他收集器只是记录新生代、老年代间互相引用）。用来避免全堆扫描<br>Collection Sets：将要被回收区块对象的集合，GC时收集器将这些区块对象复制到其他区块中</p>
+<h2 id="ZGC"><a href="#ZGC" class="headerlink" title="ZGC"></a>ZGC</h2><p>ZGC（The Z Garbage Collector）是JDK 11中推出的一款低延迟垃圾回收器，它的设计目标包括：</p>
+<p>停顿时间不超过10ms；<br>停顿时间不会随着堆的大小，或者活跃对象的大小而增加；<br>支持8MB~4TB级别的堆（未来支持16TB）。</p>
+<p>从设计目标来看，我们知道ZGC适用于大内存低延迟服务的内存管理和回收。</p>
+<p>对吞吐量优先的场景，ZGC可能并不适合。<br>ZGC作为下一代垃圾回收器，性能非常优秀。ZGC垃圾回收过程几乎全部是并发，实际STW停顿时间极短，不到10ms。这得益于其采用的着色指针和读屏障技术。</p>
+<p>后续考虑在生产环境使用ZGC。</p>
+<h1 id="七、新特性"><a href="#七、新特性" class="headerlink" title="七、新特性"></a>七、新特性</h1><h2 id="1、HttpClient-API"><a href="#1、HttpClient-API" class="headerlink" title="1、HttpClient API"></a>1、HttpClient API</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">HttpClient</span> <span class="variable">client</span> <span class="operator">=</span> HttpClient.newHttpClient();</span><br><span class="line"><span class="type">HttpRequest</span> <span class="variable">request</span> <span class="operator">=</span> HttpRequest.newBuilder()</span><br><span class="line">.uri(URI.create(<span class="string">&quot;http://openjdk.java.net/&quot;</span>))</span><br><span class="line">.build();</span><br><span class="line">client.sendAsync(request, BodyHandlers.ofString())</span><br><span class="line">.thenApply(HttpResponse::body)</span><br><span class="line">.thenAccept(System.out::println)</span><br><span class="line">.join();</span><br></pre></td></tr></table></figure>
+<h2 id="2、使用Stream-dropWhile-简化代码"><a href="#2、使用Stream-dropWhile-简化代码" class="headerlink" title="2、使用Stream dropWhile 简化代码"></a>2、使用Stream dropWhile 简化代码</h2><p>获取列表从lastId开始到结尾的子集</p>
+<p>java8</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="variable">index</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line"><span class="keyword">for</span> (UserDynamicSortSetMemberWithScoreBO bo : sortSetKeyList) &#123;</span><br><span class="line"><span class="keyword">if</span> (bo.getId() == lastId) &#123;</span><br><span class="line"><span class="keyword">break</span>;</span><br><span class="line">&#125;</span><br><span class="line">index++;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> sortSetKeyList.stream()</span><br><span class="line">.skip(index + <span class="number">1</span>)</span><br><span class="line">.limit(DynamicConfig.feedListPageSize())</span><br><span class="line">.collect(Collectors.toList());</span><br></pre></td></tr></table></figure>
+<p>java9</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> sortSetKeyList.stream()</span><br><span class="line">.dropWhile(v -&gt; !v.getId().equals(lastId))</span><br><span class="line">.skip(<span class="number">1</span>)</span><br><span class="line">.limit(DynamicConfig.feedListPageSize())</span><br><span class="line">.collect(Collectors.toList());</span><br></pre></td></tr></table></figure>
+<h2 id="3、Optional-ifPresentOrElse"><a href="#3、Optional-ifPresentOrElse" class="headerlink" title="3、Optional.ifPresentOrElse"></a>3、Optional.ifPresentOrElse</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">optional.ifPresentOrElse( x -&gt; System.out.println(<span class="string">&quot;Value: &quot;</span> + x),() -&gt;</span><br><span class="line">System.out.println(<span class="string">&quot;Not Present.&quot;</span>));</span><br></pre></td></tr></table></figure>
+
+
+<h1 id="八、迁移实践"><a href="#八、迁移实践" class="headerlink" title="八、迁移实践"></a>八、迁移实践</h1><h2 id="目标1：可运行"><a href="#目标1：可运行" class="headerlink" title="目标1：可运行"></a>目标1：可运行</h2><p>由于项目历史沉重（代码不兼容或依赖未模块化），先使用旧方式运行（类路径而不是模块系统）</p>
+<p>1、目标：用最简单快速的方式使用java11编译和运行代码<br>2、收益：使用属于Java 9-11 新的API、工具和性能改进。<br>3、未使用Java 9的旗舰功能——模块系统，仍使用类路径方式运行服务</p>
+<h2 id="目标2：使用模块系统运行"><a href="#目标2：使用模块系统运行" class="headerlink" title="目标2：使用模块系统运行"></a>目标2：使用模块系统运行</h2><p>模块化改造，在现有的项目中如何发挥模块化的作用</p>
+<h3 id="自动模块会exports所有包，导致分包问题，不同模块包含相同包"><a href="#自动模块会exports所有包，导致分包问题，不同模块包含相同包" class="headerlink" title="自动模块会exports所有包，导致分包问题，不同模块包含相同包"></a>自动模块会exports所有包，导致分包问题，不同模块包含相同包</h3><p>解决的方法：<br>（1）改代码，去除这种不规范（难，第三方包很多这种）<br>（2）把这种包放在未命名模块</p>
+<h3 id="由于完全模块化分包的问题无法解决，所以要混合两种方式运行项目"><a href="#由于完全模块化分包的问题无法解决，所以要混合两种方式运行项目" class="headerlink" title="由于完全模块化分包的问题无法解决，所以要混合两种方式运行项目"></a>由于完全模块化分包的问题无法解决，所以要混合两种方式运行项目</h3><p>gradle对混合两种（类路径和模块系统）的支持不足<br>直接命令行使用混合两种运行是可以的：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./jdk-11.0.10.jdk/Contents/Home/bin/java --add-opens=java.base/jdk.internal.loader=ALL-UNNAMED -cp &quot;build/deploy/*&quot; -p &quot;build/module/*&quot; --add-modules &quot;com.xx.xx.xx&quot; com.xx.xx.xx.Application</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="目标3：使用java17"><a href="#目标3：使用java17" class="headerlink" title="目标3：使用java17"></a>目标3：使用java17</h2><h3 id="1、Gradle-7-3-is-the-first-version-fully-supporting-Java-17"><a href="#1、Gradle-7-3-is-the-first-version-fully-supporting-Java-17" class="headerlink" title="1、Gradle 7.3 is the first version fully supporting Java 17"></a>1、Gradle 7.3 is the first version fully supporting Java 17</h3><h3 id="2、Spring-Boot-2-5-5是Spring-Boot-第一个支持Java-17的版本"><a href="#2、Spring-Boot-2-5-5是Spring-Boot-第一个支持Java-17的版本" class="headerlink" title="2、Spring Boot 2.5.5是Spring Boot 第一个支持Java 17的版本"></a>2、Spring Boot 2.5.5是Spring Boot 第一个支持Java 17的版本</h3><h1 id="其他-1"><a href="#其他-1" class="headerlink" title="其他"></a>其他</h1><ul>
+<li>新版本jdk现在基本都是规定时间内免费，比如半年或三年，一般情况下直接用openjdk就足够了。</li>
+<li><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1598291">OpenJDK和Oracle JDK有什么区别和联系</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.fokyl.com/news/openjdk%20oracle%20jdk%20.html">openjdk与Oraclejdk的区别</a><ul>
+<li>在2006年11月13日的JavaOne大会上，Sun公司（当时还没被收购）宣布计划要把Java开源，在随后的一年多时间内，它陆续地将JDK的各个部分在GPL v2（GNU General Public License v2）协议下公开了源码，并建立了OpenJDK组织对这些源码进行独立管理。除了极少量的产权代码（Encumbered Code，这部分代码所有权不属于Sun公司，Sun本身也无权进行开源处理）外，OpenJDK几乎拥有了当时SunJDK 的全部代码。</li>
+<li>但是随着JDK版本的不断发布，Oracle失去了维护OpenJDK的耐心，因为不赚钱啊。RedHat从Oracle手上接过OpenJDK的管理权利和维护职责。</li>
+</ul>
+</li>
+<li><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/19646618">https://www.zhihu.com/question/19646618</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/353325963">https://www.zhihu.com/question/353325963</a><ul>
+<li>OpenJDK 实际上不适合拿来和 OracleJDK 进行对比，OpenJDK 不提供 LTS 服务，而 OracleJDK 每三年都会推出一个 LTS 版进行长期支持。</li>
+</ul>
+</li>
+<li>从 11+ 版本开始 -XX:+UseContainerSupport 已经自动开启, 可以自适应内存pod的内存限制,不用通过<code>-Xms -Xmx</code> 来设置</li>
+</ul>
+<h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><ul>
+<li>[Java 9模块化开发_核心原则与实践]</li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_34378888/article/details/112584392">模块化加载_Java9模块化的类加载机制实现剖析</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/eMac/article/details/107131444">【JDK 11】关于 Java 模块系统，看这一篇就够了</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/IcanFixIt/p/7131676.html">Java 9 揭秘（8. JDK 9重大改变）</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/87157172">从JDK8升级到JDK11，看这篇就足够了</a></li>
+<li><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/47685388/load-class-from-exploded-module-using-custom-classloader">Load class from exploded module using custom classloader</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.baeldung.com/java-classloaders">Class Loaders in Java</a></li>
+<li><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/60764/how-to-load-jar-files-dynamically-at-runtime">How to load JAR files dynamically at Runtime?</a></li>
+<li><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/46112809/is-it-possible-to-load-and-unload-jdk-and-custom-modules-dynamically-in-java-9">Is it possible to load and unload jdk and custom modules dynamically in Java 9?</a></li>
+<li><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903666932006926">聊聊java9的classloader</a></li>
+<li><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000020110723">JVM_类加载机制详解</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/ag5u2EPObx7bZr7hkcrOTg">新一代垃圾回收器ZGC的探索与实践</a></li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java9/" rel="tag"># Java9</a>
+          
+            <a href="/tags/Java11/" rel="tag"># Java11</a>
+          
+            <a href="/tags/%E6%A8%A1%E5%9D%97%E7%B3%BB%E7%BB%9F/" rel="tag"># 模块系统</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2022/01/17/20220117-nio-zong-jie-bi-ji/" rel="next" title="NIO总结笔记">
+                <i class="fa fa-chevron-left"></i> NIO总结笔记
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2022/02/20/20220220-nba-xuan-xiu-chou-qian-ju-ti-shi-ru-he-cao-zuo-de/" rel="prev" title="nba选秀抽签具体是如何操作的？">
+                nba选秀抽签具体是如何操作的？ <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.png"
+                alt="" />
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+<a href="/archives/">                
+<!--<a href="/archives/%7C%7C%20archive">-->
+              
+                  <span class="site-state-item-count">110</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">122</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E9%80%89%E6%8B%A9java11"><span class="nav-number">1.</span> <span class="nav-text">一、为什么选择java11</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E6%A8%A1%E5%9D%97%E7%B3%BB%E7%BB%9F"><span class="nav-number">2.</span> <span class="nav-text">二、模块系统</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#java9%E4%B9%8B%E5%89%8D%E5%AD%98%E5%9C%A8%E5%93%AA%E4%BA%9B%E7%97%9B%E7%82%B9"><span class="nav-number">2.1.</span> <span class="nav-text">java9之前存在哪些痛点</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%81%E6%B2%A1%E6%9C%89%E5%B0%81%E8%A3%85"><span class="nav-number">2.1.1.</span> <span class="nav-text">1、没有封装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%E3%80%81%E7%BC%96%E8%AF%91%E6%97%B6%E6%97%A0%E6%B3%95%E6%84%9F%E7%9F%A5%E4%BE%9D%E8%B5%96%E7%BC%BA%E5%A4%B1%E6%88%96%E7%B1%BB%E9%87%8D%E5%A4%8D"><span class="nav-number">2.1.2.</span> <span class="nav-text">2、编译时无法感知依赖缺失或类重复</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B3%E4%BA%8E%E7%B1%BB%E9%87%8D%E5%A4%8D"><span class="nav-number">2.2.</span> <span class="nav-text">关于类重复</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%81%E9%80%9A%E8%BF%87%E6%8F%92%E4%BB%B6%E6%A3%80%E6%9F%A5%E7%B1%BB%E9%87%8D%E5%A4%8D"><span class="nav-number">2.2.1.</span> <span class="nav-text">1、通过插件检查类重复</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%E3%80%81%E9%80%9A%E8%BF%87%E6%9E%84%E5%BB%BA%E5%B7%A5%E5%85%B7%E4%BF%9D%E8%AF%81%E5%8F%AA%E5%AD%98%E5%9C%A8%E4%B8%80%E4%B8%AA%E7%89%88%E6%9C%AC%E7%9A%84jar%E5%8C%85"><span class="nav-number">2.2.2.</span> <span class="nav-text">2、通过构建工具保证只存在一个版本的jar包</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9E%84%E5%BB%BA%E5%B7%A5%E5%85%B7"><span class="nav-number">2.3.</span> <span class="nav-text">构建工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A8%A1%E5%9D%97%E5%8C%96%E7%9A%84%E5%A5%BD%E5%A4%84"><span class="nav-number">2.4.</span> <span class="nav-text">模块化的好处</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A8%A1%E5%9D%97%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%9F%BA%E7%A1%80"><span class="nav-number">2.5.</span> <span class="nav-text">模块系统的基础</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%81module-info-java%E6%8F%8F%E8%BF%B0%E6%96%87%E4%BB%B6-%E5%85%B3%E9%94%AE%E5%AD%97%E8%AF%B4%E6%98%8E"><span class="nav-number">2.5.1.</span> <span class="nav-text">1、module-info.java描述文件 关键字说明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%E3%80%81%E6%A8%A1%E5%9D%97%E5%8C%96%E5%9F%BA%E7%A1%80"><span class="nav-number">2.5.2.</span> <span class="nav-text">2、模块化基础</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3%E3%80%81%E4%BB%A5%E9%9D%9E%E6%A8%A1%E5%9D%97%E5%8C%96%E6%96%B9%E5%BC%8F%E5%BC%80%E5%8F%91%E5%92%8C%E8%BF%90%E8%A1%8C%E5%BA%94%E7%94%A8"><span class="nav-number">2.5.3.</span> <span class="nav-text">3、以非模块化方式开发和运行应用</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E8%BF%81%E7%A7%BB"><span class="nav-number">3.</span> <span class="nav-text">三、迁移</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%87%AA%E5%8A%A8%E6%A8%A1%E5%9D%97"><span class="nav-number">3.1.</span> <span class="nav-text">自动模块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%AA%E5%91%BD%E5%90%8D%E6%A8%A1%E5%9D%97"><span class="nav-number">3.2.</span> <span class="nav-text">未命名模块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%AA%E5%91%BD%E5%90%8D%E6%A8%A1%E5%9D%97%EF%BC%88unnamed-module%EF%BC%89%E5%92%8C%E8%87%AA%E5%8A%A8%E6%A8%A1%E5%9D%97%EF%BC%88automatic-module%EF%BC%89%E6%80%BB%E7%BB%93"><span class="nav-number">3.3.</span> <span class="nav-text">未命名模块（unnamed module）和自动模块（automatic module）总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#java9-%E8%87%AA%E5%8A%A8%E6%A8%A1%E5%9D%97-%E7%9A%84%E6%84%8F%E4%B9%89"><span class="nav-number">3.4.</span> <span class="nav-text">java9 自动模块 的意义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B6%E4%BB%96"><span class="nav-number">3.5.</span> <span class="nav-text">其他</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BA%93%E8%BF%81%E7%A7%BB"><span class="nav-number">3.6.</span> <span class="nav-text">库迁移</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E6%A8%A1%E5%9D%97%E7%B3%BB%E7%BB%9F%E5%AE%9E%E8%B7%B5%E4%BE%8B%E5%AD%90"><span class="nav-number">4.</span> <span class="nav-text">四、模块系统实践例子</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1%E3%80%81%E7%9B%B8%E5%90%8C%E6%A8%A1%E5%9D%97%E4%B8%8D%E5%90%8C%E7%89%88%E6%9C%AC%EF%BC%8C%E6%96%B0%E7%89%88%E5%BA%9F%E5%BC%83%E6%96%B9%E6%B3%95"><span class="nav-number">4.1.</span> <span class="nav-text">1、相同模块不同版本，新版废弃方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2%E3%80%81%E4%B8%8D%E5%90%8C%E6%A8%A1%E5%9D%97%E5%90%AB%E9%87%8D%E5%A4%8D%E7%B1%BB"><span class="nav-number">4.2.</span> <span class="nav-text">2、不同模块含重复类</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%94%E3%80%81classloader%E7%9A%84%E5%8F%98%E5%8C%96"><span class="nav-number">5.</span> <span class="nav-text">五、classloader的变化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1%E3%80%81%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8%E5%8F%98%E5%8C%96%E6%A6%82%E8%A7%88"><span class="nav-number">5.1.</span> <span class="nav-text">1、类加载器变化概览</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%8C%E4%BA%B2%E5%A7%94%E6%B4%BE%E6%9C%BA%E5%88%B6"><span class="nav-number">5.1.1.</span> <span class="nav-text">双亲委派机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jdk9%E4%B9%8B%E5%89%8D"><span class="nav-number">5.1.2.</span> <span class="nav-text">jdk9之前</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jdk9%E5%8F%8A%E4%B9%8B%E5%90%8E"><span class="nav-number">5.1.3.</span> <span class="nav-text">jdk9及之后</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B3%A8%E6%84%8F"><span class="nav-number">5.1.3.1.</span> <span class="nav-text">注意</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#BuiltinClassLoader"><span class="nav-number">5.1.4.</span> <span class="nav-text">BuiltinClassLoader</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E8%87%AA%E5%AE%9A%E4%B9%89%E5%8A%A0%E8%BD%BD%E5%99%A8"><span class="nav-number">5.1.5.</span> <span class="nav-text">如何自定义加载器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2%E3%80%81%E6%89%A9%E5%B1%95%E6%9C%BA%E5%88%B6"><span class="nav-number">5.2.</span> <span class="nav-text">2、扩展机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3%E3%80%81%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8%E7%9A%84%E5%8A%A0%E8%BD%BD%E6%B5%81%E7%A8%8B"><span class="nav-number">5.3.</span> <span class="nav-text">3、类加载器的加载流程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%A8JDK-9%E4%B9%8B%E5%89%8D"><span class="nav-number">5.3.1.</span> <span class="nav-text">在JDK 9之前</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%A8JDK-9%E4%B9%8B%E5%89%8D%E7%9A%84%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6"><span class="nav-number">5.3.2.</span> <span class="nav-text">在JDK 9之前的类加载机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%A8JDK-9%E5%8F%8A%E4%B9%8B%E5%90%8E"><span class="nav-number">5.3.3.</span> <span class="nav-text">在JDK 9及之后</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%A8JDK-9%E5%8F%8A%E4%B9%8B%E5%90%8E%E7%9A%84%E7%9A%84%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6"><span class="nav-number">5.3.4.</span> <span class="nav-text">在JDK 9及之后的的类加载机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JDK-9%E5%90%84%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8%E5%AF%B9%E5%BA%94%E5%8A%A0%E8%BD%BD%E7%9A%84%E6%A8%A1%E5%9D%97"><span class="nav-number">5.3.5.</span> <span class="nav-text">JDK 9各类加载器对应加载的模块</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4%E3%80%81%E5%85%B6%E4%BB%96"><span class="nav-number">5.4.</span> <span class="nav-text">4、其他</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8"><span class="nav-number">6.</span> <span class="nav-text">六、垃圾回收器</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#JDK-11-%E9%BB%98%E8%AE%A4%E4%BD%BF%E7%94%A8G1"><span class="nav-number">6.1.</span> <span class="nav-text">JDK 11 默认使用G1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ZGC"><span class="nav-number">6.2.</span> <span class="nav-text">ZGC</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E6%96%B0%E7%89%B9%E6%80%A7"><span class="nav-number">7.</span> <span class="nav-text">七、新特性</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1%E3%80%81HttpClient-API"><span class="nav-number">7.1.</span> <span class="nav-text">1、HttpClient API</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2%E3%80%81%E4%BD%BF%E7%94%A8Stream-dropWhile-%E7%AE%80%E5%8C%96%E4%BB%A3%E7%A0%81"><span class="nav-number">7.2.</span> <span class="nav-text">2、使用Stream dropWhile 简化代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3%E3%80%81Optional-ifPresentOrElse"><span class="nav-number">7.3.</span> <span class="nav-text">3、Optional.ifPresentOrElse</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%AB%E3%80%81%E8%BF%81%E7%A7%BB%E5%AE%9E%E8%B7%B5"><span class="nav-number">8.</span> <span class="nav-text">八、迁移实践</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%AE%E6%A0%871%EF%BC%9A%E5%8F%AF%E8%BF%90%E8%A1%8C"><span class="nav-number">8.1.</span> <span class="nav-text">目标1：可运行</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%AE%E6%A0%872%EF%BC%9A%E4%BD%BF%E7%94%A8%E6%A8%A1%E5%9D%97%E7%B3%BB%E7%BB%9F%E8%BF%90%E8%A1%8C"><span class="nav-number">8.2.</span> <span class="nav-text">目标2：使用模块系统运行</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%87%AA%E5%8A%A8%E6%A8%A1%E5%9D%97%E4%BC%9Aexports%E6%89%80%E6%9C%89%E5%8C%85%EF%BC%8C%E5%AF%BC%E8%87%B4%E5%88%86%E5%8C%85%E9%97%AE%E9%A2%98%EF%BC%8C%E4%B8%8D%E5%90%8C%E6%A8%A1%E5%9D%97%E5%8C%85%E5%90%AB%E7%9B%B8%E5%90%8C%E5%8C%85"><span class="nav-number">8.2.1.</span> <span class="nav-text">自动模块会exports所有包，导致分包问题，不同模块包含相同包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%B1%E4%BA%8E%E5%AE%8C%E5%85%A8%E6%A8%A1%E5%9D%97%E5%8C%96%E5%88%86%E5%8C%85%E7%9A%84%E9%97%AE%E9%A2%98%E6%97%A0%E6%B3%95%E8%A7%A3%E5%86%B3%EF%BC%8C%E6%89%80%E4%BB%A5%E8%A6%81%E6%B7%B7%E5%90%88%E4%B8%A4%E7%A7%8D%E6%96%B9%E5%BC%8F%E8%BF%90%E8%A1%8C%E9%A1%B9%E7%9B%AE"><span class="nav-number">8.2.2.</span> <span class="nav-text">由于完全模块化分包的问题无法解决，所以要混合两种方式运行项目</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%AE%E6%A0%873%EF%BC%9A%E4%BD%BF%E7%94%A8java17"><span class="nav-number">8.3.</span> <span class="nav-text">目标3：使用java17</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%81Gradle-7-3-is-the-first-version-fully-supporting-Java-17"><span class="nav-number">8.3.1.</span> <span class="nav-text">1、Gradle 7.3 is the first version fully supporting Java 17</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%E3%80%81Spring-Boot-2-5-5%E6%98%AFSpring-Boot-%E7%AC%AC%E4%B8%80%E4%B8%AA%E6%94%AF%E6%8C%81Java-17%E7%9A%84%E7%89%88%E6%9C%AC"><span class="nav-number">8.3.2.</span> <span class="nav-text">2、Spring Boot 2.5.5是Spring Boot 第一个支持Java 17的版本</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B6%E4%BB%96-1"><span class="nav-number">9.</span> <span class="nav-text">其他</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Reference"><span class="nav-number">10.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kingson Wu</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'LR34RG5CRdFgzK8ijwc5Hq0B-gzGzoHsz',
+        appKey: 'qqtIlANIluHpfpOnxTUnYrku',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"model":{"jsonPath":"/live2dw/assets/tororo.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"log":false});</script></body>
+</html>

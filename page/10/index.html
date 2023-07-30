@@ -287,7 +287,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/09/20200709-%E5%85%B3%E4%BA%8E%E5%B9%82%E7%AD%89%E7%9A%84%E8%8B%A5%E5%B9%B2%E9%97%AE%E9%A2%98/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/11/20200711-fen-bu-shi-suo-jian-dan-zong-jie/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="">
@@ -306,7 +306,894 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/07/09/20200709-%E5%85%B3%E4%BA%8E%E5%B9%82%E7%AD%89%E7%9A%84%E8%8B%A5%E5%B9%B2%E9%97%AE%E9%A2%98/" itemprop="url">关于幂等的若干问题</a></h1>
+                <a class="post-title-link" href="/2020/07/11/20200711-fen-bu-shi-suo-jian-dan-zong-jie/" itemprop="url">分布式锁简单总结</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-11T11:48:22+08:00">
+                2020-07-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/07/11/20200711-fen-bu-shi-suo-jian-dan-zong-jie/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/07/11/20200711-fen-bu-shi-suo-jian-dan-zong-jie/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="实现方式"><a href="#实现方式" class="headerlink" title="实现方式"></a>实现方式</h3><ol>
+<li>数据库的行级排它锁（如select * from x for update）；</li>
+<li>基于zookeeper的瞬间顺序节点；<ul>
+<li>最小节点获得锁</li>
+</ul>
+</li>
+<li>基于 Redis 的 SETNX 命令。<ul>
+<li>使用lua脚本保证原子性 （Redisson 有封装实现 ）</li>
+<li>RedLock <ul>
+<li>红锁并非是一个工具，而是Redis官方提出的一种分布式锁的算法。</li>
+<li>RedLock作者指出，之所以要用独立的，是避免了redis异步复制造成的锁丢失，比如：主节点没来的及把刚刚set进来这条数据给从节点，就挂了。</li>
+<li>红锁算法认为，只要(N&#x2F;2) + 1个节点加锁成功，那么就认为获取了锁， 解锁时将所有实例解锁。</li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/6bE5WmDubFCcSIMFuEqxEQ">细说Redis分布式锁</a></li>
+<li>Redisson 有封装实现</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<p>本文要讲的是第3种方式。</p>
+<h3 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h3><ol>
+<li><p>使用setnx创建一个key，如果key不存在，则创建成功返回1，否则返回0。根据是否获得锁决定是否执行业务逻辑，执行完后删除key来实现释放锁。</p>
+<ul>
+<li><code>SET resource_name my_random_value NX PX 30000</code></li>
+</ul>
+</li>
+<li><p>为了避免客户端挂了导致其他客户端无法获得锁的情况，为lock_key设置一个过期时间lock timeout</p>
+<ul>
+<li>一旦业务逻辑执行时间过长，租约到期，就会引发并发问题。</li>
+<li>lock timeout 设置合适的时间，一般情况10s内</li>
+<li>相对而言，ZooKeeper版本的分布式锁没有这个问题<ul>
+<li>锁的占用时间限制：redis就有占用时间限制，而ZooKeeper则没有，最主要的原因是redis目前没有办法知道已经获取锁的客户端的状态，是已经挂了呢还是正在执行耗时较长的业务逻辑。而ZooKeeper通过临时节点就能清晰知道，如果临时节点存在说明还在执行业务逻辑，如果临时节点不存在说明已经执行完毕释放锁或者是挂了。</li>
+<li>使用ZooKeeper可以主动通知客户端释放锁，Redis则不行</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>设置一个随机字符串my_random_value是很有必要的，它保证了一个客户端释放的锁必须是自己持有的那个锁。</p>
+<ul>
+<li>释放锁lua脚本<br> <code> if redis.call(&quot;get&quot;,KEYS[1]) == ARGV[1] then   return redis.call(&quot;del&quot;,KEYS[1])  else   return 0  end </code></li>
+</ul>
+</li>
+<li><p>可重入锁</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://juejin.cn/post/6961380552519712798">https://juejin.cn/post/6961380552519712798</a></li>
+<li>lua 脚本，需要存储 锁名称lockName、获得该锁的线程id和对应线程的进入次数count</li>
+<li>加锁 lock.lua <figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">local</span> key = KEYS[<span class="number">1</span>];</span><br><span class="line"><span class="keyword">local</span> threadId = ARGV[<span class="number">1</span>];</span><br><span class="line"><span class="keyword">local</span> releaseTime = ARGV[<span class="number">2</span>];</span><br><span class="line"></span><br><span class="line"><span class="comment">-- lockname不存在</span></span><br><span class="line"><span class="keyword">if</span>(redis.call(<span class="string">&#x27;exists&#x27;</span>, key) == <span class="number">0</span>) <span class="keyword">then</span></span><br><span class="line">    redis.call(<span class="string">&#x27;hset&#x27;</span>, key, threadId, <span class="string">&#x27;1&#x27;</span>);</span><br><span class="line">    redis.call(<span class="string">&#x27;expire&#x27;</span>, key, releaseTime);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line"><span class="keyword">end</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 当前线程已id存在</span></span><br><span class="line"><span class="keyword">if</span>(redis.call(<span class="string">&#x27;hexists&#x27;</span>, key, threadId) == <span class="number">1</span>) <span class="keyword">then</span></span><br><span class="line">    redis.call(<span class="string">&#x27;hincrby&#x27;</span>, key, threadId, <span class="string">&#x27;1&#x27;</span>);</span><br><span class="line">    redis.call(<span class="string">&#x27;expire&#x27;</span>, key, releaseTime);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line"><span class="keyword">end</span>;</span><br><span class="line"><span class="keyword">return</span> <span class="number">0</span>;</span><br></pre></td></tr></table></figure></li>
+<li>解锁 unlock.lua <figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">local</span> key = KEYS[<span class="number">1</span>];</span><br><span class="line"><span class="keyword">local</span> threadId = ARGV[<span class="number">1</span>];</span><br><span class="line"></span><br><span class="line"><span class="comment">-- lockname、threadId不存在</span></span><br><span class="line"><span class="keyword">if</span> (redis.call(<span class="string">&#x27;hexists&#x27;</span>, key, threadId) == <span class="number">0</span>) <span class="keyword">then</span></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">nil</span>;</span><br><span class="line"><span class="keyword">end</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 计数器-1</span></span><br><span class="line"><span class="keyword">local</span> count = redis.call(<span class="string">&#x27;hincrby&#x27;</span>, key, threadId, <span class="number">-1</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 删除lock</span></span><br><span class="line"><span class="keyword">if</span> (count == <span class="number">0</span>) <span class="keyword">then</span></span><br><span class="line">    redis.call(<span class="string">&#x27;del&#x27;</span>, key);</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">nil</span>;</span><br><span class="line"><span class="keyword">end</span>;</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>锁续约	</p>
+<ul>
+<li>延长锁的releaseTime延迟释放锁来直到完成业务期望结果，这种不断延长锁过期时间来保证业务执行完成的操作就是锁续约。</li>
+</ul>
+</li>
+<li><p>基于单Redis节点的分布式锁无法解决的安全问题。</p>
+<ul>
+<li>假如Redis节点宕机了，那么所有客户端就都无法获得锁了，服务变得不可用。为了提高可用性，我们可以给这个Redis节点挂一个Slave，当Master节点不可用的时候，系统自动切到Slave上（failover）。但由于Redis的主从复制（replication）是异步的，这可能导致在failover过程中丧失锁的安全性。</li>
+<li>Redlock算法</li>
+</ul>
+</li>
+<li><p>使用Redisson可以满足以上所有需求。</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/135864820">Redisson 实现分布式锁原理分析</a></li>
+<li>Redisson没有设置一个随机值，也可以解决解锁误删的问题。因为Redisson在解决可重入时，已经定义了threadId进行重入计数，通过threadId就可以判断是否是自己之前加的锁。</li>
+<li>锁续期：leaseTime 必须是 -1 才会开启 Watch Dog 机制，也就是如果你想开启 Watch Dog 机制必须使用默认的加锁时间为 30s。如果你自己自定义时间，超过这个时间，锁就会自定释放，并不会延长。</li>
+<li>锁等待：当锁正在被占用时，等待获取锁的进程并不是通过一个 while(true) 死循环去获取锁，而是利用了 Redis 的发布订阅机制,通过 await 方法阻塞等待锁的进程，有效的解决了无效的锁申请浪费资源的问题。</li>
+<li>缺点：Redis Cluster 或者说是 Redis Master-Slave 架构的主从异步复制导致的 Redis 分布式锁的最大缺陷（在 Redis Master 实例宕机的时候，可能导致多个客户端同时完成加锁）</li>
+<li>用法：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/cde0700f0128">使用Redisson实现分布式锁</a></li>
+</ul>
+</li>
+</ol>
+<ul>
+<li>个人看法： 分布式锁并不是绝对可靠，只能尽量保证大多数时候可靠，业务应该自行保证一旦锁失效时的逻辑正确性。</li>
+</ul>
+<h3 id="Zookeeper和Redis分布式锁的比较"><a href="#Zookeeper和Redis分布式锁的比较" class="headerlink" title="Zookeeper和Redis分布式锁的比较"></a>Zookeeper和Redis分布式锁的比较</h3><ol>
+<li>添加和删除，Reids性能较高</li>
+<li>Zookeeper有等待锁队列，大大提升抢锁效率；Redis需要考虑超时，原子性，误删等场景，客户端需要自旋等锁。</li>
+<li>使用 Redis 实现分布式锁在很多企业中非常常见，而且大部分情况下都不会遇到所谓的“极端复杂场景”。所以使用 Redis 作为分布式锁也不失为一种好的方案，最重要的一点是 Redis 的性能很高，可以支撑高并发的获取、释放锁操作。</li>
+<li>ZK 天生设计定位就是分布式协调，强一致性。锁的模型健壮、简单易用、适合做分布式锁。<br>如果获取不到锁，只需要添加一个监听器就可以了，不用一直轮询，性能消耗较小。<br>但是 ZK 也有其缺点：如果有较多的客户端频繁的申请加锁、释放锁，对于 ZK 集群的压力会比较大。</li>
+</ol>
+<h3 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h3><ul>
+<li><p>可以尝试使用Redisson实现分布式锁</p>
+</li>
+<li><p>Redis的作者antirez给出了一个更好的实现，称为Redlock，算是Redis官方对于实现分布式锁的指导规范。Redlock的算法描述就放在Redis的官网上：<br><a target="_blank" rel="noopener" href="https://redis.io/topics/distlock">https://redis.io/topics/distlock</a></p>
+</li>
+<li><p>举个场景的例子来详细说明：一提到分布式锁问题，大多数人想到的方案是基于Redis的Master-Slave模式来实现。这个实现方案行不行？分布式锁本质是一个CP需求，基于Redis的实现是一个AP需求，乍一看基于Redis的实现是无法满足的。脱离业务场景来谈架构都是耍流氓。<br>从技术战略的需求层面来看，如果分布式锁在极端情况下获取锁的不一致，社交业务场景能够接受，那么基于Redis的实现是完全可行的。如果业务是交易场景，分布式锁在极端情况下获取锁的不一致性无法接受，那么基于Redis的实现方案是不可行的。在锁强一致性的场景下，需要采取基于CP模型的etcd等方案来实现。</p>
+</li>
+<li><p>redis-cli提供了EVAL与EVALSHA命令执行Lua脚本:</p>
+<ol>
+<li>EVAL<ul>
+<li>EVAL script numkeys key [key …] arg [arg …]</li>
+<li>key和arg两类参数用于向脚本传递数据, 他们的值可在脚本中使用KEYS和ARGV两个table访问: KEYS表示要操作的键名, ARGV表示非键名参数(并非强制).</li>
+</ul>
+</li>
+<li>EVALSHA</li>
+</ol>
+<pre><code>- EVALSHA命令允许通过脚本的SHA1来执行(节省带宽), Redis在执行EVAL/SCRIPT LOAD后会计算脚本SHA1缓存, EVALSHA根据SHA1取出缓存脚本执行.
+</code></pre>
+</li>
+<li><p>redis一般都是单机房部署，如果要控制多个机房只有一个锁，考虑使用Consul来实现分布式锁。 </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/TEWnB_VqAW12nVrQlNmgNg">Redis 分布式锁的 10 个坑</a></p>
+<ol>
+<li>非原子操作（setnx + expire）<ul>
+<li>如果刚要执行完setnx加锁，正要执行expire设置过期时间时，进程crash或者要重启维护了，那么这个锁就“长生不老”了，别的线程永远获取不到锁了</li>
+</ul>
+</li>
+<li>被别的客户端请求覆盖（ setnx + value为过期时间）<ul>
+<li>Getset 命令用于设置指定 key 的值，并返回 key 的旧值。</li>
+</ul>
+</li>
+<li>忘记设置过期时间</li>
+<li>业务处理完，忘记释放锁</li>
+<li>B的锁被A给释放了<br>- 假设在这样的并发场景下：A、B两个线程来尝试给Redis的keylockKey加锁，A线程先拿到锁（假如锁超时时间是3秒后过期）。如果线程A执行的业务逻辑很耗时，超过了3秒还是没有执行完。这时候，Redis会自动释放lockKey锁。刚好这时，线程B过来了，它就能抢到锁了，开始执行它的业务逻辑，恰好这时，线程A执行完逻辑，去释放锁的时候，它就把B的锁给释放掉了。<br>- 正确的方式应该是，在用set扩展参数加锁时，放多一个这个线程请求的唯一标记，比如requestId，然后释放锁的时候，判断一下是不是刚刚的请求。</li>
+<li>释放锁时，不是原子性<ul>
+<li>因为判断是不是当前线程加的锁和释放锁不是一个原子操作。如果调用unlock(lockKey)释放锁的时候，锁已经过期，所以这把锁已经可能已经不属于当前客户端，会解除他人加的锁。</li>
+<li>判断和删除是两个操作，不是原子的，有一致性问题。释放锁必须保证原子性，可以使用Redis+Lua脚本来完成</li>
+</ul>
+</li>
+<li>锁过期释放，业务没执行完<ul>
+<li>是否可以给获得锁的线程，开启一个定时守护线程，每隔一段时间检查锁是否还存在，存在则对锁的过期时间延长，防止锁过期提前释放。</li>
+<li>当前开源框架Redisson解决了这个问题: 只要线程一加锁成功，就会启动一个watch dog看门狗，它是一个后台线程，会每隔10秒检查一下，如果线程一还持有锁，那么就会不断的延长锁key的生存时间。</li>
+</ul>
+</li>
+<li>Redis分布式锁和@transactional一起使用失效<ul>
+<li>正确的实现方法,可以在updateDB方法之前就上锁，即还没有开事务之前就加锁，那么就可以保证线程的安全性.</li>
+</ul>
+</li>
+<li>锁可重入<ul>
+<li>前面讨论的Redis分布式锁，都是不可重入的。</li>
+<li>不可重入的分布式锁的话，是可以满足绝大多数的业务场景。但是有时候一些业务场景，我们还是需要可重入的分布式锁</li>
+<li>Redis只要解决这两个问题，就能实现重入锁了：<br>  + 怎么保存当前持有的线程<br>  + 怎么维护加锁次数（即重入了多少次）</li>
+<li>实现一个可重入的分布式锁，我们可以参考JDK的ReentrantLock的设计思想。实际上，可以直接使用Redisson框架，它是支持可重入锁的。</li>
+</ul>
+</li>
+<li>Redis主从复制导致的坑<ul>
+<li>如果线程一在Redis的master节点上拿到了锁，但是加锁的key还没同步到slave节点。恰好这时，master节点发生故障，一个slave节点就会升级为master节点。线程二就可以获取同个key的锁啦，但线程一也已经拿到锁了，锁的安全性就没了。</li>
+<li>为了解决这个问题，Redis作者 antirez提出一种高级的分布式锁算法：Redlock。Redlock核心思想是这样的：<ul>
+<li>搞多个Redis master部署，以保证它们不会同时宕掉。并且这些master节点是完全相互独立的，相互之间不存在数据同步。同时，需要确保在这多个master实例上，是与在Redis单实例，使用相同方法来获取和释放锁。</li>
+<li>简化下步骤就是：<ol>
+<li>按顺序向5个master节点请求加锁</li>
+<li>根据设置的超时时间来判断，是不是要跳过该master节点。</li>
+<li>如果大于等于3个节点加锁成功，并且使用的时间小于锁的有效期，即可认定加锁成功啦。</li>
+<li>如果获取锁失败，解锁！</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>个人意见:一般情况下(绝大多数),业务不要强依赖于redis做互斥逻辑</li>
+</ol>
+</li>
+</ul>
+<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><ol>
+<li><a target="_blank" rel="noopener" href="https://yq.aliyun.com/articles/60663">分布式锁的实现</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/gxyandwmm/p/9588383.html">使用Redis作为分布式锁的一些注意点</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzUzMjkwMjg3Mg==&mid=2247484843&amp;idx=1&amp;sn=549ed30972eea76d5e7a0a9e1cfaf321&source=41#wech">如何实现靠谱的分布式锁？</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MjM5ODI5Njc2MA==&mid=2655825455&idx=1&sn=53e7043d76c0a39cf1b0d3be7a384ade&chksm=bd74e3f88a036aee104a1ec6001379d2238db2fde913b889b42138316e84ce9ed5e1ec271a10&mpshare=1&scene=1&srcid=0715ZMUAKOiQLNOSllsVZVKW%23rd">分布式锁用Redis还是Zookeeper？</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzA4NTg1MjM0Mg==&mid=2657261514&idx=1&sn=47b1a63f065347943341910dddbb785d&chksm=84479e13b3301705ea29c86f457ad74010eba8a8a5c12a7f54bcf264a4a8c9d6adecbe32ad0b&scene=21#wechat_redirect">基于Redis的分布式锁到底安全吗（上）？</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzUzMTA2NTU2Ng==&mid=2247487106&idx=1&sn=dd5f327c46d4274ba643a31cd0f0a77e&chksm=fa497133cd3ef82">80% 人不知道的 Redis 分布式锁的正确实现方式（Java 版）</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/On55CQezQ5sOw1E-YUpVUw">Redis结合Lua脚本实现高并发原子性操作</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/6bE5WmDubFCcSIMFuEqxEQ">细说Redis分布式锁</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/1TsBsaItcZ6fOg-bo2tGww">分布式锁用 Redis 好，还是 ZooKeeper 好？</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/452803310/answer/1931377239">使用Redis实现分布式锁和ZK实现分布式锁有什么区别，分别有哪些场景?</a></li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/10/20200710-huan-cun-ce-lue-jian-dan-zong-jie/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/07/10/20200710-huan-cun-ce-lue-jian-dan-zong-jie/" itemprop="url">缓存策略简单总结</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-10T22:24:44+08:00">
+                2020-07-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/07/10/20200710-huan-cun-ce-lue-jian-dan-zong-jie/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/07/10/20200710-huan-cun-ce-lue-jian-dan-zong-jie/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="缓存的三座大山"><a href="#缓存的三座大山" class="headerlink" title="缓存的三座大山"></a>缓存的三座大山</h3><p>以下内容摘自：<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/ziJ8OFiLA1it3sQvycN7Mg">翻越缓存的三座大山</a></p>
+<ol>
+<li>缓存一致性<ul>
+<li>缓存一致性是指业务在引入分布式缓存系统后，业务对数据的更新除了要更新存储以外还需要同时更新缓存，对两个系统进行数据更新就要先解决分布式系统中的隔离性和原子性难题。</li>
+</ul>
+</li>
+<li>缓存击穿<ul>
+<li>缓存击穿是指查询请求没有在缓存层命中而将查询透传到存储 DB 的问题，当大量的请求发生缓存击穿时，将给存储 DB 带来极大的访问压力，甚至导致 DB 过载拒绝服务。</li>
+<li>通过以下方式防止缓存击穿：<ol>
+<li>通过 bloomfilter 记录 key 是否存在，从而避免无效 Key 的查询；</li>
+<li>在 Redis 缓存不存在的 Key，从而避免无效 Key 的查询；</li>
+</ol>
+</li>
+</ul>
+</li>
+<li>缓存雪崩	<ul>
+<li>缓存雪崩是指由于大量的热数据设置了相同或接近的过期时间，导致缓存在某一时刻密集失效，大量请求全部转发到 DB，或者是某个冷数据瞬间涌入大量访问，这些查询在缓存 MISS 后，并发的将请求透传到 DB，DB 瞬时压力过载从而拒绝服务。目前常见的预防缓存雪崩的解决方案，主要是通过对 key 的 TTL 时间加随机数，打散 key 的淘汰时间来尽量规避，但是不能彻底规避。</li>
+</ul>
+</li>
+</ol>
+<p>本文主要讲的是第一个问题：缓存一致性</p>
+<h3 id="基本要点"><a href="#基本要点" class="headerlink" title="基本要点"></a>基本要点</h3><ol>
+<li>缓存替换方式<ul>
+<li>更新缓存VS淘汰缓存</li>
+</ul>
+</li>
+<li>缓存替换和写库顺序<ul>
+<li>先替换缓存后写数据库vs先写数据库后替换</li>
+</ul>
+</li>
+<li>更新缓存数据源是主还是从<ul>
+<li>主从数据库下（主从延迟），是从还是主读取数据进行缓存替换</li>
+</ul>
+</li>
+<li>从理论上来说，给缓存设置过期时间，是保证最终一致性的解决方案</li>
+</ol>
+<h4 id="Cache-Aside-pattern"><a href="#Cache-Aside-pattern" class="headerlink" title="Cache-Aside pattern"></a>Cache-Aside pattern</h4><p>最经典的缓存+数据库读写的模式，就是 Cache Aside Pattern。</p>
+<ol>
+<li>失效：应用程序先从cache取数据，没有得到，则从数据库中取数据，成功后，放到缓存中。</li>
+<li>命中：应用程序从cache中取数据，取到后返回。</li>
+<li>更新：先把数据存到数据库中，成功后，再让缓存失效。</li>
+</ol>
+<p>大多数业务，使用这样的更新套路即可</p>
+<h3 id="解决思路"><a href="#解决思路" class="headerlink" title="解决思路"></a>解决思路</h3><ol>
+<li><p>以下摘自：<a target="_blank" rel="noopener" href="https://blog.csdn.net/ZLHZHJ/article/details/80176988">高并发下缓存和数据库一致性问题</a></p>
+<ul>
+<li>主从一致性，即修改完立马就要读取到最新的数据（本方案不涉及到缓存的同步，如果涉及可以结合全篇思路去设计） 方案如下：<ol>
+<li>半同步复制，理应数据库原生的功能，等从库同步完才返回结果，缺点吞吐量下降</li>
+<li>强制读主库，部分有一致性要求的，代码中强制读取主库，这个时候一定要结合好缓存，提高读性能</li>
+<li>数据库中间件，一般情况数据库中间件把写路由到主，把读路由到从，此处是记录所以写的key，在500ms内读主库，超过500ms后读从库，能保证绝对的一致性，缺点是成本比较高</li>
+<li>缓存记录写key法，发生写操作，把此key记录在缓存里过期时间500ms，key存在表示刚更新过，还没完成同步，强制路由到主库，没有则路由到从库</li>
+</ol>
+</li>
+<li>关于强一致的需求，现实是不多的，本身就使用cache了还要求强一致，貌似本末倒置，但是不排除特殊情况的存在，主要是思路和大家分享。</li>
+<li>金钱余额业务有这种强一致需求(用户余额表接近6亿，查询QPS晚高峰4~5k )</li>
+</ul>
+</li>
+<li><p>读和写使用分布式锁控制，这样就能保证，先操作（或读或写）数据的先获得结果；写的时候让读流量直接走DB，让更新缓存的操作和写DB的操作串行。</p>
+</li>
+<li><p>延时双删策略 (延时减少读到脏数据的概率, 可以异步延时)</p>
+<pre>
+（1）先淘汰缓存
+（2）再写数据库（这两步和原来一样）
+（3）休眠1秒，再次淘汰缓存
+这么做，可以将1秒内所造成的缓存脏数据，再次删除。
+</pre>
+<p>延迟删只是减少概率</p>
+</li>
+<li><p>只有在读请求比写请求耗时还长的场景下才能产生，实际上这种情况发生的概率会很小</p>
+</li>
+<li><p>在读流量走从库的情况下，也有可能会导致缓存不一致。<br>由于更新完主库后，binlog还没有同步到从库，这时候DB读到的是旧的值，同样会导致缓存不一致的场景</p>
+</li>
+<li><p>缓存更新重试机制：使用MQ或binlog (个人不是很喜欢，除非能很好的抽象成公共组件可以考虑)</p>
+</li>
+<li><p>热点数据查主库(同1中的第4点)  </p>
+<ol>
+<li>写，更新db，设置热点数据标志（30s（可配置））</li>
+</ol>
+</li>
+<li><p>读，判断是否是热点数据。是，直接读主库（主库超过一定qps，读从库），写缓存；否，读缓存</p>
+</li>
+<li><p>根据业务id，实时性高的读主库，实时性低的读从库或者缓存</p>
+</li>
+</ol>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/Y9S89MT0uAobzRKgYVrI9Q">浅谈缓存最终一致性的解决方案</a></li>
+<li>总结: 在解决缓存一致性的过程中，有多种途径可以保证缓存的最终一致性，应该根据场景来设计合适的方案，读多写少的场景下，可以选择采用“ Cache-Aside 结合消费数据库日志做补偿”的方案，写多的场景下，可以选择采用“ Write-Through 结合分布式锁”的方案 ，写多的极端场景下，可以选择采用“ Write-Behind ” 的方案。</li>
+</ul>
+<h3 id="其他个人经验"><a href="#其他个人经验" class="headerlink" title="其他个人经验"></a>其他个人经验</h3><ol>
+<li>设置缓存时为了防止穿透,并且具备更新缓存的能力,需要失败时提供默认值,设置较大的过期时间</li>
+<li>那么需要设置:正常数据更新时间R、失败默认数据过期时间DR、数据过期时间E;</li>
+<li>一般E &gt; R &gt; DR</li>
+<li>并且,当缓存已经有数据时, 重新远程获取数据失败时,不应该更新缓存</li>
+</ol>
+<h3 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/xRVUEtbOhCHZHaBa0YQwTQ">太强了，全面解析缓存应用经典问题</a><ul>
+<li>缓存的主要存储模式<ol>
+<li>Cache Aside（旁路缓存）</li>
+<li>Read&#x2F;Write Through（读写穿透）</li>
+<li>Write Behind Caching（异步缓存写入）</li>
+</ol>
+</li>
+<li>缓存7大经典问题的常用解决方案<ol>
+<li>缓存集中失效</li>
+<li>缓存穿透</li>
+<li>缓存雪崩</li>
+<li>缓存数据不一致</li>
+<li>竞争并发</li>
+<li>热点Key问题</li>
+<li>大Key问题</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><ol>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/ZLHZHJ/article/details/80176988">高并发下缓存和数据库一致性问题（更新淘汰缓存不得不注意的细节）</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/rjzheng/p/9041659.html">分布式之数据库和缓存双写一致性方案解析</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/ziJ8OFiLA1it3sQvycN7Mg">翻越缓存的三座大山</a></li>
+<li><a target="_blank" rel="noopener" href="https://juejin.cn/post/7085530088628256776">解析分布式系统的缓存设计</a></li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/09/20200710-cai-wu-shu-ju-bao-biao-de-kua-tian-zhi-ku/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/07/09/20200710-cai-wu-shu-ju-bao-biao-de-kua-tian-zhi-ku/" itemprop="url">财务数据报表的跨天之苦</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-09T23:21:53+08:00">
+                2020-07-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/07/09/20200710-cai-wu-shu-ju-bao-biao-de-kua-tian-zhi-ku/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/07/09/20200710-cai-wu-shu-ju-bao-biao-de-kua-tian-zhi-ku/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>数据报表，尤其是金钱相关的财务报表，对数据的准确性犹为敏感。而服务系统间的处理时间点的存在差异的客观事实（网络时延，失败重试等原因），导致在以天（或月&#x2F;年）为维度的数据报表中，或对账中，常常出现数据不平的问题。</p>
+<h3 id="业务描述"><a href="#业务描述" class="headerlink" title="业务描述"></a>业务描述</h3><p>以用户充值加金币的业务为例</p>
+<pre>
+充值请求---------------->  充值服务A
+                 (支付成功的时间x：2020-07-08 23:59:59)
+                 ----------------> 金币服务B
+                           (加币成功的时间y：2020-07-09 00:00:01)
+</pre>
+<p>现在，有以下数据报表的需求：输出每一天支付金额以及对应的加金币数目。</p>
+<ul>
+<li>从上图可以看出，时间x和时间y不在同一天，在出数据报表的时候，这条充值记录应该归为7月8日还是7月9日呢？<ol>
+<li>从用户的角度看，充值成功的行为是一个原子操作，用户不关心服务方底层有区分支付时间和加币时间；</li>
+<li>从公司财务的角度看，他们同样不关心1描述的问题，只关心报表是否平帐(支付金币＝加币数目)</li>
+</ol>
+</li>
+</ul>
+<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><p>要解决以上问题：需要统一充值请求的业务时间</p>
+<pre>
+充值请求---------------->  充值服务A
+(生成当前时间addTime并传入)
+                 (支付成功的时间x：2020-07-08 23:59:59)
+                 (接收addTime参数)
+                 ----------------> 金币服务B
+                           (加币成功的时间y：2020-07-09 00:00:01)
+                           (接收addTime参数)
+</pre>
+
+<ul>
+<li>充值请求在发起时就会生成一个当前时间addTime，并一直透传到底层服务，那么统一以addTime作为充值的时间点，就不会出现跨天差异导致的数据不平问题。</li>
+</ul>
+<h3 id="注意事项和监控重跑"><a href="#注意事项和监控重跑" class="headerlink" title="注意事项和监控重跑"></a>注意事项和监控重跑</h3><ul>
+<li>上述的方案有一个问题需要解决：addTime 时间的合法性<ol>
+<li>传入的addTime大于当前时间</li>
+<li>传入的addTime远远小于当前时间</li>
+</ol>
+</li>
+</ul>
+<h4 id="问题分析"><a href="#问题分析" class="headerlink" title="问题分析"></a>问题分析</h4><ul>
+<li>问题1显然是错误的，是不合法的请求，但由于系统间可能存在微小差异，可以在逻辑上拒绝addTime大于当前时间超1分钟的请求</li>
+<li>问题2是客观存在的。<ol>
+<li>addTime是一开始生成的时间，当传到每个服务之后，理论上服务的当前时间必然大于addTime</li>
+<li>由于网络超时，重试等原因，相差的时间可能达到分钟级；而由于链路上下层服务因为故障等原因暂时无法处理，那么相差的时间可能到小时级以上。</li>
+<li>一般情况下，一个充值请求正常情况下，一分钟之内就能完成。所以有一个定时任务会在凌晨生成昨天的报表，以供财务人员第二天查看。<br>  如果报表已经生成之后，addTime是昨天的充值记录才重试成功，那么将导致该条数据没被统计到！</li>
+</ol>
+</li>
+</ul>
+<h4 id="解决方案-1"><a href="#解决方案-1" class="headerlink" title="解决方案"></a>解决方案</h4><p>针对上述问题2导致的数据报表错误</p>
+<ol>
+<li>（程序阻断）当数据报表已经生成之后，拒绝addTime&lt;&#x3D;昨天的请求，避免充值数据和数据报表不一致。同时增加告警，支持解除限制和重跑报表。</li>
+<li>（告警重跑）当数据报表已经生成之后，接收到addTime&lt;&#x3D;昨天的请求，且执行成功时告警，通知相关人员重跑报表。</li>
+</ol>
+<h3 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h3><p>有人可能会问，上述的解决方案始终依赖告警和人工补偿。有没有更加自动化的手段？</p>
+<ol>
+<li>二八法则：避免将资金、精力和时间花在琐碎的多数问题上。上述的方案其实已经解决了大多数场景的问题，如果要完美的解决，必然需要花费更大的精力(可能花费时间比实现原功能更多)。<br>当然可以想办法解决，如果确实有必要的话。</li>
+<li>针对一些不常发生的异常问题：增加限制、增加告警、增加人工补偿，是安全快捷、高效成本低的手段。</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/09/20200709-yi-zhi-te-li-du-xing-de-zhu-zhai-yao/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/07/09/20200709-yi-zhi-te-li-du-xing-de-zhu-zhai-yao/" itemprop="url">《一只特里独行的猪》摘要</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-09T22:47:40+08:00">
+                2020-07-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/07/09/20200709-yi-zhi-te-li-du-xing-de-zhu-zhai-yao/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/07/09/20200709-yi-zhi-te-li-du-xing-de-zhu-zhai-yao/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><img src="/2020/07/09/20200709-%E3%80%8A%E4%B8%80%E5%8F%AA%E7%89%B9%E9%87%8C%E7%8B%AC%E8%A1%8C%E7%9A%84%E7%8C%AA%E3%80%8B%E6%91%98%E8%A6%81/Shanghai_Beach.png"></p>
+<ul>
+<li><p>我的看法也许不值得别人重视，但对自己却很重要。这说明我有自己的好恶、爱憎等等。假如没有这些，做人也没什么味道。</p>
+</li>
+<li><p>我已经四十岁了，除了这只猪，还没见过谁敢于如此无视对生活的设置。相反，我倒见过很多想要设置别人生活的人，还有对被设置的生活安之若素的人。因为这个缘故，我一直怀念这只特立独行的猪。</p>
+</li>
+<li><p>真正有出息的人是对名人感兴趣的东西感兴趣，并且在那上面做出成就，而不是仅仅对名人感兴趣。</p>
+</li>
+<li><p>奇怪的是：错得越厉害就越有人信——这都是因为它让人振奋。</p>
+</li>
+<li><p>整个人类是一个物种，科学是全人类的事业，它的成就不能为民族所专有，所以它是全人类的光荣；这样就能有一些平常心。有了平常心，也就不容易被人骗。</p>
+</li>
+<li><p>如罗素所言，科学在“不计利害地追求客观真理”。请扪心自问，你所称的科学，是否如此淳朴和善良。尤瑟纳尔女士说：“当我计算或写作时，就超越了性别，甚至超越了人类。”请扪心自问，你所称的科学，是否是如此崇高的事业。</p>
+</li>
+<li><p>当年文化知识不能成为饭碗，也不能夸耀于人，但有一些青年对它还是有兴趣，这说明学习本身就可成为一种生活方式。学习文史知识目的在于“温故”，有文史修养的人生活在从过去到现代一个漫长的时间段里。学习科学知识目的在于“知新”，有科学知识的人可以预见将来，他生活在从现在到广阔无垠的未来。假如你什么都不学习，那就只能生活在现时现世的一个小圈子里，狭窄得很</p>
+</li>
+<li><p>人的存在是一种自然现象，而不是某种意志的产物。这种现象的内容就包括：人和人是不一样的，有性别之分、贤愚之分，还有同性恋和异性恋之分，这都是自然的现象。把属于自然的现象叫做“丑恶”，不是一种郑重的态度。这段话的意思说白了就是这样的：有些事原本就是某个样子，不以人的意志为转移。</p>
+</li>
+<li><p>据我所知，学化学的研究生也未必能学到李先生的理论；他们还有个罪名是“追星族”，鬼迷心窍，连杨振宁、李政道、李四光是谁都不知道。据我所知，这三位先生的学问实在高深，中学生根本不该懂，不知道学问，死记些名字，有何必要？更何况记下这些名字之后屈指一算，多一半都入了美国籍，这是给孩子灌输些什么</p>
+</li>
+<li><p>那些与命运斗争的人，那些做接近自己限度的斗争的人，却天生地接近这种失败。</p>
+<p>一个常常在进行着接近自己限度的斗争的人总是会常常失败的，一个想探索自然奥秘的人也常常会失败，一个想改革社会的人更是会常常失败。只有那些安于自己限度之内的生活的人才总是“胜利”，这种“胜利者”之所以常胜不败，只是因为他的对手是早已降伏的，或者说，他根本没有投入斗争。</p>
+<p>在人生的道路上，“失败”这个词还有另外的含义，即是指人失去了继续斗争的信心，放下了手中的武器。人类向限度屈服，这才是真正的失败。而没有放下手中武器，还在继续斗争，继续向限度挑战的人并没有失败。如此看来，老人没有失败。老人从未放下武器，只不过是丧失了武器。老人没有失去信心，因此不应当说他是“失败了的英雄”。</p>
+<p>那些永远不肯或不能越出自己限度的人是平庸的人。</p>
+</li>
+</ul>
+<p><img src="/2020/07/09/20200709-%E3%80%8A%E4%B8%80%E5%8F%AA%E7%89%B9%E9%87%8C%E7%8B%AC%E8%A1%8C%E7%9A%84%E7%8C%AA%E3%80%8B%E6%91%98%E8%A6%81/MSN.jpg"></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/09/20200709-guan-yu-mi-deng-de-ruo-gan-wen-ti/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/07/09/20200709-guan-yu-mi-deng-de-ruo-gan-wen-ti/" itemprop="url">关于幂等的若干问题</a></h1>
         
 
         <div class="post-meta">
@@ -337,8 +1224,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/07/09/20200709-%E5%85%B3%E4%BA%8E%E5%B9%82%E7%AD%89%E7%9A%84%E8%8B%A5%E5%B9%B2%E9%97%AE%E9%A2%98/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2020/07/09/20200709-%E5%85%B3%E4%BA%8E%E5%B9%82%E7%AD%89%E7%9A%84%E8%8B%A5%E5%B9%B2%E9%97%AE%E9%A2%98/" itemprop="commentCount"></span>
+                <a href="/2020/07/09/20200709-guan-yu-mi-deng-de-ruo-gan-wen-ti/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/07/09/20200709-guan-yu-mi-deng-de-ruo-gan-wen-ti/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -423,7 +1310,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/08/20200708-%E7%A8%8B%E5%BA%8F%E5%BC%82%E5%B8%B8%E6%97%B6%E8%83%BD%E8%BF%94%E5%9B%9E50x%E5%90%97%EF%BC%9F/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/08/20200708-cheng-xu-yi-chang-shi-neng-fan-hui-50x-ma/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="">
@@ -442,7 +1329,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/07/08/20200708-%E7%A8%8B%E5%BA%8F%E5%BC%82%E5%B8%B8%E6%97%B6%E8%83%BD%E8%BF%94%E5%9B%9E50x%E5%90%97%EF%BC%9F/" itemprop="url">程序异常时能返回50x吗？</a></h1>
+                <a class="post-title-link" href="/2020/07/08/20200708-cheng-xu-yi-chang-shi-neng-fan-hui-50x-ma/" itemprop="url">程序异常时能返回50x吗？</a></h1>
         
 
         <div class="post-meta">
@@ -473,8 +1360,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/07/08/20200708-%E7%A8%8B%E5%BA%8F%E5%BC%82%E5%B8%B8%E6%97%B6%E8%83%BD%E8%BF%94%E5%9B%9E50x%E5%90%97%EF%BC%9F/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2020/07/08/20200708-%E7%A8%8B%E5%BA%8F%E5%BC%82%E5%B8%B8%E6%97%B6%E8%83%BD%E8%BF%94%E5%9B%9E50x%E5%90%97%EF%BC%9F/" itemprop="commentCount"></span>
+                <a href="/2020/07/08/20200708-cheng-xu-yi-chang-shi-neng-fan-hui-50x-ma/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/07/08/20200708-cheng-xu-yi-chang-shi-neng-fan-hui-50x-ma/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -568,7 +1455,7 @@ proxy_upstream_tries 5;
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/08/20200708-%E5%A4%96%E7%BD%91%E8%AF%B7%E6%B1%82%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E5%B9%82%E7%AD%89/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/08/20200708-wai-wang-qing-qiu-ru-he-bao-zheng-mi-deng/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="">
@@ -587,7 +1474,7 @@ proxy_upstream_tries 5;
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/07/08/20200708-%E5%A4%96%E7%BD%91%E8%AF%B7%E6%B1%82%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E5%B9%82%E7%AD%89/" itemprop="url">外网请求如何保证幂等</a></h1>
+                <a class="post-title-link" href="/2020/07/08/20200708-wai-wang-qing-qiu-ru-he-bao-zheng-mi-deng/" itemprop="url">外网请求如何保证幂等</a></h1>
         
 
         <div class="post-meta">
@@ -618,8 +1505,8 @@ proxy_upstream_tries 5;
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/07/08/20200708-%E5%A4%96%E7%BD%91%E8%AF%B7%E6%B1%82%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E5%B9%82%E7%AD%89/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2020/07/08/20200708-%E5%A4%96%E7%BD%91%E8%AF%B7%E6%B1%82%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E5%B9%82%E7%AD%89/" itemprop="commentCount"></span>
+                <a href="/2020/07/08/20200708-wai-wang-qing-qiu-ru-he-bao-zheng-mi-deng/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/07/08/20200708-wai-wang-qing-qiu-ru-he-bao-zheng-mi-deng/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -762,7 +1649,7 @@ proxy_upstream_tries 5;
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/07/20200707-%E5%94%AF%E4%B8%80ID%E7%9A%84%E5%9F%BA%E5%9B%A0/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/07/20200707-wei-yi-id-de-ji-yin/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="">
@@ -781,7 +1668,7 @@ proxy_upstream_tries 5;
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/07/07/20200707-%E5%94%AF%E4%B8%80ID%E7%9A%84%E5%9F%BA%E5%9B%A0/" itemprop="url">唯一ID的基因</a></h1>
+                <a class="post-title-link" href="/2020/07/07/20200707-wei-yi-id-de-ji-yin/" itemprop="url">唯一ID的基因</a></h1>
         
 
         <div class="post-meta">
@@ -812,8 +1699,8 @@ proxy_upstream_tries 5;
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/07/07/20200707-%E5%94%AF%E4%B8%80ID%E7%9A%84%E5%9F%BA%E5%9B%A0/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2020/07/07/20200707-%E5%94%AF%E4%B8%80ID%E7%9A%84%E5%9F%BA%E5%9B%A0/" itemprop="commentCount"></span>
+                <a href="/2020/07/07/20200707-wei-yi-id-de-ji-yin/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/07/07/20200707-wei-yi-id-de-ji-yin/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -925,7 +1812,7 @@ proxy_upstream_tries 5;
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/07/20200707-%E5%A6%82%E4%BD%95%E5%A4%84%E7%90%86RPC%E8%BF%94%E5%9B%9E%E7%9A%84%E9%94%99%E8%AF%AF%E7%A0%81%EF%BC%9F/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/07/20200707-ru-he-chu-li-rpc-fan-hui-de-cuo-wu-ma/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="">
@@ -944,7 +1831,7 @@ proxy_upstream_tries 5;
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/07/07/20200707-%E5%A6%82%E4%BD%95%E5%A4%84%E7%90%86RPC%E8%BF%94%E5%9B%9E%E7%9A%84%E9%94%99%E8%AF%AF%E7%A0%81%EF%BC%9F/" itemprop="url">如何处理RPC返回的错误码？</a></h1>
+                <a class="post-title-link" href="/2020/07/07/20200707-ru-he-chu-li-rpc-fan-hui-de-cuo-wu-ma/" itemprop="url">如何处理RPC返回的错误码？</a></h1>
         
 
         <div class="post-meta">
@@ -975,8 +1862,8 @@ proxy_upstream_tries 5;
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/07/07/20200707-%E5%A6%82%E4%BD%95%E5%A4%84%E7%90%86RPC%E8%BF%94%E5%9B%9E%E7%9A%84%E9%94%99%E8%AF%AF%E7%A0%81%EF%BC%9F/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2020/07/07/20200707-%E5%A6%82%E4%BD%95%E5%A4%84%E7%90%86RPC%E8%BF%94%E5%9B%9E%E7%9A%84%E9%94%99%E8%AF%AF%E7%A0%81%EF%BC%9F/" itemprop="commentCount"></span>
+                <a href="/2020/07/07/20200707-ru-he-chu-li-rpc-fan-hui-de-cuo-wu-ma/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/07/07/20200707-ru-he-chu-li-rpc-fan-hui-de-cuo-wu-ma/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1084,7 +1971,7 @@ proxy_upstream_tries 5;
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/06/20200706-%E4%B8%8A%E7%BA%BF%E9%9C%80%E8%A6%81%E5%81%9A%E5%93%AA%E4%BA%9B%E5%87%86%E5%A4%87%EF%BC%9F/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/06/20200706-shang-xian-xu-yao-zuo-na-xie-zhun-bei/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="">
@@ -1103,7 +1990,7 @@ proxy_upstream_tries 5;
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/07/06/20200706-%E4%B8%8A%E7%BA%BF%E9%9C%80%E8%A6%81%E5%81%9A%E5%93%AA%E4%BA%9B%E5%87%86%E5%A4%87%EF%BC%9F/" itemprop="url">上线需要做哪些准备？</a></h1>
+                <a class="post-title-link" href="/2020/07/06/20200706-shang-xian-xu-yao-zuo-na-xie-zhun-bei/" itemprop="url">上线需要做哪些准备？</a></h1>
         
 
         <div class="post-meta">
@@ -1134,8 +2021,8 @@ proxy_upstream_tries 5;
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/07/06/20200706-%E4%B8%8A%E7%BA%BF%E9%9C%80%E8%A6%81%E5%81%9A%E5%93%AA%E4%BA%9B%E5%87%86%E5%A4%87%EF%BC%9F/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2020/07/06/20200706-%E4%B8%8A%E7%BA%BF%E9%9C%80%E8%A6%81%E5%81%9A%E5%93%AA%E4%BA%9B%E5%87%86%E5%A4%87%EF%BC%9F/" itemprop="commentCount"></span>
+                <a href="/2020/07/06/20200706-shang-xian-xu-yao-zuo-na-xie-zhun-bei/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/07/06/20200706-shang-xian-xu-yao-zuo-na-xie-zhun-bei/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1179,693 +2066,6 @@ proxy_upstream_tries 5;
 <li>若上线后出现问题，先回滚再查问题（适用于大多数场景）</li>
 <li>核心业务要重点测试</li>
 </ol>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/06/20200706-%E4%BD%BF%E7%94%A8ThreadContext%E7%BC%93%E5%AD%98RPC%E7%BB%93%E6%9E%9C/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/07/06/20200706-%E4%BD%BF%E7%94%A8ThreadContext%E7%BC%93%E5%AD%98RPC%E7%BB%93%E6%9E%9C/" itemprop="url">使用ThreadContext缓存RPC结果</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-06T19:44:20+08:00">
-                2020-07-06
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/07/06/20200706-%E4%BD%BF%E7%94%A8ThreadContext%E7%BC%93%E5%AD%98RPC%E7%BB%93%E6%9E%9C/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2020/07/06/20200706-%E4%BD%BF%E7%94%A8ThreadContext%E7%BC%93%E5%AD%98RPC%E7%BB%93%E6%9E%9C/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><img src="/2020/07/06/20200706-%E4%BD%BF%E7%94%A8ThreadContext%E7%BC%93%E5%AD%98RPC%E7%BB%93%E6%9E%9C/Gerrard.jpeg"></p>
-<p>在业务开发中，经常会使用RPC请求获取数据。有时候在同一条逻辑链路中，会多次使用RPC返回的数据。</p>
-<h3 id="业务场景"><a href="#业务场景" class="headerlink" title="业务场景"></a>业务场景</h3><pre>
-请求----------> 服务A
-             [1.methodA]----获取用户数据--->服务B(用户服务)
-             [2.mehtodB]----获取用户数据--->服务B(用户服务)
-</pre>
-<p>上图中，服务A中同一个逻辑链路中包含methodA和mehtodB，两个都会使用到用户数据，因此会导致重复的RPC调用。</p>
-<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><ol>
-<li>将数据实体作为methodB的参数传入<ul>
-<li>这种方式可以避免调用多次重复的RPC，但是也有缺点：<br>  a. 如果有mehtodC，methodD等，每个方法都加个参数，不是很优雅<br>  b. 如果除了获取用户信息，还要获取商品信息等，那么方法形参将越来越多，影响阅读</li>
-</ul>
-</li>
-</ol>
-<pre>
-请求----------> 服务A
-             [1.methodA]----获取用户数据--->服务B(用户服务)
-             [2.mehtodB(param1: userInfo)]----获取用户数据--->服务B(用户服务)
-             [3.mehtodC(param1: userInfo)]----获取用户数据--->服务B(用户服务)
-</pre>		
-<ol start="2">
-<li>使用	ThreadContext 缓存RPC结果<ul>
-<li>可以使用拦截器统一处理服务的所有ThreadContext(因为使用完之后需要remove)</li>
-<li>将RPC结果保存到ThreadContext和从ThreadContext获取RPC结果的逻辑，封装在RPC调用方法中<pre>
-请求----------> 服务A
-       [1.methodA]----获取用户数据--->服务B(用户服务)
-       ->> 将RPC结果保存在ThreadContext
-       [2.mehtodB]----获取用户数据--->从ThreadContext获取
-       [3.mehtodC]----获取用户数据--->从ThreadContext获取</pre></li>
-</ul>
-</li>
-</ol>
-<p>	</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/05/20200705-%E5%85%B3%E4%BA%8E%E6%9C%8D%E5%8A%A1%E9%97%B4%E4%B8%80%E8%87%B4%E6%80%A7%E5%92%8C%E5%89%8D%E7%BD%AE%E6%A0%A1%E9%AA%8C%E7%9A%84%E6%80%9D%E8%80%83/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/07/05/20200705-%E5%85%B3%E4%BA%8E%E6%9C%8D%E5%8A%A1%E9%97%B4%E4%B8%80%E8%87%B4%E6%80%A7%E5%92%8C%E5%89%8D%E7%BD%AE%E6%A0%A1%E9%AA%8C%E7%9A%84%E6%80%9D%E8%80%83/" itemprop="url">关于服务间一致性和前置校验的思考</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-05T22:26:48+08:00">
-                2020-07-05
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/07/05/20200705-%E5%85%B3%E4%BA%8E%E6%9C%8D%E5%8A%A1%E9%97%B4%E4%B8%80%E8%87%B4%E6%80%A7%E5%92%8C%E5%89%8D%E7%BD%AE%E6%A0%A1%E9%AA%8C%E7%9A%84%E6%80%9D%E8%80%83/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2020/07/05/20200705-%E5%85%B3%E4%BA%8E%E6%9C%8D%E5%8A%A1%E9%97%B4%E4%B8%80%E8%87%B4%E6%80%A7%E5%92%8C%E5%89%8D%E7%BD%AE%E6%A0%A1%E9%AA%8C%E7%9A%84%E6%80%9D%E8%80%83/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><img src="/2020/07/05/20200705-%E5%85%B3%E4%BA%8E%E6%9C%8D%E5%8A%A1%E9%97%B4%E4%B8%80%E8%87%B4%E6%80%A7%E5%92%8C%E5%89%8D%E7%BD%AE%E6%A0%A1%E9%AA%8C%E7%9A%84%E6%80%9D%E8%80%83/Zidane.jpeg"></p>
-<p>每个服务都有相应的前置校验，有些前置校验逻辑不统一，就会导致服务间数据的不一致。比如风控拦截，服务A未拦截，而服务B却拦截了，从而导致不一致。</p>
-<h3 id="业务描述"><a href="#业务描述" class="headerlink" title="业务描述"></a>业务描述</h3><ul>
-<li>下面描述一个仓库送礼的场景<pre>
-送礼请求----------> 服务A(送礼服务)
-           [1.出仓库礼物]------------>服务B(仓库服务)
-           [2.收礼者加分成]------------>服务C(消费服务[含分成服务])</pre></li>
-</ul>
-<p></p>
-<pre>
-送礼请求----------> 服务A(送礼服务)
-             [1.出仓库礼物]------------>服务B(仓库服务)
-             [2.收礼者加分成]------------>服务C(消费服务[含分成服务])
-                                [查询是否风险用户]------------>服务D(风控服务)
-</pre>
-<p>服务C增加查询之后，如果是风险用户，将会拦截加分成的操作。这样就会导致用户仓库礼物出仓了，但是收礼者却无法接收分成</p>
-<h3 id="如何解决"><a href="#如何解决" class="headerlink" title="如何解决"></a>如何解决</h3><p>服务B也要进行风险用户判断，针对资金操作相关的校验，可以统一逻辑，避免相同逻辑维护多个地方</p>
-<ol>
-<li>服务C增加一个统一判断接口<pre>
-送礼请求----> 服务A(送礼服务)
-          [1.出仓库礼物]----->服务B(仓库服务)
-                        [ 1.1查询用户是否允许资金变动]----->服务C
-                                     [1.1.1查询是否风险用户]--->服务D(风控服务)
-          [2.收礼者加分成]----->服务C(消费服务[含分成服务])
-                            [2.1查询是否风险用户]----->服务D(风控服务)</pre></li>
-</ol>
-<p><br>若用户是风险用户，操作1就会返回失败，不出仓，也无后续的操作2，这样就避免不一致的问题</p>
-<ol start="2">
-<li>收敛消费入口，统一资产类的入口<br>方案1的缺点明显，每个服务都要直接或间接的查询一次风控服务，实际上理想情况下，只需要查询一次即可。<pre>
-送礼请求----------> 服务A(送礼服务)
-          [1.出仓库礼物和加分成]--------->服务C(消费服务)
-                                [1.1查询是否风险用户]------------>服务D(风控服务)
-                                [1.2出仓库礼物]------------>服务B(仓库服务)
-                                [1.3收礼者加分成]</pre></li>
-</ol>
-<p><br>由消费服务统一对资产进行“出”和“入”</p>
-<ol start="3">
-<li>网关服务拦截<br>由网关服务统一调风控服务进行判断，并支持业务类型定制(比如资产类接口应该进行哪些判断)</li>
-</ol>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/05/20200705-RPC%E5%8F%AF%E4%BB%A5%E5%92%8C%E4%BA%8B%E5%8A%A1%E7%BB%91%E5%AE%9A%E5%90%97/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/07/05/20200705-RPC%E5%8F%AF%E4%BB%A5%E5%92%8C%E4%BA%8B%E5%8A%A1%E7%BB%91%E5%AE%9A%E5%90%97/" itemprop="url">RPC可以和事务绑定吗？</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-05T17:27:32+08:00">
-                2020-07-05
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/07/05/20200705-RPC%E5%8F%AF%E4%BB%A5%E5%92%8C%E4%BA%8B%E5%8A%A1%E7%BB%91%E5%AE%9A%E5%90%97/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2020/07/05/20200705-RPC%E5%8F%AF%E4%BB%A5%E5%92%8C%E4%BA%8B%E5%8A%A1%E7%BB%91%E5%AE%9A%E5%90%97/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><img src="/2020/07/05/20200705-RPC%E5%8F%AF%E4%BB%A5%E5%92%8C%E4%BA%8B%E5%8A%A1%E7%BB%91%E5%AE%9A%E5%90%97/MSN.jpg"></p>
-<p>在平常编码的时候，经常会看到很多人喜欢把一次RPC调用和数据库事务绑定在一起，RPC调用成功则提交事务，RPC调用失败或超时，则回滚事务。那么这样做是对的吗？</p>
-<h3 id="业务场景描述"><a href="#业务场景描述" class="headerlink" title="业务场景描述"></a>业务场景描述</h3><p>考虑以下一种业务场景：用户加入群聊需要花费200金币。<br>服务架构：服务A(群服务)，服务B(消费服务)，操作都是幂等的。</p>
-<pre>
-加群请求----------> 服务A
-             [1.新增事务]
-             [2.RPC进行扣费]------------>服务B
-             [3.执行加群操作(DB操作)]
-             [4.提交事务]
-</pre>
-
-<h3 id="业务场景分析"><a href="#业务场景分析" class="headerlink" title="业务场景分析"></a>业务场景分析</h3><ol>
-<li>服务B返回成功，业务无异常</li>
-<li>服务B返回失败，事务回滚，业务无异常</li>
-<li>服务B超时，或服务A RPC调用之后重启等场景，业务异常！</li>
-</ol>
-<p>业务异常表现为：用户已经扣费，但是没加群成功(即服务A和服务B数据不一致)</p>
-<h3 id="如何解决"><a href="#如何解决" class="headerlink" title="如何解决"></a>如何解决</h3><ul>
-<li><p>服务A通过本地事务表解决。</p>
-<ol>
-<li>服务A在进行RPC调用之前，需先保存一条订单，订单状态为“待扣费”，扣费成功后，更新订单状态为“已扣费”。</li>
-<li>启动定时任务，查询过去某时间范围内（如30分钟前至当前时间1分钟前）的“待扣费”的订单是否已扣费。若已扣费进行加群操作，并更新订单状态；否则，将订单置为无效状态。</li>
-<li>订单状态：[1待扣费，2已扣费，3已加群，4无效]</li>
-</ol>
-</li>
-<li><p>加群流程图</p>
-<pre>
-加群请求----------> 服务A
-           [1.新增“待扣费”订单(DB操作)]
-           [2.RPC进行扣费]------------>服务B
-           [3.更新订单状态为“已扣费”(DB操作)]
-           [4.执行加群操作(DB操作)]
-           [5.更新订单状态为“已加群”(DB操作)]</pre></li>
-</ul>
-<p><br>上图的每个操作都是单独的，其中某一步异常都会导致后续中断，因此需要两个定时任务，分别检查“待扣费”和“已扣费”的订单。</p>
-<ul>
-<li>定时任务1<pre>
-定时任务1---------> 服务A
-           [1.查询“待扣费”订单]
-           [2.RPC查询是否已扣费]------------>服务B
-           |(1)已扣费                         |(2)未扣费
-           |                                         |</pre></li>
-</ul>
-<p>[3.更新订单状态为“已扣费”(DB操作)]           [3.更新订单状态为“无效”(DB操作)]<br>[4.执行加群操作(DB操作)]<br>[5.更新订单状态为“已加群”(DB操作)]<br></p>
-<ul>
-<li>定时任务2<pre>
-定时任务2---------> 服务A
-           [1.查询“已扣费”订单]    
-           [2.执行加群操作(DB操作)]
-           [3.更新订单状态为“已加群”(DB操作)]</pre></li>
-</ul>
-<p><br>当然定时任务1和2可以放在同一个定时任务执行</p>
-<ul>
-<li>解决了问题之后，我们再回头看看一开始的问题：“RPC调用和数据库事务不能绑定吗？”<ul>
-<li>答案是看具体业务情况而定</li>
-<li>比如上述的业务场景。操作1显然是不能绑事务的</li>
-<li>但是2,3,4,5操作其实是可以绑事务的，因为定时任务可以进行补偿，而且可以因此减少定时任务2</li>
-<li>总结：rpc操作后续可补偿重试或查询，那么就是可以绑事务的，因为服务不会“失忆”；相反数据未落地之前，是不能进行绑事务了，因为一旦异常，数据就会回滚而“丢失”。</li>
-</ul>
-</li>
-</ul>
-<h3 id="其他解决方式"><a href="#其他解决方式" class="headerlink" title="其他解决方式"></a>其他解决方式</h3><ol>
-<li>业务对账，补偿机制。即接入第三方服务进行业务流水对账，发现不一致，进行修正；具体修正方式需根据具体业务场景，是退币，还是使加群成功。</li>
-<li>使用其他分布式事务解决方案(tcc，seata等)</li>
-</ol>
-<h3 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h3><ul>
-<li>重试是 “写”还是“读”？比如上述扣费操作，超时情况下，服务A重试是查询还是重新执行扣费？<ul>
-<li>其实还是取决于业务场景</li>
-<li>一般情况下，超时情况下，返回用户是失败，所以使用查询比较合适，不系统自动为用户扣费，这时候应该是“读”</li>
-<li>如果需要使用rpc调用进行加群，用户扣费了就必须要加群成功，那么加群RPC重试应该是“写”</li>
-<li>对于金钱业务来说，一般情况下，加币操作(充值，活动赠币)是“写”，扣币操作(送礼，用户触发)是“读”；入仓是“写”，出仓是“读”</li>
-</ul>
-</li>
-<li>补偿操作是“正向”还是“逆向”？比如上述扣费操作，超时情况下，服务A重试查询到用户已经扣费成功，这是是应该给用户退币，还是加群成功？<ul>
-<li>一样还是取决于业务场景</li>
-<li>如果用户只是想加群，那么只需要正向操作就好了，不影响用户利益，只是加群操作有些延迟，这时候应该是“正向”</li>
-<li>如果用户扣费之后，可以进行抽奖等，相当于用户的权益是具备实时性的，因为扣费超时(实际成功)导致无法抽奖，那么应该是退币才对的，即“逆向”</li>
-</ul>
-</li>
-<li>“无效”状态的订单应该支持重试，因为无效是因为未扣费，若作为一个基础服务，上次服务可能会使用同一个订单号进行重试，那么不能告诉业务方，操作失败等，应该作为一个全新的请求处理。可以通过增加订单的流水日志解决数据覆盖问题。</li>
-<li>上述的处理方式中，余额不足的扣费，会导致比较多的无效订单，因此在扣费之前，可以增加一次RPC查询，判断是余额是否足够</li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/29/20200329-%E5%8F%91%E7%89%88%E8%BF%87%E7%A8%8B%E7%9A%84%E5%85%BC%E5%AE%B9%E6%80%A7%E8%80%83%E8%99%91/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/03/29/20200329-%E5%8F%91%E7%89%88%E8%BF%87%E7%A8%8B%E7%9A%84%E5%85%BC%E5%AE%B9%E6%80%A7%E8%80%83%E8%99%91/" itemprop="url">发版过程的兼容性考虑</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-29T13:35:18+08:00">
-                2020-03-29
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/03/29/20200329-%E5%8F%91%E7%89%88%E8%BF%87%E7%A8%8B%E7%9A%84%E5%85%BC%E5%AE%B9%E6%80%A7%E8%80%83%E8%99%91/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2020/03/29/20200329-%E5%8F%91%E7%89%88%E8%BF%87%E7%A8%8B%E7%9A%84%E5%85%BC%E5%AE%B9%E6%80%A7%E8%80%83%E8%99%91/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><img src="/2020/03/29/20200329-%E5%8F%91%E7%89%88%E8%BF%87%E7%A8%8B%E7%9A%84%E5%85%BC%E5%AE%B9%E6%80%A7%E8%80%83%E8%99%91/Torres.jpg"></p>
-<ul>
-<li>一般情况下，服务一般不是仅有一台服务器提供服务的，因此服务上线的过程中其实会经历一个灰度过程</li>
-</ul>
-<p><img src="/2020/03/29/20200329-%E5%8F%91%E7%89%88%E8%BF%87%E7%A8%8B%E7%9A%84%E5%85%BC%E5%AE%B9%E6%80%A7%E8%80%83%E8%99%91/mermaid-diagram-20200329140016.png"></p>
-<p>如上所示，服务器A是新代码，走的是新逻辑，服务器B和C未发版，走的旧逻辑。</p>
-<ul>
-<li>如果新上线的变更只涉及读逻辑的，那么这样的灰度上线是没问题的。</li>
-<li>但如果上线的内容涉及写逻辑的变更，甚至还关联到异步处理的变更。那么这样的上线方式可能是不兼容的，会导致处理异常。</li>
-<li>在服务全量发版之后，新的流量可能正常，但发版过程中导致一定的脏数据。</li>
-</ul>
-<p>(图不画了，自行想象)</p>
-<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><ul>
-<li>开关！用配置中心开关控制，走新逻辑还是旧逻辑。默认旧逻辑。</li>
-<li>代码需要保留两套，通过开关控制走哪个分支。</li>
-<li>全量发版之后，此时线上全是新代码了，通过开关灰度(此时是业务灰度而不是机器灰度了)</li>
-</ul>
 
           
         
@@ -1956,7 +2156,7 @@ proxy_upstream_tries 5;
 <a href="/archives/">                
 <!--<a href="/archives/%7C%7C%20archive">-->
               
-                  <span class="site-state-item-count">106</span>
+                  <span class="site-state-item-count">110</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1969,7 +2169,7 @@ proxy_upstream_tries 5;
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">111</span>
+                  <span class="site-state-item-count">122</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

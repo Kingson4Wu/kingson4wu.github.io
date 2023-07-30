@@ -287,7 +287,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/08/31/20200831-%E4%BD%BF%E7%94%A8Redis%E5%AE%9E%E7%8E%B0%E6%A6%9C%E5%8D%95/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/09/08/20200908-jin-rong-ye-wu-rong-zai-qie-huan-hou-jian-kong-he-xiu-zheng-fang-an/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="">
@@ -306,7 +306,1022 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/08/31/20200831-%E4%BD%BF%E7%94%A8Redis%E5%AE%9E%E7%8E%B0%E6%A6%9C%E5%8D%95/" itemprop="url">使用Redis实现榜单</a></h1>
+                <a class="post-title-link" href="/2020/09/08/20200908-jin-rong-ye-wu-rong-zai-qie-huan-hou-jian-kong-he-xiu-zheng-fang-an/" itemprop="url">金融业务容灾切换后监控和修正方案</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-09-08T22:49:21+08:00">
+                2020-09-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/09/08/20200908-jin-rong-ye-wu-rong-zai-qie-huan-hou-jian-kong-he-xiu-zheng-fang-an/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/09/08/20200908-jin-rong-ye-wu-rong-zai-qie-huan-hou-jian-kong-he-xiu-zheng-fang-an/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><ul>
+<li><p>接<a target="_blank" rel="noopener" href="https://kingson4wu.gitee.io/2020/08/31/20200831-%E5%85%B3%E4%BA%8EMHA-Consul-MySQL%E9%AB%98%E5%8F%AF%E7%94%A8%E6%96%B9%E6%A1%88%E7%9A%84%E7%AE%80%E5%8D%95%E6%80%BB%E7%BB%93%E5%92%8C%E6%80%9D%E8%80%83/">关于MHA_Consul_MySQL高可用方案的简单总结和思考</a><br>中所讲，该方案无法严格保证主从数据一致或者不丢数据，那么对数据准确性非常严格的业务，则需要在业务层面进行相应的对账和修正。</p>
+</li>
+<li><p>对账的前提当然是要有流水，可以是业务流水(跟余额表事务绑定)或者是binlog的变更流水。</p>
+</li>
+<li><p>既然是对准确性要求严格的业务，一般都应该会有业务流水。</p>
+</li>
+</ul>
+<h2 id="方案描述"><a href="#方案描述" class="headerlink" title="方案描述"></a>方案描述</h2><ul>
+<li>方案以数据库切换事件为线索，描述切库前的事先准备、切库中的止损、切库后的监控和修正。</li>
+</ul>
+<h3 id="一、切库前"><a href="#一、切库前" class="headerlink" title="一、切库前"></a>一、切库前</h3><ol>
+<li>余额写redis缓存（如果有多机房，需要异步多写对应机房的redis，或nsq通知）</li>
+</ol>
+<h3 id="二、切库中"><a href="#二、切库中" class="headerlink" title="二、切库中"></a>二、切库中</h3><ol>
+<li>发生切库事件</li>
+<li>（切库之后的一段时间内）若有用户余额变动操作，比对redis和DB余额是否一致，不一致则阻断一段时间。</li>
+</ol>
+<ul>
+<li>缺点：不一致有可能是误伤（redis刚好写失败导致切库前就不一致）</li>
+<li>折中：针对一些大额变更才阻断，增加一些更细致的策略</li>
+</ul>
+<h3 id="三、切库后"><a href="#三、切库后" class="headerlink" title="三、切库后"></a>三、切库后</h3><ol>
+<li>指定主库和从库，对比流水日志</li>
+<li>修复数据（若有不一致），并关闭冻结开关</li>
+<li>无法修复的订单如何处理（用户余额不足）？<ul>
+<li>考虑当坏账处理；通过余额调整（邮件审批方式同步团队成员）；再按流水订单重新扣除</li>
+</ul>
+</li>
+</ol>
+<h3 id="对比流水和修复大致思路"><a href="#对比流水和修复大致思路" class="headerlink" title="对比流水和修复大致思路"></a>对比流水和修复大致思路</h3><ol>
+<li>读旧主库和新主库的余额变更流水日志</li>
+<li>对比得到旧主库存在而新主库不存在的余额变更流水日志</li>
+<li>获取受影响的用户的余额，重放流水日志模拟分析，得到受影响人数，受影响金额，不可修复订单（比如余额不足）等情况</li>
+<li>按照流水日志中的业务类型重新执行相应的业务sql（充值，消费，提现等）</li>
+<li>修复完成之后，重建旧主库，并挂为主库</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/09/08/20200908-jin-rong-ye-wu-rong-zai-ti-xi-jian-shu/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/09/08/20200908-jin-rong-ye-wu-rong-zai-ti-xi-jian-shu/" itemprop="url">金融业务容灾体系简述</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-09-08T00:04:32+08:00">
+                2020-09-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/09/08/20200908-jin-rong-ye-wu-rong-zai-ti-xi-jian-shu/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/09/08/20200908-jin-rong-ye-wu-rong-zai-ti-xi-jian-shu/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><ul>
+<li>本文针对金融类(如用户虚拟货币)这类对数据准确性很敏感的业务的容灾架构；</li>
+<li>案例中的服务架构为同城主备架构；</li>
+<li>内容包括：容灾架构、故障切换、故障恢复、演练方案等；</li>
+<li>涉及技术点：MySQL、MHA、Consul等；</li>
+<li>本文基于<ol>
+<li><a target="_blank" rel="noopener" href="https://kingson4wu.gitee.io/2020/08/31/20200831-%E5%85%B3%E4%BA%8EMHA-Consul-MySQL%E9%AB%98%E5%8F%AF%E7%94%A8%E6%96%B9%E6%A1%88%E7%9A%84%E7%AE%80%E5%8D%95%E6%80%BB%E7%BB%93%E5%92%8C%E6%80%9D%E8%80%83/">关于MHA-Consul-MySQL高可用方案的简单总结和思考</a></li>
+<li><a target="_blank" rel="noopener" href="https://kingson4wu.gitee.io/2020/09/05/20200905-%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%E8%84%91%E8%A3%82%E9%97%AE%E9%A2%98/">如何解决脑裂问题</a></li>
+</ol>
+</li>
+<li>由于某种原因，某些细节不会描述。</li>
+<li>关于系统可用性，收藏了一张网图<br><img src="/2020/09/08/20200908-%E9%87%91%E8%9E%8D%E4%B8%9A%E5%8A%A1%E5%AE%B9%E7%81%BE%E4%BD%93%E7%B3%BB%E7%AE%80%E8%BF%B0/availability.png"></li>
+<li>MTTF 是 Mean Time To Failure，平均故障前的时间，即系统平均能够正常运行多长时间才发生一次故障。系统的可靠性越高，MTTF 越长。（注意：从字面上来说，看上去有 Failure 的字样，但其实是正常运行的时间。）</li>
+<li>MTTR 是 Mean Time To Recovery，平均修复时间，即从故障出现到故障修复的这段时间，这段时间越短越好。</li>
+<li>故障是正常的，而且是常见的。<br>故障是不可预测突发的，而且相当难缠。<br>我们要干的事儿就是想尽一切手段来降低 MTTR——故障的修复时间。<br>– 陈皓</li>
+</ul>
+<h2 id="容灾架构"><a href="#容灾架构" class="headerlink" title="容灾架构"></a>容灾架构</h2><p><img src="/2020/09/08/20200908-%E9%87%91%E8%9E%8D%E4%B8%9A%E5%8A%A1%E5%AE%B9%E7%81%BE%E4%BD%93%E7%B3%BB%E7%AE%80%E8%BF%B0/Network_Topology.png"></p>
+<p><img src="/2020/09/08/20200908-%E9%87%91%E8%9E%8D%E4%B8%9A%E5%8A%A1%E5%AE%B9%E7%81%BE%E4%BD%93%E7%B3%BB%E7%AE%80%E8%BF%B0/Architecture.png"></p>
+<ol>
+<li>红色线条为正常情况下的服务主链路；</li>
+<li>同城主备架构： 主－IDC-A；从－IDC-B;</li>
+<li>域名灾备：前端通过主域名访问后端接口，当响应超时或者返回50x的时候，前端将切换到备用域名访问后端接口；<ul>
+<li>异常情况可能是后端服务异常或者用户所在地区网络不稳定等原因；</li>
+<li>针对不幂等的接口，应设置成只切换域名不进行重试；</li>
+<li>后端服务可以根据自身服务的异常情况，返回50x，让前端切换到备用域名</li>
+</ul>
+</li>
+<li>主域名为CDN域名，连接北京两个机房，备用域名是非CDN域名，直接连接北京第三个机房；<ul>
+<li>使用CDN域名的原因：不把回源点暴露出去，从而把核心机房暴露出去。</li>
+</ul>
+</li>
+<li>使用MHA＋Consul作为DB的切换方案；</li>
+<li>每个IDC的gateway配置服务的主权重都是在IDC-A；发生故障切换时，gateway将把服务主权重切换到IDC-B，而通过外网进入IDC-A的流量，服务通过返回50x由前端切换到备用域名。</li>
+</ol>
+<h2 id="详细描述"><a href="#详细描述" class="headerlink" title="详细描述"></a>详细描述</h2><h3 id="故障切换"><a href="#故障切换" class="headerlink" title="故障切换"></a>故障切换</h3><h4 id="触发故障切换的场景"><a href="#触发故障切换的场景" class="headerlink" title="触发故障切换的场景"></a>触发故障切换的场景</h4><ol>
+<li>机房孤岛 (MHA＋Consul出发切换)</li>
+<li>网络抖动 (由决策服务通过健康检查手段决策)</li>
+<li>服务自身异常或机器问题等 (MHA＋Consul出发切换)</li>
+</ol>
+<h4 id="1-MHA-Consul切换"><a href="#1-MHA-Consul切换" class="headerlink" title="1) MHA+Consul切换"></a>1) MHA+Consul切换</h4><ul>
+<li>触发条件：1或3 (主库不可访问)</li>
+<li>MHA＋Consul切换后，决策服务切换gateway的服务权重</li>
+</ul>
+<h4 id="2-决策服务切换"><a href="#2-决策服务切换" class="headerlink" title="2) 决策服务切换"></a>2) 决策服务切换</h4><ul>
+<li>触发条件：2 (网络抖动)</li>
+<li>决策服务健康检查异常后，通过MHA+Consul主动切换主库，并切换gateway的服务权重</li>
+</ul>
+<h3 id="机房容灾场景（单机房故障）"><a href="#机房容灾场景（单机房故障）" class="headerlink" title="机房容灾场景（单机房故障）"></a>机房容灾场景（单机房故障）</h3><h4 id="1-机房内外网不通"><a href="#1-机房内外网不通" class="headerlink" title="1) 机房内外网不通"></a>1) 机房内外网不通</h4><ol>
+<li>IDC-A故障<ol>
+<li>服务权重通过gateway切换到IDC-B</li>
+<li>外网无法进入IDC-A，只能进入IDC-B</li>
+<li>CDN域名检测异常后剔除IDC-A的服务节点</li>
+<li>故障瞬间由于IDC-A不通，cdn结点会重试到IDC-B或者返回前端50x，前端访问备用域名。</li>
+</ol>
+</li>
+<li>IDC-B故障<ol>
+<li>服务权重无需调整</li>
+<li>外网无法进入IDC-B，只能进入IDC-A</li>
+<li>CDN域名检测异常后剔除IDC-B的服务节点</li>
+<li>故障瞬间由于IDC-B不通，cdn结点会重试到IDC-A或者返回前端50x，前端访问备用域名。</li>
+</ol>
+</li>
+</ol>
+<h4 id="2-机房孤岛（内网不通，外网通）"><a href="#2-机房孤岛（内网不通，外网通）" class="headerlink" title="2) 机房孤岛（内网不通，外网通）"></a>2) 机房孤岛（内网不通，外网通）</h4><ol>
+<li>IDC-A故障<ol>
+<li>服务权重通过gateway切换到IDC-B</li>
+<li>通过外网进入IDC-A的流量，服务自杀返回50x，前端访问备用域名<ul>
+<li>服务自杀参考：<a target="_blank" rel="noopener" href="https://kingson4wu.gitee.io/2020/09/05/20200905-%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%E8%84%91%E8%A3%82%E9%97%AE%E9%A2%98/">如何解决脑裂问题</a></li>
+</ul>
+</li>
+</ol>
+</li>
+<li>IDC-B故障<ol>
+<li>服务权重无需调整</li>
+<li>通过外网进入IDC-B的流量，服务自杀返回50x，前端访问备用域名</li>
+</ol>
+</li>
+</ol>
+<h4 id="3-机房网络抖动"><a href="#3-机房网络抖动" class="headerlink" title="3) 机房网络抖动"></a>3) 机房网络抖动</h4><p>机房服务异常（内外网都通，但该机房服务有问题，网络不稳定，丢包率高等，需机房切换）。<br>流量进入服务之后处理同2）只是切换策略不同。</p>
+<h3 id="决策服务"><a href="#决策服务" class="headerlink" title="决策服务"></a>决策服务</h3><ol>
+<li>通过Consul判断是否孤岛</li>
+<li>通过接口调用失败率，apm，监控网络丢包率等指标判断</li>
+<li>相关服务同步切</li>
+</ol>
+<h4 id="单元化"><a href="#单元化" class="headerlink" title="单元化"></a>单元化</h4><ol>
+<li>切换需要把相互依赖的服务整体进行切换，尽量避免跨机房调用。</li>
+</ol>
+<h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><h3 id="gateway如何实现"><a href="#gateway如何实现" class="headerlink" title="gateway如何实现"></a>gateway如何实现</h3><ul>
+<li>可以考虑结合服务发现，以localproxy代替nginx代替服务权重配置</li>
+</ul>
+<h3 id="其他注意事项"><a href="#其他注意事项" class="headerlink" title="其他注意事项"></a>其他注意事项</h3><ol>
+<li>定时任务是否要切换</li>
+<li>MQ消费或生产是否要切换</li>
+<li>服务强依赖要单元化，比如强依赖方主备，自己的服务做双活也没用</li>
+<li>MQ类发送异步进行</li>
+<li>留意nginx重试机制，如以下配置：<code>proxy_next_upstream error | timeout | invalid_header | http_500 | http_502 | http_503 | http_504;</code>，501是不重试的，超时和其他50x会重试。<ul>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/mj158518/article/details/49847119">nginx的重试机制</a></li>
+</ul>
+</li>
+</ol>
+<h3 id="其他技巧"><a href="#其他技巧" class="headerlink" title="其他技巧"></a>其他技巧</h3><ol>
+<li>服务所依赖的外部服务分为强依赖和弱依赖。弱依赖可以继续降级，而强依赖则不可以。</li>
+<li>强依赖可以进一步划分成读依赖和写依赖。通常情况下写依赖是几乎不可能优化的，只能依赖其高可用，比如扣费服务。而读依赖则有优化空间，读依赖可以分为实时性依赖和非实时性依赖，后者可以通过缓存来解决强依赖的问题，比如用户的信息。这部分数据通常的强依赖的，但是又可以缓存下来。</li>
+<li>强实时性读依赖的，故障情况下，可以考虑降级成非实时性依赖。比如采取先读远端数据，失败时降级成读缓存的策略。</li>
+</ol>
+<h3 id="演练方式"><a href="#演练方式" class="headerlink" title="演练方式"></a>演练方式</h3><ol start="0">
+<li>前期：tcpcpoy线上流量，复制线上服务部署单独一台演练环境，包括应用和db</li>
+<li>kill服务，killDB</li>
+<li>iptables屏蔽端口<ul>
+<li>iptable和kill应用不一样。前者会有readtimeout，后者直接reset peer</li>
+<li>kill应用的方式基本是平稳的，使用iptable屏蔽端口的方式，可能会有connectTimeout或readTimeout。</li>
+</ul>
+</li>
+<li>线上停机房<ul>
+<li>停专线一定是孤岛，不存在一边内网通，另一边内网不通的情况，是一个内网（看上图的网络拓扑图）。</li>
+</ul>
+</li>
+</ol>
+<h3 id="Q-amp-A"><a href="#Q-amp-A" class="headerlink" title="Q&amp;A"></a>Q&amp;A</h3><ol>
+<li>备用机房（IDC-B）正常情况下无流量？<ul>
+<li>配置万分之一的流量，确保切换前已经可用。</li>
+<li>确保切换之前备机房是可用的，是否可用通过观察日志情况。</li>
+<li>备用机房异常应该及时告警。</li>
+</ul>
+</li>
+<li>为什么跨机房同步使用MySQL主从同步而使用otter？<ul>
+<li>一般主从同步只在同机房或者同城进行。</li>
+<li>otter是阿里开源的一个分布式数据库同步系统，尤其是在跨机房数据库同步方面，有很强大的功能。 </li>
+<li>？？？？</li>
+</ul>
+</li>
+<li>相关服务一同切换是否合理<ol>
+<li>机房异常一同切换可行；</li>
+<li>如果只是单个服务异常，别的服务也要跟着切库不一定合理。决策服务应该支持业务自行配制切换策略。</li>
+</ol>
+</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/09/05/20200905-ru-he-jie-jue-nao-lie-wen-ti/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/09/05/20200905-ru-he-jie-jue-nao-lie-wen-ti/" itemprop="url">如何解决脑裂问题</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-09-05T00:04:32+08:00">
+                2020-09-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/09/05/20200905-ru-he-jie-jue-nao-lie-wen-ti/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/09/05/20200905-ru-he-jie-jue-nao-lie-wen-ti/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>什么是“Split Brain”(脑裂)问题？</p>
+<p>Split Brain 是指在同一时刻有两个认为自己处于 Active 状态的 NameNode。对于HA集群而言，确保同一时刻只有一个NameNode处于active状态是至关重要的。否则，两个NameNode的数据状态就会产生分歧，可能丢失数据，或者产生错误的结果。</p>
+<h3 id="CAP理论"><a href="#CAP理论" class="headerlink" title="CAP理论"></a>CAP理论</h3><ul>
+<li><p>Consistency (一致性): 副本一致性特指强一致性；</p>
+</li>
+<li><p>Availiablity(可用性): 指系统在出现异常时已经可以提供服务;</p>
+</li>
+<li><p>Tolerance to the partition of network (分区容忍): 指系统可以对网络分区这种异常情 况进行容错处理;</p>
+</li>
+<li><p>CAP理论，对于P（分区容忍性）而言，是实际存在 从而无法避免的。因为，分布系统中的处理不是在本机，而是网络中的许多机器相互通信，故网络分区、网络通信故障问题无法避免。因此，只能尽量地在C 和 A 之间寻求平衡。</p>
+</li>
+<li><p>对于数据存储而言，为了提高可用性（Availability），采用了副本备份。某数据块所在的机器宕机了，就去该数据块副本所在的机器上读取。但是，当需要修改数据时，就需要更新所有的副本数据，这样才能保证数据的一致性（Consistency）。因此，就需要在 C(Consistency) 和 A(Availability) 之间权衡。</p>
+</li>
+<li><p>Quorum机制，就是这样的一种权衡机制，一种将“读写转化”的模型。</p>
+</li>
+</ul>
+<h3 id="Quorum机制"><a href="#Quorum机制" class="headerlink" title="Quorum机制"></a>Quorum机制</h3><ol>
+<li>Write-all-read-one(简称 WARO).(极端的方案)<ul>
+<li>当Client请求向某副本写数据时(更新数据)，只有当所有的副本都更新成功之后，这次写操作才算成功，否则视为失败。</li>
+<li>WARO牺牲了更新服务的可用性，最大程度地增强了读服务的可用性。而Quorum就是更新服务和读服务之间进行一个折衷。</li>
+</ul>
+</li>
+<li>Quorum 机制<ul>
+<li>将 WARO 的条件进行松弛,从而使得可以在读写服务可用性之间做折中,得出 Quorum 机制。</li>
+<li>Quorum机制是“抽屉原理”的一个应用。定义如下：假设有N个副本，更新操作wi 在W个副本中更新成功之后，才认为此次更新操作wi 成功。称成功提交的更新操作对应的数据为：“成功提交的数据”。对于读操作而言，至少需要读R个副本才能读到此次更新的数据。其中，W+R&gt;N ，即W和R有重叠。一般，W+R&#x3D;N+1</li>
+<li>仅仅依赖 quorum 机制是无法保证强一致性的。因为仅有 quorum 机制时无法确 定最新已成功提交的版本号,除非将最新已提交的版本号作为元数据由特定的元数据服务器或元数 据集群管理,否则很难确定最新成功提交的版本号。<ul>
+<li>1）如何读取最新的数据？—在已经知道最近成功提交的数据版本号的前提下，最多读R个副本就可以读到最新的数据了。</li>
+<li>2）如何确定 最高版本号 的数据是一个成功提交的数据？—继续读其他的副本，直到读到的 最高版本号副本 出现了W次。</li>
+</ul>
+</li>
+<li>Quorum 机制的三个系统参数 N、W、R 控制了系统的可用性,也是系统对用户的服务承诺:数 据最多有 N 个副本,但数据更新成功 W 个副本即返回用户成功。对于一致性要求较高的 Quorum 系 统,系统还应该承诺任何时候不读取未成功提交的数据,即读取到的数据都是曾经在 W 个副本上成 功的数据。</li>
+</ul>
+</li>
+</ol>
+<h3 id="Lease-机制"><a href="#Lease-机制" class="headerlink" title="Lease 机制"></a>Lease 机制</h3><ul>
+<li>Lease 是由颁发者授予的在某一有效期内的承诺。颁发者一旦发出 lease,则无论接受方是否收到,也无论后续接收方处于何种状态,只要 lease 不过期,颁发者一 定严守承诺;另一方面,接收方在 lease 的有效期内可以使用颁发者的承诺,但一旦 lease 过期,接 收方一定不能继续使用颁发者的承诺。</li>
+<li>Lease 机制依赖于有效期,这就要求颁发者和接收者的时钟是同步的。对于这种时钟不同步,实践中的通常做法是 将颁发者的有效期设置得比接收者的略大,只需大过时钟误差就可以避免对 lease 的有效性的影响。</li>
+</ul>
+<h3 id="解决脑裂的关键"><a href="#解决脑裂的关键" class="headerlink" title="解决脑裂的关键"></a>解决脑裂的关键</h3><h4 id="raft是如何解决的？"><a href="#raft是如何解决的？" class="headerlink" title="raft是如何解决的？"></a>raft是如何解决的？</h4><ol start="0">
+<li>核心是“大多数成功”机制。Raft就是基于Quorum机制下实现的。</li>
+<li>看下以下这篇文章:<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/072380e12657">为 Raft 引入 leader lease 机制解决集群脑裂时的 stale read 问题</a><ul>
+<li>这种方法牺牲了一定的可用性（在脑裂时部分客户端的可用性）换取了一致性的保证。</li>
+<li>多数派的网络分区挂了，岂不是直接不可写了</li>
+</ul>
+</li>
+<li>如何解决多数派的网络分区挂了，服务就不可用的问题？<ul>
+<li>我的答案是部署不止两个网络分区，至少三个网络分区；这样任意一个分区挂了，服务都可用，除非三个分区的大多数分区挂了(挂了2个)；</li>
+</ul>
+</li>
+<li>副本控制协议分为两大类:“中心化(centralized)副本控制协议”和“去中心化(decentralized) 副本控制协议”。解决脑裂的其中一个关键点是哪种 “去中心化的协议”，paxos和raft都是。</li>
+</ol>
+<h4 id="使用非分布式存储的应用如何解决？"><a href="#使用非分布式存储的应用如何解决？" class="headerlink" title="使用非分布式存储的应用如何解决？"></a>使用非分布式存储的应用如何解决？</h4><ol>
+<li>上述处理脑裂问题的前提是：服务本身就是一个分布式存储服务，使用raft等一致性协议；那么普通的业务服务，使用MySQL的的情况下，怎么解决脑裂问题？</li>
+<li>MySQL主从服务复制，这种存储服务本身就不是去中心的分布式数据库；</li>
+<li>解决问题的核心点是：引入第三方组件作为整个业务集群的“选主服务”(比如Consul、Etcd，都是基于Raft协议)；结合MySQL的半同步复制机制：支持配置n个从库ack才响应客户端（类似Quorum机制）和MHA，可以很大程度的避免丢数据导致不一致。</li>
+<li>Consul本身就是基于raft协议，可以利用其去中心化的特性，作为选主服务，业务通过Consul识别到哪个集群是主集群之后，可定制进行相应的业务处理。</li>
+</ol>
+<h4 id="选主服务"><a href="#选主服务" class="headerlink" title="选主服务"></a>选主服务</h4><ol>
+<li>Consul、Etcd (Raft)<ul>
+<li>在本次案例中是通过判断是否能获得Consul集群中的leader来判断孤岛的（调获取某个node的信息接口，如果没有leader会返回“No cluster leader”）；而不是通过Consul分布式锁的方式选主。</li>
+</ul>
+</li>
+<li>ZooKeeper (ZAB、Paxos )</li>
+<li>Chubby 分布式锁；<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/R2FCLknar6bCvykJ1m7rJQ">Google的锁，才是分布式锁？</a></li>
+</ol>
+<h3 id="使用Consul解决脑裂问题"><a href="#使用Consul解决脑裂问题" class="headerlink" title="使用Consul解决脑裂问题"></a>使用Consul解决脑裂问题</h3><ul>
+<li><img src="/2020/09/05/20200905-%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%E8%84%91%E8%A3%82%E9%97%AE%E9%A2%98/Consul_no_leader.png"></li>
+</ul>
+<h4 id="如何判断“孤岛”？"><a href="#如何判断“孤岛”？" class="headerlink" title="如何判断“孤岛”？"></a>如何判断“孤岛”？</h4><ol>
+<li>在三个IDC部署一个Consul集群，该集群会存在一个leader，且每个IDC的service在网络正常的情况下，都能检测到哪个是leader；依赖Consul的raft协议选举判断网络孤岛；(为了后续描述简单，假设每个IDC只部署一个Consul结点)</li>
+<li>每个IDC的service只访问当前IDC对应的Consul结点；当访问返回“No cluster leader”时，说明该网络分区已经是”孤岛”；<pre>
+curl 'http://consul:8500/v1/health/service/nodeName?passing&wait=1s&index=1&tag=master'
+No cluster leader
+</pre></li>
+<li>通过“No cluster leader”来判断孤岛的前提是，假设Consul是高可用的。因为当有两个Consul结点无法访问或挂掉的时候，也有能误判成没有leader（实际上并未出现网络孤岛，只是Consul集群异常）；</li>
+<li>引入双重检查机制，解决Consul集群因为可用性问题导致的误判的可能性；在Consul判断为网络孤岛的情况下，通过ping异地IDC的service的健康检查接口，二次确认；双重检查机制只能解决误判问题，若Consul集群不能高可用，那么判断孤岛的机制将失效。</li>
+</ol>
+<h4 id="如何处理“孤岛”？"><a href="#如何处理“孤岛”？" class="headerlink" title="如何处理“孤岛”？"></a>如何处理“孤岛”？</h4><ol>
+<li>判断为孤岛的网络分区的服务，如果接收到外网请求(因为是孤岛情况下其他IDC内网不通)，可以拒绝服务，也可以返回特殊的业务错误码或HTTP错误码，由上层服务或客户端重试到其他的机房。</li>
+</ol>
+<h4 id="“孤岛”消失后如何恢复？"><a href="#“孤岛”消失后如何恢复？" class="headerlink" title="“孤岛”消失后如何恢复？"></a>“孤岛”消失后如何恢复？</h4><ol>
+<li>手动恢复。”孤岛”的网络分区服务不恢复提供服务，由开发人员确认DB等无异常后再手动恢复；</li>
+<li>自动恢复。需做好充分的检测手段才能启用自动恢复：DB是否发生切换、主从DB数据是否一致（如比对脚本）、判断网络是否已经恢复到策略(防止来回切)等。</li>
+</ol>
+<h3 id="Q-amp-A"><a href="#Q-amp-A" class="headerlink" title="Q&amp;A"></a>Q&amp;A</h3><h4 id="为什么每个IDC的service只访问当前IDC对应的Consul结点？-前提是Consul高可用性"><a href="#为什么每个IDC的service只访问当前IDC对应的Consul结点？-前提是Consul高可用性" class="headerlink" title="为什么每个IDC的service只访问当前IDC对应的Consul结点？(前提是Consul高可用性)"></a>为什么每个IDC的service只访问当前IDC对应的Consul结点？(前提是Consul高可用性)</h4><ol>
+<li>假设IDC-A出现网络孤岛的情况下，IDC-A的service本身就无法访问IDC-B的Consul结点；</li>
+<li>假设IDC-B未出现网络孤岛，IDC-A的service只需要访问IDC-A的Consul结点即可判断；</li>
+</ol>
+<h4 id="选主服务一定要选择基于去中心一致性协议的组件吗？"><a href="#选主服务一定要选择基于去中心一致性协议的组件吗？" class="headerlink" title="选主服务一定要选择基于去中心一致性协议的组件吗？"></a>选主服务一定要选择基于去中心一致性协议的组件吗？</h4><ol>
+<li>不一定。使用选主服务只是利用组件高可用性和选举机制解决脑裂问题。Raft等去中心一致性的协议解决的的一致性问题及其leader的选举机制。换句话，只要该组件能高可用且在结点大多数存活（网络互通）的情况下，能选举出一个Leader即可，数据的一致性并不重要（因为没用到组件提供的数据存储功能）。</li>
+<li>一般情况下，业务使用MHA-Consul-MySQL作为DB切换的高可用方案；那么解决脑裂问题，也使用Consul组件，也可以减少服务对其他组件的依赖。</li>
+</ol>
+<h3 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h3><ol>
+<li>Group Replication<ul>
+<li>Group Replication由至少3个或更多个节点共同组成一个数据库集群，事务的提交必须经过半数以上节点同意方可提交，在集群中每个节点上都维护一个数据库状态机，保证节点间事务的一致性。Group Replication基于分布式一致性算法Paxos实现，允许部分节点故障，只要保证半数以上节点存活，就不影响对外提供数据库服务，是一个真正可用的高可用数据库集群技术。 Group Replication支持两种模式，单主模式和多主模式。在同一个group内，不允许两种模式同时存在，并且若要切换到不同模式，必须修改配置后重新启动集群。 在单主模式下，只有一个节点可以对外提供读写事务的服务，而其它所有节点只能提供只读事务的服务，这也是官方推荐的Group Replication复制模式。</li>
+</ul>
+</li>
+<li>NewSQL<ul>
+<li>关于NewSQL的定义是：这是一类现代关系型的DBMS，旨在为NoSQL的OLTP读写负载提供相同的可扩展性能，同时仍然提供事务的ACID保证。</li>
+<li>TiDB。TiDB 是一个分布式 NewSQL 数据库。它支持水平弹性扩展、ACID 事务、标准 SQL、MySQL 语法和 MySQL 协议，具有数据强一致的高可用特性，是一个不仅适合 OLTP 场景还适OLAP 场景的混合数据库。</li>
+</ul>
+</li>
+</ol>
+<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><ul>
+<li>刘杰：分布式原理介绍</li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/hapjin/p/5626889.html">分布式系统理论之Quorum机制</a></li>
+<li><a target="_blank" rel="noopener" href="https://kingson4wu.gitee.io/2020/08/31/20200831-%E5%85%B3%E4%BA%8EMHA-Consul-MySQL%E9%AB%98%E5%8F%AF%E7%94%A8%E6%96%B9%E6%A1%88%E7%9A%84%E7%AE%80%E5%8D%95%E6%80%BB%E7%BB%93%E5%92%8C%E6%80%9D%E8%80%83/">关于MHA_Consul_MySQL高可用方案的简单总结和思考</a></li>
+<li><a target="_blank" rel="noopener" href="http://mysql.taobao.org/monthly/2017/08/01/">MySQL · 引擎特性 · Group Replication内核解析</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/71073707">我们听到的TiDB到底是什么？</a></li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/08/31/20200831-guan-yu-mha-consul-mysql-gao-ke-yong-fang-an-de-jian-dan-zong-jie-he-si-kao/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/08/31/20200831-guan-yu-mha-consul-mysql-gao-ke-yong-fang-an-de-jian-dan-zong-jie-he-si-kao/" itemprop="url">关于MHA_Consul_MySQL高可用方案的简单总结和思考</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-08-31T21:39:33+08:00">
+                2020-08-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/08/31/20200831-guan-yu-mha-consul-mysql-gao-ke-yong-fang-an-de-jian-dan-zong-jie-he-si-kao/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/08/31/20200831-guan-yu-mha-consul-mysql-gao-ke-yong-fang-an-de-jian-dan-zong-jie-he-si-kao/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>MHA + Consul + MySQL的高可用方案，网上已经有很多资料，这里只是做一下简要的总结和思考。文章部分文字摘自Reference中的链接。<br>直接先上一张图</p>
+<p><img src="/2020/08/31/20200831-%E5%85%B3%E4%BA%8EMHA-Consul-MySQL%E9%AB%98%E5%8F%AF%E7%94%A8%E6%96%B9%E6%A1%88%E7%9A%84%E7%AE%80%E5%8D%95%E6%80%BB%E7%BB%93%E5%92%8C%E6%80%9D%E8%80%83/MHA_Consul_MySQL%E5%88%87%E6%8D%A2.png"></p>
+<ol>
+<li>图中的灾备架构适用于同城主备架构的业务，比如金钱业务；</li>
+<li>DB层是一主多从，主库至在其中一个机房，并在DB集群上搭建跨IDC的MHA；同样Consul也是跨IDC的集群；</li>
+<li>业务的写主流量配置在主库机房的一侧，当主库故障发生DB切换产生新主库时，流量也跟从新主库一同切换；</li>
+<li>主库切换通过MHA完成，并通过Consul集群和应用的SDK通知到业务服务。</li>
+<li>MySQL采用默认的异步复制方式</li>
+</ol>
+<h3 id="解决什么问题"><a href="#解决什么问题" class="headerlink" title="解决什么问题"></a>解决什么问题</h3><ol>
+<li>解决MySQL的单点问题。当主库发生故障时能提升从库为新的主库，且应用层能自动识别；从而缩短故障的处理时间；</li>
+<li>通过Consul能支持从库的故障切换以及从库扩容或下线；</li>
+</ol>
+<h3 id="每个组件各自的作用"><a href="#每个组件各自的作用" class="headerlink" title="每个组件各自的作用"></a>每个组件各自的作用</h3><ol>
+<li>MHA：监控主节点，可以在故障时自动或手动切换、非故障时手动主从切换。切换时会进行数据补齐，并将新的master信息更新到consul中。</li>
+<li>Consul：MySQL服务注册并提供健康检查、记录最新的master；还可以提供其他配置性的服务，比如dns，可解析数据库域名。</li>
+<li>SDK: sdk通过consul-api监控MySQL ip列表的变化，能连接新的库和去掉已下线的库。</li>
+</ol>
+<p>下面的部分将对使用到的技术逐一简要描述和总结。</p>
+<h2 id="MHA"><a href="#MHA" class="headerlink" title="MHA"></a>MHA</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><pre>
+MySQL MHA架构介绍：
+
+MHA（Master High Availability）目前在MySQL高可用方面是一个相对成熟的解决方案，它由日本DeNA公司youshimaton（现就职于Facebook公司）开发，是一套优秀的作为MySQL高可用性环境下故障切换和主从提升的高可用软件。在MySQL故障切换过程中，MHA能做到在0~30秒之内自动完成数据库的故障切换操作，并且在进行故障切换的过程中，MHA能在最大程度上保证数据的一致性，以达到真正意义上的高可用。
+
+该软件由两部分组成：MHA Manager（管理节点）和MHA Node（数据节点）。MHA Manager可以单独部署在一台独立的机器上管理多个master-slave集群，也可以部署在一台slave节点上。MHA Node运行在每台MySQL服务器上，MHA Manager会定时探测集群中的master节点，当master出现故障时，它可以自动将最新数据的slave提升为新的master，然后将所有其他的slave重新指向新的master。整个故障转移过程对应用程序完全透明。
+
+在MHA自动故障切换过程中，MHA试图从宕机的主服务器上保存二进制日志，最大程度的保证数据的不丢失，但这并不总是可行的。例如，如果主服务器硬件故障或无法通过ssh访问，MHA没法保存二进制日志，只进行故障转移而丢失了最新的数据。使用MySQL 5.5的半同步复制，可以大大降低数据丢失的风险。MHA可以与半同步复制结合起来。如果只有一个slave已经收到了最新的二进制日志，MHA可以将最新的二进制日志应用于其他所有的slave服务器上，因此可以保证所有节点的数据一致性。
+
+目前MHA主要支持一主多从的架构，要搭建MHA,要求一个复制集群中必须最少有三台数据库服务器，一主二从，即一台充当master，一台充当备用master，另外一台充当从库，因为至少需要三台服务器，出于机器成本的考虑，淘宝也在该基础上进行了改造，目前淘宝TMHA已经支持一主一从。（出自：《深入浅出MySQL(第二版)》）
+</pre>
+
+<pre>
+MHA工作原理总结为以下几条：
+（1）从宕机崩溃的master保存二进制日志事件（binlog events）;
+（2）识别含有最新更新的slave;
+（3）应用差异的中继日志(relay log) 到其他slave;
+（4）应用从master保存的二进制日志事件(binlog events);
+（5）提升一个slave为新master;
+（6）使用其他的slave连接新的master进行复制。
+</pre>
+
+<pre>
+自带脚本：
+自动切换脚本：/usr/local/bin/master_ip_failover
+手动切换脚本：/usr/local/bin/master_ip_online_change
+</pre>
+
+<h3 id="图中的MHA阐述"><a href="#图中的MHA阐述" class="headerlink" title="图中的MHA阐述"></a>图中的MHA阐述</h3><ol>
+<li>服务为主备架构，部署在IDC-A和IDC-B，其中主流量在IDC-A；MHA MANAGER则部署在IDC-C（第三个机房），这样才能保证任意一边的IDC出问题，都不影响MHA的切换；</li>
+<li>为了防止来回切导致严重数据问题。可以设置，当MHA发生自动切换时，MHA MANAGER无论成功与否都会退出；</li>
+<li>MHA在故障时可以进行数据补齐。</li>
+</ol>
+<h2 id="MySQL-半同步复制"><a href="#MySQL-半同步复制" class="headerlink" title="MySQL 半同步复制"></a>MySQL 半同步复制</h2><h3 id="主从复制的基本原理"><a href="#主从复制的基本原理" class="headerlink" title="主从复制的基本原理"></a>主从复制的基本原理</h3><ol>
+<li>[master] SQL操作存入binLog中;</li>
+<li>[slave] 连接master，进行数据同步;</li>
+<li>[master] dump thread 把binlog数据发送到slave中;</li>
+<li>[slave] 创建I&#x2F;O线程读取 master传输过来的binlog内容并写入到relay Log;</li>
+<li>[slave] 创建SQL线程，从relay Log读取并执行。</li>
+</ol>
+<h3 id="主从复制的方式"><a href="#主从复制的方式" class="headerlink" title="主从复制的方式"></a>主从复制的方式</h3><ol>
+<li><p>异步复制（Asynchronous replication）</p>
+<ul>
+<li>MySQL默认的复制即是异步的，主库先提交事务，然后立即响应客户端。</li>
+<li>如果主库crash，且主库上已经提交的事务还没有同步到相应的从库上，那么当从库提升为主时，会导致新主上的数据不完整。</li>
+<li>性能最好</li>
+</ul>
+</li>
+<li><p>全同步复制（Fully synchronous replication）</p>
+<ul>
+<li>当主库执行完一个事务，且所有的从库都同步完之后才响应客户端。</li>
+<li>性能差</li>
+</ul>
+</li>
+<li><p>半同步复制（Semisynchronous replication）</p>
+<ul>
+<li>AFTER_COMMIT；即参数 rpl_semi_sync_master_wait_point &#x3D; after_commit</li>
+<li>介于异步复制和全同步复制之间，主库提交完事务之后不立即响应客户端，而是等待至少一个从库接收到并写到relay log中才响应客户端。相对于异步复制，半同步复制提高了数据的安全性，同时它也造成了一定程度的延迟，这个延迟最少是一个TCP&#x2F;IP往返的时间。所以，半同步复制最好在低延时的网络中使用。</li>
+<li>等待的时间以rpl_semi_sync_master_timeout参数为准，默认为10秒。在这等待的10秒里，对其他会话该事务是可见的；所以一旦master发生宕机，对外就会产生不一致的影响</li>
+<li>Slave ACK超时，将退化为异步复制模式 （所以半同步复制并不是严格意义上的半同步复制）</li>
+</ul>
+</li>
+<li><p>增强半同步（Loss-less Semi-Synchronous）</p>
+<ul>
+<li>AFTER_SYNC；即参数 rpl_semi_sync_master_wait_point &#x3D; after_sync</li>
+<li>after sync是MySQL5.7官方新加以解决MySQL5.6半同步缺陷的选项，也是官方推荐的方式。</li>
+<li>原理：客户端发送过来一个请求，经过mysql的SQL分析，存储引擎处理，写入binlog，然后		写入从库的relaylog，存储引擎层提交，最后返回给客户端。</li>
+<li>优点：主库把SQL操作先发给从库的relay log，然后再提交，再响应给客户端，这个过程即使		在storage commit之后主crash了，日志也已经写入到relay log中，从库和主库数据一致。</li>
+<li>在commit之前等待Slave ACK，可以堆积事务，利于group commit，有利于提升性能。</li>
+<li>在master接受到Slave ACK之前，数据的变化对其他会话时不可见的，因为此时并未提交，从	而也不会产生数据不一致的影响。</li>
+<li>同样，Ack超时，也将退化为异步复制模式</li>
+</ul>
+</li>
+<li><p>组复制 MySQL Group Replication（MGR）</p>
+<ul>
+<li>MGR内部实现了分布式数据一致性协议，paxos通过其来保证数据一致性。</li>
+</ul>
+</li>
+</ol>
+<h3 id="after-commit-VS-after-sync"><a href="#after-commit-VS-after-sync" class="headerlink" title="after_commit VS after_sync"></a>after_commit VS after_sync</h3><p><img src="/2020/08/31/20200831-%E5%85%B3%E4%BA%8EMHA-Consul-MySQL%E9%AB%98%E5%8F%AF%E7%94%A8%E6%96%B9%E6%A1%88%E7%9A%84%E7%AE%80%E5%8D%95%E6%80%BB%E7%BB%93%E5%92%8C%E6%80%9D%E8%80%83/after_commit.png"><br><img src="/2020/08/31/20200831-%E5%85%B3%E4%BA%8EMHA-Consul-MySQL%E9%AB%98%E5%8F%AF%E7%94%A8%E6%96%B9%E6%A1%88%E7%9A%84%E7%AE%80%E5%8D%95%E6%80%BB%E7%BB%93%E5%92%8C%E6%80%9D%E8%80%83/after_sync.png"></p>
+<ul>
+<li>after_commit：master把每一个事务写到二进制日志并保存到磁盘上，并且提交（commit）事务，再把事务发送给从库，开始等待slave的应答。响应后master返回结果给客户端，客户端才可继续。</li>
+<li>after_sync  ：master把每一个事务写到二进制日志并保存磁盘上，并且把事务发送给从库，开始等待slave的应答。确认slave响应后，再提交（commit）事务到存储引擎，并返回结果给客户端，客户端才可继续。</li>
+<li>半同步和增强半同步都是等待slave的ACK后才给客户端返回成功（也就是整个流程完成）</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p><img src="/2020/08/31/20200831-%E5%85%B3%E4%BA%8EMHA-Consul-MySQL%E9%AB%98%E5%8F%AF%E7%94%A8%E6%96%B9%E6%A1%88%E7%9A%84%E7%AE%80%E5%8D%95%E6%80%BB%E7%BB%93%E5%92%8C%E6%80%9D%E8%80%83/MySQL_copy.png"></p>
+<ul>
+<li>一致性要求高的，比如金融类的（相比其他业务TPS较低），可以考虑开启增强半同步复制</li>
+</ul>
+<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><ol>
+<li>MySQL 5.7新增了rpl_semi_sync_master_wait_for_slave_count系统变量，可以用来控制主库接收多少个从库写事务成功反馈，给高可用架构切换提供了灵活性。	当该变量值为2时，主库需等待两个从库的ACK。</li>
+</ol>
+<h2 id="Consul"><a href="#Consul" class="headerlink" title="Consul"></a>Consul</h2><h3 id="介绍-1"><a href="#介绍-1" class="headerlink" title="介绍"></a>介绍</h3><ul>
+<li>Consul is a tool for service discovery and configuration. Consul is distributed, highly available, and extremely scalable</li>
+<li>Consul是一个服务管理软件。支持多数据中心下，分布式高可用的，服务发现和配置共享。采用 Raft 算法,用来保证服务的高可用。</li>
+<li>Consul使用Gossip Protocol来管理成员资格并向集群广播消息。所有这些都是通过使用Serf库提供的。</li>
+<li>关于raft算法原理，可以后续再讲。</li>
+</ul>
+<h3 id="和MHA的结合使用"><a href="#和MHA的结合使用" class="headerlink" title="和MHA的结合使用"></a>和MHA的结合使用</h3><ol>
+<li>checkmysql 脚本部署到每台 consul server 中, 实现了多点检测 MySQL 是否正常;</li>
+<li>checkmysql 脚本在超过半数的情况下调用 masterha_manager_consul 脚本进行主从切换;</li>
+</ol>
+<h4 id="主从切换"><a href="#主从切换" class="headerlink" title="主从切换"></a>主从切换</h4><ul>
+<li>MHA 是切换工具，控制数据库主从切换和数据补齐；</li>
+<li>MHA 进行故障检测，故障时进行切换并通知Consul下发新的主库配置到应用服务。</li>
+</ul>
+<h4 id="从库上下线"><a href="#从库上下线" class="headerlink" title="从库上下线"></a>从库上下线</h4><ul>
+<li>Consul可以对从库进行健康检查，通过配置下发控制从库上下线。</li>
+</ul>
+<h2 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h2><h3 id="CMDB"><a href="#CMDB" class="headerlink" title="CMDB"></a>CMDB</h3><ul>
+<li>配置管理数据库( Configuration Management Database,CMDB)</li>
+<li>自动化运维立足之本。在容灾切换管理工具中，可以直接一键从CMDB中同步所有业务系统，并能够非常灵活的定义每个业务系统的切换过程环节以及每个环节所有执行的具体操作。</li>
+<li><a target="_blank" rel="noopener" href="https://blog.51cto.com/031028/2426950">CMDB与容灾备份的关联</a></li>
+<li><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/news/302057">好的CMDB建设，应该具备这些要素</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_42556618/article/details/107345128">【运维探讨】如何实现更加简单、高效、安全的灾备切换管理？</a></li>
+</ul>
+<h3 id="脑裂"><a href="#脑裂" class="headerlink" title="脑裂"></a>脑裂</h3><ul>
+<li>脑裂问题是分布式多活建设必须面临的问题之一。</li>
+<li>以上面的架构进行描述，当IDC-A和IDC-B、IDC-C网络不通时，其实IDC-A就是一个网络孤岛。<br>这时候时IDC-B中的从库就会提升为主库，并开始接收写操作。因为IDC-A已经是个数据孤岛，服务的主从库并未发生改变(接收不到consul下发的配置)，此时也接受外部的写操作请求，那么就会造成两边数据都有写操作，错误的双主架构导致错误的数据问题。</li>
+</ul>
+<h4 id="如何避免脑裂问题"><a href="#如何避免脑裂问题" class="headerlink" title="如何避免脑裂问题"></a>如何避免脑裂问题</h4><ol>
+<li>如何让IDC的服务可以判断自身是否孤岛，从而拒绝服务，避免数据问题呢？</li>
+<li>其中一个方案使用Consul作为选主服务来解决。后续另开文章叙述。</li>
+<li>使用etcd：<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/VFJg14JcapijOyhfJJMYUg">etcd 实现故障时主备秒级切换高可用架构</a></li>
+<li>分布式锁服务Chubby（参见文献[Bur06]）集群锁服务提供一个与文件系统类似的API用来操作锁。Chubby 可以处理异地、跨机房级别的锁请求。Chubby 使用Paxos协议来提供分布式一致性（具体描述参看第23章）。Chubby 是实现主实例选举（Master-Election）过程的关键组件。例如，一个服务有5个冗余实例在同时运行，但是只有一个实例可以处理对外请求，一般的做法是通过Chubby进行自动选举，选择一个实例成为主实例。Chubby适合存放那种对一致性要求非常高的数据。—《SRE：Google运维解密》</li>
+</ol>
+<h4 id="结合raft的思考"><a href="#结合raft的思考" class="headerlink" title="结合raft的思考"></a>结合raft的思考</h4><ul>
+<li>为了避免脑裂，需要有选主机制，一般超半数的投票才能成为leader；Consul就是基于raft是实现的；</li>
+<li>在线上部署consul必须至少是三个机房，因为如果只有两个机房，其中一个机房挂了（刚好是大多数机器的机房），服务将不可用；</li>
+<li>分布式存储系统，需要解决数据的一致性问题和脑裂问题。<ol>
+<li>raft有实现，但是首先得基于raft协议的文件存储；</li>
+<li>使用MySQL作为存储，Consul作为选主服务的业务：Consul可以解决脑裂问题；而在数据的一致性则需要业务自身进行保证（比如比较业务流水）<ul>
+<li>MySQL的半同步复制机制 支持配置n个从库ack才响应客户端（其实和raft大多数结点写成功才算成功有点类似[Quorum机制]），可以很大程度的避免丢数据导致不一致。</li>
+</ul>
+</li>
+</ol>
+</li>
+<li>一般金钱业务使用同城两个机房，主备架构，那么不能完全和raft三机房匹配（三机房意味着一定每个机房至少有一个结点接收到数据才算成功）。因此半同步复制只能一定程度上解决机房网络无异常下，单个结点故障的情况下，数据的一致性。所以一般情况下，切完机房保持数据一致性或检查监控数据一致性的方案，需要业务方自行监控和修正。</li>
+</ul>
+<h2 id="Q-amp-A"><a href="#Q-amp-A" class="headerlink" title="Q&amp;A"></a>Q&amp;A</h2><h3 id="为什么Dump和I-x2F-O线程不能多线程？"><a href="#为什么Dump和I-x2F-O线程不能多线程？" class="headerlink" title="为什么Dump和I&#x2F;O线程不能多线程？"></a>为什么Dump和I&#x2F;O线程不能多线程？</h3><ol>
+<li>dump线程和IO线程都是负责网络传输，如果将这里扩展为多线程那么会将一份Binlog日志分割为多份，并行传输，那么在slave端将会要额外的增加代码考虑如何将多份日志还原为原来的Binlog，大大增加难度。</li>
+<li>性能瓶颈不在IO，扩展后也没有多大效率提升。</li>
+<li>为什么Redis 6.0使用IO多线程增强性能，MySQL这里使用IO多线程却不行？<ul>
+<li>Redis是多个Client节点一个Server节点（暂且这么看），IO线程需要处理多个不同Client来源的请求；MySQL主从复制，本质上是1个Client端一个Server端，增大IO线程也无济于事。</li>
+</ul>
+</li>
+</ol>
+<h3 id="增强半同步是否会导致从有数据而主却没有？"><a href="#增强半同步是否会导致从有数据而主却没有？" class="headerlink" title="增强半同步是否会导致从有数据而主却没有？"></a>增强半同步是否会导致从有数据而主却没有？</h3><ul>
+<li>是。在Loss-less Semi-Synchronous模式下，master在调用binlog sync之后，engine层commit之前等待Slave ACK（需要收到至少一个Slave节点回复的ACK后）。这样只有在确认Slave收到事务events后，master事务才会提交，然后把结果返回给客户端。此时此事务才对其他事务可见。在这种模式下解决了after_commit模式带来的幻读和数据丢失问题，因为主库没有提交事务。但也会有个问题，假设主库在存储引擎提交之前挂了，那么很明显这个事务是不成功的，但由于对应的Binlog已经做了Sync操作，从库已经收到了这些Binlog，并且执行成功，相当于在从库上多了数据，也算是有问题的，但多了数据，问题一般不算严重。这个问题可以这样理解，作为MySQL，在没办法解决分布式数据一致性问题的情况下，它能保证的是不丢数据，多了数据总比丢数据要好。</li>
+</ul>
+<h3 id="MHA本身就支持自动切，为什么还要使用Consul？"><a href="#MHA本身就支持自动切，为什么还要使用Consul？" class="headerlink" title="MHA本身就支持自动切，为什么还要使用Consul？"></a>MHA本身就支持自动切，为什么还要使用Consul？</h3><ul>
+<li>MHA本身提供了自动切换主库的功能，但是MHA本身没有提供通知应用等机制。因此采用比较成熟的方案MHA+consul，并以SDK的方式接入。</li>
+</ul>
+<h3 id="自动切换安全吗？"><a href="#自动切换安全吗？" class="headerlink" title="自动切换安全吗？"></a>自动切换安全吗？</h3><ol>
+<li>直接启用masterha_manager 自动切换脚本并不安全，主要因为在网络抖动的情况下并不能保证数据库真的不能访问。不能仅通过一个点的检测就判断数据库不可访问。</li>
+<li>通过 Consul( Consul 提供 dns 接口)集群的特性, 增加多点检测机制, 在 n 个集群的环境中, 有超过半数的检测点检测到数据库有问题, 就认为数据库不可访问, 这时调用 masterha_manager 脚本进行切换。</li>
+<li>网络问题千变万化，在发生切换事件之后，需有相应的方案对主从流水数据进行对账或修正（确定基于binlog与应用日志的重要数据校验与补偿机制）。</li>
+<li>发生切换事件之后，在确定数据已经无异常之前，需要防止再自动切回去，造成严重的数据异常。所以一般情况下，只能自动切一次，直到人工介入确认无异常，重新设置为自动切模式。当然，有完善的监控比对数据异常机制的情况下，可以考虑做成自动化，无需依赖人工介入。</li>
+</ol>
+<h3 id="MHA切换之后，主库禁写后，现有的连接是否还能继续写入"><a href="#MHA切换之后，主库禁写后，现有的连接是否还能继续写入" class="headerlink" title="MHA切换之后，主库禁写后，现有的连接是否还能继续写入?"></a>MHA切换之后，主库禁写后，现有的连接是否还能继续写入?</h3><p><img src="/2020/08/31/20200831-%E5%85%B3%E4%BA%8EMHA-Consul-MySQL%E9%AB%98%E5%8F%AF%E7%94%A8%E6%96%B9%E6%A1%88%E7%9A%84%E7%AE%80%E5%8D%95%E6%80%BB%E7%BB%93%E5%92%8C%E6%80%9D%E8%80%83/MySQL_%E6%9D%83%E9%99%90.png"><br>mha切库禁写时，直接锁住整个实例，新操作无法写入，直接就设置read_only。</p>
+<h3 id="自动切的时机如何把握？"><a href="#自动切的时机如何把握？" class="headerlink" title="自动切的时机如何把握？"></a>自动切的时机如何把握？</h3><ol>
+<li>自动切的最佳时机很难人为，必须经过多种故障场景的测试，确定合适尽可能安全的切换策略和参数。</li>
+<li>在实践中，初期可以先告警人工介入决定是否切换；确定好合适的切换策略和参数后，自动切在非核心业务中稳定正确运行一段时间后才在核心业务运用。</li>
+</ol>
+<h3 id="MHA能保证数据一定不丢吗？"><a href="#MHA能保证数据一定不丢吗？" class="headerlink" title="MHA能保证数据一定不丢吗？"></a>MHA能保证数据一定不丢吗？</h3><ul>
+<li>在MHA自动故障切换过程中，MHA试图从宕机的主服务器上保存二进制日志，最大程度的保证数据的不丢失。但如上所述，网络等问题时无解的，理论上还是存在丢的可能性。一致性要求高的，比如金钱类的（相比其他业务TPS较低），可以考虑开启半同步复制，大大降低数据丢失的风险。</li>
+</ul>
+<h3 id="新的主库和原主库数据一致性问题如何解决？"><a href="#新的主库和原主库数据一致性问题如何解决？" class="headerlink" title="新的主库和原主库数据一致性问题如何解决？"></a>新的主库和原主库数据一致性问题如何解决？</h3><ol>
+<li>MHA只能尽量保证数据补齐；</li>
+<li>主从延迟较大时，切主库有风险；</li>
+<li>开启半同步复制可以大大降低丢数据的风险，但也带来一定的性能损耗；</li>
+<li>要做好切库后，主从日志流水对比修复方案</li>
+</ol>
+<h3 id="不一致如何止损？"><a href="#不一致如何止损？" class="headerlink" title="不一致如何止损？"></a>不一致如何止损？</h3><ol>
+<li>根据业务情况进行实现，比如在发生切换事件的一端时间内(比如一个小时)，阻断大额交易操作，等待开发确认后再恢复；</li>
+<li>具体实现可以使用redis存储数据快照，执行前和数据库的数据进行对比判断是否阻断，或其他可行方案；</li>
+<li>是否应该阻断，公司的利益和用户的利益，这是个哲学问题。。。</li>
+</ol>
+<h3 id="扩展-1"><a href="#扩展-1" class="headerlink" title="扩展"></a>扩展</h3><ul>
+<li>云数据库使用数据库代理进行连接:<a target="_blank" rel="noopener" href="https://cloud.tencent.com/document/product/236/72619">读写分离扩展云数据库 MySQL 性能</a></li>
+<li><a target="_blank" rel="noopener" href="https://cloud.tencent.com/document/product/236/35671">切换网络</a></li>
+</ul>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ol>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/arstercz/p/6963920.html">基于 consul 架构的 MHA 自动切换</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/yangjianrong1985/article/details/102479034">基于MHA+consul的MySQL高可用设计</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/xuanzhi201111/p/4231412.html">MySQL高可用之MHA的搭建</a></li>
+<li><a target="_blank" rel="noopener" href="https://code.google.com/p/mysql-master-ha/">MHA官方介绍</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzA3MzYwNjQ3NA==&mid=2651297535&idx=1&sn=2138d7d09cf5294c73810b133eed67e3&chksm=84ff42dab388cbcc90d9642b6cd3ed5de8e524cc10737947ce0c46eb287e95f4bae62472fa24&mpshare=1&scene=1&srcid=0518czFAsyzFLKkM07SIauWS#rd">京东MySQL数据库主从切换自动化</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/sunss/archive/2010/10/05/1844204.html">MySQL数据库的授权原则</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/zhoujinyi/p/3808673.html">MySQL MHA 搭建&amp;测试</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/ivictor/p/5735580.html">MySQL半同步复制</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_33330687/article/details/107496954">MySQL - 异步复制，半同步复制，增强半同步复制，组复制，全告诉你</a></li>
+<li><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1537291">mysql 半同步复制</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/allenhu320/p/11316276.html">增强半同步复制</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/3bfb0bfb8b34">【MySQL】5.7增强半同步AFTER SYNC&amp;AFTER COMMIT</a></li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/08/31/20200831-shi-yong-redis-shi-xian-bang-dan/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/08/31/20200831-shi-yong-redis-shi-xian-bang-dan/" itemprop="url">使用Redis实现榜单</a></h1>
         
 
         <div class="post-meta">
@@ -337,8 +1352,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/08/31/20200831-%E4%BD%BF%E7%94%A8Redis%E5%AE%9E%E7%8E%B0%E6%A6%9C%E5%8D%95/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2020/08/31/20200831-%E4%BD%BF%E7%94%A8Redis%E5%AE%9E%E7%8E%B0%E6%A6%9C%E5%8D%95/" itemprop="commentCount"></span>
+                <a href="/2020/08/31/20200831-shi-yong-redis-shi-xian-bang-dan/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/08/31/20200831-shi-yong-redis-shi-xian-bang-dan/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -450,7 +1465,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/08/20/20200820-%E5%85%B3%E4%BA%8ECDN%E7%BC%93%E5%AD%98/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/08/20/20200820-guan-yu-cdn-huan-cun/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="">
@@ -469,7 +1484,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/08/20/20200820-%E5%85%B3%E4%BA%8ECDN%E7%BC%93%E5%AD%98/" itemprop="url">关于CDN缓存总结摘要</a></h1>
+                <a class="post-title-link" href="/2020/08/20/20200820-guan-yu-cdn-huan-cun/" itemprop="url">关于CDN缓存总结摘要</a></h1>
         
 
         <div class="post-meta">
@@ -500,8 +1515,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/08/20/20200820-%E5%85%B3%E4%BA%8ECDN%E7%BC%93%E5%AD%98/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2020/08/20/20200820-%E5%85%B3%E4%BA%8ECDN%E7%BC%93%E5%AD%98/" itemprop="commentCount"></span>
+                <a href="/2020/08/20/20200820-guan-yu-cdn-huan-cun/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/08/20/20200820-guan-yu-cdn-huan-cun/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -663,7 +1678,7 @@ no-cache: 缓存资源，但立即过期，每次请求都需要跟服务器对�
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/08/04/20200804-%E6%89%93%E8%B5%8F%E7%B1%BB%E4%B8%9A%E5%8A%A1%E8%B4%A7%E5%B8%81%E4%BD%93%E7%B3%BB%E7%AE%80%E8%BF%B0/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/08/04/20200804-da-shang-lei-ye-wu-huo-bi-ti-xi-jian-shu/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="">
@@ -682,7 +1697,7 @@ no-cache: 缓存资源，但立即过期，每次请求都需要跟服务器对�
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/08/04/20200804-%E6%89%93%E8%B5%8F%E7%B1%BB%E4%B8%9A%E5%8A%A1%E8%B4%A7%E5%B8%81%E4%BD%93%E7%B3%BB%E7%AE%80%E8%BF%B0/" itemprop="url">打赏类业务货币体系简述</a></h1>
+                <a class="post-title-link" href="/2020/08/04/20200804-da-shang-lei-ye-wu-huo-bi-ti-xi-jian-shu/" itemprop="url">打赏类业务货币体系简述</a></h1>
         
 
         <div class="post-meta">
@@ -713,8 +1728,8 @@ no-cache: 缓存资源，但立即过期，每次请求都需要跟服务器对�
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/08/04/20200804-%E6%89%93%E8%B5%8F%E7%B1%BB%E4%B8%9A%E5%8A%A1%E8%B4%A7%E5%B8%81%E4%BD%93%E7%B3%BB%E7%AE%80%E8%BF%B0/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2020/08/04/20200804-%E6%89%93%E8%B5%8F%E7%B1%BB%E4%B8%9A%E5%8A%A1%E8%B4%A7%E5%B8%81%E4%BD%93%E7%B3%BB%E7%AE%80%E8%BF%B0/" itemprop="commentCount"></span>
+                <a href="/2020/08/04/20200804-da-shang-lei-ye-wu-huo-bi-ti-xi-jian-shu/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/08/04/20200804-da-shang-lei-ye-wu-huo-bi-ti-xi-jian-shu/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -834,7 +1849,7 @@ no-cache: 缓存资源，但立即过期，每次请求都需要跟服务器对�
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/21/20200721-%E3%80%8A%E7%A8%8B%E5%BA%8F%E5%91%98%E7%9A%84%E8%81%8C%E4%B8%9A%E7%B4%A0%E5%85%BB%E3%80%8B%E6%91%98%E8%A6%81/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/21/20200721-cheng-xu-yuan-de-zhi-ye-su-yang-zhai-yao/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="">
@@ -853,7 +1868,7 @@ no-cache: 缓存资源，但立即过期，每次请求都需要跟服务器对�
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/07/21/20200721-%E3%80%8A%E7%A8%8B%E5%BA%8F%E5%91%98%E7%9A%84%E8%81%8C%E4%B8%9A%E7%B4%A0%E5%85%BB%E3%80%8B%E6%91%98%E8%A6%81/" itemprop="url">《程序员的职业素养》摘要</a></h1>
+                <a class="post-title-link" href="/2020/07/21/20200721-cheng-xu-yuan-de-zhi-ye-su-yang-zhai-yao/" itemprop="url">《程序员的职业素养》摘要</a></h1>
         
 
         <div class="post-meta">
@@ -884,8 +1899,8 @@ no-cache: 缓存资源，但立即过期，每次请求都需要跟服务器对�
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/07/21/20200721-%E3%80%8A%E7%A8%8B%E5%BA%8F%E5%91%98%E7%9A%84%E8%81%8C%E4%B8%9A%E7%B4%A0%E5%85%BB%E3%80%8B%E6%91%98%E8%A6%81/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2020/07/21/20200721-%E3%80%8A%E7%A8%8B%E5%BA%8F%E5%91%98%E7%9A%84%E8%81%8C%E4%B8%9A%E7%B4%A0%E5%85%BB%E3%80%8B%E6%91%98%E8%A6%81/" itemprop="commentCount"></span>
+                <a href="/2020/07/21/20200721-cheng-xu-yuan-de-zhi-ye-su-yang-zhai-yao/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/07/21/20200721-cheng-xu-yuan-de-zhi-ye-su-yang-zhai-yao/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1279,7 +2294,7 @@ Robert C.Martin
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/19/20200719-%E3%80%8A%E4%BA%BA%E6%80%A7%E7%9A%84%E5%BC%B1%E7%82%B9%E3%80%8B%E6%91%98%E8%A6%81/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/19/20200719-ren-xing-de-ruo-dian-zhai-yao/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="">
@@ -1298,7 +2313,7 @@ Robert C.Martin
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/07/19/20200719-%E3%80%8A%E4%BA%BA%E6%80%A7%E7%9A%84%E5%BC%B1%E7%82%B9%E3%80%8B%E6%91%98%E8%A6%81/" itemprop="url">《人性的弱点》摘要</a></h1>
+                <a class="post-title-link" href="/2020/07/19/20200719-ren-xing-de-ruo-dian-zhai-yao/" itemprop="url">《人性的弱点》摘要</a></h1>
         
 
         <div class="post-meta">
@@ -1329,8 +2344,8 @@ Robert C.Martin
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/07/19/20200719-%E3%80%8A%E4%BA%BA%E6%80%A7%E7%9A%84%E5%BC%B1%E7%82%B9%E3%80%8B%E6%91%98%E8%A6%81/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2020/07/19/20200719-%E3%80%8A%E4%BA%BA%E6%80%A7%E7%9A%84%E5%BC%B1%E7%82%B9%E3%80%8B%E6%91%98%E8%A6%81/" itemprop="commentCount"></span>
+                <a href="/2020/07/19/20200719-ren-xing-de-ruo-dian-zhai-yao/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/07/19/20200719-ren-xing-de-ruo-dian-zhai-yao/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1636,7 +2651,7 @@ Robert C.Martin
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/19/20200719-%E5%A6%82%E4%BD%95%E9%A2%84%E4%BC%B0%E5%BC%80%E5%8F%91%E6%97%B6%E9%97%B4/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/19/20200719-ru-he-yu-gu-kai-fa-shi-jian/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="">
@@ -1655,7 +2670,7 @@ Robert C.Martin
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/07/19/20200719-%E5%A6%82%E4%BD%95%E9%A2%84%E4%BC%B0%E5%BC%80%E5%8F%91%E6%97%B6%E9%97%B4/" itemprop="url">如何预估开发时间</a></h1>
+                <a class="post-title-link" href="/2020/07/19/20200719-ru-he-yu-gu-kai-fa-shi-jian/" itemprop="url">如何预估开发时间</a></h1>
         
 
         <div class="post-meta">
@@ -1686,8 +2701,8 @@ Robert C.Martin
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/07/19/20200719-%E5%A6%82%E4%BD%95%E9%A2%84%E4%BC%B0%E5%BC%80%E5%8F%91%E6%97%B6%E9%97%B4/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2020/07/19/20200719-%E5%A6%82%E4%BD%95%E9%A2%84%E4%BC%B0%E5%BC%80%E5%8F%91%E6%97%B6%E9%97%B4/" itemprop="commentCount"></span>
+                <a href="/2020/07/19/20200719-ru-he-yu-gu-kai-fa-shi-jian/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/07/19/20200719-ru-he-yu-gu-kai-fa-shi-jian/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1741,671 +2756,6 @@ Robert C.Martin
 <li>需求方需要一个相对准确的时间点；</li>
 <li>给自己一个合理靠谱，相对科学的心理预估，避免坑人坑自己；</li>
 <li>紧急情况特事特办。。。</li>
-</ol>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/19/20200719-%E8%81%8C%E5%9C%BA%E7%94%9F%E5%AD%98%E5%B0%8F%E5%B0%8F%E6%80%BB%E7%BB%93/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/07/19/20200719-%E8%81%8C%E5%9C%BA%E7%94%9F%E5%AD%98%E5%B0%8F%E5%B0%8F%E6%80%BB%E7%BB%93/" itemprop="url">职场生存小小总结</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-19T17:13:31+08:00">
-                2020-07-19
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/07/19/20200719-%E8%81%8C%E5%9C%BA%E7%94%9F%E5%AD%98%E5%B0%8F%E5%B0%8F%E6%80%BB%E7%BB%93/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2020/07/19/20200719-%E8%81%8C%E5%9C%BA%E7%94%9F%E5%AD%98%E5%B0%8F%E5%B0%8F%E6%80%BB%E7%BB%93/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="不只局限于做需求本身"><a href="#不只局限于做需求本身" class="headerlink" title="不只局限于做需求本身"></a>不只局限于做需求本身</h3><ol>
-<li>可以考虑把原本不合理的东西进行优化（当然要考虑分享和成本以及必要性）;</li>
-<li>基于基础通用的角度设计方案；</li>
-<li>只做需求本身和想同时做更多的事，时间成本肯定不一样，如何解决两者之间的矛盾：<ol>
-<li>透明！把方案抛出来，由团队共同决策选择；</li>
-<li>提供短期方案和长期优化方案。</li>
-</ol>
-</li>
-</ol>
-<h3 id="及时反馈"><a href="#及时反馈" class="headerlink" title="及时反馈"></a>及时反馈</h3><ol>
-<li>发生故障及时反馈，不独自默默处理，避免由小故障变大故障；</li>
-<li>工作进度和成果及时反馈，避免无用功；</li>
-<li>其实还是要透明。</li>
-<li>凡事有交代，件件有着落，事事有回音。</li>
-<li>在不确定的场景下，尽量可以在多个假设中做多套方案（代价不会特别大），这样在对方案的时候，才不会导致得先重做才能继续讨论。</li>
-</ol>
-<h3 id="按流程做事"><a href="#按流程做事" class="headerlink" title="按流程做事"></a>按流程做事</h3><ol>
-<li>大公司的流程虽然繁琐，但很多流程其实有其存在的道理，毕竟来源于很多历史教训；保持敬畏，可以减少错误；</li>
-<li>当然紧急情况除外，但是要保持透明，和坚持底线；</li>
-</ol>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ol>
-<li>尽量透明；</li>
-<li>站在对方的角度考虑问题；</li>
-<li>保持底线；</li>
-</ol>
-<p>To Be Continued …</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/16/20200716-%E7%9B%91%E6%8E%A7%E5%91%8A%E8%AD%A6%E8%A6%81%E7%95%99%E6%84%8F%E5%93%AA%E4%BA%9B%E7%82%B9%EF%BC%9F/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/07/16/20200716-%E7%9B%91%E6%8E%A7%E5%91%8A%E8%AD%A6%E8%A6%81%E7%95%99%E6%84%8F%E5%93%AA%E4%BA%9B%E7%82%B9%EF%BC%9F/" itemprop="url">监控告警要留意哪些点？</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-16T23:33:26+08:00">
-                2020-07-16
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/07/16/20200716-%E7%9B%91%E6%8E%A7%E5%91%8A%E8%AD%A6%E8%A6%81%E7%95%99%E6%84%8F%E5%93%AA%E4%BA%9B%E7%82%B9%EF%BC%9F/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2020/07/16/20200716-%E7%9B%91%E6%8E%A7%E5%91%8A%E8%AD%A6%E8%A6%81%E7%95%99%E6%84%8F%E5%93%AA%E4%BA%9B%E7%82%B9%EF%BC%9F/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <ol>
-<li>告警信息要标明：机器、业务和环境等信息</li>
-<li>制定合理的告警规则，梳理告警项，优化项目error日志等；避免大量无用的告警导致麻木</li>
-<li>重要的特定业务可以单独配告警</li>
-</ol>
-<h3 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h3><ul>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/wnQhovr3651SbA7a8tXr_w">对 Java 意义重大的 7 个性能指标</a></li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/MWjjOB62QtX4uCWpKVs60A">对业务系统的监控 No.118</a></li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/3eDrbITbi66e3dzwYJPmeQ">一些好用的开源监控工具汇总</a></li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/16/20200716-%E4%BD%BF%E7%94%A8%E2%80%9C%E8%87%AA%E6%97%8B%E2%80%9D%E9%99%8D%E4%BD%8E%E4%B8%9A%E5%8A%A1%E5%A4%B1%E8%B4%A5%E7%8E%87/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/07/16/20200716-%E4%BD%BF%E7%94%A8%E2%80%9C%E8%87%AA%E6%97%8B%E2%80%9D%E9%99%8D%E4%BD%8E%E4%B8%9A%E5%8A%A1%E5%A4%B1%E8%B4%A5%E7%8E%87/" itemprop="url">使用“自旋”降低业务失败率</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-16T22:57:09+08:00">
-                2020-07-16
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/07/16/20200716-%E4%BD%BF%E7%94%A8%E2%80%9C%E8%87%AA%E6%97%8B%E2%80%9D%E9%99%8D%E4%BD%8E%E4%B8%9A%E5%8A%A1%E5%A4%B1%E8%B4%A5%E7%8E%87/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2020/07/16/20200716-%E4%BD%BF%E7%94%A8%E2%80%9C%E8%87%AA%E6%97%8B%E2%80%9D%E9%99%8D%E4%BD%8E%E4%B8%9A%E5%8A%A1%E5%A4%B1%E8%B4%A5%E7%8E%87/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="业务场景描述"><a href="#业务场景描述" class="headerlink" title="业务场景描述"></a>业务场景描述</h3><p>不说废话，直接描述以下两个业务场景</p>
-<ol>
-<li>使用分布式锁控制并发<pre>
-请求----------> 服务A
-       [1.尝试获取锁]
-       [2.获取锁失败]
-       [3.返回失败(提示操作太快)]</pre></li>
-</ol>
-<p><br>2. 强依赖服务超时或”请求处理中”</p>
-<pre>
-请求----------> 服务A
-          [1.强依赖请求]----------> 服务B
-                           [2.执行慢(网络抖动等原因)]
-          [3.请求服务B超时]   
-          [4.返回失败(提示服务繁忙)]
-</pre>
-
-<h3 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h3><ol>
-<li>场景1在获取锁失败时直接返回业务失败，可以考虑二次尝试；</li>
-<li>场景2因为服务B执行慢，直接返回上层失败。<ul>
-<li>服务A重试请求服务B时，可能请求已经执行完，很快就返回成功；或者服务B仍在执行该请求，返回“执行中”错误码。</li>
-</ul>
-</li>
-</ol>
-<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><ol>
-<li>场景1可以使用“自旋”减少失败率：在抢锁失败时，当前线程“自旋”100m以内的随机数，再二次获取锁；</li>
-<li>场景2同样可以使用“自旋”减少失败率：服务A在请求超时或收到“执行中”错误码时，同样自旋后再次重试，较大概率得到成功结果。</li>
-</ol>
-<h3 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h3><ul>
-<li>自旋同样需要考虑“比例”问题，不然大量自旋会影响服务的吞吐量，具体可参考:<a target="_blank" rel="noopener" href="https://kingson4wu.github.io/2020/07/13/20200713-%E7%94%B1%E7%81%BE%E5%A4%87%E5%B7%A5%E4%BD%9C%E4%B8%AD%E5%BC%95%E5%8F%91%E7%9A%84%E5%AF%B9%E2%80%9C%E6%AF%94%E4%BE%8B%E2%80%9D%E7%9A%84%E6%80%9D%E8%80%83/">由灾备工作中引发的对“比例”的思考</a></li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/15/20200715-canal%E4%BD%BF%E7%94%A8%E6%80%BB%E7%BB%93/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/07/15/20200715-canal%E4%BD%BF%E7%94%A8%E6%80%BB%E7%BB%93/" itemprop="url">canal使用总结</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-15T23:07:33+08:00">
-                2020-07-15
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/07/15/20200715-canal%E4%BD%BF%E7%94%A8%E6%80%BB%E7%BB%93/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2020/07/15/20200715-canal%E4%BD%BF%E7%94%A8%E6%80%BB%E7%BB%93/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>本文只讲自己在使用canal之后的一些总结，关于canal的基础用法和介绍，不在这里赘述。</p>
-<h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><ul>
-<li><p>canal的原理是基于mysql binlog技术，所以这里一定需要开启mysql的binlog写入功能，建议配置binlog模式为row</p>
-</li>
-<li><p>原文：<a target="_blank" rel="noopener" href="https://blog.csdn.net/liupeifeng3514/article/details/79687130">https://blog.csdn.net/liupeifeng3514/article/details/79687130</a> </p>
-</li>
-<li><p>mysql的自带复制技术可分成三步：</p>
-<ol>
-<li>master将改变记录到二进制日志(binary log)中（这些记录叫做二进制日志事件，binary log events，可以通过show binlog events进行查看）；</li>
-<li>slave将master的binary log events拷贝到它的中继日志(relay log)，这里是I&#x2F;O thread线程；</li>
-<li>slave重做中继日志中的事件，将改变反映它自己的数据，这里是SQL thread线程。</li>
-</ol>
-</li>
-<li><p>基于canal&amp;otter的复制技术和mysql复制类似，具有类比性：</p>
-<ol>
-<li>Canal对应于I&#x2F;O thread，接收Master Binary Log；</li>
-<li>Otter对应于SQL thread，通过Canal获取Binary Log数据，执行同步插入数据库；</li>
-</ol>
-</li>
-<li><p>两者的区别在于：</p>
-<ol>
-<li>otter目前嵌入式依赖canal，部署为同一个jvm，目前设计为不产生Relay Log，数据不落地；</li>
-<li>otter目前允许自定义同步逻辑，解决各类需求；<br>  a. ETL转化. 比如Slave上目标表的表名，字段名，字段类型不同，字段个数不同等.<br>  b. 异构数据库. 比如Slave可以是oracle或者其他类型的存储,nosql等.<br>  c. M-M部署，解决数据一致性问题<br>  d. 基于manager部署，方便监控同步状态和管理同步任务.</li>
-</ol>
-</li>
-<li><p>canal的工作原理：</p>
-<ul>
-<li>canal模拟mysql slave的交互协议，伪装自己为mysql slave，向mysql master发送dump协议</li>
-<li>mysql master收到dump请求，开始推送binary log给slave(也就是canal)</li>
-<li>canal解析binary log对象(原始为byte流)</li>
-</ul>
-</li>
-</ul>
-<h3 id="使用简述"><a href="#使用简述" class="headerlink" title="使用简述"></a>使用简述</h3><ol>
-<li>对MySQL给canal-server授权<ul>
-<li><code>CREATE USER &#39;canal_server&#39; IDENTIFIED BY &#39;canal_server&#39;;</code></li>
-<li><code>GRANT SELECT, REPLICATION SLAVE, REPLICATION CLIENT ON *.* TO &#39;canal_server&#39;;</code></li>
-</ul>
-</li>
-<li>canal使用ZK来做HA，因为涉及多个client时，消费计算的业务较为复杂的问题，所以目前在使用上只是单点部署，基本能满足需求。</li>
-</ol>
-<h3 id="使用总结"><a href="#使用总结" class="headerlink" title="使用总结"></a>使用总结</h3><ol>
-<li>可以通过指定binlog文件和position来重放binlog数据：</li>
-<li>如何查看MySQL位点：<a target="_blank" rel="noopener" href="https://blog.csdn.net/c1052981766/article/details/80604083">https://blog.csdn.net/c1052981766/article/details/80604083</a><ul>
-<li><code>show master status</code></li>
-<li><code>show binary logs</code></li>
-<li><code>show binlog events in &#39;binlog.000368&#39; limit 10;</code> &#x2F;&#x2F;pos 就是位点, 重启 canal</li>
-<li>如何查到旧记录的位点？<ol>
-<li>由canal-server中meta.dat记录</li>
-<li>通过 mysqlbinlog 命令分析 mysql-bin.xxx 文件内容，确定增量恢复到的时间点（运维协助）。</li>
-</ol>
-</li>
-</ul>
-</li>
-<li>除了用pos点的办法进行恢复，也可以通过指定时间区间进行恢复，按时间恢复需要用mysqlbinlog命令读取binlog日志内容，找时间节点。<ul>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/zyz511919766/article/details/38089393">使用mysqlbinlog工具进行基于位置或时间点的数据恢复</a></li>
-</ul>
-</li>
-<li>重跑。修改instance.properties文件设置重跑起始位点，删除meta.dat文件并重启。注意回放数据时视业务情况，可能要忽略第一个位点对应的数据。</li>
-<li>重启之后batchId会变，所以不能使用batchId来做幂等处理</li>
-<li>使用mysql主从同步和使用canal同步的区别? 同步数据为什么不直接用主从同步机制？<ol>
-<li>mysql版本不一致，不支持主从同步</li>
-<li>并不是自己的库，只需要同步几张表，运维不会做这种定制化</li>
-<li>完成同步目标后，可方便拆卸和控制</li>
-</ol>
-</li>
-<li>client重启如何对应原来的位点<ul>
-<li>canal client和server交互之间的身份标识，目前clientId写死为1001. (目前canal server上的一个instance只能有一个client消费，clientId的设计是为1个instance多client消费模式而预留的，暂时不需要理会)</li>
-</ul>
-</li>
-</ol>
-<h3 id="canal和MySQL相关资料"><a href="#canal和MySQL相关资料" class="headerlink" title="canal和MySQL相关资料"></a>canal和MySQL相关资料</h3><ol>
-<li>下载：<a target="_blank" rel="noopener" href="https://github.com/alibaba/canal/releases/download/canal-1.1.4/canal.deployer-1.1.4.tar.gz">https://github.com/alibaba/canal/releases/download/canal-1.1.4/canal.deployer-1.1.4.tar.gz</a></li>
-<li><code>canal.instance.gtidon</code>   是否启用mysql gtid的订阅模式 <ul>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/wmq880204/article/details/53160078">Mysql GTID 模式详解</a></li>
-</ul>
-</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/alibaba/canal/wiki/QuickStart">https://github.com/alibaba/canal/wiki/QuickStart</a><br><a target="_blank" rel="noopener" href="https://github.com/alibaba/canal/wiki/AdminGuide">https://github.com/alibaba/canal/wiki/AdminGuide</a><br><a target="_blank" rel="noopener" href="https://github.com/alibaba/canal/wiki/ClientExample">https://github.com/alibaba/canal/wiki/ClientExample</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/sunss/archive/2010/10/05/1844204.html">MySQL数据库的授权原则</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/0f580647905c">canal 高可用介绍</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/f-zhao/p/7681960.html">canal和otter的高可靠性分析</a></li>
 </ol>
 
           
@@ -2497,7 +2847,7 @@ Robert C.Martin
 <a href="/archives/">                
 <!--<a href="/archives/%7C%7C%20archive">-->
               
-                  <span class="site-state-item-count">106</span>
+                  <span class="site-state-item-count">110</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2510,7 +2860,7 @@ Robert C.Martin
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">111</span>
+                  <span class="site-state-item-count">122</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

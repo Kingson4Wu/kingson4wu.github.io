@@ -1,0 +1,1339 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/uploads/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="容灾,Consul,MHA,MySQL,HA,半同步复制," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="拉巴力的纸皮箱" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="概述MHA + Consul + MySQL的高可用方案，网上已经有很多资料，这里只是做一下简要的总结和思考。文章部分文字摘自Reference中的链接。直接先上一张图   图中的灾备架构适用于同城主备架构的业务，比如金钱业务； DB层是一主多从，主库至在其中一个机房，并在DB集群上搭建跨IDC的MHA；同样Consul也是跨IDC的集群； 业务的写主流量配置在主库机房的一侧，当主库故障发生DB切">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关于MHA_Consul_MySQL高可用方案的简单总结和思考">
+<meta property="og:url" content="http://yoursite.com/2020/08/31/20200831-guan-yu-mha-consul-mysql-gao-ke-yong-fang-an-de-jian-dan-zong-jie-he-si-kao/index.html">
+<meta property="og:site_name" content="拉巴力的纸皮箱">
+<meta property="og:description" content="概述MHA + Consul + MySQL的高可用方案，网上已经有很多资料，这里只是做一下简要的总结和思考。文章部分文字摘自Reference中的链接。直接先上一张图   图中的灾备架构适用于同城主备架构的业务，比如金钱业务； DB层是一主多从，主库至在其中一个机房，并在DB集群上搭建跨IDC的MHA；同样Consul也是跨IDC的集群； 业务的写主流量配置在主库机房的一侧，当主库故障发生DB切">
+<meta property="og:locale">
+<meta property="og:image" content="http://yoursite.com/2020/08/31/20200831-%E5%85%B3%E4%BA%8EMHA-Consul-MySQL%E9%AB%98%E5%8F%AF%E7%94%A8%E6%96%B9%E6%A1%88%E7%9A%84%E7%AE%80%E5%8D%95%E6%80%BB%E7%BB%93%E5%92%8C%E6%80%9D%E8%80%83/MHA_Consul_MySQL%E5%88%87%E6%8D%A2.png">
+<meta property="og:image" content="http://yoursite.com/2020/08/31/20200831-%E5%85%B3%E4%BA%8EMHA-Consul-MySQL%E9%AB%98%E5%8F%AF%E7%94%A8%E6%96%B9%E6%A1%88%E7%9A%84%E7%AE%80%E5%8D%95%E6%80%BB%E7%BB%93%E5%92%8C%E6%80%9D%E8%80%83/after_commit.png">
+<meta property="og:image" content="http://yoursite.com/2020/08/31/20200831-%E5%85%B3%E4%BA%8EMHA-Consul-MySQL%E9%AB%98%E5%8F%AF%E7%94%A8%E6%96%B9%E6%A1%88%E7%9A%84%E7%AE%80%E5%8D%95%E6%80%BB%E7%BB%93%E5%92%8C%E6%80%9D%E8%80%83/after_sync.png">
+<meta property="og:image" content="http://yoursite.com/2020/08/31/20200831-%E5%85%B3%E4%BA%8EMHA-Consul-MySQL%E9%AB%98%E5%8F%AF%E7%94%A8%E6%96%B9%E6%A1%88%E7%9A%84%E7%AE%80%E5%8D%95%E6%80%BB%E7%BB%93%E5%92%8C%E6%80%9D%E8%80%83/MySQL_copy.png">
+<meta property="og:image" content="http://yoursite.com/2020/08/31/20200831-%E5%85%B3%E4%BA%8EMHA-Consul-MySQL%E9%AB%98%E5%8F%AF%E7%94%A8%E6%96%B9%E6%A1%88%E7%9A%84%E7%AE%80%E5%8D%95%E6%80%BB%E7%BB%93%E5%92%8C%E6%80%9D%E8%80%83/MySQL_%E6%9D%83%E9%99%90.png">
+<meta property="article:published_time" content="2020-08-31T13:39:33.000Z">
+<meta property="article:modified_time" content="2023-05-07T14:41:07.601Z">
+<meta property="article:author" content="Kingson Wu">
+<meta property="article:tag" content="容灾">
+<meta property="article:tag" content="Consul">
+<meta property="article:tag" content="MHA">
+<meta property="article:tag" content="MySQL">
+<meta property="article:tag" content="HA">
+<meta property="article:tag" content="半同步复制">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/2020/08/31/20200831-%E5%85%B3%E4%BA%8EMHA-Consul-MySQL%E9%AB%98%E5%8F%AF%E7%94%A8%E6%96%B9%E6%A1%88%E7%9A%84%E7%AE%80%E5%8D%95%E6%80%BB%E7%BB%93%E5%92%8C%E6%80%9D%E8%80%83/MHA_Consul_MySQL%E5%88%87%E6%8D%A2.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/08/31/20200831-guan-yu-mha-consul-mysql-gao-ke-yong-fang-an-de-jian-dan-zong-jie-he-si-kao/"/>
+
+
+
+
+
+  <title>关于MHA_Consul_MySQL高可用方案的简单总结和思考 | 拉巴力的纸皮箱</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">拉巴力的纸皮箱</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/08/31/20200831-guan-yu-mha-consul-mysql-gao-ke-yong-fang-an-de-jian-dan-zong-jie-he-si-kao/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">关于MHA_Consul_MySQL高可用方案的简单总结和思考</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-08-31T21:39:33+08:00">
+                2020-08-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/08/31/20200831-guan-yu-mha-consul-mysql-gao-ke-yong-fang-an-de-jian-dan-zong-jie-he-si-kao/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/08/31/20200831-guan-yu-mha-consul-mysql-gao-ke-yong-fang-an-de-jian-dan-zong-jie-he-si-kao/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>MHA + Consul + MySQL的高可用方案，网上已经有很多资料，这里只是做一下简要的总结和思考。文章部分文字摘自Reference中的链接。<br>直接先上一张图</p>
+<p><img src="/2020/08/31/20200831-%E5%85%B3%E4%BA%8EMHA-Consul-MySQL%E9%AB%98%E5%8F%AF%E7%94%A8%E6%96%B9%E6%A1%88%E7%9A%84%E7%AE%80%E5%8D%95%E6%80%BB%E7%BB%93%E5%92%8C%E6%80%9D%E8%80%83/MHA_Consul_MySQL%E5%88%87%E6%8D%A2.png"></p>
+<ol>
+<li>图中的灾备架构适用于同城主备架构的业务，比如金钱业务；</li>
+<li>DB层是一主多从，主库至在其中一个机房，并在DB集群上搭建跨IDC的MHA；同样Consul也是跨IDC的集群；</li>
+<li>业务的写主流量配置在主库机房的一侧，当主库故障发生DB切换产生新主库时，流量也跟从新主库一同切换；</li>
+<li>主库切换通过MHA完成，并通过Consul集群和应用的SDK通知到业务服务。</li>
+<li>MySQL采用默认的异步复制方式</li>
+</ol>
+<h3 id="解决什么问题"><a href="#解决什么问题" class="headerlink" title="解决什么问题"></a>解决什么问题</h3><ol>
+<li>解决MySQL的单点问题。当主库发生故障时能提升从库为新的主库，且应用层能自动识别；从而缩短故障的处理时间；</li>
+<li>通过Consul能支持从库的故障切换以及从库扩容或下线；</li>
+</ol>
+<h3 id="每个组件各自的作用"><a href="#每个组件各自的作用" class="headerlink" title="每个组件各自的作用"></a>每个组件各自的作用</h3><ol>
+<li>MHA：监控主节点，可以在故障时自动或手动切换、非故障时手动主从切换。切换时会进行数据补齐，并将新的master信息更新到consul中。</li>
+<li>Consul：MySQL服务注册并提供健康检查、记录最新的master；还可以提供其他配置性的服务，比如dns，可解析数据库域名。</li>
+<li>SDK: sdk通过consul-api监控MySQL ip列表的变化，能连接新的库和去掉已下线的库。</li>
+</ol>
+<p>下面的部分将对使用到的技术逐一简要描述和总结。</p>
+<h2 id="MHA"><a href="#MHA" class="headerlink" title="MHA"></a>MHA</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><pre>
+MySQL MHA架构介绍：
+
+MHA（Master High Availability）目前在MySQL高可用方面是一个相对成熟的解决方案，它由日本DeNA公司youshimaton（现就职于Facebook公司）开发，是一套优秀的作为MySQL高可用性环境下故障切换和主从提升的高可用软件。在MySQL故障切换过程中，MHA能做到在0~30秒之内自动完成数据库的故障切换操作，并且在进行故障切换的过程中，MHA能在最大程度上保证数据的一致性，以达到真正意义上的高可用。
+
+该软件由两部分组成：MHA Manager（管理节点）和MHA Node（数据节点）。MHA Manager可以单独部署在一台独立的机器上管理多个master-slave集群，也可以部署在一台slave节点上。MHA Node运行在每台MySQL服务器上，MHA Manager会定时探测集群中的master节点，当master出现故障时，它可以自动将最新数据的slave提升为新的master，然后将所有其他的slave重新指向新的master。整个故障转移过程对应用程序完全透明。
+
+在MHA自动故障切换过程中，MHA试图从宕机的主服务器上保存二进制日志，最大程度的保证数据的不丢失，但这并不总是可行的。例如，如果主服务器硬件故障或无法通过ssh访问，MHA没法保存二进制日志，只进行故障转移而丢失了最新的数据。使用MySQL 5.5的半同步复制，可以大大降低数据丢失的风险。MHA可以与半同步复制结合起来。如果只有一个slave已经收到了最新的二进制日志，MHA可以将最新的二进制日志应用于其他所有的slave服务器上，因此可以保证所有节点的数据一致性。
+
+目前MHA主要支持一主多从的架构，要搭建MHA,要求一个复制集群中必须最少有三台数据库服务器，一主二从，即一台充当master，一台充当备用master，另外一台充当从库，因为至少需要三台服务器，出于机器成本的考虑，淘宝也在该基础上进行了改造，目前淘宝TMHA已经支持一主一从。（出自：《深入浅出MySQL(第二版)》）
+</pre>
+
+<pre>
+MHA工作原理总结为以下几条：
+（1）从宕机崩溃的master保存二进制日志事件（binlog events）;
+（2）识别含有最新更新的slave;
+（3）应用差异的中继日志(relay log) 到其他slave;
+（4）应用从master保存的二进制日志事件(binlog events);
+（5）提升一个slave为新master;
+（6）使用其他的slave连接新的master进行复制。
+</pre>
+
+<pre>
+自带脚本：
+自动切换脚本：/usr/local/bin/master_ip_failover
+手动切换脚本：/usr/local/bin/master_ip_online_change
+</pre>
+
+<h3 id="图中的MHA阐述"><a href="#图中的MHA阐述" class="headerlink" title="图中的MHA阐述"></a>图中的MHA阐述</h3><ol>
+<li>服务为主备架构，部署在IDC-A和IDC-B，其中主流量在IDC-A；MHA MANAGER则部署在IDC-C（第三个机房），这样才能保证任意一边的IDC出问题，都不影响MHA的切换；</li>
+<li>为了防止来回切导致严重数据问题。可以设置，当MHA发生自动切换时，MHA MANAGER无论成功与否都会退出；</li>
+<li>MHA在故障时可以进行数据补齐。</li>
+</ol>
+<h2 id="MySQL-半同步复制"><a href="#MySQL-半同步复制" class="headerlink" title="MySQL 半同步复制"></a>MySQL 半同步复制</h2><h3 id="主从复制的基本原理"><a href="#主从复制的基本原理" class="headerlink" title="主从复制的基本原理"></a>主从复制的基本原理</h3><ol>
+<li>[master] SQL操作存入binLog中;</li>
+<li>[slave] 连接master，进行数据同步;</li>
+<li>[master] dump thread 把binlog数据发送到slave中;</li>
+<li>[slave] 创建I&#x2F;O线程读取 master传输过来的binlog内容并写入到relay Log;</li>
+<li>[slave] 创建SQL线程，从relay Log读取并执行。</li>
+</ol>
+<h3 id="主从复制的方式"><a href="#主从复制的方式" class="headerlink" title="主从复制的方式"></a>主从复制的方式</h3><ol>
+<li><p>异步复制（Asynchronous replication）</p>
+<ul>
+<li>MySQL默认的复制即是异步的，主库先提交事务，然后立即响应客户端。</li>
+<li>如果主库crash，且主库上已经提交的事务还没有同步到相应的从库上，那么当从库提升为主时，会导致新主上的数据不完整。</li>
+<li>性能最好</li>
+</ul>
+</li>
+<li><p>全同步复制（Fully synchronous replication）</p>
+<ul>
+<li>当主库执行完一个事务，且所有的从库都同步完之后才响应客户端。</li>
+<li>性能差</li>
+</ul>
+</li>
+<li><p>半同步复制（Semisynchronous replication）</p>
+<ul>
+<li>AFTER_COMMIT；即参数 rpl_semi_sync_master_wait_point &#x3D; after_commit</li>
+<li>介于异步复制和全同步复制之间，主库提交完事务之后不立即响应客户端，而是等待至少一个从库接收到并写到relay log中才响应客户端。相对于异步复制，半同步复制提高了数据的安全性，同时它也造成了一定程度的延迟，这个延迟最少是一个TCP&#x2F;IP往返的时间。所以，半同步复制最好在低延时的网络中使用。</li>
+<li>等待的时间以rpl_semi_sync_master_timeout参数为准，默认为10秒。在这等待的10秒里，对其他会话该事务是可见的；所以一旦master发生宕机，对外就会产生不一致的影响</li>
+<li>Slave ACK超时，将退化为异步复制模式 （所以半同步复制并不是严格意义上的半同步复制）</li>
+</ul>
+</li>
+<li><p>增强半同步（Loss-less Semi-Synchronous）</p>
+<ul>
+<li>AFTER_SYNC；即参数 rpl_semi_sync_master_wait_point &#x3D; after_sync</li>
+<li>after sync是MySQL5.7官方新加以解决MySQL5.6半同步缺陷的选项，也是官方推荐的方式。</li>
+<li>原理：客户端发送过来一个请求，经过mysql的SQL分析，存储引擎处理，写入binlog，然后		写入从库的relaylog，存储引擎层提交，最后返回给客户端。</li>
+<li>优点：主库把SQL操作先发给从库的relay log，然后再提交，再响应给客户端，这个过程即使		在storage commit之后主crash了，日志也已经写入到relay log中，从库和主库数据一致。</li>
+<li>在commit之前等待Slave ACK，可以堆积事务，利于group commit，有利于提升性能。</li>
+<li>在master接受到Slave ACK之前，数据的变化对其他会话时不可见的，因为此时并未提交，从	而也不会产生数据不一致的影响。</li>
+<li>同样，Ack超时，也将退化为异步复制模式</li>
+</ul>
+</li>
+<li><p>组复制 MySQL Group Replication（MGR）</p>
+<ul>
+<li>MGR内部实现了分布式数据一致性协议，paxos通过其来保证数据一致性。</li>
+</ul>
+</li>
+</ol>
+<h3 id="after-commit-VS-after-sync"><a href="#after-commit-VS-after-sync" class="headerlink" title="after_commit VS after_sync"></a>after_commit VS after_sync</h3><p><img src="/2020/08/31/20200831-%E5%85%B3%E4%BA%8EMHA-Consul-MySQL%E9%AB%98%E5%8F%AF%E7%94%A8%E6%96%B9%E6%A1%88%E7%9A%84%E7%AE%80%E5%8D%95%E6%80%BB%E7%BB%93%E5%92%8C%E6%80%9D%E8%80%83/after_commit.png"><br><img src="/2020/08/31/20200831-%E5%85%B3%E4%BA%8EMHA-Consul-MySQL%E9%AB%98%E5%8F%AF%E7%94%A8%E6%96%B9%E6%A1%88%E7%9A%84%E7%AE%80%E5%8D%95%E6%80%BB%E7%BB%93%E5%92%8C%E6%80%9D%E8%80%83/after_sync.png"></p>
+<ul>
+<li>after_commit：master把每一个事务写到二进制日志并保存到磁盘上，并且提交（commit）事务，再把事务发送给从库，开始等待slave的应答。响应后master返回结果给客户端，客户端才可继续。</li>
+<li>after_sync  ：master把每一个事务写到二进制日志并保存磁盘上，并且把事务发送给从库，开始等待slave的应答。确认slave响应后，再提交（commit）事务到存储引擎，并返回结果给客户端，客户端才可继续。</li>
+<li>半同步和增强半同步都是等待slave的ACK后才给客户端返回成功（也就是整个流程完成）</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p><img src="/2020/08/31/20200831-%E5%85%B3%E4%BA%8EMHA-Consul-MySQL%E9%AB%98%E5%8F%AF%E7%94%A8%E6%96%B9%E6%A1%88%E7%9A%84%E7%AE%80%E5%8D%95%E6%80%BB%E7%BB%93%E5%92%8C%E6%80%9D%E8%80%83/MySQL_copy.png"></p>
+<ul>
+<li>一致性要求高的，比如金融类的（相比其他业务TPS较低），可以考虑开启增强半同步复制</li>
+</ul>
+<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><ol>
+<li>MySQL 5.7新增了rpl_semi_sync_master_wait_for_slave_count系统变量，可以用来控制主库接收多少个从库写事务成功反馈，给高可用架构切换提供了灵活性。	当该变量值为2时，主库需等待两个从库的ACK。</li>
+</ol>
+<h2 id="Consul"><a href="#Consul" class="headerlink" title="Consul"></a>Consul</h2><h3 id="介绍-1"><a href="#介绍-1" class="headerlink" title="介绍"></a>介绍</h3><ul>
+<li>Consul is a tool for service discovery and configuration. Consul is distributed, highly available, and extremely scalable</li>
+<li>Consul是一个服务管理软件。支持多数据中心下，分布式高可用的，服务发现和配置共享。采用 Raft 算法,用来保证服务的高可用。</li>
+<li>Consul使用Gossip Protocol来管理成员资格并向集群广播消息。所有这些都是通过使用Serf库提供的。</li>
+<li>关于raft算法原理，可以后续再讲。</li>
+</ul>
+<h3 id="和MHA的结合使用"><a href="#和MHA的结合使用" class="headerlink" title="和MHA的结合使用"></a>和MHA的结合使用</h3><ol>
+<li>checkmysql 脚本部署到每台 consul server 中, 实现了多点检测 MySQL 是否正常;</li>
+<li>checkmysql 脚本在超过半数的情况下调用 masterha_manager_consul 脚本进行主从切换;</li>
+</ol>
+<h4 id="主从切换"><a href="#主从切换" class="headerlink" title="主从切换"></a>主从切换</h4><ul>
+<li>MHA 是切换工具，控制数据库主从切换和数据补齐；</li>
+<li>MHA 进行故障检测，故障时进行切换并通知Consul下发新的主库配置到应用服务。</li>
+</ul>
+<h4 id="从库上下线"><a href="#从库上下线" class="headerlink" title="从库上下线"></a>从库上下线</h4><ul>
+<li>Consul可以对从库进行健康检查，通过配置下发控制从库上下线。</li>
+</ul>
+<h2 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h2><h3 id="CMDB"><a href="#CMDB" class="headerlink" title="CMDB"></a>CMDB</h3><ul>
+<li>配置管理数据库( Configuration Management Database,CMDB)</li>
+<li>自动化运维立足之本。在容灾切换管理工具中，可以直接一键从CMDB中同步所有业务系统，并能够非常灵活的定义每个业务系统的切换过程环节以及每个环节所有执行的具体操作。</li>
+<li><a target="_blank" rel="noopener" href="https://blog.51cto.com/031028/2426950">CMDB与容灾备份的关联</a></li>
+<li><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/news/302057">好的CMDB建设，应该具备这些要素</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_42556618/article/details/107345128">【运维探讨】如何实现更加简单、高效、安全的灾备切换管理？</a></li>
+</ul>
+<h3 id="脑裂"><a href="#脑裂" class="headerlink" title="脑裂"></a>脑裂</h3><ul>
+<li>脑裂问题是分布式多活建设必须面临的问题之一。</li>
+<li>以上面的架构进行描述，当IDC-A和IDC-B、IDC-C网络不通时，其实IDC-A就是一个网络孤岛。<br>这时候时IDC-B中的从库就会提升为主库，并开始接收写操作。因为IDC-A已经是个数据孤岛，服务的主从库并未发生改变(接收不到consul下发的配置)，此时也接受外部的写操作请求，那么就会造成两边数据都有写操作，错误的双主架构导致错误的数据问题。</li>
+</ul>
+<h4 id="如何避免脑裂问题"><a href="#如何避免脑裂问题" class="headerlink" title="如何避免脑裂问题"></a>如何避免脑裂问题</h4><ol>
+<li>如何让IDC的服务可以判断自身是否孤岛，从而拒绝服务，避免数据问题呢？</li>
+<li>其中一个方案使用Consul作为选主服务来解决。后续另开文章叙述。</li>
+<li>使用etcd：<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/VFJg14JcapijOyhfJJMYUg">etcd 实现故障时主备秒级切换高可用架构</a></li>
+<li>分布式锁服务Chubby（参见文献[Bur06]）集群锁服务提供一个与文件系统类似的API用来操作锁。Chubby 可以处理异地、跨机房级别的锁请求。Chubby 使用Paxos协议来提供分布式一致性（具体描述参看第23章）。Chubby 是实现主实例选举（Master-Election）过程的关键组件。例如，一个服务有5个冗余实例在同时运行，但是只有一个实例可以处理对外请求，一般的做法是通过Chubby进行自动选举，选择一个实例成为主实例。Chubby适合存放那种对一致性要求非常高的数据。—《SRE：Google运维解密》</li>
+</ol>
+<h4 id="结合raft的思考"><a href="#结合raft的思考" class="headerlink" title="结合raft的思考"></a>结合raft的思考</h4><ul>
+<li>为了避免脑裂，需要有选主机制，一般超半数的投票才能成为leader；Consul就是基于raft是实现的；</li>
+<li>在线上部署consul必须至少是三个机房，因为如果只有两个机房，其中一个机房挂了（刚好是大多数机器的机房），服务将不可用；</li>
+<li>分布式存储系统，需要解决数据的一致性问题和脑裂问题。<ol>
+<li>raft有实现，但是首先得基于raft协议的文件存储；</li>
+<li>使用MySQL作为存储，Consul作为选主服务的业务：Consul可以解决脑裂问题；而在数据的一致性则需要业务自身进行保证（比如比较业务流水）<ul>
+<li>MySQL的半同步复制机制 支持配置n个从库ack才响应客户端（其实和raft大多数结点写成功才算成功有点类似[Quorum机制]），可以很大程度的避免丢数据导致不一致。</li>
+</ul>
+</li>
+</ol>
+</li>
+<li>一般金钱业务使用同城两个机房，主备架构，那么不能完全和raft三机房匹配（三机房意味着一定每个机房至少有一个结点接收到数据才算成功）。因此半同步复制只能一定程度上解决机房网络无异常下，单个结点故障的情况下，数据的一致性。所以一般情况下，切完机房保持数据一致性或检查监控数据一致性的方案，需要业务方自行监控和修正。</li>
+</ul>
+<h2 id="Q-amp-A"><a href="#Q-amp-A" class="headerlink" title="Q&amp;A"></a>Q&amp;A</h2><h3 id="为什么Dump和I-x2F-O线程不能多线程？"><a href="#为什么Dump和I-x2F-O线程不能多线程？" class="headerlink" title="为什么Dump和I&#x2F;O线程不能多线程？"></a>为什么Dump和I&#x2F;O线程不能多线程？</h3><ol>
+<li>dump线程和IO线程都是负责网络传输，如果将这里扩展为多线程那么会将一份Binlog日志分割为多份，并行传输，那么在slave端将会要额外的增加代码考虑如何将多份日志还原为原来的Binlog，大大增加难度。</li>
+<li>性能瓶颈不在IO，扩展后也没有多大效率提升。</li>
+<li>为什么Redis 6.0使用IO多线程增强性能，MySQL这里使用IO多线程却不行？<ul>
+<li>Redis是多个Client节点一个Server节点（暂且这么看），IO线程需要处理多个不同Client来源的请求；MySQL主从复制，本质上是1个Client端一个Server端，增大IO线程也无济于事。</li>
+</ul>
+</li>
+</ol>
+<h3 id="增强半同步是否会导致从有数据而主却没有？"><a href="#增强半同步是否会导致从有数据而主却没有？" class="headerlink" title="增强半同步是否会导致从有数据而主却没有？"></a>增强半同步是否会导致从有数据而主却没有？</h3><ul>
+<li>是。在Loss-less Semi-Synchronous模式下，master在调用binlog sync之后，engine层commit之前等待Slave ACK（需要收到至少一个Slave节点回复的ACK后）。这样只有在确认Slave收到事务events后，master事务才会提交，然后把结果返回给客户端。此时此事务才对其他事务可见。在这种模式下解决了after_commit模式带来的幻读和数据丢失问题，因为主库没有提交事务。但也会有个问题，假设主库在存储引擎提交之前挂了，那么很明显这个事务是不成功的，但由于对应的Binlog已经做了Sync操作，从库已经收到了这些Binlog，并且执行成功，相当于在从库上多了数据，也算是有问题的，但多了数据，问题一般不算严重。这个问题可以这样理解，作为MySQL，在没办法解决分布式数据一致性问题的情况下，它能保证的是不丢数据，多了数据总比丢数据要好。</li>
+</ul>
+<h3 id="MHA本身就支持自动切，为什么还要使用Consul？"><a href="#MHA本身就支持自动切，为什么还要使用Consul？" class="headerlink" title="MHA本身就支持自动切，为什么还要使用Consul？"></a>MHA本身就支持自动切，为什么还要使用Consul？</h3><ul>
+<li>MHA本身提供了自动切换主库的功能，但是MHA本身没有提供通知应用等机制。因此采用比较成熟的方案MHA+consul，并以SDK的方式接入。</li>
+</ul>
+<h3 id="自动切换安全吗？"><a href="#自动切换安全吗？" class="headerlink" title="自动切换安全吗？"></a>自动切换安全吗？</h3><ol>
+<li>直接启用masterha_manager 自动切换脚本并不安全，主要因为在网络抖动的情况下并不能保证数据库真的不能访问。不能仅通过一个点的检测就判断数据库不可访问。</li>
+<li>通过 Consul( Consul 提供 dns 接口)集群的特性, 增加多点检测机制, 在 n 个集群的环境中, 有超过半数的检测点检测到数据库有问题, 就认为数据库不可访问, 这时调用 masterha_manager 脚本进行切换。</li>
+<li>网络问题千变万化，在发生切换事件之后，需有相应的方案对主从流水数据进行对账或修正（确定基于binlog与应用日志的重要数据校验与补偿机制）。</li>
+<li>发生切换事件之后，在确定数据已经无异常之前，需要防止再自动切回去，造成严重的数据异常。所以一般情况下，只能自动切一次，直到人工介入确认无异常，重新设置为自动切模式。当然，有完善的监控比对数据异常机制的情况下，可以考虑做成自动化，无需依赖人工介入。</li>
+</ol>
+<h3 id="MHA切换之后，主库禁写后，现有的连接是否还能继续写入"><a href="#MHA切换之后，主库禁写后，现有的连接是否还能继续写入" class="headerlink" title="MHA切换之后，主库禁写后，现有的连接是否还能继续写入?"></a>MHA切换之后，主库禁写后，现有的连接是否还能继续写入?</h3><p><img src="/2020/08/31/20200831-%E5%85%B3%E4%BA%8EMHA-Consul-MySQL%E9%AB%98%E5%8F%AF%E7%94%A8%E6%96%B9%E6%A1%88%E7%9A%84%E7%AE%80%E5%8D%95%E6%80%BB%E7%BB%93%E5%92%8C%E6%80%9D%E8%80%83/MySQL_%E6%9D%83%E9%99%90.png"><br>mha切库禁写时，直接锁住整个实例，新操作无法写入，直接就设置read_only。</p>
+<h3 id="自动切的时机如何把握？"><a href="#自动切的时机如何把握？" class="headerlink" title="自动切的时机如何把握？"></a>自动切的时机如何把握？</h3><ol>
+<li>自动切的最佳时机很难人为，必须经过多种故障场景的测试，确定合适尽可能安全的切换策略和参数。</li>
+<li>在实践中，初期可以先告警人工介入决定是否切换；确定好合适的切换策略和参数后，自动切在非核心业务中稳定正确运行一段时间后才在核心业务运用。</li>
+</ol>
+<h3 id="MHA能保证数据一定不丢吗？"><a href="#MHA能保证数据一定不丢吗？" class="headerlink" title="MHA能保证数据一定不丢吗？"></a>MHA能保证数据一定不丢吗？</h3><ul>
+<li>在MHA自动故障切换过程中，MHA试图从宕机的主服务器上保存二进制日志，最大程度的保证数据的不丢失。但如上所述，网络等问题时无解的，理论上还是存在丢的可能性。一致性要求高的，比如金钱类的（相比其他业务TPS较低），可以考虑开启半同步复制，大大降低数据丢失的风险。</li>
+</ul>
+<h3 id="新的主库和原主库数据一致性问题如何解决？"><a href="#新的主库和原主库数据一致性问题如何解决？" class="headerlink" title="新的主库和原主库数据一致性问题如何解决？"></a>新的主库和原主库数据一致性问题如何解决？</h3><ol>
+<li>MHA只能尽量保证数据补齐；</li>
+<li>主从延迟较大时，切主库有风险；</li>
+<li>开启半同步复制可以大大降低丢数据的风险，但也带来一定的性能损耗；</li>
+<li>要做好切库后，主从日志流水对比修复方案</li>
+</ol>
+<h3 id="不一致如何止损？"><a href="#不一致如何止损？" class="headerlink" title="不一致如何止损？"></a>不一致如何止损？</h3><ol>
+<li>根据业务情况进行实现，比如在发生切换事件的一端时间内(比如一个小时)，阻断大额交易操作，等待开发确认后再恢复；</li>
+<li>具体实现可以使用redis存储数据快照，执行前和数据库的数据进行对比判断是否阻断，或其他可行方案；</li>
+<li>是否应该阻断，公司的利益和用户的利益，这是个哲学问题。。。</li>
+</ol>
+<h3 id="扩展-1"><a href="#扩展-1" class="headerlink" title="扩展"></a>扩展</h3><ul>
+<li>云数据库使用数据库代理进行连接:<a target="_blank" rel="noopener" href="https://cloud.tencent.com/document/product/236/72619">读写分离扩展云数据库 MySQL 性能</a></li>
+<li><a target="_blank" rel="noopener" href="https://cloud.tencent.com/document/product/236/35671">切换网络</a></li>
+</ul>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ol>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/arstercz/p/6963920.html">基于 consul 架构的 MHA 自动切换</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/yangjianrong1985/article/details/102479034">基于MHA+consul的MySQL高可用设计</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/xuanzhi201111/p/4231412.html">MySQL高可用之MHA的搭建</a></li>
+<li><a target="_blank" rel="noopener" href="https://code.google.com/p/mysql-master-ha/">MHA官方介绍</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzA3MzYwNjQ3NA==&mid=2651297535&idx=1&sn=2138d7d09cf5294c73810b133eed67e3&chksm=84ff42dab388cbcc90d9642b6cd3ed5de8e524cc10737947ce0c46eb287e95f4bae62472fa24&mpshare=1&scene=1&srcid=0518czFAsyzFLKkM07SIauWS#rd">京东MySQL数据库主从切换自动化</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/sunss/archive/2010/10/05/1844204.html">MySQL数据库的授权原则</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/zhoujinyi/p/3808673.html">MySQL MHA 搭建&amp;测试</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/ivictor/p/5735580.html">MySQL半同步复制</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_33330687/article/details/107496954">MySQL - 异步复制，半同步复制，增强半同步复制，组复制，全告诉你</a></li>
+<li><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1537291">mysql 半同步复制</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/allenhu320/p/11316276.html">增强半同步复制</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/3bfb0bfb8b34">【MySQL】5.7增强半同步AFTER SYNC&amp;AFTER COMMIT</a></li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E5%AE%B9%E7%81%BE/" rel="tag"># 容灾</a>
+          
+            <a href="/tags/Consul/" rel="tag"># Consul</a>
+          
+            <a href="/tags/MHA/" rel="tag"># MHA</a>
+          
+            <a href="/tags/MySQL/" rel="tag"># MySQL</a>
+          
+            <a href="/tags/HA/" rel="tag"># HA</a>
+          
+            <a href="/tags/%E5%8D%8A%E5%90%8C%E6%AD%A5%E5%A4%8D%E5%88%B6/" rel="tag"># 半同步复制</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/08/31/20200831-shi-yong-redis-shi-xian-bang-dan/" rel="next" title="使用Redis实现榜单">
+                <i class="fa fa-chevron-left"></i> 使用Redis实现榜单
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/09/05/20200905-ru-he-jie-jue-nao-lie-wen-ti/" rel="prev" title="如何解决脑裂问题">
+                如何解决脑裂问题 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.png"
+                alt="" />
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+<a href="/archives/">                
+<!--<a href="/archives/%7C%7C%20archive">-->
+              
+                  <span class="site-state-item-count">110</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">122</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98"><span class="nav-number">1.1.</span> <span class="nav-text">解决什么问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AF%8F%E4%B8%AA%E7%BB%84%E4%BB%B6%E5%90%84%E8%87%AA%E7%9A%84%E4%BD%9C%E7%94%A8"><span class="nav-number">1.2.</span> <span class="nav-text">每个组件各自的作用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MHA"><span class="nav-number">2.</span> <span class="nav-text">MHA</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8B%E7%BB%8D"><span class="nav-number">2.1.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%BE%E4%B8%AD%E7%9A%84MHA%E9%98%90%E8%BF%B0"><span class="nav-number">2.2.</span> <span class="nav-text">图中的MHA阐述</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MySQL-%E5%8D%8A%E5%90%8C%E6%AD%A5%E5%A4%8D%E5%88%B6"><span class="nav-number">3.</span> <span class="nav-text">MySQL 半同步复制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86"><span class="nav-number">3.1.</span> <span class="nav-text">主从复制的基本原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E7%9A%84%E6%96%B9%E5%BC%8F"><span class="nav-number">3.2.</span> <span class="nav-text">主从复制的方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#after-commit-VS-after-sync"><span class="nav-number">3.3.</span> <span class="nav-text">after_commit VS after_sync</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">3.4.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B6%E4%BB%96"><span class="nav-number">3.5.</span> <span class="nav-text">其他</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Consul"><span class="nav-number">4.</span> <span class="nav-text">Consul</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8B%E7%BB%8D-1"><span class="nav-number">4.1.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%92%8CMHA%E7%9A%84%E7%BB%93%E5%90%88%E4%BD%BF%E7%94%A8"><span class="nav-number">4.2.</span> <span class="nav-text">和MHA的结合使用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BB%E4%BB%8E%E5%88%87%E6%8D%A2"><span class="nav-number">4.2.1.</span> <span class="nav-text">主从切换</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%8E%E5%BA%93%E4%B8%8A%E4%B8%8B%E7%BA%BF"><span class="nav-number">4.2.2.</span> <span class="nav-text">从库上下线</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%A9%E5%B1%95"><span class="nav-number">5.</span> <span class="nav-text">扩展</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CMDB"><span class="nav-number">5.1.</span> <span class="nav-text">CMDB</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%84%91%E8%A3%82"><span class="nav-number">5.2.</span> <span class="nav-text">脑裂</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E9%81%BF%E5%85%8D%E8%84%91%E8%A3%82%E9%97%AE%E9%A2%98"><span class="nav-number">5.2.1.</span> <span class="nav-text">如何避免脑裂问题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BB%93%E5%90%88raft%E7%9A%84%E6%80%9D%E8%80%83"><span class="nav-number">5.2.2.</span> <span class="nav-text">结合raft的思考</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Q-amp-A"><span class="nav-number">6.</span> <span class="nav-text">Q&amp;A</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88Dump%E5%92%8CI-x2F-O%E7%BA%BF%E7%A8%8B%E4%B8%8D%E8%83%BD%E5%A4%9A%E7%BA%BF%E7%A8%8B%EF%BC%9F"><span class="nav-number">6.1.</span> <span class="nav-text">为什么Dump和I&#x2F;O线程不能多线程？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A2%9E%E5%BC%BA%E5%8D%8A%E5%90%8C%E6%AD%A5%E6%98%AF%E5%90%A6%E4%BC%9A%E5%AF%BC%E8%87%B4%E4%BB%8E%E6%9C%89%E6%95%B0%E6%8D%AE%E8%80%8C%E4%B8%BB%E5%8D%B4%E6%B2%A1%E6%9C%89%EF%BC%9F"><span class="nav-number">6.2.</span> <span class="nav-text">增强半同步是否会导致从有数据而主却没有？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MHA%E6%9C%AC%E8%BA%AB%E5%B0%B1%E6%94%AF%E6%8C%81%E8%87%AA%E5%8A%A8%E5%88%87%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%98%E8%A6%81%E4%BD%BF%E7%94%A8Consul%EF%BC%9F"><span class="nav-number">6.3.</span> <span class="nav-text">MHA本身就支持自动切，为什么还要使用Consul？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%87%AA%E5%8A%A8%E5%88%87%E6%8D%A2%E5%AE%89%E5%85%A8%E5%90%97%EF%BC%9F"><span class="nav-number">6.4.</span> <span class="nav-text">自动切换安全吗？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MHA%E5%88%87%E6%8D%A2%E4%B9%8B%E5%90%8E%EF%BC%8C%E4%B8%BB%E5%BA%93%E7%A6%81%E5%86%99%E5%90%8E%EF%BC%8C%E7%8E%B0%E6%9C%89%E7%9A%84%E8%BF%9E%E6%8E%A5%E6%98%AF%E5%90%A6%E8%BF%98%E8%83%BD%E7%BB%A7%E7%BB%AD%E5%86%99%E5%85%A5"><span class="nav-number">6.5.</span> <span class="nav-text">MHA切换之后，主库禁写后，现有的连接是否还能继续写入?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%87%AA%E5%8A%A8%E5%88%87%E7%9A%84%E6%97%B6%E6%9C%BA%E5%A6%82%E4%BD%95%E6%8A%8A%E6%8F%A1%EF%BC%9F"><span class="nav-number">6.6.</span> <span class="nav-text">自动切的时机如何把握？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MHA%E8%83%BD%E4%BF%9D%E8%AF%81%E6%95%B0%E6%8D%AE%E4%B8%80%E5%AE%9A%E4%B8%8D%E4%B8%A2%E5%90%97%EF%BC%9F"><span class="nav-number">6.7.</span> <span class="nav-text">MHA能保证数据一定不丢吗？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B0%E7%9A%84%E4%B8%BB%E5%BA%93%E5%92%8C%E5%8E%9F%E4%B8%BB%E5%BA%93%E6%95%B0%E6%8D%AE%E4%B8%80%E8%87%B4%E6%80%A7%E9%97%AE%E9%A2%98%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%EF%BC%9F"><span class="nav-number">6.8.</span> <span class="nav-text">新的主库和原主库数据一致性问题如何解决？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8D%E4%B8%80%E8%87%B4%E5%A6%82%E4%BD%95%E6%AD%A2%E6%8D%9F%EF%BC%9F"><span class="nav-number">6.9.</span> <span class="nav-text">不一致如何止损？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%A9%E5%B1%95-1"><span class="nav-number">6.10.</span> <span class="nav-text">扩展</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">7.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kingson Wu</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'LR34RG5CRdFgzK8ijwc5Hq0B-gzGzoHsz',
+        appKey: 'qqtIlANIluHpfpOnxTUnYrku',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"model":{"jsonPath":"/live2dw/assets/tororo.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"log":false});</script></body>
+</html>

@@ -6,7 +6,7 @@
   <link href="http://yoursite.com/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2023-05-07T14:41:07.803Z</updated>
+  <updated>2023-07-30T05:33:42.735Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -17,9 +17,128 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>记一次socket泄露问题排查记录</title>
+    <link href="http://yoursite.com/2023/07/30/20230730-ji-yi-ci-socket-xie-lu-wen-ti-pai-cha-ji-lu/"/>
+    <id>http://yoursite.com/2023/07/30/20230730-ji-yi-ci-socket-xie-lu-wen-ti-pai-cha-ji-lu/</id>
+    <published>2023-07-30T05:03:45.000Z</published>
+    <updated>2023-07-30T05:33:42.735Z</updated>
+    
+    <content type="html"><![CDATA[<p><img src="/2023/07/30/20230730-ji-yi-ci-socket-xie-lu-wen-ti-pai-cha-ji-lu/socket%E6%95%B0%E9%87%8F%E6%9A%B4%E6%B6%A8.png"></p><ul><li>在 ss -s 命令的输出中，”closed” 表示已关闭的 TCP 连接的数量。</li></ul><blockquote><blockquote><p>具体地，TCP 的 “closed” 状态表示连接已经关闭，不再使用，并且不再具有任何网络连接或状态信息。这些连接处于已经结束的状态，但它们的套接字资源还未被完全释放或回收。</p></blockquote></blockquote><blockquote><blockquote><p>在输出结果中，”closed” 数量是指当前处于已关闭状态的 TCP 连接的数量。这些连接可能是先前已经建立的连接，已经完成了其通信任务，双方都关闭了连接，并且连接的套接字资源等待系统进行资源回收。</p></blockquote></blockquote><blockquote><blockquote><p>需要注意的是，已关闭的连接数量的增加和减少是动态的，因为在系统的运行过程中，套接字的打开和关闭是常见的网络操作。</p></blockquote></blockquote><ul><li><p><a href="http://mdba.cn/2015/03/10/tcp-socket%E6%96%87%E4%BB%B6%E5%8F%A5%E6%9F%84%E6%B3%84%E6%BC%8F/">tcp-socket文件句柄泄漏</a></p></li><li><p><code>lsof| grep &quot;can&#39;t identify protocol&quot;</code><br>如果存在很多，则代表socket泄漏，同时会显示哪个进程使用的sock未关闭。</p></li><li><p>相关排查命令</p></li></ul><pre>netstat -n | awk '/^tcp/ {++S[$NF]} END {for(a in S) print a, S[a]}' sudo lsof | grep sock | awk '{++S[$1]} END {for(a in S) print a, S[a]}' | sort -k2 -nrsudo lsof | awk '/sock/ {++S[substr($0, index($0, $9))]} END {for(a in S) print a, S[a]}'sudo lsof | grep sock|grep 'identify protocol'|awk ' {++S[$2]} END {for(a in S) print a, S[a]}'| sort -k2 -nr</pre><p>![](20230730-记一次socket泄露问题排查记录&#x2F;identify protocol.png)</p><p><img src="/2023/07/30/20230730-ji-yi-ci-socket-xie-lu-wen-ti-pai-cha-ji-lu/process.png"><br><img src="/2023/07/30/20230730-ji-yi-ci-socket-xie-lu-wen-ti-pai-cha-ji-lu/process2.png"></p><ul><li>nginx和gateway都reload，那么nginx会产生新的worker进程，但是应该shutdown的老进程因为和gateway还有连接，所以也不会销毁，这样时间长了会有很多处于shutting状态的进程，这些进程都会占用资源。</li></ul>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;&lt;img src=&quot;/2023/07/30/20230730-ji-yi-ci-socket-xie-lu-wen-ti-pai-cha-ji-lu/socket%E6%95%B0%E9%87%8F%E6%9A%B4%E6%B6%A8.png&quot;&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;</summary>
+      
+    
+    
+    
+    
+    <category term="TCP" scheme="http://yoursite.com/tags/TCP/"/>
+    
+    <category term="CLOSED" scheme="http://yoursite.com/tags/CLOSED/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>我接触过的几种服务发现和rpc</title>
+    <link href="http://yoursite.com/2023/07/04/20230704-wo-jie-hong-guo-de-ji-chong-fu-wu-fa-xian-he-rpc/"/>
+    <id>http://yoursite.com/2023/07/04/20230704-wo-jie-hong-guo-de-ji-chong-fu-wu-fa-xian-he-rpc/</id>
+    <published>2023-07-04T07:22:29.000Z</published>
+    <updated>2023-07-06T10:14:03.558Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="公司V"><a href="#公司V" class="headerlink" title="公司V"></a>公司V</h1><ul><li>主要Java语言</li><li>最原始</li><li>没有服务发现</li><li>通过域名调用，服务器ip配置在nginx</li><li>数据传输使用JSON协议</li></ul><h1 id="公司U"><a href="#公司U" class="headerlink" title="公司U"></a>公司U</h1><ul><li>主要Java语言</li><li>公司基础团队自己实现服务发现机制</li><li>服务发现使用netty做tcp长链，用于服务注册等</li><li>服务sdk从服务中心获取所调用的对端服务的ip和端口</li><li>通过tcp长链通知服务上下线等</li><li>通过服务的ip和端口调用</li><li>数据传输使用hessian协议</li></ul><h1 id="公司K"><a href="#公司K" class="headerlink" title="公司K"></a>公司K</h1><h2 id="部门1"><a href="#部门1" class="headerlink" title="部门1"></a>部门1</h2><h3 id="版本v1"><a href="#版本v1" class="headerlink" title="版本v1"></a>版本v1</h3><ul><li>主要Java语言</li><li>使用Eureka做服务发现（HTTP协议）</li><li>服务sdk从Eureka获取所调用的对端服务的ip和端口</li><li>通过HTTP接口从Eureka定时更新服务实例</li><li>通过服务的ip和端口调用</li><li>数据传输使用Thrift协议&#x2F;JSON协议</li></ul><h3 id="版本v2"><a href="#版本v2" class="headerlink" title="版本v2"></a>版本v2</h3><ul><li>在版本1的基础上增加LocalProxy 作为代理</li><li>加入local proxy （service mesh）<br>（服务a）-&gt;本地LP -&gt;（服务b）</li></ul><h3 id="版本v3"><a href="#版本v3" class="headerlink" title="版本v3"></a>版本v3</h3><ul><li>在k8s 部署</li><li>让每个pod都是单独的实例，ip和物理机一样可以访问，使用calico打通网络，兼容原来的服务发现机制，暂时不使用k8s的service功能<br>（服务a）-&gt;远程LP -&gt;（服务b）</li></ul><h3 id="版本v4"><a href="#版本v4" class="headerlink" title="版本v4"></a>版本v4</h3><ul><li>使用Istio替换LP </li><li>LP（linkerd）使用Euerka，Istio使用k8s service</li><li>（服务a）-&gt;istio-istio →（服务b）</li><li>内部调用：（服务a，istio-envoy1）-》（istio-envoy2，服务b）<br>（）标识同一个pod</li></ul><h2 id="部门2"><a href="#部门2" class="headerlink" title="部门2"></a>部门2</h2><ul><li>使用nginx二次开发，作为localproxy，以域名作为服务名</li><li>比较原始的方案（公司起步比较早，当时的方案一直沿用至今）</li></ul>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;公司V&quot;&gt;&lt;a href=&quot;#公司V&quot; class=&quot;headerlink&quot; title=&quot;公司V&quot;&gt;&lt;/a&gt;公司V&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;主要Java语言&lt;/li&gt;
+&lt;li&gt;最原始&lt;/li&gt;
+&lt;li&gt;没有服务发现&lt;/li&gt;
+&lt;li&gt;通过域名调用，服务器ip配</summary>
+      
+    
+    
+    
+    
+    <category term="RPC" scheme="http://yoursite.com/tags/RPC/"/>
+    
+    <category term="服务发现" scheme="http://yoursite.com/tags/%E6%9C%8D%E5%8A%A1%E5%8F%91%E7%8E%B0/"/>
+    
+    <category term="service discovery" scheme="http://yoursite.com/tags/service-discovery/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>谈谈定时任务的原理和应用</title>
+    <link href="http://yoursite.com/2023/07/03/20230703-tan-tan-ding-shi-ren-wu-de-yuan-li-he-ying-yong/"/>
+    <id>http://yoursite.com/2023/07/03/20230703-tan-tan-ding-shi-ren-wu-de-yuan-li-he-ying-yong/</id>
+    <published>2023-07-03T12:59:41.000Z</published>
+    <updated>2023-07-04T07:19:54.303Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="定时任务的原理"><a href="#定时任务的原理" class="headerlink" title="定时任务的原理"></a>定时任务的原理</h2><ul><li>通过参考Redis等定时任务的实现，基本可以确定，定期器的本质就是起了一个线程不停的循环检查，判断是否需要执行某个任务。</li></ul><h2 id="定时任务类型"><a href="#定时任务类型" class="headerlink" title="定时任务类型"></a>定时任务类型</h2><ul><li><p>定时任务一般分为 本地定时任务 和 分布式定时任务</p></li><li><p>比如定时加载数据到本地缓存的时候，这时一般就使用本地定时任务</p></li><li><p>而有些任务定时只需要执行一次， 现在很多服务都不是单点了，这就需要分布式定时任务来进行调度了</p></li></ul><h2 id="分布式定时任务使用示例"><a href="#分布式定时任务使用示例" class="headerlink" title="分布式定时任务使用示例"></a>分布式定时任务使用示例</h2><ul><li><p>业界上可选择的定时任务工具很多，在工作中使用最多的是Saturn，个人觉得还是很方便的，其他分布式定时任务的原理其实基本大同小异</p></li><li><p>官网地址： <a href="https://github.com/vipshop/Saturn">https://github.com/vipshop/Saturn</a></p></li><li><p><a href="https://github.com/vipshop/Saturn/wiki/Saturn%E6%9E%B6%E6%9E%84%E6%96%87%E6%A1%A3">Saturn架构文档</a></p></li></ul><h3 id="Saturn"><a href="#Saturn" class="headerlink" title="Saturn"></a>Saturn</h3><ul><li>如果是Java服务，可以很方便的接入Saturn，可以直接通知到服务</li><li>但如果是其他语言，则是通过执行shell命令间接实现的</li></ul><h3 id="使用域信号通知通知服务"><a href="#使用域信号通知通知服务" class="headerlink" title="使用域信号通知通知服务"></a>使用域信号通知通知服务</h3><ul><li><p>这里Go应用为例子，通过域信号结合shell命令，从而方便使用saturn定时任务</p></li><li><p>client端：提供shell命令，供saturn定时调用</p></li></ul><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> SockPath = <span class="string">&quot;/tmp/notify-os.sock&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">notifyRun</span><span class="params">(task *notifyTask)</span></span> &#123;</span><br><span class="line"></span><br><span class="line">httpc := http.Client&#123;</span><br><span class="line">Transport: &amp;http.Transport&#123;</span><br><span class="line">DialContext: <span class="function"><span class="keyword">func</span><span class="params">(_ context.Context, _, _ <span class="type">string</span>)</span></span> (net.Conn, <span class="type">error</span>) &#123;</span><br><span class="line"><span class="keyword">return</span> net.Dial(<span class="string">&quot;unix&quot;</span>, SockPath)</span><br><span class="line">&#125;,</span><br><span class="line">&#125;,</span><br><span class="line">&#125;</span><br><span class="line">response, err := httpc.Get(<span class="string">&quot;http://unix/&quot;</span> + task.name + <span class="string">&quot;?&quot;</span> + task.args)</span><br><span class="line"><span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line"><span class="built_in">panic</span>(err)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> buf = <span class="built_in">make</span>([]<span class="type">byte</span>, <span class="number">1024</span>)</span><br><span class="line">response.Body.Read(buf)</span><br><span class="line">logger.Infof(<span class="string">&quot;finish notify task: %s, args:%s, resp: %s&quot;</span>, task.name, task.args, <span class="type">string</span>(buf))</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure><ul><li>server端：提供uds服务，介绍请求触发执行相应的任务</li></ul><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">type</span> ser <span class="keyword">struct</span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s ser)</span></span> ServeHTTP(rw http.ResponseWriter, r *http.Request) &#123;</span><br><span class="line"></span><br><span class="line"><span class="keyword">defer</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line"><span class="keyword">if</span> err := <span class="built_in">recover</span>(); err != <span class="literal">nil</span> &#123;</span><br><span class="line">logger.Errorf(<span class="string">&quot;notify server panic, r: %s, err:%s&quot;</span>, r.RequestURI, err)</span><br><span class="line">&#125;</span><br><span class="line">&#125;()</span><br><span class="line"></span><br><span class="line">name := r.URL.Path</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> strings.HasPrefix(name, <span class="string">&quot;/&quot;</span>) &#123;</span><br><span class="line">name = name[<span class="number">1</span>:]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> job, ok := jobs[name]; ok &#123;</span><br><span class="line">args := <span class="keyword">map</span>[<span class="type">string</span>]<span class="type">string</span>&#123;&#125;</span><br><span class="line"><span class="keyword">for</span> k, v := <span class="keyword">range</span> r.URL.Query() &#123;</span><br><span class="line">args[k] = v[<span class="number">0</span>]</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> job.Handler(args) &#123;</span><br><span class="line">rw.Write([]<span class="type">byte</span>(<span class="string">&quot;ok&quot;</span>))</span><br><span class="line">logger.Infof(<span class="string">&quot;job run success, name:%s, args: %s&quot;</span>, name, args)</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">rw.Write([]<span class="type">byte</span>(<span class="string">&quot;fail&quot;</span>))</span><br><span class="line">logger.Errorf(<span class="string">&quot;job run fail, name:%s, args: %s&quot;</span>, name, args)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">rw.Write([]<span class="type">byte</span>(<span class="string">&quot;not exist&quot;</span>))</span><br><span class="line">logger.Warnf(<span class="string">&quot;job not exist, name:%s&quot;</span>, name)</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">NotifyServe</span><span class="params">()</span></span> &#123;</span><br><span class="line">sockPath := utils.BizConfig(<span class="string">&quot;notify_uds_file&quot;</span>, <span class="string">&quot;&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> sockPath == <span class="string">&quot;&quot;</span> &#123;</span><br><span class="line"><span class="built_in">panic</span>(<span class="string">&quot;sockPath is nil&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">logger.Info(<span class="string">&quot;Unix NotifyServe ...&quot;</span>)</span><br><span class="line">os.Remove(sockPath)</span><br><span class="line">server := http.Server&#123;</span><br><span class="line">Handler: ser&#123;&#125;,</span><br><span class="line">&#125;</span><br><span class="line">unixListener, err := net.Listen(<span class="string">&quot;unix&quot;</span>, sockPath)</span><br><span class="line"><span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line"><span class="built_in">panic</span>(err)</span><br><span class="line">&#125;</span><br><span class="line">server.Serve(unixListener)</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure><ul><li>windows 平台没有uds，可以使用普通的HTTP接口代替</li></ul>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;定时任务的原理&quot;&gt;&lt;a href=&quot;#定时任务的原理&quot; class=&quot;headerlink&quot; title=&quot;定时任务的原理&quot;&gt;&lt;/a&gt;定时任务的原理&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;通过参考Redis等定时任务的实现，基本可以确定，定期器的本质就是起了一个线程不停的循环</summary>
+      
+    
+    
+    
+    
+    <category term="Go" scheme="http://yoursite.com/tags/Go/"/>
+    
+    <category term="定时任务" scheme="http://yoursite.com/tags/%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1/"/>
+    
+    <category term="Saturn" scheme="http://yoursite.com/tags/Saturn/"/>
+    
+    <category term="UDS" scheme="http://yoursite.com/tags/UDS/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>对工作中接触过的几种编程语言及其部署架构的看法</title>
+    <link href="http://yoursite.com/2023/07/02/20230702-dui-gong-zuo-zhong-jie-hong-guo-de-ji-chong-bian-cheng-yu-yan-ji-qi-bu-shu-jia-gou-de-kan-fa/"/>
+    <id>http://yoursite.com/2023/07/02/20230702-dui-gong-zuo-zhong-jie-hong-guo-de-ji-chong-bian-cheng-yu-yan-ji-qi-bu-shu-jia-gou-de-kan-fa/</id>
+    <published>2023-07-02T14:15:20.000Z</published>
+    <updated>2023-07-04T07:17:34.127Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="公司V"><a href="#公司V" class="headerlink" title="公司V"></a>公司V</h2><p><img src="/2023/07/02/20230702-dui-gong-zuo-zhong-jie-hong-guo-de-ji-chong-bian-cheng-yu-yan-ji-qi-bu-shu-jia-gou-de-kan-fa/01.V_Java.drawio.png"></p><ul><li><p>使用Java作为编程语言</p></li><li><p>使用Spring-MVC框架</p></li><li><p>使用Tomcat作为Web容器</p></li><li><p>打包运行方式：</p><ol><li>服务器预安装了Java和Tomcat</li><li>将代码打包成war包</li><li>将war包上传到服务器的Tomcat的web目录</li><li>重启tomcat更新服务</li></ol></li></ul><h2 id="公司U"><a href="#公司U" class="headerlink" title="公司U"></a>公司U</h2><p><img src="/2023/07/02/20230702-dui-gong-zuo-zhong-jie-hong-guo-de-ji-chong-bian-cheng-yu-yan-ji-qi-bu-shu-jia-gou-de-kan-fa/02.U_Java.drawio.png"></p><ul><li><p>使用Java作为编程语言</p></li><li><p>使用二次开发的Play1.x作为web框架（底层基于Netty）</p></li><li><p>公司在框架自行研发了服务发现等功能</p></li><li><p>打包运行方式：</p><ol><li>服务器预安装了Java</li><li>将代码打包成Zip包</li><li>将zip包上传到服务器的指定目录</li><li>通过信号停止服务（kill），通过Java命令启动服务</li></ol></li></ul><h2 id="公司B"><a href="#公司B" class="headerlink" title="公司B"></a>公司B</h2><p><img src="/2023/07/02/20230702-dui-gong-zuo-zhong-jie-hong-guo-de-ji-chong-bian-cheng-yu-yan-ji-qi-bu-shu-jia-gou-de-kan-fa/03.D_Java.drawio.png"></p><ul><li><p>使用Java作为编程语言</p></li><li><p>使用Spring-Boot框架</p></li><li><p>使用Tomcat作为Web容器</p></li><li><p>打包运行方式：</p><ol><li>服务器预安装了Java和Tomcat</li><li>将代码打包成war包</li><li>将war包上传到服务器的Tomcat的web目录</li><li>重启tomcat更新服务</li></ol></li></ul><h2 id="公司K"><a href="#公司K" class="headerlink" title="公司K"></a>公司K</h2><h3 id="Java"><a href="#Java" class="headerlink" title="Java"></a>Java</h3><p><img src="/2023/07/02/20230702-dui-gong-zuo-zhong-jie-hong-guo-de-ji-chong-bian-cheng-yu-yan-ji-qi-bu-shu-jia-gou-de-kan-fa/04.K_Java.drawio.png"></p><ul><li><p>使用Java作为编程语言</p></li><li><p>使用二次开发的Spring-Boot和Spring-Cloud作为web框架</p></li><li><p>公司在框架自行研发了服务发现，服务治理，数据库切换、容灾相关等功能</p></li><li><p>打包运行方式：</p><ol><li>服务器预安装了Java</li><li>将代码打包成Zip包</li><li>将zip包上传到服务器的指定目录</li><li>通过信号停止服务（kill），通过Java命令启动服务</li></ol></li></ul><h3 id="Lua"><a href="#Lua" class="headerlink" title="Lua"></a>Lua</h3><p><img src="/2023/07/02/20230702-dui-gong-zuo-zhong-jie-hong-guo-de-ji-chong-bian-cheng-yu-yan-ji-qi-bu-shu-jia-gou-de-kan-fa/04.K_Lua.drawio.png"></p><ul><li><p>使用Lua作为编程语言</p></li><li><p>使用OpenResty作为服务器</p></li><li><p>公司开发了一些通用的sdk，在OpenResty配置中include即可</p></li><li><p>打包运行方式：</p><ol><li>服务器预安装了OpenResty</li><li>将代码文件上传到指定的目录</li><li>执行 <code>nginx -s reload</code> 更新OpenResty的lua文件即可</li></ol></li></ul><h3 id="PHP"><a href="#PHP" class="headerlink" title="PHP"></a>PHP</h3><p><img src="/2023/07/02/20230702-dui-gong-zuo-zhong-jie-hong-guo-de-ji-chong-bian-cheng-yu-yan-ji-qi-bu-shu-jia-gou-de-kan-fa/04.K_PHP.drawio.png"></p><ul><li><p>使用PHP作为编程语言</p></li><li><p>使用OpenResty作为服务器</p></li><li><p>打包运行方式：</p><ol><li>服务器预安装了OpenResty和PHP</li><li>将代码文件上传到指定的目录</li><li>执行 <code>nginx -s reload</code> 更新OpenResty的PHP文件即可</li></ol></li></ul><h3 id="Go"><a href="#Go" class="headerlink" title="Go"></a>Go</h3><p><img src="/2023/07/02/20230702-dui-gong-zuo-zhong-jie-hong-guo-de-ji-chong-bian-cheng-yu-yan-ji-qi-bu-shu-jia-gou-de-kan-fa/04.K_Go.drawio.png"></p><ul><li><p>使用Go作为编程语言</p></li><li><p>打包运行方式：</p><ol><li>将代码打包成二进制可执行文件</li><li>使用nohup运行二进制即可（有的使用supervisor，有的使用systemctl）</li></ol></li></ul><h2 id="对这些编程语言和运行方式的理解和看法"><a href="#对这些编程语言和运行方式的理解和看法" class="headerlink" title="对这些编程语言和运行方式的理解和看法"></a>对这些编程语言和运行方式的理解和看法</h2><h3 id="Java-1"><a href="#Java-1" class="headerlink" title="Java"></a>Java</h3><ul><li>编译语言</li><li>Java服务需要运行在JVM上，而JVM是使用C++实现的</li><li>Java代码编译后本质上是一堆字节码文件，不具备单独运行的能力</li><li>运行Java字节码，需要JRE环境</li></ul><h3 id="PHP-1"><a href="#PHP-1" class="headerlink" title="PHP"></a>PHP</h3><ul><li>脚本语言</li><li>PHP通常和Web服务器搭配（比如Apache和Nginx），对外提供Web服务</li><li>以Nginx为例，Nginx不能直接处理PHP脚本，需要使用FastCGI协议将请求转发到PHP解释器<br>（因此，首先需要安装PHP和FastCGI进程管理器，例如php-fpm）</li><li>通常情况下，PHP解释器会安装在机器本机上。当Nginx通过FastCGI协议与PHP解释器进行通信时，它会将请求转发到运行在本机的FastCGI进程管理器，然后再将请求转发到本机上运行的PHP解释器</li></ul><h3 id="Lua-1"><a href="#Lua-1" class="headerlink" title="Lua"></a>Lua</h3><ul><li>脚本语言</li><li>以OpenResty作为web服务器运行Lua脚本是一种方式</li><li>Nginx + LuaJIT &#x3D; OpenResty</li></ul><h4 id="OpenResty"><a href="#OpenResty" class="headerlink" title="OpenResty"></a>OpenResty</h4><ul><li>OpenResty本质上是将 LuaJIT 的虚拟机嵌入到 Nginx 的管理进程和工作进程中，同一个进程内的所有协程都会共享这个虚拟机，并在虚拟机中执行Lua代码。在性能上，OpenResty接近或超过 Nginx 的C模块，而且开发效率更高。</li><li>OpenResty中的核心技术cosocket将 Lua 协程和 Nginx 的事件机制结合在一起，最终实现了非阻塞网络IO。不仅和HTTP客户端之间的网络通信是非阻塞的，与MySQL、Memcached以及Redis等众多后端之间的网络通信也是非阻塞的。</li></ul><h4 id="Openresty-是怎么嵌入lua虚拟机的"><a href="#Openresty-是怎么嵌入lua虚拟机的" class="headerlink" title="Openresty 是怎么嵌入lua虚拟机的"></a>Openresty 是怎么嵌入lua虚拟机的</h4><ul><li>OpenResty 是一个基于 Nginx 的 Web 应用服务器，它可以通过嵌入 Lua 脚本语言来实现高性能的 Web 应用程序。OpenResty 在运行过程中通过 LuaJIT 虚拟机来解释执行 Lua 代码。</li><li>OpenResty 在编译时会将 LuaJIT 虚拟机源代码打包成动态链接库，然后将其嵌入到 Nginx 中。OpenResty 运行时会通过 LuaJIT 虚拟机来加载和执行 Lua 代码，从而实现了高性能的 Web 应用程序。</li></ul><h3 id="Go-1"><a href="#Go-1" class="headerlink" title="Go"></a>Go</h3><ul><li>编译语言</li><li>编译成二进制文件后，可以直接在服务器运行，相比其他语言，一般可以认为没其他依赖</li></ul><h3 id="个人看法"><a href="#个人看法" class="headerlink" title="个人看法"></a>个人看法</h3><ul><li>Lua比较小众，不适合做大型的业务开发，而且debug比较不方便；</li><li>PHP在业界已经是快被淘汰的语言了，不做仔细研究，初步体验感觉一般（可能是受限于公司的维护环境过于糟糕，各种老版本，和高深莫测的代码）；</li><li>Java是我职业生涯接触最久的编程语言，谈不上喜欢也谈不上讨厌，但自从学习了Go之后，有了新的体会；</li><li>当初学习Go的其中一个原因是自己的个人项目比较轻量，Go其中一个优势是不依赖其他软件就可以运行，而且分发方便；</li><li>Go使用AOT的方式编译，针对特定平台，除了加快启动速度，也使程序打包体积大大减少；</li><li>当然Java也可以用graalvm打成二进制文件启动（没尝试过，感觉还是有不少前置条件）；</li><li>除此之外，还有很多其他以后补充</li></ul>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;公司V&quot;&gt;&lt;a href=&quot;#公司V&quot; class=&quot;headerlink&quot; title=&quot;公司V&quot;&gt;&lt;/a&gt;公司V&lt;/h2&gt;&lt;p&gt;&lt;img src=&quot;/2023/07/02/20230702-dui-gong-zuo-zhong-jie-hong-guo-de-</summary>
+      
+    
+    
+    
+    
+    <category term="Java" scheme="http://yoursite.com/tags/Java/"/>
+    
+    <category term="Go" scheme="http://yoursite.com/tags/Go/"/>
+    
+    <category term="PHP" scheme="http://yoursite.com/tags/PHP/"/>
+    
+    <category term="Lua" scheme="http://yoursite.com/tags/Lua/"/>
+    
+    <category term="OpenResty" scheme="http://yoursite.com/tags/OpenResty/"/>
+    
+    <category term="Tomcat" scheme="http://yoursite.com/tags/Tomcat/"/>
+    
+    <category term="Spring-MVC" scheme="http://yoursite.com/tags/Spring-MVC/"/>
+    
+  </entry>
+  
+  <entry>
     <title>软技能_代码之外的生存指南_notes</title>
-    <link href="http://yoursite.com/2023/03/02/20230302-%E8%BD%AF%E6%8A%80%E8%83%BD-%E4%BB%A3%E7%A0%81%E4%B9%8B%E5%A4%96%E7%9A%84%E7%94%9F%E5%AD%98%E6%8C%87%E5%8D%97-notes/"/>
-    <id>http://yoursite.com/2023/03/02/20230302-%E8%BD%AF%E6%8A%80%E8%83%BD-%E4%BB%A3%E7%A0%81%E4%B9%8B%E5%A4%96%E7%9A%84%E7%94%9F%E5%AD%98%E6%8C%87%E5%8D%97-notes/</id>
+    <link href="http://yoursite.com/2023/03/02/20230302-ruan-ji-neng-dai-ma-zhi-wai-de-sheng-cun-zhi-nan-notes/"/>
+    <id>http://yoursite.com/2023/03/02/20230302-ruan-ji-neng-dai-ma-zhi-wai-de-sheng-cun-zhi-nan-notes/</id>
     <published>2023-03-02T03:24:44.000Z</published>
     <updated>2023-05-07T14:41:07.803Z</updated>
     
@@ -41,8 +160,8 @@
   
   <entry>
     <title>N年前的笔记备忘查阅</title>
-    <link href="http://yoursite.com/2023/01/28/20230128-n%E5%B9%B4%E5%89%8D%E7%9A%84%E7%AC%94%E8%AE%B0%E5%A4%87%E5%BF%98%E6%9F%A5%E9%98%85/"/>
-    <id>http://yoursite.com/2023/01/28/20230128-n%E5%B9%B4%E5%89%8D%E7%9A%84%E7%AC%94%E8%AE%B0%E5%A4%87%E5%BF%98%E6%9F%A5%E9%98%85/</id>
+    <link href="http://yoursite.com/2023/01/28/20230128-n-nian-qian-de-bi-ji-bei-wang-cha-yue/"/>
+    <id>http://yoursite.com/2023/01/28/20230128-n-nian-qian-de-bi-ji-bei-wang-cha-yue/</id>
     <published>2023-01-28T04:22:40.000Z</published>
     <updated>2023-05-07T14:41:07.802Z</updated>
     
@@ -61,8 +180,8 @@
   
   <entry>
     <title>借《黑客与画家》记录一下想法</title>
-    <link href="http://yoursite.com/2023/01/14/20230114-%E5%80%9F%E3%80%8A%E9%BB%91%E5%AE%A2%E4%B8%8E%E7%94%BB%E5%AE%B6%E3%80%8B%E8%AE%B0%E5%BD%95%E4%B8%80%E4%B8%8B%E6%83%B3%E6%B3%95/"/>
-    <id>http://yoursite.com/2023/01/14/20230114-%E5%80%9F%E3%80%8A%E9%BB%91%E5%AE%A2%E4%B8%8E%E7%94%BB%E5%AE%B6%E3%80%8B%E8%AE%B0%E5%BD%95%E4%B8%80%E4%B8%8B%E6%83%B3%E6%B3%95/</id>
+    <link href="http://yoursite.com/2023/01/14/20230114-jie-hei-ke-yu-hua-jia-ji-lu-yi-xia-xiang-fa/"/>
+    <id>http://yoursite.com/2023/01/14/20230114-jie-hei-ke-yu-hua-jia-ji-lu-yi-xia-xiang-fa/</id>
     <published>2023-01-14T06:55:20.000Z</published>
     <updated>2023-05-07T14:41:07.802Z</updated>
     
@@ -83,8 +202,8 @@
   
   <entry>
     <title>技术选型要注意什么?</title>
-    <link href="http://yoursite.com/2022/11/18/20221118-%E6%8A%80%E6%9C%AF%E9%80%89%E5%9E%8B%E8%A6%81%E6%B3%A8%E6%84%8F%E4%BB%80%E4%B9%88/"/>
-    <id>http://yoursite.com/2022/11/18/20221118-%E6%8A%80%E6%9C%AF%E9%80%89%E5%9E%8B%E8%A6%81%E6%B3%A8%E6%84%8F%E4%BB%80%E4%B9%88/</id>
+    <link href="http://yoursite.com/2022/11/18/20221118-ji-zhu-xuan-xing-yao-zhu-yi-shi-me/"/>
+    <id>http://yoursite.com/2022/11/18/20221118-ji-zhu-xuan-xing-yao-zhu-yi-shi-me/</id>
     <published>2022-11-18T05:59:51.000Z</published>
     <updated>2023-05-07T14:41:07.800Z</updated>
     
@@ -105,8 +224,8 @@
   
   <entry>
     <title>我的重构（翻译）经历</title>
-    <link href="http://yoursite.com/2022/10/18/20221018-%E6%88%91%E7%9A%84%E9%87%8D%E6%9E%84%EF%BC%88%E7%BF%BB%E8%AF%91%EF%BC%89%E7%BB%8F%E5%8E%86/"/>
-    <id>http://yoursite.com/2022/10/18/20221018-%E6%88%91%E7%9A%84%E9%87%8D%E6%9E%84%EF%BC%88%E7%BF%BB%E8%AF%91%EF%BC%89%E7%BB%8F%E5%8E%86/</id>
+    <link href="http://yoursite.com/2022/10/18/20221018-wo-de-chong-gou-fan-yi-jing-li/"/>
+    <id>http://yoursite.com/2022/10/18/20221018-wo-de-chong-gou-fan-yi-jing-li/</id>
     <published>2022-10-18T15:05:58.000Z</published>
     <updated>2023-05-07T14:41:07.797Z</updated>
     
@@ -129,8 +248,8 @@
   
   <entry>
     <title>我的几张TCP原理学习手绘图</title>
-    <link href="http://yoursite.com/2022/09/08/20220908-%E6%88%91%E7%9A%84%E5%87%A0%E5%BC%A0TCP%E5%8E%9F%E7%90%86%E5%AD%A6%E4%B9%A0%E6%89%8B%E7%BB%98%E5%9B%BE/"/>
-    <id>http://yoursite.com/2022/09/08/20220908-%E6%88%91%E7%9A%84%E5%87%A0%E5%BC%A0TCP%E5%8E%9F%E7%90%86%E5%AD%A6%E4%B9%A0%E6%89%8B%E7%BB%98%E5%9B%BE/</id>
+    <link href="http://yoursite.com/2022/09/08/20220908-wo-de-ji-zhang-tcp-yuan-li-xue-xi-shou-hui-tu/"/>
+    <id>http://yoursite.com/2022/09/08/20220908-wo-de-ji-zhang-tcp-yuan-li-xue-xi-shou-hui-tu/</id>
     <published>2022-09-08T06:16:54.000Z</published>
     <updated>2023-05-07T14:41:07.793Z</updated>
     
@@ -151,8 +270,8 @@
   
   <entry>
     <title>TCP连接中的各种状态</title>
-    <link href="http://yoursite.com/2022/09/07/20220907-TCP%E8%BF%9E%E6%8E%A5%E4%B8%AD%E7%9A%84%E5%90%84%E7%A7%8D%E7%8A%B6%E6%80%81/"/>
-    <id>http://yoursite.com/2022/09/07/20220907-TCP%E8%BF%9E%E6%8E%A5%E4%B8%AD%E7%9A%84%E5%90%84%E7%A7%8D%E7%8A%B6%E6%80%81/</id>
+    <link href="http://yoursite.com/2022/09/07/20220907-tcp-lian-jie-zhong-de-ge-chong-zhuang-tai/"/>
+    <id>http://yoursite.com/2022/09/07/20220907-tcp-lian-jie-zhong-de-ge-chong-zhuang-tai/</id>
     <published>2022-09-07T12:36:01.000Z</published>
     <updated>2023-05-07T14:41:07.789Z</updated>
     
@@ -173,8 +292,8 @@
   
   <entry>
     <title>TIME_WAIT解析</title>
-    <link href="http://yoursite.com/2022/09/07/20220907-TIME-WAIT%E8%A7%A3%E6%9E%90/"/>
-    <id>http://yoursite.com/2022/09/07/20220907-TIME-WAIT%E8%A7%A3%E6%9E%90/</id>
+    <link href="http://yoursite.com/2022/09/07/20220907-time-wait-jie-xi/"/>
+    <id>http://yoursite.com/2022/09/07/20220907-time-wait-jie-xi/</id>
     <published>2022-09-07T05:30:37.000Z</published>
     <updated>2023-05-07T14:41:07.792Z</updated>
     
@@ -198,8 +317,8 @@
   
   <entry>
     <title>你记得设置TCP_NODEPLAY吗？</title>
-    <link href="http://yoursite.com/2022/09/07/20220907-%E4%BD%A0%E8%AE%B0%E5%BE%97%E8%AE%BE%E7%BD%AETCP-NODEPLAY%E5%90%97%EF%BC%9F/"/>
-    <id>http://yoursite.com/2022/09/07/20220907-%E4%BD%A0%E8%AE%B0%E5%BE%97%E8%AE%BE%E7%BD%AETCP-NODEPLAY%E5%90%97%EF%BC%9F/</id>
+    <link href="http://yoursite.com/2022/09/07/20220907-ni-ji-de-she-zhi-tcp-nodeplay-ma/"/>
+    <id>http://yoursite.com/2022/09/07/20220907-ni-ji-de-she-zhi-tcp-nodeplay-ma/</id>
     <published>2022-09-07T05:26:22.000Z</published>
     <updated>2023-05-07T14:41:07.793Z</updated>
     
@@ -225,8 +344,8 @@
   
   <entry>
     <title>有了TCP的keepalive，应用层还需要实现保活逻辑吗？</title>
-    <link href="http://yoursite.com/2022/09/06/20220906-%E6%9C%89%E4%BA%86TCP%E7%9A%84keepalive%EF%BC%8C%E5%BA%94%E7%94%A8%E5%B1%82%E8%BF%98%E9%9C%80%E8%A6%81%E5%AE%9E%E7%8E%B0%E4%BF%9D%E6%B4%BB%E9%80%BB%E8%BE%91%E5%90%97%EF%BC%9F/"/>
-    <id>http://yoursite.com/2022/09/06/20220906-%E6%9C%89%E4%BA%86TCP%E7%9A%84keepalive%EF%BC%8C%E5%BA%94%E7%94%A8%E5%B1%82%E8%BF%98%E9%9C%80%E8%A6%81%E5%AE%9E%E7%8E%B0%E4%BF%9D%E6%B4%BB%E9%80%BB%E8%BE%91%E5%90%97%EF%BC%9F/</id>
+    <link href="http://yoursite.com/2022/09/06/20220906-you-liao-tcp-de-keepalive-ying-yong-ceng-huan-xu-yao-shi-xian-bao-huo-luo-ji-ma/"/>
+    <id>http://yoursite.com/2022/09/06/20220906-you-liao-tcp-de-keepalive-ying-yong-ceng-huan-xu-yao-shi-xian-bao-huo-luo-ji-ma/</id>
     <published>2022-09-06T14:02:39.000Z</published>
     <updated>2023-05-07T14:41:07.789Z</updated>
     
@@ -252,8 +371,8 @@
   
   <entry>
     <title>关于HTTP相关协议的一些总结</title>
-    <link href="http://yoursite.com/2022/09/05/20220905-%E5%85%B3%E4%BA%8EHTTP%E7%9B%B8%E5%85%B3%E5%8D%8F%E8%AE%AE%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%BB%E7%BB%93/"/>
-    <id>http://yoursite.com/2022/09/05/20220905-%E5%85%B3%E4%BA%8EHTTP%E7%9B%B8%E5%85%B3%E5%8D%8F%E8%AE%AE%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%BB%E7%BB%93/</id>
+    <link href="http://yoursite.com/2022/09/05/20220905-guan-yu-http-xiang-guan-xie-yi-de-yi-xie-zong-jie/"/>
+    <id>http://yoursite.com/2022/09/05/20220905-guan-yu-http-xiang-guan-xie-yi-de-yi-xie-zong-jie/</id>
     <published>2022-09-05T14:01:12.000Z</published>
     <updated>2023-05-07T14:41:07.789Z</updated>
     
@@ -283,8 +402,8 @@
   
   <entry>
     <title>Chrome下载文件时暂停和继续是什么原理？</title>
-    <link href="http://yoursite.com/2022/08/30/20220830-Chrome%E4%B8%8B%E8%BD%BD%E6%96%87%E4%BB%B6%E6%97%B6%E6%9A%82%E5%81%9C%E5%92%8C%E7%BB%A7%E7%BB%AD%E6%98%AF%E4%BB%80%E4%B9%88%E5%8E%9F%E7%90%86%EF%BC%9F/"/>
-    <id>http://yoursite.com/2022/08/30/20220830-Chrome%E4%B8%8B%E8%BD%BD%E6%96%87%E4%BB%B6%E6%97%B6%E6%9A%82%E5%81%9C%E5%92%8C%E7%BB%A7%E7%BB%AD%E6%98%AF%E4%BB%80%E4%B9%88%E5%8E%9F%E7%90%86%EF%BC%9F/</id>
+    <link href="http://yoursite.com/2022/08/30/20220830-chrome-xia-zai-wen-jian-shi-zan-ting-he-ji-xu-shi-shi-me-yuan-li/"/>
+    <id>http://yoursite.com/2022/08/30/20220830-chrome-xia-zai-wen-jian-shi-zan-ting-he-ji-xu-shi-shi-me-yuan-li/</id>
     <published>2022-08-30T04:02:05.000Z</published>
     <updated>2023-05-07T14:41:07.789Z</updated>
     
@@ -311,8 +430,8 @@
   
   <entry>
     <title>推送技术总结</title>
-    <link href="http://yoursite.com/2022/08/05/20220805-%E6%8E%A8%E9%80%81%E6%8A%80%E6%9C%AF%E6%80%BB%E7%BB%93/"/>
-    <id>http://yoursite.com/2022/08/05/20220805-%E6%8E%A8%E9%80%81%E6%8A%80%E6%9C%AF%E6%80%BB%E7%BB%93/</id>
+    <link href="http://yoursite.com/2022/08/05/20220805-tui-song-ji-zhu-zong-jie/"/>
+    <id>http://yoursite.com/2022/08/05/20220805-tui-song-ji-zhu-zong-jie/</id>
     <published>2022-08-05T13:57:59.000Z</published>
     <updated>2023-05-07T14:41:07.789Z</updated>
     
@@ -336,8 +455,8 @@
   
   <entry>
     <title>说说CDN</title>
-    <link href="http://yoursite.com/2022/08/02/20220802-%E8%AF%B4%E8%AF%B4CDN/"/>
-    <id>http://yoursite.com/2022/08/02/20220802-%E8%AF%B4%E8%AF%B4CDN/</id>
+    <link href="http://yoursite.com/2022/08/02/20220802-shuo-shuo-cdn/"/>
+    <id>http://yoursite.com/2022/08/02/20220802-shuo-shuo-cdn/</id>
     <published>2022-08-02T13:54:30.000Z</published>
     <updated>2023-05-07T14:41:07.789Z</updated>
     
@@ -360,8 +479,8 @@
   
   <entry>
     <title>DNS解惑</title>
-    <link href="http://yoursite.com/2022/08/01/20220801-DNS%E8%A7%A3%E6%83%91/"/>
-    <id>http://yoursite.com/2022/08/01/20220801-DNS%E8%A7%A3%E6%83%91/</id>
+    <link href="http://yoursite.com/2022/08/01/20220801-dns-jie-huo/"/>
+    <id>http://yoursite.com/2022/08/01/20220801-dns-jie-huo/</id>
     <published>2022-08-01T09:00:30.000Z</published>
     <updated>2023-05-07T14:41:07.789Z</updated>
     
@@ -384,8 +503,8 @@
   
   <entry>
     <title>谈谈跨域</title>
-    <link href="http://yoursite.com/2022/07/20/20220720-%E8%B0%88%E8%B0%88%E8%B7%A8%E5%9F%9F/"/>
-    <id>http://yoursite.com/2022/07/20/20220720-%E8%B0%88%E8%B0%88%E8%B7%A8%E5%9F%9F/</id>
+    <link href="http://yoursite.com/2022/07/20/20220720-tan-tan-kua-yu/"/>
+    <id>http://yoursite.com/2022/07/20/20220720-tan-tan-kua-yu/</id>
     <published>2022-07-20T13:50:26.000Z</published>
     <updated>2023-05-07T14:41:07.789Z</updated>
     
@@ -402,106 +521,6 @@
     
     
     <category term="跨域" scheme="http://yoursite.com/tags/%E8%B7%A8%E5%9F%9F/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Java跨平台能完全做到一次编写到处运行？</title>
-    <link href="http://yoursite.com/2022/07/05/20220705-Java%E8%B7%A8%E5%B9%B3%E5%8F%B0%E8%83%BD%E5%AE%8C%E5%85%A8%E5%81%9A%E5%88%B0%E4%B8%80%E6%AC%A1%E7%BC%96%E5%86%99%E5%88%B0%E5%A4%84%E8%BF%90%E8%A1%8C%EF%BC%9F/"/>
-    <id>http://yoursite.com/2022/07/05/20220705-Java%E8%B7%A8%E5%B9%B3%E5%8F%B0%E8%83%BD%E5%AE%8C%E5%85%A8%E5%81%9A%E5%88%B0%E4%B8%80%E6%AC%A1%E7%BC%96%E5%86%99%E5%88%B0%E5%A4%84%E8%BF%90%E8%A1%8C%EF%BC%9F/</id>
-    <published>2022-07-05T02:20:11.000Z</published>
-    <updated>2023-05-07T14:41:07.787Z</updated>
-    
-    <content type="html"><![CDATA[<p><img src="/2022/07/05/20220705-Java%E8%B7%A8%E5%B9%B3%E5%8F%B0%E8%83%BD%E5%AE%8C%E5%85%A8%E5%81%9A%E5%88%B0%E4%B8%80%E6%AC%A1%E7%BC%96%E5%86%99%E5%88%B0%E5%A4%84%E8%BF%90%E8%A1%8C%EF%BC%9F/lionel-messi.jpg"></p><ul><li>最近定位一个问题，花了不少时间。事后回想起来挺低级的，在此记录一下。</li></ul><h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><ul><li>spring i18n, 在windows和mac生效，在linux不生效。</li></ul><h2 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h2><ol><li>资源文件的名字为小写（message_zh_hant.proprties）</li><li>而文件读取时包含大写（message_zh_Hant.proprties）（这里不得不吐槽一下，spring无论请求参数传的是大写还是小写，最终都会转成大写去读文件，而且这么简单的功能，代码写得及其复杂，浪费了不少时间去debug）</li><li>windows和mac大小写不敏感，所以能读取文件成功，而linux则大小写敏感，则读取不成功（说好的Java跨平台呢？但跨平台包括处理这种不兼容的问题？似乎很难界定。）</li></ol><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul><li>windows和mac文件名对大小写不敏感，而linux则大小写敏感；</li><li>即使使用Java编写代码，特殊的场景还是需要考虑各平台的兼容问题。</li></ul>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;&lt;img src=&quot;/2022/07/05/20220705-Java%E8%B7%A8%E5%B9%B3%E5%8F%B0%E8%83%BD%E5%AE%8C%E5%85%A8%E5%81%9A%E5%88%B0%E4%B8%80%E6%AC%A1%E7%BC%96%E5</summary>
-      
-    
-    
-    
-    
-    <category term="大小写敏感" scheme="http://yoursite.com/tags/%E5%A4%A7%E5%B0%8F%E5%86%99%E6%95%8F%E6%84%9F/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>个人golang项目简要描述</title>
-    <link href="http://yoursite.com/2022/06/01/20220601-%E4%B8%AA%E4%BA%BAgolang%E9%A1%B9%E7%9B%AE%E7%AE%80%E8%A6%81%E6%8F%8F%E8%BF%B0/"/>
-    <id>http://yoursite.com/2022/06/01/20220601-%E4%B8%AA%E4%BA%BAgolang%E9%A1%B9%E7%9B%AE%E7%AE%80%E8%A6%81%E6%8F%8F%E8%BF%B0/</id>
-    <published>2022-06-01T03:44:05.000Z</published>
-    <updated>2023-05-07T14:41:07.780Z</updated>
-    
-    <content type="html"><![CDATA[<p><img src="/2022/06/01/20220601-%E4%B8%AA%E4%BA%BAgolang%E9%A1%B9%E7%9B%AE%E7%AE%80%E8%A6%81%E6%8F%8F%E8%BF%B0/golang_project_3.png"></p><p><img src="/2022/06/01/20220601-%E4%B8%AA%E4%BA%BAgolang%E9%A1%B9%E7%9B%AE%E7%AE%80%E8%A6%81%E6%8F%8F%E8%BF%B0/golang_deploy_2.png"></p><h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul><li><a href="https://zhuanlan.zhihu.com/p/272594212">golang如何优雅的实现重启服务(fvbock&#x2F;endless)</a></li></ul>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;&lt;img src=&quot;/2022/06/01/20220601-%E4%B8%AA%E4%BA%BAgolang%E9%A1%B9%E7%9B%AE%E7%AE%80%E8%A6%81%E6%8F%8F%E8%BF%B0/golang_project_3.png&quot;&gt;&lt;/p&gt;
-</summary>
-      
-    
-    
-    
-    
-    <category term="golang" scheme="http://yoursite.com/tags/golang/"/>
-    
-    <category term="ngrok" scheme="http://yoursite.com/tags/ngrok/"/>
-    
-    <category term="wechat" scheme="http://yoursite.com/tags/wechat/"/>
-    
-    <category term="mail" scheme="http://yoursite.com/tags/mail/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>算法基础总结</title>
-    <link href="http://yoursite.com/2022/05/10/20220510-%E7%AE%97%E6%B3%95%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93/"/>
-    <id>http://yoursite.com/2022/05/10/20220510-%E7%AE%97%E6%B3%95%E5%9F%BA%E7%A1%80%E6%80%BB%E7%BB%93/</id>
-    <published>2022-05-10T14:33:28.000Z</published>
-    <updated>2023-05-07T14:41:07.780Z</updated>
-    
-    <content type="html"><![CDATA[<ul><li>O这个符号的意思是“忽略重要项以外的内容”，读音同Order。O（n2）的含义就是“算法的运行时间最长也就是n2的常数倍”，准确的定义请参考相关专业书籍。重点在于，通过这种表示方法，我们可以直观地了解算法的时间复杂度</li><li>当我们知道选择排序的时间复杂度为O（n2）、快速排序的时间复杂度为O（nlogn）时，很快就能判断出快速排序的运算更为高速。二者的运行时间根据输入n产生的变化程度也一目了然。</li></ul><h2 id="一、链表"><a href="#一、链表" class="headerlink" title="一、链表"></a>一、链表</h2><h2 id="二、数组"><a href="#二、数组" class="headerlink" title="二、数组"></a>二、数组</h2><h2 id="三、栈"><a href="#三、栈" class="headerlink" title="三、栈"></a>三、栈</h2><h2 id="四、队列"><a href="#四、队列" class="headerlink" title="四、队列"></a>四、队列</h2><h2 id="五、哈希表"><a href="#五、哈希表" class="headerlink" title="五、哈希表"></a>五、哈希表</h2><h2 id="六、堆"><a href="#六、堆" class="headerlink" title="六、堆"></a>六、堆</h2><ul><li>堆是一种图的树形结构，被用于实现“优先队列”（priority queues）</li><li>优先队列是一种数据结构，可以自由添加数据，但取出数据时要从最小值开始按顺序取出</li><li>如果需要频繁地从管理的数据中取出最小值，那么使用堆来操作会非常方便。</li></ul><h2 id="七、二叉查找树"><a href="#七、二叉查找树" class="headerlink" title="七、二叉查找树"></a>七、二叉查找树</h2><ul><li>二叉查找树（又叫作二叉搜索树或二叉排序树）是一种数据结构，采用了图的树形结构</li><li>二叉查找树有两个性质。第一个是每个结点的值均大于其左子树上任意一个结点的值。</li><li>有很多以二叉查找树为基础扩展的数据结构，比如“平衡二叉查找树”。这种数据结构可以修正形状不均衡的树，让其始终保持均衡形态，以提高查找效率。</li><li>种子结点数可以自由设定，并且形状均衡的树便是B树。</li></ul><hr><h1 id="图"><a href="#图" class="headerlink" title="图"></a>图</h1><ul><li>由顶点和连接每对顶点的边所构成的图形就是图。</li><li>这个值叫作边的“权重”或者“权”，加了权的图被称为“加权图”。没有权的边只能表示两个顶点的连接状态，而有权的边就可以表示顶点之间的“连接程度”</li><li>有向图、无向图</li></ul><h2 id="广度优先搜索"><a href="#广度优先搜索" class="headerlink" title="广度优先搜索"></a>广度优先搜索</h2><ul><li>广度优先搜索会优先从离起点近的顶点开始搜索。</li><li>候补顶点是用“先入先出”（FIFO）的方式来管理的，因此可以使用“队列”这个数据结构。</li><li>广度优先搜索的特征为从起点开始，由近及远进行广泛的搜索。因此，目标顶点离起点越近，搜索结束得就越快。</li></ul><h2 id="深度优先搜索"><a href="#深度优先搜索" class="headerlink" title="深度优先搜索"></a>深度优先搜索</h2><ul><li>深度优先搜索会沿着一条路径不断往下搜索直到不能再继续为止，然后再折返，开始搜索下一条候补路径。</li><li>此处，候补顶点是用“后入先出”（LIFO）的方式来管理的，因此可以使用“栈”这个数据结构。</li><li>广度优先搜索选择的是最早成为候补的顶点，因为顶点离起点越近就越早成为候补，所以会从离起点近的地方开始按顺序搜索；而深度优先搜索选择的则是最新成为候补的顶点，所以会一路往下，沿着新发现的路径不断深入搜索。</li></ul><h2 id="贝尔曼-福特算法"><a href="#贝尔曼-福特算法" class="headerlink" title="贝尔曼-福特算法"></a>贝尔曼-福特算法</h2><ul><li>贝尔曼-福特（Bellman-Ford）算法是一种在图中求解最短路径问题的算法。最短路径问题就是在加权图指定了起点和终点的前提下，寻找从起点到终点的路径中权重总和最小的那条路径。</li><li>贝尔曼也因为提出了该算法中的一个重要分类“动态规划”而被世人所熟知。</li></ul><h2 id="狄克斯特拉算法"><a href="#狄克斯特拉算法" class="headerlink" title="狄克斯特拉算法"></a>狄克斯特拉算法</h2><ul><li>狄克斯特拉（Dijkstra）算法也是求解最短路径问题的算法，使用它可以求得从起点到终点的路径中权重总和最小的那条路径路径。</li></ul><h2 id="A-算法"><a href="#A-算法" class="headerlink" title="A*算法"></a>A*算法</h2><ul><li>A<em>（A-Star）算法也是一种在图中求解最短路径问题的算法，由狄克斯特拉算法发展而来。狄克斯特拉算法会从离起点近的顶点开始，按顺序求出起点到各个顶点的最短路径。也就是说，一些离终点较远的顶点的最短路径也会被计算出来，但这部分其实是无用的。与之不同，A</em>就会预先估算一个值，并利用这个值来省去一些无用的计算。</li></ul><hr><h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><ul><li>[我的第一本算法书] - 宫崎修一 石田保辉</li></ul>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;ul&gt;
-&lt;li&gt;O这个符号的意思是“忽略重要项以外的内容”，读音同Order。O（n2）的含义就是“算法的运行时间最长也就是n2的常数倍”，准确的定义请参考相关专业书籍。重点在于，通过这种表示方法，我们可以直观地了解算法的时间复杂度&lt;/li&gt;
-&lt;li&gt;当我们知道选择排序的时间复</summary>
-      
-    
-    
-    
-    
-    <category term="算法" scheme="http://yoursite.com/tags/%E7%AE%97%E6%B3%95/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>高效工作方法论总结</title>
-    <link href="http://yoursite.com/2022/05/07/20220507-%E9%AB%98%E6%95%88%E5%B7%A5%E4%BD%9C%E6%96%B9%E6%B3%95%E8%AE%BA%E6%80%BB%E7%BB%93/"/>
-    <id>http://yoursite.com/2022/05/07/20220507-%E9%AB%98%E6%95%88%E5%B7%A5%E4%BD%9C%E6%96%B9%E6%B3%95%E8%AE%BA%E6%80%BB%E7%BB%93/</id>
-    <published>2022-05-07T01:41:15.000Z</published>
-    <updated>2023-05-07T14:41:07.779Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="思考维度"><a href="#思考维度" class="headerlink" title="思考维度"></a>思考维度</h2><ul><li>事前, 事中, 事后</li><li>从三个维度  预防，及时发现，止损  三个出发</li><li>what when why who how</li><li>5W3H(what、when、why、who、where、how、how much、how feel)</li><li>金字塔思维: 主治：思维混乱，分不清主次重点 - 提高逻辑性和条理性; 总-分-总 过去-现在-将来 第一-第二-第三.</li><li>STAR 法则: 主治：不知道如何表达 - 讲述故事的绝佳手段; 情境(situation)、任务(task)、行动(action)、结果(result)</li><li>SMART 原则: 主治：不知道如何着手做目标管理 - 制定目标的黄金准则; 目标具体(Specific)、可度量(Measurable)、可实现(Attainable)、现实性(Realistic)、时限(Time bound)</li><li>PDCA 循环： 主治：工作计划性差, 自律性弱 - 过程管理: 持续反馈-&gt;持续改进 ；计划（plan）、执行（do）、 检查（check）、调整（Adjust）</li><li>四象限法则: 主治：时间分配不合理- 尽量在做最重要的事情;</li></ul><h2 id="结构化思维"><a href="#结构化思维" class="headerlink" title="结构化思维"></a>结构化思维</h2><ol><li>表达要有逻辑(所有的逻辑关系都在这四种顺序之内)</li></ol><ul><li>演绎（因果）顺序</li><li>时间（步骤）顺序</li><li>空间（结构）顺序</li><li>程度（重要性）顺序</li></ul><ol start="2"><li>做事要有套路</li></ol><ul><li>5W2H:Why、Who、When、Where、What、How 和 How much</li></ul><ol start="3"><li>建立中心</li></ol><ul><li>定义清楚要解决的问题，要明确目标<ul><li>自上而下:适用于问题比较明确的情况，我们只需要找到问题的核心要素即可，然后进行展开即可。</li><li>自下而上:对于问题不够明确的情况，我们需要对多种杂乱的内容，进行分类、剪枝、归纳汇总成一个中心。</li></ul></li><li>抽象层次越高，要解决的问题域越宽，外延越大</li></ul><ol start="4"><li>结构化分解</li></ol><ul><li>分解的策略就是我们上文提到的四种逻辑顺序，即演绎顺序、时间顺序、空间顺序和程度顺序</li><li>在做空间分解的时候，要注意满足 MECE（Mutually Exclusive Collectively Exhaustive，相互独立，完全穷尽）原则</li></ul><h2 id="合理安排自己的时间"><a href="#合理安排自己的时间" class="headerlink" title="合理安排自己的时间"></a>合理安排自己的时间</h2><ol><li>每天提前一小时醒来</li><li>每天提前 15 分钟到公司</li><li>下班前花 15 分钟总结</li><li>减少玩手机的时候</li><li>把时间切割成小块</li><li>碎片化时间利用</li><li>给休息生活留出时间</li></ol><hr><ul><li>抽象思维：帮助我们快速抽取面对问题的关键要素和本质，可以是其他能力的“元能力”</li><li>分层思维：帮助我们拆解问题，分而治之，划清问题和职责边界</li><li>归纳思维：帮助我们从个性问题中抽象出问题的一般规律和得出共同结论</li><li>结构化思维：帮助我们沉淀自己的知识树，逐步系统性的思考问题</li></ul><hr><h2 id="深度工作总结"><a href="#深度工作总结" class="headerlink" title="深度工作总结"></a>深度工作总结</h2><ul><li>如果你无法学习，就无法成功</li><li>无干扰状态下保持专注</li><li>高质量工作产出&#x3D;时间×专注度</li><li>转移工作、注意力残留 -&gt; 专注、深度工作</li><li>深度工作并非是我们的经济中唯一有价值的技能，不培养这种能力也有可能做得很好，但是不需要深度工作的职业会越来越少。</li><li>最小阻力原则</li><li>忙碌代表生产能力（Busyness as Proxy for Productivity）：在工作中，对于生产能力和价值没有明确的指标时，很多知识工作者都会采用工业时代关于生产能力的指标，以可视的方式完成很多事情。</li><li>支持深度工作往往要抵制新的高科技</li><li>当工作中没有明确目标时，围绕浮浅工作的表面忙碌会成为一种本能</li><li>工作其实比休闲时光更容易带来享受？</li><li>意志力是有限的</li><li>培养深度工作的习惯，关键在于越过良好的意图，在工作生活中加入一些特别设计的惯例和固定程序，使得进入并保持高度专注状态消耗的意志力最小化。！！！！！</li><li>选定你的深度哲学（节奏哲学）、并习惯化</li><li>恰当展开协作可以提升你在职业生活中深度工作的质量</li><li>这种隔音办公室与宽阔公共空间的组合，形成了中心辐射型的创新建筑结构，在这里偶遇的意外发现和与世隔绝的深度思考都能实现。</li><li>专注于少量“极端重要的目标”</li><li>引领性指标</li><li>专注于极度重要目标上的深度工作状态时间</li><li>4DX框架下的4种原则 ！！！</li><li>在整个4DX的实验过程中，目标的明晰性，辅以引领性指标计分板提供的简单但却难以回避的反馈，促使我达到了此前从未实现的深度状态。</li><li>定期放松大脑！！工作日结束的时候，在第二天早晨到来之前，屏蔽掉对工作问题的担忧。</li><li>定期休息大脑可以提升深度工作的质量。工作时，努力工作。完成时，就放松下来。</li><li>不要不断分心，而要不断专注</li><li>设定一个几乎不可能的时间期限；深度工作需要专注的强度远远超出了大部分知识工作者的舒适区。</li><li>有成果的冥想</li><li>远离社交媒体</li><li>在晚上或周末到来之前就确定要做的事情是十分重要的。（避免陷入其他无效的诱惑）</li><li>人的智力系统可以进行长时间的高强度活动：它不像人的手脚一样会疲倦。除睡觉以外，它只需要变化，而不是停止。！！！</li><li>如果你想抵御娱乐网站对你时间和精力的诱惑，那么就给大脑找一些高质量的替代活动。这样不仅可以使我们避免分心，保持专注的能力，同时还有可能实现本内特的宏伟目标：体验到何为生活，而不仅仅是生存。</li><li>减少浮浅工作在我们日程中的分量，而不是将其消除</li><li>一天的每一分钟都要做好计划（笔记本）</li><li>深度工作要求你尊重自己的时间。要做到真正尊重时间，下面这一条建议是个很不错的开端：提前决定你一天的每一分钟要做什么工作。</li><li>5点半之前结束工作。固定日程生产力。</li><li>变得不容易联系到；文档化</li></ul><h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul><li><a href="https://mp.weixin.qq.com/s/zH9kFjJQ5zE9mKGEiwEYAA">如何提升职业工作效率</a></li><li><a href="https://zhuanlan.zhihu.com/p/500696193">一线技术人的成长思考总结</a></li></ul>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;h2 id=&quot;思考维度&quot;&gt;&lt;a href=&quot;#思考维度&quot; class=&quot;headerlink&quot; title=&quot;思考维度&quot;&gt;&lt;/a&gt;思考维度&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;事前, 事中, 事后&lt;/li&gt;
-&lt;li&gt;从三个维度  预防，及时发现，止损  三个出发&lt;/li&gt;
-&lt;li&gt;wha</summary>
-      
-    
-    
-    
-    
-    <category term="效率" scheme="http://yoursite.com/tags/%E6%95%88%E7%8E%87/"/>
     
   </entry>
   

@@ -134,6 +134,7 @@ KEY `idx_pId` (`pId`)
 	- 插入意向锁（LOCK_INSERT_INTENTION）: `lock_mode X locks gap before rec insert intention`
 
 ### 分析
++ 通过explain分析`explain SELECT 1 FROM t_user_xxx_2 WHERE userId = xxxx AND type = 2 AND pId = 434444` 得出以下
 + 语句的type是index_merge，Extra的信息是Using intersect(idx_user_type,idx_pId)，执行计划走了index_merge优化，单个语句通过两个索引(idx_userId_type,idx_pId)来提取记录集合并取交集获得最终结果集。
 
 ### 解决方式

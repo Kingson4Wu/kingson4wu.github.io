@@ -287,6 +287,1363 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/05/05/20220505-ffmpeg-bi-ji/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2022/05/05/20220505-ffmpeg-bi-ji/" itemprop="url">FFmpeg笔记</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-05-05T12:49:18+08:00">
+                2022-05-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2022/05/05/20220505-ffmpeg-bi-ji/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2022/05/05/20220505-ffmpeg-bi-ji/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <ul>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzIzOTU0NTQ0MA==&mid=2247491924&idx=1&sn=0fdd9e7a0d290158bf6c3d76725ea943&chksm=e92adc5bde5d554">图片拼接成特效视频</a><ul>
+<li>FFmpeg</li>
+<li>MediaCodec</li>
+<li>OpenGL</li>
+</ul>
+</li>
+</ul>
+<h2 id="JavaCV"><a href="#JavaCV" class="headerlink" title="JavaCV"></a>JavaCV</h2><ul>
+<li><p>JavaCV是对各种常用计算机视觉库的封装后的一组jar包，其中封装了ffmpeg、OpenCV、libdc1394、OpenKinect、videoInput和ARToolKitPlus等计算机视觉编程人员常用库的接口，可以通过其中的utility类方便的在包括Android在内的Java平台上调用这些接口。其中使用最多的应该就是FFmpeg了。</p>
+</li>
+<li><p>找出人脸，同时比较两张图片中的人脸相似度：<a target="_blank" rel="noopener" href="https://blog.csdn.net/nicebooks/article/details/8175002">https://blog.csdn.net/nicebooks/article/details/8175002</a>,<br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/webRobot/p/6216994.html">https://www.cnblogs.com/webRobot/p/6216994.html</a>,<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/u014365862/article/details/48212891">https://blog.csdn.net/u014365862/article/details/48212891</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/xxxlllbbb/article/details/104819683">基于JavaCV技术实现RTMP推流和拉流功能</a></p>
+</li>
+</ul>
+<h2 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h2><ul>
+<li><p>FFmpeg常用命令汇总+文档汇总：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/f07f0be088d0">https://www.jianshu.com/p/f07f0be088d0</a></p>
+</li>
+<li><p>ffplay命令播放媒体</p>
+<ul>
+<li>播放本地文件 : <code>ffplay -window_title &quot;test time&quot; -ss 2 -t 10 -autoexit test.mp4</code></li>
+<li>播放网络流: <code>ffplay -window_title &quot;rtmp stream&quot; rtmp://202.69.69.180:443/webcast/bshdlive-pc</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="怎样快速的转换FLV视频为MP4格式"><a href="#怎样快速的转换FLV视频为MP4格式" class="headerlink" title="怎样快速的转换FLV视频为MP4格式"></a>怎样快速的转换FLV视频为MP4格式</h3><ul>
+<li><p><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/65224766/answer/252226264">https://www.zhihu.com/question/65224766/answer/252226264</a></p>
+</li>
+<li><p>单个文件，就用如下命令：<br><code>ffmpeg -i &quot;input.flv&quot; -c copy &quot;output.mp4&quot;</code></p>
+</li>
+<li><p>如果是整个文件夹中的所有flv文件需要批量转成mp4，那么使用以下命令：<br><code>for %i in (*.flv) do ffmpeg -i &quot;%i&quot; -c copy &quot;%~ni.mp4&quot;</code></p>
+</li>
+<li><p>flv&#x2F;mp4文件的合并有时候通过某些下载工具得到的flv&#x2F;mp4文件是多段的，比如B站视频上下载一集40分钟左右的纪录片实际上是8个小片段，这时候可以新建一个txt文本文件，把你需要合并的flv&#x2F;mp4和这个txt放在同一个文件夹里面，然后把需要合并的flv&#x2F;mp4文件的名字按照顺序写在txt文件中并保存，格式如下：</p>
+<pre>
+file '【国家地理】COSMOS系列【熟肉-对后十一集修复】 (P10. 气候变化)[00].mp4'
+file '【国家地理】COSMOS系列【熟肉-对后十一集修复】 (P10. 气候变化)[01].mp4'
+file '【国家地理】COSMOS系列【熟肉-对后十一集修复】 (P10. 气候变化)[02].mp4'
+file '【国家地理】COSMOS系列【熟肉-对后十一集修复】 (P10. 气候变化)[03].mp4'
+file '【国家地理】COSMOS系列【熟肉-对后十一集修复】 (P10. 气候变化)[04].mp4'
+file '【国家地理】COSMOS系列【熟肉-对后十一集修复】 (P10. 气候变化)[05].mp4'
+file '【国家地理】COSMOS系列【熟肉-对后十一集修复】 (P10. 气候变化)[06].mp4'
+file '【国家地理】COSMOS系列【熟肉-对后十一集修复】 (P10. 气候变化)[07].mp4'
+</pre>
+<p><code>ffmpeg -f concat -safe 0 -i files.txt -c copy output.mp4</code>即可得到一个完整的mp4文件</p>
+</li>
+</ul>
+<h3 id="rtmp推流"><a href="#rtmp推流" class="headerlink" title="rtmp推流"></a>rtmp推流</h3><ul>
+<li><code>ffmpeg -re -i 1.mp4 -c copy -f flv rtmp://127.0.0.1:1935/live/movie</code></li>
+<li><a target="_blank" rel="noopener" href="https://juejin.cn/post/690947934664628634ing3">如何开发一款H5小程序直播</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/c141fc7881e7">利用ffmpeg实现rtmp推流</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/73984438">ffmpeg的RTMP推流</a></li>
+</ul>
+<h2 id="名词概念"><a href="#名词概念" class="headerlink" title="名词概念"></a>名词概念</h2><ul>
+<li>FFmpeg的名称来自MPEG视频编码标准，前面的“FF”代表“Fast Forward”</li>
+<li>解复用(demux)，表示从一路输入中分离出多路流(视频、音频、字幕等)。<br>把不同的流从某种容器中解析出来，这种行为叫做解复用(demux)</li>
+<li>编解码器(Codec)：以帧为单位实现压缩数据和原始数据之间的相互转换的</li>
+<li>复用(mux)：把不同的流按照某种容器的规则放入容器，这种行为叫做复用（mux）</li>
+<li>码率和帧率是视频文件的最重要的基本特征，对于他们的特有设置会决定视频质量。如果我们知道码率和时长那么可以很容易计算出输出文件的大小。</li>
+<li>帧率：帧率也叫帧频率，帧率是视频文件中每一秒的帧数，肉眼想看到连续移动图像至少需要15帧。</li>
+<li>码率：比特率(也叫码率，数据率)是一个确定整体视频&#x2F;音频质量的参数，秒为单位处理的位数，码率和视频质量成正比，在视频文件中中比特率用bps来表达。</li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/117523405">https://zhuanlan.zhihu.com/p/117523405</a></li>
+</ul>
+<h3 id="FFMPEG-中I帧、B帧、P帧、PTS、DTS"><a href="#FFMPEG-中I帧、B帧、P帧、PTS、DTS" class="headerlink" title="FFMPEG 中I帧、B帧、P帧、PTS、DTS"></a>FFMPEG 中I帧、B帧、P帧、PTS、DTS</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/2cfc19b4938c">https://www.jianshu.com/p/2cfc19b4938c</a></li>
+<li>I帧表示关键帧，又称intra picture，I帧画面完整保留，解码时只需要本帧数据就可以完成（因为包含完整画面）。</li>
+<li>P帧前向预测编码帧 又称predictive-frame，表示的是这一帧跟之前的一个关键帧（或P帧）的差别，解码时需要用之前缓存的画面叠加上本帧定义的差别，生成最终画面。（也就是差别帧，P帧没有完整画面数据，只有与前一帧的画面差别的数据）</li>
+<li>B帧双向预测内插编码帧 又称bi-directional interpolated prediction frame，是双向差别帧，也就是B帧记录的是本帧与前后帧的差别，换言之，要解码B帧，不仅要取得之前的缓存画面，还要解码之后的画面，通过前后画面的与本帧数据的叠加取得最终的画面。B帧压缩率高，但是解码时CPU会比较累。</li>
+<li>因此，I帧和P帧的解码算法比较简单，资源占用也比较少，I帧只要自己完成就行了，至于P帧，也只需要解码器把前一个画面缓存一下，遇到P帧时就使用之前缓存的画面就行。如果视频流只有I和P，解码器可以不管后面的数据，边读边解码，线性前进。如果视频流还有B帧，则需要缓存前面和当前的视频帧，待后面视频帧获得后，再解码。</li>
+</ul>
+<h3 id="ffmpeg-x2F-ffplay-x2F-ffprobe区别"><a href="#ffmpeg-x2F-ffplay-x2F-ffprobe区别" class="headerlink" title="ffmpeg&#x2F;ffplay&#x2F;ffprobe区别"></a>ffmpeg&#x2F;ffplay&#x2F;ffprobe区别</h3><ul>
+<li>ffmpeg:<br>Hyper fast Audio and Video encoder<br>超快音视频编码器（类似爱剪辑）</li>
+<li>ffplay:<br>Simple media player<br>简单媒体播放器</li>
+<li>ffprobe:<br>Simple multimedia streams analyzer<br>简单多媒体流分析器</li>
+</ul>
+<h2 id="播放软件推荐：VLC"><a href="#播放软件推荐：VLC" class="headerlink" title="播放软件推荐：VLC"></a>播放软件推荐：VLC</h2><ul>
+<li>要播放视频直播流，或者测试一个直播视频地址是否可以使用。这里推荐 VLC 媒体播放器。功能强大且跨平台。支持 Windows、Mac OS、Linux、Android、iOS。<br>官网地址：<a target="_blank" rel="noopener" href="http://www.videolan.org/">http://www.videolan.org/</a><br>打开播放器，选择菜单中“媒体”-&gt;“打开网络串流…”。在弹出页面中填入视频地址即可。</li>
+</ul>
+<hr>
+<ul>
+<li>windows 录屏软件Captura – TODO</li>
+<li>FFmpeg最全教程：<a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1773248">https://cloud.tencent.com/developer/article/1773248</a></li>
+<li>FFmpeg jar 库，无需安装 –TODO javacv</li>
+<li>​ffprobe 是一个多媒体流分析工具。它从多媒体流中收集信息，并且以人类和机器可读的形式打印出来。它可以用来检测多媒体流的容器类型，以及每一个多媒体流的格式和类型。它可以作为一个独立的应用来使用，也可以结合文本过滤器执行更复杂的处理。</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/05/04/20220504-zhi-bo-xiang-guan-ji-zhu-shu-li-zong-jie/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2022/05/04/20220504-zhi-bo-xiang-guan-ji-zhu-shu-li-zong-jie/" itemprop="url">直播相关技术梳理总结</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-05-04T23:47:04+08:00">
+                2022-05-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2022/05/04/20220504-zhi-bo-xiang-guan-ji-zhu-shu-li-zong-jie/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2022/05/04/20220504-zhi-bo-xiang-guan-ji-zhu-shu-li-zong-jie/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="视频直播的实现原理"><a href="#视频直播的实现原理" class="headerlink" title="视频直播的实现原理"></a>视频直播的实现原理</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/stringarray/p/13027230.html">网络协议-流媒体协议 </a></li>
+<li>首先，网络协议将编码好的视频流，从主播端推送到服务器，在服务器上有个运行了同样协议的服务端来接收这些网络包，从而得到里面的视频流，这个过程称为接流。</li>
+<li>服务端接到视频流之后，可以对视频流进行一定的处理，例如转码，也即从一个编码格式，转成另一种格式。因为观众使用的客户端千差万别，要保证他们都能看到直播。流处理完毕之后，就可以等待观众的客户端来请求这些视频流，观众的客户端请求的过程称为拉流。</li>
+<li>如果有非常多的观众，同时看一个视频直播，那都从一个服务器上拉流，压力太大了，因而需要一个视频的分发网络（CDN），将视频预先加载到就近的边缘节点，这样大部分观众看的视频，是从边缘节点拉取的，就能降低服务器的压力。</li>
+<li>当观众的客户端将视频流拉下来之后，就需要进行解码，也即通过上述过程的逆过程，将一串串看不懂的二进制代码，再转变成一帧帧生动的图片，在客户端播放出来，这样你就能看到直播视频啦。</li>
+</ul>
+<h1 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://cloud.tencent.com/document/product/267/43393">https://cloud.tencent.com/document/product/267/43393</a></li>
+</ul>
+<h2 id="转码"><a href="#转码" class="headerlink" title="转码"></a>转码</h2><ul>
+<li>转码是将视频码流转换成另一个视频码流的过程，是一种离线任务。通过转码，可以改变原始码流的编码格式、分辨率和码率等参数，从而适应不同终端和网络环境的播放。使用转码功能可以实现：<ul>
+<li>适配更多终端：将原始视频转码成拥有更强终端适配能力的格式，使视频资源能够在更多设备上播放。</li>
+<li>适配不同带宽：将视频转换成流畅、标清、高清或超清输出，用户可根据当前网络环境选择合适码率的视频播放。</li>
+<li>节省带宽：采用更先进的编码方式转码，在不损失原始画质的情况下显著降低码率，节省播放带宽。</li>
+</ul>
+</li>
+</ul>
+<h2 id="视频编码"><a href="#视频编码" class="headerlink" title="视频编码"></a>视频编码</h2><ul>
+<li>H.265是新的编码协议，也即是H.264的升级版。H.265标准保留H.264原来的某些技术，同时对一些相关的技术加以改进。</li>
+<li>视频编码：指通过特定的压缩技术，将某个视频格式的文件转换成另一种视频格式文件的方式。常见的音频视频编码有MPEG系列与H.26X系列。</li>
+</ul>
+<h2 id="容器"><a href="#容器" class="headerlink" title="容器"></a>容器</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/lxc1014/article/details/45666281">https://blog.csdn.net/lxc1014/article/details/45666281</a></li>
+<li>mp4,rmvb,mkv,avi从形式上来说首先都是视频文件的扩展名，其次它们也是视频文件的封装格式（即容器）， mp4是MPEG-4标准的第14部分所制定的容器标准。所谓容器，就是把编码器生成的多媒体内容（视频，音频，字幕，章节信息等）混合封装在一起的标准。容器使得不同多媒体内容同步播放变得很简单，而容器的另一个作用就是为多媒体内容提供索引，也就是说如果没有容器存在的话一部影片你只能从一开始看到最后，不能拖动进度条（当然这种情况下有的播放器会话比较长的时间临时创建索引），而且如果你不自己去手动另外载入音频就没有声音。</li>
+</ul>
+<h1 id="普通直播"><a href="#普通直播" class="headerlink" title="普通直播"></a>普通直播</h1><ul>
+<li>直播类应用在产品功能上基本是这两类：<ul>
+<li>1、直播的基础功能：连麦互动直播（支持多码率、多协议）等非功能性需求。— 流相关服务</li>
+<li>2、应用本身的个性化功能：比如答题场景中的发题目、作答、公布答案等。— 长连接相关服务</li>
+</ul>
+</li>
+</ul>
+<h1 id="多人连麦-x2F-PK-x2F-聊天"><a href="#多人连麦-x2F-PK-x2F-聊天" class="headerlink" title="多人连麦&#x2F;PK&#x2F;聊天"></a>多人连麦&#x2F;PK&#x2F;聊天</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://juejin.im/post/6844903777837776910">直播多人连麦技术简介</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/43629518">直播连麦技术对比-互动直播调研必看</a><ul>
+<li>基于WebRTC和RTMP结合的方案</li>
+<li>基于RTC的方案(声网、即构)</li>
+<li>anyRTC直播方案</li>
+</ul>
+</li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/27086190">直播连麦技术方案对比及测试方法</a><ul>
+<li>SD-RTN™:这是声网的连麦架构，直播连麦的鼻祖。基于UDP，主播端、连麦端、观众端都在基于SD-RTN™进行实时通信，大大降低延时。主播端和连麦端也可以转码到CDN推流。</li>
+<li>RTMP改进方案:基于TCP协议，基本思路是：主播接受连麦嘉宾的视频，在本地合图；主播和连麦嘉宾的视频同时传到服务端合图，然后通过CDN推到观众端。</li>
+<li>WebRTC改进:主播和连麦嘉宾，基于WebRTC进行“视频会议”，将“视频会议”在服务端合图后推到CDN进行分发。</li>
+</ul>
+</li>
+</ul>
+<h2 id="传统直播形式"><a href="#传统直播形式" class="headerlink" title="传统直播形式"></a>传统直播形式</h2><ul>
+<li>一个主播推流，广播给直播间所有的观众。一个直播间对应一个主播，并且仅有一路推拉流。</li>
+<li>基于协议RTMP做的单路直播互动。该模式下主播一个人表演，其他观众根据IM系统跟主播进行文字互动。</li>
+<li>总结：主播端推一路流，观众端CDN拉一路流。</li>
+</ul>
+<h2 id="连麦直播形式"><a href="#连麦直播形式" class="headerlink" title="连麦直播形式"></a>连麦直播形式</h2><ul>
+<li>两个主播（另一个主播可能是观众）推流，广播给直播间所有观众。</li>
+<li>基于UDP做的多路实时互动直播。该模式下主播跟观众除了基于IM系统沟通外，还可以进行音视频互动，极大的方便了观众，互动效果更直观，更能有效吸引用户。</li>
+</ul>
+<h3 id="1基于RTMP协议优化方案"><a href="#1基于RTMP协议优化方案" class="headerlink" title="1基于RTMP协议优化方案"></a>1基于RTMP协议优化方案</h3><ul>
+<li>主播A和主播B之间通过原有的推拉流路径去拉取对方的流内容。也就是说，主播A在推流同时，拉取主播B的流，主播B推流的同时拉取主播A的流。对于两个主播来说互为对方的观众。此时对于直播间内的其他观众而言，是分别拉取主播A和主播B的流，并展示出来。</li>
+<li>在此基础上可以进一步对主播两路流做混流，这样观众端只需要拉一路流。</li>
+<li>混流：可以在服务端做，也可以在其中一个主播的客户端做混流再推流（对主播设备性能有一定要求）</li>
+</ul>
+<h3 id="2基于P2P协议方案"><a href="#2基于P2P协议方案" class="headerlink" title="2基于P2P协议方案"></a>2基于P2P协议方案</h3><ul>
+<li>此方案的实现方式是，主播A和主播B之间通过P2P协议进行音视频连接，正常情况下能够保证较低的延迟，保证主播A和主播B之间的互动。主播A在自己的流内容基础上加入主播B的流内容，统一推向服务端。此时直播间内仅有一路流，并且其他观众也只需要拉取这一路流内容。</li>
+<li>此方案的优点是显而易见的，主播AB之间的延迟降低，交互体验好，观众保持原有逻辑不变，拉取直播间固定流地址。但是缺点是：主播A在连麦过程中需要承担两路推流一路拉流的压力，即拉取主播B的流内容，将自己的流内容推给主播B，将主播A和主播B的流内容推给服务端；主播A的网速压力和性能压力将会巨大，同时主播AB之间一对一的连接也导致扩展性较差，无法满足2人以上的业务场景需求。</li>
+</ul>
+<h3 id="3基于多人视频通话系统方案-（目前主流）"><a href="#3基于多人视频通话系统方案-（目前主流）" class="headerlink" title="3基于多人视频通话系统方案 （目前主流）"></a>3基于多人视频通话系统方案 （目前主流）</h3><ul>
+<li>此方案的实现方式是将主播A和主播B的视频交互交由第三方处理，目前比较成熟的技术有视频会议系统和Google开源的WebRTC系统。在此架构下，主播A与主播B的流合成处理上传都是由这个交互系统完成。此方案对于方案2来说减轻了主播端的压力，并且采用UDP协议传输方式降低延迟。同时也兼容多人连接交互。</li>
+<li>此方案缺点是对服务端开发量大，要求高。</li>
+</ul>
+<h3 id="第三方支持"><a href="#第三方支持" class="headerlink" title="第三方支持"></a>第三方支持</h3><ul>
+<li>语音连麦聊天室集成介绍:<a target="_blank" rel="noopener" href="http://docs-im.easemob.com/rtc/scenario/tc">http://docs-im.easemob.com/rtc/scenario/tc</a></li>
+<li>腾讯音视频技术平台：<a target="_blank" rel="noopener" href="https://cloud.tencent.com/document/product/267/44710">https://cloud.tencent.com/document/product/267/44710</a></li>
+</ul>
+<hr>
+<h2 id="推流"><a href="#推流" class="headerlink" title="推流"></a>推流</h2><ul>
+<li><p>使用ffmpeg推流到rtmp服务</p>
+<ul>
+<li><code>ffmpeg -re -i 1.mp4 -c copy -f flv rtmp://127.0.0.1:1935/live/movie</code></li>
+<li><a target="_blank" rel="noopener" href="https://juejin.cn/post/6909479346646286343">如何开发一款H5小程序直播</a></li>
+</ul>
+</li>
+<li><p>OBS 推流:<a target="_blank" rel="noopener" href="https://cloud.tencent.com/document/product/267/32726">https://cloud.tencent.com/document/product/267/32726</a></p>
+</li>
+<li><p>VLC播放器：<a target="_blank" rel="noopener" href="https://www.videolan.org/vlc/index.zh.html">https://www.videolan.org/vlc/index.zh.html</a>,<br><a target="_blank" rel="noopener" href="https://cloud.tencent.com/document/product/267/32727">https://cloud.tencent.com/document/product/267/32727</a></p>
+</li>
+</ul>
+<h2 id="混流"><a href="#混流" class="headerlink" title="混流"></a>混流</h2><ul>
+<li>混流就是把多路音视频流合成单流。准确的说，混流应该叫做混音（音频流）混画（视频流）混流的过程包括解码、混流、编码和推流四个部分。混流这个环节包括做动冲，目的是把多路流进行画面对齐和音画同步，同时通过缓冲对抗网络抖动，以便混合成一路流以后能够达到良好的效果。在混流的过程中，难点是如何对抗网络抖动等不确定因素。</li>
+</ul>
+<h3 id="不混流的优势和劣势"><a href="#不混流的优势和劣势" class="headerlink" title="不混流的优势和劣势"></a>不混流的优势和劣势</h3><ul>
+<li><p>不混流的优势</p>
+<ul>
+<li>延迟低：不用混流，节省了混流消耗的时间，显著地降低了延迟</li>
+<li>成本低： 如果是在服务端进行混流，将会耗费计算资源。考虑到服务端计算资源比较昂贵，如果不用混流，将会节省宝贵的计算资源，显著地降低成本。虽然拉多流比起拉单流会消耗更多的带宽成本，但是拉多流节省计算资源成本，整体而言，成本是降低了。</li>
+<li>灵活性:在观众端，业务侧可以比较灵活的操控多路流，来满足多样化的业务需求。比如画中画大小画面相互切换，和对半分屏画面左右调换等效果，来提高观众端的用户体验。</li>
+</ul>
+</li>
+<li><p>不混流的劣势</p>
+<ul>
+<li>拉多流会消耗更多的带宽。多路流被从服务端推到CDN, 然后观众端从CDN拉多流，都会耗费比较多的带宽成本。对于带宽成本占了运营成本显著，的确是需要慎重考量的。</li>
+</ul>
+</li>
+<li><p>混流的优势</p>
+<ul>
+<li>成本：可以分为计算资源成本和带宽成本。由于预先做混流，因此计算资源成本会上去，但是由于只拉单流，因此带宽成本会下来。</li>
+<li>可录制：如果业务上有录制音视频流的需求，以备监管抽查或者观众回放的话，那么需要进行混流。如果不进行混流的话，录制的时候只能录制到其中一个路音视频流，也就是只能看到其中一个主播的画面。要录制全画面的话，必须要进行混流。</li>
+<li>易传播：如果业务上有通过音视频流地址链接(HLS)进行转发传播的需求，那么也需要进行混流，因为地址链接只会指向一路音视频流。如果不混流，使用转发的地址链接就只会播放出一个主播的音视频流。</li>
+</ul>
+</li>
+<li><p>混流的劣势</p>
+<ul>
+<li>高延迟：由于在做混流的过程中，需要做抖动缓冲和实时转码等计算处理，将会耗费时间，从而造成额外的延迟。</li>
+<li>不灵活：由于观众端拉单流观看，多路音视频流已经被混合成单流，所以观众端无法再灵活地对多流进行操控，比如切换画中画的主次画面。</li>
+<li>服务器计算成本高：由于混流需要额外的计算资源，这里会导致额外的运营成本。</li>
+</ul>
+</li>
+<li><p>服务端混流的优势</p>
+<ul>
+<li>低延迟</li>
+<li>计算资源可控</li>
+<li>网络带宽资源可控</li>
+<li>可控可扩展</li>
+</ul>
+</li>
+<li><p>服务端混流的劣势</p>
+<ul>
+<li>服务器计算成本高</li>
+<li>服务端压力大</li>
+</ul>
+</li>
+<li><p>混流工具: FFmpeg</p>
+<ul>
+<li>混流命令: <code>./ffmpeg -i “背景图” -i “rtmp://输入流1” -i “rtmp://输入流2” -filter_complex “nullsrc=size=1600x720 [base];[0:v] scale=1600x720 [main]; [1:v] crop=320:180:0:0 [photo1];[2:v] crop=320:180:0:0 [photo2];[base][main] overlay=x=0:y=0 [temp];[temp][photo1] overlay=x=1280:y=0 [temp1];[temp1][photo2] overlay=x=1280:y=180 [temp2]” -c:v libx264 -r 50 -bufsize 10M -f flv “rtmp://推流地址”</code></li>
+<li>录制命令: <code>./ffmpeg -i rtmp://混流地址 test.mp4</code></li>
+</ul>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/Peng__Chao/article/details/107716008">基于FFmpeg混流及录制rtmp直播流</a></p>
+</li>
+</ul>
+<h2 id="混音"><a href="#混音" class="headerlink" title="混音"></a>混音</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/121010029">实时音频的混音在视频直播中的技术原理和实践总结</a></li>
+<li>混音，顾名思义，就是把两路或者多路音频流混合在一起，形成一路音频流。实时音频混音，指的只是音频流的混合。</li>
+<li>混音的逻辑可以在终端设备上实现，也可以在服务器上实现，因此可以分为终端混音和云端混音。终端混音一般应用于背景配音，音乐伴奏等场景。云端混音可以是云端混流的一部分，主要目的是利用云端的计算能力去做多路音视频流的音画对齐，还有降低下行带宽成本；也可以做纯粹的云端混音，来实现合唱直播等场景的需求。</li>
+</ul>
+<hr>
+<h1 id="实现例子1"><a href="#实现例子1" class="headerlink" title="实现例子1"></a>实现例子1</h1><ul>
+<li>火爆的直播应用，你了解背后的技术架构吗？:<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/2ucFww9MEdsKbMO8Wepg1A">https://mp.weixin.qq.com/s/2ucFww9MEdsKbMO8Wepg1A</a></li>
+<li>音视频流采用了腾讯云的直播解决方案，而业务数据流（活动、题目、答案、弹幕、红包等）则采用了自研的长连接方案。</li>
+</ul>
+<h2 id="产品功能"><a href="#产品功能" class="headerlink" title="产品功能"></a>产品功能</h2><ul>
+<li>直播类应用在产品功能上基本是这两类：<ul>
+<li>1、直播的基础功能：连麦互动直播（支持多码率、多协议，多主播同框）、美颜特效、弹幕、IM聊天、点赞、屏幕共享等功能性需求，以及防盗链、涉黄涉政鉴别等非功能性需求。</li>
+<li>2、应用本身的个性化功能：比如答题场景中的发题目、作答、公布答案，电商场景中的商品展示、一键下单购买，网红直播场景中的礼物打赏。</li>
+</ul>
+</li>
+</ul>
+<h2 id="面临的技术挑战"><a href="#面临的技术挑战" class="headerlink" title="面临的技术挑战"></a>面临的技术挑战</h2><ul>
+<li>音视频处理及传输：涉及音视频编码、实时美颜、视频推流、CDN加速分发、终端适配和播放，流量统计等诸多技术点</li>
+<li>高带宽压力：按照标清视频的标准，观看直播的码流至少为1Mbps，如果100W用户在线，光视频流的出口带宽能达到976.56G bps。1条弹幕可达到130字节，1秒要滚屏20条弹幕，如果需要同时推送给100W用户，弹幕的出口带宽也将达到19.37G bps.  </li>
+<li>低延迟性要求：直播场景下如何整合视频流和业务数据流，做到声音、主播画面和题目同步，以保证用户体验</li>
+</ul>
+<h2 id="音视频处理及传输的方案选型"><a href="#音视频处理及传输的方案选型" class="headerlink" title="音视频处理及传输的方案选型"></a>音视频处理及传输的方案选型</h2><ul>
+<li>第三方支持方案：音视频处理及传输，可以使用腾讯云的直播解决方案。主持人侧：通过演播室的专业摄像设备，搭载腾讯云提供的obs推流软件，即可进行视频录制和推流。用户侧：APP端集成腾讯云的SDK，动态拿到推流地址后即可观看直播。</li>
+</ul>
+<h2 id="业务数据流的方案选型"><a href="#业务数据流的方案选型" class="headerlink" title="业务数据流的方案选型"></a>业务数据流的方案选型</h2><ul>
+<li>业务数据是指除音视频以外的，和答题应用场景相关的数据（比如题目、答案、弹幕、红包等）。腾讯云提供了两种可选方案：<ul>
+<li>1、题目预先设置好，直接由腾讯云的SDK通过音视频通道下发，打入直播流中。</li>
+<li>2、让题目先通过腾讯云的IM通道快速送达观众端APP，在观众端先缓存下来，等待播放器通知了预期的 NTP 时间戳之后，再把题目显示出来。</li>
+</ul>
+</li>
+<li>自研业务数据流通道。这样视频流和业务数据流会分两个通道下发，因为业务流相对视频流的数据量很小，只要能保证业务逻辑的处理速度和业务数据的下行速度，“音-画-题”的延迟是可以接受的。毕竟当时已经是4G时代，如果用户侧的网速不行，视频流可能都无法正常观看了。</li>
+</ul>
+<h3 id="长连接、高性能的网关服务器"><a href="#长连接、高性能的网关服务器" class="headerlink" title="长连接、高性能的网关服务器"></a>长连接、高性能的网关服务器</h3><ul>
+<li>（支持100W用户同时在线，20W并发答题，弹幕实时推送等要求），我们的技术选型是：Netty、ProtoBuf、WebSocket，选型理由：</li>
+<li>1、Netty：Netty是当时最流行的高性能和异步NIO框架，直播答题的业务场景中，涉及到题目下发、弹幕、下红包雨等非常多的推送场景，而且一场答题活动中，客户端和服务端的通信频繁，长连接比短连接在性能上更优。</li>
+<li>2、ProtoBuf：作为客户端和服务端的数据交换格式，PB是一种效率和兼容性都很优秀的二进制数据传输格式，在码流和序列化速度上明显优于JSON、XML、hessian等主流格式，同时支持向前向后兼容以及各种主流语言。</li>
+<li>3、WebSocket：是 HTML5 一种新的协议，用来实现客户端与服务器端的长连接通讯。<ul>
+<li>为什么使用WebSocket不使用TCP呢？TODO</li>
+</ul>
+</li>
+</ul>
+<h3 id="基于TCP长连接的通信架构"><a href="#基于TCP长连接的通信架构" class="headerlink" title="基于TCP长连接的通信架构"></a>基于TCP长连接的通信架构</h3><p><img src="/2022/05/04/20220504-%E7%9B%B4%E6%92%AD%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF%E6%A2%B3%E7%90%86%E6%80%BB%E7%BB%93/%E5%9F%BA%E4%BA%8ETCP%E9%95%BF%E8%BF%9E%E6%8E%A5%E7%9A%84%E9%80%9A%E4%BF%A1%E6%9E%B6%E6%9E%84.png"></p>
+<ul>
+<li>上面的通信架构用于业务数据流的传输，流程如下：<ul>
+<li>1、客户端使用websocket与服务端进行通讯，用户进入答题直播间时建立连接，退出直播间时断开连接。</li>
+<li>2、Nginx对websocket做负载均衡。</li>
+<li>3、TCP网关基于netty实现，用于维持长连接和转发业务请求，不负责具体的业务逻辑，它和下层业务系统（答题系统）通过RPC接口进行交互，主要考虑后续其他业务可以复用TCP网关层，所以将业务下沉。客户端和网关之间通过心跳机制保证连接的有效性以及检测僵尸连接。</li>
+<li>4、消息推送（比如弹幕、下发题目、公布答案等诸多场景）由下层业务（答题系统）通过MQ通知TCP网关，再由TCP网关推送给客户端。</li>
+</ul>
+</li>
+</ul>
+<h3 id="长连接通信中的数据传输格式定义"><a href="#长连接通信中的数据传输格式定义" class="headerlink" title="长连接通信中的数据传输格式定义"></a>长连接通信中的数据传输格式定义</h3><ul>
+<li>客户端请求消息的格式</li>
+<li>客户端响应消息的格式</li>
+</ul>
+<h2 id="直播架构简单总结"><a href="#直播架构简单总结" class="headerlink" title="直播架构简单总结:"></a>直播架构简单总结:</h2><ul>
+<li>1、音视频编码和传输，这些基础性的直播功能，除非公司有钱有实力，否则建议直接用腾讯云或者阿里云的解决方案（斗鱼、蘑菇街这些知名的直播应用都还用的腾讯云）。</li>
+<li>2、架构设计重点放在应用本身，根据直播应用的用户量级和业务特性先确定通信架构（长连接还是短链接，或者两者混用）。</li>
+</ul>
+<h1 id="实现例子2"><a href="#实现例子2" class="headerlink" title="实现例子2"></a>实现例子2</h1><ul>
+<li>视频相亲背后的音视频方案 （多人连麦）</li>
+<li><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1579968">https://cloud.tencent.com/developer/article/1579968</a></li>
+<li>[互动直播相亲交友源码低成本开发搭建如何处理音视频技术难点](<a target="_blank" rel="noopener" href="https://www.bilibili.com/read/cv7985514/">https://www.bilibili.com/read/cv7985514/</a> 出处：bilibili)</li>
+</ul>
+<ol>
+<li>开发成本高、周期长<ul>
+<li>实时音视频技术栈包含音视频编解码、音视频前后处理、信令、网络传输、高并发、高可用、系统监控、多个平台的终端开发，技术储备和开发成本是非常大的挑战。</li>
+</ul>
+</li>
+<li>弱网环境下的音视频质量<ul>
+<li>现实的网络环境非常复杂、用户使用中小网络运营商的服务，存在着非常多的不确定性，或多或少的丢包、不确定的网络延时和抖动。</li>
+</ul>
+</li>
+<li>终端极致的性能要求<ul>
+<li>多人同屏视频连麦的直播间，面对终端有限的算力、内存，实时音视频终端软件架构的设计会对通信的质量、时延都带来影响。</li>
+</ul>
+</li>
+</ol>
+<ul>
+<li><p>一套互动直播相亲交友程序源码主播端到观众端有下面几个步骤：</p>
+<ul>
+<li>1、视音频信号实时采集；</li>
+<li>2、经过预处理和音视频编码；</li>
+<li>3、封装发送到CDN源站；</li>
+<li>4、播放端从CDN边缘拉到数据；</li>
+<li>5、然后进行解码；</li>
+<li>6、经过音视频同步之后；</li>
+<li>7、给观众展现出来。</li>
+</ul>
+</li>
+<li><p>互动直播相亲交友系统的主要技术难点在于：</p>
+<ul>
+<li>1）低延迟互动：保证主播和互动观众之间能够实时互动，两者之间就像电话沟通，因此必须保证两者能在秒级以内听到对方的声音，看到对方的视频；</li>
+<li>2）音画同步：互动直播中对音画同步的需求和单向直播中类似，只不过互动直播中的延迟要求更高，必须保证在音视频秒级传输情况下的秒级同步。</li>
+<li>3）音视频实时合成：其他观众需要实时观看到对话结果，因此需要在客户端或者服务端将画面和声音实时合成，然后以低成本高品质的方式传输观众端。</li>
+</ul>
+</li>
+</ul>
+<h1 id="实现实例3"><a href="#实现实例3" class="headerlink" title="实现实例3"></a>实现实例3</h1><ul>
+<li><p>会议系统</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://www.juhe.cn/news/index/id/1568">https://www.juhe.cn/news/index/id/1568</a></p>
+</li>
+<li><p>缺点：</p>
+<ul>
+<li>会议系统很大程度上依赖专线服务，成本过高；</li>
+<li>会议系统很多不能在服务器做转码合成视频，对主播设备依赖过大。因为合图视频主要是由主播端编码、推送到CDN，一部分需要主播设备比较高端，另外需要主播网络比较好，否则依然解决不了连麦问题</li>
+</ul>
+</li>
+<li><p>RTC技术（WebRTC）</p>
+</li>
+</ul>
+<h2 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://www.zhihu.com/answer/2121203968">为何一直推荐WebRTC？</a></li>
+</ul>
+<h1 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h1><ul>
+<li>播放网络视频，通常解析库我们可以有多个选择，如FFMPEG，Daniulive SDK 或者 vitamio。</li>
+<li>[H5 直播流播放器 Jessibuca]</li>
+</ul>
+<h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><ul>
+<li>火爆的直播应用，你了解背后的技术架构吗？:<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/2ucFww9MEdsKbMO8Wepg1A">https://mp.weixin.qq.com/s/2ucFww9MEdsKbMO8Wepg1A</a></li>
+<li>直播新红海，狼人杀火爆背后的语音视频技术:<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/33092831">https://zhuanlan.zhihu.com/p/33092831</a></li>
+<li>实时视频通话超低延迟架构的思考与实践：<a target="_blank" rel="noopener" href="https://blog.csdn.net/zego_0616/article/details/79651875">https://blog.csdn.net/zego_0616/article/details/79651875</a></li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/04/29/20220429-hou-duan-ji-zhu-si-wei-dao-tu/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2022/04/29/20220429-hou-duan-ji-zhu-si-wei-dao-tu/" itemprop="url">后端技术思维导图</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-04-29T10:05:28+08:00">
+                2022-04-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2022/04/29/20220429-hou-duan-ji-zhu-si-wei-dao-tu/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2022/04/29/20220429-hou-duan-ji-zhu-si-wei-dao-tu/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/04/28/20220408-elasticsearch-xue-xi-ji-lu/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2022/04/28/20220408-elasticsearch-xue-xi-ji-lu/" itemprop="url">elasticsearch学习记录</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-04-28T16:36:10+08:00">
+                2022-04-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2022/04/28/20220408-elasticsearch-xue-xi-ji-lu/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2022/04/28/20220408-elasticsearch-xue-xi-ji-lu/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>基于ES 7.10下的简要总结</p>
+<h1 id="一、官方文档链接"><a href="#一、官方文档链接" class="headerlink" title="一、官方文档链接"></a>一、官方文档链接</h1><ul>
+<li>文档主页：<a target="_blank" rel="noopener" href="https://www.elastic.co/guide/en/elasticsearch/reference/7.10/index.html">https://www.elastic.co/guide/en/elasticsearch/reference/7.10/index.html</a></li>
+<li>rest api: <a target="_blank" rel="noopener" href="https://www.elastic.co/guide/en/elasticsearch/reference/7.10/rest-apis.html">https://www.elastic.co/guide/en/elasticsearch/reference/7.10/rest-apis.html</a></li>
+<li>Java rest high client: <a target="_blank" rel="noopener" href="https://www.elastic.co/guide/en/elasticsearch/client/java-rest/7.10/java-rest-high.html">https://www.elastic.co/guide/en/elasticsearch/client/java-rest/7.10/java-rest-high.html</a></li>
+</ul>
+<h1 id="二、基础简要总结"><a href="#二、基础简要总结" class="headerlink" title="二、基础简要总结"></a>二、基础简要总结</h1><h2 id="1、REST-Client"><a href="#1、REST-Client" class="headerlink" title="1、REST Client"></a>1、REST Client</h2><ul>
+<li><p>Java Low Level REST Client: 低级别的REST客户端，通过http与集群交互，用户需自己编组请求JSON串，及解析响应JSON串。兼容所有ES版本。</p>
+</li>
+<li><p>Java High Level REST Client: 高级别的REST客户端，基于低级别的REST客户端，增加了编组请求JSON串、解析响应JSON串等相关api。使用的版本需要保持和ES服务端的版本一致，否则会有版本问题。</p>
+</li>
+<li><p>ES 7.0版本中弃用TransportClient客户端，且在8.0版本中完全移除它</p>
+</li>
+</ul>
+<h2 id="2、文档元数据"><a href="#2、文档元数据" class="headerlink" title="2、文档元数据"></a>2、文档元数据</h2><ul>
+<li>一个文档不仅仅包含它的数据 ，也包含 元数据 —— 有关 文档的信息。 三个必须的元数据元素如下：<ul>
+<li>（1）_index<br>  文档在哪存放 （粗暴认为相当于Mysql的database）</li>
+<li>（2）_type<br>  文档表示的对象类别 （粗暴认为相当于Mysql的table）（在ES7版本开始已经被打上废弃标识）<br>  -（3）_id<br>  文档唯一标识</li>
+<li>（4）其他预定义字段（通常以_开头）<br>    - <code>_timestamp</code> 记录文档索引时间,<code>_ttl</code> 存活时间,  <code>_source</code> 原始JSON文档， <code>_all</code> 所有字段<br>    - <code>_size</code>等</li>
+</ul>
+</li>
+</ul>
+<h3 id="相关链接"><a href="#相关链接" class="headerlink" title="相关链接"></a>相关链接</h3><ul>
+<li>ES7为什么废弃type类型：<a target="_blank" rel="noopener" href="https://blog.csdn.net/numbbe/article/details/109656567">https://blog.csdn.net/numbbe/article/details/109656567</a></li>
+</ul>
+<h2 id="3、索引的分片数"><a href="#3、索引的分片数" class="headerlink" title="3、索引的分片数"></a>3、索引的分片数</h2><ul>
+<li>（1）一个分片可以是 主分片或者 副本分片。 索引内任意一个文档都归属于一个主分片，所以主分片的数目决定着索引能够保存的最大数据量。<br>(索引包含多个主分片,主分片包含多个文档), 技术上来说，一般一个主分片最大能够存储 Integer.MAX_VALUE - 128 个文档；</li>
+<li>（2）一个副本分片只是一个主分片的拷贝。 副本分片作为硬件故障时保护数据不丢失的冗余备份，并为搜索和返回文档等读操作提供服务。<br>在索引建立的时候就已经确定了主分片数，但是副本分片数可以随时修改；</li>
+<li>（3）索引在默认情况下会被分配5个主分片,但是可以在创建时修改；<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">PUT /blogs</span><br><span class="line">&#123;</span><br><span class="line">   &quot;settings&quot; : &#123;</span><br><span class="line">      &quot;number_of_shards&quot; : 3,</span><br><span class="line">      &quot;number_of_replicas&quot; : 1</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<ul>
+<li>3个主分片和一份副本（每个主分片拥有一个副本分片）</li>
+<li>拥有6个分片（3个主分片和3个副本分片）的索引可以最大扩容到6个节点，每个节点上存在一个分片，并且每个分片拥有所在节点的全部资源。</li>
+<li>如果只是在相同节点数目的集群上增加更多的副本分片并不能提高性能，因为每个分片从节点上获得的资源会变少。 你需要增加更多的硬件资源来提升吞吐量。<br>但是更多的副本分片数提高了数据冗余量 。</li>
+</ul>
+<h2 id="4、索引查询路由"><a href="#4、索引查询路由" class="headerlink" title="4、索引查询路由"></a>4、索引查询路由</h2><ul>
+<li><p>路由一个文档到一个分片中</p>
+</li>
+<li><p>Elasticsearch 如何知道一个文档应该存放到哪个分片中呢？</p>
+<ul>
+<li><code>shard = hash(routing) % number_of_primary_shards</code></li>
+</ul>
+</li>
+<li><p>routing 是一个可变值，默认是文档的 <code>_id</code></p>
+<ul>
+<li>这就解释了为什么要在创建索引的时候就确定好主分片的数量 并且永远不会改变这个数量：因为如果数量变化了，</li>
+<li>那么所有之前路由的值都会无效，文档也再也找不到了。</li>
+</ul>
+</li>
+</ul>
+<h2 id="5、分析器（Analyzer）和分词器（Tokenizer）"><a href="#5、分析器（Analyzer）和分词器（Tokenizer）" class="headerlink" title="5、分析器（Analyzer）和分词器（Tokenizer）"></a>5、分析器（Analyzer）和分词器（Tokenizer）</h2><ul>
+<li>Elasticsearch这种全文搜索引擎，会用某种算法对建立的文档进行分析，从文档中提取出有效信息（Token）</li>
+<li>对于es来说，有内置的分析器（Analyzer）和分词器（Tokenizer）</li>
+<li>Es中也支持非常多的分词器：<ul>
+<li>Standard 默认的分词器根据 Unicode 文本分割算法，以单词边界分割文本。它删除大多数标点符号。它是大多数语言的最佳选择。</li>
+<li>Letter 遇到非字母时分割文本</li>
+<li>Lowercase 类似 letter ，遇到非字母时分割文本，同时会将所有分割后的词元转为小写</li>
+<li>Whitespace 遇到空白字符时分割位文本</li>
+</ul>
+</li>
+</ul>
+<h2 id="6、文档更新并发控制"><a href="#6、文档更新并发控制" class="headerlink" title="6、文档更新并发控制"></a>6、文档更新并发控制</h2><ul>
+<li>更新文档：POST，可以发送部分文档进行更新; upsert (更新或新增文档)；使用脚本来更新文档（不常用）</li>
+<li>通过版本来实现并发控制（可以取时间戳作为version参数）</li>
+<li>版本冲突时自动重试更新操作（retry_on_conflict 参数）</li>
+<li>更新文档其实是先删除旧的文档，再索引新的文档。</li>
+</ul>
+<h2 id="7、文档查询"><a href="#7、文档查询" class="headerlink" title="7、文档查询"></a>7、文档查询</h2><ul>
+<li>在 Elasticsearch 中， 每个字段的所有数据 都是 默认被索引的。 即每个字段都有为了快速检索设置的专用倒排索引</li>
+<li>返回文档的一部分: 单个字段能用 <code>_source</code> 参数请求得到，多个字段也能使用逗号分隔的列表来指定</li>
+</ul>
+<h2 id="8、搜索提示"><a href="#8、搜索提示" class="headerlink" title="8、搜索提示"></a>8、搜索提示</h2><ul>
+<li>Elasticsearch Suggester- Google在用户刚开始输入的时候是自动补全的，而当输入到一定长度，如果因为单词拼写错误无法补全，就开始尝试提示相似的词。</li>
+<li>那么类似的功能在Elasticsearch里如何实现呢？ 答案就在Suggesters API。 Suggesters基本的运作原理是将输入的文本分解为token，然后在索引的字典里查找相似的term并返回。</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul>
+<li>Term Suggester，基于编辑距离，对analyze过的单个term去提供建议，并不会考虑多个term&#x2F;词组之间的关系。</li>
+<li>Phrase Suggester，在Term Suggester的基础上，通过ngram以词组为单位返回建议。</li>
+<li>Completion Suggester，FST数据结构，类似Trie树，并非使用倒排索引，只能前缀匹配，快速返回</li>
+<li>Context Suggester，在Completion Suggester的基础上，用于filter和boost</li>
+</ul>
+<h3 id="相关链接-1"><a href="#相关链接-1" class="headerlink" title="相关链接"></a>相关链接</h3><ul>
+<li>elasticsearch suggest： <a target="_blank" rel="noopener" href="https://www.elastic.co/guide/en/elasticsearch/reference/7.10/search-suggesters.html">https://www.elastic.co/guide/en/elasticsearch/reference/7.10/search-suggesters.html</a></li>
+<li>elasticsearch Term Suggester ：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/Neeo/articles/10694969.html">https://www.cnblogs.com/Neeo/articles/10694969.html</a></li>
+<li>elasticsearch Phrase Suggester： <a target="_blank" rel="noopener" href="https://blog.csdn.net/UbuntuTouch/article/details/103952092">https://blog.csdn.net/UbuntuTouch/article/details/103952092</a></li>
+<li>elasticsearch completion Suggester: completion ：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/8a6b80813a34">https://www.jianshu.com/p/8a6b80813a34</a></li>
+</ul>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><h3 id="mapping中的store属性"><a href="#mapping中的store属性" class="headerlink" title="mapping中的store属性"></a>mapping中的store属性</h3><ul>
+<li>Elasticsearch 理解mapping中的store属性：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/sanduzxcvbnm/p/12157453.html">https://www.cnblogs.com/sanduzxcvbnm/p/12157453.html</a></li>
+</ul>
+<h3 id="searchType"><a href="#searchType" class="headerlink" title="searchType"></a>searchType</h3><ul>
+<li>QUERY_THEN_FETCH,QUERY_AND_FEATCH,DFS_QUERY_THEN_FEATCH和DFS_QUERY_AND_FEATCH</li>
+<li>总结一下， 从性能考虑 QUERY_AND_FETCH 是最快的， DFS_QUERY_THEN_FETCH 是最慢的。从搜索的准确度来说， DFS 要比非 DFS 的准确度更高。</li>
+</ul>
+<h4 id="相关链接-2"><a href="#相关链接-2" class="headerlink" title="相关链接"></a>相关链接</h4><ul>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/ningskyer/articles/5984346.html">https://www.cnblogs.com/ningskyer/articles/5984346.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000015409044">https://segmentfault.com/a/1190000015409044</a></li>
+</ul>
+<h1 id="三、DSL全文搜索"><a href="#三、DSL全文搜索" class="headerlink" title="三、DSL全文搜索"></a>三、DSL全文搜索</h1><ul>
+<li>Elasticsearch Query DSL之全文检索(Full text queries) ： <a target="_blank" rel="noopener" href="https://blog.csdn.net/prestigeding/article/details/102295397">https://blog.csdn.net/prestigeding/article/details/102295397</a></li>
+</ul>
+<h2 id="1、match-query"><a href="#1、match-query" class="headerlink" title="1、match query"></a>1、match query</h2><ul>
+<li>标准的全文检索模式，包含模糊匹配、前缀或近似匹配等。<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&quot;query&quot;: &#123;</span><br><span class="line">&quot;match&quot; : &#123;</span><br><span class="line">&quot;message&quot; : &quot;this out Elasticsearch&quot;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">SearchSourceBuilder</span> <span class="variable">sourceBuilder</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SearchSourceBuilder</span>();</span><br><span class="line">sourceBuilder.query(QueryBuilders.matchQuery(<span class="string">&quot;message&quot;</span>, <span class="string">&quot;this out elasticsearch&quot;</span>));</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="2-match-phrase-query"><a href="#2-match-phrase-query" class="headerlink" title="2. match_phrase query"></a>2. match_phrase query</h2><ul>
+<li>与match query类似，但只是用来精确匹配的短语。</li>
+<li>如果查询字符串为 quick fox，分词后的词根序列为 quick fox，与原词根序列不匹配。如果指定slop属性，设置为1，则匹配，其表示每一个词根直接跳过一个词根形成新的序列，与搜索词根进行比较，是否匹配。</li>
+</ul>
+<h2 id="3-match-phrase-prefix-query"><a href="#3-match-phrase-prefix-query" class="headerlink" title="3. match_phrase_prefix query"></a>3. match_phrase_prefix query</h2><ul>
+<li>与match_phrase查询类似，但是在最后一个单词上执行通配符搜索。<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">GET /_search</span><br><span class="line">&#123;</span><br><span class="line">    &quot;query&quot;: &#123;</span><br><span class="line">        &quot;match_phrase_prefix&quot; : &#123;</span><br><span class="line">            &quot;message&quot; : &#123;</span><br><span class="line">                &quot;query&quot; : &quot;quick brown f&quot;,</span><br><span class="line">                &quot;max_expansions&quot; : 10</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>默认查找50组，受参数max_expansions控制，在使用时请设置合理的max_expansions，该值越大，查询速度将会变的更慢。该技术主要完成及时搜索，指用户在输入过程中，就根据前缀返回查询结果，随着用户输入的字符越多，查询的结果越接近用户的需求。</li>
+</ul>
+<h2 id="4-multi-match-query-（多字段查询）"><a href="#4-multi-match-query-（多字段查询）" class="headerlink" title="4. multi_match query （多字段查询）"></a>4. multi_match query （多字段查询）</h2><h3 id="type-属性"><a href="#type-属性" class="headerlink" title="type 属性"></a>type 属性</h3><ul>
+<li>指定multi_query内部的执行方式，取值如下：best_fields、most_fields、cross_fields、phrase、phrase_prefix （5种）。</li>
+</ul>
+<h3 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h3><ul>
+<li><p>best_fields 按照match检索，所有字段单独计算得分并取最高分的field为最终_score，虽然是默认值，但不建议使用，数据量上来后查询性能会下降</p>
+</li>
+<li><p>most_fields 按照match检索，融合所有field得分为最终_score</p>
+</li>
+<li><p>cross_fields 将fields中的所有字段融合成一个大字段进行match检索，此时要求所有字段使用相同分析器</p>
+</li>
+<li><p>phrase 按照match_phrase检索，默认slop为0，执行短语精确匹配，所以即便设置 minimum_should_match 也无效; 取最高字段得分</p>
+</li>
+<li><p>phrase_prefix 按照match_phrase_prefix检索，滑动步长slop默认为0；取最高字段得分</p>
+</li>
+<li><p>bool_prefix 按照match_bool_prefix检索</p>
+</li>
+<li><p>slop参数告诉match_phrase查询词条能够相隔多远时仍然将文档视为匹配。相隔多远的意思是，你需要移动一个词条多少次来让查询和文档匹配？<br>我们以一个简单的例子来阐述这个概念。为了让查询quick fox能够匹配含有quick brown fox的文档，我们需要slop的值为1</p>
+</li>
+</ul>
+<h3 id="1、best-fields"><a href="#1、best-fields" class="headerlink" title="1、best_fields"></a>1、best_fields</h3><ul>
+<li>type默认值，只要其中一个字段匹配则匹配文档（match query)。但是使用最佳匹配的字段的score来表示文档的分数，会影响文档的排序。</li>
+</ul>
+<h3 id="2、most-fields"><a href="#2、most-fields" class="headerlink" title="2、most_fields"></a>2、most_fields</h3><ul>
+<li><p>查找匹配任何字段并结合每个字段的_score的文档，Elasticsearch会为每个字段生成一个match查询，然后将它们包含在一个bool查询中。其算法的核心是各个字段的评分相加作为文档的最终得分参与排序。</p>
+</li>
+<li><p>其建议场景是不同字段对同一关键字的存储维度不一样，例如字段一可能包含同义词、词干、变音符等；字段二可能包含原始词根，这种情况下综合各个字段的评分就会显的更加具有相关性。</p>
+</li>
+</ul>
+<h3 id="3、phrase、phrase-prefix"><a href="#3、phrase、phrase-prefix" class="headerlink" title="3、phrase、phrase_prefix"></a>3、phrase、phrase_prefix</h3><ul>
+<li>这两种类型score的计算采用best_fields方法，但是其查询方式分别为match_phrase、match_phrase_prefix</li>
+</ul>
+<h3 id="4、cross-fields"><a href="#4、cross-fields" class="headerlink" title="4、cross_fields"></a>4、cross_fields</h3><ul>
+<li>交叉字段，对于需要匹配多个字段的结构化文档，cross_fields类型特别有用。例如，在查询“Will Smith”的first_name和last_name字段时，在一个字段中可能会有“Will”，而在另一个字段中可能会有“Smith”。这听起来很象most_fields，cross_fields与most_fields的两个明显区别如下：</li>
+<li>对于opreator、minimum_should_match的作用域不一样，most_fields是针对字段的，（遍历每个字段，然后遍历查询词根列表，进行逐一匹配），而cross_fields是针对词根的，即遍历词根列表，搜索范围是所有字段。</li>
+<li>相关性的考量不相同，cross_fields重在这个交叉匹配，对于一组查询词根，一部分出现在其中一个字段，另外一部分出现在另外一个字段中，其相关性计算评分将更高。</li>
+</ul>
+<h3 id="tie-breaker属性"><a href="#tie-breaker属性" class="headerlink" title="tie_breaker属性"></a>tie_breaker属性</h3><ul>
+<li>默认情况下，每个词汇混合查询将使用组中任何字段返回的最佳分数，然后将这些分数相加，以给出最终分数。tie_breaker参数可以改变每项混合查询的默认行为。</li>
+<li>tie_breaker可选值如下：<ul>
+<li>0.0 ： 默认行为，使用最佳字段的score。</li>
+<li>1.0 ：所有匹配字段socre的和。</li>
+<li>0.0 ~ 1.0 : 使用最佳匹配字段的score + (其他匹配字段score) * tie_breaker。</li>
+</ul>
+</li>
+</ul>
+<h3 id="most-fields-vs-cross-fields"><a href="#most-fields-vs-cross-fields" class="headerlink" title="most_fields vs cross_fields"></a>most_fields vs cross_fields</h3><ul>
+<li><p>most_fields: Finds documents which match any field and combines the <code>_score</code> from each field.</p>
+</li>
+<li><p>cross_fields: Treats fields with the same analyzer as though they were one big field. Looks for each word in any field.</p>
+</li>
+<li><p>Elasticsearch搜索之cross_fields分析: <a target="_blank" rel="noopener" href="https://www.cnblogs.com/clonen/p/6674939.html">https://www.cnblogs.com/clonen/p/6674939.html</a></p>
+</li>
+<li><p>cross_fields类型采用了一种以词条为中心(Term-centric)的方法，这种方法和best_fields及most_fields采用的以字段为中心(Field-centric)的方法有很大的区别。</p>
+</li>
+</ul>
+<h3 id="most-field-vs-best-field"><a href="#most-field-vs-best-field" class="headerlink" title="most_field vs best_field"></a>most_field vs best_field</h3><ul>
+<li><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/lovezhr/p/14421872.html">https://www.cnblogs.com/lovezhr/p/14421872.html</a></p>
+</li>
+<li><p>best-fields策略，主要是说将某一个field匹配尽可能多的关键词的doc优先返回回来</p>
+</li>
+<li><p>most-fields策略，主要是说尽可能返回更多field匹配到某个关键词的doc，优先返回回来</p>
+</li>
+<li><p>两者差异</p>
+<ul>
+<li>（1）best_fields，是对多个field进行搜索，挑选某个field匹配度最高的那个分数，同时在多个query最高分相同的情况下，在一定程度上考虑其他query的分数。简单来说，你对多个field进行搜索，就想搜索到某一个field尽可能包含更多关键字的数据<ul>
+<li>优点：通过best_fields策略，以及综合考虑其他field，还有minimum_should_match支持，可以尽可能精准地将匹配的结果推送到最前面</li>
+<li>缺点：除了那些精准匹配的结果，其他差不多大的结果，排序结果不是太均匀，没有什么区分度了</li>
+<li>实际的例子：百度之类的搜索引擎，最匹配的到最前面，但是其他的就没什么区分度了</li>
+</ul>
+</li>
+<li>（2）most_fields，综合多个field一起进行搜索，尽可能多地让所有fieldquery参与到总分数的计算中来，此时就会是个大杂烩，出现类似best_fields案例最开始的那个结果，结果不一定精准，某一个document的一个field包含更多的关键字，但是因为其他document有更多field匹配到了，所以排在了前面；所以需要建立类似sub_title.std这样的field，尽可能让某一个field精准匹配query string，贡献更高的分数，将更精准匹配的数据排到前面<ul>
+<li>优点：将尽可能匹配更多field的结果推送到最前面，整个排序结果是比较均匀的</li>
+<li>缺点：可能那些精准匹配的结果，无法推送到最前面</li>
+<li>实际的例子：wiki，明显的most_fields策略，搜索结果比较均匀，但是的确要翻好几页才能找到最匹配的结果</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="相关链接-3"><a href="#相关链接-3" class="headerlink" title="相关链接"></a>相关链接</h4><ul>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/prestigeding/article/details/102295397">https://blog.csdn.net/prestigeding/article/details/102295397</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/2a27b4985331">https://www.jianshu.com/p/2a27b4985331</a></li>
+</ul>
+<h2 id="5-common-terms-query"><a href="#5-common-terms-query" class="headerlink" title="5. common terms query"></a>5. common terms query</h2><ul>
+<li>相比match query，消除停用词与高频词对相关度的影响。</li>
+<li>定位：排除停用词或高频词对文档的匹配影响。提高文档匹配的精确度，同时不对性能产生影响。</li>
+</ul>
+<h2 id="6-query-string-query"><a href="#6-query-string-query" class="headerlink" title="6. query_string query"></a>6. query_string query</h2><ul>
+<li><p>查询字符串方式。query_string查询解析器支持对查询字符串按照操作符进行切割，每个部分独立分析</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">GET /_search</span><br><span class="line">&#123;</span><br><span class="line">    &quot;query&quot;: &#123;</span><br><span class="line">        &quot;query_string&quot; : &#123;</span><br><span class="line">            &quot;default_field&quot; : &quot;content&quot;,</span><br><span class="line">            &quot;query&quot; : &quot;(new york city) OR (big apple)&quot;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>多字段支持（multi field）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">GET /_search</span><br><span class="line">&#123;</span><br><span class="line">    &quot;query&quot;: &#123;</span><br><span class="line">        &quot;query_string&quot; : &#123;</span><br><span class="line">            &quot;fields&quot; : [&quot;content&quot;, &quot;name&quot;],</span><br><span class="line">            &quot;query&quot; : &quot;this AND that&quot;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>其含义类似于：“query”: “(content:this OR name:this) AND (content:that OR name:that)”。</p>
+</li>
+<li><p>同时query_string(查询字符串)模式同样支持match_query等查询对应的参数，其工作机制一样</p>
+</li>
+</ul>
+<h2 id="7-simple-query-string-query"><a href="#7-simple-query-string-query" class="headerlink" title="7. simple_query_string query"></a>7. simple_query_string query</h2><ul>
+<li>简单查询字符串方式</li>
+<li>使用SimpleQueryParser解析上下文的查询。与常规的query_string查询不同，simple_query_string查询永远不会抛出异常，并丢弃查询的无效部分</li>
+</ul>
+<h2 id="其他-1"><a href="#其他-1" class="headerlink" title="其他"></a>其他</h2><ul>
+<li>match_all 查询</li>
+<li>match 查询</li>
+<li>multi_match 查询</li>
+<li>range 查询</li>
+<li>term 查询</li>
+<li>terms 查询</li>
+<li>exists 查询</li>
+<li>missing 查询</li>
+</ul>
+<ul>
+<li>bool 查询<ul>
+<li>must<br>  文档 必须 匹配这些条件才能被包含进来。</li>
+<li>must_not<br>  文档 必须不 匹配这些条件才能被包含进来。</li>
+<li>should<br>  如果满足这些语句中的任意语句，将增加 _score ，否则，无任何影响。它们主要用于修正每个文档的相关性得分。</li>
+<li>filter<br>  必须 匹配，但它以不评分、过滤模式来进行。这些语句对评分没有贡献，只是根据过滤标准来排除或包含文档。<br>  如果没有 must 语句，那么至少需要能够匹配其中的一条 should 语句。但，如果存在至少一条 must 语句，则对 should 语句的匹配没有要求。</li>
+</ul>
+</li>
+</ul>
+<h1 id="四、扩展"><a href="#四、扩展" class="headerlink" title="四、扩展"></a>四、扩展</h1><h2 id="1、索引别名和零停机"><a href="#1、索引别名和零停机" class="headerlink" title="1、索引别名和零停机"></a>1、索引别名和零停机</h2><ul>
+<li>重建索引的问题是必须更新应用中的索引名称。 索引别名就是用来解决这个问题的。</li>
+<li>索引 别名 就像一个快捷方式或软连接，可以指向一个或多个索引，也可以给任何一个需要索引名的API来使用。</li>
+<li>在应用中使用别名而不是索引名。然后就可以在任何时候重建索引。</li>
+<li>准备好数据才能切换。</li>
+<li>新增新字段不需要重建索引。</li>
+</ul>
+<h3 id="重新索引数据"><a href="#重新索引数据" class="headerlink" title="重新索引数据"></a>重新索引数据</h3><ul>
+<li>尽管可以增加新的类型到索引中，或者增加新的字段到类型中，但是不能添加新的分析器或者对现有的字段做改动。 如果你那么做的话，结果就是那些已经被索引的数据就不正确， 搜索也不能正常工作。</li>
+<li>对现有数据的这类改变最简单的办法就是重新索引：用新的设置创建新的索引并把文档从旧的索引复制到新的索引。</li>
+<li>为了有效的重新索引所有在旧的索引中的文档，用 scroll 从旧的索引检索批量文档 ， 然后用 bulk API 把文档推送到新的索引中。</li>
+<li>(从Elasticsearch v2.3.0开始， Reindex API 被引入。它能够对文档重建索引而不需要任何插件或外部工具。)</li>
+</ul>
+<h3 id="使用reindex-api将旧索引数据导入新索引"><a href="#使用reindex-api将旧索引数据导入新索引" class="headerlink" title="使用reindex api将旧索引数据导入新索引"></a>使用reindex api将旧索引数据导入新索引</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://www.elastic.co/guide/en/elasticsearch/reference/7.10/docs-reindex.html">https://www.elastic.co/guide/en/elasticsearch/reference/7.10/docs-reindex.html</a></li>
+<li>reindex的底层是scroll实现<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">POST _reindex</span><br><span class="line">&#123;</span><br><span class="line"> &quot;source&quot;: &#123;</span><br><span class="line">  &quot;index&quot;: &quot;song.20220425_3&quot;</span><br><span class="line"> &#125;,</span><br><span class="line"> &quot;dest&quot;: &#123;</span><br><span class="line">  &quot;index&quot;: &quot;song.20220425_4&quot;</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="新索引同时在写数据，如何防止冲突？"><a href="#新索引同时在写数据，如何防止冲突？" class="headerlink" title="新索引同时在写数据，如何防止冲突？"></a>新索引同时在写数据，如何防止冲突？</h3><ul>
+<li>默认情况下，当发生 version conflict 的时候，_reindex 会被 abort，任务终止【此时数据还没有 reindex 完成】，在返回体中的 failures 指标中会包含冲突的数据【有时候数据会非常多】，除非把 conflicts 设置为 proceed。</li>
+<li>（1）只创建目标索引中缺少的文档  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">POST _reindex</span><br><span class="line">&#123;</span><br><span class="line">&quot;source&quot;: &#123;</span><br><span class="line">&quot;index&quot;: &quot;pigg_test&quot;</span><br><span class="line">&#125;,</span><br><span class="line">&quot;dest&quot;: &#123;</span><br><span class="line">&quot;index&quot;: &quot;pigg_test2&quot;,</span><br><span class="line">&quot;op_type&quot;: &quot;create&quot;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>（2）版本高的才复制<ul>
+<li>external 等同 external_gt</li>
+<li><a target="_blank" rel="noopener" href="https://www.elastic.co/guide/en/elasticsearch/reference/7.10/docs-index_.html#index-version-types">https://www.elastic.co/guide/en/elasticsearch/reference/7.10/docs-index_.html#index-version-types</a>  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">POST _reindex</span><br><span class="line">&#123;</span><br><span class="line">&quot;source&quot;: &#123;</span><br><span class="line">&quot;index&quot;: &quot;twitter&quot;</span><br><span class="line">&#125;,</span><br><span class="line">&quot;dest&quot;: &#123;</span><br><span class="line">&quot;index&quot;: &quot;new_twitter&quot;,</span><br><span class="line">&quot;version_type&quot;: &quot;external&quot;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+<h3 id="如何提升迁移效率？"><a href="#如何提升迁移效率？" class="headerlink" title="如何提升迁移效率？"></a>如何提升迁移效率？</h3><ul>
+<li>默认情况下，_reindex使用1000进行批量操作，您可以在source中调整batch_size。</li>
+</ul>
+<h3 id="如何查看执行进度？"><a href="#如何查看执行进度？" class="headerlink" title="如何查看执行进度？"></a>如何查看执行进度？</h3><ul>
+<li>默认执行同步返回结果的。</li>
+</ul>
+<h4 id="异步执⾏"><a href="#异步执⾏" class="headerlink" title="异步执⾏"></a>异步执⾏</h4><ul>
+<li>如果 reindex 时间过⻓，建议加上 wait_for_completion&#x3D;false 的参数条件，这样 reindex 将直接返回 taskId。<pre>
+POST /_reindex?wait_for_completion=false
+  {
+      "source": {
+          "index": "blog"
+      },
+      "dest": {
+          "index": "blog_lastest"
+      }
+  }
+  
+  返回：
+  
+  {
+    "task" : "dpBihNSMQfSlboMGlTgCBA:4728038"
+  }</pre></li>
+</ul>
+<p></p>
+<h3 id="根据taskId可以实时查看任务的执行状态"><a href="#根据taskId可以实时查看任务的执行状态" class="headerlink" title="根据taskId可以实时查看任务的执行状态"></a>根据taskId可以实时查看任务的执行状态</h3><ul>
+<li>一般来说，如果我们的 source index 很大【比如几百万数据量】，则可能需要比较长的时间来完成 _reindex 的工作，可能需要几十分钟。而在此期间不可能一直等待结果返回，可以去做其它事情，如果中途需要查看进度，可以通过 _tasks API 进行查看。</li>
+<li><code>GET /_tasks/&#123;taskId&#125;</code></li>
+</ul>
+<h3 id="如何取消任务"><a href="#如何取消任务" class="headerlink" title="如何取消任务?"></a>如何取消任务?</h3><ul>
+<li><code>POST _tasks/task_id/_cancel</code></li>
+</ul>
+<h3 id="相关链接-4"><a href="#相关链接-4" class="headerlink" title="相关链接"></a>相关链接</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/341337374">https://zhuanlan.zhihu.com/p/341337374</a></li>
+</ul>
+<h2 id="2、深分页问题"><a href="#2、深分页问题" class="headerlink" title="2、深分页问题"></a>2、深分页问题</h2><ul>
+<li><p>需要从集群取回大量的文档，使用游标查询 Scroll：<a target="_blank" rel="noopener" href="https://www.elastic.co/guide/en/elasticsearch/reference/7.10/scroll-api.html">https://www.elastic.co/guide/en/elasticsearch/reference/7.10/scroll-api.html</a></p>
+</li>
+<li><p>scroll 查询 可以用来对 Elasticsearch 有效地执行大批量的文档查询，而又不用付出深度分页那种代价。</p>
+</li>
+<li><p>游标查询会取某个时间点的快照数据。 查询初始化之后索引上的任何变化会被它忽略。</p>
+</li>
+<li><p>它通过保存旧的数据文件来实现这个特性，结果就像保留初始化时的索引 视图 一样。</p>
+</li>
+<li><p>深度分页的代价根源是结果集全局排序，如果去掉全局排序的特性的话查询结果的成本就会很低。</p>
+</li>
+<li><p>启用游标查询可以通过在查询的时候设置参数 scroll 的值为我们期望的游标查询的过期时间。</p>
+</li>
+<li><p>这个过期时间的参数很重要，因为保持这个游标查询窗口需要消耗资源，所以我们期望如果不再需要维护这种资源就该早点儿释放掉。<br>设置这个超时能够让 Elasticsearch 在稍后空闲的时候自动释放这部分资源。</p>
+</li>
+<li><p>查询的返回结果包括一个字段 <code>_scroll_id</code>， 它是一个base64编码的长字符串</p>
+</li>
+<li><p>尽管我们指定字段 size 的值为1000，我们有可能取到超过这个值数量的文档。 当查询的时候， 字段 size 作用于单个分片，所以每个批次实际返回的文档数量最大为 <code>size * number_of_primary_shards</code> 。</p>
+</li>
+<li><p>注意游标查询每次返回一个新字段 <code>_scroll_id</code>。每次我们做下一次游标查询， 我们必须把前一次查询返回的字段 <code>_scroll_id</code> 传递进去。当没有更多的结果返回的时候，我们就处理完所有匹配的文档了。</p>
+</li>
+<li><p>理解为什么深度分页是有问题的，我们可以假设在一个有 5 个主分片的索引中搜索。 当我们请求结果的第一页（结果从 1 到 10 ），每一个分片产生前 10 的结果，并且返回给 协调节点 ，协调节点对 50 个结果排序得到全部结果的前 10 个。</p>
+</li>
+<li><p>现在假设我们请求第 1000 页–结果从 10001 到 10010 。所有都以相同的方式工作除了每个分片不得不产生前10010个结果以外。 然后协调节点对全部 50050 个结果排序最后丢弃掉这些结果中的 50040 个结果。</p>
+</li>
+<li><p>可以看到，在分布式系统中，对结果排序的成本随分页的深度成指数上升。这就是 web 搜索引擎对任何查询都不要返回超过 1000 个结果的原因。</p>
+</li>
+<li><p>排序过程可能会变得非常沉重，使用大量的CPU、内存和带宽。因为这个原因，我们强烈建议你不要使用深分页。</p>
+</li>
+<li><p>实际上， “深分页” 很少符合人的行为。当2到3页过去以后，人会停止翻页，并且改变搜索标准。</p>
+</li>
+<li><p>会不知疲倦地一页一页的获取网页直到你的服务崩溃的罪魁祸首一般是机器人或者web spider。</p>
+</li>
+<li><p>如果确实 需要从你的集群取回大量的文档，你可以通过用 scroll 查询禁用排序使这个取回行为更有效率。</p>
+</li>
+</ul>
+<h2 id="3、highlight-参数"><a href="#3、highlight-参数" class="headerlink" title="3、highlight 参数"></a>3、highlight 参数</h2><ul>
+<li><p><a target="_blank" rel="noopener" href="https://www.elastic.co/guide/en/elasticsearch/reference/7.10/highlighting.html">https://www.elastic.co/guide/en/elasticsearch/reference/7.10/highlighting.html</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">GET /_search</span><br><span class="line">&#123;</span><br><span class="line"> &quot;query&quot;: &#123;</span><br><span class="line">  &quot;match&quot;: &#123;</span><br><span class="line">   &quot;content&quot;: &quot;kimchy&quot;</span><br><span class="line">  &#125;</span><br><span class="line"> &#125;,</span><br><span class="line"> &quot;highlight&quot;: &#123;</span><br><span class="line">  &quot;fields&quot;: &#123;</span><br><span class="line">   &quot;content&quot;: &#123;&#125;</span><br><span class="line">  &#125;</span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>ragment_size ：指定高亮数据展示多少个字符回来； <br>  fragment_size The size of the highlighted fragment in characters. Defaults to 100</p>
+</li>
+</ul>
+<h2 id="4、聚合（aggregations）"><a href="#4、聚合（aggregations）" class="headerlink" title="4、聚合（aggregations）"></a>4、聚合（aggregations）</h2><ul>
+<li><p>允许我们基于数据生成一些精细的分析结果</p>
+</li>
+<li><p>加载和搜索相匹配的文档，并且完成各种计算。</p>
+</li>
+<li><p>两种类型的聚集：桶型和度量型</p>
+<ul>
+<li>度量型 ： 某个字段最大值，最小值，平均值等</li>
+<li>桶型 ：某个论坛最流行的帖子等</li>
+</ul>
+</li>
+</ul>
+<h2 id="5、集群扩容、故障转移"><a href="#5、集群扩容、故障转移" class="headerlink" title="5、集群扩容、故障转移"></a>5、集群扩容、故障转移</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://www.elastic.co/guide/en/elasticsearch/reference/7.10/scalability.html">https://www.elastic.co/guide/en/elasticsearch/reference/7.10/scalability.html</a></li>
+</ul>
+<h2 id="6、运维监控"><a href="#6、运维监控" class="headerlink" title="6、运维监控"></a>6、运维监控</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://www.elastic.co/guide/en/elasticsearch/reference/7.10/monitor-elasticsearch-cluster.html">https://www.elastic.co/guide/en/elasticsearch/reference/7.10/monitor-elasticsearch-cluster.html</a></li>
+</ul>
+<h2 id="7、es-日志，-慢搜索，慢索引"><a href="#7、es-日志，-慢搜索，慢索引" class="headerlink" title="7、es 日志， 慢搜索，慢索引"></a>7、es 日志， 慢搜索，慢索引</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://www.elastic.co/guide/en/elasticsearch/reference/7.10/index-modules-slowlog.html">https://www.elastic.co/guide/en/elasticsearch/reference/7.10/index-modules-slowlog.html</a></li>
+</ul>
+<h2 id="8、相关性"><a href="#8、相关性" class="headerlink" title="8、相关性"></a>8、相关性</h2><ul>
+<li><p>Elasticsearch 相关度评分 TF&amp;IDF算法：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/05219358a2e9">https://www.jianshu.com/p/05219358a2e9</a></p>
+</li>
+<li><p>fuzzy 查询会计算与关键词的拼写相似程度，terms 查询会计算 找到的内容与关键词组成部分匹配的百分比，</p>
+</li>
+<li><p>但是通常我们说的 relevance 是我们用来计算全文本字段的值相对于全文本检索词相似程度的算法。</p>
+</li>
+<li><p>Elasticsearch 的相似度算法 被定义为检索词频率&#x2F;反向文档频率， TF&#x2F;IDF ，包括以下内容：</p>
+<ul>
+<li>检索词频率<br>  检索词在该字段出现的频率？出现频率越高，相关性也越高。 字段中出现过 5 次要比只出现过 1 次的相关性高。</li>
+<li>反向文档频率<br>  每个检索词在索引中出现的频率？频率越高，相关性越低。检索词出现在多数文档中会比出现在少数文档中的权重更低。</li>
+<li>字段长度准则<br>  字段的长度是多少？长度越长，相关性越低。 检索词出现在一个短的 title 要比同样的词出现在一个长的 content 字段权重更大。</li>
+</ul>
+</li>
+<li><p>控制相关度：<br><a target="_blank" rel="noopener" href="https://www.elastic.co/guide/en/elasticsearch/reference/7.10/search-rank-eval.html">https://www.elastic.co/guide/en/elasticsearch/reference/7.10/search-rank-eval.html</a></p>
+</li>
+</ul>
+<h2 id="9、explain-api"><a href="#9、explain-api" class="headerlink" title="9、explain api"></a>9、explain api</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://www.elastic.co/guide/en/elasticsearch/reference/7.10/_explain_analyze.html">https://www.elastic.co/guide/en/elasticsearch/reference/7.10/_explain_analyze.html</a></li>
+</ul>
+<h2 id="10、refresh-API-和-flush-API"><a href="#10、refresh-API-和-flush-API" class="headerlink" title="10、refresh API 和  flush API"></a>10、refresh API 和  flush API</h2><ul>
+<li><p>重点：新段会被先写入到文件系统缓存，refresh则是从这个文件缓存获取新段（写入和打开一个新段的轻量的过程叫做 refresh ）<br>默认一秒刷新，可以设置</p>
+</li>
+<li><p>在 Elasticsearch 中，写入和打开一个新段的轻量的过程叫做 refresh 。 默认情况下每个分片会每秒自动刷新一次。这就是为什么我们说 Elasticsearch 是 近 实时搜索: 文档的变化并不是立即对搜索可见，但会在一秒之内变为可见。</p>
+</li>
+<li><p>如果没有用 fsync 把数据从文件系统缓存刷（flush）到硬盘，我们不能保证数据在断电甚至是程序正常退出之后依然存在。为了保证 Elasticsearch 的可靠性，需要确保数据变化被持久化到磁盘。</p>
+</li>
+<li><p>在 动态更新索引，我们说一次完整的提交会将段刷到磁盘，并写入一个包含所有段列表的提交点。Elasticsearch 在启动或重新打开一个索引的过程中使用这个提交点来判断哪些段隶属于当前分片。</p>
+</li>
+<li><p>即使通过每秒刷新（refresh）实现了近实时搜索，我们仍然需要经常进行完整提交来确保能从失败中恢复。</p>
+</li>
+<li><p>Elasticsearch 增加了一个 translog ，或者叫事务日志，在每一次对 Elasticsearch 进行操作时均进行了日志记录。通过 translog</p>
+</li>
+<li><p>translog 提供所有还没有被刷到磁盘的操作的一个持久化纪录。当 Elasticsearch 启动的时候， 它会从磁盘中使用最后一个提交点去恢复已知的段，并且会重放 translog 中所有在最后一次提交后发生的变更操作。</p>
+</li>
+<li><p>translog 也被用来提供实时 CRUD 。当你试着通过ID查询、更新、删除一个文档，它会在尝试从相应的段中检索之前， 首先检查 translog 任何最近的变更。这意味着它总是能够实时地获取到文档的最新版本。</p>
+</li>
+<li><p>这个执行一个提交并且截断 translog 的行为在 Elasticsearch 被称作一次 flush 。 分片每30分钟被自动刷新（flush），或者在 translog 太大的时候也会刷新。</p>
+</li>
+<li><p>flush API 可以 被用来执行一个手工的刷新（flush）<br><code>POST /blogs/_flush</code> , <code>POST /_flush?wait_for_ongoin</code></p>
+</li>
+</ul>
+<h1 id="五、常用REST命令"><a href="#五、常用REST命令" class="headerlink" title="五、常用REST命令"></a>五、常用REST命令</h1><ul>
+<li><p>PUT 谓词(“使用这个 URL 存储这个文档”)，</p>
+</li>
+<li><p>POST 谓词(“存储文档在这个 URL 命名空间下”)</p>
+</li>
+<li><p>GET 查询</p>
+</li>
+<li><p>DELETE 删除</p>
+</li>
+<li><p>HEAD 检查文档是否存在</p>
+</li>
+<li><p>某些特定语言（特别是 JavaScript）的 HTTP 库是不允许 GET 请求带有请求体的。 事实上，一些使用者对于 GET 请求可以带请求体感到非常的吃惊。</p>
+</li>
+<li><p>而事实是这个RFC文档 RFC 7231— 一个专门负责处理 HTTP 语义和内容的文档 — 并没有规定一个带有请求体的 GET 请求应该如何处理！</p>
+</li>
+<li><p>结果是，一些 HTTP 服务器允许这样子，而有一些 — 特别是一些用于缓存和代理的服务器 — 则不允许。</p>
+</li>
+<li><p>对于一个查询请求，Elasticsearch 的工程师偏向于使用 GET 方式，因为他们觉得它比 POST 能更好的描述信息检索（retrieving information）的行为。<br>然而，因为带请求体的 GET 请求并不被广泛支持，所以 search API 同时支持 POST 请求</p>
+</li>
+</ul>
+<h3 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/nankezhishi/archive/2012/06/09/getandpost.html#!comments">https://www.cnblogs.com/nankezhishi/archive/2012/06/09/getandpost.html#!comments</a></li>
+<li>不是所有客户端都支持发起带有body的HTTP GET请求，比如jQuery就直接限制了</li>
+</ul>
+<h2 id="1、数据索引"><a href="#1、数据索引" class="headerlink" title="1、数据索引"></a>1、数据索引</h2><ul>
+<li>数据的mapping一般只执行一次，不使用代码方式创建，使用curl即可<br>关掉自动映射：即”dynamic”:”false”， 未预先定义的字段不自动保存<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">$ curl -X PUT &#x27;localhost:9200/accounts&#x27; -d &#x27;</span><br><span class="line">&#123;</span><br><span class="line"> &quot;mappings&quot;: &#123;</span><br><span class="line">  &quot;dynamic&quot; : &quot;false&quot;,</span><br><span class="line">  &quot;properties&quot;: &#123;</span><br><span class="line">   &quot;user&quot;: &#123;</span><br><span class="line">    &quot;type&quot;: &quot;text&quot;,</span><br><span class="line">    &quot;analyzer&quot;: &quot;ik_max_word&quot;,</span><br><span class="line">    &quot;search_analyzer&quot;: &quot;ik_max_word&quot;</span><br><span class="line">   &#125;,</span><br><span class="line">   &quot;title&quot;: &#123;</span><br><span class="line">    &quot;type&quot;: &quot;text&quot;,</span><br><span class="line">    &quot;analyzer&quot;: &quot;ik_max_word&quot;,</span><br><span class="line">    &quot;search_analyzer&quot;: &quot;ik_max_word&quot;</span><br><span class="line">   &#125;,</span><br><span class="line">   &quot;desc&quot;: &#123;</span><br><span class="line">    &quot;type&quot;: &quot;text&quot;,</span><br><span class="line">    &quot;analyzer&quot;: &quot;ik_max_word&quot;,</span><br><span class="line">    &quot;search_analyzer&quot;: &quot;ik_max_word&quot;</span><br><span class="line">   &#125;</span><br><span class="line">  &#125;</span><br><span class="line"> &#125;</span><br><span class="line">&#125;&#x27; </span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="2、分析查询"><a href="#2、分析查询" class="headerlink" title="2、分析查询"></a>2、分析查询</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ curl -X POST -H Content-Type:application/json &#x27;localhost:9200/_analyze&#x27; -d &#x27;</span><br><span class="line">&#123;</span><br><span class="line">&quot;analyzer&quot;:&quot;ik_max_word&quot;,</span><br><span class="line">&quot;text&quot;:&quot;中华人民共和国国歌&quot;</span><br><span class="line">&#125;&#x27; </span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">POST _analyze</span><br><span class="line">&#123;</span><br><span class="line">&quot;text&quot;: &quot;我爱北京天安门&quot;,</span><br><span class="line">&quot;analyzer&quot;: &quot;icu_analyzer&quot;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="3、查看索引"><a href="#3、查看索引" class="headerlink" title="3、查看索引"></a>3、查看索引</h2><ul>
+<li><code>curl -X GET &quot;localhost:19200/xxxxxx/_mapping?pretty&quot;</code></li>
+<li><code>curl -X GET &quot;localhost:19200/_cat/indices&quot;</code></li>
+</ul>
+<h2 id="4、索引别名"><a href="#4、索引别名" class="headerlink" title="4、索引别名"></a>4、索引别名</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">curl -XPOST &#x27;http://localhost:9200/_aliases&#x27; -d &#x27;</span><br><span class="line">&#123;</span><br><span class="line"> &quot;actions&quot;: [&#123;</span><br><span class="line">  &quot;add&quot;: &#123;</span><br><span class="line">   &quot;index&quot;: &quot;testtmp&quot;,</span><br><span class="line">   &quot;alias&quot;: &quot;test&quot;</span><br><span class="line">  &#125;</span><br><span class="line"> &#125;]</span><br><span class="line">&#125;&#x27;</span><br></pre></td></tr></table></figure>
+
+<h2 id="5、替换别名"><a href="#5、替换别名" class="headerlink" title="5、替换别名"></a>5、替换别名</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">POST _aliases</span><br><span class="line">&#123;</span><br><span class="line"> &quot;actions&quot;: [&#123;</span><br><span class="line">  &quot;remove&quot;: &#123;</span><br><span class="line">   &quot;index&quot;: &quot;anchor.20220421&quot;,</span><br><span class="line">   &quot;alias&quot;: &quot;anchor&quot;</span><br><span class="line">  &#125;</span><br><span class="line"> &#125;, &#123;</span><br><span class="line">  &quot;add&quot;: &#123;</span><br><span class="line">   &quot;index&quot;: &quot;anchor.20220422&quot;,</span><br><span class="line">   &quot;alias&quot;: &quot;anchor&quot;</span><br><span class="line">  &#125;</span><br><span class="line"> &#125;]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="6、查看ES版本"><a href="#6、查看ES版本" class="headerlink" title="6、查看ES版本"></a>6、查看ES版本</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">curl -XGET localhost:19200</span><br><span class="line">&#123;</span><br><span class="line"> &quot;name&quot;: &quot;node-1&quot;,</span><br><span class="line"> &quot;cluster_name&quot;: &quot;es6_dev_2&quot;,</span><br><span class="line"> &quot;cluster_uuid&quot;: &quot;MG_zNwBhQZC1C4Yjm8IFQA&quot;,</span><br><span class="line"> &quot;version&quot;: &#123;</span><br><span class="line">  &quot;number&quot;: &quot;6.7.1&quot;,</span><br><span class="line">  &quot;build_flavor&quot;: &quot;default&quot;,</span><br><span class="line">  &quot;build_type&quot;: &quot;tar&quot;,</span><br><span class="line">  &quot;build_hash&quot;: &quot;2f32220&quot;,</span><br><span class="line">  &quot;build_date&quot;: &quot;2019-04-02T15:59:27.961366Z&quot;,</span><br><span class="line">  &quot;build_snapshot&quot;: false,</span><br><span class="line">  &quot;lucene_version&quot;: &quot;7.7.0&quot;,</span><br><span class="line">  &quot;minimum_wire_compatibility_version&quot;: &quot;5.6.0&quot;,</span><br><span class="line">  &quot;minimum_index_compatibility_version&quot;: &quot;5.0.0&quot;</span><br><span class="line"> &#125;,</span><br><span class="line"> &quot;tagline&quot;: &quot;You Know, for Search&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="7、文档索引"><a href="#7、文档索引" class="headerlink" title="7、文档索引"></a>7、文档索引</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">PUT anchor/_doc/1?version=2&amp;version_type=external</span><br><span class="line">&#123;</span><br><span class="line">&quot;id&quot;: &quot;54354&quot;,</span><br><span class="line">&quot;userId&quot;: 324325,</span><br><span class="line">&quot;nickname&quot;:&quot;i love you&quot;,</span><br><span class="line">&quot;searchStatus&quot;: 1,</span><br><span class="line">&quot;weight&quot;: 99 </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="8、查看索引数量"><a href="#8、查看索引数量" class="headerlink" title="8、查看索引数量"></a>8、查看索引数量</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET /_cat/count/song?v</span><br></pre></td></tr></table></figure>
+
+<h1 id="六、其他"><a href="#六、其他" class="headerlink" title="六、其他"></a>六、其他</h1><h2 id="1、jdk版本"><a href="#1、jdk版本" class="headerlink" title="1、jdk版本"></a>1、jdk版本</h2><ul>
+<li>由于Elasticsearch依赖于jdk，es和jdk有着对应的依赖关系。具体可见：<br><a target="_blank" rel="noopener" href="https://www.elastic.co/support/matrix">https://www.elastic.co/support/matrix</a><br><a target="_blank" rel="noopener" href="https://www.elastic.co/guide/en/elasticsearch/reference/7.10/setup.html">https://www.elastic.co/guide/en/elasticsearch/reference/7.10/setup.html</a></li>
+</ul>
+<h2 id="2、安装问题"><a href="#2、安装问题" class="headerlink" title="2、安装问题"></a>2、安装问题</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/heyongboke/p/11379472.html">https://www.cnblogs.com/heyongboke/p/11379472.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/64d4b7472cfb">https://www.jianshu.com/p/64d4b7472cfb</a></li>
+</ul>
+<h2 id="3、String类型已弃用"><a href="#3、String类型已弃用" class="headerlink" title="3、String类型已弃用"></a>3、String类型已弃用</h2><ul>
+<li><p>String：string（弃用）, text, keyword（ElasticSearch 5.0开始支持）</p>
+</li>
+<li><p>ElasticSearch数据类型–string类型已死, 字符串数据永生: <a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000008897731">https://segmentfault.com/a/1190000008897731</a></p>
+</li>
+</ul>
+<h3 id="text-vs-keyword"><a href="#text-vs-keyword" class="headerlink" title="text vs keyword"></a>text vs keyword</h3><ul>
+<li><p>Elasticsearch中text与keyword的区别:<br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/sanduzxcvbnm/p/12177377.html">https://www.cnblogs.com/sanduzxcvbnm/p/12177377.html</a></p>
+</li>
+<li><p>text类型</p>
+<ul>
+<li>1:支持分词，全文检索,支持模糊、精确查询,不支持聚合,排序操作;</li>
+<li>2:test类型的最大支持的字符长度无限制,适合大字段存储；</li>
+<li>使用场景：<br>  存储全文搜索数据, 例如: 邮箱内容、地址、代码块、博客文章内容等。<br>  默认结合standard analyzer(标准解析器)对文本进行分词、倒排索引。<br>  默认结合标准分析器进行词命中、词频相关度打分。</li>
+</ul>
+</li>
+<li><p>keyword</p>
+<ul>
+<li>1:不进行分词，直接索引,支持模糊、支持精确匹配，支持聚合、排序操作。</li>
+<li>2:keyword类型的最大支持的长度为——32766个UTF-8类型的字符,可以通过设置ignore_above指定自持字符长度，超过给定长度后的数据将不被索引，无法通过term精确匹配检索返回结果。</li>
+<li>使用场景：<br>  存储邮箱号码、url、name、title，手机号码、主机名、状态码、邮政编码、标签、年龄、性别等数据。<br>  用于筛选数据(例如: select * from x where status&#x3D;’open’)、排序、聚合(统计)。<br>  直接将完整的文本保存到倒排索引中。</li>
+</ul>
+</li>
+</ul>
+<h2 id="4、客户端代码转curl技巧"><a href="#4、客户端代码转curl技巧" class="headerlink" title="4、客户端代码转curl技巧"></a>4、客户端代码转curl技巧</h2><ul>
+<li>该方法仅限于使用rest client的情况</li>
+<li>有时想知道代码实际发出的请求是怎样的，并且在控制台进行快速调整测试，可以怎么做？</li>
+<li>其中一个方法就是使用代理（fiddler、whistle等）抓包。</li>
+</ul>
+<h3 id="（1）连接-ES时指定代理"><a href="#（1）连接-ES时指定代理" class="headerlink" title="（1）连接 ES时指定代理"></a>（1）连接 ES时指定代理</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">RequestConfig.<span class="type">Builder</span> <span class="variable">builder</span> <span class="operator">=</span> RequestConfig.custom()</span><br><span class="line">builder.setProxy(<span class="keyword">new</span> <span class="title class_">HttpHost</span>(proxyHost, proxyPort));</span><br></pre></td></tr></table></figure>
+<h3 id="（2）如果连接的ES是HTTPS的，那么需要安装代理导出的证书"><a href="#（2）如果连接的ES是HTTPS的，那么需要安装代理导出的证书" class="headerlink" title="（2）如果连接的ES是HTTPS的，那么需要安装代理导出的证书"></a>（2）如果连接的ES是HTTPS的，那么需要安装代理导出的证书</h3><p><code>shell keytool -import -alias whistle -keystore cacerts -file rootCA.crt </code></p>
+<h2 id="扩展-1"><a href="#扩展-1" class="headerlink" title="扩展"></a>扩展</h2><h3 id="基于MySQL如何自动同步到ES"><a href="#基于MySQL如何自动同步到ES" class="headerlink" title="基于MySQL如何自动同步到ES"></a>基于MySQL如何自动同步到ES</h3><ol>
+<li>使用canal监听MySQL的binlog</li>
+<li>也可以考虑使用<a target="_blank" rel="noopener" href="https://github.com/go-mysql-org/go-mysql-elasticsearch">https://github.com/go-mysql-org/go-mysql-elasticsearch</a></li>
+</ol>
+<h1 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h1><ul>
+<li>很多东西不用纠结，以前每看一次es，都会纠结类型怎么使用合理，实际上这本书就是一个不合理的设计，官方最后也承认并废弃了</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/04/04/20220404-qu-dong-li-bi-ji/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -763,6 +2120,7 @@
 </li>
 </ul>
 <h3 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h3><ul>
+<li>通过explain分析<code>explain SELECT 1 FROM t_user_xxx_2 WHERE userId = xxxx AND type = 2 AND pId = 434444</code> 得出以下</li>
 <li>语句的type是index_merge，Extra的信息是Using intersect(idx_user_type,idx_pId)，执行计划走了index_merge优化，单个语句通过两个索引(idx_userId_type,idx_pId)来提取记录集合并取交集获得最终结果集。</li>
 </ul>
 <h3 id="解决方式"><a href="#解决方式" class="headerlink" title="解决方式"></a>解决方式</h3><ol>
@@ -1508,962 +2866,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/02/28/20220228-jing-dian-pai-xu-suan-fa/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2022/02/28/20220228-jing-dian-pai-xu-suan-fa/" itemprop="url">经典排序算法</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-02-28T14:56:23+08:00">
-                2022-02-28
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2022/02/28/20220228-jing-dian-pai-xu-suan-fa/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2022/02/28/20220228-jing-dian-pai-xu-suan-fa/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <ul>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/onepixel/articles/7674659.html">十大经典排序算法（动图演示）</a></li>
-</ul>
-<h2 id="排序算法分类"><a href="#排序算法分类" class="headerlink" title="排序算法分类"></a>排序算法分类</h2><h3 id="一"><a href="#一" class="headerlink" title="(一)"></a>(一)</h3><ul>
-<li>内部排序和外部排序</li>
-</ul>
-<h3 id="（二）"><a href="#（二）" class="headerlink" title="（二）"></a>（二）</h3><ol>
-<li>比较类排序：通过比较来决定元素间的相对次序，由于其时间复杂度不能突破O(nlogn)，因此也称为非线性时间比较类排序。(非线性时间)</li>
-<li>非比较类排序：不通过比较来决定元素间的相对次序，它可以突破基于比较排序的时间下界，以线性时间运行，因此也称为线性时间非比较类排序。 (线性时间)</li>
-</ol>
-<h3 id="（三）"><a href="#（三）" class="headerlink" title="（三）"></a>（三）</h3><ol>
-<li>非线性时间比较类排序：通过比较来决定元素间的相对次序，由于其时间复杂度不能突破O(nlogn)，因此称为非线性时间比较类排序。如：快速排序、归并排序、堆排序、冒泡排序等。在排序的最终结果里，元素之间的次序依赖于它们之间的比较。每个数都必须和其他数进行比较，才能确定自己的位置。</li>
-<li>线性时间非比较类排序：不通过比较来决定元素间的相对次序，它可以突破基于比较排序的时间下界，以线性时间运行，因此称为线性时间非比较类排序。如：计数排序、基数排序、桶排序。非比较排序是通过确定每个元素之前，应该有多少个元素来排序。针对数组arr，计算arr之前有多少个元素，则唯一确定了arr在排序后数组中的位置。</li>
-</ol>
-<h3 id="（四）"><a href="#（四）" class="headerlink" title="（四）"></a>（四）</h3><ol>
-<li>比较类排序<ul>
-<li>交换排序 (swap)<ul>
-<li>冒泡排序 (bubble Sort) - 双重遍历，相邻元素两两比较交换</li>
-<li>快速排序 (quick Sort) - 较复杂</li>
-</ul>
-</li>
-<li>插入排序 (insertion)<ul>
-<li>简单插入排序 (insertion sort) - 分左右两批，遍历有序列表，将无序的元素插入有序的列表</li>
-<li>希尔排序 (shell sort) (缩小增量排序) - 较复杂</li>
-</ul>
-</li>
-<li>选择排序 (selection)<ul>
-<li>简单选择排序 (selection) - 双重遍历，每次找到最小的元素，最后和该趟遍历的第一个元素进行交换</li>
-<li>堆排序 (heap sort)</li>
-</ul>
-</li>
-<li>归并排序 (merge sort) - 即先使每个子序列有序，再使子序列段间有序。若将两个有序表合并成一个有序表，称为2-路归并。 （递归）<ul>
-<li>二路归并排序</li>
-<li>多路归并排序</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>非比较类排序<ul>
-<li>计数排序 (counting sort)</li>
-<li>桶排序 (bucket sort)</li>
-<li>基数排序 (radix sort)(分配排序)</li>
-</ul>
-</li>
-</ol>
-<h3 id="（五）"><a href="#（五）" class="headerlink" title="（五）"></a>（五）</h3><ul>
-<li>算法复杂度</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>排序方法</th>
-<th>时间复杂度（平均）</th>
-<th>时间复杂度（最坏）</th>
-<th>时间复杂度（最好）</th>
-<th>空间复杂度</th>
-<th>稳定性</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>冒泡排序</td>
-<td>O(n^2)</td>
-<td>O(n^2)</td>
-<td>O(n)</td>
-<td>O(1)</td>
-<td>稳定</td>
-</tr>
-<tr>
-<td>快速排序</td>
-<td>O(nlog<sub>2</sub>n)</td>
-<td>O(n^2)</td>
-<td>O(nlog<sub>2</sub>n)</td>
-<td>O(nlog<sub>2</sub>n)</td>
-<td>不稳定</td>
-</tr>
-<tr>
-<td>简单插入排序</td>
-<td>O(n^2)</td>
-<td>O(n^2)</td>
-<td>O(n)</td>
-<td>O(1)</td>
-<td>稳定</td>
-</tr>
-<tr>
-<td>希尔排序</td>
-<td>O(n<sup>1.3</sup>)</td>
-<td>O(n^2)</td>
-<td>O(n)</td>
-<td>O(1)</td>
-<td>不稳定</td>
-</tr>
-<tr>
-<td>简单选择排序</td>
-<td>O(n^2)</td>
-<td>O(n^2)</td>
-<td>O(n^2)</td>
-<td>O(1)</td>
-<td>不稳定</td>
-</tr>
-<tr>
-<td>堆排序</td>
-<td>O(nlog<sub>2</sub>n)</td>
-<td>O(nlog<sub>2</sub>n)</td>
-<td>O(nlog<sub>2</sub>n)</td>
-<td>O(1)</td>
-<td>不稳定</td>
-</tr>
-<tr>
-<td>归并排序</td>
-<td>O(nlog<sub>2</sub>n)</td>
-<td>O(nlog<sub>2</sub>n)</td>
-<td>O(nlog<sub>2</sub>n)</td>
-<td>O(n)</td>
-<td>稳定</td>
-</tr>
-<tr>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>计数排序</td>
-<td>O(n+k)</td>
-<td>O(n+k)</td>
-<td>O(n+k)</td>
-<td>O(n+k)</td>
-<td>稳定</td>
-</tr>
-<tr>
-<td>桶排序</td>
-<td>O(n+k)</td>
-<td>O(n^2)</td>
-<td>O(n)</td>
-<td>O(n+k)</td>
-<td>稳定</td>
-</tr>
-<tr>
-<td>基数排序</td>
-<td>O(n*k)</td>
-<td>O(n*k)</td>
-<td>O(n*k)</td>
-<td>O(n+k)</td>
-<td>稳定</td>
-</tr>
-</tbody></table>
-<ul>
-<li>相关概念：</li>
-</ul>
-<h4 id="1、时间复杂度"><a href="#1、时间复杂度" class="headerlink" title="1、时间复杂度"></a>1、时间复杂度</h4><ul>
-<li>时间复杂度可以认为是对排序数据的总的操作次数。反映当n变化时，操作次数呈现什么规律。</li>
-<li>常见的时间复杂度有：常数阶O(1),对数阶O(log2n),线性阶O(n), 线性对数阶O(nlog2n),平方阶O(n2)</li>
-<li>时间复杂度O(1)：算法中语句执行次数为一个常数，则时间复杂度为O(1),</li>
-</ul>
-<h4 id="2、空间复杂度"><a href="#2、空间复杂度" class="headerlink" title="2、空间复杂度"></a>2、空间复杂度</h4><ul>
-<li>空间复杂度是指算法在计算机内执行时所需存储空间的度量，它也是问题规模n的函数</li>
-<li>空间复杂度O(1)：当一个算法的空间复杂度为一个常量，即不随被处理数据量n的大小而改变时，可表示为O(1)</li>
-<li>空间复杂度O(log2N)：当一个算法的空间复杂度与以2为底的n的对数成正比时，可表示为O(log2n)， ax&#x3D;N，则x&#x3D;logaN，</li>
-<li>空间复杂度O(n)：当一个算法的空间复杂度与n成线性比例关系时，可表示为0(n).</li>
-</ul>
-<h4 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h4><ul>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_42907443/article/details/118329160">常见排序算法分类（排序算法，是算法的基石，你掌握多少？）</a></li>
-<li>大O时间复杂度表示法：表示代码执行时间随数据规模增长的变化趋势，又称渐进时间复杂度</li>
-<li>大O空间复杂度表示法：表示代码执行所占的内存空间随数据规模增长的变化趋势，又称渐进空间复杂度</li>
-<li>复杂度分析法则<ul>
-<li>单段代码，看循环的次数。</li>
-<li>多段代码，看代码循环量级。</li>
-<li>嵌套代码求乘积，比如递归和多重循环。</li>
-<li>多个规模求加法，方法中并行的两个循环。</li>
-</ul>
-</li>
-<li>常用的复杂度级别<ul>
-<li>多项式阶：随着数据规模的增长，算法的执行时间和空间占用，按照多项式的比例增长，包括，O(1)(常数阶)、O(logn)(对数阶)、O(n)(线性阶)、O(nlogn)(线性对数阶)、O(n2)(平方阶)、O(n3)(立方阶)。</li>
-<li>非多项式阶：随着数据规模的增长，算法的执行时间和空间占用暴增，这列算法性能极差。包括，O(2^n)(指数阶)、O(n!)(阶乘阶)</li>
-</ul>
-</li>
-</ul>
-<h3 id="（六）"><a href="#（六）" class="headerlink" title="（六）"></a>（六）</h3><ul>
-<li>稳定性</li>
-<li>假定在待排序的记录序列中，存在多个具有相同的关键字的记录，若经过排序，这些记录的相对次序保持不变，即在原序列中，A1&#x3D;A2，且A1在A2之前，而在排序后的序列中，A1仍在A2之前，则称这种排序算法是稳定的；否则称为不稳定的。</li>
-<li>稳定也可以理解为一切皆在掌握中,元素的位置处在你在控制中.而不稳定算法有时就有点碰运气,随机的成分.当两元素相等时它们的位置在排序后可能仍然相同.但也可能不同.是未可知的.</li>
-<li>不稳定排序算法<ul>
-<li>快选希堆（快速排序，选择排序，希尔排序，堆排序）</li>
-</ul>
-</li>
-</ul>
-<h3 id="（七）"><a href="#（七）" class="headerlink" title="（七）"></a>（七）</h3><ul>
-<li>算法总结</li>
-<li>所需辅助空间最多：归并排序；<br>所需辅助空间最少：堆排序；<br>平均速度最快：快速排序；<br>不稳定：快速排序，希尔排序，堆排序。</li>
-</ul>
-<h4 id="冒泡排序"><a href="#冒泡排序" class="headerlink" title="冒泡排序"></a>冒泡排序</h4><ul>
-<li>1、冒泡排序是一种用时间换空间的排序方法，n小时好</li>
-<li>2、最坏情况是把顺序的排列变成逆序，或者把逆序的数列变成顺序，最差时间复杂度O(N^2)只是表示其操作次数的数量级</li>
-<li>3、最好的情况是数据本来就有序，复杂度为O(n)</li>
-</ul>
-<h4 id="快速排序"><a href="#快速排序" class="headerlink" title="快速排序"></a>快速排序</h4><ul>
-<li>1、n大时好，快速排序比较占用内存，内存随n的增大而增大，但却是效率高不稳定的排序算法。</li>
-<li>2、划分之后一边是一个，一边是n-1个，<br>这种极端情况的时间复杂度就是O(N^2)</li>
-<li>3、最好的情况是每次都能均匀的划分序列，O(N*log2N)</li>
-</ul>
-<h4 id="归并排序"><a href="#归并排序" class="headerlink" title="归并排序"></a>归并排序</h4><ul>
-<li>1、n大时好，归并比较占用内存，内存随n的增大而增大，但却是效率高且稳定的排序算法。</li>
-</ul>
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/onepixel/articles/7674659.html">十大经典排序算法（动图演示）</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/guidao13/article/details/86430483">Go语言经典排序算法实现</a></li>
-<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/42586566">[算法总结] 十大排序算法</a></li>
-<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/116046849">排序算法的稳定性</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/xiaochun126/p/5086037.html">各种排序算法时间复杂度</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_42907443/article/details/118329160">常见排序算法分类（排序算法，是算法的基石，你掌握多少？）</a> !!!</li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/02/23/20220223-li-jie-zhuang-tai-ji-yuan-li-ji-shi-jian/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2022/02/23/20220223-li-jie-zhuang-tai-ji-yuan-li-ji-shi-jian/" itemprop="url">理解状态机原理及实践</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-02-23T13:42:47+08:00">
-                2022-02-23
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2022/02/23/20220223-li-jie-zhuang-tai-ji-yuan-li-ji-shi-jian/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2022/02/23/20220223-li-jie-zhuang-tai-ji-yuan-li-ji-shi-jian/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><ul>
-<li><p>有限状态机FSM</p>
-</li>
-<li><p>描述事物的有限状态机模型的元素由以下组成：</p>
-<ol>
-<li>状态(State)：事物的状态，包括初始状态和所有事件触发后的状态</li>
-<li>事件(Event)：触发状态变化或者保持原状态的事件</li>
-<li>行为或转换(Action&#x2F;Transition)：执行状态转换的过程</li>
-<li>检测器(Guard)：检测某种状态要转换成另一种状态的条件是否满足</li>
-</ol>
-</li>
-<li><p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/37281543f506">https://www.jianshu.com/p/37281543f506</a></p>
-</li>
-<li><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/46347732">深入浅出理解有限状态机</a></p>
-</li>
-<li><p>状态机的要素</p>
-</li>
-<li><p>状态机可归纳为4个要素，即现态、条件、动作、次态。“现态”和“条件”是因，“动作”和“次态”是果。详解如下：<br>  1. 现态：是指当前所处的状态。<br>  2. 条件：又称为“事件”。当一个条件被满足，将会触发一个动作，或者执行一次状态的迁移。<br>  3. 动作：条件满足后执行的动作。动作执行完毕后，可以迁移到新的状态，也可以仍旧保持原状态。动作不是必需的，当条件满足后，也可以不执行任何动作，直接迁移到新状态。<br>  4. 次态：条件满足后要迁往的新状态。“次态”是相对于“现态”而言的，“次态”一旦被激活，就转变成新的“现态”了。</p>
-</li>
-</ul>
-<h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><ol>
-<li><p>定义状态</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> <span class="title class_">ProcessState</span> &#123;</span><br><span class="line"></span><br><span class="line">    INIT(<span class="number">0</span>, <span class="string">&quot;未开始&quot;</span>),</span><br><span class="line">    READY_ONE_SIDE(<span class="number">1</span>, <span class="string">&quot;一方准备完成&quot;</span>),</span><br><span class="line">    READY_ALL(<span class="number">2</span>, <span class="string">&quot;双方准备完成&quot;</span>),</span><br><span class="line">    CHAT(<span class="number">3</span>, <span class="string">&quot;发言完成&quot;</span>),</span><br><span class="line">    END(<span class="number">4</span>, <span class="string">&quot;结束&quot;</span>),</span><br><span class="line">    ;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> val;</span><br><span class="line">    <span class="keyword">private</span> String desc;</span><br><span class="line"></span><br><span class="line">    ProcessState(<span class="type">int</span> val, String desc) &#123;</span><br><span class="line">        <span class="built_in">this</span>.val = val;</span><br><span class="line">        <span class="built_in">this</span>.desc = desc;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">getVal</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> val;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>定义事件</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> <span class="title class_">ProcessEvent</span> &#123;</span><br><span class="line"></span><br><span class="line">    READY_ONE_SIDE(<span class="number">1</span>, <span class="string">&quot;一方准备&quot;</span>),</span><br><span class="line">		READY_ALL(<span class="number">2</span>, <span class="string">&quot;另一方准备&quot;</span>),</span><br><span class="line">		CHAT(<span class="number">3</span>, <span class="string">&quot;发言&quot;</span>),</span><br><span class="line">		FORBID_ALL(<span class="number">4</span>, <span class="string">&quot;全员禁言&quot;</span>),</span><br><span class="line">    ;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> Integer code;</span><br><span class="line">    <span class="keyword">private</span> String desc;</span><br><span class="line"></span><br><span class="line">    ProcessEvent(Integer code, String desc) &#123;</span><br><span class="line">        <span class="built_in">this</span>.code = code;</span><br><span class="line">        <span class="built_in">this</span>.desc = desc;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> Integer <span class="title function_">getCode</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> code;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>定义状态机</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ProcessEventConfig</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> ProcessEvent event;</span><br><span class="line">    <span class="keyword">private</span> ProcessState fromState;</span><br><span class="line">    <span class="keyword">private</span> ProcessState toState;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">desc</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> fromState.getDesc() + <span class="string">&quot;_&quot;</span> + event.getDesc() + <span class="string">&quot;_&quot;</span> + toState.getDesc();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">List&lt;ProcessEventConfig&gt; configList = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;(<span class="number">16</span>);</span><br><span class="line">configList.add(<span class="keyword">new</span> <span class="title class_">ProcessEventConfig</span>(ProcessEvent.READY_ONE_SIDE, ProcessState.INIT, ProcessState.READY_ONE_SIDE));</span><br><span class="line">configList.add(<span class="keyword">new</span> <span class="title class_">ProcessEventConfig</span>(ProcessEvent.READY_ALL, ProcessState.READY_ONE_SIDE, ProcessState.READY_ALL));</span><br><span class="line">configList.add(<span class="keyword">new</span> <span class="title class_">ProcessEventConfig</span>(ProcessEvent.CHAT, ProcessState.READY_ALL, ProcessState.CHAT));</span><br><span class="line">configList.add(<span class="keyword">new</span> <span class="title class_">ProcessEventConfig</span>(ProcessEvent.FORBID_ALL, ProcessState.CHAT, ProcessState.END));</span><br><span class="line"></span><br><span class="line">Map&lt;ProcessEvent, ProcessEventConfig&gt; eventResultStateConfigMap = <span class="keyword">new</span> <span class="title class_">EnumMap</span>&lt;&gt;(ProcessEvent.class);</span><br><span class="line"></span><br><span class="line">configList.forEach(eventConfig -&gt; eventResultStateConfigMap.put(eventConfig.getEvent(), eventConfig));</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>触发状态变化</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">fire</span><span class="params">(ProcessEvent event, Process process)</span> &#123;</span><br><span class="line"></span><br><span class="line">        <span class="type">ProcessEventConfig</span> <span class="variable">config</span> <span class="operator">=</span> Optional.ofNullable(eventResultStateConfigMap.get(event)).orElseThrow(() -&gt; ExceptionCodeEnum.AGRS_INVALID.newException(<span class="string">&quot;不存在该事件&quot;</span>));</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (process.getStatus() != config.getFromState().getVal()) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        process.setRemark(config.desc());</span><br><span class="line">        process.setStatus(config.getToState().getVal());</span><br><span class="line"></span><br><span class="line">				<span class="comment">//DB改变状态</span></span><br><span class="line">				<span class="comment">/*update table set status=$&#123;status&#125; WHERE id=&#123;id&#125; AND status=$&#123;beforeStatus&#125;*/</span></span><br><span class="line">        <span class="type">boolean</span> <span class="variable">suc</span> <span class="operator">=</span> processManager.updateStatus(process, config.getFromState().getVal());</span><br><span class="line">        <span class="keyword">if</span> (suc) &#123;</span><br><span class="line">               <span class="comment">//变更成功，业务逻辑    </span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> suc;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-</ol>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/02/20/20220220-nba-xuan-xiu-chou-qian-ju-ti-shi-ru-he-cao-zuo-de/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2022/02/20/20220220-nba-xuan-xiu-chou-qian-ju-ti-shi-ru-he-cao-zuo-de/" itemprop="url">nba选秀抽签具体是如何操作的？</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-02-20T20:26:21+08:00">
-                2022-02-20
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2022/02/20/20220220-nba-xuan-xiu-chou-qian-ju-ti-shi-ru-he-cao-zuo-de/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2022/02/20/20220220-nba-xuan-xiu-chou-qian-ju-ti-shi-ru-he-cao-zuo-de/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/52895544">nba选秀抽签具体是如何操作的？</a></p>
-<ul>
-<li>14个乒乓球分别贴上1-14数字，随机滚出4个，加起来是1001可能，其中11、12、13、14这个组合不算，剩下1000种可能。</li>
-</ul>
-<p><img src="/2022/02/20/20220220-nba%E9%80%89%E7%A7%80%E6%8A%BD%E7%AD%BE%E5%85%B7%E4%BD%93%E6%98%AF%E5%A6%82%E4%BD%95%E6%93%8D%E4%BD%9C%E7%9A%84%EF%BC%9F/nba%E9%80%89%E7%A7%80%E6%8A%BD%E7%AD%BE.jpg"></p>
-<ul>
-<li>闲来无事，使用Go粗暴模拟了一下</li>
-</ul>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;fmt&quot;</span></span><br><span class="line">	<span class="string">&quot;math/rand&quot;</span></span><br><span class="line">	<span class="string">&quot;sort&quot;</span></span><br><span class="line">	<span class="string">&quot;time&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">https://www.zhihu.com/question/52895544</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	n := <span class="number">14</span></span><br><span class="line">	m := <span class="number">4</span></span><br><span class="line">	nn := <span class="number">1</span></span><br><span class="line">	mm := <span class="number">1</span></span><br><span class="line">	nm := <span class="number">1</span></span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">1</span>; i &lt;= n; i++ &#123;</span><br><span class="line">		nn = nn * i</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">1</span>; i &lt;= m; i++ &#123;</span><br><span class="line">		mm = mm * i</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">1</span>; i &lt;= (n - m); i++ &#123;</span><br><span class="line">		nm = nm * i</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	all_result := <span class="built_in">make</span>([]<span class="type">string</span>, <span class="number">1000</span>)</span><br><span class="line">	all_result_map := <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="type">string</span>]<span class="type">int</span>)</span><br><span class="line"></span><br><span class="line">	count := <span class="number">0</span></span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">1</span>; i &lt;= <span class="number">11</span>; i++ &#123;</span><br><span class="line">		<span class="keyword">for</span> j := i + <span class="number">1</span>; j &lt;= <span class="number">12</span>; j++ &#123;</span><br><span class="line">			<span class="keyword">for</span> k := j + <span class="number">1</span>; k &lt;= <span class="number">13</span>; k++ &#123;</span><br><span class="line">				<span class="keyword">for</span> l := k + <span class="number">1</span>; l &lt;= <span class="number">14</span>; l++ &#123;</span><br><span class="line">					<span class="comment">//fmt.Printf(&quot;%d -&gt; %d -&gt; %d -&gt; %d\n&quot;, i, j, k, l)</span></span><br><span class="line">					<span class="keyword">if</span> i == <span class="number">11</span> &amp;&amp; j == <span class="number">12</span> &amp;&amp; k == <span class="number">13</span> &amp;&amp; l == <span class="number">14</span> &#123;</span><br><span class="line">						<span class="keyword">continue</span></span><br><span class="line">					&#125;</span><br><span class="line">					all_result[count] = fmt.Sprintf(<span class="string">&quot;%d-%d-%d-%d&quot;</span>, i, j, k, l)</span><br><span class="line">					count++</span><br><span class="line">					all_result_map[fmt.Sprintf(<span class="string">&quot;%d-%d-%d-%d&quot;</span>, i, j, k, l)] = count</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	weight_arr := [<span class="number">14</span>]<span class="type">int</span>&#123;<span class="number">250</span>, <span class="number">199</span>, <span class="number">156</span>, <span class="number">119</span>, <span class="number">88</span>, <span class="number">63</span>, <span class="number">43</span>, <span class="number">28</span>, <span class="number">17</span>, <span class="number">11</span>, <span class="number">8</span>, <span class="number">7</span>, <span class="number">6</span>, <span class="number">5</span>&#125;</span><br><span class="line">	all_weight := <span class="number">0</span></span><br><span class="line">	source_map := <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="type">int</span>]<span class="type">int</span>)</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> num, weight := <span class="keyword">range</span> weight_arr &#123;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; weight; i++ &#123;</span><br><span class="line">			source_map[i+<span class="number">1</span>+all_weight] = num + <span class="number">1</span></span><br><span class="line">		&#125;</span><br><span class="line">		all_weight = all_weight + weight</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	模拟前三顺位</span></span><br><span class="line"><span class="comment">	*/</span></span><br><span class="line">	all_hit_result := []<span class="type">int</span>&#123;<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>&#125;</span><br><span class="line">	all_hit_result_second_round := []<span class="type">int</span>&#123;<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>&#125;</span><br><span class="line">	all_hit_result_third_round := []<span class="type">int</span>&#123;<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>&#125;</span><br><span class="line">	r := rand.New(rand.NewSource(time.Now().Unix()))</span><br><span class="line">	<span class="keyword">for</span> xx := <span class="number">0</span>; xx &lt; <span class="number">1000000</span>; xx++ &#123;</span><br><span class="line"></span><br><span class="line">		hit_map := <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="type">int</span>]<span class="type">int</span>)</span><br><span class="line">		<span class="keyword">for</span> round := <span class="number">0</span>; round &lt; <span class="number">3</span>; round++ &#123;</span><br><span class="line">			all_ball := []<span class="type">int</span>&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">10</span>, <span class="number">11</span>, <span class="number">12</span>, <span class="number">13</span>, <span class="number">14</span>&#125;</span><br><span class="line"></span><br><span class="line">			chosen_ball := <span class="built_in">make</span>([]<span class="type">int</span>, <span class="number">4</span>)</span><br><span class="line">			<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="number">4</span>; i++ &#123;</span><br><span class="line"></span><br><span class="line">				hit := r.Intn(<span class="number">14</span> - i)</span><br><span class="line">				chosen_ball[i] = all_ball[hit]</span><br><span class="line">				index := hit</span><br><span class="line">				all_ball = <span class="built_in">append</span>(all_ball[:index], all_ball[index+<span class="number">1</span>:]...)</span><br><span class="line"></span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			sort.Ints(chosen_ball)</span><br><span class="line">			result := fmt.Sprintf(<span class="string">&quot;%d-%d-%d-%d&quot;</span>, chosen_ball[<span class="number">0</span>], chosen_ball[<span class="number">1</span>], chosen_ball[<span class="number">2</span>], chosen_ball[<span class="number">3</span>])</span><br><span class="line"></span><br><span class="line">			<span class="keyword">if</span> result == <span class="string">&quot;11-12-13-14&quot;</span> &#123;</span><br><span class="line">				round--</span><br><span class="line">				<span class="keyword">continue</span></span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			result_rank := source_map[all_result_map[result]]</span><br><span class="line"></span><br><span class="line">			value := hit_map[result_rank]</span><br><span class="line">			<span class="keyword">if</span> value == <span class="number">1</span> &#123;</span><br><span class="line">				round--</span><br><span class="line">				<span class="keyword">continue</span></span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			<span class="keyword">if</span> round == <span class="number">0</span> &#123;</span><br><span class="line">				all_hit_result[result_rank<span class="number">-1</span>]++</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">if</span> round == <span class="number">1</span> &#123;</span><br><span class="line">				all_hit_result_second_round[result_rank<span class="number">-1</span>]++</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">if</span> round == <span class="number">2</span> &#123;</span><br><span class="line">				all_hit_result_third_round[result_rank<span class="number">-1</span>]++</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			hit_map[result_rank] = <span class="number">1</span></span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line">	fmt.Println(<span class="string">&quot;第一轮&quot;</span>)</span><br><span class="line">	<span class="keyword">for</span> i, resut_hit := <span class="keyword">range</span> all_hit_result &#123;</span><br><span class="line">		fmt.Printf(<span class="string">&quot;%d -&gt; %d\n&quot;</span>, i+<span class="number">1</span>, resut_hit)</span><br><span class="line">	&#125;</span><br><span class="line">	fmt.Println(<span class="string">&quot;第二轮&quot;</span>)</span><br><span class="line">	<span class="keyword">for</span> i, resut_hit := <span class="keyword">range</span> all_hit_result_second_round &#123;</span><br><span class="line">		fmt.Printf(<span class="string">&quot;%d -&gt; %d\n&quot;</span>, i+<span class="number">1</span>, resut_hit)</span><br><span class="line">	&#125;</span><br><span class="line">	fmt.Println(<span class="string">&quot;第三轮&quot;</span>)</span><br><span class="line">	<span class="keyword">for</span> i, resut_hit := <span class="keyword">range</span> all_hit_result_third_round &#123;</span><br><span class="line">		fmt.Printf(<span class="string">&quot;%d -&gt; %d\n&quot;</span>, i+<span class="number">1</span>, resut_hit)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">		模拟100万次</span></span><br><span class="line"><span class="comment">		第一轮</span></span><br><span class="line"><span class="comment">	1 -&gt; 249512</span></span><br><span class="line"><span class="comment">	2 -&gt; 198836</span></span><br><span class="line"><span class="comment">	3 -&gt; 155714</span></span><br><span class="line"><span class="comment">	4 -&gt; 118849</span></span><br><span class="line"><span class="comment">	5 -&gt; 88395</span></span><br><span class="line"><span class="comment">	6 -&gt; 63352</span></span><br><span class="line"><span class="comment">	7 -&gt; 43285</span></span><br><span class="line"><span class="comment">	8 -&gt; 28016</span></span><br><span class="line"><span class="comment">	9 -&gt; 16892</span></span><br><span class="line"><span class="comment">	10 -&gt; 11093</span></span><br><span class="line"><span class="comment">	11 -&gt; 7894</span></span><br><span class="line"><span class="comment">	12 -&gt; 7004</span></span><br><span class="line"><span class="comment">	13 -&gt; 6100</span></span><br><span class="line"><span class="comment">	14 -&gt; 5058</span></span><br><span class="line"><span class="comment">	第二轮</span></span><br><span class="line"><span class="comment">	1 -&gt; 215647</span></span><br><span class="line"><span class="comment">	2 -&gt; 188267</span></span><br><span class="line"><span class="comment">	3 -&gt; 157704</span></span><br><span class="line"><span class="comment">	4 -&gt; 125474</span></span><br><span class="line"><span class="comment">	5 -&gt; 96543</span></span><br><span class="line"><span class="comment">	6 -&gt; 71033</span></span><br><span class="line"><span class="comment">	7 -&gt; 49195</span></span><br><span class="line"><span class="comment">	8 -&gt; 32360</span></span><br><span class="line"><span class="comment">	9 -&gt; 19803</span></span><br><span class="line"><span class="comment">	10 -&gt; 13185</span></span><br><span class="line"><span class="comment">	11 -&gt; 9521</span></span><br><span class="line"><span class="comment">	12 -&gt; 8252</span></span><br><span class="line"><span class="comment">	13 -&gt; 7031</span></span><br><span class="line"><span class="comment">	14 -&gt; 5985</span></span><br><span class="line"><span class="comment">	第三轮</span></span><br><span class="line"><span class="comment">	1 -&gt; 177455</span></span><br><span class="line"><span class="comment">	2 -&gt; 171603</span></span><br><span class="line"><span class="comment">	3 -&gt; 155736</span></span><br><span class="line"><span class="comment">	4 -&gt; 133323</span></span><br><span class="line"><span class="comment">	5 -&gt; 106458</span></span><br><span class="line"><span class="comment">	6 -&gt; 81193</span></span><br><span class="line"><span class="comment">	7 -&gt; 58185</span></span><br><span class="line"><span class="comment">	8 -&gt; 38863</span></span><br><span class="line"><span class="comment">	9 -&gt; 24146</span></span><br><span class="line"><span class="comment">	10 -&gt; 15550</span></span><br><span class="line"><span class="comment">	11 -&gt; 11508</span></span><br><span class="line"><span class="comment">	12 -&gt; 10064</span></span><br><span class="line"><span class="comment">	13 -&gt; 8634</span></span><br><span class="line"><span class="comment">	14 -&gt; 7282</span></span><br><span class="line"><span class="comment">	*/</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/02/08/20220208-java11-ji-chu-yuan-li-he-shi-jian/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2022/02/08/20220208-java11-ji-chu-yuan-li-he-shi-jian/" itemprop="url">Java11基础原理和实践</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-02-08T00:08:24+08:00">
-                2022-02-08
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2022/02/08/20220208-java11-ji-chu-yuan-li-he-shi-jian/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2022/02/08/20220208-java11-ji-chu-yuan-li-he-shi-jian/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="一、为什么选择java11"><a href="#一、为什么选择java11" class="headerlink" title="一、为什么选择java11"></a>一、为什么选择java11</h1><p>Java 11 是 Java 8 之后的首个 LTS 版本（Long-term support 长期支持版本），所以有不少开发者表示会选择升级至 Java 11。</p>
-<p><img src="/2022/02/08/20220208-Java11%E5%9F%BA%E7%A1%80%E5%8E%9F%E7%90%86%E5%92%8C%E5%AE%9E%E8%B7%B5/java11.png"></p>
-<p>1、目前相对来说，Java 8 太旧，Java 17 太新，Java11 刚刚好；<br>2、支持以类路径方式运行，适合过渡阶段升级；<br>3、其他原因（下文会说明）</p>
-<h1 id="二、模块系统"><a href="#二、模块系统" class="headerlink" title="二、模块系统"></a>二、模块系统</h1><p>模块系统是Java 9的旗舰功能，使用java9，有必要了解一下。</p>
-<h2 id="java9之前存在哪些痛点"><a href="#java9之前存在哪些痛点" class="headerlink" title="java9之前存在哪些痛点"></a>java9之前存在哪些痛点</h2><h3 id="1、没有封装"><a href="#1、没有封装" class="headerlink" title="1、没有封装"></a>1、没有封装</h3><p>类一旦公开，意味着没有封装。</p>
-<p>如果将一个类设置为protected，那么就可以防止其他类访问该类，除非这些类与该类位于相同的包中。但这样做会产生一个有趣的问题：如果想从组件的另一个包中访问该类，同时仍然防止其他类使用该类，那么应该怎么做呢？事实是无法做到。</p>
-<p>让类公开，意味着对系统中的所有类型都是公开的，也就意味着没有封装。</p>
-<p>Java在过去经历过相当多的安全漏洞。这些漏洞都有一个共同的特点：不知何故，攻击者可以绕过JVM的安全沙盒并访问JDK中的敏感类。从安全的角度来看，在JDK中对危险的内部类进行强封装是一个很大的改进。同时，减少运行时中可用类的数量会降低攻击面。在应用程序运行时中保留大量暂时不使用的类是一种不恰当的做法。而通过使用模块化JDK，可以确定应用程序所需的模块。</p>
-<h3 id="2、编译时无法感知依赖缺失或类重复"><a href="#2、编译时无法感知依赖缺失或类重复" class="headerlink" title="2、编译时无法感知依赖缺失或类重复"></a>2、编译时无法感知依赖缺失或类重复</h3><p>Java确实使用了显式的import语句。但不幸的是，从严格意义上讲，这些导入是编译时结构，一旦将代码打包到JAR中，就无法确定哪些JAR包含当前JAR运行所需的类型。</p>
-<p>在Java 9出现之前，JAR文件似乎是最接近模块的，它们拥有名称、对相关代码进行了分组并且提供了定义良好的公共接口。</p>
-<p>（1）依赖缺失<br>所有类按照-classpath参数定义的顺序加载类。由于类会延迟加载，JVM无法在应用程序启动时有效地验证类路径的完整性，即无法预先知道类路径是否是完整的，或者是否应该添加另一个JAR。</p>
-<p>（2）类重复<br>当类路径上有重复类时，则会出现更为隐蔽的问题。出现相同库的两个版本（如Guava 19和Guava 18）是非常常见的，这两个库JAR以一种未定义的顺序压缩到类路径中。库类的任一版本都可能会被首先加载。此外，有些类还可能会使用来自（可能不兼容的）其他版本的类。此时就会导致运行时异常。</p>
-<h2 id="关于类重复"><a href="#关于类重复" class="headerlink" title="关于类重复"></a>关于类重复</h2><p>目前存在以下方法缓解或解决</p>
-<h3 id="1、通过插件检查类重复"><a href="#1、通过插件检查类重复" class="headerlink" title="1、通过插件检查类重复"></a>1、通过插件检查类重复</h3><p>在编译时，检测类是否重复，比如使用插件 maven enforcer plugin，但本质上是通过解压全部jar包，检查所有文件是否存在重复类来判断的，效率可想而知。</p>
-<h3 id="2、通过构建工具保证只存在一个版本的jar包"><a href="#2、通过构建工具保证只存在一个版本的jar包" class="headerlink" title="2、通过构建工具保证只存在一个版本的jar包"></a>2、通过构建工具保证只存在一个版本的jar包</h3><p>构建工具冲突失败策略设置如gradle中</p>
-<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">configurations</span>.all &#123;</span><br><span class="line">    resolutionStrategy &#123;  failOnVersionConflict() &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这种设置仅仅是针对jar包冲突，不能保证不同名的jar包是否存在相同的类。</p>
-<p>处理jar包冲突有两种策略：</p>
-<p>1）强制指定版本：版本冲突太多，指定版本的情况，后续有新的版本间接依赖也无法直接发现。<br>2）取最高版本：同样有可能引起高版本导致不兼容的问题。</p>
-<p>要彻底解决，只有项目依赖完全模块化。</p>
-<h2 id="构建工具"><a href="#构建工具" class="headerlink" title="构建工具"></a>构建工具</h2><p>Maven、Gradle等构建工具，在运行时没有任何作用。Maven构建了想要运行的工件，但是最后仍然需要配置Java运行时，以便运行正确的模块路径和类路径。虽然手动配置模块路径比类路径要容易得多，但它仍然是重复的工作，因为相关信息已经在pom.xml文件中了。</p>
-<h2 id="模块化的好处"><a href="#模块化的好处" class="headerlink" title="模块化的好处"></a>模块化的好处</h2><p>模块化 可以 在编译时和运行时获得所有这些信息所带来的优势。这可以防止对来自其他非引用模块的代码的意外依赖。通过检查（传递）依赖关系，工具链可以知道运行模块需要哪些附加模块并进行优化。</p>
-<p>Java平台模块系统带来了如下最重要的好处：</p>
-<p>1．可靠的配置在编译或运行代码之前，模块系统会检查给定的模块组合是否满足所有依赖关系，从而导致更少的运行时错误。<br>2．强封装型模块显式地选择了向其他模块公开的内容，从而防止对内部实现细节的意外依赖。<br>3．可扩展开发显式边界能够让开发团队并行工作，同时可创建可维护的代码库。只有显式导出的公共类型是共享的，这创建了由模块系统自动执行的边界。<br>4．安全性在JVM的最深层次上执行强封装，从而减少Java运行时的攻击面，同时无法获得对敏感内部类的反射访问。<br>5．优化由于模块系统知道哪些模块是在一起的，包括平台模块，因此在JVM启动期间不需要考虑其他代码。同时，其也为创建模块分发的最小配置提供了可能性。此外，还可以在一组模块上应用整个程序的优化。</p>
-<p>在模块出现之前，这样做是非常困难的，因为没有可用的显式依赖信息，一个类可以引用类路径中任何其他类。</p>
-<p>此外还有：<br>（1）JDK9的模块化可以减少Java程序打包的体积，同时拥有更好的隔离线与封装性。<br>在JDK9之前，JVM的基础类以前都是在rt.jar这个包里，这个包也是JRE运行的基石。这不仅是违反了单一职责原则，同样程序在编译的时候会将很多无用的类也一并打包，造成臃肿。在JDK9中，整个JDK都基于模块化进行构建，以前的rt.jar, tool.jar被拆分成数十个模块，编译的时候只编译实际用到的模块，同时各个类加载器各司其职，只加载自己负责的模块。<br>（2）经过破坏后的双亲委派模型更加高效，减少了很多类加载器之间不必要的委派操作</p>
-<h2 id="模块系统的基础"><a href="#模块系统的基础" class="headerlink" title="模块系统的基础"></a>模块系统的基础</h2><p>本质上就是一个jar包切成多模块（更细的jar包）来引用</p>
-<h3 id="1、module-info-java描述文件-关键字说明"><a href="#1、module-info-java描述文件-关键字说明" class="headerlink" title="1、module-info.java描述文件 关键字说明"></a>1、module-info.java描述文件 关键字说明</h3><p>requires代表依赖的模块，只有依赖的模块存在才能通过编译并运行.需要注意的是，所有模块均自动隐式依赖java.base模块，不需要显示声明<br>exports指出需要暴露的包，如果某个包没有被exports，那么其他模块是无法访问的。</p>
-<p>Readability:指的是必须exports的包才可被其他模块访问<br>Accessibility:指的是即使是exports的包，其中的类的可访问下也要基于java的访问修饰符，仅有public修饰的才可被其他模块访问</p>
-<p>Implied Readability(隐式Readability, requires transitive):<br>Readability默认情况下是不会被传递的<br>requires transitive，传递性依赖生效</p>
-<p>由于requires transitive的存在，就可以支持聚合模块。有些聚合模块可以没有任何代码，就一个module-info.java描述文件，比如java.se, java.se.ee模块<br>不建议直接引用java.se模块，因为它就相当于java9以前版本的rt.jar的内容。</p>
-<p>Qualified Exports(有限制的exports)<br>比如我只想exports某个包给部分模块,而不是所有模块</p>
-<h3 id="2、模块化基础"><a href="#2、模块化基础" class="headerlink" title="2、模块化基础"></a>2、模块化基础</h3><p>（1）模块拥有一个名称，并对相关的代码以及可能的其他资源进行分组，同时使用一个模块描述符进行描述。模块描述符保存在一个名为module-info.java的文件中。<br>（2）模块描述符还可以包含exports语句。强封装性是模块的默认特性。只有当显式地导出一个包时（比如示例中的java.util.prefs），才可以从其他模块中访问该包<br>可访问性和可读性的结合可以确保在模块系统中实现强封装性。<br>（3）其他模块无法使用未导出包中的任何类型——即使包中的类型是公共的。这是对Java语言可访问性规则的根本变化。<br>（4）Java 9出现之后，public意味着仅对模块中的其他包公开。只有当导出包包含了公开类型时，其他模块才可以使用这些类型。这就是强封装的意义所在。</p>
-<p>在模块出现之前，强封装实现类的唯一方法是将这些类放置到单个包中，并标记为私有。这种做法使得包变得非常笨重，实际上，将类公开只是为了实现不同包之间的访问。通过使用模块，可以以任何方式构建包，并仅导出模块使用者真正必须访问的包。如果愿意的话，还可以将导出的包构成模块的API。</p>
-<p>（5）模块提供了导出包的显式信息，从而能够高效地对模块路径进行索引。当从给定的包中查找类型时，Java运行时和编译器可以准确地知道从模块路径中解析哪个模块。而在以前，对整个类路径进行扫描是找到任意类型的唯一方法。</p>
-<p>在解析过程中还会完成一些额外的检查。例如，具有相同名称的两个模块在启动时（而不是在运行过程出现类加载失败时）会产生错误。此外，还会检查导出包的唯一性。</p>
-<p>模块解析过程以及额外的检查确保了应用程序在一个可靠的环境中运行，降低了运行时失败的可能性。</p>
-<p>（6）通过使用未命名模块，尚未模块化的代码可以继续在JDK 9上运行。<br>当将代码放在类路径上时，会自动使用未命名模块。这也意味着需要构建一个正确的类路径。可一旦使用了未命名模块，前面讨论的模块系统所带来的保障和好处也就没有了。</p>
-<p>当在Java 9中使用类路径时，还需要注意两件事情。首先，由于平台是模块化的，因此对内部实现类进行了强封装。</p>
-<p>（7）模块系统执行的另一个检查是循环依赖。<br>在编译时，模块之间的可读性关系必须是非循环的。而在模块中，仍然可以在类之间创建循环关系</p>
-<p>（8）通过使用ServiceLoader API可在模块描述符和代码中表示服务<br>使用这个功能可以对代码的实现进行良好的封装</p>
-<h3 id="3、以非模块化方式开发和运行应用"><a href="#3、以非模块化方式开发和运行应用" class="headerlink" title="3、以非模块化方式开发和运行应用"></a>3、以非模块化方式开发和运行应用</h3><p>在java9中也是允许你以非模块化方式开发和运行应用的(也就是说，模块化开发是可选的)，如果你的应用中没有module-info.java，那么这就是一个unnamed module. java9对于unnamed module的处理方式就是所有的jdk模块均直接可用(模块图中是以java.se模块作为root模块的，也意味着单独处于java.se.ee下的一些包，比如JAXB API是无法访问到的)。</p>
-<p>但是需要注意的是，在java8以及之前的版本中，我们可以访问jdk中的一些不推荐访问的内部类，比如com.sun.image.codec.jpeg,但在java9模块化之后被强封装了，所以在java9中无法使用这些内部类，也就是说无法通过编译，但是java9为了保持兼容性，允许之前引用这些内部类的已有的jar或已编译的类正确运行。换言之，就是java9不允许源码中引用这些类，无法通过编译，但是之前版本中引用这些类的已编译class文件是允许正常运行的。</p>
-<h1 id="三、迁移"><a href="#三、迁移" class="headerlink" title="三、迁移"></a>三、迁移</h1><p>（1）为了便于将基于类路径的应用程序迁移到Java 9，在对平台模块中的类应用深度反射时，或者使用反射来访问非导出包中的类型时，JVM默认显示警告</p>
-<p>（2）那些在JDK 8和更早的版本上运行没有任何问题的代码现在会在控制台上显示一个醒目的警告——即使是在生产环境中也是如此。这表明严重破坏了强封装。除了这个警告之外，应用程序仍然照常运行。如警告消息所示，在下一个Java版本中行为将发生变化。将来，即使是类路径上的代码，JDK也会强制执行平台模块的强封装。</p>
-<p>（3）可以使用–add-opens标志授予对模块中特定包的类路径深度反射访问。同样，当类路径上的代码尝试访问非导出包中的类型时，可以使用–add-exports来强制导出包。</p>
-<p>（4）为了使逐步迁移成为可能，可以混合使用类路径和模块路径。但这不是一种理想的情况，因为只能部分受益于Java模块系统的优点。但是，“小步”迁移是非常有帮助的。</p>
-<h2 id="自动模块"><a href="#自动模块" class="headerlink" title="自动模块"></a>自动模块</h2><p>Java模块系统提供了一个有用的功能来处理非模块的代码：自动模块。只需将现有的JAR文件从类路径移动到模块路径，而不改变其内容，就可以创建一个自动模块。这样一来，JAR就转换为一个模块，同时模块系统动态生成模块描述符。相比之下，显式模块始终有一个用户自定义的模块描述符。</p>
-<p>自动模块的行为不同于显式模块。自动模块具有以下特征：</p>
-<p>（1）不包含module-info.class；<br>（2）它有一个在META-INF&#x2F;MANIFEST.MF中指定或者来自其文件名的模块名称。<br>（3）通过requires transitive请求所有其他已解析模块。<br>（4）导出所有包。<br>（5）读取路径（或者更准确地讲，读取前面所讨论的未命名模块）。<br>（6）它不能与其他模块拆分包。</p>
-<p>自动模块并不是一个设计良好的模块。虽然请求所有的模块并导出所有的包听起来不像是正确的模块化，但至少是可用的。</p>
-<p>自动模块中仍然没有明确的信息来告诉模块系统真正需要哪些模块，这意味着JVM在启动时不会警告自动模块的依赖项丢失。</p>
-<p>作为开发人员，负责确保模块路径（或类路径）包含所有必需的依赖项。这与使用类路径没有太大区别。</p>
-<p>模块图中的所有模块都需要通过自动模块传递。这实际上意味着，如果请求一个自动模块，那么就可以“免费”获得所有其他模块的隐式可读性。</p>
-<p>当使用自动模块时，也会遇到拆分包。在大型应用程序中，由于依赖关系管理不善，通常会发现拆分包。拆分包始终是一个错误，因为它们在类路径上不能可靠地工作。</p>
-<h2 id="未命名模块"><a href="#未命名模块" class="headerlink" title="未命名模块"></a>未命名模块</h2><p>模块路径上的非模块化JAR变成了自动模块。而类路径变成了未命名模块。</p>
-<p>类路径上的所有代码都是未命名模块的一部分。</p>
-<p>存在一个很大的限制：未命名模块本身只能通过自动模块读取（只有自动模块可以读取类路径）</p>
-<p>当读取未命名模块时自动模块和显式模块之间的区别。显式模块只能读取其他显式模块和自动模块。而自动模块可读取所有模块，包括未命名模块。</p>
-<p>未命名模块的可读性只是一种在混合类路径&#x2F;模块路径迁移方案中有助于自动模块的机制。</p>
-<p>JVM为什么没有那么“聪明”呢？它有权访问自动模块中的所有代码，那么为什么不分析依赖关系呢？如果想要分析这些代码是否调用其他模块，JVM需要对所有代码执行字节码分析。虽然这不难实现，但却是一个昂贵的操作，可能会大量增加大型应用程序的启动时间。而且，这样的分析不会发现通过反射产生的依赖关系。由于存在这些限制，JVM不可能也永远不会这样做。相反，JDK附带了另一个工具jdeps，它可以执行字节码分析。</p>
-<p>现代构建工具通常有一个“在重复依赖项上失败”的设置，这使得依赖关系管理问题变得更加清晰，从而迫使尽早解决这些问题。强烈建议使用这个设置。关于该问题，Java模块系统比类路径要严格得多。当它检测到一个包从模块路径上的两个模块导出时，就会拒绝启动。相比于以前使用类路径时所遇到的不可靠情况，这种快速失败（fail-fast）机制要好得多。在开发过程中失败好过在生产过程中失败，尤其是当一些不幸的用户碰到一个由于模糊的类路径问题而被破坏的代码路径时。但这也意味着我们必须处理这些问题。盲目地将所有JAR从类路径移至模块路径可能导致在生成的自动模块之间出现拆分包。而这些拆分包将被模块系统所拒绝。</p>
-<p>为了使迁移变得容易一些，当涉及自动模块和未命名模块时，上述规则存在一个例外，即承认很多类路径是不正确的，并且包含拆分包。当（自动）模块和未命名模块都包含相同的包时，将使用来自（自动）模块的包，而未命名模块中的包被忽略。</p>
-<p>如果在迁移到Java 9时遇到了拆分包问题，那么是无法绕过的。即使从用户角度来看基于类路径的应用程序可以正确工作，你也必须处理这些问题。</p>
-<p>拆分包会导致无法以模块系统的方式启动服务</p>
-<h2 id="未命名模块（unnamed-module）和自动模块（automatic-module）总结"><a href="#未命名模块（unnamed-module）和自动模块（automatic-module）总结" class="headerlink" title="未命名模块（unnamed module）和自动模块（automatic module）总结"></a>未命名模块（unnamed module）和自动模块（automatic module）总结</h2><p>（1）一个未经模块化改造的 jar 文件是转为未命名模块还是自动模块，取决于这个 jar 文件出现的路径，如果是类路径，那么就会转为未命名模块，如果是模块路径，那么就会转为自动模块。注意，自动模块也属于命名模块的范畴，其名称是模块系统基于 jar 文件名自动推导得出的<br>（2）两者还有一个关键区别，分裂包规则适用于自动模块，但对未命名模块无效，也即多个未命名模块可以导出同一个包，但自动模块不允许。<br>（3） 未命名模块和自动模块存在的意义在于，无论传入的 jar 文件是否一个合法的模块（包含 module descriptor），Java 内部都可以统一的以模块的方式进行处理，这也是 Java 9 兼容老版本应用的架构原理。运行老版本应用时，所有 jar 文件都出现在类路径下，也就是转为未命名模块，对于未命名模块而言，默认导出所有包并且依赖所有模块，因此应用可以正常运行。<br>（4）基于未命名模块和自动模块，相应的就产生了两种老版本应用的迁移策略，或者说模块化策略。<br>（5）等所有 jar 包都完成模块化改造，应用改为 -m 方式启动，这也标志着应用已经迁移为真正的 Java 9 应用<br>（6）-cp 和 -m 可以同时存在 并运行？？可以（类路径和模块系统可以混合运行）</p>
-<h2 id="java9-自动模块-的意义"><a href="#java9-自动模块-的意义" class="headerlink" title="java9 自动模块 的意义"></a>java9 自动模块 的意义</h2><p>（1）个人理解，只是为了让开发者能像模块一样使用起来，引入。实际上封装性方面和类路径没任何区别。<br>（2）未命名模块和自动模块存在的意义在于，无论传入的 jar 文件是否一个合法的模块（包含 module descriptor），Java 内部都可以统一的以模块的方式进行处理，这也是 Java 9 兼容老版本应用的架构原理。</p>
-<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>（1）如何用最快的速度判别它是不是一个模块？它又是如何定义的？<br>试试看 jar -d -f <jar_file>。<br>（2）通过JDK11内置jdeps工具查找过期以及废弃API以及对应的替换<br><code>./jdk-11.0.10.jdk/Contents/Home/bin/jdeps --jdk-internals ./build/libs/service.jar</code><br><code>./jdk-11.0.10.jdk/Contents/Home/bin/jdeps --jdk-internals -R --class-path ./build/deploy/* ./build/libs/*</code><br><code>jdeps --jdk-internals -R --class-path &#39;libs/*&#39; $project</code><br>libs是你的所有依赖的目录，$project是你的项目jar包<br>（3）我们可以在线上使用OpenJDK，开发时，使用任意的JDK。<br><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/87157172">https://zhuanlan.zhihu.com/p/87157172</a></jar_file></p>
-<h2 id="库迁移"><a href="#库迁移" class="headerlink" title="库迁移"></a>库迁移</h2><p>迁移库和迁移应用程序之间最大的区别在于库被许多应用程序使用。这些应用程序可能运行在不同版本的Java上，所以库通常需要在各种Java版本上工作。期望库的用户在你迁移库的同时切换到Java 9是不现实的。</p>
-<p>库的迁移过程由以下步骤组成：</p>
-<p>1）确保库可以作为自动模块在Java 9上运行。<br>2）使用Java 9编译器编译库（主要使用满足需求的最低Java版本），而不使用新的Java 9功能。<br>3）添加一个模块描述符，并将库转换为显式模块。<br>4）重构库的结构，以便增加封装性，识别API，并尽可能分割成多个模块（可选）。<br>5）开始使用库中的Java 9功能，同时保持向后兼容Java 9的早期版本。</p>
-<p>库管理需要使用java8编译，模块描述需要用java9编译，且不能使用新特性，否则java8编译不过</p>
-<p>项目模块化后，很多第三库（基于反射的），深度反射项目代码，或jdk，可能不能用，要进行特殊处理</p>
-<p>历史解决jar包冲突问题得改造成模块化</p>
-<h1 id="四、模块系统实践例子"><a href="#四、模块系统实践例子" class="headerlink" title="四、模块系统实践例子"></a>四、模块系统实践例子</h1><h2 id="1、相同模块不同版本，新版废弃方法"><a href="#1、相同模块不同版本，新版废弃方法" class="headerlink" title="1、相同模块不同版本，新版废弃方法"></a>1、相同模块不同版本，新版废弃方法</h2><p>结论：运行时才会报错</p>
-<p>module_2-1.0  依赖 module_1-1.0 printInfo.print2()方法，项目依赖 module_1-2.0 printInfo.print3()；<br>build的时候并不能识别到错误，只有运行时才会发现错误 java.lang.NoSuchMethodError: com.kxw.module1.info.PrintInfo.print2()V</p>
-<h2 id="2、不同模块含重复类"><a href="#2、不同模块含重复类" class="headerlink" title="2、不同模块含重复类"></a>2、不同模块含重复类</h2><p>结论：不同模块可以存在相同类，在引入时指定模块，可以正确加载到对应类</p>
-<p>（1）如果同时引入两个不同模块（不管是直接还是间接），编译时会检测引入的模块是否包含可读的相同路径<br>编译报错：错误: 未命名的模块同时从 com.kxw.module.four 和 com.kxw.module.three 读取程序包 com.kxw.module.config</p>
-<p>（2）如果模块存在相同类，但是却没有通过export声明，仅内部使用，那么编译时将无法检测，但运行时报 （两个模块都没有export的情况，结果一样）<br>Error occurred during initialization of boot layer<br>java.lang.LayerInstantiationException: Package com.kxw.module.config in both module com.kxw.module.three and</p>
-<p>没声明（export）的情况下，运行时怎么检测有相同的package？<br>报：Checks for split packages between modules defined to the built-in class loaders.<br> ModuleBootstrap#checkSplitPackages 会检查所有module的package是否重复，通过String other &#x3D; packageToModule.putIfAbsent(p, name);来实现</p>
-<p>结论：只要是一个模块，且被引入，有相同包名都可以在启动时被检测出来并报错 （为什么编译时不做的呢？main方法不明确？还是要指定主模块？）</p>
-<p>注意：类路径加载的模块都是未命名模块，且不会因为包冲突而报错 </p>
-<h1 id="五、classloader的变化"><a href="#五、classloader的变化" class="headerlink" title="五、classloader的变化"></a>五、classloader的变化</h1><h2 id="1、类加载器变化概览"><a href="#1、类加载器变化概览" class="headerlink" title="1、类加载器变化概览"></a>1、类加载器变化概览</h2><h3 id="双亲委派机制"><a href="#双亲委派机制" class="headerlink" title="双亲委派机制"></a>双亲委派机制</h3><p>（1）任意一个 ClassLoader 在尝试加载一个类的时候，都会先尝试调用其父类的相关方法去加载类，如果其父类不能加载该类，则交由子类去完成。 这样的好处：对于任意使用者自定义的 ClassLoader，都会先去尝试让 jvm 的 Bootstrap ClassLoader 去尝试加载(自定义的 ClassLoader 都继承了它们)。那么就能保证 jvm 的类会被优先加载，限制了使用者对 jvm 系统的影响。</p>
-<p>（2）jdk9中的双亲委派机制仍然存在，只是在委派之前会优先寻找模块所属的加载器进行加载。</p>
-<h3 id="jdk9之前"><a href="#jdk9之前" class="headerlink" title="jdk9之前"></a>jdk9之前</h3><p>Boostrap -&gt; Extension -&gt; Application</p>
-<p>（1）bootstrap classloader加载rt.jar，jre&#x2F;lib&#x2F;endorsed （用来加载 jvm 自身需要的类，c++ 实现，用来加载 rt.jar）<br>（2）ext classloader加载jre&#x2F;lib&#x2F;ext （ 在 jdk9 中已经被移除。）<br>（3）application classloader加载-cp指定的类 (负责加载ClassPath路径下的类)</p>
-<h3 id="jdk9及之后"><a href="#jdk9及之后" class="headerlink" title="jdk9及之后"></a>jdk9及之后</h3><p>Application -&gt; Platform -&gt; Boostrap</p>
-<p>（1）bootstrap classloader加载lib&#x2F;modules 中的核心模块 （主要用来加载 java.base 中的核心系统类）<br>（2）ext classloader被废弃，新增platform classloader，加载lib&#x2F;modules的非核心模块 （用来加载 jdk 中的非核心模块类）<br>（3）application classloader加载-cp，-mp指定的类 （用来加载一般的应用类）</p>
-<h4 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h4><p>JDK9开始，AppClassLoader父类不再是 URLClassLoader；而是BuiltinClassLoader</p>
-<p>之前对于动态加载的类，我们总是通过将这个类通过反射调用URLClassLoader加到classpath里面进行加载。这么加载在JDK11中已经无法实现，并且这样加载的类不能卸载。 对于动态加载的类，我们在OpenJDK11中只能自定义类加载器去加载，而不是通过获取APPClassLoader去加载。同时，这么做也有助于你随时能将动态加载的类卸载，因为并没有加载到APPClassLoader。</p>
-<p>建议使用自定义的类加载器继承SecureClassLoader去加载类：java.security.SecureClassLoader</p>
-<h3 id="BuiltinClassLoader"><a href="#BuiltinClassLoader" class="headerlink" title="BuiltinClassLoader"></a>BuiltinClassLoader</h3><p>BuiltinClassLoader 是 jdk9 中代替 URLClassLoader 的加载器，是 PlatformClassLoader 与 AppClassLoader 的父类。其继承了 SecureClassLoader，其核心的方法主要是 loadClassOrNull(…) 方法</p>
-<h3 id="如何自定义加载器"><a href="#如何自定义加载器" class="headerlink" title="如何自定义加载器"></a>如何自定义加载器</h3><p>（1）java9之前</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ArthasClassloader</span> <span class="keyword">extends</span> <span class="title class_">URLClassLoader</span> &#123;</span><br><span class="line"><span class="keyword">public</span> <span class="title function_">ArthasClassloader</span><span class="params">(URL[] urls)</span> &#123;</span><br><span class="line"><span class="built_in">super</span>(urls, ClassLoader.getSystemClassLoader().getParent());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">protected</span> <span class="keyword">synchronized</span> Class&lt;?&gt; loadClass(String name, <span class="type">boolean</span> resolve) <span class="keyword">throws</span> ClassNotFoundException &#123;</span><br><span class="line"><span class="keyword">final</span> Class&lt;?&gt; loadedClass = findLoadedClass(name);</span><br><span class="line"><span class="keyword">if</span> (loadedClass != <span class="literal">null</span>) &#123;</span><br><span class="line"><span class="keyword">return</span> loadedClass;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 优先从parent（SystemClassLoader）里加载系统类，避免抛出ClassNotFoundException</span></span><br><span class="line"><span class="keyword">if</span> (name != <span class="literal">null</span> &amp;&amp; (name.startsWith(<span class="string">&quot;sun.&quot;</span>) || name.startsWith(<span class="string">&quot;java.&quot;</span>))) &#123;</span><br><span class="line"><span class="keyword">return</span> <span class="built_in">super</span>.loadClass(name, resolve);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">Class&lt;?&gt; aClass = findClass(name);</span><br><span class="line"><span class="keyword">if</span> (resolve) &#123;</span><br><span class="line">resolveClass(aClass);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> aClass;</span><br><span class="line">&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line"><span class="comment">// ignore</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> <span class="built_in">super</span>.loadClass(name, resolve);</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>（2）java9之后</p>
-<p>TODO</p>
-<h2 id="2、扩展机制"><a href="#2、扩展机制" class="headerlink" title="2、扩展机制"></a>2、扩展机制</h2><p>（1）版本9之前的Java SE允许扩展机制，可以通过将JAR放置在系统属性java.ext.dirs指定的目录中来扩展运行时映像。 如果未设置此系统属性，则使用jre\lib\ext目录作为其默认值。 该机制通过扩展类加载器（这是引导类加载器的子类）和系统类加载器的父级加载了该目录中的所有JAR。 它加载所有应用程序类。 这些JAR的内容对于在此运行时映像上编译或运行的所有应用程序都可见。</p>
-<p>（2）Java SE 9不支持扩展机制。 如果需要类似的功能，可以将这些JAR放在类路径的前面。 使用名为JAVA_HOME\lib\ext的目录或设置名为java.ext.dirs的系统属性会导致JDK 9中的错误。</p>
-<p>（3）在JDK 9之前，扩展类加载器和应用程序类加载器是java.net.URLClassLoader类的一个实例。 在JDK 9中，平台类加载器（以前的扩展类加载器）和应用程序类加载器是内部JDK类的实例。 如果你的代码依赖于URLClassLoader类的特定方法，代码可能会在JDK 9中崩溃。</p>
-<h2 id="3、类加载器的加载流程"><a href="#3、类加载器的加载流程" class="headerlink" title="3、类加载器的加载流程"></a>3、类加载器的加载流程</h2><p><img src="/2022/02/08/20220208-Java11%E5%9F%BA%E7%A1%80%E5%8E%9F%E7%90%86%E5%92%8C%E5%AE%9E%E8%B7%B5/java11_classloader.png"></p>
-<h3 id="在JDK-9之前"><a href="#在JDK-9之前" class="headerlink" title="在JDK 9之前"></a>在JDK 9之前</h3><p>a. JDK使用三个类加载器来加载类<br>b. JDK类加载器以分层方式工作 —— 引导类加载器位于层次结构的顶部。 类加载器将类加载请求委托给上层类加载器。</p>
-<p>例如，如果应用程序类加载器需要加载一个类，它将请求委托给扩展类加载器，扩展类加载器又将请求委托给引导类加载器。 如果引导类加载器无法加载类，扩展类加载器将尝试加载它。 如果扩展类加载器无法加载类，则应用程序类加载器尝试加载它。 如果应用程序类加载器无法加载它，则抛出ClassNotFoundException异常。</p>
-<p>c. 引导类加载器是扩展类加载器的父类。 扩展类加载器是应用程序类加载器的父类。 引导类加载器没有父类。 默认情况下，应用程序类加载器将是你创建的其他类加载器的父类。</p>
-<h3 id="在JDK-9之前的类加载机制"><a href="#在JDK-9之前的类加载机制" class="headerlink" title="在JDK 9之前的类加载机制"></a>在JDK 9之前的类加载机制</h3><p>（1）【Boostrap】引导类加载器加载由Java平台组成的引导类，包括JAVA_HOME\lib\rt.jar中的类和其他几个运行时JAR。 它完全在虚拟机中实现。 可以使用-Xbootclasspath&#x2F;p和-Xbootclasspath&#x2F;a命令行选项来附加引导目录。 可以使用-Xbootclasspath选项指定引导类路径，该选项将替换默认的引导类路径。 在运行时，sun.boot.class.path系统属性包含引导类路径的只读值。 JDK通过null表示这个类加载器。 也就是说，你不能得到它的引用。 例如，Object类由引导类加载器加载，并且Object.class.getClassLoader()表达式将返回null。</p>
-<p>（2）【Extension】扩展类加载器用于通过java.ext.dirs系统属性指定的目录中的位于JAR中的扩展机制加载可用的类。要获得扩展类加载器的引用，需要获取应用程序类加载器的引用，并在该引用上使用getParent()方法。</p>
-<p>（3）【Application】应用程序类加载器从由CLASSPATH环境变量指定的应用程序类路径或命令行选项-cp或-classpath加载类。应用程序类加载器也称为系统类加载器，这是一种误称，它暗示它加载系统类。可以使用ClassLoader类的静态方法getSystemClassLoader()获取对应用程序类加载器的引用。</p>
-<h3 id="在JDK-9及之后"><a href="#在JDK-9及之后" class="headerlink" title="在JDK 9及之后"></a>在JDK 9及之后</h3><p>a. JDK9保持三级分层类加载器架构以实现向后兼容。但是，从模块系统加载类的方式有一些变化。<br>b. 在JDK 9中，应用程序类加载器【Application】可以委托给平台类加载器【Platform】以及引导类加载器【Boostrap】；平台类加载器【Platform】可以委托给引导类加载器【Boostrap】和应用程序类加载器【Application】。</p>
-<p>（1）在JDK 9中，引导类加载器是由类库和代码在虚拟机中实现的(不再是c++实现)。 为了向后兼容，它在程序中仍然由null表示。 例如，Object.class.getClassLoader()仍然返回null。 但是，并不是所有的Java SE平台和JDK模块都由引导类加载器加载。 举几个例子，引导类加载器加载的模块是java.base，java.logging，java.prefs和java.desktop。 其他Java SE平台和JDK模块由平台类加载器和应用程序类加载器加载，这在下面介绍。 JDK 9中不再支持用于指定引导类路径，-Xbootclasspath和-Xbootclasspath&#x2F;p选项以及系统属性sun.boot.class.path。-Xbootclasspath&#x2F;a选项仍然受支持，其值存储在jdk.boot.class.path.append的系统属性中。</p>
-<p>（2）JDK 9不再支持扩展机制。 但是，它将扩展类加载器保留在名为平台类加载器的新名称下。 ClassLoader类包含一个名为getPlatformClassLoader()的静态方法，该方法返回对平台类加载器的引用。 下表包含平台类加载器加载的模块列表。 平台类加载器用于另一目的。 默认情况下，由引导类加载器加载的类将被授予所有权限。 但是，几个类不需要所有权限。 这些类在JDK 9中已经被取消了特权，并且它们被平台类加载器加载以提高安全性。<br>下面是JDK 9中由平台加载器加载的模块列表。</p>
-<p>（3）应用程序类加载器加载在模块路径上找到的应用程序模块和一些提供工具或导出工具API的JDK模块，如下表所示。 仍然可以使用ClassLoader类的getSystemClassLoader()的静态方法来获取应用程序类加载器的引用。</p>
-<h3 id="在JDK-9及之后的的类加载机制"><a href="#在JDK-9及之后的的类加载机制" class="headerlink" title="在JDK 9及之后的的类加载机制"></a>在JDK 9及之后的的类加载机制</h3><p>三个内置的类加载器一起协作来加载类。</p>
-<p>（1）当应用程序类加载器需要加载类时，它将搜索定义到所有类加载器的模块。 如果有合适的模块定义在这些类加载器中，则该类加载器将加载类，这意味着应用程序类加载器现在可以委托给引导类加载器和平台类加载器。 如果在为这些类加载器定义的命名模块中找不到类，则应用程序类加载器将委托给其父类，即平台类加载器。 如果类尚未加载，则应用程序类加载器将搜索类路径。 如果它在类路径中找到类，它将作为其未命名模块的成员加载该类。 如果在类路径中找不到类，则抛出ClassNotFoundException异常。</p>
-<p>（2）当平台类加载器需要加载类时，它将搜索定义到所有类加载器的模块。 如果一个合适的模块被定义为这些类加载器中，则该类加载器加载该类。 这意味着平台类加载器可以委托给引导类加载器以及应用程序类加载器。 如果在为这些类加载器定义的命名模块中找不到一个类，那么平台类加载器将委托给它的父类，即引导类加载器。</p>
-<p>（3）当引导类加载器需要加载一个类时，它会搜索自己的命名模块列表。 如果找不到类，它将通过命令行选项-Xbootclasspath&#x2F;a指定的文件和目录列表进行搜索。 如果它在引导类路径上找到一个类，它将作为其未命名模块的成员加载该类。</p>
-<p>JDK 9包含一个名为-Xlog::modules的选项，用于在虚拟机加载时记录调试或跟踪消息，可以看到类加载器及其加载的模块和类。其格式如下：</p>
-<p><code>-Xlog:modules=&lt;debug|trace&gt;</code><br><code>java -Xlog:modules=trace --module-path lib --module com.jdojo.prime.client/com.jdojo.prime.client.Main &gt; test.txt</code></p>
-<h3 id="JDK-9各类加载器对应加载的模块"><a href="#JDK-9各类加载器对应加载的模块" class="headerlink" title="JDK 9各类加载器对应加载的模块"></a>JDK 9各类加载器对应加载的模块</h3><p>（1）bootstrap classloader加载lib&#x2F;modules</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">java.base java.security.sasl</span><br><span class="line">java.datatransfer java.xml</span><br><span class="line">java.desktop jdk.httpserver</span><br><span class="line">java.instrument jdk.internal.vm.ci</span><br><span class="line">java.logging jdk.management</span><br><span class="line">java.management jdk.management.agent</span><br><span class="line">java.management.rmi jdk.naming.rmi</span><br><span class="line">java.naming jdk.net</span><br><span class="line">java.prefs jdk.sctp</span><br><span class="line">java.rmi jdk.unsupported</span><br></pre></td></tr></table></figure>
-<p>（2）platform classloader，加载lib&#x2F;modules</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">java.activation* jdk.accessibility</span><br><span class="line">java.compiler* jdk.charsets</span><br><span class="line">java.corba* jdk.crypto.cryptoki</span><br><span class="line">java.scripting jdk.crypto.ec</span><br><span class="line">java.se jdk.dynalink</span><br><span class="line">java.se.ee jdk.incubator.httpclient</span><br><span class="line">java.security.jgss jdk.internal.vm.compiler*</span><br><span class="line">java.smartcardio jdk.jsobject</span><br><span class="line">java.sql jdk.localedata</span><br><span class="line">java.sql.rowset jdk.naming.dns</span><br><span class="line">java.transaction* jdk.scripting.nashorn</span><br><span class="line">java.xml.bind* jdk.security.auth</span><br><span class="line">java.xml.crypto jdk.security.jgss</span><br><span class="line">java.xml.ws* jdk.xml.dom</span><br><span class="line">java.xml.ws.annotation* jdk.zipfs</span><br></pre></td></tr></table></figure>
-<p>（3）application classloader加载-cp，-mp指定的类</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">jdk.aot jdk.jdeps</span><br><span class="line">jdk.attach jdk.jdi</span><br><span class="line">jdk.compiler jdk.jdwp.agent</span><br><span class="line">jdk.editpad jdk.jlink</span><br><span class="line">jdk.hotspot.agent jdk.jshell</span><br><span class="line">jdk.internal.ed jdk.jstatd</span><br><span class="line">jdk.internal.jvmstat jdk.pack</span><br><span class="line">jdk.internal.le jdk.policytool</span><br><span class="line">jdk.internal.opt jdk.rmic</span><br><span class="line">jdk.jartool jdk.scripting.nashorn.shell</span><br><span class="line">jdk.javadoc jdk.xml.bind*</span><br><span class="line">jdk.jcmd jdk.xml.ws*</span><br><span class="line">jdk.jconsole</span><br></pre></td></tr></table></figure>
-<h2 id="4、其他"><a href="#4、其他" class="headerlink" title="4、其他"></a>4、其他</h2><p>（1）如果你想访问classpath下的内容，你可以读取环境变量：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">String</span> <span class="variable">pathSeparator</span> <span class="operator">=</span> System</span><br><span class="line">.getProperty(<span class="string">&quot;path.separator&quot;</span>);</span><br><span class="line">String[] classPathEntries = System</span><br><span class="line">.getProperty(<span class="string">&quot;java.class.path&quot;</span>)</span><br><span class="line">.split(pathSeparator);</span><br></pre></td></tr></table></figure>
-<p>（2）设置虚拟机参数为”-XX:+TraceClassLoading”来获取类加载信息<br>（3）如何判断类是有未命名模块加载，还是正常模块加载的 ：clazz.getModule()</p>
-<h1 id="六、垃圾回收器"><a href="#六、垃圾回收器" class="headerlink" title="六、垃圾回收器"></a>六、垃圾回收器</h1><h2 id="JDK-11-默认使用G1"><a href="#JDK-11-默认使用G1" class="headerlink" title="JDK 11 默认使用G1"></a>JDK 11 默认使用G1</h2><p>G1会比CMS有更多的内存消耗，多了两个内存结构：</p>
-<p>Remembered Sets：每个区块Region都有一个与之对应的Remembered Set来记录不同区块间对象引用（其他收集器只是记录新生代、老年代间互相引用）。用来避免全堆扫描<br>Collection Sets：将要被回收区块对象的集合，GC时收集器将这些区块对象复制到其他区块中</p>
-<h2 id="ZGC"><a href="#ZGC" class="headerlink" title="ZGC"></a>ZGC</h2><p>ZGC（The Z Garbage Collector）是JDK 11中推出的一款低延迟垃圾回收器，它的设计目标包括：</p>
-<p>停顿时间不超过10ms；<br>停顿时间不会随着堆的大小，或者活跃对象的大小而增加；<br>支持8MB~4TB级别的堆（未来支持16TB）。</p>
-<p>从设计目标来看，我们知道ZGC适用于大内存低延迟服务的内存管理和回收。</p>
-<p>对吞吐量优先的场景，ZGC可能并不适合。<br>ZGC作为下一代垃圾回收器，性能非常优秀。ZGC垃圾回收过程几乎全部是并发，实际STW停顿时间极短，不到10ms。这得益于其采用的着色指针和读屏障技术。</p>
-<p>后续考虑在生产环境使用ZGC。</p>
-<h1 id="七、新特性"><a href="#七、新特性" class="headerlink" title="七、新特性"></a>七、新特性</h1><h2 id="1、HttpClient-API"><a href="#1、HttpClient-API" class="headerlink" title="1、HttpClient API"></a>1、HttpClient API</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">HttpClient</span> <span class="variable">client</span> <span class="operator">=</span> HttpClient.newHttpClient();</span><br><span class="line"><span class="type">HttpRequest</span> <span class="variable">request</span> <span class="operator">=</span> HttpRequest.newBuilder()</span><br><span class="line">.uri(URI.create(<span class="string">&quot;http://openjdk.java.net/&quot;</span>))</span><br><span class="line">.build();</span><br><span class="line">client.sendAsync(request, BodyHandlers.ofString())</span><br><span class="line">.thenApply(HttpResponse::body)</span><br><span class="line">.thenAccept(System.out::println)</span><br><span class="line">.join();</span><br></pre></td></tr></table></figure>
-<h2 id="2、使用Stream-dropWhile-简化代码"><a href="#2、使用Stream-dropWhile-简化代码" class="headerlink" title="2、使用Stream dropWhile 简化代码"></a>2、使用Stream dropWhile 简化代码</h2><p>获取列表从lastId开始到结尾的子集</p>
-<p>java8</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="variable">index</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line"><span class="keyword">for</span> (UserDynamicSortSetMemberWithScoreBO bo : sortSetKeyList) &#123;</span><br><span class="line"><span class="keyword">if</span> (bo.getId() == lastId) &#123;</span><br><span class="line"><span class="keyword">break</span>;</span><br><span class="line">&#125;</span><br><span class="line">index++;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> sortSetKeyList.stream()</span><br><span class="line">.skip(index + <span class="number">1</span>)</span><br><span class="line">.limit(DynamicConfig.feedListPageSize())</span><br><span class="line">.collect(Collectors.toList());</span><br></pre></td></tr></table></figure>
-<p>java9</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> sortSetKeyList.stream()</span><br><span class="line">.dropWhile(v -&gt; !v.getId().equals(lastId))</span><br><span class="line">.skip(<span class="number">1</span>)</span><br><span class="line">.limit(DynamicConfig.feedListPageSize())</span><br><span class="line">.collect(Collectors.toList());</span><br></pre></td></tr></table></figure>
-<h2 id="3、Optional-ifPresentOrElse"><a href="#3、Optional-ifPresentOrElse" class="headerlink" title="3、Optional.ifPresentOrElse"></a>3、Optional.ifPresentOrElse</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">optional.ifPresentOrElse( x -&gt; System.out.println(<span class="string">&quot;Value: &quot;</span> + x),() -&gt;</span><br><span class="line">System.out.println(<span class="string">&quot;Not Present.&quot;</span>));</span><br></pre></td></tr></table></figure>
-
-
-<h1 id="八、迁移实践"><a href="#八、迁移实践" class="headerlink" title="八、迁移实践"></a>八、迁移实践</h1><h2 id="目标1：可运行"><a href="#目标1：可运行" class="headerlink" title="目标1：可运行"></a>目标1：可运行</h2><p>由于项目历史沉重（代码不兼容或依赖未模块化），先使用旧方式运行（类路径而不是模块系统）</p>
-<p>1、目标：用最简单快速的方式使用java11编译和运行代码<br>2、收益：使用属于Java 9-11 新的API、工具和性能改进。<br>3、未使用Java 9的旗舰功能——模块系统，仍使用类路径方式运行服务</p>
-<h2 id="目标2：使用模块系统运行"><a href="#目标2：使用模块系统运行" class="headerlink" title="目标2：使用模块系统运行"></a>目标2：使用模块系统运行</h2><p>模块化改造，在现有的项目中如何发挥模块化的作用</p>
-<h3 id="自动模块会exports所有包，导致分包问题，不同模块包含相同包"><a href="#自动模块会exports所有包，导致分包问题，不同模块包含相同包" class="headerlink" title="自动模块会exports所有包，导致分包问题，不同模块包含相同包"></a>自动模块会exports所有包，导致分包问题，不同模块包含相同包</h3><p>解决的方法：<br>（1）改代码，去除这种不规范（难，第三方包很多这种）<br>（2）把这种包放在未命名模块</p>
-<h3 id="由于完全模块化分包的问题无法解决，所以要混合两种方式运行项目"><a href="#由于完全模块化分包的问题无法解决，所以要混合两种方式运行项目" class="headerlink" title="由于完全模块化分包的问题无法解决，所以要混合两种方式运行项目"></a>由于完全模块化分包的问题无法解决，所以要混合两种方式运行项目</h3><p>gradle对混合两种（类路径和模块系统）的支持不足<br>直接命令行使用混合两种运行是可以的：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./jdk-11.0.10.jdk/Contents/Home/bin/java --add-opens=java.base/jdk.internal.loader=ALL-UNNAMED -cp &quot;build/deploy/*&quot; -p &quot;build/module/*&quot; --add-modules &quot;com.xx.xx.xx&quot; com.xx.xx.xx.Application</span><br></pre></td></tr></table></figure>
-
-
-<h2 id="目标3：使用java17"><a href="#目标3：使用java17" class="headerlink" title="目标3：使用java17"></a>目标3：使用java17</h2><h3 id="1、Gradle-7-3-is-the-first-version-fully-supporting-Java-17"><a href="#1、Gradle-7-3-is-the-first-version-fully-supporting-Java-17" class="headerlink" title="1、Gradle 7.3 is the first version fully supporting Java 17"></a>1、Gradle 7.3 is the first version fully supporting Java 17</h3><h3 id="2、Spring-Boot-2-5-5是Spring-Boot-第一个支持Java-17的版本"><a href="#2、Spring-Boot-2-5-5是Spring-Boot-第一个支持Java-17的版本" class="headerlink" title="2、Spring Boot 2.5.5是Spring Boot 第一个支持Java 17的版本"></a>2、Spring Boot 2.5.5是Spring Boot 第一个支持Java 17的版本</h3><h1 id="其他-1"><a href="#其他-1" class="headerlink" title="其他"></a>其他</h1><ul>
-<li>新版本jdk现在基本都是规定时间内免费，比如半年或三年，一般情况下直接用openjdk就足够了。</li>
-<li><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1598291">OpenJDK和Oracle JDK有什么区别和联系</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.fokyl.com/news/openjdk%20oracle%20jdk%20.html">openjdk与Oraclejdk的区别</a><ul>
-<li>在2006年11月13日的JavaOne大会上，Sun公司（当时还没被收购）宣布计划要把Java开源，在随后的一年多时间内，它陆续地将JDK的各个部分在GPL v2（GNU General Public License v2）协议下公开了源码，并建立了OpenJDK组织对这些源码进行独立管理。除了极少量的产权代码（Encumbered Code，这部分代码所有权不属于Sun公司，Sun本身也无权进行开源处理）外，OpenJDK几乎拥有了当时SunJDK 的全部代码。</li>
-<li>但是随着JDK版本的不断发布，Oracle失去了维护OpenJDK的耐心，因为不赚钱啊。RedHat从Oracle手上接过OpenJDK的管理权利和维护职责。</li>
-</ul>
-</li>
-<li><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/19646618">https://www.zhihu.com/question/19646618</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/353325963">https://www.zhihu.com/question/353325963</a><ul>
-<li>OpenJDK 实际上不适合拿来和 OracleJDK 进行对比，OpenJDK 不提供 LTS 服务，而 OracleJDK 每三年都会推出一个 LTS 版进行长期支持。</li>
-</ul>
-</li>
-<li>从 11+ 版本开始 -XX:+UseContainerSupport 已经自动开启, 可以自适应内存pod的内存限制,不用通过<code>-Xms -Xmx</code> 来设置</li>
-</ul>
-<h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><ul>
-<li>[Java 9模块化开发_核心原则与实践]</li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_34378888/article/details/112584392">模块化加载_Java9模块化的类加载机制实现剖析</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/eMac/article/details/107131444">【JDK 11】关于 Java 模块系统，看这一篇就够了</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/IcanFixIt/p/7131676.html">Java 9 揭秘（8. JDK 9重大改变）</a></li>
-<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/87157172">从JDK8升级到JDK11，看这篇就足够了</a></li>
-<li><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/47685388/load-class-from-exploded-module-using-custom-classloader">Load class from exploded module using custom classloader</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.baeldung.com/java-classloaders">Class Loaders in Java</a></li>
-<li><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/60764/how-to-load-jar-files-dynamically-at-runtime">How to load JAR files dynamically at Runtime?</a></li>
-<li><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/46112809/is-it-possible-to-load-and-unload-jdk-and-custom-modules-dynamically-in-java-9">Is it possible to load and unload jdk and custom modules dynamically in Java 9?</a></li>
-<li><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903666932006926">聊聊java9的classloader</a></li>
-<li><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000020110723">JVM_类加载机制详解</a></li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/ag5u2EPObx7bZr7hkcrOTg">新一代垃圾回收器ZGC的探索与实践</a></li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/3/">&lt;i class&#x3D;&quot;fa fa-angle-left&quot;&gt;&lt;&#x2F;i&gt;</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/5/">&lt;i class&#x3D;&quot;fa fa-angle-right&quot;&gt;&lt;&#x2F;i&gt;</a>
+    <a class="extend prev" rel="prev" href="/page/3/">&lt;i class&#x3D;&quot;fa fa-angle-left&quot;&gt;&lt;&#x2F;i&gt;</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><a class="extend next" rel="next" href="/page/5/">&lt;i class&#x3D;&quot;fa fa-angle-right&quot;&gt;&lt;&#x2F;i&gt;</a>
   </nav>
 
 
@@ -2514,7 +2921,7 @@
 <a href="/archives/">                
 <!--<a href="/archives/%7C%7C%20archive">-->
               
-                  <span class="site-state-item-count">110</span>
+                  <span class="site-state-item-count">114</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2527,7 +2934,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">122</span>
+                  <span class="site-state-item-count">126</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -2571,7 +2978,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2023</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2024</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>

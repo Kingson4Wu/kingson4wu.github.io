@@ -88,13 +88,13 @@
 <meta property="og:site_name" content="拉巴力的纸皮箱">
 <meta property="og:description" content="思维导图 InnoDB 事务隔离级别   隔离级别 脏读 不可重复读 幻读    未提交读(RUC) NO NO NO   已提交读(RC) YES NO NO   可重复读(RR) YES YES NO   可串行化 YES YES YES   InnoDB 锁类型共享&#x2F;排它锁(Shared and Exclusive Locks)在InnoDb中实现了两个标准的行级锁，可以简单的看为">
 <meta property="og:locale">
-<meta property="og:image" content="http://yoursite.com/2020/10/03/20201003-MySQL%E7%AC%94%E8%AE%B0/MySQL.png">
+<meta property="og:image" content="http://yoursite.com/2020/10/03/20201003-mysql-bi-ji/MySQL.png">
 <meta property="article:published_time" content="2020-10-03T15:10:18.000Z">
-<meta property="article:modified_time" content="2023-05-07T14:41:07.616Z">
+<meta property="article:modified_time" content="2023-07-30T07:39:20.520Z">
 <meta property="article:author" content="Kingson Wu">
 <meta property="article:tag" content="MySQL">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://yoursite.com/2020/10/03/20201003-MySQL%E7%AC%94%E8%AE%B0/MySQL.png">
+<meta name="twitter:image" content="http://yoursite.com/2020/10/03/20201003-mysql-bi-ji/MySQL.png">
 
 
 
@@ -368,7 +368,7 @@
       
 
       
-        <h2 id="思维导图"><a href="#思维导图" class="headerlink" title="思维导图"></a>思维导图</h2><p><img src="/2020/10/03/20201003-MySQL%E7%AC%94%E8%AE%B0/MySQL.png"></p>
+        <h2 id="思维导图"><a href="#思维导图" class="headerlink" title="思维导图"></a>思维导图</h2><p><img src="/2020/10/03/20201003-mysql-bi-ji/MySQL.png"></p>
 <h2 id="InnoDB-事务隔离级别"><a href="#InnoDB-事务隔离级别" class="headerlink" title="InnoDB 事务隔离级别"></a>InnoDB 事务隔离级别</h2><table>
 <thead>
 <tr>
@@ -572,10 +572,36 @@
 <h2 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h2><h3 id="InnoDB一棵B-树可以存放多少行数据"><a href="#InnoDB一棵B-树可以存放多少行数据" class="headerlink" title="InnoDB一棵B+树可以存放多少行数据?"></a>InnoDB一棵B+树可以存放多少行数据?</h3><ul>
 <li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/leefreeman/p/8315844.html">https://www.cnblogs.com/leefreeman/p/8315844.html</a></li>
 <li>约2千万。(高度为3的B+树)；一个高度为 3 的 B+ 树大概可以存放 1170 × 1170 × 16 &#x3D; 21902400 行数据，已经是千万级别的数据量了。</li>
-<li>InnoDB存储引擎最小储存单元——页（Page），一个页的大小是16K。</li>
+<li>InnoDB存储引擎最小储存单元——页（Page），一个页的大小默认是16K。<ul>
+<li><code>show variables like &#39;innodb_page_size&#39;;</code></li>
+<li>innodb的所有数据文件（后缀为ibd的文件），他的大小始终都是16384（16k）的整数倍</li>
+</ul>
+</li>
 <li>假设一行记录的数据大小为1k，实际上现在很多互联网业务数据记录大小通常就是1K左右</li>
 <li>非叶子节点能存放多少指针：假设主键ID为bigint类型，长度为8字节，而指针大小在InnoDB源码中设置为6字节，这样一共14字节，我们一个页中能存放多少这样的单元，其实就代表有多少指针，即16384&#x2F;14&#x3D;1170。那么可以算出一棵高度为2的B+树，能存放1170  × 16&#x3D;18720条这样的数据记录。</li>
+<li>根据同样的原理我们可以算出一个高度为3的B+树可以存放：1170<em>1170</em>16&#x3D;21902400条这样的记录。所以在InnoDB中B+树高度一般为1-3层，它就能满足千万级的数据存储。在查找数据时一次页的查找代表一次IO，所以通过主键索引查询通常只需要1-3次IO操作即可查找到数据。</li>
 <li>在InnoDB中B+树高度一般为1-3层，它就能满足千万级的数据存储。在查找数据时一次页的查找代表一次IO，所以通过主键索引查询通常只需要1-3次IO操作即可查找到数据。</li>
+<li>怎么得到InnoDB主键索引B+树的高度？<ul>
+<li>在实际操作之前，你可以通过InnoDB元数据表确认主键索引根页的page number为3，你也可以从《InnoDB存储引擎》这本书中得到确认。</li>
+<li><code>SELECT   b.name, a.name, index_id, type, a.space, a.PAGE_NO   FROM   information_schema.INNODB_SYS_INDEXES a,   information_schema.INNODB_SYS_TABLES b   WHERE   a.table_id = b.table_id AND a.space &lt;&gt; 0;</code></li>
+</ul>
+</li>
+<li>基于现有表的总大小和总行数，算出每一行占用的大概大小<ul>
+<li>每行大概大小 ≈ total_size &#x2F; total_rows</li>
+<li>对于InnoDB存储引擎，可以通过执行以下SQL查询来获取表的大小  <pre>
+  SELECT
+  table_name AS `Table`,
+  ROUND(((data_length + index_length) / 1024 / 1024), 2) AS `Size (MB)`
+  FROM
+  information_schema.tables
+  WHERE
+  table_schema = 'your_database_name' -- 替换为实际的数据库名
+  AND table_name = 'your_table_name'; -- 替换为实际的表名        
+  </pre></li>
+<li>通过查看InnoDB存储引擎的.ibd文件来获取表的大小。每个InnoDB表都有一个对应的.ibd文件，其中包含了该表的数据和索引。</li>
+<li>3层B+树，每行大小1k（1个页16k，则可以存16条数据）：可以记录的总大小大概为1170<em>1170</em>16</li>
+</ul>
+</li>
 </ul>
 <h3 id="MySQL-InnoDB-引擎-RR-隔离级别是否解决了幻读"><a href="#MySQL-InnoDB-引擎-RR-隔离级别是否解决了幻读" class="headerlink" title="MySQL InnoDB 引擎 RR 隔离级别是否解决了幻读?"></a>MySQL InnoDB 引擎 RR 隔离级别是否解决了幻读?</h3><ul>
 <li><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzI3ODcxMzQzMw==&amp;mid=2247489575&amp;idx=2&amp;sn=410aa5a43cb2cdc265dcd39e31128f17&amp;chksm=eb539d11dc24140743b6b6f1369e958417cbe86b9f53809afe2744872f86675e753d9884f9e3&amp;xtrack=1&amp;scene=90&amp;subscene=93&amp;sessionid=1559142508&amp;clicktime=1559142541&amp;ascene=56&amp;devicetype=android-26&amp;version=2700043b&amp;nettype=WIFI&amp;abtest_cookie=BQABAAoACwASABMAFQAHACOXHgBWmR4AyJkeANyZHgDzmR4AA5oeAAyaHgAAAA==&amp;lang=zh_CN&amp;pass_ticket=W5ig5maP6tmaLevaqwsMcnXl28LHoqSmvBuqMPbg7dOQBytHnUWtVKFBwtS2hFz6&amp;wx_header=1">https://mp.weixin.qq.com/s?__biz=MzI3ODcxMzQzMw==&amp;mid=2247489575&amp;idx=2&amp;sn=410aa5a43cb2cdc265dcd39e31128f17&amp;chksm=eb539d11dc24140743b6b6f1369e958417cbe86b9f53809afe2744872f86675e753d9884f9e3&amp;xtrack=1&amp;scene=90&amp;subscene=93&amp;sessionid=1559142508&amp;clicktime=1559142541&amp;ascene=56&amp;devicetype=android-26&amp;version=2700043b&amp;nettype=WIFI&amp;abtest_cookie=BQABAAoACwASABMAFQAHACOXHgBWmR4AyJkeANyZHgDzmR4AA5oeAAyaHgAAAA%3D%3D&amp;lang=zh_CN&amp;pass_ticket=W5ig5maP6tmaLevaqwsMcnXl28LHoqSmvBuqMPbg7dOQBytHnUWtVKFBwtS2hFz6&amp;wx_header=1</a></p>
@@ -741,7 +767,7 @@
 <a href="/archives/">                
 <!--<a href="/archives/%7C%7C%20archive">-->
               
-                  <span class="site-state-item-count">110</span>
+                  <span class="site-state-item-count">114</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -754,7 +780,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">122</span>
+                  <span class="site-state-item-count">126</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -814,7 +840,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2023</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2024</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>

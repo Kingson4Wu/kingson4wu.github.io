@@ -287,6 +287,986 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/06/20200706-shi-yong-threadcontext-huan-cun-rpc-jie-guo/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/07/06/20200706-shi-yong-threadcontext-huan-cun-rpc-jie-guo/" itemprop="url">使用ThreadContext缓存RPC结果</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-06T19:44:20+08:00">
+                2020-07-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/07/06/20200706-shi-yong-threadcontext-huan-cun-rpc-jie-guo/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/07/06/20200706-shi-yong-threadcontext-huan-cun-rpc-jie-guo/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><img src="/2020/07/06/20200706-%E4%BD%BF%E7%94%A8ThreadContext%E7%BC%93%E5%AD%98RPC%E7%BB%93%E6%9E%9C/Gerrard.jpeg"></p>
+<p>在业务开发中，经常会使用RPC请求获取数据。有时候在同一条逻辑链路中，会多次使用RPC返回的数据。</p>
+<h3 id="业务场景"><a href="#业务场景" class="headerlink" title="业务场景"></a>业务场景</h3><pre>
+请求----------> 服务A
+             [1.methodA]----获取用户数据--->服务B(用户服务)
+             [2.mehtodB]----获取用户数据--->服务B(用户服务)
+</pre>
+<p>上图中，服务A中同一个逻辑链路中包含methodA和mehtodB，两个都会使用到用户数据，因此会导致重复的RPC调用。</p>
+<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><ol>
+<li>将数据实体作为methodB的参数传入<ul>
+<li>这种方式可以避免调用多次重复的RPC，但是也有缺点：<br>  a. 如果有mehtodC，methodD等，每个方法都加个参数，不是很优雅<br>  b. 如果除了获取用户信息，还要获取商品信息等，那么方法形参将越来越多，影响阅读</li>
+</ul>
+</li>
+</ol>
+<pre>
+请求----------> 服务A
+             [1.methodA]----获取用户数据--->服务B(用户服务)
+             [2.mehtodB(param1: userInfo)]----获取用户数据--->服务B(用户服务)
+             [3.mehtodC(param1: userInfo)]----获取用户数据--->服务B(用户服务)
+</pre>		
+<ol start="2">
+<li>使用	ThreadContext 缓存RPC结果<ul>
+<li>可以使用拦截器统一处理服务的所有ThreadContext(因为使用完之后需要remove)</li>
+<li>将RPC结果保存到ThreadContext和从ThreadContext获取RPC结果的逻辑，封装在RPC调用方法中<pre>
+请求----------> 服务A
+       [1.methodA]----获取用户数据--->服务B(用户服务)
+       ->> 将RPC结果保存在ThreadContext
+       [2.mehtodB]----获取用户数据--->从ThreadContext获取
+       [3.mehtodC]----获取用户数据--->从ThreadContext获取</pre></li>
+</ul>
+</li>
+</ol>
+<p>	</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/05/20200705-guan-yu-fu-wu-jian-yi-zhi-xing-he-qian-zhi-xiao-yan-de-si-kao/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/07/05/20200705-guan-yu-fu-wu-jian-yi-zhi-xing-he-qian-zhi-xiao-yan-de-si-kao/" itemprop="url">关于服务间一致性和前置校验的思考</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-05T22:26:48+08:00">
+                2020-07-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/07/05/20200705-guan-yu-fu-wu-jian-yi-zhi-xing-he-qian-zhi-xiao-yan-de-si-kao/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/07/05/20200705-guan-yu-fu-wu-jian-yi-zhi-xing-he-qian-zhi-xiao-yan-de-si-kao/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><img src="/2020/07/05/20200705-%E5%85%B3%E4%BA%8E%E6%9C%8D%E5%8A%A1%E9%97%B4%E4%B8%80%E8%87%B4%E6%80%A7%E5%92%8C%E5%89%8D%E7%BD%AE%E6%A0%A1%E9%AA%8C%E7%9A%84%E6%80%9D%E8%80%83/Zidane.jpeg"></p>
+<p>每个服务都有相应的前置校验，有些前置校验逻辑不统一，就会导致服务间数据的不一致。比如风控拦截，服务A未拦截，而服务B却拦截了，从而导致不一致。</p>
+<h3 id="业务描述"><a href="#业务描述" class="headerlink" title="业务描述"></a>业务描述</h3><ul>
+<li>下面描述一个仓库送礼的场景<pre>
+送礼请求----------> 服务A(送礼服务)
+           [1.出仓库礼物]------------>服务B(仓库服务)
+           [2.收礼者加分成]------------>服务C(消费服务[含分成服务])</pre></li>
+</ul>
+<p></p>
+<pre>
+送礼请求----------> 服务A(送礼服务)
+             [1.出仓库礼物]------------>服务B(仓库服务)
+             [2.收礼者加分成]------------>服务C(消费服务[含分成服务])
+                                [查询是否风险用户]------------>服务D(风控服务)
+</pre>
+<p>服务C增加查询之后，如果是风险用户，将会拦截加分成的操作。这样就会导致用户仓库礼物出仓了，但是收礼者却无法接收分成</p>
+<h3 id="如何解决"><a href="#如何解决" class="headerlink" title="如何解决"></a>如何解决</h3><p>服务B也要进行风险用户判断，针对资金操作相关的校验，可以统一逻辑，避免相同逻辑维护多个地方</p>
+<ol>
+<li>服务C增加一个统一判断接口<pre>
+送礼请求----> 服务A(送礼服务)
+          [1.出仓库礼物]----->服务B(仓库服务)
+                        [ 1.1查询用户是否允许资金变动]----->服务C
+                                     [1.1.1查询是否风险用户]--->服务D(风控服务)
+          [2.收礼者加分成]----->服务C(消费服务[含分成服务])
+                            [2.1查询是否风险用户]----->服务D(风控服务)</pre></li>
+</ol>
+<p><br>若用户是风险用户，操作1就会返回失败，不出仓，也无后续的操作2，这样就避免不一致的问题</p>
+<ol start="2">
+<li>收敛消费入口，统一资产类的入口<br>方案1的缺点明显，每个服务都要直接或间接的查询一次风控服务，实际上理想情况下，只需要查询一次即可。<pre>
+送礼请求----------> 服务A(送礼服务)
+          [1.出仓库礼物和加分成]--------->服务C(消费服务)
+                                [1.1查询是否风险用户]------------>服务D(风控服务)
+                                [1.2出仓库礼物]------------>服务B(仓库服务)
+                                [1.3收礼者加分成]</pre></li>
+</ol>
+<p><br>由消费服务统一对资产进行“出”和“入”</p>
+<ol start="3">
+<li>网关服务拦截<br>由网关服务统一调风控服务进行判断，并支持业务类型定制(比如资产类接口应该进行哪些判断)</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/05/20200705-rpc-ke-yi-he-shi-wu-bang-ding-ma/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/07/05/20200705-rpc-ke-yi-he-shi-wu-bang-ding-ma/" itemprop="url">RPC可以和事务绑定吗？</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-05T17:27:32+08:00">
+                2020-07-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/07/05/20200705-rpc-ke-yi-he-shi-wu-bang-ding-ma/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/07/05/20200705-rpc-ke-yi-he-shi-wu-bang-ding-ma/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><img src="/2020/07/05/20200705-RPC%E5%8F%AF%E4%BB%A5%E5%92%8C%E4%BA%8B%E5%8A%A1%E7%BB%91%E5%AE%9A%E5%90%97/MSN.jpg"></p>
+<p>在平常编码的时候，经常会看到很多人喜欢把一次RPC调用和数据库事务绑定在一起，RPC调用成功则提交事务，RPC调用失败或超时，则回滚事务。那么这样做是对的吗？</p>
+<h3 id="业务场景描述"><a href="#业务场景描述" class="headerlink" title="业务场景描述"></a>业务场景描述</h3><p>考虑以下一种业务场景：用户加入群聊需要花费200金币。<br>服务架构：服务A(群服务)，服务B(消费服务)，操作都是幂等的。</p>
+<pre>
+加群请求----------> 服务A
+             [1.新增事务]
+             [2.RPC进行扣费]------------>服务B
+             [3.执行加群操作(DB操作)]
+             [4.提交事务]
+</pre>
+
+<h3 id="业务场景分析"><a href="#业务场景分析" class="headerlink" title="业务场景分析"></a>业务场景分析</h3><ol>
+<li>服务B返回成功，业务无异常</li>
+<li>服务B返回失败，事务回滚，业务无异常</li>
+<li>服务B超时，或服务A RPC调用之后重启等场景，业务异常！</li>
+</ol>
+<p>业务异常表现为：用户已经扣费，但是没加群成功(即服务A和服务B数据不一致)</p>
+<h3 id="如何解决"><a href="#如何解决" class="headerlink" title="如何解决"></a>如何解决</h3><ul>
+<li><p>服务A通过本地事务表解决。</p>
+<ol>
+<li>服务A在进行RPC调用之前，需先保存一条订单，订单状态为“待扣费”，扣费成功后，更新订单状态为“已扣费”。</li>
+<li>启动定时任务，查询过去某时间范围内（如30分钟前至当前时间1分钟前）的“待扣费”的订单是否已扣费。若已扣费进行加群操作，并更新订单状态；否则，将订单置为无效状态。</li>
+<li>订单状态：[1待扣费，2已扣费，3已加群，4无效]</li>
+</ol>
+</li>
+<li><p>加群流程图</p>
+<pre>
+加群请求----------> 服务A
+           [1.新增“待扣费”订单(DB操作)]
+           [2.RPC进行扣费]------------>服务B
+           [3.更新订单状态为“已扣费”(DB操作)]
+           [4.执行加群操作(DB操作)]
+           [5.更新订单状态为“已加群”(DB操作)]</pre></li>
+</ul>
+<p><br>上图的每个操作都是单独的，其中某一步异常都会导致后续中断，因此需要两个定时任务，分别检查“待扣费”和“已扣费”的订单。</p>
+<ul>
+<li>定时任务1<pre>
+定时任务1---------> 服务A
+           [1.查询“待扣费”订单]
+           [2.RPC查询是否已扣费]------------>服务B
+           |(1)已扣费                         |(2)未扣费
+           |                                         |</pre></li>
+</ul>
+<p>[3.更新订单状态为“已扣费”(DB操作)]           [3.更新订单状态为“无效”(DB操作)]<br>[4.执行加群操作(DB操作)]<br>[5.更新订单状态为“已加群”(DB操作)]<br></p>
+<ul>
+<li>定时任务2<pre>
+定时任务2---------> 服务A
+           [1.查询“已扣费”订单]    
+           [2.执行加群操作(DB操作)]
+           [3.更新订单状态为“已加群”(DB操作)]</pre></li>
+</ul>
+<p><br>当然定时任务1和2可以放在同一个定时任务执行</p>
+<ul>
+<li>解决了问题之后，我们再回头看看一开始的问题：“RPC调用和数据库事务不能绑定吗？”<ul>
+<li>答案是看具体业务情况而定</li>
+<li>比如上述的业务场景。操作1显然是不能绑事务的</li>
+<li>但是2,3,4,5操作其实是可以绑事务的，因为定时任务可以进行补偿，而且可以因此减少定时任务2</li>
+<li>总结：rpc操作后续可补偿重试或查询，那么就是可以绑事务的，因为服务不会“失忆”；相反数据未落地之前，是不能进行绑事务了，因为一旦异常，数据就会回滚而“丢失”。</li>
+</ul>
+</li>
+</ul>
+<h3 id="其他解决方式"><a href="#其他解决方式" class="headerlink" title="其他解决方式"></a>其他解决方式</h3><ol>
+<li>业务对账，补偿机制。即接入第三方服务进行业务流水对账，发现不一致，进行修正；具体修正方式需根据具体业务场景，是退币，还是使加群成功。</li>
+<li>使用其他分布式事务解决方案(tcc，seata等)</li>
+</ol>
+<h3 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h3><ul>
+<li>重试是 “写”还是“读”？比如上述扣费操作，超时情况下，服务A重试是查询还是重新执行扣费？<ul>
+<li>其实还是取决于业务场景</li>
+<li>一般情况下，超时情况下，返回用户是失败，所以使用查询比较合适，不系统自动为用户扣费，这时候应该是“读”</li>
+<li>如果需要使用rpc调用进行加群，用户扣费了就必须要加群成功，那么加群RPC重试应该是“写”</li>
+<li>对于金钱业务来说，一般情况下，加币操作(充值，活动赠币)是“写”，扣币操作(送礼，用户触发)是“读”；入仓是“写”，出仓是“读”</li>
+</ul>
+</li>
+<li>补偿操作是“正向”还是“逆向”？比如上述扣费操作，超时情况下，服务A重试查询到用户已经扣费成功，这是是应该给用户退币，还是加群成功？<ul>
+<li>一样还是取决于业务场景</li>
+<li>如果用户只是想加群，那么只需要正向操作就好了，不影响用户利益，只是加群操作有些延迟，这时候应该是“正向”</li>
+<li>如果用户扣费之后，可以进行抽奖等，相当于用户的权益是具备实时性的，因为扣费超时(实际成功)导致无法抽奖，那么应该是退币才对的，即“逆向”</li>
+</ul>
+</li>
+<li>“无效”状态的订单应该支持重试，因为无效是因为未扣费，若作为一个基础服务，上次服务可能会使用同一个订单号进行重试，那么不能告诉业务方，操作失败等，应该作为一个全新的请求处理。可以通过增加订单的流水日志解决数据覆盖问题。</li>
+<li>上述的处理方式中，余额不足的扣费，会导致比较多的无效订单，因此在扣费之前，可以增加一次RPC查询，判断是余额是否足够</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/29/20200329-fa-ban-guo-cheng-de-jian-rong-xing-kao-lu/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/03/29/20200329-fa-ban-guo-cheng-de-jian-rong-xing-kao-lu/" itemprop="url">发版过程的兼容性考虑</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-29T13:35:18+08:00">
+                2020-03-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/03/29/20200329-fa-ban-guo-cheng-de-jian-rong-xing-kao-lu/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/03/29/20200329-fa-ban-guo-cheng-de-jian-rong-xing-kao-lu/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><img src="/2020/03/29/20200329-%E5%8F%91%E7%89%88%E8%BF%87%E7%A8%8B%E7%9A%84%E5%85%BC%E5%AE%B9%E6%80%A7%E8%80%83%E8%99%91/Torres.jpg"></p>
+<ul>
+<li>一般情况下，服务一般不是仅有一台服务器提供服务的，因此服务上线的过程中其实会经历一个灰度过程</li>
+</ul>
+<p><img src="/2020/03/29/20200329-%E5%8F%91%E7%89%88%E8%BF%87%E7%A8%8B%E7%9A%84%E5%85%BC%E5%AE%B9%E6%80%A7%E8%80%83%E8%99%91/mermaid-diagram-20200329140016.png"></p>
+<p>如上所示，服务器A是新代码，走的是新逻辑，服务器B和C未发版，走的旧逻辑。</p>
+<ul>
+<li>如果新上线的变更只涉及读逻辑的，那么这样的灰度上线是没问题的。</li>
+<li>但如果上线的内容涉及写逻辑的变更，甚至还关联到异步处理的变更。那么这样的上线方式可能是不兼容的，会导致处理异常。</li>
+<li>在服务全量发版之后，新的流量可能正常，但发版过程中导致一定的脏数据。</li>
+</ul>
+<p>(图不画了，自行想象)</p>
+<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><ul>
+<li>开关！用配置中心开关控制，走新逻辑还是旧逻辑。默认旧逻辑。</li>
+<li>代码需要保留两套，通过开关控制走哪个分支。</li>
+<li>全量发版之后，此时线上全是新代码了，通过开关灰度(此时是业务灰度而不是机器灰度了)</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/29/20200329-biao-jie-gou-bian-geng-shi-fou-xu-yao-chu-li-li-shi-yue-biao/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/03/29/20200329-biao-jie-gou-bian-geng-shi-fou-xu-yao-chu-li-li-shi-yue-biao/" itemprop="url">表结构变更是否需要处理历史月表？</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-29T12:42:38+08:00">
+                2020-03-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/03/29/20200329-biao-jie-gou-bian-geng-shi-fou-xu-yao-chu-li-li-shi-yue-biao/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/03/29/20200329-biao-jie-gou-bian-geng-shi-fou-xu-yao-chu-li-li-shi-yue-biao/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><img src="/2020/03/29/20200329-%E8%A1%A8%E7%BB%93%E6%9E%84%E5%8F%98%E6%9B%B4%E6%98%AF%E5%90%A6%E9%9C%80%E8%A6%81%E5%A4%84%E7%90%86%E5%8E%86%E5%8F%B2%E6%9C%88%E8%A1%A8%EF%BC%9F/Henry.jpeg"></p>
+<ul>
+<li>目前针对历史流水表，历史订单表，采用的以月为维度的方式建表，如以下表结构所示<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> `t_order_202002` (</span><br><span class="line">`order_id` <span class="type">varchar</span>(<span class="number">128</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;订单id&#x27;</span>,</span><br><span class="line">`coin` <span class="type">decimal</span>(<span class="number">32</span>,<span class="number">2</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;0.00&#x27;</span> COMMENT <span class="string">&#x27;支付币数&#x27;</span>,</span><br><span class="line">`user_id` <span class="type">bigint</span>(<span class="number">20</span>) unsigned <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;0&#x27;</span> COMMENT <span class="string">&#x27;用户id&#x27;</span>,</span><br><span class="line">`create_time` datetime <span class="keyword">NOT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;创建时间&#x27;</span>,</span><br><span class="line">`update_time` datetime <span class="keyword">NOT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;更新时间&#x27;</span>,</span><br><span class="line"><span class="keyword">PRIMARY</span> KEY (`order_id`)</span><br><span class="line">) ENGINE<span class="operator">=</span>InnoDB <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>utf8mb4 COMMENT<span class="operator">=</span><span class="string">&#x27;订单表&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> `t_order_202003` (</span><br><span class="line">`order_id` <span class="type">varchar</span>(<span class="number">128</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;订单id&#x27;</span>,</span><br><span class="line">`coin` <span class="type">decimal</span>(<span class="number">32</span>,<span class="number">2</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;0.00&#x27;</span> COMMENT <span class="string">&#x27;支付币数&#x27;</span>,</span><br><span class="line">`user_id` <span class="type">bigint</span>(<span class="number">20</span>) unsigned <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;0&#x27;</span> COMMENT <span class="string">&#x27;用户id&#x27;</span>,</span><br><span class="line">`create_time` datetime <span class="keyword">NOT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;创建时间&#x27;</span>,</span><br><span class="line">`update_time` datetime <span class="keyword">NOT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;更新时间&#x27;</span>,</span><br><span class="line"><span class="keyword">PRIMARY</span> KEY (`order_id`)</span><br><span class="line">) ENGINE<span class="operator">=</span>InnoDB <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>utf8mb4 COMMENT<span class="operator">=</span><span class="string">&#x27;订单表&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> `t_order_202004` (</span><br><span class="line">`order_id` <span class="type">varchar</span>(<span class="number">128</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;订单id&#x27;</span>,</span><br><span class="line">`coin` <span class="type">decimal</span>(<span class="number">32</span>,<span class="number">2</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;0.00&#x27;</span> COMMENT <span class="string">&#x27;支付币数&#x27;</span>,</span><br><span class="line">`user_id` <span class="type">bigint</span>(<span class="number">20</span>) unsigned <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;0&#x27;</span> COMMENT <span class="string">&#x27;用户id&#x27;</span>,</span><br><span class="line">`create_time` datetime <span class="keyword">NOT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;创建时间&#x27;</span>,</span><br><span class="line">`update_time` datetime <span class="keyword">NOT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;更新时间&#x27;</span>,</span><br><span class="line"><span class="keyword">PRIMARY</span> KEY (`order_id`)</span><br><span class="line">) ENGINE<span class="operator">=</span>InnoDB <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>utf8mb4 COMMENT<span class="operator">=</span><span class="string">&#x27;订单表&#x27;</span></span><br></pre></td></tr></table></figure>
+现要对表结构增加一个字段 room_id<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> t_order_202003</span><br><span class="line"><span class="keyword">ADD</span> <span class="keyword">COLUMN</span> `room_id` <span class="type">bigint</span>(<span class="number">20</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;0&#x27;</span> COMMENT <span class="string">&#x27;动作发生的所在房间ID&#x27;</span>;</span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> t_order_202004</span><br><span class="line"><span class="keyword">ADD</span> <span class="keyword">COLUMN</span> `room_id` <span class="type">bigint</span>(<span class="number">20</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;0&#x27;</span> COMMENT <span class="string">&#x27;动作发生的所在房间ID&#x27;</span>;</span><br></pre></td></tr></table></figure>
+那么久的历史表可以不处理吗？</li>
+</ul>
+<ol>
+<li>假如全部的查询语句都是<code>select *</code>,  那么久的历史表可以不处理，但是这样违反了按需查询原则</li>
+<li>如果查询语句有指定字段如<code>select order_id, room_id</code>,那么查询到旧的表时会报错</li>
+</ol>
+<h3 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h3><ol>
+<li>历史表和当前的表结构保存一致，在进行表结构变更时一并处理，避免后续的坑(没精力折腾的建议这样处理，可以增加一些监控手段)</li>
+<li>历史表不处理，在程序代码上兼容。这样会增加代码复杂度，难以维护，如果有必要最好统一sdk中处理。</li>
+<li>运维层面，统一处理，统一月表的结构，需要DBA工具支持</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/26/20200326-yi-dong-duan-xia-yi-chong-zhe-zhong-fen-ye-fang-fa/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/03/26/20200326-yi-dong-duan-xia-yi-chong-zhe-zhong-fen-ye-fang-fa/" itemprop="url">移动端下一种折中的分页方法</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-26T00:36:38+08:00">
+                2020-03-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/03/26/20200326-yi-dong-duan-xia-yi-chong-zhe-zhong-fen-ye-fang-fa/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/03/26/20200326-yi-dong-duan-xia-yi-chong-zhe-zhong-fen-ye-fang-fa/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><img src="/2020/03/26/20200326-%E7%A7%BB%E5%8A%A8%E7%AB%AF%E4%B8%8B%E4%B8%80%E7%A7%8D%E6%8A%98%E4%B8%AD%E5%88%86%E9%A1%B5%E6%96%B9%E6%B3%95/Messi.jpg"></p>
+<ul>
+<li><p>移动互联网下微服务大行其道，服务之间按业务拆分精细，各司其职，通过服务发现rpc相互调用，实现各自的需求场景。</p>
+</li>
+<li><p>一个简单的列表，如果不依赖其他服务，只依赖自身的数据库，可以简单的通过sql即可查询出来。</p>
+</li>
+<li><p>而如果数据来源于其他服务，根据特定的需求场景，可能就需要调用多个服务，获取数据，判断属性，过滤数据，再展示，那么可能未免会出现分页的问题。</p>
+</li>
+<li><p>以下面的场景为例：</p>
+</li>
+</ul>
+<p><img src="/2020/03/26/20200326-%E7%A7%BB%E5%8A%A8%E7%AB%AF%E4%B8%8B%E4%B8%80%E7%A7%8D%E6%8A%98%E4%B8%AD%E5%88%86%E9%A1%B5%E6%96%B9%E6%B3%95/page1.png"></p>
+<ul>
+<li>业务服务依赖两个底层服务的数据进行聚合，导致返回客户端的数据小于请求值10，甚至为空，客户端认为已经没数据了，从而错误提示用户“已经到底了”。</li>
+<li>解决方案：客户端不依赖返回数据的数量判断是否还有数据，由服务端返回”hasNext&#x3D;1”来判断是否有数据，控制用户是否可继续滑动查看</li>
+</ul>
+<p><img src="/2020/03/26/20200326-%E7%A7%BB%E5%8A%A8%E7%AB%AF%E4%B8%8B%E4%B8%80%E7%A7%8D%E6%8A%98%E4%B8%AD%E5%88%86%E9%A1%B5%E6%96%B9%E6%B3%95/page2.png"></p>
+<ul>
+<li>方案并不完美，极端情况下可能因为数据被过滤，导致返回前端数据太少设置没数据，影响体验。所以此方案只是不考虑极端场景的折中方案，另外的优化手段是初始请求size控制在一个合适的值，比如size&#x3D;30</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/01/01/20200101-dian-ying-zhai-yao/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -981,7 +1961,7 @@
 <a href="/archives/">                
 <!--<a href="/archives/%7C%7C%20archive">-->
               
-                  <span class="site-state-item-count">114</span>
+                  <span class="site-state-item-count">120</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -994,7 +1974,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">126</span>
+                  <span class="site-state-item-count">129</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

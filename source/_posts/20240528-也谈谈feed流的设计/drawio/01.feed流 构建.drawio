@@ -1,0 +1,139 @@
+<mxfile host="Electron" modified="2024-05-28T06:54:23.358Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.4.8 Chrome/124.0.6367.207 Electron/30.0.6 Safari/537.36" etag="wwvXsXHjoHqQDLNhD_ij" version="24.4.8" type="device">
+  <diagram name="第 1 页" id="6wXkcqWGg4cuLXUTY5P-">
+    <mxGraphModel dx="1727" dy="674" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="6MK_E4ewD0aysOkczJjy-1" value="动态数据&lt;br&gt;（DB）&lt;br&gt;【按用户id分表】" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="170" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="6MK_E4ewD0aysOkczJjy-2" value="发布动态" style="ellipse;whiteSpace=wrap;html=1;dashed=1;dashPattern=1 1;" vertex="1" parent="1">
+          <mxGeometry x="-270" y="160" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="6MK_E4ewD0aysOkczJjy-3" value="1、写入动态" style="endArrow=classic;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;strokeColor=#0000FF;" edge="1" parent="1" source="6MK_E4ewD0aysOkczJjy-2" target="6MK_E4ewD0aysOkczJjy-1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="80" y="110" as="sourcePoint" />
+            <mxPoint x="130" y="60" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="6MK_E4ewD0aysOkczJjy-4" value="feed流&lt;br&gt;（redis）" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="380" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="6MK_E4ewD0aysOkczJjy-5" value="活跃粉丝&lt;br&gt;（redis）" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="280" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="6MK_E4ewD0aysOkczJjy-6" value="2、查询活跃粉丝" style="endArrow=classic;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=1;exitY=1;exitDx=0;exitDy=0;edgeStyle=orthogonalEdgeStyle;strokeColor=#0000FF;" edge="1" parent="1" source="6MK_E4ewD0aysOkczJjy-2" target="6MK_E4ewD0aysOkczJjy-5">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="-260" y="280" as="sourcePoint" />
+            <mxPoint x="-210" y="230" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="-168" y="310" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="6MK_E4ewD0aysOkczJjy-7" value="&lt;font color=&quot;#ff0000&quot;&gt;3、写入feed流（推模式）（1）&lt;/font&gt;" style="endArrow=classic;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;edgeStyle=orthogonalEdgeStyle;strokeColor=#0000FF;" edge="1" parent="1" source="6MK_E4ewD0aysOkczJjy-2">
+          <mxGeometry x="0.25" width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="-10" y="440" as="sourcePoint" />
+            <mxPoint x="40" y="390" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="-210" y="390" />
+            </Array>
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="6MK_E4ewD0aysOkczJjy-8" value="获取feed流" style="ellipse;whiteSpace=wrap;html=1;dashed=1;dashPattern=1 1;" vertex="1" parent="1">
+          <mxGeometry x="380" y="160" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="6MK_E4ewD0aysOkczJjy-9" value="1、获取数据" style="endArrow=classic;html=1;entryX=1;entryY=0.25;entryDx=0;entryDy=0;exitX=0;exitY=1;exitDx=0;exitDy=0;edgeStyle=orthogonalEdgeStyle;strokeColor=#00CC00;" edge="1" parent="1" source="6MK_E4ewD0aysOkczJjy-8" target="6MK_E4ewD0aysOkczJjy-4">
+          <mxGeometry x="0.6322" width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="400" y="320" as="sourcePoint" />
+            <mxPoint x="450" y="270" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="398" y="395" />
+            </Array>
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="6MK_E4ewD0aysOkczJjy-10" value="粉丝服务" style="rounded=1;whiteSpace=wrap;html=1;dashed=1;dashPattern=1 1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="600" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="6MK_E4ewD0aysOkczJjy-11" value="2、feed流为空，获取关注列表（2000人以内）" style="endArrow=classic;html=1;strokeColor=#00CC00;entryX=1;entryY=0.4;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="6MK_E4ewD0aysOkczJjy-8" target="6MK_E4ewD0aysOkczJjy-10">
+          <mxGeometry x="0.4681" width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="430" y="320" as="sourcePoint" />
+            <mxPoint x="480" y="270" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="440" y="624" />
+            </Array>
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="6MK_E4ewD0aysOkczJjy-12" value="RPC" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="6MK_E4ewD0aysOkczJjy-11">
+          <mxGeometry x="0.0542" y="4" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="6MK_E4ewD0aysOkczJjy-13" value="3、获取关注人动态数据&lt;br&gt;（拉模式限流，可配置）" style="endArrow=classic;html=1;strokeColor=#00CC00;exitX=0.008;exitY=0.313;exitDx=0;exitDy=0;entryX=1;entryY=0.25;entryDx=0;entryDy=0;exitPerimeter=0;" edge="1" parent="1" source="6MK_E4ewD0aysOkczJjy-8" target="6MK_E4ewD0aysOkczJjy-1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="270" y="170" as="sourcePoint" />
+            <mxPoint x="320" y="120" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="6MK_E4ewD0aysOkczJjy-14" value="&lt;font color=&quot;#ff0000&quot;&gt;4、写入feed流（拉模式）（2）&lt;/font&gt;" style="endArrow=classic;html=1;strokeColor=#00CC00;entryX=1;entryY=0.75;entryDx=0;entryDy=0;edgeStyle=orthogonalEdgeStyle;exitX=0.358;exitY=0.975;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="6MK_E4ewD0aysOkczJjy-8" target="6MK_E4ewD0aysOkczJjy-4">
+          <mxGeometry x="0.4131" width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="418" y="290" as="sourcePoint" />
+            <mxPoint x="360" y="260" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="423" y="425" />
+            </Array>
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="6MK_E4ewD0aysOkczJjy-15" value="5、成为活跃粉丝" style="endArrow=classic;html=1;strokeColor=#00CC00;exitX=0.025;exitY=0.688;exitDx=0;exitDy=0;exitPerimeter=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="6MK_E4ewD0aysOkczJjy-8" target="6MK_E4ewD0aysOkczJjy-5">
+          <mxGeometry x="0.4968" width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="280" y="280" as="sourcePoint" />
+            <mxPoint x="330" y="230" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="383" y="310" />
+            </Array>
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="6MK_E4ewD0aysOkczJjy-16" value="&lt;font color=&quot;#ff0000&quot;&gt;新增、删除动态（3）&lt;/font&gt;" style="endArrow=classic;html=1;entryX=0;entryY=0.75;entryDx=0;entryDy=0;strokeColor=#999999;dashed=1;dashPattern=1 2;exitX=0;exitY=1;exitDx=0;exitDy=0;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="6MK_E4ewD0aysOkczJjy-2" target="6MK_E4ewD0aysOkczJjy-4">
+          <mxGeometry x="0.5093" width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="-210" y="420" as="sourcePoint" />
+            <mxPoint x="-280" y="350" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="-252" y="425" />
+            </Array>
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="6MK_E4ewD0aysOkczJjy-17" value="&lt;font color=&quot;#ff0000&quot;&gt;关注、取消 事件（4）&lt;/font&gt;" style="endArrow=classic;html=1;dashed=1;dashPattern=1 2;strokeColor=#999999;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.25;entryY=1;entryDx=0;entryDy=0;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="1" source="6MK_E4ewD0aysOkczJjy-10" target="6MK_E4ewD0aysOkczJjy-4">
+          <mxGeometry x="-0.3333" width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="-130" y="530" as="sourcePoint" />
+            <mxPoint x="-80" y="480" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="-20" y="630" />
+              <mxPoint x="-20" y="470" />
+              <mxPoint x="70" y="470" />
+            </Array>
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="6MK_E4ewD0aysOkczJjy-18" value="新动态提醒&lt;br&gt;（redis）" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="480" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="6MK_E4ewD0aysOkczJjy-19" value="4、新动态提醒" style="endArrow=classic;html=1;entryX=0;entryY=0.25;entryDx=0;entryDy=0;exitX=0.258;exitY=0.95;exitDx=0;exitDy=0;exitPerimeter=0;edgeStyle=orthogonalEdgeStyle;strokeColor=#0000FF;" edge="1" parent="1" source="6MK_E4ewD0aysOkczJjy-2" target="6MK_E4ewD0aysOkczJjy-18">
+          <mxGeometry x="0.4424" width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="-330" y="450" as="sourcePoint" />
+            <mxPoint x="-280" y="400" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="-239" y="495" />
+            </Array>
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

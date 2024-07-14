@@ -7,7 +7,7 @@ tags: [IT-BOOK,Kubernetes]
 ## 整体架构
 
 ![](20210713-Kubernetes学习笔记/Kubernetes的整体架构0.png)
-![](20210713-Kubernetes学习笔记/Kubernetes的整体架构1.png)
+![](20210713-Kubernetes学习笔记/Kubernetes的整体架构1.jpg)
 ![](20210713-Kubernetes学习笔记/Kubernetes的整体架构2.png)
 ![](20210713-Kubernetes学习笔记/Kubernetes及容器生态系统.png)
 ![](20210713-Kubernetes学习笔记/Kubernetes及容器生态系统2.png)
@@ -83,7 +83,7 @@ iptables与IPVS虽然都是基于Netfilter实现的，但因为定位不同，�
 11. 检查Deployment部署的历史记录：`kubectl rollout history`
 
 
-### Kubernetes
+## Kubernetes
 + Kubernetes里的3种IP，这3种IP分别如下
 	- Node IP：Node的IP地址。
 	- Pod IP：Pod的IP地址。
@@ -285,7 +285,7 @@ iptables与IPVS虽然都是基于Netfilter实现的，但因为定位不同，�
 	- 如果在更新过程中发现配置有误，则用户可以中断更新操作，并通过执行kubectl rolling- update --rollback完成Pod版本的回滚
 
 ### RC、Deployment、ReplicaSet
-+ 
+
 
 ### StatefulSet
 + StatefulSet从本质上来说，可以看作Deployment/RC的一个特殊变种，它有如下特性。	
@@ -561,7 +561,8 @@ iptables与IPVS虽然都是基于Netfilter实现的，但因为定位不同，�
 
 + 路由方案
 	- 路由方案回过头来想一下，我们为什么要封包？其实它是改包，主要解决的问题是同一个问题，即在容器网络里，主机间不知道对方的目的地址，没有办法把IP包投递到正确的地方。传统的三层网络是用路由来互相访问的，不需要封包。至于路由规则怎么维护？传统的网络解决方案是利用BGP部署一个分布式的路由集群。　传统BGP分布式路由集群方案通过路由来实现，比较典型的网络插件有：
-	- Calico：源自Tigera，基于BGP的路由方案，支持很细致的ACL控制，对混合云亲和度比较高；	- Macvlan：从逻辑和Kernel层来看，是隔离性和性能最优的方案，基于二层隔离，需要二层路由器支持，大多数云服务商不支持，因此混合云上比较难以实现；
+	- Calico：源自Tigera，基于BGP的路由方案，支持很细致的ACL控制，对混合云亲和度比较高；	
+	- Macvlan：从逻辑和Kernel层来看，是隔离性和性能最优的方案，基于二层隔离，需要二层路由器支持，大多数云服务商不支持，因此混合云上比较难以实现；
 	- Metaswitch：容器内部配一个路由指向自己宿主机的地址，这是一个纯三层的网络不存在封包，因此性能接近原生网络。路由方案的另一个优点是出了问题也很容易排查。路由方案往往需要用户了解底层网络基础结构，因此使用和运维门槛较高。
 	- Calico是一个纯三层网络方案。不同主机上的每个容器内部都配一个路由，指向自己所在的IP地址；每台服务器变成路由器，配置自己的路由规则，通过网卡直接到达目标容器，整个过程没有封包。
 	- 那么，路由交换是不是很难呢？用传统的BGP技术就可以实现。这个协议在大规模应用下是一个很好的场景，而且BGP有一个自治域的概念。在这个场景下会有一个问题，路由之间的信息交换实际上基于TCP，每两个之间都有一个TCP连接，规模大了维护这些连接的开销会非常高。
@@ -630,10 +631,11 @@ iptables与IPVS虽然都是基于Netfilter实现的，但因为定位不同，�
 + Kubernetes经典的主机内组网模型是veth pair+bridge的方式。
 + 当Kubernetes调度Pod在某个节点上运行时，它会在该节点的Linux内核中为Pod创建network namespace，供Pod内所有运行的容器使用。从容器的角度看，Pod是具有一个网络接口的物理机器，Pod中的所有容器都会看到此网络接口。因此，每个容器通过localhost就能访问同一个Pod内的其他容器。
 + Kubernetes使用veth pair将容器与主机的网络协议栈连接起来，从而使数据包可以进出Pod。容器放在主机根network namespace中veth pair的一端连接到Linux网桥，可让同一节点上的各Pod之间相互通信。
-![](20210713-Kubernetes学习笔记/Kubernetes bridge网络模型.jpg)
+
+![](20210713-Kubernetes学习笔记/Kubernetes_bridge网络模型.jpg)
 + 如果Kubernetes集群发生节点升级、修改Pod声明式配置、更新容器镜像或节点不可用，那么Kubernetes就会删除并重新创建Pod。在大部分情况下，Pod创建会导致容器IP发生变化。也有一些CNI插件提供Pod固定IP的解决方案，例如Weave、Calico等。
 
-![](20210713-Kubernetes学习笔记/CNI Bridge.png)
+![](20210713-Kubernetes学习笔记/CNI_Bridge.png)
 
 + 使用新建的bridge网桥（CNI bridge）代替docker0网桥（docker0也可以继续保留，常规容器还是用docker0，而需要互通的容器可以借助于这个工具给docker容器新建虚拟网卡并绑定IP桥接到bridge）
 + bridge和主机eth0之间是也是利用veth pair这个技术。
@@ -695,13 +697,14 @@ iptables与IPVS虽然都是基于Netfilter实现的，但因为定位不同，�
 
 #### CNI标准的胜出：从此江湖没有CNM
 + CNI即容器网络接口（Container Network Interface）。Kubernetes采用CNI而非CNM（容器网络模型），这背后有很长的一段故事，核心的原因就是CNI对开发者的约束更少，更开放，不依赖于Docker工具，而CNM对Docker有非常强的依赖，无法作为通用的容器网络标准。在CNI标准中，网络插件是独立的可执行文件，被上层的容器管理平台调用。网络插件只有两件事情要做：把容器加入网络或把容器从网络中删除。调用插件的配置通过两种方式传递：环境变量和标准输入。
+
 + CNI很简单，只需要：
   -	1个配置文件，配置文件描述插件的版本、名称、描述等基本信息；
   - 1个可执行文件，可执行文件就是CNI插件本身会在容器需要建立网络和需要销毁容器时被调用；
   - 读取6个环境变量，获得需要执行的操作、目标网络Namespace、容器的网卡必要信息；
   - 接受1个命令行参数，同样用于获得需要执行的操作、目标网络Namespace、容器的网卡必要信息；
   - 实现2个操作（ADD/DEL）。
-  - 
+  
 + Kubernetes使用CNI网络插件的工作流程
 	- Kubernetes调用CRI创建pause容器，生成对应的network namespace；
 	- 调用网络driver（因为配置的是CNI，所以会调用CNI的相关代码）；

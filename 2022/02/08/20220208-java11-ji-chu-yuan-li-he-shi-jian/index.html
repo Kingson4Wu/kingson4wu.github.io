@@ -88,8 +88,8 @@
 <meta property="og:site_name" content="拉巴力的纸皮箱">
 <meta property="og:description" content="一、为什么选择java11Java 11 是 Java 8 之后的首个 LTS 版本（Long-term support 长期支持版本），所以有不少开发者表示会选择升级至 Java 11。  1、目前相对来说，Java 8 太旧，Java 17 太新，Java11 刚刚好；2、支持以类路径方式运行，适合过渡阶段升级；3、其他原因（下文会说明） 二、模块系统模块系统是Java 9的旗舰功能，使用ja">
 <meta property="og:locale">
-<meta property="og:image" content="http://yoursite.com/2022/02/08/20220208-Java11%E5%9F%BA%E7%A1%80%E5%8E%9F%E7%90%86%E5%92%8C%E5%AE%9E%E8%B7%B5/java11.png">
-<meta property="og:image" content="http://yoursite.com/2022/02/08/20220208-Java11%E5%9F%BA%E7%A1%80%E5%8E%9F%E7%90%86%E5%92%8C%E5%AE%9E%E8%B7%B5/java11_classloader.png">
+<meta property="og:image" content="http://yoursite.com/2022/02/08/20220208-java11-ji-chu-yuan-li-he-shi-jian/java11.png">
+<meta property="og:image" content="http://yoursite.com/2022/02/08/20220208-java11-ji-chu-yuan-li-he-shi-jian/java11_classloader.png">
 <meta property="article:published_time" content="2022-02-07T16:08:24.000Z">
 <meta property="article:modified_time" content="2023-05-07T14:41:07.767Z">
 <meta property="article:author" content="Kingson Wu">
@@ -97,7 +97,7 @@
 <meta property="article:tag" content="Java11">
 <meta property="article:tag" content="模块系统">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://yoursite.com/2022/02/08/20220208-Java11%E5%9F%BA%E7%A1%80%E5%8E%9F%E7%90%86%E5%92%8C%E5%AE%9E%E8%B7%B5/java11.png">
+<meta name="twitter:image" content="http://yoursite.com/2022/02/08/20220208-java11-ji-chu-yuan-li-he-shi-jian/java11.png">
 
 
 
@@ -372,7 +372,7 @@
 
       
         <h1 id="一、为什么选择java11"><a href="#一、为什么选择java11" class="headerlink" title="一、为什么选择java11"></a>一、为什么选择java11</h1><p>Java 11 是 Java 8 之后的首个 LTS 版本（Long-term support 长期支持版本），所以有不少开发者表示会选择升级至 Java 11。</p>
-<p><img src="/2022/02/08/20220208-Java11%E5%9F%BA%E7%A1%80%E5%8E%9F%E7%90%86%E5%92%8C%E5%AE%9E%E8%B7%B5/java11.png"></p>
+<p><img src="/2022/02/08/20220208-java11-ji-chu-yuan-li-he-shi-jian/java11.png"></p>
 <p>1、目前相对来说，Java 8 太旧，Java 17 太新，Java11 刚刚好；<br>2、支持以类路径方式运行，适合过渡阶段升级；<br>3、其他原因（下文会说明）</p>
 <h1 id="二、模块系统"><a href="#二、模块系统" class="headerlink" title="二、模块系统"></a>二、模块系统</h1><p>模块系统是Java 9的旗舰功能，使用java9，有必要了解一下。</p>
 <h2 id="java9之前存在哪些痛点"><a href="#java9之前存在哪些痛点" class="headerlink" title="java9之前存在哪些痛点"></a>java9之前存在哪些痛点</h2><h3 id="1、没有封装"><a href="#1、没有封装" class="headerlink" title="1、没有封装"></a>1、没有封装</h3><p>类一旦公开，意味着没有封装。</p>
@@ -471,7 +471,7 @@
 <h2 id="2、扩展机制"><a href="#2、扩展机制" class="headerlink" title="2、扩展机制"></a>2、扩展机制</h2><p>（1）版本9之前的Java SE允许扩展机制，可以通过将JAR放置在系统属性java.ext.dirs指定的目录中来扩展运行时映像。 如果未设置此系统属性，则使用jre\lib\ext目录作为其默认值。 该机制通过扩展类加载器（这是引导类加载器的子类）和系统类加载器的父级加载了该目录中的所有JAR。 它加载所有应用程序类。 这些JAR的内容对于在此运行时映像上编译或运行的所有应用程序都可见。</p>
 <p>（2）Java SE 9不支持扩展机制。 如果需要类似的功能，可以将这些JAR放在类路径的前面。 使用名为JAVA_HOME\lib\ext的目录或设置名为java.ext.dirs的系统属性会导致JDK 9中的错误。</p>
 <p>（3）在JDK 9之前，扩展类加载器和应用程序类加载器是java.net.URLClassLoader类的一个实例。 在JDK 9中，平台类加载器（以前的扩展类加载器）和应用程序类加载器是内部JDK类的实例。 如果你的代码依赖于URLClassLoader类的特定方法，代码可能会在JDK 9中崩溃。</p>
-<h2 id="3、类加载器的加载流程"><a href="#3、类加载器的加载流程" class="headerlink" title="3、类加载器的加载流程"></a>3、类加载器的加载流程</h2><p><img src="/2022/02/08/20220208-Java11%E5%9F%BA%E7%A1%80%E5%8E%9F%E7%90%86%E5%92%8C%E5%AE%9E%E8%B7%B5/java11_classloader.png"></p>
+<h2 id="3、类加载器的加载流程"><a href="#3、类加载器的加载流程" class="headerlink" title="3、类加载器的加载流程"></a>3、类加载器的加载流程</h2><p><img src="/2022/02/08/20220208-java11-ji-chu-yuan-li-he-shi-jian/java11_classloader.png"></p>
 <h3 id="在JDK-9之前"><a href="#在JDK-9之前" class="headerlink" title="在JDK 9之前"></a>在JDK 9之前</h3><p>a. JDK使用三个类加载器来加载类<br>b. JDK类加载器以分层方式工作 —— 引导类加载器位于层次结构的顶部。 类加载器将类加载请求委托给上层类加载器。</p>
 <p>例如，如果应用程序类加载器需要加载一个类，它将请求委托给扩展类加载器，扩展类加载器又将请求委托给引导类加载器。 如果引导类加载器无法加载类，扩展类加载器将尝试加载它。 如果扩展类加载器无法加载类，则应用程序类加载器尝试加载它。 如果应用程序类加载器无法加载它，则抛出ClassNotFoundException异常。</p>
 <p>c. 引导类加载器是扩展类加载器的父类。 扩展类加载器是应用程序类加载器的父类。 引导类加载器没有父类。 默认情况下，应用程序类加载器将是你创建的其他类加载器的父类。</p>
@@ -681,7 +681,7 @@
 <a href="/archives/">                
 <!--<a href="/archives/%7C%7C%20archive">-->
               
-                  <span class="site-state-item-count">120</span>
+                  <span class="site-state-item-count">127</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -694,7 +694,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">129</span>
+                  <span class="site-state-item-count">137</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

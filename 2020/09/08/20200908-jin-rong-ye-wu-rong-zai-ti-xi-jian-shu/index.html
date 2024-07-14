@@ -88,16 +88,16 @@
 <meta property="og:site_name" content="拉巴力的纸皮箱">
 <meta property="og:description" content="概述 本文针对金融类(如用户虚拟货币)这类对数据准确性很敏感的业务的容灾架构； 案例中的服务架构为同城主备架构； 内容包括：容灾架构、故障切换、故障恢复、演练方案等； 涉及技术点：MySQL、MHA、Consul等； 本文基于 关于MHA-Consul-MySQL高可用方案的简单总结和思考 如何解决脑裂问题   由于某种原因，某些细节不会描述。 关于系统可用性，收藏了一张网图 MTTF 是 Mea">
 <meta property="og:locale">
-<meta property="og:image" content="http://yoursite.com/2020/09/08/20200908-%E9%87%91%E8%9E%8D%E4%B8%9A%E5%8A%A1%E5%AE%B9%E7%81%BE%E4%BD%93%E7%B3%BB%E7%AE%80%E8%BF%B0/availability.png">
-<meta property="og:image" content="http://yoursite.com/2020/09/08/20200908-%E9%87%91%E8%9E%8D%E4%B8%9A%E5%8A%A1%E5%AE%B9%E7%81%BE%E4%BD%93%E7%B3%BB%E7%AE%80%E8%BF%B0/Network_Topology.png">
-<meta property="og:image" content="http://yoursite.com/2020/09/08/20200908-%E9%87%91%E8%9E%8D%E4%B8%9A%E5%8A%A1%E5%AE%B9%E7%81%BE%E4%BD%93%E7%B3%BB%E7%AE%80%E8%BF%B0/Architecture.png">
+<meta property="og:image" content="http://yoursite.com/2020/09/08/20200908-jin-rong-ye-wu-rong-zai-ti-xi-jian-shu/availability.png">
+<meta property="og:image" content="http://yoursite.com/2020/09/08/20200908-jin-rong-ye-wu-rong-zai-ti-xi-jian-shu/Network_Topology.png">
+<meta property="og:image" content="http://yoursite.com/2020/09/08/20200908-jin-rong-ye-wu-rong-zai-ti-xi-jian-shu/Architecture.png">
 <meta property="article:published_time" content="2020-09-07T16:04:32.000Z">
-<meta property="article:modified_time" content="2023-05-07T14:41:07.604Z">
+<meta property="article:modified_time" content="2024-05-27T06:00:53.941Z">
 <meta property="article:author" content="Kingson Wu">
 <meta property="article:tag" content="金钱相关">
 <meta property="article:tag" content="容灾">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://yoursite.com/2020/09/08/20200908-%E9%87%91%E8%9E%8D%E4%B8%9A%E5%8A%A1%E5%AE%B9%E7%81%BE%E4%BD%93%E7%B3%BB%E7%AE%80%E8%BF%B0/availability.png">
+<meta name="twitter:image" content="http://yoursite.com/2020/09/08/20200908-jin-rong-ye-wu-rong-zai-ti-xi-jian-shu/availability.png">
 
 
 
@@ -382,13 +382,13 @@
 </ol>
 </li>
 <li>由于某种原因，某些细节不会描述。</li>
-<li>关于系统可用性，收藏了一张网图<br><img src="/2020/09/08/20200908-%E9%87%91%E8%9E%8D%E4%B8%9A%E5%8A%A1%E5%AE%B9%E7%81%BE%E4%BD%93%E7%B3%BB%E7%AE%80%E8%BF%B0/availability.png"></li>
+<li>关于系统可用性，收藏了一张网图<br><img src="/2020/09/08/20200908-jin-rong-ye-wu-rong-zai-ti-xi-jian-shu/availability.png"></li>
 <li>MTTF 是 Mean Time To Failure，平均故障前的时间，即系统平均能够正常运行多长时间才发生一次故障。系统的可靠性越高，MTTF 越长。（注意：从字面上来说，看上去有 Failure 的字样，但其实是正常运行的时间。）</li>
 <li>MTTR 是 Mean Time To Recovery，平均修复时间，即从故障出现到故障修复的这段时间，这段时间越短越好。</li>
 <li>故障是正常的，而且是常见的。<br>故障是不可预测突发的，而且相当难缠。<br>我们要干的事儿就是想尽一切手段来降低 MTTR——故障的修复时间。<br>– 陈皓</li>
 </ul>
-<h2 id="容灾架构"><a href="#容灾架构" class="headerlink" title="容灾架构"></a>容灾架构</h2><p><img src="/2020/09/08/20200908-%E9%87%91%E8%9E%8D%E4%B8%9A%E5%8A%A1%E5%AE%B9%E7%81%BE%E4%BD%93%E7%B3%BB%E7%AE%80%E8%BF%B0/Network_Topology.png"></p>
-<p><img src="/2020/09/08/20200908-%E9%87%91%E8%9E%8D%E4%B8%9A%E5%8A%A1%E5%AE%B9%E7%81%BE%E4%BD%93%E7%B3%BB%E7%AE%80%E8%BF%B0/Architecture.png"></p>
+<h2 id="容灾架构"><a href="#容灾架构" class="headerlink" title="容灾架构"></a>容灾架构</h2><p><img src="/2020/09/08/20200908-jin-rong-ye-wu-rong-zai-ti-xi-jian-shu/Network_Topology.png"></p>
+<p><img src="/2020/09/08/20200908-jin-rong-ye-wu-rong-zai-ti-xi-jian-shu/Architecture.png"></p>
 <ol>
 <li>红色线条为正常情况下的服务主链路；</li>
 <li>同城主备架构： 主－IDC-A；从－IDC-B;</li>
@@ -496,7 +496,7 @@
 <li>备用机房异常应该及时告警。</li>
 </ul>
 </li>
-<li>为什么跨机房同步使用MySQL主从同步而使用otter？<ul>
+<li>为什么跨机房同步不使用MySQL主从同步而使用otter？<ul>
 <li>一般主从同步只在同机房或者同城进行。</li>
 <li>otter是阿里开源的一个分布式数据库同步系统，尤其是在跨机房数据库同步方面，有很强大的功能。 </li>
 <li>？？？？</li>
@@ -504,7 +504,7 @@
 </li>
 <li>相关服务一同切换是否合理<ol>
 <li>机房异常一同切换可行；</li>
-<li>如果只是单个服务异常，别的服务也要跟着切库不一定合理。决策服务应该支持业务自行配制切换策略。</li>
+<li>如果只是单个服务异常，别的服务也要跟着切库不一定合理。决策服务应该支持业务自行配置切换策略。</li>
 </ol>
 </li>
 </ol>
@@ -637,7 +637,7 @@
 <a href="/archives/">                
 <!--<a href="/archives/%7C%7C%20archive">-->
               
-                  <span class="site-state-item-count">120</span>
+                  <span class="site-state-item-count">127</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -650,7 +650,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">129</span>
+                  <span class="site-state-item-count">137</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

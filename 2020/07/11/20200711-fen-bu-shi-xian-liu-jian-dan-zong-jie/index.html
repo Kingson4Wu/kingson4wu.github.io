@@ -89,7 +89,7 @@
 <meta property="og:description" content="基本描述 限流分类  单机限流 分布式限流   限流的指标  每秒处理的事务数 (TPS)，每秒请求数 (hits per second) 使用 hits per second 作为限流指标   限流规则包含三个部分：时间粒度，接口粒度，最大限流值。  选择单机限流还是分布式限流  单机限流一般针对服务负载，防止突发流量压垮服务器 分布式限流一般针对在业务侧做细粒度限流    限流算法 固定时间窗">
 <meta property="og:locale">
 <meta property="article:published_time" content="2020-07-11T15:01:37.000Z">
-<meta property="article:modified_time" content="2023-05-07T14:41:07.598Z">
+<meta property="article:modified_time" content="2024-06-07T06:01:01.652Z">
 <meta property="article:author" content="Kingson Wu">
 <meta property="article:tag" content="限流">
 <meta name="twitter:card" content="summary">
@@ -415,7 +415,7 @@
 </ol>
 <h3 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h3><ol>
 <li>Google的Guava包中的RateLimiter<ul>
-<li>令牌桶算法的解决方案，假设1S需要限流5次；也就是1S会往桶里面方5个Token;如果在这1S内桶满了则不再加请求，如果空了则表示达到限制的上线了，会阻塞，知道有数据加入再次处理。</li>
+<li>令牌桶算法的解决方案，假设1S需要限流5次；也就是1S会往桶里面方5个Token;如果在这1S内桶满了则不再加请求，如果空了则表示达到限制的上线了，会阻塞，直到有数据加入再次处理。</li>
 </ul>
 </li>
 <li>[ratelimiter4j] (<a target="_blank" rel="noopener" href="https://github.com/wangzheng0822/ratelimiter4j">https://github.com/wangzheng0822/ratelimiter4j</a>)<ul>
@@ -553,7 +553,7 @@
 <a href="/archives/">                
 <!--<a href="/archives/%7C%7C%20archive">-->
               
-                  <span class="site-state-item-count">120</span>
+                  <span class="site-state-item-count">127</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -566,7 +566,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">129</span>
+                  <span class="site-state-item-count">137</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

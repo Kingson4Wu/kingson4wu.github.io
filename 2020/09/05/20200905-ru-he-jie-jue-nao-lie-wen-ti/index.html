@@ -88,7 +88,7 @@
 <meta property="og:site_name" content="拉巴力的纸皮箱">
 <meta property="og:description" content="什么是“Split Brain”(脑裂)问题？ Split Brain 是指在同一时刻有两个认为自己处于 Active 状态的 NameNode。对于HA集群而言，确保同一时刻只有一个NameNode处于active状态是至关重要的。否则，两个NameNode的数据状态就会产生分歧，可能丢失数据，或者产生错误的结果。 CAP理论 Consistency (一致性): 副本一致性特指强一致性；  A">
 <meta property="og:locale">
-<meta property="og:image" content="http://yoursite.com/2020/09/05/20200905-%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%E8%84%91%E8%A3%82%E9%97%AE%E9%A2%98/Consul_no_leader.png">
+<meta property="og:image" content="http://yoursite.com/2020/09/05/20200905-ru-he-jie-jue-nao-lie-wen-ti/Consul_no_leader.png">
 <meta property="article:published_time" content="2020-09-04T16:04:32.000Z">
 <meta property="article:modified_time" content="2023-05-07T14:41:07.603Z">
 <meta property="article:author" content="Kingson Wu">
@@ -98,7 +98,7 @@
 <meta property="article:tag" content="Quorum">
 <meta property="article:tag" content="Raft">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://yoursite.com/2020/09/05/20200905-%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%E8%84%91%E8%A3%82%E9%97%AE%E9%A2%98/Consul_no_leader.png">
+<meta name="twitter:image" content="http://yoursite.com/2020/09/05/20200905-ru-he-jie-jue-nao-lie-wen-ti/Consul_no_leader.png">
 
 
 
@@ -438,7 +438,7 @@
 <li>Chubby 分布式锁；<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/R2FCLknar6bCvykJ1m7rJQ">Google的锁，才是分布式锁？</a></li>
 </ol>
 <h3 id="使用Consul解决脑裂问题"><a href="#使用Consul解决脑裂问题" class="headerlink" title="使用Consul解决脑裂问题"></a>使用Consul解决脑裂问题</h3><ul>
-<li><img src="/2020/09/05/20200905-%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%E8%84%91%E8%A3%82%E9%97%AE%E9%A2%98/Consul_no_leader.png"></li>
+<li><img src="/2020/09/05/20200905-ru-he-jie-jue-nao-lie-wen-ti/Consul_no_leader.png"></li>
 </ul>
 <h4 id="如何判断“孤岛”？"><a href="#如何判断“孤岛”？" class="headerlink" title="如何判断“孤岛”？"></a>如何判断“孤岛”？</h4><ol>
 <li>在三个IDC部署一个Consul集群，该集群会存在一个leader，且每个IDC的service在网络正常的情况下，都能检测到哪个是leader；依赖Consul的raft协议选举判断网络孤岛；(为了后续描述简单，假设每个IDC只部署一个Consul结点)</li>
@@ -617,7 +617,7 @@ No cluster leader
 <a href="/archives/">                
 <!--<a href="/archives/%7C%7C%20archive">-->
               
-                  <span class="site-state-item-count">120</span>
+                  <span class="site-state-item-count">127</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -630,7 +630,7 @@ No cluster leader
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">129</span>
+                  <span class="site-state-item-count">137</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

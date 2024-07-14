@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="golang,ngrok,wechat,mail," />
+  <meta name="keywords" content="Go,ngrok,wechat,mail," />
 
 
 
@@ -81,24 +81,24 @@
 
 
 
-<meta name="description" content="Reference golang如何优雅的实现重启服务(fvbock&#x2F;endless)">
+<meta name="description" content="一直想部署一个私有服务，平常在外的时候可以为自己提供服务。私有服务的好处是，可以根据自己的需求，开发程序，提供个人定制化的服务   服务器的选择 阿里云、腾讯云等 优点：使用方便，只要有网络就可以连上 缺点：有持续产生的费用，对于个人服务来说，平常几乎都是闲置，性价比很低   自建服务器 优点：总体成本低，购买服务器后，后续只有有电有网就行，无需其他额外成本 缺点：需要外网能访问（需要绑定外网">
 <meta property="og:type" content="article">
-<meta property="og:title" content="个人golang项目简要描述">
+<meta property="og:title" content="开发golang程序和进行内网穿透，作为微信公众号服务器">
 <meta property="og:url" content="http://yoursite.com/2022/06/01/20220601-ge-ren-golang-xiang-mu-jian-yao-miao-shu/index.html">
 <meta property="og:site_name" content="拉巴力的纸皮箱">
-<meta property="og:description" content="Reference golang如何优雅的实现重启服务(fvbock&#x2F;endless)">
+<meta property="og:description" content="一直想部署一个私有服务，平常在外的时候可以为自己提供服务。私有服务的好处是，可以根据自己的需求，开发程序，提供个人定制化的服务   服务器的选择 阿里云、腾讯云等 优点：使用方便，只要有网络就可以连上 缺点：有持续产生的费用，对于个人服务来说，平常几乎都是闲置，性价比很低   自建服务器 优点：总体成本低，购买服务器后，后续只有有电有网就行，无需其他额外成本 缺点：需要外网能访问（需要绑定外网">
 <meta property="og:locale">
-<meta property="og:image" content="http://yoursite.com/2022/06/01/20220601-%E4%B8%AA%E4%BA%BAgolang%E9%A1%B9%E7%9B%AE%E7%AE%80%E8%A6%81%E6%8F%8F%E8%BF%B0/golang_project_3.png">
-<meta property="og:image" content="http://yoursite.com/2022/06/01/20220601-%E4%B8%AA%E4%BA%BAgolang%E9%A1%B9%E7%9B%AE%E7%AE%80%E8%A6%81%E6%8F%8F%E8%BF%B0/golang_deploy_2.png">
+<meta property="og:image" content="http://yoursite.com/2022/06/01/20220601-ge-ren-golang-xiang-mu-jian-yao-miao-shu/golang_project_3.png">
+<meta property="og:image" content="http://yoursite.com/2022/06/01/20220601-ge-ren-golang-xiang-mu-jian-yao-miao-shu/golang_deploy_2.png">
 <meta property="article:published_time" content="2022-06-01T03:44:05.000Z">
-<meta property="article:modified_time" content="2023-05-07T14:41:07.780Z">
+<meta property="article:modified_time" content="2024-06-04T07:18:37.425Z">
 <meta property="article:author" content="Kingson Wu">
-<meta property="article:tag" content="golang">
+<meta property="article:tag" content="Go">
 <meta property="article:tag" content="ngrok">
 <meta property="article:tag" content="wechat">
 <meta property="article:tag" content="mail">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://yoursite.com/2022/06/01/20220601-%E4%B8%AA%E4%BA%BAgolang%E9%A1%B9%E7%9B%AE%E7%AE%80%E8%A6%81%E6%8F%8F%E8%BF%B0/golang_project_3.png">
+<meta name="twitter:image" content="http://yoursite.com/2022/06/01/20220601-ge-ren-golang-xiang-mu-jian-yao-miao-shu/golang_project_3.png">
 
 
 
@@ -134,7 +134,7 @@
 
 
 
-  <title>个人golang项目简要描述 | 拉巴力的纸皮箱</title>
+  <title>开发golang程序和进行内网穿透，作为微信公众号服务器 | 拉巴力的纸皮箱</title>
   
 
 
@@ -312,7 +312,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">个人golang项目简要描述</h1>
+          <h1 class="post-title" itemprop="name headline">开发golang程序和进行内网穿透，作为微信公众号服务器</h1>
         
 
         <div class="post-meta">
@@ -372,8 +372,59 @@
       
 
       
-        <p><img src="/2022/06/01/20220601-%E4%B8%AA%E4%BA%BAgolang%E9%A1%B9%E7%9B%AE%E7%AE%80%E8%A6%81%E6%8F%8F%E8%BF%B0/golang_project_3.png"></p>
-<p><img src="/2022/06/01/20220601-%E4%B8%AA%E4%BA%BAgolang%E9%A1%B9%E7%9B%AE%E7%AE%80%E8%A6%81%E6%8F%8F%E8%BF%B0/golang_deploy_2.png"></p>
+        <blockquote>
+<blockquote>
+<p>一直想部署一个私有服务，平常在外的时候可以为自己提供服务。<br>私有服务的好处是，可以根据自己的需求，开发程序，提供个人定制化的服务</p>
+</blockquote>
+</blockquote>
+<h2 id="服务器的选择"><a href="#服务器的选择" class="headerlink" title="服务器的选择"></a>服务器的选择</h2><ol>
+<li>阿里云、腾讯云等<ul>
+<li>优点：使用方便，只要有网络就可以连上</li>
+<li>缺点：有持续产生的费用，对于个人服务来说，平常几乎都是闲置，性价比很低</li>
+</ul>
+</li>
+<li>自建服务器<ul>
+<li>优点：总体成本低，购买服务器后，后续只有有电有网就行，无需其他额外成本</li>
+<li>缺点：需要外网能访问（需要绑定外网ip或者代理接入转发）</li>
+</ul>
+</li>
+</ol>
+<ul>
+<li>本着能省就省的原则，最终还是采用了方案2 ：上淘宝买一个一百多块的小型服务器！</li>
+</ul>
+<h2 id="如何使外网环境能访问到服务器"><a href="#如何使外网环境能访问到服务器" class="headerlink" title="如何使外网环境能访问到服务器"></a>如何使外网环境能访问到服务器</h2><ul>
+<li>服务器有了之后，通过网线连接到家庭网络即可正常上网了，那么外网环境怎么访问呢？<br>通过一番研究之后，最终决定通过在服务器上部署ngrok代理来实现，不知道啥是ngrok的自行搜索即可</li>
+</ul>
+<h2 id="编程语言选择"><a href="#编程语言选择" class="headerlink" title="编程语言选择"></a>编程语言选择</h2><ul>
+<li>本人平常工作都是使用Java，但经过一番考虑之后，我最终选择了Go作为开发语言</li>
+</ul>
+<ol>
+<li>想学习，通过实践熟悉</li>
+<li>足够轻量，打包成一个二进制文件即可，特别适合这种低配版服务器</li>
+</ol>
+<ul>
+<li>个人Go程序代码：<a target="_blank" rel="noopener" href="https://github.com/Kingson4Wu/mp_weixin_server">https://github.com/Kingson4Wu/mp_weixin_server</a></li>
+</ul>
+<h2 id="前端终端选择"><a href="#前端终端选择" class="headerlink" title="前端终端选择"></a>前端终端选择</h2><ul>
+<li><p>平常在外都是使用android的手机，但是作为后端开发，本人只会android的hello world。<br>有考虑使用网页，但是现在前端很卷了，用传统的html+js开发，以我的水平开发出来，至少前期体验也一般。</p>
+</li>
+<li><p>经过一番考虑，就在决定直接通过个人的微信公众号来作为前端，在公众号后台配置自己的服务器地址即可</p>
+</li>
+</ul>
+<h2 id="微信通知的实现"><a href="#微信通知的实现" class="headerlink" title="微信通知的实现"></a>微信通知的实现</h2><ul>
+<li><p>平常自己有一些个性定时任务，需要通知消息到自己，使用微信来通知是最好的，毕竟大家目前都是微信的重度用户了。</p>
+</li>
+<li><p>但现在微信对公众号的通知限制越来越多了，最后我选择通过发送邮件的方式来实现。在微信配置QQ邮箱接收邮件通知即可。</p>
+</li>
+</ul>
+<h2 id="服务架构"><a href="#服务架构" class="headerlink" title="服务架构"></a>服务架构</h2><p><img src="/2022/06/01/20220601-ge-ren-golang-xiang-mu-jian-yao-miao-shu/golang_project_3.png"></p>
+<h2 id="外网环境下如何进行服务部署更新"><a href="#外网环境下如何进行服务部署更新" class="headerlink" title="外网环境下如何进行服务部署更新"></a>外网环境下如何进行服务部署更新</h2><ul>
+<li>平常在家庭网络下，开发Go程序，本地编译打包成二进制文件，上传到服务器更新程序即可<br>在外网环境下，使用花生壳等端口映射软件即可。我使用花生壳映射端口后，就可以通过ssh登录到家里的服务器，接下来就可以为所欲为了。</li>
+</ul>
+<h2 id="部署流程"><a href="#部署流程" class="headerlink" title="部署流程"></a>部署流程</h2><p><img src="/2022/06/01/20220601-ge-ren-golang-xiang-mu-jian-yao-miao-shu/golang_deploy_2.png"></p>
+<h2 id="结论总结"><a href="#结论总结" class="headerlink" title="结论总结"></a>结论总结</h2><ul>
+<li>家庭网络 + 小型服务器 + Go程序 + ngrok + 微信公众号 + 邮箱通知 + 花生壳</li>
+</ul>
 <h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
 <li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/272594212">golang如何优雅的实现重启服务(fvbock&#x2F;endless)</a></li>
 </ul>
@@ -394,7 +445,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/golang/" rel="tag"># golang</a>
+            <a href="/tags/Go/" rel="tag"># Go</a>
           
             <a href="/tags/ngrok/" rel="tag"># ngrok</a>
           
@@ -510,7 +561,7 @@
 <a href="/archives/">                
 <!--<a href="/archives/%7C%7C%20archive">-->
               
-                  <span class="site-state-item-count">120</span>
+                  <span class="site-state-item-count">127</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -523,7 +574,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">129</span>
+                  <span class="site-state-item-count">137</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -563,7 +614,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">1.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E9%80%89%E6%8B%A9"><span class="nav-number">1.</span> <span class="nav-text">服务器的选择</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E4%BD%BF%E5%A4%96%E7%BD%91%E7%8E%AF%E5%A2%83%E8%83%BD%E8%AE%BF%E9%97%AE%E5%88%B0%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="nav-number">2.</span> <span class="nav-text">如何使外网环境能访问到服务器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80%E9%80%89%E6%8B%A9"><span class="nav-number">3.</span> <span class="nav-text">编程语言选择</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E7%AB%AF%E7%BB%88%E7%AB%AF%E9%80%89%E6%8B%A9"><span class="nav-number">4.</span> <span class="nav-text">前端终端选择</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BE%AE%E4%BF%A1%E9%80%9A%E7%9F%A5%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="nav-number">5.</span> <span class="nav-text">微信通知的实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84"><span class="nav-number">6.</span> <span class="nav-text">服务架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%96%E7%BD%91%E7%8E%AF%E5%A2%83%E4%B8%8B%E5%A6%82%E4%BD%95%E8%BF%9B%E8%A1%8C%E6%9C%8D%E5%8A%A1%E9%83%A8%E7%BD%B2%E6%9B%B4%E6%96%B0"><span class="nav-number">7.</span> <span class="nav-text">外网环境下如何进行服务部署更新</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%83%A8%E7%BD%B2%E6%B5%81%E7%A8%8B"><span class="nav-number">8.</span> <span class="nav-text">部署流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E8%AE%BA%E6%80%BB%E7%BB%93"><span class="nav-number">9.</span> <span class="nav-text">结论总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">10.</span> <span class="nav-text">Reference</span></a></li></ol></div>
             
 
           </div>

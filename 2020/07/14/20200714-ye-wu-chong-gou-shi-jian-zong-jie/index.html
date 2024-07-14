@@ -81,15 +81,15 @@
 
 
 
-<meta name="description" content="项目背景 公司原有的业务几乎都是PHP编写的，并且处于一个很大的项目里维护和运行，可以说是大杂烩。随着业务发展和用户量的提升，渐渐得暴露了很多问题： PHP运行效率较低，业务未进行隔离，出问题时相互影响； PHP 过于灵活的语言特性，导致后期较高的后期维护成本； 基础框架和服务对PHP支持不足； 实现灾备比较困难。    重构语言选择 我们选择Java作为开发语言进行重构 静态类型，多人协作开发和">
+<meta name="description" content="业务重构似乎是必然且合理的过程。一个项目刚开始为了快速上线和试错，总会或多或少出现不合理的地方。当项目活下来了，为了寻求下一步的发展，服务的稳定和扩展性提升了优先级，自然就需要有人来重构了，这也是项目历史遗留的技术债务。   项目背景 公司原有的业务几乎都是PHP编写的，并且处于一个很大的项目里维护和运行，可以说是大杂烩。随着业务发展和用户量的提升，渐渐得暴露了很多问题： PHP运行效率较低，">
 <meta property="og:type" content="article">
 <meta property="og:title" content="业务重构实践总结">
 <meta property="og:url" content="http://yoursite.com/2020/07/14/20200714-ye-wu-chong-gou-shi-jian-zong-jie/index.html">
 <meta property="og:site_name" content="拉巴力的纸皮箱">
-<meta property="og:description" content="项目背景 公司原有的业务几乎都是PHP编写的，并且处于一个很大的项目里维护和运行，可以说是大杂烩。随着业务发展和用户量的提升，渐渐得暴露了很多问题： PHP运行效率较低，业务未进行隔离，出问题时相互影响； PHP 过于灵活的语言特性，导致后期较高的后期维护成本； 基础框架和服务对PHP支持不足； 实现灾备比较困难。    重构语言选择 我们选择Java作为开发语言进行重构 静态类型，多人协作开发和">
+<meta property="og:description" content="业务重构似乎是必然且合理的过程。一个项目刚开始为了快速上线和试错，总会或多或少出现不合理的地方。当项目活下来了，为了寻求下一步的发展，服务的稳定和扩展性提升了优先级，自然就需要有人来重构了，这也是项目历史遗留的技术债务。   项目背景 公司原有的业务几乎都是PHP编写的，并且处于一个很大的项目里维护和运行，可以说是大杂烩。随着业务发展和用户量的提升，渐渐得暴露了很多问题： PHP运行效率较低，">
 <meta property="og:locale">
 <meta property="article:published_time" content="2020-07-14T12:14:58.000Z">
-<meta property="article:modified_time" content="2023-05-07T14:41:07.598Z">
+<meta property="article:modified_time" content="2024-05-16T09:06:58.233Z">
 <meta property="article:author" content="Kingson Wu">
 <meta property="article:tag" content="重构">
 <meta name="twitter:card" content="summary">
@@ -366,7 +366,12 @@
       
 
       
-        <h3 id="项目背景"><a href="#项目背景" class="headerlink" title="项目背景"></a>项目背景</h3><ul>
+        <blockquote>
+<blockquote>
+<p>业务重构似乎是必然且合理的过程。一个项目刚开始为了快速上线和试错，总会或多或少出现不合理的地方。当项目活下来了，为了寻求下一步的发展，服务的稳定和扩展性提升了优先级，自然就需要有人来重构了，这也是项目历史遗留的技术债务。</p>
+</blockquote>
+</blockquote>
+<h3 id="项目背景"><a href="#项目背景" class="headerlink" title="项目背景"></a>项目背景</h3><ul>
 <li>公司原有的业务几乎都是PHP编写的，并且处于一个很大的项目里维护和运行，可以说是大杂烩。随着业务发展和用户量的提升，渐渐得暴露了很多问题：<ol>
 <li>PHP运行效率较低，业务未进行隔离，出问题时相互影响；</li>
 <li>PHP 过于灵活的语言特性，导致后期较高的后期维护成本；</li>
@@ -552,7 +557,7 @@
 <a href="/archives/">                
 <!--<a href="/archives/%7C%7C%20archive">-->
               
-                  <span class="site-state-item-count">120</span>
+                  <span class="site-state-item-count">127</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -565,7 +570,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">129</span>
+                  <span class="site-state-item-count">137</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

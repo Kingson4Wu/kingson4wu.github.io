@@ -88,19 +88,19 @@
 <meta property="og:site_name" content="拉巴力的纸皮箱">
 <meta property="og:description" content="前言 本文涉及一些理论基础 业界目前的分布式事务的解决方案 简单的分类和总结 基本内容都来源网上  理论基础事务 事务：事务是由一组操作构成的可靠的独立的工作单元，事务具备ACID的特性，即原子性、一致性、隔离性和持久性。 本地事务：当事务由资源管理器本地管理时被称作本地事务。本地事务的优点就是支持严格的ACID特性，高效，可靠，状态可以只在资源管理器中维护，而且应用编程模型简单。但是本地事务不具">
 <meta property="og:locale">
-<meta property="og:image" content="http://yoursite.com/2020/09/12/20200912-%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1%E7%AE%80%E8%A6%81%E6%80%BB%E7%BB%93/DTP.png">
-<meta property="og:image" content="http://yoursite.com/2020/09/12/20200912-%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1%E7%AE%80%E8%A6%81%E6%80%BB%E7%BB%93/Saga_TCC_AT.png">
-<meta property="og:image" content="http://yoursite.com/2020/09/12/20200912-%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1%E7%AE%80%E8%A6%81%E6%80%BB%E7%BB%93/Seata.jpg">
-<meta property="og:image" content="http://yoursite.com/2020/09/12/20200912-%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1%E7%AE%80%E8%A6%81%E6%80%BB%E7%BB%93/%E8%A1%A5%E5%81%BF%E5%9E%8B%E4%BA%8B%E5%8A%A1.png">
-<meta property="og:image" content="http://yoursite.com/2020/09/12/20200912-%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1%E7%AE%80%E8%A6%81%E6%80%BB%E7%BB%93/%E6%AD%A3%E5%B8%B8%E6%83%85%E5%86%B5_%E4%BA%8B%E5%8A%A1%E4%B8%BB%E5%8A%A8%E6%96%B9%E5%8F%91%E6%B6%88%E6%81%AF.png">
-<meta property="og:image" content="http://yoursite.com/2020/09/12/20200912-%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1%E7%AE%80%E8%A6%81%E6%80%BB%E7%BB%93/%E5%BC%82%E5%B8%B8%E6%83%85%E5%86%B5_%E4%BA%8B%E5%8A%A1%E4%B8%BB%E5%8A%A8%E6%96%B9%E6%B6%88%E6%81%AF%E6%81%A2%E5%A4%8D.jpeg">
-<meta property="og:image" content="http://yoursite.com/2020/09/12/20200912-%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1%E7%AE%80%E8%A6%81%E6%80%BB%E7%BB%93/RocketMQ.png">
-<meta property="og:image" content="http://yoursite.com/2020/09/12/20200912-%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1%E7%AE%80%E8%A6%81%E6%80%BB%E7%BB%93/%E5%85%81%E8%AE%B8%E7%A9%BA%E5%9B%9E%E6%BB%9A.png">
-<meta property="og:image" content="http://yoursite.com/2020/09/12/20200912-%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1%E7%AE%80%E8%A6%81%E6%80%BB%E7%BB%93/%E9%98%B2%E6%82%AC%E6%8C%82%E6%8E%A7%E5%88%B6.png">
-<meta property="og:image" content="http://yoursite.com/2020/09/12/20200912-%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1%E7%AE%80%E8%A6%81%E6%80%BB%E7%BB%93/Seata.jpg">
-<meta property="og:image" content="http://yoursite.com/2020/09/12/20200912-%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1%E7%AE%80%E8%A6%81%E6%80%BB%E7%BB%93/XA_TCC.png">
+<meta property="og:image" content="http://yoursite.com/2020/09/12/20200912-fen-bu-shi-shi-wu-jian-yao-zong-jie/DTP.png">
+<meta property="og:image" content="http://yoursite.com/2020/09/12/20200912-fen-bu-shi-shi-wu-jian-yao-zong-jie/Saga_TCC_AT.png">
+<meta property="og:image" content="http://yoursite.com/2020/09/12/20200912-fen-bu-shi-shi-wu-jian-yao-zong-jie/Seata.jpg">
+<meta property="og:image" content="http://yoursite.com/2020/09/12/20200912-fen-bu-shi-shi-wu-jian-yao-zong-jie/%E8%A1%A5%E5%81%BF%E5%9E%8B%E4%BA%8B%E5%8A%A1.png">
+<meta property="og:image" content="http://yoursite.com/2020/09/12/20200912-fen-bu-shi-shi-wu-jian-yao-zong-jie/%E6%AD%A3%E5%B8%B8%E6%83%85%E5%86%B5_%E4%BA%8B%E5%8A%A1%E4%B8%BB%E5%8A%A8%E6%96%B9%E5%8F%91%E6%B6%88%E6%81%AF.png">
+<meta property="og:image" content="http://yoursite.com/2020/09/12/20200912-fen-bu-shi-shi-wu-jian-yao-zong-jie/%E5%BC%82%E5%B8%B8%E6%83%85%E5%86%B5_%E4%BA%8B%E5%8A%A1%E4%B8%BB%E5%8A%A8%E6%96%B9%E6%B6%88%E6%81%AF%E6%81%A2%E5%A4%8D.jpeg">
+<meta property="og:image" content="http://yoursite.com/2020/09/12/20200912-fen-bu-shi-shi-wu-jian-yao-zong-jie/RocketMQ.png">
+<meta property="og:image" content="http://yoursite.com/2020/09/12/20200912-fen-bu-shi-shi-wu-jian-yao-zong-jie/%E5%85%81%E8%AE%B8%E7%A9%BA%E5%9B%9E%E6%BB%9A.png">
+<meta property="og:image" content="http://yoursite.com/2020/09/12/20200912-fen-bu-shi-shi-wu-jian-yao-zong-jie/%E9%98%B2%E6%82%AC%E6%8C%82%E6%8E%A7%E5%88%B6.png">
+<meta property="og:image" content="http://yoursite.com/2020/09/12/20200912-fen-bu-shi-shi-wu-jian-yao-zong-jie/Seata.jpg">
+<meta property="og:image" content="http://yoursite.com/2020/09/12/20200912-fen-bu-shi-shi-wu-jian-yao-zong-jie/XA_TCC.png">
 <meta property="article:published_time" content="2020-09-12T06:41:45.000Z">
-<meta property="article:modified_time" content="2023-05-07T14:41:07.607Z">
+<meta property="article:modified_time" content="2024-06-11T07:43:31.858Z">
 <meta property="article:author" content="Kingson Wu">
 <meta property="article:tag" content="分布式事务">
 <meta property="article:tag" content="TCC">
@@ -108,7 +108,7 @@
 <meta property="article:tag" content="XA">
 <meta property="article:tag" content="Seata">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://yoursite.com/2020/09/12/20200912-%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1%E7%AE%80%E8%A6%81%E6%80%BB%E7%BB%93/DTP.png">
+<meta name="twitter:image" content="http://yoursite.com/2020/09/12/20200912-fen-bu-shi-shi-wu-jian-yao-zong-jie/DTP.png">
 
 
 
@@ -416,7 +416,7 @@
 </li>
 </ul>
 <h3 id="DTP-Distributed-Transaction-Processing"><a href="#DTP-Distributed-Transaction-Processing" class="headerlink" title="DTP(Distributed Transaction Processing)"></a>DTP(Distributed Transaction Processing)</h3><ul>
-<li><p>DTP（Distributed Transaction Processing Reference Model）：分布式事务处理模型。TM、RM、AP等角色的分布式事务的模型。<br><img src="/2020/09/12/20200912-%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1%E7%AE%80%E8%A6%81%E6%80%BB%E7%BB%93/DTP.png"></p>
+<li><p>DTP（Distributed Transaction Processing Reference Model）：分布式事务处理模型。TM、RM、AP等角色的分布式事务的模型。<br><img src="/2020/09/12/20200912-fen-bu-shi-shi-wu-jian-yao-zong-jie/DTP.png"></p>
 </li>
 <li><p>AP（Application Program，应用程序）</p>
 </li>
@@ -443,7 +443,7 @@
 <li><p>基于业务补偿的Saga满足1.2；TCC满足2.3；Seata（AT模式）满足1.3</p>
 </li>
 </ul>
-<p><img src="/2020/09/12/20200912-%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1%E7%AE%80%E8%A6%81%E6%80%BB%E7%BB%93/Saga_TCC_AT.png"></p>
+<p><img src="/2020/09/12/20200912-fen-bu-shi-shi-wu-jian-yao-zong-jie/Saga_TCC_AT.png"></p>
 <h3 id="分布式事务的4种模式"><a href="#分布式事务的4种模式" class="headerlink" title="分布式事务的4种模式"></a>分布式事务的4种模式</h3><ol>
 <li>AT - (无侵入的分布式事务解决方案)</li>
 <li>TCC (业务层的2PC)</li>
@@ -454,13 +454,13 @@
 <li>阿里seata框架 实现了这四种模式。</li>
 <li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/78599954">分布式事务的4种模式</a></li>
 </ul>
-<p><img src="/2020/09/12/20200912-%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1%E7%AE%80%E8%A6%81%E6%80%BB%E7%BB%93/Seata.jpg"></p>
+<p><img src="/2020/09/12/20200912-fen-bu-shi-shi-wu-jian-yao-zong-jie/Seata.jpg"></p>
 <ul>
 <li>性能最高的是Saga，其次是TCC。</li>
 <li>隔离性最好的是XA（资源层），最差的是Saga。</li>
 <li>除了XA，其他三个为柔性事务，补偿式事务。</li>
 </ul>
-<h3 id="补偿型事务"><a href="#补偿型事务" class="headerlink" title="补偿型事务"></a>补偿型事务</h3><p>补偿型事务处理机制构建在 事务资源 之上（要么在中间件层面，要么在应用层面），事务资源 本身对分布式事务是无感知的。<br><img src="/2020/09/12/20200912-%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1%E7%AE%80%E8%A6%81%E6%80%BB%E7%BB%93/%E8%A1%A5%E5%81%BF%E5%9E%8B%E4%BA%8B%E5%8A%A1.png"></p>
+<h3 id="补偿型事务"><a href="#补偿型事务" class="headerlink" title="补偿型事务"></a>补偿型事务</h3><p>补偿型事务处理机制构建在 事务资源 之上（要么在中间件层面，要么在应用层面），事务资源 本身对分布式事务是无感知的。<br><img src="/2020/09/12/20200912-fen-bu-shi-shi-wu-jian-yao-zong-jie/%E8%A1%A5%E5%81%BF%E5%9E%8B%E4%BA%8B%E5%8A%A1.png"></p>
 <h3 id="分类"><a href="#分类" class="headerlink" title="分类"></a>分类</h3><ul>
 <li>分布式事务实现方案从ACID的角度上，分刚性事务、柔型事务。</li>
 <li>刚性事务：通常无业务改造，强一致性，原生支持回滚&#x2F;隔离性，低并发，适合短事务;<br>柔性事务：有业务改造，最终一致性，实现补偿接口，实现资源锁定接口，高并发，适合长事务。</li>
@@ -542,7 +542,7 @@
 <li><p>MQ（事务消息）(notify-两阶段提交加回调机制)－ RocketMQ</p>
 </li>
 </ul>
-<p><img src="/2020/09/12/20200912-%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1%E7%AE%80%E8%A6%81%E6%80%BB%E7%BB%93/%E6%AD%A3%E5%B8%B8%E6%83%85%E5%86%B5_%E4%BA%8B%E5%8A%A1%E4%B8%BB%E5%8A%A8%E6%96%B9%E5%8F%91%E6%B6%88%E6%81%AF.png"><br><img src="/2020/09/12/20200912-%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1%E7%AE%80%E8%A6%81%E6%80%BB%E7%BB%93/%E5%BC%82%E5%B8%B8%E6%83%85%E5%86%B5_%E4%BA%8B%E5%8A%A1%E4%B8%BB%E5%8A%A8%E6%96%B9%E6%B6%88%E6%81%AF%E6%81%A2%E5%A4%8D.jpeg"></p>
+<p><img src="/2020/09/12/20200912-fen-bu-shi-shi-wu-jian-yao-zong-jie/%E6%AD%A3%E5%B8%B8%E6%83%85%E5%86%B5_%E4%BA%8B%E5%8A%A1%E4%B8%BB%E5%8A%A8%E6%96%B9%E5%8F%91%E6%B6%88%E6%81%AF.png"><br><img src="/2020/09/12/20200912-fen-bu-shi-shi-wu-jian-yao-zong-jie/%E5%BC%82%E5%B8%B8%E6%83%85%E5%86%B5_%E4%BA%8B%E5%8A%A1%E4%B8%BB%E5%8A%A8%E6%96%B9%E6%B6%88%E6%81%AF%E6%81%A2%E5%A4%8D.jpeg"></p>
 <h4 id="RocketMQ"><a href="#RocketMQ" class="headerlink" title="RocketMQ"></a>RocketMQ</h4><ul>
 <li><p>很像阿里的notify</p>
 </li>
@@ -553,7 +553,7 @@
 <li><p>RocketMQ 阿里开源的消息中间件,原来叫做MetaQ; RocketMQ的各个环节,包括生产者,消费者,broker都是分布式的,所以基本可以保障由于网络原因丢掉,且RocketMQ存在重复消费的问题,所以文档明确表明了应该业务方自己实现幂等性.</p>
 </li>
 </ul>
-<p><img src="/2020/09/12/20200912-%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1%E7%AE%80%E8%A6%81%E6%80%BB%E7%BB%93/RocketMQ.png"></p>
+<p><img src="/2020/09/12/20200912-fen-bu-shi-shi-wu-jian-yao-zong-jie/RocketMQ.png"></p>
 <ul>
 <li>Pulsar、RocketMQ、NSQ、RabbitMQ、Kafka TODO</li>
 </ul>
@@ -625,14 +625,14 @@ A:
 </ul>
 </li>
 </ol>
-<p><img src="/2020/09/12/20200912-%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1%E7%AE%80%E8%A6%81%E6%80%BB%E7%BB%93/%E5%85%81%E8%AE%B8%E7%A9%BA%E5%9B%9E%E6%BB%9A.png"></p>
+<p><img src="/2020/09/12/20200912-fen-bu-shi-shi-wu-jian-yao-zong-jie/%E5%85%81%E8%AE%B8%E7%A9%BA%E5%9B%9E%E6%BB%9A.png"></p>
 <ol start="2">
 <li>防悬挂控制<ul>
 <li>悬挂的意思是：Cancel 比 Try 接口先执行，出现的原因是 Try 由于网络拥堵而超时，事务管理器生成回滚，触发 Cancel 接口，而最终又收到了 Try 接口调用，但是 Cancel 比 Try 先到。按照前面允许空回滚的逻辑，回滚会返回成功，事务管理器认为事务已回滚成功，则此时的 Try 接口不应该执行，否则会产生数据不一致，所以我们在 Cancel 空回滚返回成功之前先记录该条事务 xid 或业务主键，标识这条记录已经回滚过，Try 接口先检查这条事务xid或业务主键如果已经标记为回滚成功过，则不执行 Try 的业务操作。</li>
 </ul>
 </li>
 </ol>
-<p><img src="/2020/09/12/20200912-%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1%E7%AE%80%E8%A6%81%E6%80%BB%E7%BB%93/%E9%98%B2%E6%82%AC%E6%8C%82%E6%8E%A7%E5%88%B6.png"></p>
+<p><img src="/2020/09/12/20200912-fen-bu-shi-shi-wu-jian-yao-zong-jie/%E9%98%B2%E6%82%AC%E6%8C%82%E6%8E%A7%E5%88%B6.png"></p>
 <h3 id="Saga-‘sɑɡə"><a href="#Saga-‘sɑɡə" class="headerlink" title="Saga [‘sɑɡə]"></a>Saga [‘sɑɡə]</h3><ul>
 <li><p>Saga 理论出自 Hector &amp; Kenneth 1987发表的论文 Sagas。Saga 模式是一种长事务解决方案。</p>
 </li>
@@ -642,7 +642,7 @@ A:
 </li>
 <li><p>Saga 正向服务与补偿服务也需要业务开发者实现。因此是业务入侵的。</p>
 </li>
-<li><p>Saga可以看做一个异步的、利用队列实现的补偿事务。Saga 模式下分布式事务通常是由事件驱动的，各个参与者之间是异步执。</p>
+<li><p>Saga可以看做一个异步的、利用队列实现的补偿事务。Saga 模式下分布式事务通常是由事件驱动的，各个参与者之间是异步执行。</p>
 </li>
 <li><p>使用 Saga 模式开发分布式事务时，有两种协调不同服务的方式，一种是协同（Choreography），另一种是编排（Orchestration）</p>
 <ol>
@@ -774,7 +774,7 @@ A:
 <li><p>从编程模型上，XA 模式与 AT 模式保持完全一致。上层编程模型与 AT 模式完全相同。只需要修改数据源代理，即可实现 XA 模式与 AT 模式之间的切换。</p>
 </li>
 </ul>
-<p><img src="/2020/09/12/20200912-%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1%E7%AE%80%E8%A6%81%E6%80%BB%E7%BB%93/Seata.jpg"></p>
+<p><img src="/2020/09/12/20200912-fen-bu-shi-shi-wu-jian-yao-zong-jie/Seata.jpg"></p>
 <h3 id="最大努力通知型"><a href="#最大努力通知型" class="headerlink" title="最大努力通知型"></a>最大努力通知型</h3><ul>
 <li>回调客户端确认：支付宝会每间隔一段时间后，再向客户方发起回调请求，直到输出成功标识为止。</li>
 </ul>
@@ -841,7 +841,7 @@ A:
 <li>XA是数据库的分布式事务，强一致性，在整个过程中，数据一张锁住状态，即从prepare到commit、rollback的整个过程中，TM一直把持着数据库的锁，如果有其他人要修改数据库的该条数据，就必须等待锁的释放，存在长事务风险。</li>
 <li>TCC是业务的分布式事务，最终一致性，不会出现长事务的锁风险，try是本地事务，锁定资源后就提交事务，confirm／cancel也是本地事务，可以直接提交事务，所以多个短事务不会出现长事务的风险。</li>
 </ol>
-<p><img src="/2020/09/12/20200912-%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1%E7%AE%80%E8%A6%81%E6%80%BB%E7%BB%93/XA_TCC.png"></p>
+<p><img src="/2020/09/12/20200912-fen-bu-shi-shi-wu-jian-yao-zong-jie/XA_TCC.png"></p>
 <h3 id="XA如何在分布式事务中如何保证隔离性？"><a href="#XA如何在分布式事务中如何保证隔离性？" class="headerlink" title="XA如何在分布式事务中如何保证隔离性？"></a>XA如何在分布式事务中如何保证隔离性？</h3><ol>
 <li>由RM直接连接各个数据源(支持XA协议)，RM一般是个单独的服务？</li>
 <li>后续通过Seata的XA模式深入了解TODO</li>
@@ -1022,7 +1022,7 @@ A:
 <a href="/archives/">                
 <!--<a href="/archives/%7C%7C%20archive">-->
               
-                  <span class="site-state-item-count">120</span>
+                  <span class="site-state-item-count">127</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1035,7 +1035,7 @@ A:
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">129</span>
+                  <span class="site-state-item-count">137</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

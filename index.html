@@ -287,6 +287,1221 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2024/05/30/20240530-ji-yu-saturn-ding-shi-ren-wu-de-ke-hu-duan-gong-ju-she-ji/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2024/05/30/20240530-ji-yu-saturn-ding-shi-ren-wu-de-ke-hu-duan-gong-ju-she-ji/" itemprop="url">基于Saturn定时任务的客户端工具设计</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2024-05-30T12:15:11+08:00">
+                2024-05-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2024/05/30/20240530-ji-yu-saturn-ding-shi-ren-wu-de-ke-hu-duan-gong-ju-she-ji/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2024/05/30/20240530-ji-yu-saturn-ding-shi-ren-wu-de-ke-hu-duan-gong-ju-she-ji/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <ul>
+<li>基于之前写的这篇<a target="_blank" rel="noopener" href="https://kingson4wu.github.io/2023/07/03/20230703-tan-tan-ding-shi-ren-wu-de-yuan-li-he-ying-yong/">谈谈定时任务的原理和应用</a>继续聊。</li>
+</ul>
+<p><img src="/2024/05/30/20240530-ji-yu-saturn-ding-shi-ren-wu-de-ke-hu-duan-gong-ju-she-ji/saturn_uds.drawio.png"></p>
+<ul>
+<li><p>由于业务进程不是Java编写的，无法使用Saturn提供的Java定时任务，只能使用Shell定时任务</p>
+</li>
+<li><p>这里选择用UDS实现Shell进程和服务进程之间的通信，实现和使用Java定时任务一样的效果</p>
+</li>
+<li><p>在上次的实现中，只考虑了如何触发定时任务执行，并没有考虑如何停止</p>
+</li>
+</ul>
+<h2 id="实现对执行中的任务进行停止"><a href="#实现对执行中的任务进行停止" class="headerlink" title="实现对执行中的任务进行停止"></a>实现对执行中的任务进行停止</h2><p><img src="/2024/05/30/20240530-ji-yu-saturn-ding-shi-ren-wu-de-ke-hu-duan-gong-ju-she-ji/saturn_signal.drawio.png">    </p>
+<ul>
+<li><p>通过测试可以知道，当在saturn控制台点击终止任务时，会对shell进程发出terminated信号</p>
+</li>
+<li><p>如何不是通过saturn控制台触发，直接终端执行shell命令时，操作Crtl+C时，会对Shell进程发出interrupt信号</p>
+</li>
+<li><p>基于上述研究，提供以下方式停止业务服务的运行中的定时任务</p>
+<ol>
+<li>通过saturn控制台点击终止任务，发terminated信号</li>
+<li>通过操作Crtl+C，发interrupt信号</li>
+<li>通过执行shell命令，指定任务名称和-stop选项，直接发出终止任务请求</li>
+</ol>
+</li>
+</ul>
+<h2 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h2><ul>
+<li>经过测试，saturn的调度不会因为设置的频率太快导致并发运行，只会执行完一个任务再执行下一个</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2024/05/28/20240528-ye-tan-tan-feed-liu-de-she-ji/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2024/05/28/20240528-ye-tan-tan-feed-liu-de-she-ji/" itemprop="url">也谈谈feed流的设计</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2024-05-28T13:56:23+08:00">
+                2024-05-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2024/05/28/20240528-ye-tan-tan-feed-liu-de-she-ji/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2024/05/28/20240528-ye-tan-tan-feed-liu-de-she-ji/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<blockquote>
+<p>几年前也做过feed流相关的服务，虽然网上相关的文章很多，这里也做个人的简要记录和总结<br>方案并非原创，当时是参考其他业务团队的设计</p>
+</blockquote>
+</blockquote>
+<ul>
+<li>需求背景：做一个用户动态模块，可以发动态，可以关注别人动态，有推荐列表，有消息提醒（其实就是微博的基本功能）</li>
+</ul>
+<h1 id="实现逻辑流程"><a href="#实现逻辑流程" class="headerlink" title="实现逻辑流程"></a>实现逻辑流程</h1><ul>
+<li><p>整个feed流设计都是强依赖Redis来实现的，以下列出key设计和对应的功能模块</p>
+<ul>
+<li>粉丝的feed流 - 【feed_list_$userId】<ul>
+<li>member-$id_$userId_$type （score-addtime）</li>
+</ul>
+</li>
+<li>粉丝的feed流为空标志 - 【【feed_list_empty_$userId】】- 防止每次请求都穿透到DB</li>
+<li>用户的活跃粉丝列表 - 【active_fans_list_$userId】</li>
+<li>用户的活跃属性 - 【active_user_status_${userId}】</li>
+<li>动态详情 - 【cache.user.dynamic_${dynamicId}】 - MGet获取</li>
+</ul>
+</li>
+<li><p>数据库分表设计</p>
+<ul>
+<li>用户动态表 - 按用户id分库</li>
+<li>评论表 - 按动态id分库（根据业务，一般都是单个动态的所有评论）</li>
+<li>点赞表 - 按用户id分库（根据业务，一般都是动态列表中展示当前用户的点赞状态）</li>
+</ul>
+</li>
+<li><p>feed流使用sortset，score是addtime</p>
+</li>
+<li><p>推模式，通过维护用户的活跃粉丝列表（有数量限制），推到粉丝的feed流</p>
+</li>
+<li><p>拉模式，通过请求第一页或其他接口进行预加载，查询粉丝的关注人和对应动态（有数量限制），构建粉丝自己feed流</p>
+</li>
+</ul>
+<h2 id="01-feed流-构建-整体流程"><a href="#01-feed流-构建-整体流程" class="headerlink" title="01.feed流 构建 整体流程"></a>01.feed流 构建 整体流程</h2><p><img src="/2024/05/28/20240528-ye-tan-tan-feed-liu-de-she-ji/01.feed%E6%B5%81%E6%9E%84%E5%BB%BA.drawio.png"></p>
+<ul>
+<li>用户发动态、删动态、关注和取关事件，都会对feed流有相应操作</li>
+<li>通过发布事件的设计进行业务逻辑解耦</li>
+</ul>
+<h3 id="用户发动态（推模式）"><a href="#用户发动态（推模式）" class="headerlink" title="用户发动态（推模式）"></a>用户发动态（推模式）</h3><ol>
+<li>用户发布动态（写入DB）</li>
+<li>查询用户的活跃粉丝列表（Redis）</li>
+<li>写入粉丝的Feed流（Redis）</li>
+<li>写入消息表</li>
+</ol>
+<h3 id="粉丝拉关注列表（拉模式）（请求第一页或其他接口，预加载）"><a href="#粉丝拉关注列表（拉模式）（请求第一页或其他接口，预加载）" class="headerlink" title="粉丝拉关注列表（拉模式）（请求第一页或其他接口，预加载）"></a>粉丝拉关注列表（拉模式）（请求第一页或其他接口，预加载）</h3><ol>
+<li>获取feed流（Redis）</li>
+<li>获取关注用户列表（RPC）（限制2000个粉丝）</li>
+<li>获取关注人的动态数据（DB）（限制没人100条动态）</li>
+<li>写入个人的Feed流（Redis）</li>
+<li>成为活跃用户（Redis）</li>
+</ol>
+<h2 id="02-动态消息交互"><a href="#02-动态消息交互" class="headerlink" title="02.动态消息交互"></a>02.动态消息交互</h2><p><img src="/2024/05/28/20240528-ye-tan-tan-feed-liu-de-she-ji/02.%E5%8A%A8%E6%80%81%E6%B6%88%E6%81%AF%E4%BA%A4%E4%BA%92.drawio.png"></p>
+<ul>
+<li>消息表 和 消息读取时间表（用于控制用户红点提示和读取消息列表的范围）</li>
+<li>消息表保存7天定时清除</li>
+</ul>
+<h2 id="03-feed流预加载策略（pull模式）"><a href="#03-feed流预加载策略（pull模式）" class="headerlink" title="03.feed流预加载策略（pull模式）"></a>03.feed流预加载策略（pull模式）</h2><p><img src="/2024/05/28/20240528-ye-tan-tan-feed-liu-de-she-ji/03.feed%E6%B5%81%E9%A2%84%E5%8A%A0%E8%BD%BD%E7%AD%96%E7%95%A5%EF%BC%88pull%E6%A8%A1%E5%BC%8F%EF%BC%89.drawio.png"></p>
+<ul>
+<li>。。。。</li>
+<li>将用户加入为活跃粉丝</li>
+</ul>
+<h2 id="04-动态新增、删除（push模式），活跃粉丝处理"><a href="#04-动态新增、删除（push模式），活跃粉丝处理" class="headerlink" title="04.动态新增、删除（push模式），活跃粉丝处理"></a>04.动态新增、删除（push模式），活跃粉丝处理</h2><p><img src="/2024/05/28/20240528-ye-tan-tan-feed-liu-de-she-ji/04.%E5%8A%A8%E6%80%81%E6%96%B0%E5%A2%9E%E3%80%81%E5%88%A0%E9%99%A4%EF%BC%88push%E6%A8%A1%E5%BC%8F%EF%BC%89%EF%BC%8C%E6%B4%BB%E8%B7%83%E7%B2%89%E4%B8%9D%E5%A4%84%E7%90%86.drawio.png"></p>
+<ul>
+<li>用户的活跃粉丝列表逻辑<ol>
+<li>拉取过feed流或发布过动态等操作的用户，都会设置成有活跃粉丝属性的用户</li>
+<li>RPC获取用户的粉丝列表，过滤掉非活跃用户，保存到用户的活跃粉丝列表</li>
+<li>关注和取关事件，也更新活跃粉丝列表</li>
+</ol>
+</li>
+</ul>
+<h2 id="05-关注、取关-事件-对feed流的处理"><a href="#05-关注、取关-事件-对feed流的处理" class="headerlink" title="05.关注、取关 事件 对feed流的处理"></a>05.关注、取关 事件 对feed流的处理</h2><p><img src="/2024/05/28/20240528-ye-tan-tan-feed-liu-de-she-ji/05.%E5%85%B3%E6%B3%A8%E3%80%81%E5%8F%96%E5%85%B3%E4%BA%8B%E4%BB%B6%E5%AF%B9feed%E6%B5%81%E7%9A%84%E5%A4%84%E7%90%86.drawio.png"></p>
+<h2 id="06-获取feed流"><a href="#06-获取feed流" class="headerlink" title="06.获取feed流"></a>06.获取feed流</h2><p><img src="/2024/05/28/20240528-ye-tan-tan-feed-liu-de-she-ji/06.%E8%8E%B7%E5%8F%96feed%E6%B5%81.drawio.png"></p>
+<ul>
+<li>有了前面的推拉模式，用户直接从redis获取feed流即可</li>
+</ul>
+<h2 id="07-动态类型版本设计"><a href="#07-动态类型版本设计" class="headerlink" title="07.动态类型版本设计"></a>07.动态类型版本设计</h2><p><img src="/2024/05/28/20240528-ye-tan-tan-feed-liu-de-she-ji/07.%E5%8A%A8%E6%80%81%E7%B1%BB%E5%9E%8B%E7%89%88%E6%9C%AC%E8%AE%BE%E8%AE%A1.drawio.png"></p>
+<ul>
+<li><p>随着动态类型的新增，客户端旧版本不支持新类型动态，需要过滤；</p>
+</li>
+<li><p>目前feed流是存在redis的，直接过滤可能会导致旧版本数据为空，可以通过多版本动态来区分</p>
+</li>
+<li><p>实现描述</p>
+<ol>
+<li>用户获取feed流，根据客户端的版本号等信息，判断出客户端支持的feed版本，并构建对应的feed流</li>
+<li>用户发布动态，构建用户存在的活跃动态版本的feed流（为了用户的新旧版本都兼容）</li>
+</ol>
+</li>
+</ul>
+<h1 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h1><ul>
+<li>很久之前做的一次实验<ul>
+<li>取消了微信黑名单，没看到之前的人的朋友圈。说明微信朋友圈也是feed持久化的方式实现</li>
+<li>微博也是这样，之前关注过，取关后再恢复，内容也能恢复，说明feed表只是逻辑删（应该是存数据库表了）</li>
+</ul>
+</li>
+<li>微博feed实现（猜测）<ol>
+<li>为每个用户保存他所有关注的用户的feed表数据</li>
+<li>假如取关，则重写关注能恢复数据（逻辑删除）</li>
+<li>但如果之前没关注的用户，则他之前的动态不会出现在feed表中</li>
+</ol>
+</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2024/05/09/20240509-liao-liao-pei-zhi-zhong-xin/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2024/05/09/20240509-liao-liao-pei-zhi-zhong-xin/" itemprop="url">聊聊配置中心</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2024-05-09T15:28:40+08:00">
+                2024-05-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2024/05/09/20240509-liao-liao-pei-zhi-zhong-xin/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2024/05/09/20240509-liao-liao-pei-zhi-zhong-xin/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<blockquote>
+<p>第一次接触配置中心，是快十年前了，那时的配置中心还没像现在那么多成熟的开源项目，很多公司都需要结合自身业务自研。</p>
+</blockquote>
+</blockquote>
+<h2 id="使用配置中心的好处"><a href="#使用配置中心的好处" class="headerlink" title="使用配置中心的好处"></a>使用配置中心的好处</h2><ol>
+<li>快速发布变更配置，实时生效</li>
+<li>对于不复杂的系统或业务配置，可以避免写繁琐的后台，但又具备快速变更的功能</li>
+<li>读取配置性能高，一般配置后，都是以内存变量的方式常驻在服务中，可以说读取配置几乎零成本</li>
+</ol>
+<h2 id="配置中心的核心-推送原理"><a href="#配置中心的核心-推送原理" class="headerlink" title="配置中心的核心-推送原理"></a>配置中心的核心-推送原理</h2><blockquote>
+<blockquote>
+<p>这里主要讲一下个人实际接触的三种原理，其实从宏观本质上看，三种方案原理是一致的</p>
+</blockquote>
+</blockquote>
+<ol>
+<li>第一家公司的配置中心自研方案，借助ZooKeeper的临时节点变更事件，从而实现实时推送</li>
+</ol>
+<p><img src="/2024/05/09/20240509-liao-liao-pei-zhi-zhong-xin/zookeeper_config_center.png"></p>
+<ol start="2">
+<li><p>第二家公司的服务治理中心的实现方案，使用Netty使服务中心和各服务之间建立TCP长链接，从而实现配置推送</p>
+</li>
+<li><p>第三家公司使用Apollo开源项目作为配置中心，原理是使用HTTP的Long polling方案</p>
+</li>
+</ol>
+<ul>
+<li>从原理的本质上看，三者都是通过保持TCP连接不断开，从而复用这个通道进行数据推送</li>
+<li>除了推送的实现很重要之外，后台管理系统的设计和客户端的SDK也很重要。因为光能实时推送是不够的，要让接入配置中心方便，以及能方便管理和发布配置也是很关键的。在这一点上，Apollo这个开源项目是很不错的。</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2024/05/07/20240507-ye-wu-kai-fa-zhong-de-zhu-yu-dao/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2024/05/07/20240507-ye-wu-kai-fa-zhong-de-zhu-yu-dao/" itemprop="url">业务开发中的术与道</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2024-05-07T17:43:26+08:00">
+                2024-05-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2024/05/07/20240507-ye-wu-kai-fa-zhong-de-zhu-yu-dao/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2024/05/07/20240507-ye-wu-kai-fa-zhong-de-zhu-yu-dao/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<blockquote>
+<p>从事IT行业若干年，有时回首，不禁感叹，很多技术方案和日常生活息息相关，可以相互借鉴。</p>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<p>以下只是草稿，以后有缘再整理</p>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<p>以下每项并不是独立，而是相互重叠的</p>
+</blockquote>
+</blockquote>
+<h1 id="技术追求"><a href="#技术追求" class="headerlink" title="技术追求"></a>技术追求</h1><ul>
+<li>提升自身和团队的水平、服务架构合理性和性能的考虑、提高开发效率和体验</li>
+</ul>
+<h2 id="定时任务使用UDS作为触发运行的通知方式"><a href="#定时任务使用UDS作为触发运行的通知方式" class="headerlink" title="定时任务使用UDS作为触发运行的通知方式"></a>定时任务使用UDS作为触发运行的通知方式</h2><ul>
+<li>基于架构的完全性考虑：不暴露非本机触发的机会</li>
+<li>基于架构的合理性考虑：复用已有服务的逻辑和资源，无需新开进程</li>
+<li>具体实现看：<a target="_blank" rel="noopener" href="https://kingson4wu.github.io/2023/07/03/20230703-tan-tan-ding-shi-ren-wu-de-yuan-li-he-ying-yong/">谈谈定时任务的原理和应用</a> - 使用域信号通知通知服务</li>
+</ul>
+<h1 id="代码质量"><a href="#代码质量" class="headerlink" title="代码质量"></a>代码质量</h1><h2 id="使用代码扫描工具"><a href="#使用代码扫描工具" class="headerlink" title="使用代码扫描工具"></a>使用代码扫描工具</h2><ul>
+<li>比如Java的Sonar、Golang的golint等</li>
+</ul>
+<h2 id="单元测试"><a href="#单元测试" class="headerlink" title="单元测试"></a>单元测试</h2><ul>
+<li>及时发现新代码逻辑问题，以及发现避免误改动等</li>
+<li>提交代码检查并及时阻断</li>
+</ul>
+<h2 id="代码Review"><a href="#代码Review" class="headerlink" title="代码Review"></a>代码Review</h2><ul>
+<li>上面的事项自动化，比如和gitlab pipeline结合，在开发阶段就及时修正；</li>
+<li>后续代码review可以避免审核低级问题，提高效率</li>
+</ul>
+<h1 id="开发效率"><a href="#开发效率" class="headerlink" title="开发效率"></a>开发效率</h1><h2 id="脚本工具"><a href="#脚本工具" class="headerlink" title="脚本工具"></a>脚本工具</h2><ul>
+<li>开发快速生成curl脚本的工具，便于快速定位问题，以及反馈时提供复现实例；</li>
+</ul>
+<h1 id="代码复用"><a href="#代码复用" class="headerlink" title="代码复用"></a>代码复用</h1><h2 id="通用组件抽象"><a href="#通用组件抽象" class="headerlink" title="通用组件抽象"></a>通用组件抽象</h2><ul>
+<li>apollo灰度工具</li>
+<li>bi数据上报组件</li>
+<li>消息通知组件</li>
+</ul>
+<h2 id="业务组件抽象"><a href="#业务组件抽象" class="headerlink" title="业务组件抽象"></a>业务组件抽象</h2><ul>
+<li>目前都流行微服务，但有很多上游的逻辑是可以复用的，可以抽象出来，通过代码库的方式复用</li>
+</ul>
+<h1 id="服务稳定"><a href="#服务稳定" class="headerlink" title="服务稳定"></a>服务稳定</h1><h2 id="灰度工具"><a href="#灰度工具" class="headerlink" title="灰度工具"></a>灰度工具</h2><ul>
+<li>为保证改动一旦出问题，降低影响，开发基于配置中心的灰度工具，可以根据业务属性进行灰度</li>
+</ul>
+<h1 id="性能优化"><a href="#性能优化" class="headerlink" title="性能优化"></a>性能优化</h1><ul>
+<li>使用wrk、pprof等工具分析优化</li>
+</ul>
+<h1 id="文档化"><a href="#文档化" class="headerlink" title="文档化"></a>文档化</h1><h2 id="常规事情文档化"><a href="#常规事情文档化" class="headerlink" title="常规事情文档化"></a>常规事情文档化</h2><h2 id="复杂事情文档化"><a href="#复杂事情文档化" class="headerlink" title="复杂事情文档化"></a>复杂事情文档化</h2>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2024/04/25/20240425-ye-wu-kai-fa-zhong-shi-yong-bi-de-hai-liang-shu-ju-chu-li-neng-li/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2024/04/25/20240425-ye-wu-kai-fa-zhong-shi-yong-bi-de-hai-liang-shu-ju-chu-li-neng-li/" itemprop="url">业务开发中使用BI的海量数据处理能力</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2024-04-25T19:40:27+08:00">
+                2024-04-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2024/04/25/20240425-ye-wu-kai-fa-zhong-shi-yong-bi-de-hai-liang-shu-ju-chu-li-neng-li/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2024/04/25/20240425-ye-wu-kai-fa-zhong-shi-yong-bi-de-hai-liang-shu-ju-chu-li-neng-li/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <ul>
+<li>BI的数据统计跑数结果一般是T+1生成的</li>
+</ul>
+<ol>
+<li>实时性要求不高的功能，用于推荐等其他业务功能，可用于统计和监控等</li>
+<li>对实时性要求高的功能，做后置的监控，及早发现逻辑错误</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2024/04/07/20240407-cong-java-zhuan-go-de-ge-ren-ti-hui/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2024/04/07/20240407-cong-java-zhuan-go-de-ge-ren-ti-hui/" itemprop="url">从Java转Go的个人体会</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2024-04-07T09:22:08+08:00">
+                2024-04-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2024/04/07/20240407-cong-java-zhuan-go-de-ge-ren-ti-hui/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2024/04/07/20240407-cong-java-zhuan-go-de-ge-ren-ti-hui/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<blockquote>
+<p>这里仅从一个业务开发的角度谈谈体会，格局较低，仅做个人记录<br>编程语言是程序员接触和使用最多的工具<br>后端技术基础的深度是快速学习和适应新语言的关键</p>
+</blockquote>
+</blockquote>
+<ul>
+<li><p>基于<a target="_blank" rel="noopener" href="https://kingson4wu.github.io/2023/07/02/20230702-dui-gong-zuo-zhong-jie-hong-guo-de-ji-chong-bian-cheng-yu-yan-ji-qi-bu-shu-jia-gou-de-kan-fa/">对工作中接触过的几种编程语言及其部署架构的看法</a>继续聊。</p>
+</li>
+<li><p>截至目前，职业生涯五分之四的时间都是在使用Java。出于个人意愿和兴趣，以及行业的发展形势，也系统的自学了Go语言，并在个人的小项目实践。在一次意外的组织变动中，我转岗到了新团队，并开始使用Go，由于之前自己的自学基础，基本是无缝切换到新语言。可能是由于团队人员大部分是从Lua或PHP开始转Go的，在那里甚至感觉自己稍稍领先。</p>
+</li>
+<li><p>Go抽象业务比Java麻烦，代码不美观，但是它原生高并发，而且微服务下很多时候就一个后端服务，业务足够小，不需要复杂的设计模式等，并不需要像以前写大型Java应用这样做非常多的抽象，还能打二进制包，甚至还能保证一个团队所有人代码都是相同风格</p>
+</li>
+<li><p>以下讲一些个人看法，比较乱甚至不正确，仅做个人记录</p>
+<ol>
+<li>小型项目省内存</li>
+<li>写命令行程序方便简单</li>
+<li>现在绝大部分功能都有相应的官方库和开源库</li>
+<li>运行无需环境依赖，直接打包成二进制可执行程序（Java现在也可以了，可能大部分业务场景下体积还较大）</li>
+<li>支持交叉编译，不要特定平台</li>
+<li>打包体积小（根据代码实际使用情况打包-这点是我一直苦苦寻找的）<ul>
+<li>Go语言中有未用代码消除和可执行文件瘦身机制。只有在程序执行路径上被调用的函数才会进入最终的可执行文件，未被调用的函数会被消除</li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/s60J4eA_d0hqrXj-XMPpXA">Go未用代码消除与可执行文件瘦身</a></li>
+</ul>
+</li>
+</ol>
+</li>
+<li><p>为什么现在大多数人都会认为Java启动慢占内存呢？</p>
+<ul>
+<li>首先不是Java自身的原因，而是跟实际使用场景有关</li>
+<li>使用Java大多数用来做业务开发，也习惯引入很多依赖库，首当其冲就是SpringBoot等框架</li>
+<li>多数都是spring相关类、proxy&#x2F;cglib，以及各种bean配置</li>
+<li>而且很多类都是在启动的时候初始化的</li>
+</ul>
+</li>
+<li><p>微服务下的编程语言</p>
+<ul>
+<li>在K8S流行之前，Java通常是使用SpringCloud</li>
+<li>其实微服务相关技术，在K8S已经实现了</li>
+<li>无论是使用Go还是Java，目前都应该向K8S靠近</li>
+<li>还有一点，K8S本身就是用Go实现的</li>
+</ul>
+</li>
+</ul>
+<h2 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h2><ul>
+<li><p><a target="_blank" rel="noopener" href="https://github.com/Kingson4Wu/graalvm_demo">体验Graalvm+SpringBoot+Java21构建原生程序</a></p>
+</li>
+<li><p>在内存利用效率上，Go语言确实比Java做得更好，在4个不同的角度来总结</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/-N4eqdXb9a93uvOWfE4ScQ">Golang与Java全方位对比总结</a></li>
+</ul>
+<ol>
+<li>Java的JIT策略比Golang的AOT策略<ul>
+<li>Java在运行时相比Golang多占用了一些内存。原因在于：<ul>
+<li>Java运行态中包含了一个完整的解释器、一个JIT编译期以及一个垃圾回收器，这会显著地增加内存。</li>
+<li>Golang语言直接编译到机器码，运行态只包含机器码和一个垃圾回收器。</li>
+</ul>
+</li>
+<li>因此Golang的运行态相对消耗内存较少。</li>
+</ul>
+</li>
+<li>内存分配和垃圾回收器<ul>
+<li>Java确实在起步占用上偏多，毕竟jvm需要更多内存做jit，默认的gc算法对内存要求偏高，但这不能代表后续占用仍然线性增长。如果目标是启动成百上千个内存需求较少的进程，那Java确实不擅长。</li>
+</ul>
+</li>
+<li>并发<ul>
+<li>协程模型比线程模型更加节省内存。</li>
+</ul>
+</li>
+<li>反射<ul>
+<li>Golang的反射更加简单，导致框架的内存消耗Golang程序比Java程序优秀。主要是因为： Java的框架实现中大量使用反射，并使用hashmap缓存信息，这2个都是极度消耗内存的行为。 Golang的框架中也使用reflect、map。但是Golang是面向interface和值类型的，这导致Golang的反射模型要比Java的反射模型简单非常多，反射过程要产生的对象数量也少非常多。</li>
+</ul>
+</li>
+</ol>
+</li>
+<li><p>为什么一些已经选择 Java 的公司，现在又开始考虑使用 Go？</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/ZKL-M54IBx9CSkYKoLdsUA">为什么要用Go重写Dubbo？</a></li>
+<li>相较于 Java，Go 在启动速度、编译速度、内存使用和高并发（如协程）方面都有明显优势。所以，那些已经采用 Java 的公司现在也在考虑引入 Go。但要注意的是，目前这样的公司仍然是少数。另外，一些公司并没有严格规定技术栈的选择，因此新成立的部门或新业务团队可以自由选择，而他们可能更倾向于选择 Go 作为开发语言。</li>
+<li>小结: 总的来说，无论是选择 Java 还是 Go，都是有其合理性的。一家公司同时选择这两种语言也同样合理。尽管这样的公司占比不大，但 Java 与 Go 之间的交流需求仍然存在。</li>
+</ul>
+</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2024/04/06/20240406-ji-lu-xian-mian-ye-wu-de-jing-yan/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2024/04/06/20240406-ji-lu-xian-mian-ye-wu-de-jing-yan/" itemprop="url">记录限免业务的经验</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2024-04-06T22:16:35+08:00">
+                2024-04-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2024/04/06/20240406-ji-lu-xian-mian-ye-wu-de-jing-yan/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2024/04/06/20240406-ji-lu-xian-mian-ye-wu-de-jing-yan/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <ul>
+<li><p>由于业务需要，比如歌曲，我们需要对部分歌曲开放限免的功能，而且需要限制开放限免的场景。比如这首歌在场景A免费，在场景B收费。</p>
+</li>
+<li><p>先说正确的做法，下发另外一个字段比如free_token，通过这个字段判断业务来源，和判断是否可以免费。free_token是随着对应的场景查询时下发的，是变化的。即同一个歌曲的free_token不是唯一的。</p>
+</li>
+<li><p>现在有另外一种情况，想对现有的业务做限免（前端业务是不认free_token的）。这时可以把歌曲id使用free_token的值来下发，后续通过歌曲id来判断是否符合限免。</p>
+<ul>
+<li>这样做有个前提，就是前端业务没有使用歌曲id来做唯一性的业务（因为这是歌曲id是变化的），比如收藏。所以使用这个方案，要充分测试，而且可能还有其他不兼容的场景。</li>
+</ul>
+</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2024/04/05/20240405-zhi-chang-zhong-de-shan-yu-gou-tong-he-gao-qing-shang/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -724,1206 +1939,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2024/04/02/20240402-da-gong-ren-xin-tai-ying-gai-shi-zen-yang-de/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2024/04/02/20240402-da-gong-ren-xin-tai-ying-gai-shi-zen-yang-de/" itemprop="url">打工人心态应该是怎样的？</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2024-04-02T14:11:15+08:00">
-                2024-04-02
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2024/04/02/20240402-da-gong-ren-xin-tai-ying-gai-shi-zen-yang-de/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2024/04/02/20240402-da-gong-ren-xin-tai-ying-gai-shi-zen-yang-de/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote>
-<blockquote>
-<p>先来两段经典的话:</p>
-</blockquote>
-</blockquote>
-<blockquote>
-<blockquote>
-<p>一<br>为众人抱薪者，不可使其冻毙于风雪；<br>为大众谋福利者，不可使其孤军奋战；<br>为自由开路者，不可使其困顿于荆棘。</p>
-</blockquote>
-</blockquote>
-<blockquote>
-<blockquote>
-<p>二<br>愿中国青年都摆脱冷气，只是向上走。<br>不要听自暴自弃者的话。<br>能做事的做事，能发声的发声。<br>有一份光，发一份热。<br>就令萤火一般，也可以在黑暗里发一点光。<br>不必等候炬火。</p>
-</blockquote>
-</blockquote>
-<ul>
-<li><p>迫于由于现实的压迫，大家普遍焦虑，也会在工作中认怂，即使是不合理不正确负能量的等等；</p>
-</li>
-<li><p>这些其实都能理解，不管是迫于生活压力，还是对方给得实在太多等原因；</p>
-</li>
-<li><p>但有时，希望我们可以</p>
-<ul>
-<li>我们只是个打工的，有些东西不必过度较真</li>
-<li>虽是打工但也人格独立和自尊，不必唯唯诺诺</li>
-<li>有自己的时间分配和生活，不必紧盯信息，实在紧急对方会打电话</li>
-<li>不必焦虑，事事回复，根据自身情况，适当保持高姿态</li>
-<li>换位思考，容人之度，当然容人不是纵容</li>
-<li>工作时专注和高质量，不浪费自己时间</li>
-</ul>
-</li>
-</ul>
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://www.163.com/dy/article/I21SD6BV0514ANQM.html"></a></li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2024/04/01/20240401-tob-ye-wu-sui-bian-jiang-jiang/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2024/04/01/20240401-tob-ye-wu-sui-bian-jiang-jiang/" itemprop="url">ToB业务随便讲讲</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2024-04-01T16:16:48+08:00">
-                2024-04-01
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2024/04/01/20240401-tob-ye-wu-sui-bian-jiang-jiang/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2024/04/01/20240401-tob-ye-wu-sui-bian-jiang-jiang/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote>
-<blockquote>
-<p>以下内容格局比较小，仅做个人记录</p>
-</blockquote>
-</blockquote>
-<ul>
-<li><p>从我个人接触过的ToB和ToC业务讲，有以下特点（当然肯定不是一定对的，毕竟业务形态实在太多，我没真正接触过的，就不提了）：</p>
-<ul>
-<li>ToC的业务团队，一般只做若干个业务模块；不同的业务有不同的团队</li>
-<li>ToB的业务团队，需要对接几乎所有业务，进而对外提供平台能力</li>
-</ul>
-</li>
-<li><p>关于ToB业务的规范</p>
-<ul>
-<li>ToB的业务，出于通用性，会制定各种规范由客户进行对接</li>
-<li>当然，所谓的规范，有时候是看哪方处于强势</li>
-<li>弱势方即使作为平台也要给客户做定制化</li>
-<li>比如一个简单的回调规范，客户不配合，需要平台这边按照他们的规范适配</li>
-<li>但同样支付宝和微信作为平台，难道要支付宝和微信去适配每个接入方？无非是谁更强势的问题。</li>
-<li>从这方面看，可以一定判断出这个公司目前的状况</li>
-</ul>
-</li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2024/03/29/20240329-ti-sheng-zi-ji-zhi-chang-zhong-de-ke-ti-dai-xing/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2024/03/29/20240329-ti-sheng-zi-ji-zhi-chang-zhong-de-ke-ti-dai-xing/" itemprop="url">提升自己职场中的“可替代性”</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2024-03-29T15:14:28+08:00">
-                2024-03-29
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2024/03/29/20240329-ti-sheng-zi-ji-zhi-chang-zhong-de-ke-ti-dai-xing/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2024/03/29/20240329-ti-sheng-zi-ji-zhi-chang-zhong-de-ke-ti-dai-xing/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote>
-<blockquote>
-<p>怎么看待职场中的“业务壁垒”？</p>
-</blockquote>
-</blockquote>
-<ul>
-<li><p>在我的工作中，曾经发生过这样一件事：有一天我们在讨论，能不能实现一个业务通用组件，让各个业务接入，提升业务需求的开发效率等，这时候有一个同事就跟我说：‘那如果真的实现的话，那你这边的业务就啥都没了’，言外之意就是我这边“没事做了”。我给他的回答是：‘没关系，只要是有意义，有价值，对公司是正确的就行’</p>
-</li>
-<li><p>那么？我真的那么爱公司吗？</p>
-<ul>
-<li>当然不是，我只是觉得应该做自己认为正确的事，顺便说一下漂亮话忽悠一下。</li>
-</ul>
-</li>
-<li><p>在工作中，你们到遇到很多“业务壁垒”。通俗来讲，这个东西只有他会，或者短期内只有他能搞定。你甚至会觉得一股恶心，就是很乱很难受，并惊叹对方的忍耐力。</p>
-</li>
-<li><p>然而，无数的事实证明了，这个世界不会因为没有谁就不行。</p>
-</li>
-<li><p>而我的原则是：做正确的事，不制造业务壁垒；保持出色的整理学习能力，输出业务文档，让自己随时可替换，甚至寻找可以替换自己的人；不做狭义对自己有利的事，尽量做广义对公司有利的事。</p>
-</li>
-<li><p>具体来说，可以这样阐述</p>
-<ol>
-<li>“业务壁垒”不是我认同的核心竞争力，甚至混乱的“业务壁垒”不是我能忍受的工作体验；</li>
-<li>出色的整理学习能力，坚信长期主义，才是我认同的核心竞争力；</li>
-<li>我在提升自己可替代性的同时，也是在提升自己的“不可替代性”；而有些地方，并不需要“不可替代性”的人；</li>
-<li>提升自己可替代性，其实也是在保持业务的稳定；不会因个人而大受影响，甚至我因此可以放心度假，因为我会的东西，别人也可以快速学会和处理；</li>
-</ol>
-</li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2024/03/28/20240328-dui-fu-wu-jia-gou-zhong-de-ju-he-ceng-li-jie/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2024/03/28/20240328-dui-fu-wu-jia-gou-zhong-de-ju-he-ceng-li-jie/" itemprop="url">对服务架构中的聚合层理解</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2024-03-28T11:55:49+08:00">
-                2024-03-28
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2024/03/28/20240328-dui-fu-wu-jia-gou-zhong-de-ju-he-ceng-li-jie/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2024/03/28/20240328-dui-fu-wu-jia-gou-zhong-de-ju-he-ceng-li-jie/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote>
-<blockquote>
-<p>以前刚毕业的时候，进入一个组，叫中间层，那时候还懵懵懂懂不知道想表达啥意思</p>
-</blockquote>
-</blockquote>
-<p><img src="/2024/03/28/20240328-dui-fu-wu-jia-gou-zhong-de-ju-he-ceng-li-jie/%E8%81%9A%E5%90%88%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84.jpeg"></p>
-<ul>
-<li><p>图来源网上，已未知出处</p>
-</li>
-<li><p>这个组是直接给app提供接口的，主要的职能大概有以下</p>
-<ul>
-<li>业务适配</li>
-<li>服务聚合</li>
-<li>数据展示</li>
-<li>安全隔离</li>
-</ul>
-</li>
-<li><p>聚合服务，简单的来说就是聚合底层的各个业务系统，给用户端应用提供接口</p>
-<ul>
-<li>（直接对接用户前端的接口服务，手机app，网站，h5等用户终端）</li>
-<li>BFF —— Backends for frontends（服务于前端的后端），是为了让后端API满足不同的前端使用场景，而演进出来的一种模式。</li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/IZ5wD2Dc5k83dP6dR8M9xg">BFF避坑指南</a></li>
-</ul>
-</li>
-<li><p>那么这个组有存在的必要吗？特别是现在服务内部都微服务化，很多业务服务都是直接对app提供接口的。</p>
-</li>
-<li><p>先从表面上看看使不使用聚合层各自的特点和好处</p>
-<ul>
-<li>使用聚合层<ol>
-<li>前端需要对接的接口比较少，对前端来说比较友好</li>
-<li>聚合层可以聚合底层业务的接口，相比前端直接对接，有些业务场景可以提升接口性能</li>
-<li>能根据前端的业务场合适配和统一改动，便于快速迭代和打补丁等</li>
-<li>可以根据前端对数据的不同使用场景，减少不必要的性能损耗<ul>
-<li>如果统一接口，入参就会变得复杂，增加前端的对接成本</li>
-</ul>
-</li>
-</ol>
-</li>
-<li>不使用聚合层<ol>
-<li>有些业务场景，减少多一层调用，有利于提升性能</li>
-<li>业务接口可以复用，不需要聚合层再包一层，减少开发时间<ul>
-<li>前提：整个公司统一接口规范，同个接口可以复用于不同app</li>
-</ul>
-</li>
-<li>分散接口故障风险。一个业务故障，不会导致其他业务也故障。<ul>
-<li>相对使用聚合层，聚合层的服务不可用，整个app都会受影响</li>
-</ul>
-</li>
-</ol>
-</li>
-</ul>
-</li>
-<li><p>仔细想想，简单理解，其实使用聚合层就是水平架构，不使用就是垂直架构；根据康威定律，其实公司决定使用哪种方案，一定程度还受公司组织关系的影响。</p>
-</li>
-<li><p>提外话：由于前后端分离的流行。聚合层服务有时候会由前端团队来维护。使用node服务用于聚合页面和后端接口，从而提升性能。相对于传统的聚合层，前端的聚合层比较轻量化，基本是无状态服务，不存储数据和加工数据，纯粹做聚合接口和页面。</p>
-</li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2024/03/27/20240327-zhi-chang-zhong-ma-hou-pao-xian-xiang/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2024/03/27/20240327-zhi-chang-zhong-ma-hou-pao-xian-xiang/" itemprop="url">职场中“马后炮”现象</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2024-03-27T10:22:47+08:00">
-                2024-03-27
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2024/03/27/20240327-zhi-chang-zhong-ma-hou-pao-xian-xiang/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2024/03/27/20240327-zhi-chang-zhong-ma-hou-pao-xian-xiang/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote>
-<blockquote>
-<p>职场中有一种奇怪又平常的现象：没出事就没人重视，出事了就各种马后炮。</p>
-</blockquote>
-</blockquote>
-<ul>
-<li><p>以软件开发人员平常应对的事情为例，这里其实有一种无奈的解释：</p>
-<ol>
-<li>需求这么多还没做完，有什么充分的理由去重视这个问题？</li>
-<li>你把事情做好了，完全不出事，怎么证明是你的功劳？</li>
-</ol>
-</li>
-<li><p>普通的干实事的程序员，最讨厌跟行外人谈收益。就像把代码写好了，自然后续维护成本就低了。但是硬要把他转化为节约多少人力。只想一心老老实实写代码的程序员，好心做个事情还要花费心力想办法给你解释，久而久之自然是多一事不如少一事。所谓劣币驱逐良币，有追求的程序员自然离开了，剩下的可想而知。</p>
-</li>
-<li><p>那么，难道这个问题就无解吗？</p>
-<ul>
-<li>当然不是。要建立在不干涉和充分信任的基础上。CEO相信CTO，CTO当然知道把代码写好的好处，所以也不需要底下做事的人过分解释。</li>
-<li>但实际上很多公司，CTO不做CTO的事，只是专注向上汇报，还把汇报的事情层层外包给下面的人。导致本应该自己屏蔽，让底下安心做事的事情，层层透传，苦了干实事的人。而自己就成了汇总PPT的汇报员。</li>
-</ul>
-</li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2024/03/26/20240326-xiao-tuan-dui-guan-li-jing-yan/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2024/03/26/20240326-xiao-tuan-dui-guan-li-jing-yan/" itemprop="url">小团队管理经验</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2024-03-26T10:39:17+08:00">
-                2024-03-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2024/03/26/20240326-xiao-tuan-dui-guan-li-jing-yan/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2024/03/26/20240326-xiao-tuan-dui-guan-li-jing-yan/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote>
-<blockquote>
-<p>转眼工作十年了，从20年10月开始，断断续续做了近三年的小团队管理，这里作简要总结一下。</p>
-</blockquote>
-</blockquote>
-<blockquote>
-<blockquote>
-<p>所谓小团队管理，其实就是现在说的虚线组长，需要写代码、给团队提供指导等，但是由于不是高级别大领导，不需要应付很多烦人的破事。从这层来看，挺适合我这种性格的人。</p>
-</blockquote>
-</blockquote>
-<blockquote>
-<blockquote>
-<p>以下是以小团队为背景来总结的，格局显得较小；当然每个人的观点不一样，不一定是正确的理解。</p>
-</blockquote>
-</blockquote>
-<h2 id="核心要点（对自己）"><a href="#核心要点（对自己）" class="headerlink" title="核心要点（对自己）"></a>核心要点（对自己）</h2><ul>
-<li>情商、基于别人的角度思考<ul>
-<li>个人习惯采取对内温和对外强硬的方式；当然结合自身情况和环境具体选择；这个方法可以让你更好的理解人和事情；我不认为所谓的“情商高”就是“老好人”。</li>
-</ul>
-</li>
-<li>以身作则<ul>
-<li>以自己为榜样，让团队其他成员看到正确的做事方式等；包括技术方案、沟通方式等，当然包括一些无法避免的脏活累活等；用高效和人性化等方式应对 。</li>
-</ul>
-</li>
-<li>令人信服的技术功底<ul>
-<li>小团队管理的特点，就是领头的人也是需要写代码和干实事，而且跟团队成员的距离是最近的；需要保持自己良好的技术功底，才能更好的给团队提供有效的建议；另外作为有追求的技术人，谁都想跟着比自己优秀的人一起共事。</li>
-</ul>
-</li>
-<li>保证成员尽量免干扰、休息时间如无必要不打扰<ul>
-<li>这一点是我基于人性化的角度考虑的，有些人可能会觉得不重要。给团队提供深度工作的环境，才能提升效率；在一些不紧急的事情少，要做到不随意打扰，减少团队的负面情绪。对应上面第一条，将心比心，每个人都想要良好的工作体验。</li>
-</ul>
-</li>
-<li>真诚、谦虚、透明<ul>
-<li>尽量保持团队一定的透明度，减少不必要的暗箱操作。大部分情况下不需要开会，只需要一篇简明扼要的文档，即可让团队快速了解事情的内容。团队成员也在发展，要清楚有一天他们的能力会超过你。而我一直坚持的做法是，业务上坚持写文档，尽量减少业务壁垒（也是为自己放假偷懒准备），技术上提供合理的建议，不遗余力的提高自己的“可替代性”。</li>
-<li>认清自己。领导需要团队的力量才能发挥作用。不要错把平台的能力当作自己的能力。把公司的给予当作自己的给予。</li>
-</ul>
-</li>
-<li>人性化管理<ul>
-<li>现在很多公司都追求狼性文化，说着各种假话哄下属为自己加班干活</li>
-<li>个人管理经验理念是，先做人再做领导</li>
-<li>如非必要。不严厉。许多人还没到那个层级就采取低端没人情味的管理方式。要和同事成为朋友，营造友好的工作环境，而不是一味向上管理。</li>
-</ul>
-</li>
-<li>尽量保持技术更新升级<ul>
-<li>在确保充分测试，稳定灰度的同时，适量的升级有利于系统的稳定，增加维护人员的积极性。这种东西无法直接给出具体收益，但应该长远考虑，一味的保守只会让技术越来越落后</li>
-</ul>
-</li>
-</ul>
-<h2 id="核心要点（对团队）"><a href="#核心要点（对团队）" class="headerlink" title="核心要点（对团队）"></a>核心要点（对团队）</h2><ul>
-<li>聪明、叙述简明扼要、能抓重点</li>
-<li>乐于分享、采用高效的分享手段（文章即可）、实事求是</li>
-<li>有团队主人翁意识，主动了解业务</li>
-<li>对技术原理好奇并积极探索</li>
-<li>尊重别人的时间</li>
-<li>跟进事情有反馈和结论</li>
-<li>在正确的事情面前，敢于说不</li>
-<li>重视自己的“可替代性”、免于个人单点、提升团队容错性</li>
-</ul>
-<h2 id="小团队技术管理者的事项列表"><a href="#小团队技术管理者的事项列表" class="headerlink" title="小团队技术管理者的事项列表"></a>小团队技术管理者的事项列表</h2><ul>
-<li>业务侧<ul>
-<li>快速满足需求</li>
-<li>通用业务组件抽象</li>
-<li>旧业务熟悉</li>
-<li>定期删除无用代码，增加代码可维护性</li>
-<li>遗留需求记录和跟进</li>
-<li>业务知识文档化，方便查阅和备忘</li>
-<li>需求上线时间定时跟进（你就是项目经理）</li>
-</ul>
-</li>
-<li>技术侧<ul>
-<li>旧业务梳理和重构</li>
-<li>架构灾备和优化、资源隔离等</li>
-<li>通用工具类封装</li>
-<li>管理后台搭建 （解放技术）</li>
-<li>服务异常监控（后端接口，前端APM等各个维度）</li>
-<li>技术组件升级，提升团队技术广度</li>
-<li>废弃业务下线，回收资源</li>
-<li>业务技术调研，团队具备快速满足产品新需求的能力</li>
-<li>分享，相互学习，个人认为文档就行了，会议实际上挺形式和浪费大家的时间</li>
-<li>帮助review方案和代码</li>
-<li>技术债务登记和逐步处理（分优先级[每个季度一定要完成一定比例的低优先级任务]，保持代码洁癖，不给后来人挖坑）</li>
-<li>开发规范制定（避免后续维护混乱，也方便大家日常开发查阅）</li>
-<li>开发阶段和上线阶段checklist，避免犯重复的错误，避免上线遗漏导致项目延期</li>
-<li>技术面试</li>
-<li>应急处理、日常维护等文档化（公开、透明、高效）</li>
-<li>团队文档整理规划<ul>
-<li>新人指引</li>
-<li>业务模块（服务模块、业务知识整理、业务交接记录、业务安全风险点）</li>
-<li>工作规划（需求列表、技术规划、技术债务）</li>
-<li>开发规范（项目上线流程、公共库说明、开发协议、服务架构图、业务逻辑开发套路等）</li>
-<li>工作文档（应急、日常维护等）<ul>
-<li>常见问题处理导航</li>
-</ul>
-</li>
-<li>技术文档（技术型、分享类）</li>
-<li>技术方案（日常需求上线方案归档）</li>
-<li>复盘、故障报告</li>
-<li>业务调研</li>
-<li>其他备份</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://kingson4wu.github.io/2021/08/13/20210813-ge-ren-guan-li-jing-yan-zong-jie/">个人管理经验总结</a></li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2023/07/30/20230730-ru-he-zai-da-liang-shu-ju-zhong-pan-duan-gei-ding-de-shi-fou-zai-qi-zhong/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2023/07/30/20230730-ru-he-zai-da-liang-shu-ju-zhong-pan-duan-gei-ding-de-shi-fou-zai-qi-zhong/" itemprop="url">如何在大量数据中判断给定的是否在其中</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-07-30T16:27:34+08:00">
-                2023-07-30
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2023/07/30/20230730-ru-he-zai-da-liang-shu-ju-zhong-pan-duan-gei-ding-de-shi-fou-zai-qi-zhong/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2023/07/30/20230730-ru-he-zai-da-liang-shu-ju-zhong-pan-duan-gei-ding-de-shi-fou-zai-qi-zhong/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="1、-Bloom-Filter"><a href="#1、-Bloom-Filter" class="headerlink" title="1、 Bloom Filter"></a>1、 Bloom Filter</h2><ul>
-<li>缺点：只能增不能减，且有误判场景需要单独处理</li>
-<li>可以使用当前进程级的Bloom Filter，也可以使用Redis的Bloom Filter</li>
-</ul>
-<h2 id="2、-文件存储"><a href="#2、-文件存储" class="headerlink" title="2、 文件存储"></a>2、 文件存储</h2><ul>
-<li><p>可以使用类似Java的MappedByteBuffer来保存数据</p>
-</li>
-<li><p>缺点：只能保存连续的一定范围的数字对应的值</p>
-</li>
-<li><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/353988136">Java文件读写与MappedByteBuffer</a></p>
-</li>
-<li><p>使用示例：</p>
-</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.junit.Test;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.File;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.net.URI;</span><br><span class="line"><span class="keyword">import</span> java.nio.MappedByteBuffer;</span><br><span class="line"><span class="keyword">import</span> java.nio.channels.FileChannel;</span><br><span class="line"><span class="keyword">import</span> java.nio.file.Paths;</span><br><span class="line"><span class="keyword">import</span> java.nio.file.StandardOpenOption;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MappedByteBufferTest</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;==&quot;</span>+ ID_SIZE);</span><br><span class="line">        System.out.println(<span class="string">&quot;==&quot;</span>+ getBufferIndex(<span class="number">1032387525</span>));</span><br><span class="line">        System.out.println(<span class="string">&quot;==&quot;</span>+ getBufferIndex(<span class="number">227081157</span>));</span><br><span class="line">        <span class="comment">// 两个数字模结果冲突</span></span><br><span class="line">        <span class="comment">// 这种方案只能保存连续的一定范围的数字对应的值</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">ID_SIZE</span> <span class="operator">=</span> <span class="number">1024</span> * <span class="number">1024</span> * <span class="number">32</span> * <span class="number">8</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">int</span> <span class="title function_">getBufferIndex</span><span class="params">(<span class="type">long</span> idx)</span> &#123;</span><br><span class="line">        <span class="comment">//每个id占用8个字节</span></span><br><span class="line">        <span class="keyword">return</span> (<span class="type">int</span>) ((idx % ID_SIZE) * <span class="number">8</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * 写入：mappedByteBuffer.putLong(int index, long value);</span></span><br><span class="line"><span class="comment">     * 读取：mappedByteBuffer.getLong(int index);</span></span><br><span class="line"><span class="comment">     * 注：MappedByteBuffer对index的最大范围是Int.MaxValue()</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 上面的表述计算有问题</span></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 2G = 2^31 字节</span></span><br><span class="line"><span class="comment">     * ==&gt; 1b= 2^3 ; 1k = 2^10 b ; 1M = 2^20 b ; 1G = 2^30 b; 2G = 2^31 字节</span></span><br><span class="line"><span class="comment">     * long 64 位，即 2^3 字节 = 2^3</span></span><br><span class="line"><span class="comment">     * 2G = 2^31 字节 能存储多少个，应该是 2^31 / 2^3 = 2^28</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 31 - 3 = 28 = 10 + 10 + 5 = 1024 * 1024 * 32 * 8</span></span><br><span class="line">    <span class="comment">// 根据每个模之后的倍数放在不通的文件，所以不会冲突</span></span><br><span class="line">    <span class="comment">//如果分文件，比如10个，那么78在第8个文件的低第七个； 78%10、78/10</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * https://zhuanlan.zhihu.com/p/353988136</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> IOException</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">testMappedByteBuffer</span><span class="params">()</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">        <span class="type">File</span> <span class="variable">file</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">File</span>(<span class="string">&quot;/Users/kingsonwu/downloads/test.log&quot;</span>);</span><br><span class="line">        <span class="keyword">if</span>(!file.exists())&#123;</span><br><span class="line">            file.createNewFile();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">FileChannel</span> <span class="variable">fileChannel</span> <span class="operator">=</span> FileChannel.open(Paths.get(URI.create(<span class="string">&quot;file:/Users/kingsonwu/downloads/test.log&quot;</span>)),</span><br><span class="line">                StandardOpenOption.WRITE, StandardOpenOption.READ);</span><br><span class="line">        <span class="type">MappedByteBuffer</span> <span class="variable">mappedByteBuffer</span> <span class="operator">=</span> fileChannel.map(FileChannel.MapMode.READ_WRITE, <span class="number">0</span>, Integer.MAX_VALUE);</span><br><span class="line">        <span class="comment">//fileChannel.close();</span></span><br><span class="line">        <span class="comment">//mappedByteBuffer.position(1024);</span></span><br><span class="line">        <span class="comment">//mappedByteBuffer.putLong(10000L);</span></span><br><span class="line"></span><br><span class="line">        mappedByteBuffer.putLong(getBufferIndex(<span class="number">1032387525</span>), <span class="number">1032387528111L</span>);</span><br><span class="line">        mappedByteBuffer.putLong(getBufferIndex(<span class="number">1032387526</span>), <span class="number">1032387529567L</span>);</span><br><span class="line">        mappedByteBuffer.putLong((ID_SIZE - <span class="number">2</span>)*<span class="number">8</span>, <span class="number">4032387529569443654L</span>);</span><br><span class="line">        <span class="comment">//mappedByteBuffer.putLong((ID_SIZE_2)*8, 1032387529569L);</span></span><br><span class="line"></span><br><span class="line">        mappedByteBuffer.force();</span><br><span class="line"></span><br><span class="line">        System.out.println(mappedByteBuffer.getLong(getBufferIndex(<span class="number">1032387525</span>)));</span><br><span class="line">        System.out.println(mappedByteBuffer.getLong(getBufferIndex(<span class="number">1032387526</span>)));</span><br><span class="line">        System.out.println(mappedByteBuffer.getLong((ID_SIZE - <span class="number">2</span>)*<span class="number">8</span>));</span><br><span class="line">        <span class="comment">//System.out.println(mappedByteBuffer.getLong((ID_SIZE_2 )*8));</span></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h2 id="3、Tendis"><a href="#3、Tendis" class="headerlink" title="3、Tendis"></a>3、Tendis</h2><ul>
-<li>使用tendis可以将数据存储到磁盘，避免全部数据都保存在内存，从而节约内存</li>
-<li>Redis的痛点之一就是内存成本高，访问频率(QPS)没那么高, 依然占用大量机器, 维护成本很高</li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/Tencent_TEG/article/details/115878121">Redis vs Tendis：冷热混合存储版架构揭秘</a></li>
-<li>使用 rocksdb 作为存储引擎, LSM Tree</li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><a class="extend next" rel="next" href="/page/2/">&lt;i class&#x3D;&quot;fa fa-angle-right&quot;&gt;&lt;&#x2F;i&gt;</a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><a class="extend next" rel="next" href="/page/2/">&lt;i class&#x3D;&quot;fa fa-angle-right&quot;&gt;&lt;&#x2F;i&gt;</a>
   </nav>
 
 
@@ -1974,7 +1994,7 @@
 <a href="/archives/">                
 <!--<a href="/archives/%7C%7C%20archive">-->
               
-                  <span class="site-state-item-count">120</span>
+                  <span class="site-state-item-count">127</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1987,7 +2007,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">129</span>
+                  <span class="site-state-item-count">137</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

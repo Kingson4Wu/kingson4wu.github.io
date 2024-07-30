@@ -5345,6 +5345,9 @@ sudo netstat -anp|grep 'FIN_WAIT2'| awk '{print $7}'|sort |uniq -c | sort -nr
 <p>要解决这个问题，可以将读锁的获取和解锁放在同一次循环迭代中，确保每次获取读锁后都会及时释放，而不会在后续迭代中持有读锁。以下是修改后的代码：</p>
 <figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *GuardPolicy)</span></span> Resolve(connPools []gorm.ConnPool) gorm.ConnPool &#123;</span><br><span class="line">	<span class="keyword">var</span> x = <span class="built_in">make</span>([]*sortPool, <span class="number">0</span>, <span class="built_in">len</span>(connPools))</span><br><span class="line">	<span class="keyword">for</span> i := <span class="keyword">range</span> connPools &#123;</span><br><span class="line">		p, ok := connPools[i].(*sql.DB)</span><br><span class="line">		<span class="keyword">if</span> !ok &#123;</span><br><span class="line">			x = <span class="built_in">append</span>(x, &amp;sortPool&#123;connPool: connPools[i], errCnt: <span class="number">0</span>&#125;)</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			s.mu.RLock()</span><br><span class="line">			errCnt := s.errData[p]</span><br><span class="line">			s.mu.RUnlock()</span><br><span class="line">			x = <span class="built_in">append</span>(x, &amp;sortPool&#123;connPool: connPools[i], errCnt: errCnt&#125;)</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	sort.Slice(x, <span class="function"><span class="keyword">func</span><span class="params">(i, j <span class="type">int</span>)</span></span> <span class="type">bool</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> x[i].errCnt &lt;= x[j].errCnt</span><br><span class="line">	&#125;)</span><br><span class="line">	<span class="keyword">return</span> x[<span class="number">0</span>].connPool</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
+<h2 id="扩展-1"><a href="#扩展-1" class="headerlink" title="扩展"></a>扩展</h2><ul>
+<li>跟这个很像：<a href="https://ms2008.github.io/2019/07/04/golang-redis-deadlock/">线上一次大量 CLOSE_WAIT 复盘</a></li>
+</ul>
 <hr>
 <h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
 <li><a href="https://blog.csdn.net/wodatoucai/article/details/69389288">tcp socket文件句柄泄漏</a></li>
@@ -13751,7 +13754,7 @@ POST /_reindex?wait_for_completion=false
 <h3 id="服务的风险容忍度"><a href="#服务的风险容忍度" class="headerlink" title="服务的风险容忍度"></a>服务的风险容忍度</h3><ul>
 <li><p>为了辨别服务的风险容忍度，SRE必须与产品负责人一起努力，将一组商业目标转化为明确的可以实现的工程目标。</p>
 </li>
-<li><p>尽管当时YouTube已经有了一个很出色的产品，但它仍然在不断变化和快速发展着。因此，我们为YouTube设定了一个相比我们企业的产品更低的可用性目标，因为快速发展更加重要。故障的类型</p>
+<li><p>尽管当时YouTube已经有了一个很出色的产品，但它仍然在不断变化和快速发展着。因此，我们为YouTube设定了一个相比我们企业的产品更低的可用性目标，因为快速发展更加重要。</p>
 </li>
 <li><p>对于一项给定的服务的故障预期是另一个需要重点考虑的因素。我们的业务对于服务的停机时间的容忍程度有多高？持续的低故障率或者偶尔发生的全网中断哪一个会更糟糕？这两种类型的故障可能会导致绝对数量上完全相同的错误被返回，但可能对于业务的影响相差很大。下面这个例子说明了一个提供私人信息的系统中自然发生的完全和部分服务中断的区别。假设有一个联系人管理应用程序，一种情况是导致用户头像显示失败的间歇性故障，另一种情况是将A用户的私人联系列表显示给B用户的故障。第一种情况显然是一个糟糕的用户体验，SRE会努力去快速地解决这个问题。然而，在第二种情况下，暴露私人数据的风险可能会破坏基本的用户信任。因此，在第二种情况下，在进行调试和事后的数据清理时，完全停止该服务更加恰当。</p>
 </li>
@@ -13873,9 +13876,9 @@ POST /_reindex?wait_for_completion=false
 </li>
 <li><p>琐事的存在并不总是坏事，但是每个人都必须清楚，在SRE所扮演的角色中，一定数量的琐事是不可避免的，这其实是任何工程类工作都具有的特点。少量的琐事存在不是什么大问题。但是一旦琐事的数量变多，就会有害了。如果琐事特别繁重，那就应该非常担忧，大声抱怨。在许多琐事有害的原因中，有如下因素需要考虑：职业停滞如果花在工程项目上的时间太少，你的职业发展会变慢，甚至停滞。Google确实会奖励做那些脏活累活的人，但是仅仅是该工作是不可避免，并有巨大的正面影响的时候才会这样做。没有人可以通过不停地做脏活累活满足自己的职业发展。</p>
 </li>
-<li><p>士气低落每个人对自己可以承担的琐事限度有所不同，但是一定有个限度。过多的琐事会导致过度劳累、厌倦和不满。另外，牺牲工程实践而做琐事会对SRE组织的整体发展造成损害，原因如下：造成误解</p>
+<li><p>士气低落每个人对自己可以承担的琐事限度有所不同，但是一定有个限度。过多的琐事会导致过度劳累、厌倦和不满。另外，牺牲工程实践而做琐事会对SRE组织的整体发展造成损害。</p>
 </li>
-<li><p>我们努力确保每个SRE以及每个与SRE一起工作的人都理解SRE是一个工程组织。如果个人或者团队过度参与琐事，会破坏这种角色，造成误解。进展缓慢琐事过多会导致团队生产力下降。如果SRE团队忙于为手工操作和导出数据救火，新功能的发布就会变慢。开创先例如果SRE过于愿意承担琐事，研发同事就更倾向于加入更多的琐事，有时候甚至将本来应该由研发团队承担的运维工作转给SRE来承担。其他团队也会开始指望SRE接受这样的工作，这显然是不好的。促进摩擦产生即使你个人对琐事没有怨言，你现在的或未来的队友可能会很不开心。如果团队中引入了太多的琐事，其实就是在鼓励团队里最好的工程师开始寻找其他地方提供的更有价值的工作。违反承诺那些为了项目工程工作而新入职的员工，以及转入SRE的老员工会有被欺骗的感觉，这非常不利于公司的士气。</p>
+<li><p>原因如下：造成误解。我们努力确保每个SRE以及每个与SRE一起工作的人都理解SRE是一个工程组织。如果个人或者团队过度参与琐事，会破坏这种角色，造成误解。进展缓慢琐事过多会导致团队生产力下降。如果SRE团队忙于为手工操作和导出数据救火，新功能的发布就会变慢。开创先例如果SRE过于愿意承担琐事，研发同事就更倾向于加入更多的琐事，有时候甚至将本来应该由研发团队承担的运维工作转给SRE来承担。其他团队也会开始指望SRE接受这样的工作，这显然是不好的。促进摩擦产生即使你个人对琐事没有怨言，你现在的或未来的队友可能会很不开心。如果团队中引入了太多的琐事，其实就是在鼓励团队里最好的工程师开始寻找其他地方提供的更有价值的工作。违反承诺那些为了项目工程工作而新入职的员工，以及转入SRE的老员工会有被欺骗的感觉，这非常不利于公司的士气。</p>
 </li>
 </ul>
 <h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><ul>
@@ -14002,7 +14005,7 @@ POST /_reindex?wait_for_completion=false
 <li>Borgmon提供一种类似于宏的模板机制，允许用户创造出一些可重用的规则库，进一步减小了配置文件中的重复程度，降低配置文件出错的可能性。</li>
 </ul>
 <h3 id="个人总结-6"><a href="#个人总结-6" class="headerlink" title="个人总结"></a>个人总结</h3><ol>
-<li>Prometheus 学习一下TODO</li>
+<li>Prometheus</li>
 <li>黑盒监控（类似APM）</li>
 <li>保证监控系统的维护成本与服务的部署规模呈非线性相关增长是非常关键的。</li>
 </ol>
@@ -16111,6 +16114,8 @@ POST /_reindex?wait_for_completion=false
 <li>通过执行shell命令，指定任务名称和-stop选项，直接发出终止任务请求</li>
 </ol>
 </li>
+<li><p>具体实现参考：<a href="https://github.com/Kingson4Wu/saturncli">saturncli</a></p>
+</li>
 </ul>
 <h2 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h2><ul>
 <li>经过测试，saturn的调度不会因为设置的频率太快导致并发运行，只会执行完一个任务再执行下一个</li>
@@ -16122,6 +16127,239 @@ POST /_reindex?wait_for_completion=false
         <tag>Saturn</tag>
         <tag>UDS</tag>
         <tag>Signal</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>看似理科实则文科，看似文科实则理科</title>
+    <url>/2024/07/17/20240717-kan-si-li-ke-shi-ze-wen-ke-kan-si-wen-ke-shi-ze-li-ke/</url>
+    <content><![CDATA[<ul>
+<li><p>前段时间在看Rust，所有权部分涉及到很多规则，让我重新反思了传统文科和理科的区别</p>
+</li>
+<li><p>学习一门编程语言，大家普遍会认为这是一门理科</p>
+</li>
+<li><p>但像Rust语言的所有权规则，让我想到了英语中的各种时态规则</p>
+</li>
+<li><p>大家基本会认为英语是文科</p>
+</li>
+<li><p>但我其实认为Rust中的规则和英语中的规则，其实没啥区别，都是逻辑规则，比较烧脑。</p>
+</li>
+<li><p>所以无论是学习文科还是学习理科，有些地方，都是需要良好的逻辑能力。</p>
+</li>
+<li><p>逻辑能力好的人，基本学习文科理科都不会有太大差异。都是聪明的人。</p>
+</li>
+<li><p>当然中理科中偏理的部分，文科中偏文的部分，这些可能有差异则另说。</p>
+</li>
+</ul>
+]]></content>
+  </entry>
+  <entry>
+    <title>高效会议的重要性</title>
+    <url>/2024/07/18/20240718-gao-xiao-hui-yi-de-chong-yao-xing/</url>
+    <content><![CDATA[<blockquote>
+<p>生命是以时间为单位的，浪费别人的时间等于谋财害命；浪费自己的时间，等于慢性自杀。 - 鲁迅</p>
+</blockquote>
+<ul>
+<li>平常在工作中，有些同事在没有提前发会议主题和相关资料前，突然就拉一群人一起开会，方便了自己，却浪费了别人的时间。</li>
+<li>比如一些不专业的产品为了节省自己的时间，也不做充分的会前准备，拉一堆开发给自己做需求完善员，对别人的时间极其不尊重。</li>
+</ul>
+<h2 id="高效会议"><a href="#高效会议" class="headerlink" title="高效会议"></a>高效会议</h2><ol start="0">
+<li>能线下小部分人沟通清楚的，不必拉齐人一起开会</li>
+<li>会前发相关资料，让潜在参与者提前了解</li>
+<li>看完资料，可以发相关疑问，有些内容可以提前单独沟通</li>
+<li>真正开会前发会议主题和目标</li>
+<li>会有要有会议纪要，结论，执行人等</li>
+</ol>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
+<li><a href="https://mp.weixin.qq.com/s/Eew2WXHKskYR3VH35QTh4A">去TMD低效会议</a></li>
+</ul>
+<pre>
+最近和几个大佬朋友聊天，大家不约而同的在吐槽公司开会效率低下的问题。
+
+
+
+一提到开会，想必大家都会浮现各种场景，甚至有人可能要开始骂娘了吧？不断延长的会议时间，沉默的参会成员，语无伦次的会议组织者，不断跑偏的主题，一不小心一天就全在开会了。
+
+
+
+what? 不仅一天全开会了，还没有任何有用的结论？
+
+
+
+作为一个开会无数的互联网老鸟，针对高效开会，我有以下六点建议：
+
+
+
+1.能不开会就不要开会
+
+
+
+很多会其实根本没有开的必要，不少人平时不沟通，沟通全靠会议！
+
+
+
+一旦开会出现几个人相互扯皮，你一句我一句的情况，基本可以断定这几个人平时就不怎么沟通，或者沟通有问题。
+
+
+
+更为可怕的是，有些管理者，不开会就不知道自己要做什么！曾经我招过一个产品leader，热衷于组织各种会议，基本可以在会议室呆着不用出来的那种，但关键事情的推进都没落地。
+
+
+
+具体注意点如下：
+
+会议组织者还没完全想清楚之前，坚决不要开会
+
+能定点沟通清楚的问题，坚决不要开会
+
+能召集3，4个人花5分钟说清楚的事情，坚决不要开会
+
+
+
+2.开小会，越小越好
+
+
+
+会议人数尽量控制在7个人以内，人越多会议效率越低。有时候喊很多人开会，无非是出于显示你的权威或者逃避责任，潜台词是：反正大家都参加会议了，出了问题一起扛。
+
+
+
+不知道大家注意过一个现象没有，不少微信群人少的时候，大家都很活跃，如果进来一些不说话的「潜水者」，大家也就慢慢都不说话了。
+
+
+
+开会也是一个道理！如果有不太相关的人进来，他肯定会不怎么参与讨论，而其他人的思维活跃度都会受影响。
+
+
+
+那么有人会问：如果会议就是需要很多人参与怎么办？可以将一个大的会议拆解成几个议题，分议题开小会。然后再把小会的决策者喊一起开会。
+
+
+
+乔布斯就特别重视控制会议人数，在「疯狂的简洁」一书中记载了乔布斯一个小故事：「在一次和广告公司的例行会议上，乔布斯突然发现了一位名叫Lorrie的陌生的参会者，乔布斯指着Lorrie问到：“请问您是哪位？”，Lorrie解释自己需要听这个会议，但最后乔布斯还是礼貌的请Lorrie小姐离开了：“我不觉得你有必要参加这个会议，Lorrie小姐，谢谢。”」
+
+
+
+我猜，Lorrie小姐估计也是暗爽的吧，毕竟她估计也是莫名其妙被拉到这个会议。
+
+
+
+3.开会前做好充分准备
+
+
+
+会议组织者需要把会议主题、会议背景、提前同步给所有参会人员，甚至需要提前进行答疑及相关沟通工作。
+
+
+
+比如产品的技术评审会，不少产品经理可能没有提前发出原型做沟通。结果在会议上大家需要先理解原型，而不是上来直奔主题。
+
+
+
+充分的准备工作，会让会议更加高效，大家坐下来开会的时候已经清楚所有信息，开门见山展开思辨，而不是一屋子人毫无准备甚至满头雾水。
+
+
+
+4.能站着开，就别坐着开
+
+
+
+比尔盖茨说过一句话，“当你能站着开会，就不要坐下来”。
+
+
+
+会议室的椅子也不能用太舒服的那种，为什么？当人们坐在一个舒适且舒服的椅子上，大脑更多的时候是在放空状态，注意力无法被集中。
+
+
+
+坐在那里舒舒服服的探讨，效率远低于站着快速解决。当站着开会，不再有人坐在办公椅上犯困想打瞌睡，不再有人玩手机看电脑。时间大大的减少，不再沉默寡言，而是速战速决。
+
+
+
+每日的项目进度之类，特别适合10-20分钟的站会形式。站着开会，大家都不想浪费时间，自然就更能保证高节奏，高效率。
+
+
+
+5.盯紧走神的人
+
+
+
+开会的过程中，一般会不断有人走神。这点很考验会议组织者，如果发现有人走神，需要盯着他，看他眼睛。如果还不行，就需要提醒下拉回他的注意力。
+
+
+
+开会应该是个激烈思辨的过程，走神是要被杜绝的。如果团队中发现开会经常走神的人，那要小心了。他要么是对业务不太了解，说不上话，要么是心灰意冷已经不想说话。「要引起重视了」
+
+
+
+6.会后，有结论、有责任
+
+
+
+开会过程要对关键结论做会议纪要，在会议结束后，尽早发出会议记录。会议记录可能会有遗漏和错误的地方，尽早将会议记录发给所有相关人，可以让其它参会者检查，提出问题或作出补充。
+
+
+
+会议结束后，将任务指派给每一位责任人。这也往往是会议组织者的工作，不仅仅做出决定，更要负责落实决定的执行。如果这一步做不到位，那基本可以说这个会白开了。
+
+
+
+最后总结几句：
+
+
+
+开会是个大学问，千万不要小看提升的那点效率。10个人开会，浪费2小时，就相当于浪费了一个人一天的生命和一个人的工资。
+
+
+
+工作的目标是为了创造价值，而不是摧毁价值。低效会议无疑是摧毁价值的重要帮凶！！！
+
+
+
+浪费时间等于谋财害命，高效开会是每个会议组织者必须学会的技能。
+
+</pre>
+
+]]></content>
+      <tags>
+        <tag>职场</tag>
+        <tag>会议</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>谈谈接口调用中的序列化协议</title>
+    <url>/2024/07/24/20240724-tan-tan-jie-kou-diao-yong-zhong-de-xu-lie-hua-xie-yi/</url>
+    <content><![CDATA[<blockquote>
+<blockquote>
+<p>接口调用存在于内部服务之间，也存在于客户端和服务端之间<br>既然涉及接口调用，必然就涉及到数据的序列化</p>
+</blockquote>
+</blockquote>
+<h2 id="RPC"><a href="#RPC" class="headerlink" title="RPC"></a>RPC</h2><ul>
+<li>什么是 RPC？<ul>
+<li>RPC是”远程过程调用”(Remote Procedure Call)的缩写。这是一种计算机通信协议,允许程序调用另一个地址空间(通常是在其它计算机上)的子程序或过程,而程序员就像调用本地程序一样,无需额外地为这个交互作用编程。</li>
+</ul>
+</li>
+<li>其实 RPC 不仅可以存在于内部服务之间，前端和服务端之间的交互也可以用 RPC</li>
+</ul>
+<h2 id="序列化"><a href="#序列化" class="headerlink" title="序列化"></a>序列化</h2><ul>
+<li>一般情况下，我们习惯于使用 idl 文件定义数据格式（比如 thrift 或 Protocol Buffer），然后使用 RPC（比如 gPRC 等）用于服务之间的调用；而使用 JSON 和 HTTP 作为前端和服务端的交互方式</li>
+<li>这里提一点，回看 RPC 的定义，即使使用 JSON 作为序列化协议，也可以使用 RPC 作为接口调用，具体要看 RPC 框架的实现。</li>
+</ul>
+<h2 id="使用-RPC-和-IDL文件-的好处"><a href="#使用-RPC-和-IDL文件-的好处" class="headerlink" title="使用 RPC 和 IDL文件 的好处"></a>使用 RPC 和 IDL文件 的好处</h2><ul>
+<li>本文只关注序列化方面相关的好处</li>
+<li>举个例子，接口调用简单使用 HTTP + JSON；如果后续加字段，而调用方使用不规范，复用接口调用的返回对象用于业务的其他逻辑，而字段名刚好相同，则会冲突从而可能导致逻辑异常，这种低级错误无论是客户端还是服务端都经常发生</li>
+<li>理论上每个接口都应该有单独的接口响应类，这样才不会在后续加字段时产生语义冲突,虽然写起来麻烦，但这是最规范最严谨的做法，所以自动化代码工具很重要</li>
+<li>其中一种解决方式：使用 IDL 文件定义数据格式，并且通过 RPC 框架限制调用的返回对象不被随意设置，从而解决这种低级又容易忽视的错误</li>
+<li>对 RPC 框架的要求：<ol>
+<li>限制返回对象不被修改</li>
+<li>排查工具完善，支持将数据转成可阅读格式（比如使用Protobuf二进制传输，将很难排查）</li>
+<li>适配多种语言的客户端 sdk（包括客户端）</li>
+</ol>
+</li>
+</ul>
+]]></content>
+      <tags>
+        <tag>RPC</tag>
+        <tag>序列化</tag>
       </tags>
   </entry>
 </search>

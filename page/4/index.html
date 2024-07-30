@@ -287,6 +287,590 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/09/07/20220907-tcp-lian-jie-zhong-de-ge-chong-zhuang-tai/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2022/09/07/20220907-tcp-lian-jie-zhong-de-ge-chong-zhuang-tai/" itemprop="url">TCP连接中的各种状态</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-09-07T20:36:01+08:00">
+                2022-09-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2022/09/07/20220907-tcp-lian-jie-zhong-de-ge-chong-zhuang-tai/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2022/09/07/20220907-tcp-lian-jie-zhong-de-ge-chong-zhuang-tai/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><img src="/2022/09/07/20220907-tcp-lian-jie-zhong-de-ge-chong-zhuang-tai/TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B.png"></p>
+<p><img src="/2022/09/07/20220907-tcp-lian-jie-zhong-de-ge-chong-zhuang-tai/TCP%E7%8A%B6%E6%80%81%E5%8F%98%E5%8C%96.png"></p>
+<h2 id="状态说明"><a href="#状态说明" class="headerlink" title="状态说明"></a>状态说明</h2><ul>
+<li>CLOSED：无连接是活动的或正在进行</li>
+<li>LISTEN：服务器在等待进入呼叫</li>
+<li>SYN_RECV：一个连接请求已经到达，等待确认</li>
+<li>SYN_SENT：应用已经开始，打开一个连接</li>
+<li>ESTABLISHED：正常数据传输状态</li>
+<li>FIN_WAIT1：应用说它已经完成</li>
+<li>FIN_WAIT2：另一边已同意释放</li>
+<li>ITMED_WAIT：等待所有分组死掉</li>
+<li>CLOSING：两边同时尝试关闭</li>
+<li>TIME_WAIT：另一边已初始化一个释放</li>
+<li>LAST_ACK：等待所有分组死掉</li>
+</ul>
+<h3 id="flags-标志"><a href="#flags-标志" class="headerlink" title="flags 标志"></a>flags 标志</h3><ul>
+<li>S(SYN)</li>
+<li>F(FIN)</li>
+<li>P(PUSH)</li>
+<li>R(RST)</li>
+</ul>
+<h2 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h2><h3 id="查看主机上的TCP连接状态"><a href="#查看主机上的TCP连接状态" class="headerlink" title="查看主机上的TCP连接状态"></a>查看主机上的TCP连接状态</h3><ul>
+<li><code>netstat –an</code></li>
+<li><code>netstat –an |grep &#39;CLOSE_WAIT&#39;</code></li>
+<li><code>ss -t -n|grep 5000</code></li>
+</ul>
+<h3 id="统计当前各种状态的连接的数量的命令"><a href="#统计当前各种状态的连接的数量的命令" class="headerlink" title="统计当前各种状态的连接的数量的命令"></a>统计当前各种状态的连接的数量的命令</h3><ul>
+<li><code>netstat -n | awk &#39;/^tcp/ &#123;++S[$NF]&#125; END &#123;for(a in S) print a, S[a]&#125;&#39;</code></li>
+</ul>
+<h3 id="查看指定端口的连接"><a href="#查看指定端口的连接" class="headerlink" title="查看指定端口的连接"></a>查看指定端口的连接</h3><ul>
+<li><code>netstat -an | awk &#39;NR==2 || $4~/65016/&#39;</code>（client）</li>
+<li><code>netstat -an | awk &#39;NR==2 || $5~/8080/&#39;</code>（server）</li>
+</ul>
+<h3 id="Linux-netstat命令详解"><a href="#Linux-netstat命令详解" class="headerlink" title="Linux netstat命令详解"></a>Linux netstat命令详解</h3><ul>
+<li><a target="_blank" rel="noopener" href="http://www.cnblogs.com/ggjucheng/archive/2012/01/08/2316661.html">http://www.cnblogs.com/ggjucheng/archive/2012/01/08/2316661.html</a></li>
+</ul>
+<h3 id="tcpdump"><a href="#tcpdump" class="headerlink" title="tcpdump"></a>tcpdump</h3><ul>
+<li><p>想知道我们可以通过哪几个网卡抓包，可以使用-D参数 : <code>tcpdump –D</code></p>
+</li>
+<li><p>将抓包结果存放在文件中(可以用Wireshark打开查看) : <code>tcpdump –w google.cap</code></p>
+</li>
+<li><p>其中http协议的数据包都给过滤出来: <code>tcpdump –r google.cap http</code></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="http://www.cnblogs.com/zhuimengle/p/5737848.html">http://www.cnblogs.com/zhuimengle/p/5737848.html</a></p>
+</li>
+</ul>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
+<li><a target="_blank" rel="noopener" href="http://elf8848.iteye.com/blog/1739571">TCP&#x2F;IP TIME_WAIT状态原理</a></li>
+</ul>
+<h2 id="todo"><a href="#todo" class="headerlink" title="todo"></a>todo</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/yunhua_lee/article/details/40513677">tcp 三次握手和四次断连深入分析：连接状态和socket API的关系</a><ul>
+<li>close函数其实本身不会导致tcp协议栈立刻发送fin包，而只是将socket文件的引用计数减1，当socket文件的引用计数变为0的时候，操作系统会自动关闭tcp连接，此时才会发送fin包。</li>
+<li>这也是多进程编程需要特别注意的一点，父进程中一定要将socket文件描述符close，否则运行一段时间后就可能会出现操作系统提示too many open files</li>
+</ul>
+</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/09/07/20220907-time-wait-jie-xi/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2022/09/07/20220907-time-wait-jie-xi/" itemprop="url">TIME_WAIT解析</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-09-07T13:30:37+08:00">
+                2022-09-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2022/09/07/20220907-time-wait-jie-xi/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2022/09/07/20220907-time-wait-jie-xi/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><img src="/2022/09/07/20220907-time-wait-jie-xi/%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B.jpeg"></p>
+<h2 id="TIME-WAIT"><a href="#TIME-WAIT" class="headerlink" title="TIME_WAIT"></a>TIME_WAIT</h2><ul>
+<li>通信双方建立TCP连接后，主动关闭(FIN)连接的一方就会进入TIME_WAIT状态<ul>
+<li>客户端主动关闭连接时，发送最后一个ack后，会进入TIME_WAIT状态，再停留2个MSL时间，进入CLOSED状态</li>
+</ul>
+</li>
+</ul>
+<h2 id="TIME-WAIT状态存在的理由"><a href="#TIME-WAIT状态存在的理由" class="headerlink" title="TIME_WAIT状态存在的理由"></a>TIME_WAIT状态存在的理由</h2><ol>
+<li><p>可靠地实现TCP全双工连接的终止</p>
+<ul>
+<li>TCP协议在关闭连接的四次握手过程中，最终的ACK是由主动关闭连接的一端（后面统称A端）发出的，如果这个ACK丢失，对方（后面统称B端）将重发出最终的FIN，因此A端必须维护状态信息（TIME_WAIT）允许它重发最终的ACK。如果A端不维持TIME_WAIT状态，而是处于CLOSED 状态，那么A端将响应RST分节，B端收到后将此分节解释成一个错误（在java中会抛出connection reset的SocketException)。</li>
+<li>因而，要实现TCP全双工连接的正常终止，必须处理终止过程中四个分节任何一个分节的丢失情况，主动关闭连接的A端必须维持TIME_WAIT状态 。</li>
+<li>对一个具体实现所给定的MSL值，处理的原则是：当TCP执行一个主动关闭，并发回最后一个ACK，该连接必须在TIMEWAIT状态停留的时间为2倍的MSL。这样可尽可能让TCP再次发送最后的ACK以防这个ACK丢失(另一端超时并重发最后的FIN)。</li>
+<li>总结：尽量避免主动关闭方ack丢失导致被关闭方异常（理论上从应用层看，被关闭方需要对这种异常进行处理，因为万一主动关闭方断电了呢）</li>
+</ul>
+</li>
+<li><p>允许老的重复分节在网络中消逝</p>
+<ul>
+<li>TCP分节可能由于路由器异常而“迷途”，在迷途期间，TCP发送端可能因确认超时而重发这个分节，迷途的分节在路由器修复后也会被送到最终目的地，这个迟到的迷途分节到达时可能会引起问题。在关闭“前一个连接”之后，马上又重新建立起一个相同的IP和端口之间的“新连接”，“前一个连接”的迷途重复分组在“前一个连接”终止后到达，而被“新连接”收到了。为了避免这个情况，TCP协议不允许处于TIME_WAIT状态的连接启动一个新的可用连接，因为TIME_WAIT状态持续2MSL，基本可以保证当成功建立一个新TCP连接的时候，来自旧连接重复分组已经在网络中消逝。</li>
+<li>IP包的最大生存时间记录在其TTL字段中，即MSL，超过将过期丢弃</li>
+</ul>
+</li>
+</ol>
+<h2 id="MSL时间"><a href="#MSL时间" class="headerlink" title="MSL时间"></a>MSL时间</h2><ul>
+<li>MSL就是maximum segment lifetime(最大分节生命期），这是一个IP数据包能在互联网上生存的最长时间，超过这个时间IP数据包将在网络中消失 。MSL在RFC 1122上建议是2分钟，而源自berkeley的TCP实现传统上使用30秒。<br>TCP报文段以IP数据报在网络内传输，而IP数据报则有限制其生存时间的TTL字段  </li>
+<li>TIME_WAIT状态维持时间是两个MSL时间长度，也就是在1-4分钟。Windows操作系统就是4分钟。</li>
+<li>为什么需要2MSL？<ul>
+<li>第一个MSL是为了等自己发出去的最后一个ACK从网络中消失，同时让旧的数据包基本在网络中消失；</li>
+<li>第二MSL是为了等在对端收到ACK之前的一刹那可能重传的FIN报文从网络中消失（主要目的）</li>
+<li>问题：重传的FIN报文会重传多少次？<ul>
+<li>重发次数由 tcp_orphan_retries 参数控制</li>
+</ul>
+</li>
+<li>所以如果最后一个ack丢了，且对端又重试发FIN，那么还是无法避免FIN包没过期，所以2MSL只是尽可能，但这时旧的数据包基本消失了</li>
+</ul>
+</li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
+<li>TIME_WAIT主动关闭方的状态  </li>
+<li>TIME_WAIT存在的原因<ol>
+<li>防止主动关闭方最后的ACK丢失，确保远程TCP接收到连接中断的请求</li>
+<li>允许老的重复数据包在网络中过期</li>
+</ol>
+</li>
+</ul>
+<h2 id="TIME-WAIT产生的场景"><a href="#TIME-WAIT产生的场景" class="headerlink" title="TIME_WAIT产生的场景"></a>TIME_WAIT产生的场景</h2><ul>
+<li>进入TIME_WAIT状态的一般情况下是客户端。</li>
+<li>大多数服务器端一般执行被动关闭，服务器不会进入TIME_WAIT状态。<br>但在服务器端关闭某个服务再重新启动时，服务器是会进入TIME_WAIT状态的。<br>可以使用SO_REUSEADDR选项来复用端口。</li>
+</ul>
+<pre>
+举例：
+1.客户端连接服务器的80服务，这时客户端会启用一个本地的端口访问服务器的80，访问完成后关闭此连接，立刻再次访问服务器的
+80，这时客户端会启用另一个本地的端口，而不是刚才使用的那个本地端口。原因就是刚才的那个连接还处于TIME_WAIT状态。
+2.客户端连接服务器的80服务，这时服务器关闭80端口，立即再次重启80端口的服务，这时可能不会成功启动，原因也是服务器的连
+接还处于TIME_WAIT状态。
+</pre>
+
+<h2 id="作为客户端和服务器"><a href="#作为客户端和服务器" class="headerlink" title="作为客户端和服务器"></a>作为客户端和服务器</h2><ol>
+<li>服务端提供服务时，一般监听一个端口就够了；</li>
+<li>客户端则是使用一个本地的空闲端口（大于1024），与服务器的端口建立连接；<ul>
+<li>如果使用短连接请求，那么客户端将会产生大量TIME_WAIT状态的端口（本地最多就能承受6万个TIME_WAIT状态的连接就无端口可用了，后续的短连接就会产生address already in use : connect的异常）</li>
+<li>因此，作为短连接请求的压测服务器，不能在短时间连续使用；</li>
+<li>一般来说一台机器可用Local Port 3万多个，如果是短连接的话，一个连接释放后默认需要60秒回收，30000&#x2F;60 &#x3D;500 这是大概的理论TPS值</li>
+</ul>
+</li>
+<li>一个提供高并发的服务器，同时依赖第三方服务（间接看来服务端也作为第三方服务的客户端），怎么应对 ？<ul>
+<li>一般情况都是启用keepalive选项，避免短连接服务（一般依赖方也不会多达几千个，即调用的ip和端口不一样）</li>
+<li>启用SO_REUSEADDR选项</li>
+</ul>
+</li>
+<li>大多数服务器端一般执行被动关闭，服务器不会进入TIME_WAIT状态</li>
+</ol>
+<h2 id="如何复用TIME-WAIT端口"><a href="#如何复用TIME-WAIT端口" class="headerlink" title="如何复用TIME_WAIT端口"></a>如何复用TIME_WAIT端口</h2><ol>
+<li>应用层发出请求前指定，如何Java HttpClient中设置reuseaddr<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">httpClient.setHttpRequestRetryHandler(<span class="keyword">new</span> <span class="title class_">DefaultHttpRequestRetryHandler</span>());</span><br><span class="line">httpClient.setReuseStrategy(<span class="keyword">new</span> <span class="title class_">DefaultConnectionReuseStrategy</span>());</span><br><span class="line">httpClient.setKeepAliveStrategy(<span class="keyword">new</span> <span class="title class_">DefaultConnectionKeepAliveStrategy</span>());</span><br></pre></td></tr></table></figure></li>
+<li>调整内核参数（net.ipv4.tcp_tw_reuse）</li>
+</ol>
+<h2 id="总结避免TIME-WAIT的方法"><a href="#总结避免TIME-WAIT的方法" class="headerlink" title="总结避免TIME_WAIT的方法"></a>总结避免TIME_WAIT的方法</h2><ol>
+<li>使用长连接（基本大部分业务场景都可以）</li>
+<li>避免主动关闭</li>
+<li>关闭的时候使用RST的方式 （比如程序中设置socket的SO_LINGER选项）(应用层貌似不是很方便实现)</li>
+<li>TIME_WAIT状态的TCP允许重用</li>
+<li>增大可用端口范围，默认是 net.ipv4.ip_local_port_range &#x3D; 32768 61000 （即对同一个服务器的ip+port可创建28233个连接）（只能缓解问题，不能根本解决问题）</li>
+</ol>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://www.iteye.com/blog/elf8848-1739571">TCP&#x2F;IP TIME_WAIT状态原理</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.51cto.com/kerry/105233">发现大量的TIME_WAIT解决办法</a></li>
+<li>[《TCP IP详解卷一》18.6.1]</li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/LNWv5I-klJCBCX4e84WbTQ">为什么 TCP 协议有 TIME_WAIT 状态</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/joker1937/articles/12487776.html">TCP四次挥手为何需要TIME_WAIT以及为何是2MSL？</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/398890723">TCP 才不傻：三次握手和四次挥手的异常处理</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.helloworld.net/p/4875307437">tcp短连接TIME_WAIT问题解决方法大全</a></li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/09/07/20220907-ni-ji-de-she-zhi-tcp-nodeplay-ma/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2022/09/07/20220907-ni-ji-de-she-zhi-tcp-nodeplay-ma/" itemprop="url">你记得设置TCP_NODEPLAY吗？</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-09-07T13:26:22+08:00">
+                2022-09-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2022/09/07/20220907-ni-ji-de-she-zhi-tcp-nodeplay-ma/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2022/09/07/20220907-ni-ji-de-she-zhi-tcp-nodeplay-ma/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <ul>
+<li><p>有接触过TCP服务器实现的同学都会知道，需要注意TCP_NODELAY参数，为什么呢？</p>
+</li>
+<li><p>若没有开启TCP_NODELAY，那么在发送小包的时候，可能会出现这样的现象：<br>通过 TCP socket 分多次发送较少的数据时，比如小于 1460 或者 100 以内，对端可能会很长时间收不到数据，导致本端应用程序认为超时报错。</p>
+</li>
+</ul>
+<h2 id="Nagle算法（Nagle‘s-Algorithm）"><a href="#Nagle算法（Nagle‘s-Algorithm）" class="headerlink" title="Nagle算法（Nagle‘s Algorithm）"></a>Nagle算法（Nagle‘s Algorithm）</h2><ul>
+<li><p>TCP&#x2F;IP协议中，无论发送多少数据，总是要在数据前面加上协议头，同时，对方接收到数据，也需要发送ACK表示确认。为了尽可能的利用网络带宽，TCP总是希望尽可能的发送足够大的数据。（一个连接会设置MSS参数，因此，TCP&#x2F;IP希望每次都能够以MSS尺寸的数据块来发送数据）。</p>
+</li>
+<li><p>Nagle算法就是为了尽可能发送大块数据，避免网络中充斥着许多小数据块。</p>
+</li>
+<li><p>Nagle算法的基本定义是任意时刻，最多只能有一个未被确认的小段。 所谓“小段”，指的是小于MSS尺寸的数据块，所谓“未被确认”，是指一个数据块发送出去后，没有收到对方发送的ACK确认该数据已收到。</p>
+</li>
+<li><p>举个例子，一开始client端调用socket的write操作将一个int型数据(称为A块)写入到网络中，由于此时连接是空闲的（也就是说还没有未被确认的小段），因此这个int型数据会被马上发送到server端，接着，client端又调用write操作写入一个int型数据（简称B块），这个时候，A块的ACK没有返回，所以可以认为已经存在了一个未被确认的小段，所以B块没有立即被发送，一直等待A块的ACK收到（大概40ms之后）(ACK延迟机制的超时时间)，B块才被发送。</p>
+</li>
+<li><p>Nagle算法的改进在于：如果发送端欲多次发送包含少量字符的数据包（一般情况下，后面统一称长度小于MSS的数据包为小包，与此相对，称长度等于MSS的数据包为大包，为了某些对比说明，还有中包，即长度比小包长，但又不足一个MSS的包），则发送端会先将第一个小包发送出去，而将后面到达的少量字符数据都缓存起来而不立即发送，直到收到接收端对前一个数据包报文段的ACK确认、或当前字符属于紧急数据，或者积攒到了一定数量的数据（比如缓存的字符数据已经达到数据包报文段的最大长度）等多种情况才将其组成一个较大的数据包发送出去。<br> TCP在三次握手建立连接过程中，会在SYN报文中使用MSS（Maximum Segment Size）选项功能，协商交互双方能够接收的最大段长MSS值。</p>
+</li>
+</ul>
+<h2 id="ACK延迟机制-TCP-Delayed-Acknoledgement"><a href="#ACK延迟机制-TCP-Delayed-Acknoledgement" class="headerlink" title="ACK延迟机制(TCP Delayed Acknoledgement)"></a>ACK延迟机制(TCP Delayed Acknoledgement)</h2><ul>
+<li>TCP&#x2F;IP中不仅仅有Nagle算法(Nagle‘s Algorithm)，还有一个ACK延迟机制(TCP Delayed Ack) 。当Server端收到数据之后，它并不会马上向client端发送ACK，而是会将ACK的发送延迟一段时间（假设为t），它希望在t时间内server端会向client端发送应答数据，这样ACK就能够和应答数据一起发送，就像是应答数据捎带着ACK过去。</li>
+<li>也就是如果一个 TCP 连接的一端启用了Nagle算法，而另一端启用了ACK延时机制，而发送的数据包又比较小，则可能会出现这样的情况：发送端在等待接收端对上一个packet的Ack才发送当前的packet，而接收端则正好延迟了此Ack的发送，那么这个正要被发送的packet就会同样被延迟。当然Delayed Ack是有个超时机制的，而默认的超时正好就是40ms。</li>
+<li>现代的 TCP&#x2F;IP 协议栈实现，默认几乎都启用了这两个功能，那岂不每次都会触发这个延迟问题？事实不是那样的。仅当协议的交互是发送端连续发送两个packet，然后立刻read的时候才会出现问题。</li>
+</ul>
+<h2 id="总结：问题出现的三个条件"><a href="#总结：问题出现的三个条件" class="headerlink" title="总结：问题出现的三个条件"></a>总结：问题出现的三个条件</h2><ol>
+<li>发送小包（仅当协议的交互是发送端连续发送两个 packet，然后立刻 read 的 时候才会出现问题。）</li>
+<li>发送方启用了Nagle算法（发送方未接收到上一个包的ack，且待发送的是小包，则会等待）</li>
+<li>接收方启用了ACK延时机制 且没及时准备好数据（希望响应ack可以和响应的数据一起发送，等待本端响应数据的准备）</li>
+</ol>
+<h2 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h2><ul>
+<li>开启TCP_NODELAY：禁用Nagle算法，禁止后当然就不会有它引起的一系列问题了。</li>
+<li>优化协议：连续 write 小数据包，然后 read 其实是一个不好的网络编程模式，这样的连续 write 其实应该在应用层合并成一次 write。</li>
+</ul>
+<h2 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h2><h3 id="另一个问题的例子-HTTP服务"><a href="#另一个问题的例子-HTTP服务" class="headerlink" title="另一个问题的例子(HTTP服务)"></a>另一个问题的例子(HTTP服务)</h3><ul>
+<li><p><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1621142">神秘的40毫秒延迟与TCP_NODELAY</a></p>
+</li>
+<li><p>接口响应时间在client端开启keepalive后连续请求时由0ms变成40ms</p>
+</li>
+<li><p>因为设计的一些不足，我没能做到把 短小的 HTTP Body 连同 HTTP Headers 一起发送出去，而是分开成两次调用实 现的，之后进入 epoll_wait 等待下一个 Request 被发送过来（相当于阻塞模 型里直接 read）。正好是 write-write-read 的模式</p>
+</li>
+<li><p>那么 write-read-write-read 会不会出问题呢？维基百科上的解释是不会：</p>
+<ul>
+<li>“The user-level solution is to avoid write-write-read sequences on sockets. write-read-write-read is fine. write-write-write is fine. But write-write-read is a killer. So, if you can, buffer up your little writes to TCP and send them all at once. Using the standard UNIX I&#x2F;O package and flushing write before each read usually works.”</li>
+<li>我的理解是这样的：因为第一个 write 不会被缓冲，会立刻到达接收端，如果是 write-read-write-read 模式，此时接收端应该已经得到所有需要的数据以进行 下一步处理。接收端此时处理完后发送结果，同时也就可以把上一个packet 的 Ack 可以和数据一起发送回去，不需要 delay，从而不会导致任何问题。</li>
+</ul>
+</li>
+</ul>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/majianfei1023/article/details/51558941">TCP_NODELAY和Nagle算法</a></li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/09/06/20220906-you-liao-tcp-de-keepalive-ying-yong-ceng-huan-xu-yao-shi-xian-bao-huo-luo-ji-ma/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1722,510 +2306,6 @@ Jquery 在每次跨域发送请求时都会有callback这个参数，其实这�
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/07/05/20220705-java-kua-ping-tai-neng-wan-quan-zuo-dao-yi-ci-bian-xie-dao-chu-yun-xing/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2022/07/05/20220705-java-kua-ping-tai-neng-wan-quan-zuo-dao-yi-ci-bian-xie-dao-chu-yun-xing/" itemprop="url">Java跨平台能完全做到一次编写到处运行？</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-07-05T10:20:11+08:00">
-                2022-07-05
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2022/07/05/20220705-java-kua-ping-tai-neng-wan-quan-zuo-dao-yi-ci-bian-xie-dao-chu-yun-xing/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2022/07/05/20220705-java-kua-ping-tai-neng-wan-quan-zuo-dao-yi-ci-bian-xie-dao-chu-yun-xing/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><img src="/2022/07/05/20220705-java-kua-ping-tai-neng-wan-quan-zuo-dao-yi-ci-bian-xie-dao-chu-yun-xing/lionel-messi.jpg"></p>
-<ul>
-<li>最近定位一个问题，花了不少时间。事后回想起来挺低级的，在此记录一下。</li>
-</ul>
-<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><ul>
-<li>spring i18n, 在windows和mac生效，在linux不生效。</li>
-</ul>
-<h2 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h2><ol>
-<li>资源文件的名字为小写（message_zh_hant.proprties）</li>
-<li>而文件读取时包含大写（message_zh_Hant.proprties）（这里不得不吐槽一下，spring无论请求参数传的是大写还是小写，最终都会转成大写去读文件，而且这么简单的功能，代码写得及其复杂，浪费了不少时间去debug）</li>
-<li>windows和mac大小写不敏感，所以能读取文件成功，而linux则大小写敏感，则读取不成功（说好的Java跨平台呢？但跨平台包括处理这种不兼容的问题？似乎很难界定。）</li>
-</ol>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
-<li>windows和mac文件名对大小写不敏感，而linux则大小写敏感；</li>
-<li>即使使用Java编写代码，特殊的场景还是需要考虑各平台的兼容问题。</li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/06/01/20220601-ge-ren-golang-xiang-mu-jian-yao-miao-shu/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2022/06/01/20220601-ge-ren-golang-xiang-mu-jian-yao-miao-shu/" itemprop="url">开发golang程序和进行内网穿透，作为微信公众号服务器</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-06-01T11:44:05+08:00">
-                2022-06-01
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2022/06/01/20220601-ge-ren-golang-xiang-mu-jian-yao-miao-shu/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2022/06/01/20220601-ge-ren-golang-xiang-mu-jian-yao-miao-shu/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote>
-<blockquote>
-<p>一直想部署一个私有服务，平常在外的时候可以为自己提供服务。<br>私有服务的好处是，可以根据自己的需求，开发程序，提供个人定制化的服务</p>
-</blockquote>
-</blockquote>
-<h2 id="服务器的选择"><a href="#服务器的选择" class="headerlink" title="服务器的选择"></a>服务器的选择</h2><ol>
-<li>阿里云、腾讯云等<ul>
-<li>优点：使用方便，只要有网络就可以连上</li>
-<li>缺点：有持续产生的费用，对于个人服务来说，平常几乎都是闲置，性价比很低</li>
-</ul>
-</li>
-<li>自建服务器<ul>
-<li>优点：总体成本低，购买服务器后，后续只有有电有网就行，无需其他额外成本</li>
-<li>缺点：需要外网能访问（需要绑定外网ip或者代理接入转发）</li>
-</ul>
-</li>
-</ol>
-<ul>
-<li>本着能省就省的原则，最终还是采用了方案2 ：上淘宝买一个一百多块的小型服务器！</li>
-</ul>
-<h2 id="如何使外网环境能访问到服务器"><a href="#如何使外网环境能访问到服务器" class="headerlink" title="如何使外网环境能访问到服务器"></a>如何使外网环境能访问到服务器</h2><ul>
-<li>服务器有了之后，通过网线连接到家庭网络即可正常上网了，那么外网环境怎么访问呢？<br>通过一番研究之后，最终决定通过在服务器上部署ngrok代理来实现，不知道啥是ngrok的自行搜索即可</li>
-</ul>
-<h2 id="编程语言选择"><a href="#编程语言选择" class="headerlink" title="编程语言选择"></a>编程语言选择</h2><ul>
-<li>本人平常工作都是使用Java，但经过一番考虑之后，我最终选择了Go作为开发语言</li>
-</ul>
-<ol>
-<li>想学习，通过实践熟悉</li>
-<li>足够轻量，打包成一个二进制文件即可，特别适合这种低配版服务器</li>
-</ol>
-<ul>
-<li>个人Go程序代码：<a target="_blank" rel="noopener" href="https://github.com/Kingson4Wu/mp_weixin_server">https://github.com/Kingson4Wu/mp_weixin_server</a></li>
-</ul>
-<h2 id="前端终端选择"><a href="#前端终端选择" class="headerlink" title="前端终端选择"></a>前端终端选择</h2><ul>
-<li><p>平常在外都是使用android的手机，但是作为后端开发，本人只会android的hello world。<br>有考虑使用网页，但是现在前端很卷了，用传统的html+js开发，以我的水平开发出来，至少前期体验也一般。</p>
-</li>
-<li><p>经过一番考虑，就在决定直接通过个人的微信公众号来作为前端，在公众号后台配置自己的服务器地址即可</p>
-</li>
-</ul>
-<h2 id="微信通知的实现"><a href="#微信通知的实现" class="headerlink" title="微信通知的实现"></a>微信通知的实现</h2><ul>
-<li><p>平常自己有一些个性定时任务，需要通知消息到自己，使用微信来通知是最好的，毕竟大家目前都是微信的重度用户了。</p>
-</li>
-<li><p>但现在微信对公众号的通知限制越来越多了，最后我选择通过发送邮件的方式来实现。在微信配置QQ邮箱接收邮件通知即可。</p>
-</li>
-</ul>
-<h2 id="服务架构"><a href="#服务架构" class="headerlink" title="服务架构"></a>服务架构</h2><p><img src="/2022/06/01/20220601-ge-ren-golang-xiang-mu-jian-yao-miao-shu/golang_project_3.png"></p>
-<h2 id="外网环境下如何进行服务部署更新"><a href="#外网环境下如何进行服务部署更新" class="headerlink" title="外网环境下如何进行服务部署更新"></a>外网环境下如何进行服务部署更新</h2><ul>
-<li>平常在家庭网络下，开发Go程序，本地编译打包成二进制文件，上传到服务器更新程序即可<br>在外网环境下，使用花生壳等端口映射软件即可。我使用花生壳映射端口后，就可以通过ssh登录到家里的服务器，接下来就可以为所欲为了。</li>
-</ul>
-<h2 id="部署流程"><a href="#部署流程" class="headerlink" title="部署流程"></a>部署流程</h2><p><img src="/2022/06/01/20220601-ge-ren-golang-xiang-mu-jian-yao-miao-shu/golang_deploy_2.png"></p>
-<h2 id="结论总结"><a href="#结论总结" class="headerlink" title="结论总结"></a>结论总结</h2><ul>
-<li>家庭网络 + 小型服务器 + Go程序 + ngrok + 微信公众号 + 邮箱通知 + 花生壳</li>
-</ul>
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/272594212">golang如何优雅的实现重启服务(fvbock&#x2F;endless)</a></li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/05/10/20220510-suan-fa-ji-chu-zong-jie/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2022/05/10/20220510-suan-fa-ji-chu-zong-jie/" itemprop="url">算法基础总结</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-05-10T22:33:28+08:00">
-                2022-05-10
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2022/05/10/20220510-suan-fa-ji-chu-zong-jie/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2022/05/10/20220510-suan-fa-ji-chu-zong-jie/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <ul>
-<li>O这个符号的意思是“忽略重要项以外的内容”，读音同Order。O（n2）的含义就是“算法的运行时间最长也就是n2的常数倍”，准确的定义请参考相关专业书籍。重点在于，通过这种表示方法，我们可以直观地了解算法的时间复杂度</li>
-<li>当我们知道选择排序的时间复杂度为O（n2）、快速排序的时间复杂度为O（nlogn）时，很快就能判断出快速排序的运算更为高速。二者的运行时间根据输入n产生的变化程度也一目了然。</li>
-</ul>
-<h2 id="一、链表"><a href="#一、链表" class="headerlink" title="一、链表"></a>一、链表</h2><h2 id="二、数组"><a href="#二、数组" class="headerlink" title="二、数组"></a>二、数组</h2><h2 id="三、栈"><a href="#三、栈" class="headerlink" title="三、栈"></a>三、栈</h2><h2 id="四、队列"><a href="#四、队列" class="headerlink" title="四、队列"></a>四、队列</h2><h2 id="五、哈希表"><a href="#五、哈希表" class="headerlink" title="五、哈希表"></a>五、哈希表</h2><h2 id="六、堆"><a href="#六、堆" class="headerlink" title="六、堆"></a>六、堆</h2><ul>
-<li>堆是一种图的树形结构，被用于实现“优先队列”（priority queues）</li>
-<li>优先队列是一种数据结构，可以自由添加数据，但取出数据时要从最小值开始按顺序取出</li>
-<li>如果需要频繁地从管理的数据中取出最小值，那么使用堆来操作会非常方便。</li>
-</ul>
-<h2 id="七、二叉查找树"><a href="#七、二叉查找树" class="headerlink" title="七、二叉查找树"></a>七、二叉查找树</h2><ul>
-<li>二叉查找树（又叫作二叉搜索树或二叉排序树）是一种数据结构，采用了图的树形结构</li>
-<li>二叉查找树有两个性质。第一个是每个结点的值均大于其左子树上任意一个结点的值。</li>
-<li>有很多以二叉查找树为基础扩展的数据结构，比如“平衡二叉查找树”。这种数据结构可以修正形状不均衡的树，让其始终保持均衡形态，以提高查找效率。</li>
-<li>种子结点数可以自由设定，并且形状均衡的树便是B树。</li>
-</ul>
-<hr>
-<h1 id="图"><a href="#图" class="headerlink" title="图"></a>图</h1><ul>
-<li>由顶点和连接每对顶点的边所构成的图形就是图。</li>
-<li>这个值叫作边的“权重”或者“权”，加了权的图被称为“加权图”。没有权的边只能表示两个顶点的连接状态，而有权的边就可以表示顶点之间的“连接程度”</li>
-<li>有向图、无向图</li>
-</ul>
-<h2 id="广度优先搜索"><a href="#广度优先搜索" class="headerlink" title="广度优先搜索"></a>广度优先搜索</h2><ul>
-<li>广度优先搜索会优先从离起点近的顶点开始搜索。</li>
-<li>候补顶点是用“先入先出”（FIFO）的方式来管理的，因此可以使用“队列”这个数据结构。</li>
-<li>广度优先搜索的特征为从起点开始，由近及远进行广泛的搜索。因此，目标顶点离起点越近，搜索结束得就越快。</li>
-</ul>
-<h2 id="深度优先搜索"><a href="#深度优先搜索" class="headerlink" title="深度优先搜索"></a>深度优先搜索</h2><ul>
-<li>深度优先搜索会沿着一条路径不断往下搜索直到不能再继续为止，然后再折返，开始搜索下一条候补路径。</li>
-<li>此处，候补顶点是用“后入先出”（LIFO）的方式来管理的，因此可以使用“栈”这个数据结构。</li>
-<li>广度优先搜索选择的是最早成为候补的顶点，因为顶点离起点越近就越早成为候补，所以会从离起点近的地方开始按顺序搜索；而深度优先搜索选择的则是最新成为候补的顶点，所以会一路往下，沿着新发现的路径不断深入搜索。</li>
-</ul>
-<h2 id="贝尔曼-福特算法"><a href="#贝尔曼-福特算法" class="headerlink" title="贝尔曼-福特算法"></a>贝尔曼-福特算法</h2><ul>
-<li>贝尔曼-福特（Bellman-Ford）算法是一种在图中求解最短路径问题的算法。最短路径问题就是在加权图指定了起点和终点的前提下，寻找从起点到终点的路径中权重总和最小的那条路径。</li>
-<li>贝尔曼也因为提出了该算法中的一个重要分类“动态规划”而被世人所熟知。</li>
-</ul>
-<h2 id="狄克斯特拉算法"><a href="#狄克斯特拉算法" class="headerlink" title="狄克斯特拉算法"></a>狄克斯特拉算法</h2><ul>
-<li>狄克斯特拉（Dijkstra）算法也是求解最短路径问题的算法，使用它可以求得从起点到终点的路径中权重总和最小的那条路径路径。</li>
-</ul>
-<h2 id="A-算法"><a href="#A-算法" class="headerlink" title="A*算法"></a>A*算法</h2><ul>
-<li>A<em>（A-Star）算法也是一种在图中求解最短路径问题的算法，由狄克斯特拉算法发展而来。狄克斯特拉算法会从离起点近的顶点开始，按顺序求出起点到各个顶点的最短路径。也就是说，一些离终点较远的顶点的最短路径也会被计算出来，但这部分其实是无用的。与之不同，A</em>就会预先估算一个值，并利用这个值来省去一些无用的计算。</li>
-</ul>
-<hr>
-<h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><ul>
-<li>[我的第一本算法书] - 宫崎修一 石田保辉</li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2281,7 +2361,7 @@ Jquery 在每次跨域发送请求时都会有callback这个参数，其实这�
 <a href="/archives/">                
 <!--<a href="/archives/%7C%7C%20archive">-->
               
-                  <span class="site-state-item-count">127</span>
+                  <span class="site-state-item-count">130</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2294,7 +2374,7 @@ Jquery 在每次跨域发送请求时都会有callback这个参数，其实这�
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">137</span>
+                  <span class="site-state-item-count">139</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

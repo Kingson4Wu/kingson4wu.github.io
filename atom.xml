@@ -6,7 +6,7 @@
   <link href="http://yoursite.com/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2024-10-23T06:49:18.781Z</updated>
+  <updated>2024-10-23T08:56:30.775Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,28 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>金钱业务数据库事务相关要点记录</title>
+    <link href="http://yoursite.com/2024/10/23/20241023-jin-qian-ye-wu-shu-ju-ku-shi-wu-xiang-guan-yao-dian-ji-lu/"/>
+    <id>http://yoursite.com/2024/10/23/20241023-jin-qian-ye-wu-shu-ju-ku-shi-wu-xiang-guan-yao-dian-ji-lu/</id>
+    <published>2024-10-23T07:59:48.000Z</published>
+    <updated>2024-10-23T08:56:30.775Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="表结构"><a href="#表结构" class="headerlink" title="表结构"></a>表结构</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> `user_balance` (</span><br><span class="line">`user_id` <span class="type">varchar</span>(<span class="number">128</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;&#x27;</span> COMMENT <span class="string">&#x27;用户ID&#x27;</span>,</span><br><span class="line">`coin` <span class="type">bigint</span>(<span class="number">20</span>) unsigned <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;0&#x27;</span> COMMENT <span class="string">&#x27;余额&#x27;</span>,</span><br><span class="line">`create_time` datetime <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;创建时间&#x27;</span>,</span><br><span class="line">`update_time` datetime <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;更新时间&#x27;</span>,</span><br><span class="line"><span class="keyword">PRIMARY</span> KEY (`user_id`),</span><br><span class="line">KEY `idx_updatetime` (`update_time`)</span><br><span class="line">) ENGINE<span class="operator">=</span>InnoDB <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>utf8mb4 COMMENT<span class="operator">=</span><span class="string">&#x27;账户余额表&#x27;</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> `user_balance_log` (</span><br><span class="line">`log_id` <span class="type">bigint</span>(<span class="number">20</span>) unsigned <span class="keyword">NOT</span> <span class="keyword">NULL</span> AUTO_INCREMENT COMMENT <span class="string">&#x27;流水id&#x27;</span>,</span><br><span class="line">`order_id` <span class="type">varchar</span>(<span class="number">128</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;&#x27;</span> COMMENT <span class="string">&#x27;业务订单ID&#x27;</span>,</span><br><span class="line">`user_id` <span class="type">varchar</span>(<span class="number">128</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;&#x27;</span> COMMENT <span class="string">&#x27;用户ID&#x27;</span>,</span><br><span class="line">`type` tinyint(<span class="number">4</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;0&#x27;</span> COMMENT <span class="string">&#x27;1：加，2：减&#x27;</span>,</span><br><span class="line">`coin` <span class="type">bigint</span>(<span class="number">20</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;0&#x27;</span> COMMENT <span class="string">&#x27;变更金额&#x27;</span>,</span><br><span class="line">`coin_after` <span class="type">bigint</span>(<span class="number">20</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;0&#x27;</span> COMMENT <span class="string">&#x27;变更后的金额&#x27;</span>,</span><br><span class="line">`create_time` datetime <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;创建时间&#x27;</span>,</span><br><span class="line"><span class="keyword">PRIMARY</span> KEY (`log_id`),</span><br><span class="line">KEY `idx_createtime` (`create_time`)</span><br><span class="line">) ENGINE<span class="operator">=</span>InnoDB <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>utf8mb4 COMMENT<span class="operator">=</span><span class="string">&#x27;账户余额表流水表&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> `user_balance`(`user_id`, `coin`, `create_time`, `update_time`) <span class="keyword">VALUES</span> (<span class="string">&#x27;kxw&#x27;</span>, <span class="number">20000000</span>, <span class="string">&#x27;2024-10-23 00:00:00&#x27;</span>, <span class="string">&#x27;2024-10-23 00:00:00&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">UPDATE</span> `user_balance` <span class="keyword">SET</span> `coin`<span class="operator">=</span> `coin` <span class="operator">-</span> <span class="number">1000</span> <span class="keyword">WHERE</span> `user_id` <span class="operator">=</span> <span class="string">&#x27;kxw&#x27;</span> <span class="keyword">AND</span> `coin` <span class="operator">&gt;=</span> <span class="number">1000</span>;</span><br><span class="line"></span><br></pre></td></tr></table></figure><h2 id="操作用户余额时注意"><a href="#操作用户余额时注意" class="headerlink" title="操作用户余额时注意"></a>操作用户余额时注意</h2><ol><li>可重复读（记录扣费后余额快照）(select <code>coin</code> 后记录到user_balance_log表的<code>coin_after</code>)</li><li>乐观锁（扣费冲突）（set <code>coin</code> - 1000 where <code>coin</code> &gt;&#x3D; 1000）</li><li>业务幂等（不同业务使用相应的订单表）</li><li>事务（用户余额表<code>user_balance</code>、日志流水表<code>user_balance_log</code>、业务订单表绑定）</li><li>canal 监听 binlog 识别业务异常 (对比 binlog监听的<code>user_balance</code>表<code>coin</code>变化量 和 <code>user_balance_log</code>的 <code>coin</code>记录总量 是否一致)</li></ol><h2 id="流水表只需要记录coin-after"><a href="#流水表只需要记录coin-after" class="headerlink" title="流水表只需要记录coin_after"></a>流水表只需要记录coin_after</h2><h3 id="事务过程"><a href="#事务过程" class="headerlink" title="事务过程"></a>事务过程</h3><table><thead><tr><th>事务1</th><th>事务2</th></tr></thead><tbody><tr><td>BEGIN;</td><td></td></tr><tr><td></td><td>BEGIN;</td></tr><tr><td>SELECT * FROM <code>user_balance</code> WHERE <code>user_id</code> &#x3D; ‘kxw’; (coin&#x3D;20000000)</td><td></td></tr><tr><td>UPDATE <code>user_balance</code> SET <code>coin</code>&#x3D; <code>coin</code> - 1000 WHERE <code>user_id</code> &#x3D; ‘kxw’ AND <code>coin</code> &gt;&#x3D; 1000;</td><td></td></tr><tr><td></td><td>SELECT * FROM <code>user_balance</code> WHERE <code>user_id</code> &#x3D; ‘kxw’; (coin&#x3D;20000000)</td></tr><tr><td></td><td>UPDATE <code>user_balance</code> SET <code>coin</code>&#x3D; <code>coin</code> - 1000 WHERE <code>user_id</code> &#x3D; ‘kxw’ AND <code>coin</code> &gt;&#x3D; 1000;</td></tr><tr><td>SELECT * FROM <code>user_balance</code> WHERE <code>user_id</code> &#x3D; ‘kxw’; (coin&#x3D;19999000)</td><td></td></tr><tr><td>COMMIT;</td><td></td></tr><tr><td></td><td>SELECT * FROM <code>user_balance</code> WHERE <code>user_id</code> &#x3D; ‘kxw’; (coin&#x3D;19998000)</td></tr><tr><td></td><td>COMMIT;</td></tr></tbody></table><ul><li>流水表只需要记录<code>coin_after</code>（变更后的余额）即可，因为变更前的余额，可能因为并发导致不准确，除非开启事务后，使用<code>select for update</code>来查询，而不是用普通的快照读</li></ul>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;表结构&quot;&gt;&lt;a href=&quot;#表结构&quot; class=&quot;headerlink&quot; title=&quot;表结构&quot;&gt;&lt;/a&gt;表结构&lt;/h2&gt;&lt;figure class=&quot;highlight sql&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;spa</summary>
+      
+    
+    
+    
+    
+    <category term="金钱相关" scheme="http://yoursite.com/tags/%E9%87%91%E9%92%B1%E7%9B%B8%E5%85%B3/"/>
+    
+  </entry>
   
   <entry>
     <title>简单记录我在几家公司的经历</title>
@@ -566,35 +588,6 @@
     <category term="JOB" scheme="http://yoursite.com/tags/JOB/"/>
     
     <category term="职场" scheme="http://yoursite.com/tags/%E8%81%8C%E5%9C%BA/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>小团队管理经验</title>
-    <link href="http://yoursite.com/2024/03/26/20240326-xiao-tuan-dui-guan-li-jing-yan/"/>
-    <id>http://yoursite.com/2024/03/26/20240326-xiao-tuan-dui-guan-li-jing-yan/</id>
-    <published>2024-03-26T02:39:17.000Z</published>
-    <updated>2024-03-28T15:39:24.443Z</updated>
-    
-    <content type="html"><![CDATA[<blockquote><blockquote><p>转眼工作十年了，从20年10月开始，断断续续做了近三年的小团队管理，这里作简要总结一下。</p></blockquote></blockquote><blockquote><blockquote><p>所谓小团队管理，其实就是现在说的虚线组长，需要写代码、给团队提供指导等，但是由于不是高级别大领导，不需要应付很多烦人的破事。从这层来看，挺适合我这种性格的人。</p></blockquote></blockquote><blockquote><blockquote><p>以下是以小团队为背景来总结的，格局显得较小；当然每个人的观点不一样，不一定是正确的理解。</p></blockquote></blockquote><h2 id="核心要点（对自己）"><a href="#核心要点（对自己）" class="headerlink" title="核心要点（对自己）"></a>核心要点（对自己）</h2><ul><li>情商、基于别人的角度思考<ul><li>个人习惯采取对内温和对外强硬的方式；当然结合自身情况和环境具体选择；这个方法可以让你更好的理解人和事情；我不认为所谓的“情商高”就是“老好人”。</li></ul></li><li>以身作则<ul><li>以自己为榜样，让团队其他成员看到正确的做事方式等；包括技术方案、沟通方式等，当然包括一些无法避免的脏活累活等；用高效和人性化等方式应对 。</li></ul></li><li>令人信服的技术功底<ul><li>小团队管理的特点，就是领头的人也是需要写代码和干实事，而且跟团队成员的距离是最近的；需要保持自己良好的技术功底，才能更好的给团队提供有效的建议；另外作为有追求的技术人，谁都想跟着比自己优秀的人一起共事。</li></ul></li><li>保证成员尽量免干扰、休息时间如无必要不打扰<ul><li>这一点是我基于人性化的角度考虑的，有些人可能会觉得不重要。给团队提供深度工作的环境，才能提升效率；在一些不紧急的事情少，要做到不随意打扰，减少团队的负面情绪。对应上面第一条，将心比心，每个人都想要良好的工作体验。</li></ul></li><li>真诚、谦虚、透明<ul><li>尽量保持团队一定的透明度，减少不必要的暗箱操作。大部分情况下不需要开会，只需要一篇简明扼要的文档，即可让团队快速了解事情的内容。团队成员也在发展，要清楚有一天他们的能力会超过你。而我一直坚持的做法是，业务上坚持写文档，尽量减少业务壁垒（也是为自己放假偷懒准备），技术上提供合理的建议，不遗余力的提高自己的“可替代性”。</li><li>认清自己。领导需要团队的力量才能发挥作用。不要错把平台的能力当作自己的能力。把公司的给予当作自己的给予。</li></ul></li><li>人性化管理<ul><li>现在很多公司都追求狼性文化，说着各种假话哄下属为自己加班干活</li><li>个人管理经验理念是，先做人再做领导</li><li>如非必要。不严厉。许多人还没到那个层级就采取低端没人情味的管理方式。要和同事成为朋友，营造友好的工作环境，而不是一味向上管理。</li></ul></li><li>尽量保持技术更新升级<ul><li>在确保充分测试，稳定灰度的同时，适量的升级有利于系统的稳定，增加维护人员的积极性。这种东西无法直接给出具体收益，但应该长远考虑，一味的保守只会让技术越来越落后</li></ul></li></ul><h2 id="核心要点（对团队）"><a href="#核心要点（对团队）" class="headerlink" title="核心要点（对团队）"></a>核心要点（对团队）</h2><ul><li>聪明、叙述简明扼要、能抓重点</li><li>乐于分享、采用高效的分享手段（文章即可）、实事求是</li><li>有团队主人翁意识，主动了解业务</li><li>对技术原理好奇并积极探索</li><li>尊重别人的时间</li><li>跟进事情有反馈和结论</li><li>在正确的事情面前，敢于说不</li><li>重视自己的“可替代性”、免于个人单点、提升团队容错性</li></ul><h2 id="小团队技术管理者的事项列表"><a href="#小团队技术管理者的事项列表" class="headerlink" title="小团队技术管理者的事项列表"></a>小团队技术管理者的事项列表</h2><ul><li>业务侧<ul><li>快速满足需求</li><li>通用业务组件抽象</li><li>旧业务熟悉</li><li>定期删除无用代码，增加代码可维护性</li><li>遗留需求记录和跟进</li><li>业务知识文档化，方便查阅和备忘</li><li>需求上线时间定时跟进（你就是项目经理）</li></ul></li><li>技术侧<ul><li>旧业务梳理和重构</li><li>架构灾备和优化、资源隔离等</li><li>通用工具类封装</li><li>管理后台搭建 （解放技术）</li><li>服务异常监控（后端接口，前端APM等各个维度）</li><li>技术组件升级，提升团队技术广度</li><li>废弃业务下线，回收资源</li><li>业务技术调研，团队具备快速满足产品新需求的能力</li><li>分享，相互学习，个人认为文档就行了，会议实际上挺形式和浪费大家的时间</li><li>帮助review方案和代码</li><li>技术债务登记和逐步处理（分优先级[每个季度一定要完成一定比例的低优先级任务]，保持代码洁癖，不给后来人挖坑）</li><li>开发规范制定（避免后续维护混乱，也方便大家日常开发查阅）</li><li>开发阶段和上线阶段checklist，避免犯重复的错误，避免上线遗漏导致项目延期</li><li>技术面试</li><li>应急处理、日常维护等文档化（公开、透明、高效）</li><li>团队文档整理规划<ul><li>新人指引</li><li>业务模块（服务模块、业务知识整理、业务交接记录、业务安全风险点）</li><li>工作规划（需求列表、技术规划、技术债务）</li><li>开发规范（项目上线流程、公共库说明、开发协议、服务架构图、业务逻辑开发套路等）</li><li>工作文档（应急、日常维护等）<ul><li>常见问题处理导航</li></ul></li><li>技术文档（技术型、分享类）</li><li>技术方案（日常需求上线方案归档）</li><li>复盘、故障报告</li><li>业务调研</li><li>其他备份</li></ul></li></ul></li></ul><h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul><li><a href="https://kingson4wu.github.io/2021/08/13/20210813-ge-ren-guan-li-jing-yan-zong-jie/">个人管理经验总结</a></li></ul>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;blockquote&gt;
-&lt;blockquote&gt;
-&lt;p&gt;转眼工作十年了，从20年10月开始，断断续续做了近三年的小团队管理，这里作简要总结一下。&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;/blockquote&gt;
-&lt;blockquote&gt;
-&lt;blockquote&gt;
-&lt;p&gt;所谓小团队</summary>
-      
-    
-    
-    
-    
-    <category term="团队管理" scheme="http://yoursite.com/tags/%E5%9B%A2%E9%98%9F%E7%AE%A1%E7%90%86/"/>
     
   </entry>
   

@@ -287,6 +287,168 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/02/23/20220223-li-jie-zhuang-tai-ji-yuan-li-ji-shi-jian/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2022/02/23/20220223-li-jie-zhuang-tai-ji-yuan-li-ji-shi-jian/" itemprop="url">理解状态机原理及实践</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-02-23T13:42:47+08:00">
+                2022-02-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2022/02/23/20220223-li-jie-zhuang-tai-ji-yuan-li-ji-shi-jian/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2022/02/23/20220223-li-jie-zhuang-tai-ji-yuan-li-ji-shi-jian/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><ul>
+<li><p>有限状态机FSM</p>
+</li>
+<li><p>描述事物的有限状态机模型的元素由以下组成：</p>
+<ol>
+<li>状态(State)：事物的状态，包括初始状态和所有事件触发后的状态</li>
+<li>事件(Event)：触发状态变化或者保持原状态的事件</li>
+<li>行为或转换(Action&#x2F;Transition)：执行状态转换的过程</li>
+<li>检测器(Guard)：检测某种状态要转换成另一种状态的条件是否满足</li>
+</ol>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/37281543f506">https://www.jianshu.com/p/37281543f506</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/46347732">深入浅出理解有限状态机</a></p>
+</li>
+<li><p>状态机的要素</p>
+</li>
+<li><p>状态机可归纳为4个要素，即现态、条件、动作、次态。“现态”和“条件”是因，“动作”和“次态”是果。详解如下：<br>  1. 现态：是指当前所处的状态。<br>  2. 条件：又称为“事件”。当一个条件被满足，将会触发一个动作，或者执行一次状态的迁移。<br>  3. 动作：条件满足后执行的动作。动作执行完毕后，可以迁移到新的状态，也可以仍旧保持原状态。动作不是必需的，当条件满足后，也可以不执行任何动作，直接迁移到新状态。<br>  4. 次态：条件满足后要迁往的新状态。“次态”是相对于“现态”而言的，“次态”一旦被激活，就转变成新的“现态”了。</p>
+</li>
+</ul>
+<h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><ol>
+<li><p>定义状态</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> <span class="title class_">ProcessState</span> &#123;</span><br><span class="line"></span><br><span class="line">    INIT(<span class="number">0</span>, <span class="string">&quot;未开始&quot;</span>),</span><br><span class="line">    READY_ONE_SIDE(<span class="number">1</span>, <span class="string">&quot;一方准备完成&quot;</span>),</span><br><span class="line">    READY_ALL(<span class="number">2</span>, <span class="string">&quot;双方准备完成&quot;</span>),</span><br><span class="line">    CHAT(<span class="number">3</span>, <span class="string">&quot;发言完成&quot;</span>),</span><br><span class="line">    END(<span class="number">4</span>, <span class="string">&quot;结束&quot;</span>),</span><br><span class="line">    ;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> val;</span><br><span class="line">    <span class="keyword">private</span> String desc;</span><br><span class="line"></span><br><span class="line">    ProcessState(<span class="type">int</span> val, String desc) &#123;</span><br><span class="line">        <span class="built_in">this</span>.val = val;</span><br><span class="line">        <span class="built_in">this</span>.desc = desc;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">getVal</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> val;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>定义事件</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> <span class="title class_">ProcessEvent</span> &#123;</span><br><span class="line"></span><br><span class="line">    READY_ONE_SIDE(<span class="number">1</span>, <span class="string">&quot;一方准备&quot;</span>),</span><br><span class="line">		READY_ALL(<span class="number">2</span>, <span class="string">&quot;另一方准备&quot;</span>),</span><br><span class="line">		CHAT(<span class="number">3</span>, <span class="string">&quot;发言&quot;</span>),</span><br><span class="line">		FORBID_ALL(<span class="number">4</span>, <span class="string">&quot;全员禁言&quot;</span>),</span><br><span class="line">    ;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> Integer code;</span><br><span class="line">    <span class="keyword">private</span> String desc;</span><br><span class="line"></span><br><span class="line">    ProcessEvent(Integer code, String desc) &#123;</span><br><span class="line">        <span class="built_in">this</span>.code = code;</span><br><span class="line">        <span class="built_in">this</span>.desc = desc;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> Integer <span class="title function_">getCode</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> code;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>定义状态机</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ProcessEventConfig</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> ProcessEvent event;</span><br><span class="line">    <span class="keyword">private</span> ProcessState fromState;</span><br><span class="line">    <span class="keyword">private</span> ProcessState toState;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">desc</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> fromState.getDesc() + <span class="string">&quot;_&quot;</span> + event.getDesc() + <span class="string">&quot;_&quot;</span> + toState.getDesc();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">List&lt;ProcessEventConfig&gt; configList = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;(<span class="number">16</span>);</span><br><span class="line">configList.add(<span class="keyword">new</span> <span class="title class_">ProcessEventConfig</span>(ProcessEvent.READY_ONE_SIDE, ProcessState.INIT, ProcessState.READY_ONE_SIDE));</span><br><span class="line">configList.add(<span class="keyword">new</span> <span class="title class_">ProcessEventConfig</span>(ProcessEvent.READY_ALL, ProcessState.READY_ONE_SIDE, ProcessState.READY_ALL));</span><br><span class="line">configList.add(<span class="keyword">new</span> <span class="title class_">ProcessEventConfig</span>(ProcessEvent.CHAT, ProcessState.READY_ALL, ProcessState.CHAT));</span><br><span class="line">configList.add(<span class="keyword">new</span> <span class="title class_">ProcessEventConfig</span>(ProcessEvent.FORBID_ALL, ProcessState.CHAT, ProcessState.END));</span><br><span class="line"></span><br><span class="line">Map&lt;ProcessEvent, ProcessEventConfig&gt; eventResultStateConfigMap = <span class="keyword">new</span> <span class="title class_">EnumMap</span>&lt;&gt;(ProcessEvent.class);</span><br><span class="line"></span><br><span class="line">configList.forEach(eventConfig -&gt; eventResultStateConfigMap.put(eventConfig.getEvent(), eventConfig));</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>触发状态变化</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">fire</span><span class="params">(ProcessEvent event, Process process)</span> &#123;</span><br><span class="line"></span><br><span class="line">        <span class="type">ProcessEventConfig</span> <span class="variable">config</span> <span class="operator">=</span> Optional.ofNullable(eventResultStateConfigMap.get(event)).orElseThrow(() -&gt; ExceptionCodeEnum.AGRS_INVALID.newException(<span class="string">&quot;不存在该事件&quot;</span>));</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (process.getStatus() != config.getFromState().getVal()) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        process.setRemark(config.desc());</span><br><span class="line">        process.setStatus(config.getToState().getVal());</span><br><span class="line"></span><br><span class="line">				<span class="comment">//DB改变状态</span></span><br><span class="line">				<span class="comment">/*update table set status=$&#123;status&#125; WHERE id=&#123;id&#125; AND status=$&#123;beforeStatus&#125;*/</span></span><br><span class="line">        <span class="type">boolean</span> <span class="variable">suc</span> <span class="operator">=</span> processManager.updateStatus(process, config.getFromState().getVal());</span><br><span class="line">        <span class="keyword">if</span> (suc) &#123;</span><br><span class="line">               <span class="comment">//变更成功，业务逻辑    </span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> suc;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/02/20/20220220-nba-xuan-xiu-chou-qian-ju-ti-shi-ru-he-cao-zuo-de/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2212,257 +2374,6 @@ We obviously did not consider Windows as a serious platform so far, and that's w
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/08/17/20210817-java-la-ji-hui-shou-zong-jie/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2021/08/17/20210817-java-la-ji-hui-shou-zong-jie/" itemprop="url">Java垃圾回收总结</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-08-17T13:57:00+08:00">
-                2021-08-17
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2021/08/17/20210817-java-la-ji-hui-shou-zong-jie/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2021/08/17/20210817-java-la-ji-hui-shou-zong-jie/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><img src="/2021/08/17/20210817-java-la-ji-hui-shou-zong-jie/JVM_GC.png"></p>
-<ul>
-<li><p>Java中成熟的垃圾回收器有串行垃圾回收器、并行垃圾回收器、并发标记回收器（Concurrent Mark Sweep, CMS）、垃圾优先回收器（Garbage First，也称为G1）。在JDK 11中引入了一款新的垃圾回收器ZGC，在JDK 12中又引入了另一款新的垃圾回收器Shenandoah。虽然新的垃圾回收器不断地涌现，但是垃圾回收的基本算法变化并不大。简单来说，回收算法主要有复制、标记清除、标记压缩。JVM中不同的垃圾回收器都是基于这些基本算法实现的，不同的垃圾回收器区别在于：选择的算法不同，实现时后台线程采用的并行&#x2F;并发方式不同。</p>
-</li>
-<li><p>垃圾回收针对的是堆空间</p>
-</li>
-<li><p>目前垃圾回收算法主要有两类：</p>
-<ul>
-<li>引用计数法：在堆内存中分配对象时，会为对象分配一段额外的空间，这个空间用于维护一个计数器，如果对象增加了一个新的引用，则将增加计数器的值；如果一个引用关系失效，则减少计数器的值。当一个对象的计数器的值变为0，则说明该对象已经被废弃，处于不活跃状态，可以被回收。引用计数法需要解决循环依赖的问题</li>
-<li>可达性分析法（也称为根引用分析法），基本思路就是通过根集合（root set）作为起始点，从这些节点出发，根据引用关系开始搜索，所经过的路径称为引用链，当一个对象没有被任何引用链访问到时，则证明此对象是不活跃的，可以被回收。在JVM中常见的根（root）有线程栈帧（thread frame，用于跟踪线程中活跃对象）、符号表（symbol dictionary）、字符串表（string table）、对象监视器（object synchronizer）、元数据对象（universe）等，这些根共同构成了根集合。</li>
-</ul>
-</li>
-<li><p>JVM的垃圾回收采用了可达性分析法。垃圾回收算法也在不断地演化，按照不同的标准有不同的分类：</p>
-<ul>
-<li>从垃圾回收算法实现主要分为复制（copy）、标记清除（mark-sweep）和标记压缩（mark-compact）。</li>
-<li>从回收方式上可以分为串行回收、并行回收、并发回收。</li>
-<li>从内存管理上可以分为代管理和非代管理。</li>
-</ul>
-</li>
-<li><p>JVM垃圾回收器基于分代管理和回收算法，结合回收的方式，实现了串行回收器、并行回收器、CMS、G1、ZGC和Shenandoah。</p>
-</li>
-<li><p>从程序执行方式的角度可以分为以下3类：</p>
-<ul>
-<li>串行执行：应用程序和垃圾回收器交替执行，垃圾回收器执行的时候应用程序暂停执行。串行执行指的是垃圾回收器有且仅有一个后台线程执行垃圾对象的识别和回收。</li>
-<li>并行执行：应用程序和垃圾回收器交替执行，垃圾回收器执行的时候应用程序暂停执行。并行执行指的是垃圾回收器有多个后台线程执行垃圾对象的识别和回收，多个线程并行执行。</li>
-<li>并发执行：应用程序和垃圾回收器同时运行，除了在某些必要的情况下垃圾回收器需要暂停应用程序的执行，其余的时候在应用程序运行的同时，垃圾回收器的后台线程也运行，如标识垃圾对象并回收垃圾对象所占的空间。<br><img src="/2021/08/17/20210817-java-la-ji-hui-shou-zong-jie/%E4%B8%8D%E5%90%8C%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8%E7%9A%84%E5%B9%B6%E5%8F%91%E6%89%A7%E8%A1%8C.jpg"></li>
-</ul>
-</li>
-<li><p>JKD7 默认垃圾收集器Parallel Scavenge（新生代）+Parallel Old（老年代）</p>
-</li>
-<li><p>JKD8 默认垃圾收集器Parallel Scavenge（新生代）+Parallel Old（老年代）</p>
-</li>
-<li><p>JKD9的默认垃圾回收器是G1</p>
-</li>
-<li><p>JDK15 正式删除CMS。JDK11就已经把CMS标记为过期。JDK9开始使用G1作为「默认」的垃圾回收器（JDK11中ZGC开始崭露头角）</p>
-</li>
-<li><p>Minor GC：又称新生代GC</p>
-</li>
-<li><p>Full GC：又称为Major GC或老年代GC</p>
-</li>
-</ul>
-<p><img src="/2021/08/17/20210817-java-la-ji-hui-shou-zong-jie/%E5%85%B3%E4%BA%8E%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8%E5%92%8C%E5%86%85%E5%AD%98%E5%A4%A7%E5%B0%8F%E7%9A%84%E5%8F%82%E8%80%83.png"></p>
-<h3 id="垃圾收集器-种类"><a href="#垃圾收集器-种类" class="headerlink" title="垃圾收集器 种类"></a>垃圾收集器 种类</h3><ol>
-<li>Serial 垃圾收集器（单线程、复制算法）[‘sɪriəl]</li>
-<li>ParNew 垃圾收集器（Serial+多线程）【Serial收集器的多线程版本】</li>
-<li>Parallel Scavenge 收集器（多线程复制算法、高效）[‘perə.lel] [‘skævəndʒ] 【“吞吐量优先”收集器】<br>自适应调节策略也是 ParallelScavenge 收集器与 ParNew 收集器的一个<br>重要区别。</li>
-<li>Serial Old 收集器（单线程标记整理算法 ）【Serial收集器的老年代版本】</li>
-<li>Parallel Old 收集器（多线程标记整理算法）【Parallel Scavenge收集器的老年代版本】</li>
-<li>CMS 收集器（多线程标记清除算法） （Coucurrent Mark Sweep）【并发收集、低停顿】<br>最主要目标是获取最短垃圾回收停顿时间</li>
-<li>G1 收集器 （Garbage-First）【面向服务端应用的垃圾收集器】</li>
-</ol>
-<ul>
-<li><p>相比与 CMS 收集器，G1 收集器两个最突出的改进是：</p>
-<ul>
-<li>基于标记-整理算法，不产生内存碎片。</li>
-<li>可以非常精确控制停顿时间，在不牺牲吞吐量前提下，实现低停顿垃圾回收。</li>
-</ul>
-</li>
-<li><p>CMS收集器的关注点尽可能地缩短垃圾收集时用户线程的停顿时间，而Parallel Scavenge收集器更关注系统的吞吐量（Throughput）。</p>
-</li>
-<li><p>CMS</p>
-<ul>
-<li>多线程，使用标记清除算法。并发收集，垃圾回收停顿时间短。但对CPU资源较敏感，CPU核心较少时会导致并发标记、并发清除时吞吐量骤减；无法处理浮动垃圾，老年代空间不能完全使用,需要预留一部分空间；由于基于标记清除算法，会产生大量空间碎片，将会给大对象分配带来很大麻烦，往往会出现老年代还有很大空间剩余，但是无法找到足够大的连续空间来分配当前对象，不得不提前触发一次Full GC。</li>
-</ul>
-</li>
-<li><p>G1</p>
-<ul>
-<li>多线程，从局部（两个Region之间）来看，是基于复制算法，从整体来看是基于标记整理算法，不会产生空间碎片，相比于CMS，可预测停顿时间。适合大堆，追求低停顿。</li>
-</ul>
-</li>
-</ul>
-<h3 id="JVM-GC参数"><a href="#JVM-GC参数" class="headerlink" title="JVM GC参数"></a>JVM GC参数</h3><ul>
-<li>-XX:+UseSerialGC 开启此参数使用Serial &amp; Serial Old搜集器（client模式默认值）</li>
-<li>-XX:+UseParNewGC 开启此参数使用ParNew &amp; Serial Old收集器</li>
-<li>-XX:+UseParallelGC 开启此参数使用parallel scavenge &amp; Serial old收集器（server模式默认值）</li>
-<li>-XX:+UseParallelOldGC 使用Parallel scavenge &amp; Parallel old收集器</li>
-<li>-XX:+UseConcMarkSweepGC 使用ParNew &amp; CMS收集器 (使用ParNew + CMS + Serial Old的收集器组合进行垃圾回收，Serial Old作为CMS出现Concurrent Mode Failure失败后的后备收集器)</li>
-<li>-XX:+UseG1GC</li>
-</ul>
-<h2 id="总结和适用场景"><a href="#总结和适用场景" class="headerlink" title="总结和适用场景"></a>总结和适用场景</h2><h3 id="CMS"><a href="#CMS" class="headerlink" title="CMS"></a>CMS</h3><ul>
-<li>以获取最短回收停顿时间为目标的收集器。</li>
-<li>CMS收集器工作时，GC工作线程与用户线程可以并发执行，以此来达到降低收集停顿时间的目的。</li>
-<li>优点：并发收集、低停顿</li>
-<li>CMS收集器之所以能够做到并发，根本原因在于采用基于“标记-清除”的算法并对算法过程进行了细粒度的分解。</li>
-<li>CMS是老年代的垃圾回收器，在老年代分配不下的时候，触发CMS。</li>
-<li>CMS的最大问题：CMS会使内存碎片化，老年代产生了很多的碎片，然后从年轻代过来的对象无法找到空间，造成了promotion failed。这时候，CMS既没有机会进行垃圾回收，又放不下新来的对象，在这种情况下，CMS会调用SerialOld来进行垃圾回收。这是一件很恐怖的事情。</li>
-</ul>
-<h3 id="G1"><a href="#G1" class="headerlink" title="G1"></a>G1</h3><ul>
-<li>致力于在多CPU和大内存服务器上对垃圾回收提供软实时目标（soft real-time goal）和高吞吐量（high throughput）</li>
-<li>G1适合8&#x2F;16G以上的内存使用</li>
-<li>整体采用标记-整理算法，局部是通过是通过复制算法，不会产生内存碎片</li>
-<li>G1垃圾收集器相对比其他收集器而言，最大的区别在于它取消了年轻代、老年代的物理划分，取而代之的是将堆划分为若干个区域（Region），这些区域中包含了有逻辑上的年轻代、老年代区域。这样做的好处就是，我们再也不用单独的空间对每个代进行设置了，不用担心每个代内存是否足够。</li>
-<li>G1重新定义了堆空间，打破了原有的分代模型，将堆划分为一个个区域。这么做的目的是在进行收集时不必在全堆范围内进行，这是它最显著的特点。区域划分的好处就是带来了停顿时间可预测的收集模型：用户可以指定收集操作在多长时间内完成。即G1提供了接近实时的收集特性。</li>
-<li>可预测的停顿</li>
-<li>G1在逻辑上分代，在物理上不分代。G1引入了分而治之的思想，把内存分为一个一个的小块(region)。每个region逻辑上属于下面四种分代中的一种。</li>
-<li>四种分代：<br>  a. Old区：老对象<br>  b .Survivor区：存活对象<br>  c. Eden区：新生对象<br>  d. Humongous区：大对象，如果这个对象特别大，可能会跨两个region。</li>
-</ul>
-<h3 id="ZGC"><a href="#ZGC" class="headerlink" title="ZGC"></a>ZGC</h3><ul>
-<li>和G1类似，但ZGC的region的大小更加灵活和动态。zgc的region不会像G1那样在一开始就被划分为固定大小的region。</li>
-<li>zgc的region核心亮点就是：动态。</li>
-<li>停顿时间控制在10ms之内停顿时间不会因为堆变大而变长堆大小支持TB级。</li>
-<li>ZGC在对象回收的吞吐量方面略逊于G1回收器（差距小于15%）</li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/BH7XAuSs4QsseIK-gMeD7A">Tencent Kona JDK11无暂停内存管理ZGC生产实践</a><ul>
-<li>超大堆应用。超大堆（百 G 以上）下，CMS 或者 G1 如果发生 Full GC，停顿会在分钟级别，可能会造成业务的终端，强烈推荐使用 ZGC。</li>
-<li>高 SLA 需求的应用。如对响应时间有 P999 时限要求的实时和软实时应用，此类应用无论堆大小，均推荐采用低停顿的 ZGC。</li>
-</ul>
-</li>
-</ul>
-<h3 id="Shenandoah"><a href="#Shenandoah" class="headerlink" title="Shenandoah"></a>Shenandoah</h3><ul>
-<li>ZGC是Oracle JDK的。而Shenandoah只存在于OpenJDK中，因此使用时需注意你的JDK版本</li>
-</ul>
-<h3 id="新生代关系和组合关系"><a href="#新生代关系和组合关系" class="headerlink" title="新生代关系和组合关系"></a>新生代关系和组合关系</h3><ul>
-<li>当 CMS回收失败时, 备选 Serial Old GC<br><img src="/2021/08/17/20210817-java-la-ji-hui-shou-zong-jie/HotSpot_%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%9A%84%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8.png"></li>
-</ul>
-<p><img src="/2021/08/17/20210817-java-la-ji-hui-shou-zong-jie/G1_ZGC_Shenandoah.jpg"></p>
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
-<li>新一代垃圾回收器ZGC设计与实现</li>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/heyonggang/p/11718170.html">弄明白CMS和G1，就靠这一篇了</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/lyy9902/article/details/111504800">十种常见的垃圾回收器简介</a></li>
-<li><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000021786789">Java 虚拟机系列三：垃圾收集器一网打尽，船新的 ZGC 和 Shenandoah 听说过吗</a></li>
-<li>[JVM垃圾回收-垃圾回收的各种分类&amp; 垃圾收集器的组合关系(<a target="_blank" rel="noopener" href="https://blog.csdn.net/qcl108/article/details/108875189">https://blog.csdn.net/qcl108/article/details/108875189</a>)</li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2518,7 +2429,7 @@ We obviously did not consider Windows as a serious platform so far, and that's w
 <a href="/archives/">                
 <!--<a href="/archives/%7C%7C%20archive">-->
               
-                  <span class="site-state-item-count">132</span>
+                  <span class="site-state-item-count">133</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

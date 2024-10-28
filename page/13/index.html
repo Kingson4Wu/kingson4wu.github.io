@@ -287,6 +287,169 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/07/20200707-wei-yi-id-de-ji-yin/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/07/07/20200707-wei-yi-id-de-ji-yin/" itemprop="url">唯一ID的基因</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-07T23:15:24+08:00">
+                2020-07-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/07/07/20200707-wei-yi-id-de-ji-yin/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/07/07/20200707-wei-yi-id-de-ji-yin/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><img src="/2020/07/07/20200707-wei-yi-id-de-ji-yin/Zidane_2.jpeg"></p>
+<p>在互联网服务中，经常需要使用唯一ID。其中一个常见的应用场景是作为业务中请求的幂等ID。</p>
+<h3 id="分布式唯一ID生成方案"><a href="#分布式唯一ID生成方案" class="headerlink" title="分布式唯一ID生成方案"></a>分布式唯一ID生成方案</h3><ol>
+<li>uuid</li>
+<li>snowflake</li>
+<li>包含业务属性的唯一ID，如 timestamp+ uid（10-11位）+ 随机3位数字（或递增）</li>
+<li>其他方案</li>
+</ol>
+<p>优劣不在这里讨论</p>
+<h3 id="业务场景分析"><a href="#业务场景分析" class="headerlink" title="业务场景分析"></a>业务场景分析</h3><p>结合目前工作中的现状进行分析</p>
+<ol>
+<li>唯一ID的存储方式：MySQL－bigint(20)</li>
+<li>唯一ID生成方式：snowflake－64位：42位时间戳+5位机器码+5位进程worker标识码+12位自增id（42|5|5|12 &#x3D; 64）</li>
+</ol>
+<ul>
+<li><p>我们把幂等ID作为数据库的唯一键，从而保证幂等；而当数据量越来越大是，我们对数据按月进行分表，提升处理性能。</p>
+</li>
+<li><p>我们在数据库中除了有幂等ID（orderId）字段之外，还有添加时间字段（addTime）;当请求进来之后，根据addTime找到相应的月表。所以实际上要保证请求处理幂等，依赖的是orderId＋addTime 不变（或addTime保证始终落在同一个月）</p>
+</li>
+</ul>
+<h4 id="为什么要依赖addTime保证幂等？"><a href="#为什么要依赖addTime保证幂等？" class="headerlink" title="为什么要依赖addTime保证幂等？"></a>为什么要依赖addTime保证幂等？</h4><ol>
+<li><p>基础组件提供的唯一ID生成服务，对snowflake进行个性化的改造，只能保证ID是唯一的，然而ID的属性并不明显，无法方便的使用唯一ID进行分库（实际上snowflake算法的前n位是时间戳，可以考虑作为分库的属性）</p>
+</li>
+<li><p>一些常见唯一ID的例子</p>
+<pre>
+交易单号:4008722001201707283057762612
+商户单号:2017072809364399365840049582
+订单编号: 60310040822721833
+支付宝交易号: 2017092021001001150522558267
+大众点评订单号36611441412777832
+</pre></li>
+</ol>
+<p>像“商户单号”和“支付宝交易号”，很明显可以使用日期“基因”来分库，不过这种唯一ID不能使用bigint 存储，因为超过64位了</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>一个好的唯一ID算法生成的ID，应该具备易用的“基因”。像UUID这种就不是很满足。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/07/20200707-ru-he-chu-li-rpc-fan-hui-de-cuo-wu-ma/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1709,153 +1872,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/28/20191228-tian-xia-zu-qiu-qu-mu/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/12/28/20191228-tian-xia-zu-qiu-qu-mu/" itemprop="url">《天下足球》曲目</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-12-28T16:27:54+08:00">
-                2019-12-28
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2019/12/28/20191228-tian-xia-zu-qiu-qu-mu/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2019/12/28/20191228-tian-xia-zu-qiu-qu-mu/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <ol>
-<li>The Phoenix - Fall Out boy</li>
-<li>Love Runs Out - OneRepublic</li>
-<li>Empire of Angels</li>
-<li>Breath And Lift</li>
-<li>If I Could Fly</li>
-<li>Electric romeo</li>
-<li>Rise - John Dreamer</li>
-<li>Victory - Two Steps From Hell</li>
-<li>El Dorado - Two Steps From Hell</li>
-<li>Journey - Capo Productions</li>
-<li>Star Sky - Two Steps From Hell</li>
-<li>No Boundaries - Adam Lambert</li>
-<li>Attraction - Masazumi Ozawa</li>
-<li>Because of You - Kelly Clarkson</li>
-<li>Now We Are Free - Hans Zimmer</li>
-</ol>
-<p><img src="/2019/12/28/20191228-tian-xia-zu-qiu-qu-mu/Cristiano_Ronaldo.jpeg"></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1911,7 +1927,7 @@
 <a href="/archives/">                
 <!--<a href="/archives/%7C%7C%20archive">-->
               
-                  <span class="site-state-item-count">132</span>
+                  <span class="site-state-item-count">133</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

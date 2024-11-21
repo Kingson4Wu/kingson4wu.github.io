@@ -96,17 +96,16 @@ tags: [Java, Go, Rust]
         - 所有代码路径都使用这个版本
         - 使用 MVS (Minimal Version Selection) 算法
         - 在 go.mod 中记录最终版本
-    ```go
-        Copy
-        // go.mod
-        module my-project
+        <pre>
+            // go.mod
+            module my-project
 
-        require (
-            A v1.0.0
-            B v1.0.0
-            pkg v1.2.3 // 间接依赖，统一使用最高版本
-        )
-    ```    
+            require (
+                A v1.0.0
+                B v1.0.0
+                pkg v1.2.3 // 间接依赖，统一使用最高版本
+            )
+        </pre>    
 + Rust 的处理方式：
     <pre>
     依赖关系示例：
@@ -120,12 +119,12 @@ tags: [Java, Go, Rust]
         - 允许两个版本同时存在
         - 分别编译两个版本的代码
         - 在最终二进制中包含两个版本
-    ```toml
-    # Cargo.toml
-    [dependencies]
-    A = "1.0.0"  # 依赖 pkg 1.1.0
-    B = "1.0.0"  # 依赖 pkg 1.2.3
-    ```
+        <pre>
+        Cargo.toml
+        [dependencies]
+        A = "1.0.0"  # 依赖 pkg 1.1.0
+        B = "1.0.0"  # 依赖 pkg 1.2.3
+        </pre>
 + 主要区别：
     - Go: 强制统一版本，避免重复
     - Rust: 允许多版本共存，保证兼容性

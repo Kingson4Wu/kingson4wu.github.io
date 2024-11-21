@@ -459,7 +459,39 @@
 <li>自动选择最高兼容版本（v1.2.3）</li>
 <li>所有代码路径都使用这个版本</li>
 <li>使用 MVS (Minimal Version Selection) 算法</li>
-<li>在 go.mod 中记录最终版本  <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">        Copy</span><br><span class="line">        <span class="comment">// go.mod</span></span><br><span class="line">        module my-project</span><br><span class="line"></span><br><span class="line">        require (</span><br><span class="line">            A v1<span class="number">.0</span><span class="number">.0</span></span><br><span class="line">            B v1<span class="number">.0</span><span class="number">.0</span></span><br><span class="line">            pkg v1<span class="number">.2</span><span class="number">.3</span> <span class="comment">// 间接依赖，统一使用最高版本</span></span><br><span class="line">        )</span><br><span class="line">    <span class="string">``</span><span class="string">`    </span></span><br><span class="line"><span class="string">+ Rust 的处理方式：</span></span><br><span class="line"><span class="string">    &lt;pre&gt;</span></span><br><span class="line"><span class="string">    依赖关系示例：</span></span><br><span class="line"><span class="string">    my-project</span></span><br><span class="line"><span class="string">    ├── A </span></span><br><span class="line"><span class="string">    │   └── pkg 1.1.0</span></span><br><span class="line"><span class="string">    └── B</span></span><br><span class="line"><span class="string">        └── pkg 1.2.3</span></span><br><span class="line"><span class="string">    &lt;/pre&gt;    </span></span><br><span class="line"><span class="string">    + Rust 会：</span></span><br><span class="line"><span class="string">        - 允许两个版本同时存在</span></span><br><span class="line"><span class="string">        - 分别编译两个版本的代码</span></span><br><span class="line"><span class="string">        - 在最终二进制中包含两个版本</span></span><br><span class="line"><span class="string">    `</span><span class="string">``</span>toml</span><br><span class="line">    # Cargo.toml</span><br><span class="line">    [dependencies]</span><br><span class="line">    A = <span class="string">&quot;1.0.0&quot;</span>  # 依赖 pkg <span class="number">1.1</span><span class="number">.0</span></span><br><span class="line">    B = <span class="string">&quot;1.0.0&quot;</span>  # 依赖 pkg <span class="number">1.2</span><span class="number">.3</span></span><br></pre></td></tr></table></figure></li>
+<li>在 go.mod 中记录最终版本  <pre>
+  // go.mod
+  module my-project
+
+  require (
+      A v1.0.0
+      B v1.0.0
+      pkg v1.2.3 // 间接依赖，统一使用最高版本
+  )</pre></li>
+</ul>
+<p>  </p>
+</li>
+</ul>
+</li>
+<li><p>Rust 的处理方式：</p>
+  <pre>
+  依赖关系示例：
+  my-project
+  ├── A 
+  │   └── pkg 1.1.0
+  └── B
+      └── pkg 1.2.3
+  </pre>    
+<ul>
+<li>Rust 会：<ul>
+<li>允许两个版本同时存在</li>
+<li>分别编译两个版本的代码</li>
+<li>在最终二进制中包含两个版本  <pre>
+  Cargo.toml
+  [dependencies]
+  A = "1.0.0"  # 依赖 pkg 1.1.0
+  B = "1.0.0"  # 依赖 pkg 1.2.3
+  </pre></li>
 </ul>
 </li>
 </ul>

@@ -6,7 +6,7 @@
   <link href="http://yoursite.com/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2024-10-29T03:58:49.811Z</updated>
+  <updated>2024-11-21T14:41:13.806Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,37 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>对Java、Go、Rust之间的简单对比和总结</title>
+    <link href="http://yoursite.com/2024/11/21/20241121-dui-java-go-rust-zhi-jian-de-jian-dan-dui-bi-he-zong-jie/"/>
+    <id>http://yoursite.com/2024/11/21/20241121-dui-java-go-rust-zhi-jian-de-jian-dan-dui-bi-he-zong-jie/</id>
+    <published>2024-11-21T08:42:35.000Z</published>
+    <updated>2024-11-21T14:41:13.806Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><blockquote><p>工作中接触过多种编程语言，主要是 Java 和 Go，最近因个人兴趣简单学习了 Rust，在这里简单记录总结一下</p></blockquote></blockquote><h2 id="编程语言的GC问题"><a href="#编程语言的GC问题" class="headerlink" title="编程语言的GC问题"></a>编程语言的GC问题</h2><ul><li><p>一般来说，程序需要管理好运行中使用的内存空间，比如传统的C和C++则要求开发者手动管理内存，但这往往导致内存泄漏和安全隐患；而垃圾回收（GC）语言，比如Java和Go在运行时自动回收内存，但存在”停顿”（STW）问题；而Rust则采用独特的所有权系统，通过编译期严格的规则检查，在不增加运行时开销的情况下实现内存安全。</p></li><li><p>GC语言，调用栈和内存一直在变化，不STW无法算出没引用的变量（可回收的内存）； 而Rust通过作用域的规则判断自动回收。另外无GC不代表不在堆分配，是代表没有STW的垃圾回收机制。</p></li><li><p>Rust引入了”所有权”概念，每个值都有且仅有一个所有者，当所有者离开作用域时，值会被自动释放。这种方式不仅避免了运行时垃圾回收的性能开销，还能在编译阶段就发现潜在的内存使用问题，有效防止了常见的内存安全缺陷。</p></li></ul><h2 id="设计哲学"><a href="#设计哲学" class="headerlink" title="设计哲学"></a>设计哲学</h2><ul><li>Java 作为一门成熟的编程语言，其设计理念更多体现在企业级应用和跨平台兼容性上。当然个人认为由此历史包袱也比较重。</li><li>相比之下，Go 和 Rust 作为更现代的语言，也各有侧重。Go 语言强调简洁、高效和并发性，而 Rust 则更加注重内存安全、零成本抽象和并发安全性。</li></ul><h2 id="交叉编译"><a href="#交叉编译" class="headerlink" title="交叉编译"></a>交叉编译</h2><ul><li>Go 和 Rust 支持各自编译成对应二进制实现跨平台（可以使用交叉编译）；而Java则编译成统一的字节码，依赖平台安装的运行时（JVM）来运行服务（也可以Graalvm直接编译成可执行二进制）</li></ul><h2 id="工具链"><a href="#工具链" class="headerlink" title="工具链"></a>工具链</h2><ul><li>相关工具链完善问题，比如Java性能依赖外部开发，比如arthas，asyncProfiler等；而Go自带pprof，单元测试工具等（Rust 也有一些相应的配套工具）；Java历史包袱重，不够现代化</li></ul><h2 id="热加载"><a href="#热加载" class="headerlink" title="热加载"></a>热加载</h2><ul><li>Java支持热加载（基于 Instrumentation 技术），但也有一定的限制，比如不能新增&#x2F;删除方法、类等，主要通过字节码替换和类加载器重载实现，一般多在开发阶段使用。实际应用中，JRebel 等商业工具通过更复杂的字节码重写技术，部分突破了这些限制，而Spring DevTools 提供了更轻量的重启机制。</li><li>Go官方不直接支持热加载；第三方工具如 gin-reload、air 实现热重载（通过监控文件变化，重新编译和启动进程，相对简单直接，但不是语言级特性）</li><li>Rust同样没有官方直接的热加载机制；比如cargo-watch 可以监听文件变化并重新编译（由于所有权系统，热加载实现相对复杂）</li></ul><h2 id="远程Debug"><a href="#远程Debug" class="headerlink" title="远程Debug"></a>远程Debug</h2><ul><li>Java远程调试的原理是两个VM之间通过debug协议进行通信，然后以达到远程调试的目的。两者之间可以通过socket进行通信。</li><li>Go原生支持远程调试，使用 dlv（Delve）调试器（基于 gRPC 协议通信）</li><li>Rust支持远程调试，但配置相对较复杂（主要使用 rust-gdb 和 rust-lldb）</li></ul><h2 id="依赖管理-以及-冲突解决"><a href="#依赖管理-以及-冲突解决" class="headerlink" title="依赖管理 以及 冲突解决"></a>依赖管理 以及 冲突解决</h2><h3 id="Java"><a href="#Java" class="headerlink" title="Java"></a>Java</h3><ul><li>Java 的依赖管理历史上存在诸多挑战。在早期，Java 并没有原生的依赖版本管理机制，开发者需要依赖 Maven 或 Gradle 等外部构建工具来处理项目依赖。更为关键的是，Java 的依赖冲突解析是基于具体类而非整个 JAR 包，这导致了潜在的版本兼容性和类加载问题。为了彻底解决这一痛点，Java 9 引入了模块化系统（Java Platform Module System, JPMS），提供了更精细和可靠的依赖管理和隔离机制，从根本上改善了包依赖和版本控制的复杂性。这一设计不仅简化了大型项目的依赖管理，还增强了 Java 运行时的安全性和可预测性。</li></ul><h3 id="关于Java的类重复问题"><a href="#关于Java的类重复问题" class="headerlink" title="关于Java的类重复问题"></a>关于Java的类重复问题</h3><ul><li><p>Java 依赖引入的时 Jar 包，使用时则是含路径信息的类名</p></li><li><p>Go则没有这个问题，因为Go的依赖的引入需要指定模块的全路径，使用时也是使用全路径或别名</p></li><li><p>Rust和 Go 类似，依赖的引入也需要指定模块的全路径。但不同包有相应的依赖文件，利用这个使相同依赖的不兼容版本共存而没有冲突问题</p></li><li><p>Java9之前（模块系统之前）- 只能减少，不能从根本上解决</p><ol><li>协议文件生成的代码，重复拷贝和引入，导致类重复冲突<ul><li>使用RPC协议，idl文件生成java文件，容易因为多处拷贝（比如一些业务通用库也使用到），导致类重复问题，这样在运行时可能会造成影响</li><li>这时最好打包的时候，不要将协议文件打进jar包中，让业务使用方自行生成代码</li><li>通过扫描jar包路径类的方式，可以协助检查这种问题 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">String</span> <span class="variable">classPath</span> <span class="operator">=</span> Optional.ofNullable(thriftClass.getProtectionDomain())</span><br><span class="line">    .map(ProtectionDomain::getCodeSource)</span><br><span class="line">    .map(CodeSource::getLocation)</span><br><span class="line">    .map(URL::getPath).orElse(<span class="string">&quot;&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (!classPath.contains(jarFileName)) &#123;</span><br><span class="line">    System.err.println(String.format(<span class="string">&quot;%s thrift class may be duplicated&quot;</span>, thriftClass.getName()));</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">DuplicatedThriftFileException</span>(String.format(<span class="string">&quot;%s thrift class may be duplicated&quot;</span>, thriftClass.getName()));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li></ul></li><li>通过maven-enforcer插件解决类冲突<ul><li>本质上就是解压所有依赖的 jar 包，判断是否存在重复的类文件，性能较低</li></ul></li></ol></li><li><p>JVM中Jar包的加载顺序</p><ul><li>由classpath参数指定的顺序决定</li><li>如果classpath未明确指明，则由文件系统决定的（readdir函数）<ul><li>readdir并不保证读取后的文件顺序，在不同的操作系统上可能有不同的顺序。</li></ul></li><li>如何找出重复类<ul><li><code>find . -name &quot;*.jar&quot; -exec sh -c  &#39;jar -tf &#123;&#125;|grep -H --label &#123;&#125; &#39;JspRuntimeContext &#39;&#39;</code> </li><li><code>-verbose:class</code> 查看加载顺序</li></ul></li></ul></li><li><p>Java9及以上（使用模块系统）</p></li></ul><h3 id="Go-VS-Rust-库冲突"><a href="#Go-VS-Rust-库冲突" class="headerlink" title="Go VS Rust 库冲突"></a>Go VS Rust 库冲突</h3><ul><li><p>当项目间接依赖同一个库的不同版本时，Rust 和 Go 在处理上有什么异同</p></li><li><p>Go 的处理方式：</p>  <pre>  依赖关系示例：  my-project  ├── A   │   └── pkg v1.1.0  └── B      └── pkg v1.2.3  </pre><ul><li>Go 会：<ul><li>自动选择最高兼容版本（v1.2.3）</li><li>所有代码路径都使用这个版本</li><li>使用 MVS (Minimal Version Selection) 算法</li><li>在 go.mod 中记录最终版本  <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">        Copy</span><br><span class="line">        <span class="comment">// go.mod</span></span><br><span class="line">        module my-project</span><br><span class="line"></span><br><span class="line">        require (</span><br><span class="line">            A v1<span class="number">.0</span><span class="number">.0</span></span><br><span class="line">            B v1<span class="number">.0</span><span class="number">.0</span></span><br><span class="line">            pkg v1<span class="number">.2</span><span class="number">.3</span> <span class="comment">// 间接依赖，统一使用最高版本</span></span><br><span class="line">        )</span><br><span class="line">    <span class="string">``</span><span class="string">`    </span></span><br><span class="line"><span class="string">+ Rust 的处理方式：</span></span><br><span class="line"><span class="string">    &lt;pre&gt;</span></span><br><span class="line"><span class="string">    依赖关系示例：</span></span><br><span class="line"><span class="string">    my-project</span></span><br><span class="line"><span class="string">    ├── A </span></span><br><span class="line"><span class="string">    │   └── pkg 1.1.0</span></span><br><span class="line"><span class="string">    └── B</span></span><br><span class="line"><span class="string">        └── pkg 1.2.3</span></span><br><span class="line"><span class="string">    &lt;/pre&gt;    </span></span><br><span class="line"><span class="string">    + Rust 会：</span></span><br><span class="line"><span class="string">        - 允许两个版本同时存在</span></span><br><span class="line"><span class="string">        - 分别编译两个版本的代码</span></span><br><span class="line"><span class="string">        - 在最终二进制中包含两个版本</span></span><br><span class="line"><span class="string">    `</span><span class="string">``</span>toml</span><br><span class="line">    # Cargo.toml</span><br><span class="line">    [dependencies]</span><br><span class="line">    A = <span class="string">&quot;1.0.0&quot;</span>  # 依赖 pkg <span class="number">1.1</span><span class="number">.0</span></span><br><span class="line">    B = <span class="string">&quot;1.0.0&quot;</span>  # 依赖 pkg <span class="number">1.2</span><span class="number">.3</span></span><br></pre></td></tr></table></figure></li></ul></li></ul></li><li><p>主要区别：</p><ul><li>Go: 强制统一版本，避免重复</li><li>Rust: 允许多版本共存，保证兼容性</li><li>这种设计反映了两种不同的理念：<ul><li>Go: 简单性优先，避免版本冲突</li><li>Rust: 灵活性优先，保证正确性</li></ul></li></ul></li><li><p>针对依赖同一个库的不同版本的情况：如果版本相同或兼容，Cargo会选择满足要求的当前最高版本；如果版本不兼容，Cargo允许在项目中同时使用这些不兼容的版本，可以通过别名来区分使用。</p></li></ul><h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul><li>个人看法总结：Rust能做到同时使用同一个库的不同版本，是因为每个项目都有独立的依赖库配置以及引入别名机制，关键的是打包能根据这些信息直接生成二进制。而java是生成 字节码文件，并打包时丢失这方面的信息，虚拟机可能目前由于历史和后续兼容等原因也暂不支持。Go 则是选择简单性优先，避免版本冲突。</li><li>Rust可以运行同一库不同版本；Go和Java（模块化后）都不允许同一库不同版本；Go通过路径能确定库的唯一性；Java（未模块化）存在不同库类冲突的可能。</li></ul><h2 id="封装私有性"><a href="#封装私有性" class="headerlink" title="封装私有性"></a>封装私有性</h2><ul><li><p>Java通过访问修饰符（public、private、protected）控制（反射可以破坏私有性；运行时检查私有访问）</p></li><li><p>Java 9 模块化（JPMS）后，封装私有性发生了显著变化</p><ol><li>更严格的可见性控制（引入模块（module）概念；模块间显式依赖声明）</li><li>可见性新规则（使用 exports 关键字定义可导出包；opens 关键字控制运行时反射访问）</li><li>相比传统机制（编译期就能检查模块间依赖；避免了类路径的”打开式”依赖）</li><li>实际影响（需要在 module-info.java 显式声明依赖；原有代码需要适配模块系统；更接近 Rust 的模块化设计理念）</li></ol></li><li><p>Go首字母大小写决定可见性（小写标识符包内可见，大写标识符全局可见；没有私有修饰符，依赖命名约定）</p></li><li><p>Rust模块系统提供精细的可见性控制（默认私有；pub 关键字定义可见性；可以精确控制字段、方法的可见范围；编译期检查，性能无额外开销）</p></li><li><p>Rust 的封装性设计最为现代和严格，Go 相对最为简单，Java 则相对传统，Java9 之后更加严格，跟 Rust 类似，但由于历史包袱，又显得比较笨重。</p></li></ul><h2 id="并发和多线程"><a href="#并发和多线程" class="headerlink" title="并发和多线程"></a>并发和多线程</h2><ul><li>并发线程，Rust为了减少运行时，默认使用线程模型的并发。</li><li>Go是绿色线程（协程）。</li><li>Java一般也是线程模型，当然也有一些协程库（其他 JVM 语言比如 kotlin 就自带协程）</li></ul><h3 id="主线程结束进程是否停止"><a href="#主线程结束进程是否停止" class="headerlink" title="主线程结束进程是否停止"></a>主线程结束进程是否停止</h3><ul><li>主线程退出：主线程结束，不管其他线程是否结束，进程都会结束，这点Rust和Go一样（go是协程）.<br>Java则是即使主线程结束，其他线程不结束，进程就不会退出。</li></ul><h3 id="非主线程异常进程是否停止"><a href="#非主线程异常进程是否停止" class="headerlink" title="非主线程异常进程是否停止"></a>非主线程异常进程是否停止</h3><ul><li>默认情况下，非主线程的 panic 不会导致整个进程退出，这点 Rust 和 Java 一样。<ul><li>Java 中未捕获的异常会导致线程终止，但不影响其他线程</li><li>Rust 的设计更灵活，允许开发者根据需求自行控制（比如使用 std::panic::set_hook() 设置了自定义 panic 处理，可以捕获控制）</li></ul></li><li>而 Go 中 goroutine panic 会导致整个程序崩溃（除非被 recover）</li></ul><h2 id="面向对象编程"><a href="#面向对象编程" class="headerlink" title="面向对象编程"></a>面向对象编程</h2><ul><li>类定义：java Python js 只有class的概念 go 只有struct概念 c++都有 区别是struct可以在栈中定义</li><li>面向对象：Java中的单继承其实简化了继承的使用方式， Go和Rust，算是彻底抛弃了使用类继承的方式，选择了接口继承。</li><li>Java设计之初就是面向对象，加上由于后续历史兼容等原因，代码看起来比较臃肿（类设计）；Rust博采众长，有各自语法糖；Go追求语法简单，表达力不足，会存在一定丑陋的代码（比如没有set， contains，streams等）</li></ul><h2 id="接口设计和多态"><a href="#接口设计和多态" class="headerlink" title="接口设计和多态"></a>接口设计和多态</h2><ul><li>Rust中的 trait 和 Java 以及 Go 的接口：本质上它们都是在解决同一个问题：如何定义和实现抽象行为。主要区别在于语言设计理念导致的一些具体细节</li></ul><h2 id="空值问题"><a href="#空值问题" class="headerlink" title="空值问题"></a>空值问题</h2><ul><li>Go的类型系统一个缺憾是，对于一个类型，它的值是零值，还是不存在值，混淆不清。Java 之前也存在类似的问题，但是后来增加了基础类型的包装类型（例如对于int的Integer，double的Double），Go是否也可以参考一下？或者增加一个Option(al)类型，对这些基础类型再包装一下（基于泛型），当然还有其他更优方案那就更好了<ul><li>JSON包新提案：用“omitzero”解决编码中的空值困局:<a href="https://mp.weixin.qq.com/s/Lw_l_AELo8RKiLzVdS0H-Q">https://mp.weixin.qq.com/s/Lw_l_AELo8RKiLzVdS0H-Q</a></li></ul></li></ul><h2 id="异常处理"><a href="#异常处理" class="headerlink" title="异常处理"></a>异常处理</h2><ul><li>异常：Java分为Error和Exception，异常又分为运行时异常和检查性异常。抛出与捕获。<br>这点和go是类似的，go也区分简单返回的错误error和抛出的恐慌panic，而 Rust 也是差不多这么设计。</li></ul><h2 id="链式调用"><a href="#链式调用" class="headerlink" title="链式调用"></a>链式调用</h2><ul><li><p>链式调用：Rust和Java支持函数式链式编程，类似stream；Go不支持，要自己实现</p></li><li><p>Rust 的迭代器和 Java 的 Stream API 确实很像，都支持链式调用和函数式编程风格。</p></li><li><p>Go 的设计理念是追求简单直接，所以：</p><ul><li>没有内置的链式调用语法</li><li>更倾向于使用显式的 for range 循环</li><li>性能更可预测（没有懒加载特性）</li></ul></li><li><p>这反映了不同语言的设计理念：</p><ul><li>Rust&#x2F;Java：提供丰富的抽象和函数式编程特性</li><li>Go：保持简单，倾向于显式的命令式编程</li></ul></li></ul><h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><ul><li>枚举：Java和Rust支持，Go不支持；Rust可以支持同个枚举内包含不同类型</li></ul><h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul><li><a href="https://mp.weixin.qq.com/s/UG-6UuqDiLX15dEZrGGrRA">Gopher的Rust第一课：Rust的依赖管理</a></li></ul>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;工作中接触过多种编程语言，主要是 Java 和 Go，最近因个人兴趣简单学习了 Rust，在这里简单记录总结一下&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&quot;编程语言的GC问题&quot;&gt;&lt;a </summary>
+      
+    
+    
+    
+    
+    <category term="Java" scheme="http://yoursite.com/tags/Java/"/>
+    
+    <category term="Go" scheme="http://yoursite.com/tags/Go/"/>
+    
+    <category term="Rust" scheme="http://yoursite.com/tags/Rust/"/>
+    
+  </entry>
   
   <entry>
     <title>《认知觉醒》-笔记</title>
@@ -552,37 +583,6 @@
     <category term="JOB" scheme="http://yoursite.com/tags/JOB/"/>
     
     <category term="职场" scheme="http://yoursite.com/tags/%E8%81%8C%E5%9C%BA/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>对服务架构中的聚合层理解</title>
-    <link href="http://yoursite.com/2024/03/28/20240328-dui-fu-wu-jia-gou-zhong-de-ju-he-ceng-li-jie/"/>
-    <id>http://yoursite.com/2024/03/28/20240328-dui-fu-wu-jia-gou-zhong-de-ju-he-ceng-li-jie/</id>
-    <published>2024-03-28T03:55:49.000Z</published>
-    <updated>2024-07-31T02:15:31.132Z</updated>
-    
-    <content type="html"><![CDATA[<blockquote><blockquote><p>以前刚毕业的时候，进入一个组，叫中间层，那时候还懵懵懂懂不知道想表达啥意思</p></blockquote></blockquote><p><img src="/2024/03/28/20240328-dui-fu-wu-jia-gou-zhong-de-ju-he-ceng-li-jie/%E8%81%9A%E5%90%88%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84.jpeg"></p><ul><li><p>图来源网上，已未知出处</p></li><li><p>这个组是直接给app提供接口的，主要的职能大概有以下</p><ul><li>业务适配</li><li>服务聚合</li><li>数据展示</li><li>安全隔离</li></ul></li><li><p>聚合服务，简单的来说就是聚合底层的各个业务系统，给用户端应用提供接口</p><ul><li>（直接对接用户前端的接口服务，手机app，网站，h5等用户终端）</li><li>BFF —— Backends for frontends（服务于前端的后端），是为了让后端API满足不同的前端使用场景，而演进出来的一种模式。</li><li><a href="https://mp.weixin.qq.com/s/IZ5wD2Dc5k83dP6dR8M9xg">BFF避坑指南</a></li></ul></li><li><p>那么这个组有存在的必要吗？特别是现在服务内部都微服务化，很多业务服务都是直接对app提供接口的。</p></li><li><p>先从表面上看看使不使用聚合层各自的特点和好处</p><ul><li>使用聚合层<ol><li>前端需要对接的接口比较少，对前端来说比较友好</li><li>聚合层可以聚合底层业务的接口，相比前端直接对接，有些业务场景可以提升接口性能</li><li>能根据前端的业务场合适配和统一改动，便于快速迭代和打补丁等</li><li>可以根据前端对数据的不同使用场景，减少不必要的性能损耗<ul><li>如果统一接口，入参就会变得复杂，增加前端的对接成本</li></ul></li></ol></li><li>不使用聚合层<ol><li>有些业务场景，减少多一层调用，有利于提升性能</li><li>业务接口可以复用，不需要聚合层再包一层，减少开发时间<ul><li>前提：整个公司统一接口规范，同个接口可以复用于不同app</li></ul></li><li>分散接口故障风险。一个业务故障，不会导致其他业务也故障。<ul><li>相对使用聚合层，聚合层的服务不可用，整个app都会受影响</li></ul></li></ol></li></ul></li><li><p>仔细想想，简单理解，其实使用聚合层就是水平架构，不使用就是垂直架构；根据康威定律，其实公司决定使用哪种方案，一定程度还受公司组织关系的影响。</p></li><li><p>提外话：由于前后端分离的流行。聚合层服务有时候会由前端团队来维护。使用node服务用于聚合页面和后端接口，从而提升性能。相对于传统的聚合层，前端的聚合层比较轻量化，基本是无状态服务，不存储数据和加工数据，纯粹做聚合接口和页面。</p></li></ul><h2 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h2><ul><li><a href="https://mp.weixin.qq.com/s/fy5-qiZ54TLJCCTXarKonQ">“胖瘦” BFF：常见的两种微服务形态</a></li></ul>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;blockquote&gt;
-&lt;blockquote&gt;
-&lt;p&gt;以前刚毕业的时候，进入一个组，叫中间层，那时候还懵懵懂懂不知道想表达啥意思&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;&lt;img src=&quot;/2024/03/28/20240328-dui-fu-</summary>
-      
-    
-    
-    
-    
-    <category term="架构" scheme="http://yoursite.com/tags/%E6%9E%B6%E6%9E%84/"/>
-    
-    <category term="服务架构" scheme="http://yoursite.com/tags/%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84/"/>
-    
-    <category term="聚合层" scheme="http://yoursite.com/tags/%E8%81%9A%E5%90%88%E5%B1%82/"/>
     
   </entry>
   

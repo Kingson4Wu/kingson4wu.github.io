@@ -287,6 +287,177 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/08/04/20200804-da-shang-lei-ye-wu-huo-bi-ti-xi-jian-shu/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/08/04/20200804-da-shang-lei-ye-wu-huo-bi-ti-xi-jian-shu/" itemprop="url">打赏类业务货币体系简述</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-08-04T00:08:36+08:00">
+                2020-08-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/08/04/20200804-da-shang-lei-ye-wu-huo-bi-ti-xi-jian-shu/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/08/04/20200804-da-shang-lei-ye-wu-huo-bi-ti-xi-jian-shu/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <ul>
+<li>在打赏类业务中，消费跟分成是紧紧挂钩的。比如在直播间送礼，用户通过花费虚拟货币给对方送礼，而对方则得到相应的分成。</li>
+<li>定义：用户花费的是“金币”，接受者得到的是“银币”。</li>
+</ul>
+<h3 id="设计概要"><a href="#设计概要" class="headerlink" title="设计概要"></a>设计概要</h3><p><img src="/2020/08/04/20200804-da-shang-lei-ye-wu-huo-bi-ti-xi-jian-shu/%E9%87%91%E9%92%B1%E6%9C%8D%E5%8A%A1%E4%BD%93%E7%B3%BB.png"></p>
+<h4 id="一、用户货币类型组成"><a href="#一、用户货币类型组成" class="headerlink" title="一、用户货币类型组成"></a>一、用户货币类型组成</h4><ol>
+<li>用户通过充值或活动赠币等方式得到“金币(coin)”<ul>
+<li>充值行为得到的是“充值金币(money)”</li>
+<li>活动赠币等非充值行为得到的是“非充值金币(virtualCoin)”</li>
+<li>coin&#x3D;money + virtualCoin</li>
+</ul>
+</li>
+<li>消费行为的接受者（收益方）得到的是“银币(bean)”</li>
+</ol>
+<h4 id="二、业务情况"><a href="#二、业务情况" class="headerlink" title="二、业务情况"></a>二、业务情况</h4><p>所有的业务场景其实都是对上述几种货币类型的加减，主要分为以下几类：</p>
+<ol>
+<li>充值业务</li>
+<li>消费业务（伴随着分成）</li>
+<li>赠币业务（活动获取）</li>
+<li>兑换业务（“银币”可以兑换成“金币”进行消费）</li>
+<li>结算业务（“银币”可以进行提现）</li>
+<li>管理员调整（运营行为，对用户货币进行调整）</li>
+</ol>
+<h4 id="三、冻结账户设计"><a href="#三、冻结账户设计" class="headerlink" title="三、冻结账户设计"></a>三、冻结账户设计</h4><p>针对消费场景，有两种形式的消费：</p>
+<ol>
+<li>即时消费(比如送礼)；<ul>
+<li>用户消费的同时，收益方立即得到相应的分成</li>
+</ul>
+</li>
+<li>延迟消费(比如申请上麦)<ul>
+<li>先对用户的“金币“进行冻结，根据最终的结果，对用户冻结的金币进行结算或退回；用户的消费时间为实际结算的时间（不是冻结时的时间）。</li>
+</ul>
+</li>
+</ol>
+<p><img src="/2020/08/04/20200804-da-shang-lei-ye-wu-huo-bi-ti-xi-jian-shu/%E9%87%91%E9%92%B1%E5%86%BB%E7%BB%93%E8%B4%A6%E6%88%B7%E8%AE%BE%E8%AE%A1.png"></p>
+<ul>
+<li>冻结&amp;结算 和 消费&amp;退款 在技术实现设计上的差异：<ol>
+<li>前者两次RPC，后者一次RPC</li>
+<li>前者以结算时间作为消费完成时间；后者是以扣币时间作为消费完成时间，且退款会导致营收数据受影响</li>
+</ol>
+</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/21/20200721-cheng-xu-yuan-de-zhi-ye-su-yang-zhai-yao/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2262,199 +2433,6 @@ Robert C.Martin
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/14/20200714-ye-wu-chong-gou-shi-jian-zong-jie/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/07/14/20200714-ye-wu-chong-gou-shi-jian-zong-jie/" itemprop="url">业务重构实践总结</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-14T20:14:58+08:00">
-                2020-07-14
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/07/14/20200714-ye-wu-chong-gou-shi-jian-zong-jie/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2020/07/14/20200714-ye-wu-chong-gou-shi-jian-zong-jie/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote>
-<blockquote>
-<p>业务重构似乎是必然且合理的过程。一个项目刚开始为了快速上线和试错，总会或多或少出现不合理的地方。当项目活下来了，为了寻求下一步的发展，服务的稳定和扩展性提升了优先级，自然就需要有人来重构了，这也是项目历史遗留的技术债务。</p>
-</blockquote>
-</blockquote>
-<h3 id="项目背景"><a href="#项目背景" class="headerlink" title="项目背景"></a>项目背景</h3><ul>
-<li>公司原有的业务几乎都是PHP编写的，并且处于一个很大的项目里维护和运行，可以说是大杂烩。随着业务发展和用户量的提升，渐渐得暴露了很多问题：<ol>
-<li>PHP运行效率较低，业务未进行隔离，出问题时相互影响；</li>
-<li>PHP 过于灵活的语言特性，导致后期较高的后期维护成本；</li>
-<li>基础框架和服务对PHP支持不足；</li>
-<li>实现灾备比较困难。</li>
-</ol>
-</li>
-</ul>
-<h3 id="重构语言选择"><a href="#重构语言选择" class="headerlink" title="重构语言选择"></a>重构语言选择</h3><ul>
-<li>我们选择Java作为开发语言进行重构<ol>
-<li>静态类型，多人协作开发和维护更加安全可靠；</li>
-<li>内部基础组件的 Java 版生态比较完善；</li>
-<li>学习成本低，且开发效率较 PHP 没有明显降低。</li>
-</ol>
-</li>
-</ul>
-<h3 id="重构的工作是什么？"><a href="#重构的工作是什么？" class="headerlink" title="重构的工作是什么？"></a>重构的工作是什么？</h3><ol>
-<li>最简单直接的主要工作：就是充当PHP到Java语言的翻译，将PHP代码转化成Java代码，并保持逻辑不变，对上层业务是无感知的；</li>
-<li>除此之外，对业务逻辑进行优化和简化，提高后续的可维护性和开发效率；对服务架构进行优化，提升服务的稳定性和可靠性。这是重构的主要意义；</li>
-<li>重构完成之后，制定完善的验证和上线方案。</li>
-</ol>
-<h3 id="实施过程"><a href="#实施过程" class="headerlink" title="实施过程"></a>实施过程</h3><ul>
-<li>Step 1. 用 Java 重构逻辑<ul>
-<li>对外暴露的协议（HTTP 、RPC 接口定义和返回数据）与之前保持一致（保持协议一致很重要，之后迁移依赖方会更方便）</li>
-<li>尽量翻译而不是重构优化（至少第一版重构采取这样的策略）</li>
-</ul>
-</li>
-<li>Step 2. 验证新逻辑正确性<ul>
-<li>当代码重构完成后，在将流量切换到新逻辑之前，我们会先验证新服务的正确性。</li>
-<li>考验对业务的熟悉程度和翻译的准确度（代码太久远，最熟悉的可能只有你自己）</li>
-<li>单元测试保证</li>
-</ul>
-</li>
-<li>Step 3. 灰度放量<ul>
-<li>当一切验证通过之后，我们会开始按照百分比转发流量。</li>
-<li>PHP入口对接底层新逻辑（验证逻辑正确性；之所以不直接从流量入口切换，是为了保证稳定性，在出现问题时可以迅速回滚。）</li>
-<li>外网代理切到新接口（保持协议一致，无需前端修改，切换彻底）</li>
-</ul>
-</li>
-</ul>
-<h3 id="经验总结"><a href="#经验总结" class="headerlink" title="经验总结"></a>经验总结</h3><ol>
-<li>PHP代码太复杂，项目又不容易跑起来怎么办？<ul>
-<li>默默睁大眼睛翻译还能怎样。。。</li>
-<li>如何验证是否翻译正确？</li>
-<li>找个在线PHP执行平台把复杂的代码片断跑起来，按照执行结果编写测试用例</li>
-</ul>
-</li>
-<li>PHP代码太狗血太久远，万一翻译到半死发现这段逻辑根本已经没用了怎么办？<ul>
-<li>把你的服务当nginx用，参数不符合条件的转发到旧服务，记录入参和返回结果，打日志和监控观察流量</li>
-</ul>
-</li>
-</ol>
-<h3 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h3><ol>
-<li>不能相信自己</li>
-<li>不能相信别人</li>
-<li>只能相信自己</li>
-<li>乖乖覆盖测试用例</li>
-</ol>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2510,7 +2488,7 @@ Robert C.Martin
 <a href="/archives/">                
 <!--<a href="/archives/%7C%7C%20archive">-->
               
-                  <span class="site-state-item-count">133</span>
+                  <span class="site-state-item-count">134</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2523,7 +2501,7 @@ Robert C.Martin
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">139</span>
+                  <span class="site-state-item-count">140</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

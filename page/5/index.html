@@ -287,6 +287,206 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/08/05/20220805-tui-song-ji-zhu-zong-jie/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2022/08/05/20220805-tui-song-ji-zhu-zong-jie/" itemprop="url">推送技术总结</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-08-05T21:57:59+08:00">
+                2022-08-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2022/08/05/20220805-tui-song-ji-zhu-zong-jie/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2022/08/05/20220805-tui-song-ji-zhu-zong-jie/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><ul>
+<li><p>从客户端是手机APP的角度来理解推送（PUSH），展示的形式有两种：</p>
+<ol>
+<li>App 推送：消息内容通过手机通知栏（状态栏）展示</li>
+<li>应用内消息：各种业务数据推送（通过定义模版或命令号等方式推送给APP内的业务使用）</li>
+</ol>
+</li>
+<li><p>从Web端角度看理解推送，一般只有网页内消息（跟手机APP的应用内消息是一样的类型）  </p>
+</li>
+<li><p>APP推送：</p>
+<ol>
+<li>在线推送（应用级方案）：APP进程控制推送消息，理论上只要APP要获得“手机通知栏”的权限（一般通过在APP内维持长连接来进行推送，但前提是APP已经启动和运行，并且能常驻）</li>
+<li>离线推送（系统级方案）：通过手机操作系统或手机厂商提供的通道进行推送。这种推送方式可以在APP未启动的情况下，推送APP的消息。</li>
+<li>APP进程运行时，应该优先走在线推送，自己的推送系统更快、更有保障。</li>
+</ol>
+</li>
+<li><p>应用场景</p>
+<ul>
+<li>APP推送：电商内APP（推送促销消息）</li>
+<li>应用内消息：直播类APP（推送送礼特效消息）</li>
+<li>APP推送和应用内消息都需要：IM类APP（推送用户聊天信息）</li>
+</ul>
+</li>
+<li><p>从推送的实现角度看，基本可以概括为两种：主动轮询（pull 拉）和长连接 （push 推）</p>
+</li>
+</ul>
+<h2 id="实现方式"><a href="#实现方式" class="headerlink" title="实现方式"></a>实现方式</h2><ul>
+<li>以下实现方式没有进行严格分类，从原理上看存在相互联系</li>
+</ul>
+<ol>
+<li><p>HTTP轮询</p>
+<ol>
+<li>短轮询（Polling）</li>
+<li>长轮询（Long-polling）(Nacos和apollo配置中心也是用这种)</li>
+</ol>
+<ul>
+<li>从TCP的角度看HTTP长轮询：HTTP开启keepalive，服务端保持连接并不需要发额外数据包，有数据时可以立刻推送，跟TCP长连推送无异。展示服务端有点费连接的相关资源，数据包是HTTP相比较大而已。</li>
+</ul>
+</li>
+<li><p>SSE (Server Sent Event 服务器发送事件)</p>
+<ul>
+<li>sse 单通道，只能服务端向客户端发消息； webscoket 是双通道</li>
+<li>实现成本较低</li>
+<li>http 协议，服务端响应的是text&#x2F;event-stream类型的数据流信息</li>
+<li>场景：站内信、未读消息数、状态更新、股票行情、监控数量等场景</li>
+</ul>
+</li>
+<li><p>WebSocket</p>
+</li>
+<li><p>MQTT （通常结合TCP长连接一起使用）</p>
+</li>
+<li><p>TCP长连接（自定义消息或protobuf等格式）</p>
+</li>
+<li><p>系统级方案</p>
+<ul>
+<li>Android和IOS本身的消息推送（Android的C2DM和IOS的APNS，系统与服务器建立连接，APP向系统注册关注的消息，实现系统级消息推送）</li>
+<li>国内Android无法访问Google服务器，所以国内的手机厂商比如小米、OPPO、华为等，都实现来各自的系统级推送。</li>
+<li>避免维持长连接而导致的过多资源消耗，IM类要求即时的更应该接系统级推送</li>
+</ul>
+</li>
+<li><p>第三方推送平台</p>
+<ul>
+<li>集成各种手机平台，各种推送类型，甚至短信等推送</li>
+<li>简单来说：由专业的平台做专业的事（太麻烦了，我只是想推送了消息，帮我搞定吧。。。）</li>
+</ul>
+</li>
+</ol>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/wIs5wi7rf0RFFGl7sR3J8g">7种 实现web实时消息推送的方案</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/yihuihui/p/12622729.html">SSE 服务器发送事件详解</a></li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/08/02/20220802-shuo-shuo-cdn/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2046,220 +2246,6 @@ DDoS 攻击流量集中在一个 IP 上，影响巨大。
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/05/05/20220505-ffmpeg-bi-ji/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2022/05/05/20220505-ffmpeg-bi-ji/" itemprop="url">FFmpeg笔记</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-05-05T12:49:18+08:00">
-                2022-05-05
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2022/05/05/20220505-ffmpeg-bi-ji/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2022/05/05/20220505-ffmpeg-bi-ji/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <ul>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzIzOTU0NTQ0MA==&mid=2247491924&idx=1&sn=0fdd9e7a0d290158bf6c3d76725ea943&chksm=e92adc5bde5d554">图片拼接成特效视频</a><ul>
-<li>FFmpeg</li>
-<li>MediaCodec</li>
-<li>OpenGL</li>
-</ul>
-</li>
-</ul>
-<h2 id="JavaCV"><a href="#JavaCV" class="headerlink" title="JavaCV"></a>JavaCV</h2><ul>
-<li><p>JavaCV是对各种常用计算机视觉库的封装后的一组jar包，其中封装了ffmpeg、OpenCV、libdc1394、OpenKinect、videoInput和ARToolKitPlus等计算机视觉编程人员常用库的接口，可以通过其中的utility类方便的在包括Android在内的Java平台上调用这些接口。其中使用最多的应该就是FFmpeg了。</p>
-</li>
-<li><p>找出人脸，同时比较两张图片中的人脸相似度：<a target="_blank" rel="noopener" href="https://blog.csdn.net/nicebooks/article/details/8175002">https://blog.csdn.net/nicebooks/article/details/8175002</a>,<br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/webRobot/p/6216994.html">https://www.cnblogs.com/webRobot/p/6216994.html</a>,<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/u014365862/article/details/48212891">https://blog.csdn.net/u014365862/article/details/48212891</a></p>
-</li>
-<li><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/xxxlllbbb/article/details/104819683">基于JavaCV技术实现RTMP推流和拉流功能</a></p>
-</li>
-</ul>
-<h2 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h2><ul>
-<li><p>FFmpeg常用命令汇总+文档汇总：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/f07f0be088d0">https://www.jianshu.com/p/f07f0be088d0</a></p>
-</li>
-<li><p>ffplay命令播放媒体</p>
-<ul>
-<li>播放本地文件 : <code>ffplay -window_title &quot;test time&quot; -ss 2 -t 10 -autoexit test.mp4</code></li>
-<li>播放网络流: <code>ffplay -window_title &quot;rtmp stream&quot; rtmp://202.69.69.180:443/webcast/bshdlive-pc</code></li>
-</ul>
-</li>
-</ul>
-<h3 id="怎样快速的转换FLV视频为MP4格式"><a href="#怎样快速的转换FLV视频为MP4格式" class="headerlink" title="怎样快速的转换FLV视频为MP4格式"></a>怎样快速的转换FLV视频为MP4格式</h3><ul>
-<li><p><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/65224766/answer/252226264">https://www.zhihu.com/question/65224766/answer/252226264</a></p>
-</li>
-<li><p>单个文件，就用如下命令：<br><code>ffmpeg -i &quot;input.flv&quot; -c copy &quot;output.mp4&quot;</code></p>
-</li>
-<li><p>如果是整个文件夹中的所有flv文件需要批量转成mp4，那么使用以下命令：<br><code>for %i in (*.flv) do ffmpeg -i &quot;%i&quot; -c copy &quot;%~ni.mp4&quot;</code></p>
-</li>
-<li><p>flv&#x2F;mp4文件的合并有时候通过某些下载工具得到的flv&#x2F;mp4文件是多段的，比如B站视频上下载一集40分钟左右的纪录片实际上是8个小片段，这时候可以新建一个txt文本文件，把你需要合并的flv&#x2F;mp4和这个txt放在同一个文件夹里面，然后把需要合并的flv&#x2F;mp4文件的名字按照顺序写在txt文件中并保存，格式如下：</p>
-<pre>
-file '【国家地理】COSMOS系列【熟肉-对后十一集修复】 (P10. 气候变化)[00].mp4'
-file '【国家地理】COSMOS系列【熟肉-对后十一集修复】 (P10. 气候变化)[01].mp4'
-file '【国家地理】COSMOS系列【熟肉-对后十一集修复】 (P10. 气候变化)[02].mp4'
-file '【国家地理】COSMOS系列【熟肉-对后十一集修复】 (P10. 气候变化)[03].mp4'
-file '【国家地理】COSMOS系列【熟肉-对后十一集修复】 (P10. 气候变化)[04].mp4'
-file '【国家地理】COSMOS系列【熟肉-对后十一集修复】 (P10. 气候变化)[05].mp4'
-file '【国家地理】COSMOS系列【熟肉-对后十一集修复】 (P10. 气候变化)[06].mp4'
-file '【国家地理】COSMOS系列【熟肉-对后十一集修复】 (P10. 气候变化)[07].mp4'
-</pre>
-<p><code>ffmpeg -f concat -safe 0 -i files.txt -c copy output.mp4</code>即可得到一个完整的mp4文件</p>
-</li>
-</ul>
-<h3 id="rtmp推流"><a href="#rtmp推流" class="headerlink" title="rtmp推流"></a>rtmp推流</h3><ul>
-<li><code>ffmpeg -re -i 1.mp4 -c copy -f flv rtmp://127.0.0.1:1935/live/movie</code></li>
-<li><a target="_blank" rel="noopener" href="https://juejin.cn/post/690947934664628634ing3">如何开发一款H5小程序直播</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/c141fc7881e7">利用ffmpeg实现rtmp推流</a></li>
-<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/73984438">ffmpeg的RTMP推流</a></li>
-</ul>
-<h2 id="名词概念"><a href="#名词概念" class="headerlink" title="名词概念"></a>名词概念</h2><ul>
-<li>FFmpeg的名称来自MPEG视频编码标准，前面的“FF”代表“Fast Forward”</li>
-<li>解复用(demux)，表示从一路输入中分离出多路流(视频、音频、字幕等)。<br>把不同的流从某种容器中解析出来，这种行为叫做解复用(demux)</li>
-<li>编解码器(Codec)：以帧为单位实现压缩数据和原始数据之间的相互转换的</li>
-<li>复用(mux)：把不同的流按照某种容器的规则放入容器，这种行为叫做复用（mux）</li>
-<li>码率和帧率是视频文件的最重要的基本特征，对于他们的特有设置会决定视频质量。如果我们知道码率和时长那么可以很容易计算出输出文件的大小。</li>
-<li>帧率：帧率也叫帧频率，帧率是视频文件中每一秒的帧数，肉眼想看到连续移动图像至少需要15帧。</li>
-<li>码率：比特率(也叫码率，数据率)是一个确定整体视频&#x2F;音频质量的参数，秒为单位处理的位数，码率和视频质量成正比，在视频文件中中比特率用bps来表达。</li>
-<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/117523405">https://zhuanlan.zhihu.com/p/117523405</a></li>
-</ul>
-<h3 id="FFMPEG-中I帧、B帧、P帧、PTS、DTS"><a href="#FFMPEG-中I帧、B帧、P帧、PTS、DTS" class="headerlink" title="FFMPEG 中I帧、B帧、P帧、PTS、DTS"></a>FFMPEG 中I帧、B帧、P帧、PTS、DTS</h3><ul>
-<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/2cfc19b4938c">https://www.jianshu.com/p/2cfc19b4938c</a></li>
-<li>I帧表示关键帧，又称intra picture，I帧画面完整保留，解码时只需要本帧数据就可以完成（因为包含完整画面）。</li>
-<li>P帧前向预测编码帧 又称predictive-frame，表示的是这一帧跟之前的一个关键帧（或P帧）的差别，解码时需要用之前缓存的画面叠加上本帧定义的差别，生成最终画面。（也就是差别帧，P帧没有完整画面数据，只有与前一帧的画面差别的数据）</li>
-<li>B帧双向预测内插编码帧 又称bi-directional interpolated prediction frame，是双向差别帧，也就是B帧记录的是本帧与前后帧的差别，换言之，要解码B帧，不仅要取得之前的缓存画面，还要解码之后的画面，通过前后画面的与本帧数据的叠加取得最终的画面。B帧压缩率高，但是解码时CPU会比较累。</li>
-<li>因此，I帧和P帧的解码算法比较简单，资源占用也比较少，I帧只要自己完成就行了，至于P帧，也只需要解码器把前一个画面缓存一下，遇到P帧时就使用之前缓存的画面就行。如果视频流只有I和P，解码器可以不管后面的数据，边读边解码，线性前进。如果视频流还有B帧，则需要缓存前面和当前的视频帧，待后面视频帧获得后，再解码。</li>
-</ul>
-<h3 id="ffmpeg-x2F-ffplay-x2F-ffprobe区别"><a href="#ffmpeg-x2F-ffplay-x2F-ffprobe区别" class="headerlink" title="ffmpeg&#x2F;ffplay&#x2F;ffprobe区别"></a>ffmpeg&#x2F;ffplay&#x2F;ffprobe区别</h3><ul>
-<li>ffmpeg:<br>Hyper fast Audio and Video encoder<br>超快音视频编码器（类似爱剪辑）</li>
-<li>ffplay:<br>Simple media player<br>简单媒体播放器</li>
-<li>ffprobe:<br>Simple multimedia streams analyzer<br>简单多媒体流分析器</li>
-</ul>
-<h2 id="播放软件推荐：VLC"><a href="#播放软件推荐：VLC" class="headerlink" title="播放软件推荐：VLC"></a>播放软件推荐：VLC</h2><ul>
-<li>要播放视频直播流，或者测试一个直播视频地址是否可以使用。这里推荐 VLC 媒体播放器。功能强大且跨平台。支持 Windows、Mac OS、Linux、Android、iOS。<br>官网地址：<a target="_blank" rel="noopener" href="http://www.videolan.org/">http://www.videolan.org/</a><br>打开播放器，选择菜单中“媒体”-&gt;“打开网络串流…”。在弹出页面中填入视频地址即可。</li>
-</ul>
-<hr>
-<ul>
-<li>windows 录屏软件Captura – TODO</li>
-<li>FFmpeg最全教程：<a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1773248">https://cloud.tencent.com/developer/article/1773248</a></li>
-<li>FFmpeg jar 库，无需安装 –TODO javacv</li>
-<li>​ffprobe 是一个多媒体流分析工具。它从多媒体流中收集信息，并且以人类和机器可读的形式打印出来。它可以用来检测多媒体流的容器类型，以及每一个多媒体流的格式和类型。它可以作为一个独立的应用来使用，也可以结合文本过滤器执行更复杂的处理。</li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2315,7 +2301,7 @@ file '【国家地理】COSMOS系列【熟肉-对后十一集修复】 (P10. 气
 <a href="/archives/">                
 <!--<a href="/archives/%7C%7C%20archive">-->
               
-                  <span class="site-state-item-count">133</span>
+                  <span class="site-state-item-count">134</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2328,7 +2314,7 @@ file '【国家地理】COSMOS系列【熟肉-对后十一集修复】 (P10. 气
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">139</span>
+                  <span class="site-state-item-count">140</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

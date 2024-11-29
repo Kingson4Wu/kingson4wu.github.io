@@ -6,7 +6,7 @@
   <link href="http://yoursite.com/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2024-11-21T14:50:27.463Z</updated>
+  <updated>2024-11-29T15:44:41.273Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,35 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>AI已经如此强大了，帮我写完所有代码</title>
+    <link href="http://yoursite.com/2024/11/29/20241129-ai-yi-jing-ru-ci-qiang-da-liao-bang-wo-xie-wan-suo-you-dai-ma/"/>
+    <id>http://yoursite.com/2024/11/29/20241129-ai-yi-jing-ru-ci-qiang-da-liao-bang-wo-xie-wan-suo-you-dai-ma/</id>
+    <published>2024-11-29T15:34:32.000Z</published>
+    <updated>2024-11-29T15:44:41.273Z</updated>
+    
+    <content type="html"><![CDATA[<ul><li><p>今天使用Windsurf帮我写一个小工具。</p></li><li><p>全程没有写过一行代码和一个字，全靠一直给AI提需求，配合授权运行纠正；有时感觉偏离正确的道路时，结合git命令回退代码，再重新提需求。就这样一直重复，就帮我把这个小工具写好了，包括使用文档，构建脚本等，通通都包了。</p></li><li><p>自从两年前第一次用ChatGPT时一下子服气了，这次直接帮我把整个项目搞定了，不得不再次拜服。客观来讲，如果是我一个人来做，由于对Rust不熟练等原因，估计得一周，而且还会很费劲，然而它半天就搞定了，并且我做得不一定比它好。</p></li><li><p>AI为什么这么强大，对里面的细节是越来越好奇了。</p></li><li><p>项目地址：<a href="https://github.com/Kingson4Wu/magic-converter">https://github.com/Kingson4Wu/magic-converter</a></p></li></ul><p><img src="/2024/11/29/20241129-ai-yi-jing-ru-ci-qiang-da-liao-bang-wo-xie-wan-suo-you-dai-ma/Windsurf.jpeg"></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;今天使用Windsurf帮我写一个小工具。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;全程没有写过一行代码和一个字，全靠一直给AI提需求，配合授权运行纠正；有时感觉偏离正确的道路时，结合git命令回退代码，再重新提需求。就这样一直重复，就帮我把这个小工具写好了，包</summary>
+      
+    
+    
+    
+    
+    <category term="Rust" scheme="http://yoursite.com/tags/Rust/"/>
+    
+    <category term="AI" scheme="http://yoursite.com/tags/AI/"/>
+    
+    <category term="Windsurf" scheme="http://yoursite.com/tags/Windsurf/"/>
+    
+  </entry>
   
   <entry>
     <title>对Java、Go、Rust之间的简单对比和总结</title>
@@ -553,36 +582,6 @@
     
     
     <category term="ToB" scheme="http://yoursite.com/tags/ToB/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>提升自己职场中的“可替代性”</title>
-    <link href="http://yoursite.com/2024/03/29/20240329-ti-sheng-zi-ji-zhi-chang-zhong-de-ke-ti-dai-xing/"/>
-    <id>http://yoursite.com/2024/03/29/20240329-ti-sheng-zi-ji-zhi-chang-zhong-de-ke-ti-dai-xing/</id>
-    <published>2024-03-29T07:14:28.000Z</published>
-    <updated>2024-03-29T07:15:09.388Z</updated>
-    
-    <content type="html"><![CDATA[<blockquote><blockquote><p>怎么看待职场中的“业务壁垒”？</p></blockquote></blockquote><ul><li><p>在我的工作中，曾经发生过这样一件事：有一天我们在讨论，能不能实现一个业务通用组件，让各个业务接入，提升业务需求的开发效率等，这时候有一个同事就跟我说：‘那如果真的实现的话，那你这边的业务就啥都没了’，言外之意就是我这边“没事做了”。我给他的回答是：‘没关系，只要是有意义，有价值，对公司是正确的就行’</p></li><li><p>那么？我真的那么爱公司吗？</p><ul><li>当然不是，我只是觉得应该做自己认为正确的事，顺便说一下漂亮话忽悠一下。</li></ul></li><li><p>在工作中，你们到遇到很多“业务壁垒”。通俗来讲，这个东西只有他会，或者短期内只有他能搞定。你甚至会觉得一股恶心，就是很乱很难受，并惊叹对方的忍耐力。</p></li><li><p>然而，无数的事实证明了，这个世界不会因为没有谁就不行。</p></li><li><p>而我的原则是：做正确的事，不制造业务壁垒；保持出色的整理学习能力，输出业务文档，让自己随时可替换，甚至寻找可以替换自己的人；不做狭义对自己有利的事，尽量做广义对公司有利的事。</p></li><li><p>具体来说，可以这样阐述</p><ol><li>“业务壁垒”不是我认同的核心竞争力，甚至混乱的“业务壁垒”不是我能忍受的工作体验；</li><li>出色的整理学习能力，坚信长期主义，才是我认同的核心竞争力；</li><li>我在提升自己可替代性的同时，也是在提升自己的“不可替代性”；而有些地方，并不需要“不可替代性”的人；</li><li>提升自己可替代性，其实也是在保持业务的稳定；不会因个人而大受影响，甚至我因此可以放心度假，因为我会的东西，别人也可以快速学会和处理；</li></ol></li></ul>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;blockquote&gt;
-&lt;blockquote&gt;
-&lt;p&gt;怎么看待职场中的“业务壁垒”？&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;/blockquote&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;在我的工作中，曾经发生过这样一件事：有一天我们在讨论，能不能实现一个业务通用组件，让各个业务接入，提升</summary>
-      
-    
-    
-    
-    
-    <category term="JOB" scheme="http://yoursite.com/tags/JOB/"/>
-    
-    <category term="职场" scheme="http://yoursite.com/tags/%E8%81%8C%E5%9C%BA/"/>
     
   </entry>
   

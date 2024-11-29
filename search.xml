@@ -4,6 +4,29 @@
   
     
     <entry>
+      <title>AI已经如此强大了，帮我写完所有代码</title>
+      <link href="/2024/11/29/20241129-ai-yi-jing-ru-ci-qiang-da-liao-bang-wo-xie-wan-suo-you-dai-ma/"/>
+      <url>/2024/11/29/20241129-ai-yi-jing-ru-ci-qiang-da-liao-bang-wo-xie-wan-suo-you-dai-ma/</url>
+      
+        <content type="html"><![CDATA[<ul><li><p>今天使用Windsurf帮我写一个小工具。</p></li><li><p>全程没有写过一行代码和一个字，全靠一直给AI提需求，配合授权运行纠正；有时感觉偏离正确的道路时，结合git命令回退代码，再重新提需求。就这样一直重复，就帮我把这个小工具写好了，包括使用文档，构建脚本等，通通都包了。</p></li><li><p>自从两年前第一次用ChatGPT时一下子服气了，这次直接帮我把整个项目搞定了，不得不再次拜服。客观来讲，如果是我一个人来做，由于对Rust不熟练等原因，估计得一周，而且还会很费劲，然而它半天就搞定了，并且我做得不一定比它好。</p></li><li><p>AI为什么这么强大，对里面的细节是越来越好奇了。</p></li><li><p>项目地址：<a href="https://github.com/Kingson4Wu/magic-converter">https://github.com/Kingson4Wu/magic-converter</a></p></li></ul><p><img src="/2024/11/29/20241129-ai-yi-jing-ru-ci-qiang-da-liao-bang-wo-xie-wan-suo-you-dai-ma/Windsurf.jpeg"></p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> Rust </tag>
+            
+            <tag> AI </tag>
+            
+            <tag> Windsurf </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>对Java、Go、Rust之间的简单对比和总结</title>
       <link href="/2024/11/21/20241121-dui-java-go-rust-zhi-jian-de-jian-dan-dui-bi-he-zong-jie/"/>
       <url>/2024/11/21/20241121-dui-java-go-rust-zhi-jian-de-jian-dan-dui-bi-he-zong-jie/</url>

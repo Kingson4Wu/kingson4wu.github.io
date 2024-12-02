@@ -287,6 +287,269 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2024/12/02/20241202-yi-ge-wu-zhong-xin-jie-dian-de-ju-yu-wang-tong-xin-gong-ju/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2024/12/02/20241202-yi-ge-wu-zhong-xin-jie-dian-de-ju-yu-wang-tong-xin-gong-ju/" itemprop="url">一个无中心节点的局域网通信工具</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2024-12-02T14:54:49+08:00">
+                2024-12-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2024/12/02/20241202-yi-ge-wu-zhong-xin-jie-dian-de-ju-yu-wang-tong-xin-gong-ju/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2024/12/02/20241202-yi-ge-wu-zhong-xin-jie-dian-de-ju-yu-wang-tong-xin-gong-ju/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="通信协议"><a href="#通信协议" class="headerlink" title="通信协议"></a>通信协议</h2><ol>
+<li>初始阶段：UDP广播发现</li>
+<li>建立连接后：切换到TCP进行可靠通信（也可以使用 UDP）（增加接收完成确认机制）</li>
+</ol>
+<h2 id="AI生成的需求文档"><a href="#AI生成的需求文档" class="headerlink" title="AI生成的需求文档"></a>AI生成的需求文档</h2><p>&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</p>
+<h2 id="局域网去中心化通信工具-iOS-应用需求文档"><a href="#局域网去中心化通信工具-iOS-应用需求文档" class="headerlink" title="局域网去中心化通信工具 iOS 应用需求文档"></a>局域网去中心化通信工具 iOS 应用需求文档</h2><h3 id="项目概述"><a href="#项目概述" class="headerlink" title="项目概述"></a>项目概述</h3><p>开发一款基于局域网的去中心化即时通信应用，支持可选的邮件注册、设备迁移，同时保证数据安全性和用户灵活性。</p>
+<h3 id="功能需求"><a href="#功能需求" class="headerlink" title="功能需求"></a>功能需求</h3><h4 id="1-用户身份与账号管理"><a href="#1-用户身份与账号管理" class="headerlink" title="1. 用户身份与账号管理"></a>1. 用户身份与账号管理</h4><h5 id="1-1-注册模式"><a href="#1-1-注册模式" class="headerlink" title="1.1 注册模式"></a>1.1 注册模式</h5><ul>
+<li>提供两种账号模式：<ol>
+<li>邮件注册模式</li>
+<li>匿名模式（无注册）</li>
+</ol>
+</li>
+</ul>
+<h5 id="1-2-邮件注册"><a href="#1-2-邮件注册" class="headerlink" title="1.2 邮件注册"></a>1.2 邮件注册</h5><ul>
+<li>支持邮箱作为唯一标识</li>
+<li>注册流程：<ol>
+<li>输入邮箱地址</li>
+<li>发送验证码</li>
+<li>验证码校验</li>
+<li>设置密码（可选）</li>
+</ol>
+</li>
+</ul>
+<h5 id="1-3-匿名模式"><a href="#1-3-匿名模式" class="headerlink" title="1.3 匿名模式"></a>1.3 匿名模式</h5><ul>
+<li>自动生成唯一设备ID</li>
+<li>ID生成算法：<ul>
+<li>基于设备信息</li>
+<li>加入随机熵</li>
+<li>确保全球唯一性</li>
+</ul>
+</li>
+</ul>
+<h4 id="2-身份与数据迁移"><a href="#2-身份与数据迁移" class="headerlink" title="2. 身份与数据迁移"></a>2. 身份与数据迁移</h4><h5 id="2-1-数据备份"><a href="#2-1-数据备份" class="headerlink" title="2.1 数据备份"></a>2.1 数据备份</h5><ul>
+<li>支持将关键数据备份到 iCloud</li>
+<li>备份内容：<ul>
+<li>好友关系</li>
+<li>本地配置</li>
+<li>唯一标识信息</li>
+</ul>
+</li>
+</ul>
+<h5 id="2-2-数据完整性与防篡改"><a href="#2-2-数据完整性与防篡改" class="headerlink" title="2.2 数据完整性与防篡改"></a>2.2 数据完整性与防篡改</h5><ul>
+<li>使用密码学签名保护本地数据</li>
+<li>备份数据加密存储</li>
+<li>数据完整性校验机制：<ol>
+<li>每条记录生成哈希值</li>
+<li>使用非对称加密签名</li>
+<li>防止篡改和重放攻击</li>
+</ol>
+</li>
+</ul>
+<h5 id="2-3-账号绑定"><a href="#2-3-账号绑定" class="headerlink" title="2.3 账号绑定"></a>2.3 账号绑定</h5><ul>
+<li>匿名用户可随时绑定邮箱</li>
+<li>绑定后保留原有数据和身份标识</li>
+<li>邮箱绑定过程：<ol>
+<li>生成迁移凭证</li>
+<li>邮箱验证</li>
+<li>数据关联</li>
+</ol>
+</li>
+</ul>
+<h4 id="3-网络发现与连接"><a href="#3-网络发现与连接" class="headerlink" title="3. 网络发现与连接"></a>3. 网络发现与连接</h4><ul>
+<li>保留原需求文档中的网络发现机制</li>
+<li>新增身份验证层：<ol>
+<li>设备ID交换</li>
+<li>可选的身份签名验证</li>
+</ol>
+</li>
+</ul>
+<h4 id="4-消息通信机制"><a href="#4-消息通信机制" class="headerlink" title="4. 消息通信机制"></a>4. 消息通信机制</h4><ul>
+<li>保留原需求文档中的消息队列功能</li>
+<li>新增加密通信：<ol>
+<li>端到端加密</li>
+<li>消息签名</li>
+<li>防重放攻击</li>
+</ol>
+</li>
+</ul>
+<h4 id="5-系统要求"><a href="#5-系统要求" class="headerlink" title="5. 系统要求"></a>5. 系统要求</h4><ul>
+<li>目标平台：iOS 14.0+</li>
+<li>开发语言：Swift</li>
+<li>架构：ARM64</li>
+<li>iCloud 集成</li>
+</ul>
+<h3 id="技术实现建议"><a href="#技术实现建议" class="headerlink" title="技术实现建议"></a>技术实现建议</h3><ul>
+<li>身份与加密：<ul>
+<li>CryptoKit</li>
+<li>Apple 安全隔离区（Secure Enclave）</li>
+</ul>
+</li>
+<li>存储：<ul>
+<li>CoreData</li>
+<li>iCloud 同步</li>
+</ul>
+</li>
+<li>网络：<ul>
+<li>Network.framework</li>
+<li>支持 HTTPS&#x2F;TLS</li>
+</ul>
+</li>
+<li>UI：SwiftUI</li>
+</ul>
+<h3 id="安全性要求"><a href="#安全性要求" class="headerlink" title="安全性要求"></a>安全性要求</h3><ul>
+<li>设备ID生成使用硬件随机数生成器</li>
+<li>备份数据端到端加密</li>
+<li>支持多重身份验证</li>
+<li>用户可控的隐私设置</li>
+</ul>
+<h3 id="数据保护关键技术"><a href="#数据保护关键技术" class="headerlink" title="数据保护关键技术"></a>数据保护关键技术</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">graph TD</span><br><span class="line">    A[用户数据] --&gt; B&#123;身份模式&#125;</span><br><span class="line">    B --&gt;|邮件注册| C[加密存储]</span><br><span class="line">    B --&gt;|匿名模式| D[设备ID加密]</span><br><span class="line">    C --&gt; E[iCloud备份]</span><br><span class="line">    D --&gt; E</span><br><span class="line">    E --&gt; F[数字签名校验]</span><br><span class="line">    F --&gt; G[防篡改机制]</span><br></pre></td></tr></table></figure>
+
+<h3 id="开发交付物"><a href="#开发交付物" class="headerlink" title="开发交付物"></a>开发交付物</h3><ol>
+<li>完整 Xcode 工程</li>
+<li>技术文档</li>
+<li>安全性审计报告</li>
+<li>单元和集成测试用例</li>
+</ol>
+<h3 id="开发注意事项"><a href="#开发注意事项" class="headerlink" title="开发注意事项"></a>开发注意事项</h3><ul>
+<li>遵循 Apple 隐私指南</li>
+<li>代码安全审查</li>
+<li>最小权限原则</li>
+<li>用户数据可控</li>
+</ul>
+<h3 id="隐私与合规"><a href="#隐私与合规" class="headerlink" title="隐私与合规"></a>隐私与合规</h3><ul>
+<li>GDPR 兼容</li>
+<li>用户数据可导出</li>
+<li>明确的隐私政策</li>
+<li>用户可完全删除数据</li>
+</ul>
+<h3 id="性能目标"><a href="#性能目标" class="headerlink" title="性能目标"></a>性能目标</h3><ul>
+<li>设备发现 &lt; 3秒</li>
+<li>消息延迟 &lt; 1秒</li>
+<li>低功耗</li>
+<li>最小化系统资源占用</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2024/11/29/20241129-ai-yi-jing-ru-ci-qiang-da-liao-bang-wo-xie-wan-suo-you-dai-ma/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -374,6 +637,10 @@
 <li><p>全程没有写过一行代码和一个字，全靠一直给AI提需求，配合授权运行纠正；有时感觉偏离正确的道路时，结合git命令回退代码，再重新提需求。就这样一直重复，就帮我把这个小工具写好了，包括使用文档，构建脚本等，通通都包了。</p>
 </li>
 <li><p>自从两年前第一次用ChatGPT时一下子服气了，这次直接帮我把整个项目搞定了，不得不再次拜服。客观来讲，如果是我一个人来做，由于对Rust不熟练等原因，估计得一周，而且还会很费劲，然而它半天就搞定了，并且我做得不一定比它好。</p>
+</li>
+<li><p>使用AI帮助编程，就像一个架构师，有一群AI小弟帮你做事。</p>
+</li>
+<li><p>想要把事情快速做好，前提是你是一个有品位的架构师，另外即使你很多不懂，你也是有很大可能通过你的AI小弟变成一个优秀的架构师。所以学习方法，总结，知识体系很重要，拥抱变化。</p>
 </li>
 <li><p>AI为什么这么强大，对里面的细节是越来越好奇了。</p>
 </li>
@@ -2752,238 +3019,6 @@ what? 不仅一天全开会了，还没有任何有用的结论？
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2024/05/28/20240528-ye-tan-tan-feed-liu-de-she-ji/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2024/05/28/20240528-ye-tan-tan-feed-liu-de-she-ji/" itemprop="url">也谈谈feed流的设计</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2024-05-28T13:56:23+08:00">
-                2024-05-28
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2024/05/28/20240528-ye-tan-tan-feed-liu-de-she-ji/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2024/05/28/20240528-ye-tan-tan-feed-liu-de-she-ji/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote>
-<blockquote>
-<p>几年前也做过feed流相关的服务，虽然网上相关的文章很多，这里也做个人的简要记录和总结<br>方案并非原创，当时是参考其他业务团队的设计</p>
-</blockquote>
-</blockquote>
-<ul>
-<li>需求背景：做一个用户动态模块，可以发动态，可以关注别人动态，有推荐列表，有消息提醒（其实就是微博的基本功能）</li>
-</ul>
-<h1 id="实现逻辑流程"><a href="#实现逻辑流程" class="headerlink" title="实现逻辑流程"></a>实现逻辑流程</h1><ul>
-<li><p>整个feed流设计都是强依赖Redis来实现的，以下列出key设计和对应的功能模块</p>
-<ul>
-<li>粉丝的feed流 - 【feed_list_$userId】<ul>
-<li>member-$id_$userId_$type （score-addtime）</li>
-</ul>
-</li>
-<li>粉丝的feed流为空标志 - 【【feed_list_empty_$userId】】- 防止每次请求都穿透到DB</li>
-<li>用户的活跃粉丝列表 - 【active_fans_list_$userId】</li>
-<li>用户的活跃属性 - 【active_user_status_${userId}】</li>
-<li>动态详情 - 【cache.user.dynamic_${dynamicId}】 - MGet获取</li>
-</ul>
-</li>
-<li><p>数据库分表设计</p>
-<ul>
-<li>用户动态表 - 按用户id分库</li>
-<li>评论表 - 按动态id分库（根据业务，一般都是单个动态的所有评论）</li>
-<li>点赞表 - 按用户id分库（根据业务，一般都是动态列表中展示当前用户的点赞状态）</li>
-</ul>
-</li>
-<li><p>feed流使用sortset，score是addtime</p>
-</li>
-<li><p>推模式，通过维护用户的活跃粉丝列表（有数量限制），推到粉丝的feed流</p>
-</li>
-<li><p>拉模式，通过请求第一页或其他接口进行预加载，查询粉丝的关注人和对应动态（有数量限制），构建粉丝自己feed流</p>
-</li>
-</ul>
-<h2 id="01-feed流-构建-整体流程"><a href="#01-feed流-构建-整体流程" class="headerlink" title="01.feed流 构建 整体流程"></a>01.feed流 构建 整体流程</h2><p><img src="/2024/05/28/20240528-ye-tan-tan-feed-liu-de-she-ji/01.feed%E6%B5%81%E6%9E%84%E5%BB%BA.drawio.png"></p>
-<ul>
-<li>用户发动态、删动态、关注和取关事件，都会对feed流有相应操作</li>
-<li>通过发布事件的设计进行业务逻辑解耦</li>
-</ul>
-<h3 id="用户发动态（推模式）"><a href="#用户发动态（推模式）" class="headerlink" title="用户发动态（推模式）"></a>用户发动态（推模式）</h3><ol>
-<li>用户发布动态（写入DB）</li>
-<li>查询用户的活跃粉丝列表（Redis）</li>
-<li>写入粉丝的Feed流（Redis）</li>
-<li>写入消息表</li>
-</ol>
-<h3 id="粉丝拉关注列表（拉模式）（请求第一页或其他接口，预加载）"><a href="#粉丝拉关注列表（拉模式）（请求第一页或其他接口，预加载）" class="headerlink" title="粉丝拉关注列表（拉模式）（请求第一页或其他接口，预加载）"></a>粉丝拉关注列表（拉模式）（请求第一页或其他接口，预加载）</h3><ol>
-<li>获取feed流（Redis）</li>
-<li>获取关注用户列表（RPC）（限制2000个粉丝）</li>
-<li>获取关注人的动态数据（DB）（限制没人100条动态）</li>
-<li>写入个人的Feed流（Redis）</li>
-<li>成为活跃用户（Redis）</li>
-</ol>
-<h2 id="02-动态消息交互"><a href="#02-动态消息交互" class="headerlink" title="02.动态消息交互"></a>02.动态消息交互</h2><p><img src="/2024/05/28/20240528-ye-tan-tan-feed-liu-de-she-ji/02.%E5%8A%A8%E6%80%81%E6%B6%88%E6%81%AF%E4%BA%A4%E4%BA%92.drawio.png"></p>
-<ul>
-<li>消息表 和 消息读取时间表（用于控制用户红点提示和读取消息列表的范围）</li>
-<li>消息表保存7天定时清除</li>
-</ul>
-<h2 id="03-feed流预加载策略（pull模式）"><a href="#03-feed流预加载策略（pull模式）" class="headerlink" title="03.feed流预加载策略（pull模式）"></a>03.feed流预加载策略（pull模式）</h2><p><img src="/2024/05/28/20240528-ye-tan-tan-feed-liu-de-she-ji/03.feed%E6%B5%81%E9%A2%84%E5%8A%A0%E8%BD%BD%E7%AD%96%E7%95%A5%EF%BC%88pull%E6%A8%A1%E5%BC%8F%EF%BC%89.drawio.png"></p>
-<ul>
-<li>。。。。</li>
-<li>将用户加入为活跃粉丝</li>
-</ul>
-<h2 id="04-动态新增、删除（push模式），活跃粉丝处理"><a href="#04-动态新增、删除（push模式），活跃粉丝处理" class="headerlink" title="04.动态新增、删除（push模式），活跃粉丝处理"></a>04.动态新增、删除（push模式），活跃粉丝处理</h2><p><img src="/2024/05/28/20240528-ye-tan-tan-feed-liu-de-she-ji/04.%E5%8A%A8%E6%80%81%E6%96%B0%E5%A2%9E%E3%80%81%E5%88%A0%E9%99%A4%EF%BC%88push%E6%A8%A1%E5%BC%8F%EF%BC%89%EF%BC%8C%E6%B4%BB%E8%B7%83%E7%B2%89%E4%B8%9D%E5%A4%84%E7%90%86.drawio.png"></p>
-<ul>
-<li>用户的活跃粉丝列表逻辑<ol>
-<li>拉取过feed流或发布过动态等操作的用户，都会设置成有活跃粉丝属性的用户</li>
-<li>RPC获取用户的粉丝列表，过滤掉非活跃用户，保存到用户的活跃粉丝列表</li>
-<li>关注和取关事件，也更新活跃粉丝列表</li>
-</ol>
-</li>
-</ul>
-<h2 id="05-关注、取关-事件-对feed流的处理"><a href="#05-关注、取关-事件-对feed流的处理" class="headerlink" title="05.关注、取关 事件 对feed流的处理"></a>05.关注、取关 事件 对feed流的处理</h2><p><img src="/2024/05/28/20240528-ye-tan-tan-feed-liu-de-she-ji/05.%E5%85%B3%E6%B3%A8%E3%80%81%E5%8F%96%E5%85%B3%E4%BA%8B%E4%BB%B6%E5%AF%B9feed%E6%B5%81%E7%9A%84%E5%A4%84%E7%90%86.drawio.png"></p>
-<h2 id="06-获取feed流"><a href="#06-获取feed流" class="headerlink" title="06.获取feed流"></a>06.获取feed流</h2><p><img src="/2024/05/28/20240528-ye-tan-tan-feed-liu-de-she-ji/06.%E8%8E%B7%E5%8F%96feed%E6%B5%81.drawio.png"></p>
-<ul>
-<li>有了前面的推拉模式，用户直接从redis获取feed流即可</li>
-</ul>
-<h2 id="07-动态类型版本设计"><a href="#07-动态类型版本设计" class="headerlink" title="07.动态类型版本设计"></a>07.动态类型版本设计</h2><p><img src="/2024/05/28/20240528-ye-tan-tan-feed-liu-de-she-ji/07.%E5%8A%A8%E6%80%81%E7%B1%BB%E5%9E%8B%E7%89%88%E6%9C%AC%E8%AE%BE%E8%AE%A1.drawio.png"></p>
-<ul>
-<li><p>随着动态类型的新增，客户端旧版本不支持新类型动态，需要过滤；</p>
-</li>
-<li><p>目前feed流是存在redis的，直接过滤可能会导致旧版本数据为空，可以通过多版本动态来区分</p>
-</li>
-<li><p>实现描述</p>
-<ol>
-<li>用户获取feed流，根据客户端的版本号等信息，判断出客户端支持的feed版本，并构建对应的feed流</li>
-<li>用户发布动态，构建用户存在的活跃动态版本的feed流（为了用户的新旧版本都兼容）</li>
-</ol>
-</li>
-</ul>
-<h1 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h1><ul>
-<li>很久之前做的一次实验<ul>
-<li>取消了微信黑名单，没看到之前的人的朋友圈。说明微信朋友圈也是feed持久化的方式实现</li>
-<li>微博也是这样，之前关注过，取关后再恢复，内容也能恢复，说明feed表只是逻辑删（应该是存数据库表了）</li>
-</ul>
-</li>
-<li>微博feed实现（猜测）<ol>
-<li>为每个用户保存他所有关注的用户的feed表数据</li>
-<li>假如取关，则重写关注能恢复数据（逻辑删除）</li>
-<li>但如果之前没关注的用户，则他之前的动态不会出现在feed表中</li>
-</ol>
-</li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -3039,7 +3074,7 @@ what? 不仅一天全开会了，还没有任何有用的结论？
 <a href="/archives/">                
 <!--<a href="/archives/%7C%7C%20archive">-->
               
-                  <span class="site-state-item-count">135</span>
+                  <span class="site-state-item-count">136</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -3052,7 +3087,7 @@ what? 不仅一天全开会了，还没有任何有用的结论？
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">142</span>
+                  <span class="site-state-item-count">143</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

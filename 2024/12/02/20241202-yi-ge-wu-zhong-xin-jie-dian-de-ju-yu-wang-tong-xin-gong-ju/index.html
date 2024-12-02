@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/uploads/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="UDP," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="拉巴力的纸皮箱" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="通信协议 初始阶段：UDP广播发现 建立连接后：切换到TCP进行可靠通信（也可以使用 UDP）（增加接收完成确认机制）  AI生成的需求文档&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; 局域网去中心化通信工具 iOS 应用需求文档项目概述开发一款基于局域网的去中心化即时通信应用，支持可选的邮件注册、设备迁移，同时保证数据安全性和用户灵活性。 功能需求1. 用户身份与账号管理1.1">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一个无中心节点的局域网通信工具">
+<meta property="og:url" content="http://yoursite.com/2024/12/02/20241202-yi-ge-wu-zhong-xin-jie-dian-de-ju-yu-wang-tong-xin-gong-ju/index.html">
+<meta property="og:site_name" content="拉巴力的纸皮箱">
+<meta property="og:description" content="通信协议 初始阶段：UDP广播发现 建立连接后：切换到TCP进行可靠通信（也可以使用 UDP）（增加接收完成确认机制）  AI生成的需求文档&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; 局域网去中心化通信工具 iOS 应用需求文档项目概述开发一款基于局域网的去中心化即时通信应用，支持可选的邮件注册、设备迁移，同时保证数据安全性和用户灵活性。 功能需求1. 用户身份与账号管理1.1">
+<meta property="og:locale">
+<meta property="article:published_time" content="2024-12-02T06:54:49.000Z">
+<meta property="article:modified_time" content="2024-12-02T07:09:10.128Z">
+<meta property="article:author" content="Kingson Wu">
+<meta property="article:tag" content="UDP">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2024/12/02/20241202-yi-ge-wu-zhong-xin-jie-dian-de-ju-yu-wang-tong-xin-gong-ju/"/>
+
+
+
+
+
+  <title>一个无中心节点的局域网通信工具 | 拉巴力的纸皮箱</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">拉巴力的纸皮箱</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2024/12/02/20241202-yi-ge-wu-zhong-xin-jie-dian-de-ju-yu-wang-tong-xin-gong-ju/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">一个无中心节点的局域网通信工具</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2024-12-02T14:54:49+08:00">
+                2024-12-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2024/12/02/20241202-yi-ge-wu-zhong-xin-jie-dian-de-ju-yu-wang-tong-xin-gong-ju/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2024/12/02/20241202-yi-ge-wu-zhong-xin-jie-dian-de-ju-yu-wang-tong-xin-gong-ju/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="通信协议"><a href="#通信协议" class="headerlink" title="通信协议"></a>通信协议</h2><ol>
+<li>初始阶段：UDP广播发现</li>
+<li>建立连接后：切换到TCP进行可靠通信（也可以使用 UDP）（增加接收完成确认机制）</li>
+</ol>
+<h2 id="AI生成的需求文档"><a href="#AI生成的需求文档" class="headerlink" title="AI生成的需求文档"></a>AI生成的需求文档</h2><p>&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</p>
+<h2 id="局域网去中心化通信工具-iOS-应用需求文档"><a href="#局域网去中心化通信工具-iOS-应用需求文档" class="headerlink" title="局域网去中心化通信工具 iOS 应用需求文档"></a>局域网去中心化通信工具 iOS 应用需求文档</h2><h3 id="项目概述"><a href="#项目概述" class="headerlink" title="项目概述"></a>项目概述</h3><p>开发一款基于局域网的去中心化即时通信应用，支持可选的邮件注册、设备迁移，同时保证数据安全性和用户灵活性。</p>
+<h3 id="功能需求"><a href="#功能需求" class="headerlink" title="功能需求"></a>功能需求</h3><h4 id="1-用户身份与账号管理"><a href="#1-用户身份与账号管理" class="headerlink" title="1. 用户身份与账号管理"></a>1. 用户身份与账号管理</h4><h5 id="1-1-注册模式"><a href="#1-1-注册模式" class="headerlink" title="1.1 注册模式"></a>1.1 注册模式</h5><ul>
+<li>提供两种账号模式：<ol>
+<li>邮件注册模式</li>
+<li>匿名模式（无注册）</li>
+</ol>
+</li>
+</ul>
+<h5 id="1-2-邮件注册"><a href="#1-2-邮件注册" class="headerlink" title="1.2 邮件注册"></a>1.2 邮件注册</h5><ul>
+<li>支持邮箱作为唯一标识</li>
+<li>注册流程：<ol>
+<li>输入邮箱地址</li>
+<li>发送验证码</li>
+<li>验证码校验</li>
+<li>设置密码（可选）</li>
+</ol>
+</li>
+</ul>
+<h5 id="1-3-匿名模式"><a href="#1-3-匿名模式" class="headerlink" title="1.3 匿名模式"></a>1.3 匿名模式</h5><ul>
+<li>自动生成唯一设备ID</li>
+<li>ID生成算法：<ul>
+<li>基于设备信息</li>
+<li>加入随机熵</li>
+<li>确保全球唯一性</li>
+</ul>
+</li>
+</ul>
+<h4 id="2-身份与数据迁移"><a href="#2-身份与数据迁移" class="headerlink" title="2. 身份与数据迁移"></a>2. 身份与数据迁移</h4><h5 id="2-1-数据备份"><a href="#2-1-数据备份" class="headerlink" title="2.1 数据备份"></a>2.1 数据备份</h5><ul>
+<li>支持将关键数据备份到 iCloud</li>
+<li>备份内容：<ul>
+<li>好友关系</li>
+<li>本地配置</li>
+<li>唯一标识信息</li>
+</ul>
+</li>
+</ul>
+<h5 id="2-2-数据完整性与防篡改"><a href="#2-2-数据完整性与防篡改" class="headerlink" title="2.2 数据完整性与防篡改"></a>2.2 数据完整性与防篡改</h5><ul>
+<li>使用密码学签名保护本地数据</li>
+<li>备份数据加密存储</li>
+<li>数据完整性校验机制：<ol>
+<li>每条记录生成哈希值</li>
+<li>使用非对称加密签名</li>
+<li>防止篡改和重放攻击</li>
+</ol>
+</li>
+</ul>
+<h5 id="2-3-账号绑定"><a href="#2-3-账号绑定" class="headerlink" title="2.3 账号绑定"></a>2.3 账号绑定</h5><ul>
+<li>匿名用户可随时绑定邮箱</li>
+<li>绑定后保留原有数据和身份标识</li>
+<li>邮箱绑定过程：<ol>
+<li>生成迁移凭证</li>
+<li>邮箱验证</li>
+<li>数据关联</li>
+</ol>
+</li>
+</ul>
+<h4 id="3-网络发现与连接"><a href="#3-网络发现与连接" class="headerlink" title="3. 网络发现与连接"></a>3. 网络发现与连接</h4><ul>
+<li>保留原需求文档中的网络发现机制</li>
+<li>新增身份验证层：<ol>
+<li>设备ID交换</li>
+<li>可选的身份签名验证</li>
+</ol>
+</li>
+</ul>
+<h4 id="4-消息通信机制"><a href="#4-消息通信机制" class="headerlink" title="4. 消息通信机制"></a>4. 消息通信机制</h4><ul>
+<li>保留原需求文档中的消息队列功能</li>
+<li>新增加密通信：<ol>
+<li>端到端加密</li>
+<li>消息签名</li>
+<li>防重放攻击</li>
+</ol>
+</li>
+</ul>
+<h4 id="5-系统要求"><a href="#5-系统要求" class="headerlink" title="5. 系统要求"></a>5. 系统要求</h4><ul>
+<li>目标平台：iOS 14.0+</li>
+<li>开发语言：Swift</li>
+<li>架构：ARM64</li>
+<li>iCloud 集成</li>
+</ul>
+<h3 id="技术实现建议"><a href="#技术实现建议" class="headerlink" title="技术实现建议"></a>技术实现建议</h3><ul>
+<li>身份与加密：<ul>
+<li>CryptoKit</li>
+<li>Apple 安全隔离区（Secure Enclave）</li>
+</ul>
+</li>
+<li>存储：<ul>
+<li>CoreData</li>
+<li>iCloud 同步</li>
+</ul>
+</li>
+<li>网络：<ul>
+<li>Network.framework</li>
+<li>支持 HTTPS&#x2F;TLS</li>
+</ul>
+</li>
+<li>UI：SwiftUI</li>
+</ul>
+<h3 id="安全性要求"><a href="#安全性要求" class="headerlink" title="安全性要求"></a>安全性要求</h3><ul>
+<li>设备ID生成使用硬件随机数生成器</li>
+<li>备份数据端到端加密</li>
+<li>支持多重身份验证</li>
+<li>用户可控的隐私设置</li>
+</ul>
+<h3 id="数据保护关键技术"><a href="#数据保护关键技术" class="headerlink" title="数据保护关键技术"></a>数据保护关键技术</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">graph TD</span><br><span class="line">    A[用户数据] --&gt; B&#123;身份模式&#125;</span><br><span class="line">    B --&gt;|邮件注册| C[加密存储]</span><br><span class="line">    B --&gt;|匿名模式| D[设备ID加密]</span><br><span class="line">    C --&gt; E[iCloud备份]</span><br><span class="line">    D --&gt; E</span><br><span class="line">    E --&gt; F[数字签名校验]</span><br><span class="line">    F --&gt; G[防篡改机制]</span><br></pre></td></tr></table></figure>
+
+<h3 id="开发交付物"><a href="#开发交付物" class="headerlink" title="开发交付物"></a>开发交付物</h3><ol>
+<li>完整 Xcode 工程</li>
+<li>技术文档</li>
+<li>安全性审计报告</li>
+<li>单元和集成测试用例</li>
+</ol>
+<h3 id="开发注意事项"><a href="#开发注意事项" class="headerlink" title="开发注意事项"></a>开发注意事项</h3><ul>
+<li>遵循 Apple 隐私指南</li>
+<li>代码安全审查</li>
+<li>最小权限原则</li>
+<li>用户数据可控</li>
+</ul>
+<h3 id="隐私与合规"><a href="#隐私与合规" class="headerlink" title="隐私与合规"></a>隐私与合规</h3><ul>
+<li>GDPR 兼容</li>
+<li>用户数据可导出</li>
+<li>明确的隐私政策</li>
+<li>用户可完全删除数据</li>
+</ul>
+<h3 id="性能目标"><a href="#性能目标" class="headerlink" title="性能目标"></a>性能目标</h3><ul>
+<li>设备发现 &lt; 3秒</li>
+<li>消息延迟 &lt; 1秒</li>
+<li>低功耗</li>
+<li>最小化系统资源占用</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/UDP/" rel="tag"># UDP</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2024/11/29/20241129-ai-yi-jing-ru-ci-qiang-da-liao-bang-wo-xie-wan-suo-you-dai-ma/" rel="next" title="AI已经如此强大了，帮我写完所有代码">
+                <i class="fa fa-chevron-left"></i> AI已经如此强大了，帮我写完所有代码
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.png"
+                alt="" />
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+<a href="/archives/">                
+<!--<a href="/archives/%7C%7C%20archive">-->
+              
+                  <span class="site-state-item-count">136</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">143</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE"><span class="nav-number">1.</span> <span class="nav-text">通信协议</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AI%E7%94%9F%E6%88%90%E7%9A%84%E9%9C%80%E6%B1%82%E6%96%87%E6%A1%A3"><span class="nav-number">2.</span> <span class="nav-text">AI生成的需求文档</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B1%80%E5%9F%9F%E7%BD%91%E5%8E%BB%E4%B8%AD%E5%BF%83%E5%8C%96%E9%80%9A%E4%BF%A1%E5%B7%A5%E5%85%B7-iOS-%E5%BA%94%E7%94%A8%E9%9C%80%E6%B1%82%E6%96%87%E6%A1%A3"><span class="nav-number">3.</span> <span class="nav-text">局域网去中心化通信工具 iOS 应用需求文档</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E6%A6%82%E8%BF%B0"><span class="nav-number">3.1.</span> <span class="nav-text">项目概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%9F%E8%83%BD%E9%9C%80%E6%B1%82"><span class="nav-number">3.2.</span> <span class="nav-text">功能需求</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E7%94%A8%E6%88%B7%E8%BA%AB%E4%BB%BD%E4%B8%8E%E8%B4%A6%E5%8F%B7%E7%AE%A1%E7%90%86"><span class="nav-number">3.2.1.</span> <span class="nav-text">1. 用户身份与账号管理</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-1-%E6%B3%A8%E5%86%8C%E6%A8%A1%E5%BC%8F"><span class="nav-number">3.2.1.1.</span> <span class="nav-text">1.1 注册模式</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-2-%E9%82%AE%E4%BB%B6%E6%B3%A8%E5%86%8C"><span class="nav-number">3.2.1.2.</span> <span class="nav-text">1.2 邮件注册</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-3-%E5%8C%BF%E5%90%8D%E6%A8%A1%E5%BC%8F"><span class="nav-number">3.2.1.3.</span> <span class="nav-text">1.3 匿名模式</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E8%BA%AB%E4%BB%BD%E4%B8%8E%E6%95%B0%E6%8D%AE%E8%BF%81%E7%A7%BB"><span class="nav-number">3.2.2.</span> <span class="nav-text">2. 身份与数据迁移</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#2-1-%E6%95%B0%E6%8D%AE%E5%A4%87%E4%BB%BD"><span class="nav-number">3.2.2.1.</span> <span class="nav-text">2.1 数据备份</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-2-%E6%95%B0%E6%8D%AE%E5%AE%8C%E6%95%B4%E6%80%A7%E4%B8%8E%E9%98%B2%E7%AF%A1%E6%94%B9"><span class="nav-number">3.2.2.2.</span> <span class="nav-text">2.2 数据完整性与防篡改</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-3-%E8%B4%A6%E5%8F%B7%E7%BB%91%E5%AE%9A"><span class="nav-number">3.2.2.3.</span> <span class="nav-text">2.3 账号绑定</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E7%BD%91%E7%BB%9C%E5%8F%91%E7%8E%B0%E4%B8%8E%E8%BF%9E%E6%8E%A5"><span class="nav-number">3.2.3.</span> <span class="nav-text">3. 网络发现与连接</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-%E6%B6%88%E6%81%AF%E9%80%9A%E4%BF%A1%E6%9C%BA%E5%88%B6"><span class="nav-number">3.2.4.</span> <span class="nav-text">4. 消息通信机制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-%E7%B3%BB%E7%BB%9F%E8%A6%81%E6%B1%82"><span class="nav-number">3.2.5.</span> <span class="nav-text">5. 系统要求</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8A%80%E6%9C%AF%E5%AE%9E%E7%8E%B0%E5%BB%BA%E8%AE%AE"><span class="nav-number">3.3.</span> <span class="nav-text">技术实现建议</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E5%85%A8%E6%80%A7%E8%A6%81%E6%B1%82"><span class="nav-number">3.4.</span> <span class="nav-text">安全性要求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E4%BF%9D%E6%8A%A4%E5%85%B3%E9%94%AE%E6%8A%80%E6%9C%AF"><span class="nav-number">3.5.</span> <span class="nav-text">数据保护关键技术</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%80%E5%8F%91%E4%BA%A4%E4%BB%98%E7%89%A9"><span class="nav-number">3.6.</span> <span class="nav-text">开发交付物</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%80%E5%8F%91%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="nav-number">3.7.</span> <span class="nav-text">开发注意事项</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9A%90%E7%A7%81%E4%B8%8E%E5%90%88%E8%A7%84"><span class="nav-number">3.8.</span> <span class="nav-text">隐私与合规</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%A7%E8%83%BD%E7%9B%AE%E6%A0%87"><span class="nav-number">3.9.</span> <span class="nav-text">性能目标</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kingson Wu</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'LR34RG5CRdFgzK8ijwc5Hq0B-gzGzoHsz',
+        appKey: 'qqtIlANIluHpfpOnxTUnYrku',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"model":{"jsonPath":"/live2dw/assets/tororo.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"log":false});</script></body>
+</html>

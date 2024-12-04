@@ -287,6 +287,143 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/10/12/20211012-cqrs-bi-ji/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2021/10/12/20211012-cqrs-bi-ji/" itemprop="url">CQRS笔记</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-10-12T18:37:20+08:00">
+                2021-10-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2021/10/12/20211012-cqrs-bi-ji/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2021/10/12/20211012-cqrs-bi-ji/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <ul>
+<li><a target="_blank" rel="noopener" href="https://insights.thoughtworks.cn/backend-development-cqrs/">后端开发实践系列——简单可用的CQRS编码实践</a></li>
+<li></li>
+</ul>
+<h3 id="个人认为："><a href="#个人认为：" class="headerlink" title="个人认为："></a>个人认为：</h3><ol>
+<li>清除消息业务：写时只记录一个”清除时间”，读时只读取”清除时间”之后的数据，这是一种CQRS (避免写时操作太多数据，QPS不高，但单个请求需要操作多条数据的情况)</li>
+<li>消息通知业务：写时只写在redis，定时任务从redis批量获取数据逐步写入的数据库（QPS高，但单个请求却不多，可以批量操作的情况）</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/10/12/20211012-fen-bu-shi-li-lun-xiang-guan-zheng-li/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -3323,244 +3460,6 @@ Leader 和 Boss 的不同
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/07/30/20210730-fang-an-she-ji-shi-ying-gai-hua-shi-me-tu/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2021/07/30/20210730-fang-an-she-ji-shi-ying-gai-hua-shi-me-tu/" itemprop="url">方案设计时应该画什么图？</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-07-30T18:25:22+08:00">
-                2021-07-30
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2021/07/30/20210730-fang-an-she-ji-shi-ying-gai-hua-shi-me-tu/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2021/07/30/20210730-fang-an-she-ji-shi-ying-gai-hua-shi-me-tu/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="思维导图"><a href="#思维导图" class="headerlink" title="思维导图"></a>思维导图</h2><ul>
-<li>思维导图又叫脑图，使用一个中央关键词或想法引起形象化的构造和分类的想法，是一种结构化思维的树形发散图。</li>
-</ul>
-<h2 id="UML"><a href="#UML" class="headerlink" title="UML"></a>UML</h2><p><img src="/2021/07/30/20210730-fang-an-she-ji-shi-ying-gai-hua-shi-me-tu/UML%E5%88%86%E7%B1%BB.png"></p>
-<ul>
-<li>基本上大多情况，类图、时序图、活动图、状态图 已经够用。</li>
-</ul>
-<h3 id="用例图"><a href="#用例图" class="headerlink" title="用例图"></a>用例图</h3><ul>
-<li>从用户角度描述系统功能，并指出各功能的操作者。</li>
-<li>实际工作中，写功能说明，项目交接等情况可以使用。</li>
-</ul>
-<h3 id="类图"><a href="#类图" class="headerlink" title="类图"></a>类图</h3><ul>
-<li>复杂数据结构，方便说明时可以使用</li>
-<li>第一是领域模型设计，第二种是表实体关系设计。</li>
-<li>组合 &gt; 聚合 &gt; 依赖 &gt; 关联</li>
-</ul>
-<h3 id="时序图（顺序图）"><a href="#时序图（顺序图）" class="headerlink" title="时序图（顺序图）"></a>时序图（顺序图）</h3><ul>
-<li>按时间顺序描述系统之间的交互。</li>
-<li>在方案设计中，涉及外部服务的调用、新增新组件（Redis、DB）或设计中涉及组件的关联较多等情况，应该有时序图。</li>
-</ul>
-<h3 id="协作图"><a href="#协作图" class="headerlink" title="协作图"></a>协作图</h3><ul>
-<li>可视化的组织对象及相互作用（和时序图类似，后者强调时间顺序）</li>
-<li>在方案设计中，需要描述多个对象之间的相互作用关系时，可以使用。</li>
-</ul>
-<h3 id="状态图-（状态机）"><a href="#状态图-（状态机）" class="headerlink" title="状态图 （状态机）"></a>状态图 （状态机）</h3><ul>
-<li>描述类的对象所有可能的状态，以及事件发生时状态的转移条件</li>
-<li>在方案设计中，涉及数据状态的（比如订单的支付状态，UGC的审核状态等）可以使用。</li>
-<li>图不好表达双向状态转移，一般使用状态图+状态表来穷举描述状态变化。</li>
-</ul>
-<h3 id="活动图"><a href="#活动图" class="headerlink" title="活动图"></a>活动图</h3><ul>
-<li>活动图和产品经理出的流程图差不多，都是动态图，活动图相对时序图关注更粗粒度的业务流程变化，其中一个活动可能包含多个时序。活动图可以通过纵向泳道和横向泳道划分，纵向泳道表示系统，横向泳道表示业务阶段。</li>
-</ul>
-<h3 id="组件图"><a href="#组件图" class="headerlink" title="组件图"></a>组件图</h3><ul>
-<li>描述代码部件的物理结构及各部件之间的依赖关系，组件图有助于分析和理解部件之间的相互影响程度。</li>
-<li>方案设计中，类似于架构设计，组件逻辑关系。</li>
-</ul>
-<h3 id="部署图"><a href="#部署图" class="headerlink" title="部署图"></a>部署图</h3><ul>
-<li>定义系统中软硬件的物理体系结构。</li>
-<li>灾备方案设计或新项目部署等场景，可以使用。</li>
-</ul>
-<h2 id="架构图"><a href="#架构图" class="headerlink" title="架构图"></a>架构图</h2><ul>
-<li>架构图是为了抽象地表示软件系统的整体轮廓和各个组件之间的相互关系和约束边界，以及软件系统的物理部署和软件系统的演进方向的整体视图。</li>
-</ul>
-<p><img src="/2021/07/30/20210730-fang-an-she-ji-shi-ying-gai-hua-shi-me-tu/%E6%9E%B6%E6%9E%84%E5%9B%BE.png"></p>
-<h3 id="业务架构"><a href="#业务架构" class="headerlink" title="业务架构"></a>业务架构</h3><ul>
-<li>包括业务规划，业务模块、业务流程，对整个系统的业务进行拆分，对领域模型进行设计，把现实的业务转化成抽象对象。</li>
-</ul>
-<h3 id="应用架构"><a href="#应用架构" class="headerlink" title="应用架构"></a>应用架构</h3><ul>
-<li>硬件到应用的抽象，包括抽象层和编程接口。应用架构和业务架构是相辅相成的关系。业务架构的每一部分都有应用架构。</li>
-<li>应用作为独立可部署的单元，为系统划分了明确的边界，深刻影响系统功能组织、代码开发、部署和运维等各方面。应用架构定义系统有哪些应用、以及应用之间如何分工和合作。这里所谓应用就是各个逻辑模块或者子系统。</li>
-<li>逻辑分层、对外接口协议、RPC调用协议等</li>
-</ul>
-<h3 id="数据架构"><a href="#数据架构" class="headerlink" title="数据架构"></a>数据架构</h3><ul>
-<li>数据架构指导数据库的设计. 不仅仅要考虑开发中涉及到的数据库，实体模型，也要考虑物理架构中数据存储的设计。</li>
-</ul>
-<h3 id="代码架构"><a href="#代码架构" class="headerlink" title="代码架构"></a>代码架构</h3><ul>
-<li>子系统代码架构主要为开发人员提供切实可行的指导，如果代码架构设计不足，就会造成影响全局的架构设计。比如公司内不同的开发团队使用不同的技术栈或者组件，结果公司整体架构设计就会失控。</li>
-<li>框架、类库、配置、编码规范、代码分层等</li>
-</ul>
-<h3 id="技术架构"><a href="#技术架构" class="headerlink" title="技术架构"></a>技术架构</h3><ul>
-<li>确定组成应用系统的实际运行组件（lvs，nginx，tomcat，php-fpm等），这些运行组件之间的关系，以及部署到硬件的策略。</li>
-<li>平常所说的技术栈</li>
-</ul>
-<h3 id="部署拓扑架构图"><a href="#部署拓扑架构图" class="headerlink" title="部署拓扑架构图"></a>部署拓扑架构图</h3><ul>
-<li>拓扑架构，包括架构部署了几个节点，节点之间的关系，服务器的高可用，网路接口和协议等，决定了应用如何运行，运行的性能，可维护性，可扩展性，是所有架构的基础。</li>
-</ul>
-<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><h3 id="活动图与流程图的区别"><a href="#活动图与流程图的区别" class="headerlink" title="活动图与流程图的区别"></a>活动图与流程图的区别</h3><ol>
-<li>流程图着重描述处理过程，它的主要控制结构是顺序、分支和循环，各个处理过程之间有严格的顺序和时间关系。而活动图描述的是对象活动的顺序关系所遵循的规则，它着重表现的是系统的行为，而非系统的处理过程。</li>
-<li>活动图能够表示并发活动的情形，而流程图不行。</li>
-<li>活动图是面向对象的，而流程图是面向过程的。</li>
-</ol>
-<h3 id="架构图的分类"><a href="#架构图的分类" class="headerlink" title="架构图的分类"></a>架构图的分类</h3><ul>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/rypUZQBQHI1A_JIfBNvI1A">画一手好的架构图是工程师进阶的开始</a></li>
-</ul>
-<h4 id="4-1视图"><a href="#4-1视图" class="headerlink" title="4+1视图"></a>4+1视图</h4><ol>
-<li>场景视图</li>
-<li>逻辑视图</li>
-<li>物理视图</li>
-<li>处理流程视图</li>
-<li>开发视图</li>
-</ol>
-<h2 id="个人总结"><a href="#个人总结" class="headerlink" title="个人总结"></a>个人总结</h2><ol>
-<li>需要对数据实体设计进行详细清晰的说明时，考虑使用类图；</li>
-<li>新增功能涉及其他外部服务或组件的交互时，一般情况下都应该有时序图；</li>
-<li>数据涉及多种状态且流转较复杂时，考虑使用状态图；</li>
-<li>新服务搭建时，可以有部署图、组件图等；</li>
-<li>较复杂的业务设计中，除了时序图，还可以考虑协作图、活动图等；</li>
-<li>在需要对整体进行描述、规划时，可以使用架构图；</li>
-<li>概要设计、详细设计</li>
-</ol>
-<ul>
-<li><p>图的分类很多种，也没有统一的归类；参考不同图的意义，画出能清晰表达的图才是重点。</p>
-</li>
-<li><p>一份好的设计文档需要提供清晰的问题描述、整体的概要设计、涵盖各个细节的详细设计等。</p>
-</li>
-<li><p><a target="_blank" rel="noopener" href="https://jishuin.proginn.com/p/763bfbd77085">怎么写出一份令人惊叹的设计文档？</a></p>
-</li>
-<li><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/IG4HRjU-pOeaKBZ1ZRSiSQ">如何写出一篇好的技术方案？</a></p>
-</li>
-</ul>
-<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><ul>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/nangeali/article/details/48953587">UML九种图的分类</a></li>
-<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/376084792">思维导图、UML图、架构图怎么画</a></li>
-<li><a target="_blank" rel="noopener" href="http://www.uml.org.cn/zjjs/202003061.asp?artid=23031">架构设计-谈谈架构</a></li>
-<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/148670093">如何画好一张架构图？</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/nizuimeiabc1/p/5909790.html">uml中活动图与流程图的区别</a></li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/oRrZIBLwjCRJG3xJcm5bdA">架构制图：工具与方法论</a> – 抽象，没怎么看懂</li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/QfVhutaw_iJy57v0VVatuA">我是怎么画架构图的？</a></li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -3616,7 +3515,7 @@ Leader 和 Boss 的不同
 <a href="/archives/">                
 <!--<a href="/archives/%7C%7C%20archive">-->
               
-                  <span class="site-state-item-count">136</span>
+                  <span class="site-state-item-count">137</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

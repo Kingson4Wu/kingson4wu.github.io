@@ -287,6 +287,166 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2024/05/30/20240530-ji-yu-saturn-ding-shi-ren-wu-de-ke-hu-duan-gong-ju-she-ji/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2024/05/30/20240530-ji-yu-saturn-ding-shi-ren-wu-de-ke-hu-duan-gong-ju-she-ji/" itemprop="url">基于Saturn定时任务的客户端工具设计</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2024-05-30T12:15:11+08:00">
+                2024-05-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2024/05/30/20240530-ji-yu-saturn-ding-shi-ren-wu-de-ke-hu-duan-gong-ju-she-ji/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2024/05/30/20240530-ji-yu-saturn-ding-shi-ren-wu-de-ke-hu-duan-gong-ju-she-ji/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <ul>
+<li>基于之前写的这篇<a target="_blank" rel="noopener" href="https://kingson4wu.github.io/2023/07/03/20230703-tan-tan-ding-shi-ren-wu-de-yuan-li-he-ying-yong/">谈谈定时任务的原理和应用</a>继续聊。</li>
+</ul>
+<p><img src="/2024/05/30/20240530-ji-yu-saturn-ding-shi-ren-wu-de-ke-hu-duan-gong-ju-she-ji/saturn_uds.drawio.png"></p>
+<ul>
+<li><p>由于业务进程不是Java编写的，无法使用Saturn提供的Java定时任务，只能使用Shell定时任务</p>
+</li>
+<li><p>这里选择用UDS实现Shell进程和服务进程之间的通信，实现和使用Java定时任务一样的效果</p>
+</li>
+<li><p>在上次的实现中，只考虑了如何触发定时任务执行，并没有考虑如何停止</p>
+</li>
+</ul>
+<h2 id="实现对执行中的任务进行停止"><a href="#实现对执行中的任务进行停止" class="headerlink" title="实现对执行中的任务进行停止"></a>实现对执行中的任务进行停止</h2><p><img src="/2024/05/30/20240530-ji-yu-saturn-ding-shi-ren-wu-de-ke-hu-duan-gong-ju-she-ji/saturn_signal.drawio.png">    </p>
+<ul>
+<li><p>通过测试可以知道，当在saturn控制台点击终止任务时，会对shell进程发出terminated信号</p>
+</li>
+<li><p>如何不是通过saturn控制台触发，直接终端执行shell命令时，操作Crtl+C时，会对Shell进程发出interrupt信号</p>
+</li>
+<li><p>基于上述研究，提供以下方式停止业务服务的运行中的定时任务</p>
+<ol>
+<li>通过saturn控制台点击终止任务，发terminated信号</li>
+<li>通过操作Crtl+C，发interrupt信号</li>
+<li>通过执行shell命令，指定任务名称和-stop选项，直接发出终止任务请求</li>
+</ol>
+</li>
+<li><p>具体实现参考：<a target="_blank" rel="noopener" href="https://github.com/Kingson4Wu/saturncli">saturncli</a></p>
+</li>
+</ul>
+<h2 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h2><ul>
+<li>经过测试，saturn的调度不会因为设置的频率太快导致并发运行，只会执行完一个任务再执行下一个</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2024/05/28/20240528-ye-tan-tan-feed-liu-de-she-ji/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1787,169 +1947,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2024/04/02/20240402-da-gong-ren-xin-tai-ying-gai-shi-zen-yang-de/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2024/04/02/20240402-da-gong-ren-xin-tai-ying-gai-shi-zen-yang-de/" itemprop="url">打工人心态应该是怎样的？</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2024-04-02T14:11:15+08:00">
-                2024-04-02
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2024/04/02/20240402-da-gong-ren-xin-tai-ying-gai-shi-zen-yang-de/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2024/04/02/20240402-da-gong-ren-xin-tai-ying-gai-shi-zen-yang-de/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote>
-<blockquote>
-<p>先来两段经典的话:</p>
-</blockquote>
-</blockquote>
-<blockquote>
-<blockquote>
-<p>一<br>为众人抱薪者，不可使其冻毙于风雪；<br>为大众谋福利者，不可使其孤军奋战；<br>为自由开路者，不可使其困顿于荆棘。</p>
-</blockquote>
-</blockquote>
-<blockquote>
-<blockquote>
-<p>二<br>愿中国青年都摆脱冷气，只是向上走。<br>不要听自暴自弃者的话。<br>能做事的做事，能发声的发声。<br>有一份光，发一份热。<br>就令萤火一般，也可以在黑暗里发一点光。<br>不必等候炬火。</p>
-</blockquote>
-</blockquote>
-<ul>
-<li><p>迫于由于现实的压迫，大家普遍焦虑，也会在工作中认怂，即使是不合理不正确负能量的等等；</p>
-</li>
-<li><p>这些其实都能理解，不管是迫于生活压力，还是对方给得实在太多等原因；</p>
-</li>
-<li><p>但有时，希望我们可以</p>
-<ul>
-<li>我们只是个打工的，有些东西不必过度较真</li>
-<li>虽是打工但也人格独立和自尊，不必唯唯诺诺</li>
-<li>有自己的时间分配和生活，不必紧盯信息，实在紧急对方会打电话</li>
-<li>不必焦虑，事事回复，根据自身情况，适当保持高姿态</li>
-<li>换位思考，容人之度，当然容人不是纵容</li>
-<li>工作时专注和高质量，不浪费自己时间</li>
-</ul>
-</li>
-</ul>
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://www.163.com/dy/article/I21SD6BV0514ANQM.html"></a></li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2005,7 +2002,7 @@
 <a href="/archives/">                
 <!--<a href="/archives/%7C%7C%20archive">-->
               
-                  <span class="site-state-item-count">136</span>
+                  <span class="site-state-item-count">137</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

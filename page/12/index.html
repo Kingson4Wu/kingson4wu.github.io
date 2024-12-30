@@ -287,6 +287,166 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/16/20200716-shi-yong-zi-xuan-jiang-di-ye-wu-shi-bai-lu/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/07/16/20200716-shi-yong-zi-xuan-jiang-di-ye-wu-shi-bai-lu/" itemprop="url">使用“自旋”降低业务失败率</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-16T22:57:09+08:00">
+                2020-07-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/07/16/20200716-shi-yong-zi-xuan-jiang-di-ye-wu-shi-bai-lu/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/07/16/20200716-shi-yong-zi-xuan-jiang-di-ye-wu-shi-bai-lu/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="业务场景描述"><a href="#业务场景描述" class="headerlink" title="业务场景描述"></a>业务场景描述</h3><p>不说废话，直接描述以下两个业务场景</p>
+<ol>
+<li>使用分布式锁控制并发<pre>
+请求----------> 服务A
+       [1.尝试获取锁]
+       [2.获取锁失败]
+       [3.返回失败(提示操作太快)]</pre></li>
+</ol>
+<p><br>2. 强依赖服务超时或”请求处理中”</p>
+<pre>
+请求----------> 服务A
+          [1.强依赖请求]----------> 服务B
+                           [2.执行慢(网络抖动等原因)]
+          [3.请求服务B超时]   
+          [4.返回失败(提示服务繁忙)]
+</pre>
+
+<h3 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h3><ol>
+<li>场景1在获取锁失败时直接返回业务失败，可以考虑二次尝试；</li>
+<li>场景2因为服务B执行慢，直接返回上层失败。<ul>
+<li>服务A重试请求服务B时，可能请求已经执行完，很快就返回成功；或者服务B仍在执行该请求，返回“执行中”错误码。</li>
+</ul>
+</li>
+</ol>
+<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><ol>
+<li>场景1可以使用“自旋”减少失败率：在抢锁失败时，当前线程“自旋”100m以内的随机数，再二次获取锁；</li>
+<li>场景2同样可以使用“自旋”减少失败率：服务A在请求超时或收到“执行中”错误码时，同样自旋后再次重试，较大概率得到成功结果。</li>
+</ol>
+<h3 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h3><ul>
+<li>自旋同样需要考虑“比例”问题，不然大量自旋会影响服务的吞吐量，具体可参考:<a target="_blank" rel="noopener" href="https://kingson4wu.github.io/2020/07/13/20200713-%E7%94%B1%E7%81%BE%E5%A4%87%E5%B7%A5%E4%BD%9C%E4%B8%AD%E5%BC%95%E5%8F%91%E7%9A%84%E5%AF%B9%E2%80%9C%E6%AF%94%E4%BE%8B%E2%80%9D%E7%9A%84%E6%80%9D%E8%80%83/">由灾备工作中引发的对“比例”的思考</a></li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/15/20200715-canal-shi-yong-zong-jie/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2147,191 +2307,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/09/20200710-cai-wu-shu-ju-bao-biao-de-kua-tian-zhi-ku/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/07/09/20200710-cai-wu-shu-ju-bao-biao-de-kua-tian-zhi-ku/" itemprop="url">财务数据报表的跨天之苦</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-09T23:21:53+08:00">
-                2020-07-09
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/07/09/20200710-cai-wu-shu-ju-bao-biao-de-kua-tian-zhi-ku/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2020/07/09/20200710-cai-wu-shu-ju-bao-biao-de-kua-tian-zhi-ku/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>数据报表，尤其是金钱相关的财务报表，对数据的准确性犹为敏感。而服务系统间的处理时间点的存在差异的客观事实（网络时延，失败重试等原因），导致在以天（或月&#x2F;年）为维度的数据报表中，或对账中，常常出现数据不平的问题。</p>
-<h3 id="业务描述"><a href="#业务描述" class="headerlink" title="业务描述"></a>业务描述</h3><p>以用户充值加金币的业务为例</p>
-<pre>
-充值请求---------------->  充值服务A
-                 (支付成功的时间x：2020-07-08 23:59:59)
-                 ----------------> 金币服务B
-                           (加币成功的时间y：2020-07-09 00:00:01)
-</pre>
-<p>现在，有以下数据报表的需求：输出每一天支付金额以及对应的加金币数目。</p>
-<ul>
-<li>从上图可以看出，时间x和时间y不在同一天，在出数据报表的时候，这条充值记录应该归为7月8日还是7月9日呢？<ol>
-<li>从用户的角度看，充值成功的行为是一个原子操作，用户不关心服务方底层有区分支付时间和加币时间；</li>
-<li>从公司财务的角度看，他们同样不关心1描述的问题，只关心报表是否平帐(支付金币＝加币数目)</li>
-</ol>
-</li>
-</ul>
-<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><p>要解决以上问题：需要统一充值请求的业务时间</p>
-<pre>
-充值请求---------------->  充值服务A
-(生成当前时间addTime并传入)
-                 (支付成功的时间x：2020-07-08 23:59:59)
-                 (接收addTime参数)
-                 ----------------> 金币服务B
-                           (加币成功的时间y：2020-07-09 00:00:01)
-                           (接收addTime参数)
-</pre>
-
-<ul>
-<li>充值请求在发起时就会生成一个当前时间addTime，并一直透传到底层服务，那么统一以addTime作为充值的时间点，就不会出现跨天差异导致的数据不平问题。</li>
-</ul>
-<h3 id="注意事项和监控重跑"><a href="#注意事项和监控重跑" class="headerlink" title="注意事项和监控重跑"></a>注意事项和监控重跑</h3><ul>
-<li>上述的方案有一个问题需要解决：addTime 时间的合法性<ol>
-<li>传入的addTime大于当前时间</li>
-<li>传入的addTime远远小于当前时间</li>
-</ol>
-</li>
-</ul>
-<h4 id="问题分析"><a href="#问题分析" class="headerlink" title="问题分析"></a>问题分析</h4><ul>
-<li>问题1显然是错误的，是不合法的请求，但由于系统间可能存在微小差异，可以在逻辑上拒绝addTime大于当前时间超1分钟的请求</li>
-<li>问题2是客观存在的。<ol>
-<li>addTime是一开始生成的时间，当传到每个服务之后，理论上服务的当前时间必然大于addTime</li>
-<li>由于网络超时，重试等原因，相差的时间可能达到分钟级；而由于链路上下层服务因为故障等原因暂时无法处理，那么相差的时间可能到小时级以上。</li>
-<li>一般情况下，一个充值请求正常情况下，一分钟之内就能完成。所以有一个定时任务会在凌晨生成昨天的报表，以供财务人员第二天查看。<br>  如果报表已经生成之后，addTime是昨天的充值记录才重试成功，那么将导致该条数据没被统计到！</li>
-</ol>
-</li>
-</ul>
-<h4 id="解决方案-1"><a href="#解决方案-1" class="headerlink" title="解决方案"></a>解决方案</h4><p>针对上述问题2导致的数据报表错误</p>
-<ol>
-<li>（程序阻断）当数据报表已经生成之后，拒绝addTime&lt;&#x3D;昨天的请求，避免充值数据和数据报表不一致。同时增加告警，支持解除限制和重跑报表。</li>
-<li>（告警重跑）当数据报表已经生成之后，接收到addTime&lt;&#x3D;昨天的请求，且执行成功时告警，通知相关人员重跑报表。</li>
-</ol>
-<h3 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h3><p>有人可能会问，上述的解决方案始终依赖告警和人工补偿。有没有更加自动化的手段？</p>
-<ol>
-<li>二八法则：避免将资金、精力和时间花在琐碎的多数问题上。上述的方案其实已经解决了大多数场景的问题，如果要完美的解决，必然需要花费更大的精力(可能花费时间比实现原功能更多)。<br>当然可以想办法解决，如果确实有必要的话。</li>
-<li>针对一些不常发生的异常问题：增加限制、增加告警、增加人工补偿，是安全快捷、高效成本低的手段。</li>
-</ol>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2387,7 +2362,7 @@
 <a href="/archives/">                
 <!--<a href="/archives/%7C%7C%20archive">-->
               
-                  <span class="site-state-item-count">137</span>
+                  <span class="site-state-item-count">138</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2400,7 +2375,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">143</span>
+                  <span class="site-state-item-count">145</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

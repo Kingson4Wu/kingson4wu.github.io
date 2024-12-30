@@ -287,6 +287,180 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/05/10/20220510-suan-fa-ji-chu-zong-jie/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2022/05/10/20220510-suan-fa-ji-chu-zong-jie/" itemprop="url">算法基础总结</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-05-10T22:33:28+08:00">
+                2022-05-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2022/05/10/20220510-suan-fa-ji-chu-zong-jie/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2022/05/10/20220510-suan-fa-ji-chu-zong-jie/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <ul>
+<li>O这个符号的意思是“忽略重要项以外的内容”，读音同Order。O（n2）的含义就是“算法的运行时间最长也就是n2的常数倍”，准确的定义请参考相关专业书籍。重点在于，通过这种表示方法，我们可以直观地了解算法的时间复杂度</li>
+<li>当我们知道选择排序的时间复杂度为O（n2）、快速排序的时间复杂度为O（nlogn）时，很快就能判断出快速排序的运算更为高速。二者的运行时间根据输入n产生的变化程度也一目了然。</li>
+</ul>
+<h2 id="一、链表"><a href="#一、链表" class="headerlink" title="一、链表"></a>一、链表</h2><h2 id="二、数组"><a href="#二、数组" class="headerlink" title="二、数组"></a>二、数组</h2><h2 id="三、栈"><a href="#三、栈" class="headerlink" title="三、栈"></a>三、栈</h2><h2 id="四、队列"><a href="#四、队列" class="headerlink" title="四、队列"></a>四、队列</h2><h2 id="五、哈希表"><a href="#五、哈希表" class="headerlink" title="五、哈希表"></a>五、哈希表</h2><h2 id="六、堆"><a href="#六、堆" class="headerlink" title="六、堆"></a>六、堆</h2><ul>
+<li>堆是一种图的树形结构，被用于实现“优先队列”（priority queues）</li>
+<li>优先队列是一种数据结构，可以自由添加数据，但取出数据时要从最小值开始按顺序取出</li>
+<li>如果需要频繁地从管理的数据中取出最小值，那么使用堆来操作会非常方便。</li>
+</ul>
+<h2 id="七、二叉查找树"><a href="#七、二叉查找树" class="headerlink" title="七、二叉查找树"></a>七、二叉查找树</h2><ul>
+<li>二叉查找树（又叫作二叉搜索树或二叉排序树）是一种数据结构，采用了图的树形结构</li>
+<li>二叉查找树有两个性质。第一个是每个结点的值均大于其左子树上任意一个结点的值。</li>
+<li>有很多以二叉查找树为基础扩展的数据结构，比如“平衡二叉查找树”。这种数据结构可以修正形状不均衡的树，让其始终保持均衡形态，以提高查找效率。</li>
+<li>种子结点数可以自由设定，并且形状均衡的树便是B树。</li>
+</ul>
+<hr>
+<h1 id="图"><a href="#图" class="headerlink" title="图"></a>图</h1><ul>
+<li>由顶点和连接每对顶点的边所构成的图形就是图。</li>
+<li>这个值叫作边的“权重”或者“权”，加了权的图被称为“加权图”。没有权的边只能表示两个顶点的连接状态，而有权的边就可以表示顶点之间的“连接程度”</li>
+<li>有向图、无向图</li>
+</ul>
+<h2 id="广度优先搜索"><a href="#广度优先搜索" class="headerlink" title="广度优先搜索"></a>广度优先搜索</h2><ul>
+<li>广度优先搜索会优先从离起点近的顶点开始搜索。</li>
+<li>候补顶点是用“先入先出”（FIFO）的方式来管理的，因此可以使用“队列”这个数据结构。</li>
+<li>广度优先搜索的特征为从起点开始，由近及远进行广泛的搜索。因此，目标顶点离起点越近，搜索结束得就越快。</li>
+</ul>
+<h2 id="深度优先搜索"><a href="#深度优先搜索" class="headerlink" title="深度优先搜索"></a>深度优先搜索</h2><ul>
+<li>深度优先搜索会沿着一条路径不断往下搜索直到不能再继续为止，然后再折返，开始搜索下一条候补路径。</li>
+<li>此处，候补顶点是用“后入先出”（LIFO）的方式来管理的，因此可以使用“栈”这个数据结构。</li>
+<li>广度优先搜索选择的是最早成为候补的顶点，因为顶点离起点越近就越早成为候补，所以会从离起点近的地方开始按顺序搜索；而深度优先搜索选择的则是最新成为候补的顶点，所以会一路往下，沿着新发现的路径不断深入搜索。</li>
+</ul>
+<h2 id="贝尔曼-福特算法"><a href="#贝尔曼-福特算法" class="headerlink" title="贝尔曼-福特算法"></a>贝尔曼-福特算法</h2><ul>
+<li>贝尔曼-福特（Bellman-Ford）算法是一种在图中求解最短路径问题的算法。最短路径问题就是在加权图指定了起点和终点的前提下，寻找从起点到终点的路径中权重总和最小的那条路径。</li>
+<li>贝尔曼也因为提出了该算法中的一个重要分类“动态规划”而被世人所熟知。</li>
+</ul>
+<h2 id="狄克斯特拉算法"><a href="#狄克斯特拉算法" class="headerlink" title="狄克斯特拉算法"></a>狄克斯特拉算法</h2><ul>
+<li>狄克斯特拉（Dijkstra）算法也是求解最短路径问题的算法，使用它可以求得从起点到终点的路径中权重总和最小的那条路径路径。</li>
+</ul>
+<h2 id="A-算法"><a href="#A-算法" class="headerlink" title="A*算法"></a>A*算法</h2><ul>
+<li>A<em>（A-Star）算法也是一种在图中求解最短路径问题的算法，由狄克斯特拉算法发展而来。狄克斯特拉算法会从离起点近的顶点开始，按顺序求出起点到各个顶点的最短路径。也就是说，一些离终点较远的顶点的最短路径也会被计算出来，但这部分其实是无用的。与之不同，A</em>就会预先估算一个值，并利用这个值来省去一些无用的计算。</li>
+</ul>
+<hr>
+<h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><ul>
+<li>[我的第一本算法书] - 宫崎修一 石田保辉</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/05/07/20220507-gao-xiao-gong-zuo-fang-fa-lun-zong-jie/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2853,160 +3027,6 @@ POST /_reindex?wait_for_completion=false
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/04/02/20220402-scrum-bi-ji/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2022/04/02/20220402-scrum-bi-ji/" itemprop="url">Scrum笔记</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-04-02T17:35:32+08:00">
-                2022-04-02
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2022/04/02/20220402-scrum-bi-ji/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2022/04/02/20220402-scrum-bi-ji/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <ul>
-<li><p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/7d3e2b86c737">https://www.jianshu.com/p/7d3e2b86c737</a></p>
-</li>
-<li><p>Scrum是一个过程框架，自上世纪90年代初以来，它就已经被应用于管理复杂产品的开发上。Scrum并不是构建产品的一种过程或一项技术</p>
-</li>
-<li><p>Scrum的精髓在于小团队。</p>
-</li>
-<li><p>Scrum基于经验过程控制理论，或称之为经验主义。</p>
-</li>
-<li><p>Scrum规定了4个正式事件，用于检视与适应上，这4个事件在Scrum事件章节中会加以描述：</p>
-<p>Sprint计划会议<br>每日Scrum站会<br>Sprint评审会议<br>Sprint回顾会议</p>
-</li>
-<li><p>Scrum团队由一名产品负责人、开发团队和一名ScrumMaster组成。Scrum团队是跨职能的自组织团队。自组织团队自己选择如何以最好的方式来完成工作，而不是由团队之外的人来指导。跨职能团队拥有完成工作所需的全部技能，不需要依赖团队之外的人。Scrum的团队模式乃是设计用来提供最佳的灵活性、创造力和生产力。</p>
-<p>Scrum团队迭代增量式地交付产品，籍此最大化获得反馈的机会。增量式交付“完成”的产品保证了一个可工作产品的潜在可用版本总是存在。</p>
-</li>
-<li><p>ScrumMaster服务于产品负责人<br>ScrumMaster服务于开发团队<br>ScrumMaster服务于组织</p>
-</li>
-<li><p>Scrum事件<br>Sprint除了本身作为一个事件以外，它还是其他所有事件的容器</p>
-</li>
-<li><p>Sprint是Scrum的核心，其长度(持续时间)为一个月或更短时间的限时，在这段时间内构建一个“完成的”、可用的和潜在可发布的产品增量。在整个开发过程期间，Sprint的长度通常保持一致。前一个Sprint结束后，新的下一个Sprint紧接着立即开始。</p>
-<p>Sprint由Sprint计划会议、每日Scrum站会、开发工作、Sprint评审会议和Sprint回顾会议构成。</p>
-</li>
-<li><p>取消Sprint</p>
-</li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -3062,7 +3082,7 @@ POST /_reindex?wait_for_completion=false
 <a href="/archives/">                
 <!--<a href="/archives/%7C%7C%20archive">-->
               
-                  <span class="site-state-item-count">137</span>
+                  <span class="site-state-item-count">138</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -3075,7 +3095,7 @@ POST /_reindex?wait_for_completion=false
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">143</span>
+                  <span class="site-state-item-count">145</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

@@ -287,6 +287,217 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/05/20200705-rpc-ke-yi-he-shi-wu-bang-ding-ma/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/07/05/20200705-rpc-ke-yi-he-shi-wu-bang-ding-ma/" itemprop="url">RPC可以和事务绑定吗？</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-05T17:27:32+08:00">
+                2020-07-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/07/05/20200705-rpc-ke-yi-he-shi-wu-bang-ding-ma/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/07/05/20200705-rpc-ke-yi-he-shi-wu-bang-ding-ma/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><img src="/2020/07/05/20200705-rpc-ke-yi-he-shi-wu-bang-ding-ma/MSN.jpg"></p>
+<p>在平常编码的时候，经常会看到很多人喜欢把一次RPC调用和数据库事务绑定在一起，RPC调用成功则提交事务，RPC调用失败或超时，则回滚事务。那么这样做是对的吗？</p>
+<h3 id="业务场景描述"><a href="#业务场景描述" class="headerlink" title="业务场景描述"></a>业务场景描述</h3><p>考虑以下一种业务场景：用户加入群聊需要花费200金币。<br>服务架构：服务A(群服务)，服务B(消费服务)，操作都是幂等的。</p>
+<pre>
+加群请求----------> 服务A
+             [1.新增事务]
+             [2.RPC进行扣费]------------>服务B
+             [3.执行加群操作(DB操作)]
+             [4.提交事务]
+</pre>
+
+<h3 id="业务场景分析"><a href="#业务场景分析" class="headerlink" title="业务场景分析"></a>业务场景分析</h3><ol>
+<li>服务B返回成功，业务无异常</li>
+<li>服务B返回失败，事务回滚，业务无异常</li>
+<li>服务B超时，或服务A RPC调用之后重启等场景，业务异常！</li>
+</ol>
+<p>业务异常表现为：用户已经扣费，但是没加群成功(即服务A和服务B数据不一致)</p>
+<h3 id="如何解决"><a href="#如何解决" class="headerlink" title="如何解决"></a>如何解决</h3><ul>
+<li><p>服务A通过本地事务表解决。</p>
+<ol>
+<li>服务A在进行RPC调用之前，需先保存一条订单，订单状态为“待扣费”，扣费成功后，更新订单状态为“已扣费”。</li>
+<li>启动定时任务，查询过去某时间范围内（如30分钟前至当前时间1分钟前）的“待扣费”的订单是否已扣费。若已扣费进行加群操作，并更新订单状态；否则，将订单置为无效状态。</li>
+<li>订单状态：[1待扣费，2已扣费，3已加群，4无效]</li>
+</ol>
+</li>
+<li><p>加群流程图</p>
+<pre>
+加群请求----------> 服务A
+           [1.新增“待扣费”订单(DB操作)]
+           [2.RPC进行扣费]------------>服务B
+           [3.更新订单状态为“已扣费”(DB操作)]
+           [4.执行加群操作(DB操作)]
+           [5.更新订单状态为“已加群”(DB操作)]</pre></li>
+</ul>
+<p><br>上图的每个操作都是单独的，其中某一步异常都会导致后续中断，因此需要两个定时任务，分别检查“待扣费”和“已扣费”的订单。</p>
+<ul>
+<li>定时任务1<pre>
+定时任务1---------> 服务A
+           [1.查询“待扣费”订单]
+           [2.RPC查询是否已扣费]------------>服务B
+           |(1)已扣费                         |(2)未扣费
+           |                                         |</pre></li>
+</ul>
+<p>[3.更新订单状态为“已扣费”(DB操作)]           [3.更新订单状态为“无效”(DB操作)]<br>[4.执行加群操作(DB操作)]<br>[5.更新订单状态为“已加群”(DB操作)]<br></p>
+<ul>
+<li>定时任务2<pre>
+定时任务2---------> 服务A
+           [1.查询“已扣费”订单]    
+           [2.执行加群操作(DB操作)]
+           [3.更新订单状态为“已加群”(DB操作)]</pre></li>
+</ul>
+<p><br>当然定时任务1和2可以放在同一个定时任务执行</p>
+<ul>
+<li>解决了问题之后，我们再回头看看一开始的问题：“RPC调用和数据库事务不能绑定吗？”<ul>
+<li>答案是看具体业务情况而定</li>
+<li>比如上述的业务场景。操作1显然是不能绑事务的</li>
+<li>但是2,3,4,5操作其实是可以绑事务的，因为定时任务可以进行补偿，而且可以因此减少定时任务2</li>
+<li>总结：rpc操作后续可补偿重试或查询，那么就是可以绑事务的，因为服务不会“失忆”；相反数据未落地之前，是不能进行绑事务了，因为一旦异常，数据就会回滚而“丢失”。</li>
+</ul>
+</li>
+</ul>
+<h3 id="其他解决方式"><a href="#其他解决方式" class="headerlink" title="其他解决方式"></a>其他解决方式</h3><ol>
+<li>业务对账，补偿机制。即接入第三方服务进行业务流水对账，发现不一致，进行修正；具体修正方式需根据具体业务场景，是退币，还是使加群成功。</li>
+<li>使用其他分布式事务解决方案(tcc，seata等)</li>
+</ol>
+<h3 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h3><ul>
+<li>重试是 “写”还是“读”？比如上述扣费操作，超时情况下，服务A重试是查询还是重新执行扣费？<ul>
+<li>其实还是取决于业务场景</li>
+<li>一般情况下，超时情况下，返回用户是失败，所以使用查询比较合适，不系统自动为用户扣费，这时候应该是“读”</li>
+<li>如果需要使用rpc调用进行加群，用户扣费了就必须要加群成功，那么加群RPC重试应该是“写”</li>
+<li>对于金钱业务来说，一般情况下，加币操作(充值，活动赠币)是“写”，扣币操作(送礼，用户触发)是“读”；入仓是“写”，出仓是“读”</li>
+</ul>
+</li>
+<li>补偿操作是“正向”还是“逆向”？比如上述扣费操作，超时情况下，服务A重试查询到用户已经扣费成功，这是是应该给用户退币，还是加群成功？<ul>
+<li>一样还是取决于业务场景</li>
+<li>如果用户只是想加群，那么只需要正向操作就好了，不影响用户利益，只是加群操作有些延迟，这时候应该是“正向”</li>
+<li>如果用户扣费之后，可以进行抽奖等，相当于用户的权益是具备实时性的，因为扣费超时(实际成功)导致无法抽奖，那么应该是退币才对的，即“逆向”</li>
+</ul>
+</li>
+<li>“无效”状态的订单应该支持重试，因为无效是因为未扣费，若作为一个基础服务，上次服务可能会使用同一个订单号进行重试，那么不能告诉业务方，操作失败等，应该作为一个全新的请求处理。可以通过增加订单的流水日志解决数据覆盖问题。</li>
+<li>上述的处理方式中，余额不足的扣费，会导致比较多的无效订单，因此在扣费之前，可以增加一次RPC查询，判断是余额是否足够</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/29/20200329-fa-ban-guo-cheng-de-jian-rong-xing-kao-lu/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1420,7 +1631,7 @@
 <a href="/archives/">                
 <!--<a href="/archives/%7C%7C%20archive">-->
               
-                  <span class="site-state-item-count">137</span>
+                  <span class="site-state-item-count">138</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1433,7 +1644,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">143</span>
+                  <span class="site-state-item-count">145</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

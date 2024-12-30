@@ -287,6 +287,155 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2024/04/02/20240402-zai-qian-tan-jie-kou-de-an-quan-xing-he-hui-diao-ji-zhi/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2024/04/02/20240402-zai-qian-tan-jie-kou-de-an-quan-xing-he-hui-diao-ji-zhi/" itemprop="url">再浅谈接口的安全性和回调机制</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2024-04-02T14:42:48+08:00">
+                2024-04-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2024/04/02/20240402-zai-qian-tan-jie-kou-de-an-quan-xing-he-hui-diao-ji-zhi/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2024/04/02/20240402-zai-qian-tan-jie-kou-de-an-quan-xing-he-hui-diao-ji-zhi/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<blockquote>
+<p>最近的工作原因，涉及到接口充权益的接口安全性问题，这里趁热再说说个人看法</p>
+</blockquote>
+</blockquote>
+<ul>
+<li><p>基于之前写的这篇<a target="_blank" rel="noopener" href="https://kingson4wu.github.io/2020/07/12/20200712-shi-yong-hui-diao-ji-zhi-ti-gao-jie-kou-an-quan-xing/">使用回调机制提高接口安全性</a>继续聊。上次扩展中提到是不是可以使用非对称加密，替换回调验证？目前我所负责的业务确实使用这种方式。</p>
+</li>
+<li><p>业务中要对接多个渠道，渠道需要调业务的接口来加权益，为了安全性，目前的做法是由渠道自己生成RSA私钥，提供RSA公钥到业务这边。渠道使用私钥生成签名，业务这边则使用公钥解密验证，从而保证请求是合法的。</p>
+</li>
+<li><p>其实这里还是有潜在漏洞，之前的文章也提到过，如何保证私钥不泄漏？虽然说保证私钥不泄漏是渠道自己的问题，但是多年的经验告诉我，大多数公司并没有很好的保存这些私钥的方法。按照我的猜想，这些私钥在公司内部会被经常拷贝发送，至少开发人员基本都有办法知道的。万一知道私钥的人后续离职了作恶呢？</p>
+</li>
+<li><p>而我们经常对接一下小渠道，参差不齐。尽可能保证渠道的安全也是我们作为平台要积极考虑的问题。</p>
+</li>
+<li><p>所以个人的看法，即使使用RSA保证签名的合法，还是要提供回调的能力，提供给渠道，通过二次校验保证知道私钥的人也无法直接从自己的私人客户端发起请求并成功加权益。毕竟回调的请求是到达渠道方的正式服务器，要在正式服务器上线恶意代码，靠谱的公司都有一定的限制和管控。</p>
+</li>
+</ul>
+<h2 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h2><ul>
+<li>接口一般都会分外网访问和内网访问，我们平常要注意避免只能内网访问的接口暴露给外网访问，因为大多数情况下，我们的内网接口会安全性低一点。</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2024/04/02/20240402-da-gong-ren-xin-tai-ying-gai-shi-zen-yang-de/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1933,181 +2082,6 @@ sudo netstat -anp|grep 'FIN_WAIT2'| awk '{print $7}'|sort |uniq -c | sort -nr
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2023/07/03/20230703-tan-tan-ding-shi-ren-wu-de-yuan-li-he-ying-yong/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2023/07/03/20230703-tan-tan-ding-shi-ren-wu-de-yuan-li-he-ying-yong/" itemprop="url">谈谈定时任务的原理和应用</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-07-03T20:59:41+08:00">
-                2023-07-03
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2023/07/03/20230703-tan-tan-ding-shi-ren-wu-de-yuan-li-he-ying-yong/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2023/07/03/20230703-tan-tan-ding-shi-ren-wu-de-yuan-li-he-ying-yong/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="定时任务的原理"><a href="#定时任务的原理" class="headerlink" title="定时任务的原理"></a>定时任务的原理</h2><ul>
-<li><p>本质是开一个线程,无限循环,检查本地的当前时间,是否符合执行的条件</p>
-</li>
-<li><p>Redis: 比如redis-5.0.8，起了一个线程不停的循环检查，比对当前时间（gettimeofday）判断是否需要执行</p>
-</li>
-<li><p>Golang: 起一个goroutine无限循环,从最小堆中取符合时间的任务</p>
-</li>
-<li><p>Java: 单线程, 无限循环,最小堆: java.util.TimerThread#mainLoop</p>
-</li>
-</ul>
-<h2 id="定时任务类型"><a href="#定时任务类型" class="headerlink" title="定时任务类型"></a>定时任务类型</h2><ul>
-<li><p>定时任务一般分为 本地定时任务 和 分布式定时任务</p>
-</li>
-<li><p>比如定时加载数据到本地缓存的时候，这时一般就使用本地定时任务</p>
-</li>
-<li><p>而有些任务定时只需要执行一次， 现在很多服务都不是单点了，这就需要分布式定时任务来进行调度了</p>
-</li>
-</ul>
-<h2 id="分布式定时任务使用示例"><a href="#分布式定时任务使用示例" class="headerlink" title="分布式定时任务使用示例"></a>分布式定时任务使用示例</h2><ul>
-<li><p>业界上可选择的定时任务工具很多，在工作中使用最多的是Saturn，个人觉得还是很方便的，其他分布式定时任务的原理其实基本大同小异</p>
-</li>
-<li><p>官网地址： <a target="_blank" rel="noopener" href="https://github.com/vipshop/Saturn">https://github.com/vipshop/Saturn</a></p>
-</li>
-<li><p><a target="_blank" rel="noopener" href="https://github.com/vipshop/Saturn/wiki/Saturn%E6%9E%B6%E6%9E%84%E6%96%87%E6%A1%A3">Saturn架构文档</a></p>
-</li>
-</ul>
-<h3 id="Saturn"><a href="#Saturn" class="headerlink" title="Saturn"></a>Saturn</h3><ul>
-<li>如果是Java服务，可以很方便的接入Saturn，可以直接通知到服务</li>
-<li>但如果是其他语言，则是通过执行shell命令间接实现的</li>
-</ul>
-<h3 id="使用域信号通知通知服务"><a href="#使用域信号通知通知服务" class="headerlink" title="使用域信号通知通知服务"></a>使用域信号通知通知服务</h3><ul>
-<li><p>这里Go应用为例子，通过域信号结合shell命令，从而方便使用saturn定时任务</p>
-</li>
-<li><p>client端：提供shell命令，供saturn定时调用</p>
-</li>
-</ul>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> SockPath = <span class="string">&quot;/tmp/notify-os.sock&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">notifyRun</span><span class="params">(task *notifyTask)</span></span> &#123;</span><br><span class="line"></span><br><span class="line">	httpc := http.Client&#123;</span><br><span class="line">		Transport: &amp;http.Transport&#123;</span><br><span class="line">			DialContext: <span class="function"><span class="keyword">func</span><span class="params">(_ context.Context, _, _ <span class="type">string</span>)</span></span> (net.Conn, <span class="type">error</span>) &#123;</span><br><span class="line">				<span class="keyword">return</span> net.Dial(<span class="string">&quot;unix&quot;</span>, SockPath)</span><br><span class="line">			&#125;,</span><br><span class="line">		&#125;,</span><br><span class="line">	&#125;</span><br><span class="line">	response, err := httpc.Get(<span class="string">&quot;http://unix/&quot;</span> + task.name + <span class="string">&quot;?&quot;</span> + task.args)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="built_in">panic</span>(err)</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">var</span> buf = <span class="built_in">make</span>([]<span class="type">byte</span>, <span class="number">1024</span>)</span><br><span class="line">	response.Body.Read(buf)</span><br><span class="line">	logger.Infof(<span class="string">&quot;finish notify task: %s, args:%s, resp: %s&quot;</span>, task.name, task.args, <span class="type">string</span>(buf))</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>server端：提供uds服务，介绍请求触发执行相应的任务</li>
-</ul>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">type</span> ser <span class="keyword">struct</span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s ser)</span></span> ServeHTTP(rw http.ResponseWriter, r *http.Request) &#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">defer</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		<span class="keyword">if</span> err := <span class="built_in">recover</span>(); err != <span class="literal">nil</span> &#123;</span><br><span class="line">			logger.Errorf(<span class="string">&quot;notify server panic, r: %s, err:%s&quot;</span>, r.RequestURI, err)</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;()</span><br><span class="line"></span><br><span class="line">	name := r.URL.Path</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> strings.HasPrefix(name, <span class="string">&quot;/&quot;</span>) &#123;</span><br><span class="line">		name = name[<span class="number">1</span>:]</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> job, ok := jobs[name]; ok &#123;</span><br><span class="line">		args := <span class="keyword">map</span>[<span class="type">string</span>]<span class="type">string</span>&#123;&#125;</span><br><span class="line">		<span class="keyword">for</span> k, v := <span class="keyword">range</span> r.URL.Query() &#123;</span><br><span class="line">			args[k] = v[<span class="number">0</span>]</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span> job.Handler(args) &#123;</span><br><span class="line">			rw.Write([]<span class="type">byte</span>(<span class="string">&quot;ok&quot;</span>))</span><br><span class="line">			logger.Infof(<span class="string">&quot;job run success, name:%s, args: %s&quot;</span>, name, args)</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			rw.Write([]<span class="type">byte</span>(<span class="string">&quot;fail&quot;</span>))</span><br><span class="line">			logger.Errorf(<span class="string">&quot;job run fail, name:%s, args: %s&quot;</span>, name, args)</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	rw.Write([]<span class="type">byte</span>(<span class="string">&quot;not exist&quot;</span>))</span><br><span class="line">	logger.Warnf(<span class="string">&quot;job not exist, name:%s&quot;</span>, name)</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">NotifyServe</span><span class="params">()</span></span> &#123;</span><br><span class="line">	sockPath := utils.BizConfig(<span class="string">&quot;notify_uds_file&quot;</span>, <span class="string">&quot;&quot;</span>)</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> sockPath == <span class="string">&quot;&quot;</span> &#123;</span><br><span class="line">		<span class="built_in">panic</span>(<span class="string">&quot;sockPath is nil&quot;</span>)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	logger.Info(<span class="string">&quot;Unix NotifyServe ...&quot;</span>)</span><br><span class="line">	os.Remove(sockPath)</span><br><span class="line">	server := http.Server&#123;</span><br><span class="line">		Handler: ser&#123;&#125;,</span><br><span class="line">	&#125;</span><br><span class="line">	unixListener, err := net.Listen(<span class="string">&quot;unix&quot;</span>, sockPath)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="built_in">panic</span>(err)</span><br><span class="line">	&#125;</span><br><span class="line">	server.Serve(unixListener)</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>windows 平台没有uds，可以使用普通的HTTP接口代替</li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2163,7 +2137,7 @@ sudo netstat -anp|grep 'FIN_WAIT2'| awk '{print $7}'|sort |uniq -c | sort -nr
 <a href="/archives/">                
 <!--<a href="/archives/%7C%7C%20archive">-->
               
-                  <span class="site-state-item-count">137</span>
+                  <span class="site-state-item-count">138</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2176,7 +2150,7 @@ sudo netstat -anp|grep 'FIN_WAIT2'| awk '{print $7}'|sort |uniq -c | sort -nr
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">143</span>
+                  <span class="site-state-item-count">145</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

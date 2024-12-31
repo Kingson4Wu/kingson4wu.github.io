@@ -287,6 +287,256 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/10/20200710-huan-cun-ce-lue-jian-dan-zong-jie/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/07/10/20200710-huan-cun-ce-lue-jian-dan-zong-jie/" itemprop="url">缓存策略简单总结</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-10T22:24:44+08:00">
+                2020-07-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/07/10/20200710-huan-cun-ce-lue-jian-dan-zong-jie/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/07/10/20200710-huan-cun-ce-lue-jian-dan-zong-jie/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="缓存的三座大山"><a href="#缓存的三座大山" class="headerlink" title="缓存的三座大山"></a>缓存的三座大山</h3><p>以下内容摘自：<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/ziJ8OFiLA1it3sQvycN7Mg">翻越缓存的三座大山</a></p>
+<ol>
+<li>缓存一致性<ul>
+<li>缓存一致性是指业务在引入分布式缓存系统后，业务对数据的更新除了要更新存储以外还需要同时更新缓存，对两个系统进行数据更新就要先解决分布式系统中的隔离性和原子性难题。</li>
+</ul>
+</li>
+<li>缓存击穿<ul>
+<li>缓存击穿是指查询请求没有在缓存层命中而将查询透传到存储 DB 的问题，当大量的请求发生缓存击穿时，将给存储 DB 带来极大的访问压力，甚至导致 DB 过载拒绝服务。</li>
+<li>通过以下方式防止缓存击穿：<ol>
+<li>通过 bloomfilter 记录 key 是否存在，从而避免无效 Key 的查询；</li>
+<li>在 Redis 缓存不存在的 Key，从而避免无效 Key 的查询；</li>
+</ol>
+</li>
+</ul>
+</li>
+<li>缓存雪崩	<ul>
+<li>缓存雪崩是指由于大量的热数据设置了相同或接近的过期时间，导致缓存在某一时刻密集失效，大量请求全部转发到 DB，或者是某个冷数据瞬间涌入大量访问，这些查询在缓存 MISS 后，并发的将请求透传到 DB，DB 瞬时压力过载从而拒绝服务。目前常见的预防缓存雪崩的解决方案，主要是通过对 key 的 TTL 时间加随机数，打散 key 的淘汰时间来尽量规避，但是不能彻底规避。</li>
+</ul>
+</li>
+</ol>
+<p>本文主要讲的是第一个问题：缓存一致性</p>
+<h3 id="基本要点"><a href="#基本要点" class="headerlink" title="基本要点"></a>基本要点</h3><ol>
+<li>缓存替换方式<ul>
+<li>更新缓存VS淘汰缓存</li>
+</ul>
+</li>
+<li>缓存替换和写库顺序<ul>
+<li>先替换缓存后写数据库vs先写数据库后替换</li>
+</ul>
+</li>
+<li>更新缓存数据源是主还是从<ul>
+<li>主从数据库下（主从延迟），是从还是主读取数据进行缓存替换</li>
+</ul>
+</li>
+<li>从理论上来说，给缓存设置过期时间，是保证最终一致性的解决方案</li>
+</ol>
+<h4 id="Cache-Aside-pattern"><a href="#Cache-Aside-pattern" class="headerlink" title="Cache-Aside pattern"></a>Cache-Aside pattern</h4><p>最经典的缓存+数据库读写的模式，就是 Cache Aside Pattern。</p>
+<ol>
+<li>失效：应用程序先从cache取数据，没有得到，则从数据库中取数据，成功后，放到缓存中。</li>
+<li>命中：应用程序从cache中取数据，取到后返回。</li>
+<li>更新：先把数据存到数据库中，成功后，再让缓存失效。</li>
+</ol>
+<p>大多数业务，使用这样的更新套路即可</p>
+<h3 id="解决思路"><a href="#解决思路" class="headerlink" title="解决思路"></a>解决思路</h3><ol>
+<li><p>以下摘自：<a target="_blank" rel="noopener" href="https://blog.csdn.net/ZLHZHJ/article/details/80176988">高并发下缓存和数据库一致性问题</a></p>
+<ul>
+<li>主从一致性，即修改完立马就要读取到最新的数据（本方案不涉及到缓存的同步，如果涉及可以结合全篇思路去设计） 方案如下：<ol>
+<li>半同步复制，理应数据库原生的功能，等从库同步完才返回结果，缺点吞吐量下降</li>
+<li>强制读主库，部分有一致性要求的，代码中强制读取主库，这个时候一定要结合好缓存，提高读性能</li>
+<li>数据库中间件，一般情况数据库中间件把写路由到主，把读路由到从，此处是记录所以写的key，在500ms内读主库，超过500ms后读从库，能保证绝对的一致性，缺点是成本比较高</li>
+<li>缓存记录写key法，发生写操作，把此key记录在缓存里过期时间500ms，key存在表示刚更新过，还没完成同步，强制路由到主库，没有则路由到从库</li>
+</ol>
+</li>
+<li>关于强一致的需求，现实是不多的，本身就使用cache了还要求强一致，貌似本末倒置，但是不排除特殊情况的存在，主要是思路和大家分享。</li>
+<li>金钱余额业务有这种强一致需求(用户余额表接近6亿，查询QPS晚高峰4~5k )</li>
+</ul>
+</li>
+<li><p>读和写使用分布式锁控制，这样就能保证，先操作（或读或写）数据的先获得结果；写的时候让读流量直接走DB，让更新缓存的操作和写DB的操作串行。</p>
+</li>
+<li><p>延时双删策略 (延时减少读到脏数据的概率, 可以异步延时)</p>
+<pre>
+（1）先淘汰缓存
+（2）再写数据库（这两步和原来一样）
+（3）休眠1秒，再次淘汰缓存
+这么做，可以将1秒内所造成的缓存脏数据，再次删除。
+</pre>
+<p>延迟删只是减少概率</p>
+</li>
+<li><p>只有在读请求比写请求耗时还长的场景下才能产生，实际上这种情况发生的概率会很小</p>
+</li>
+<li><p>在读流量走从库的情况下，也有可能会导致缓存不一致。<br>由于更新完主库后，binlog还没有同步到从库，这时候DB读到的是旧的值，同样会导致缓存不一致的场景</p>
+</li>
+<li><p>缓存更新重试机制：使用MQ或binlog (个人不是很喜欢，除非能很好的抽象成公共组件可以考虑)</p>
+</li>
+<li><p>热点数据查主库(同1中的第4点)  </p>
+<ol>
+<li>写，更新db，设置热点数据标志（30s（可配置））</li>
+</ol>
+</li>
+<li><p>读，判断是否是热点数据。是，直接读主库（主库超过一定qps，读从库），写缓存；否，读缓存</p>
+</li>
+<li><p>根据业务id，实时性高的读主库，实时性低的读从库或者缓存</p>
+</li>
+</ol>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/Y9S89MT0uAobzRKgYVrI9Q">浅谈缓存最终一致性的解决方案</a></li>
+<li>总结: 在解决缓存一致性的过程中，有多种途径可以保证缓存的最终一致性，应该根据场景来设计合适的方案，读多写少的场景下，可以选择采用“ Cache-Aside 结合消费数据库日志做补偿”的方案，写多的场景下，可以选择采用“ Write-Through 结合分布式锁”的方案 ，写多的极端场景下，可以选择采用“ Write-Behind ” 的方案。</li>
+</ul>
+<h3 id="其他个人经验"><a href="#其他个人经验" class="headerlink" title="其他个人经验"></a>其他个人经验</h3><ol>
+<li>设置缓存时为了防止穿透,并且具备更新缓存的能力,需要失败时提供默认值,设置较大的过期时间</li>
+<li>那么需要设置:正常数据更新时间R、失败默认数据过期时间DR、数据过期时间E;</li>
+<li>一般E &gt; R &gt; DR</li>
+<li>并且,当缓存已经有数据时, 重新远程获取数据失败时,不应该更新缓存</li>
+</ol>
+<h3 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/xRVUEtbOhCHZHaBa0YQwTQ">太强了，全面解析缓存应用经典问题</a><ul>
+<li>缓存的主要存储模式<ol>
+<li>Cache Aside（旁路缓存）</li>
+<li>Read&#x2F;Write Through（读写穿透）</li>
+<li>Write Behind Caching（异步缓存写入）</li>
+</ol>
+</li>
+<li>缓存7大经典问题的常用解决方案<ol>
+<li>缓存集中失效</li>
+<li>缓存穿透</li>
+<li>缓存雪崩</li>
+<li>缓存数据不一致</li>
+<li>竞争并发</li>
+<li>热点Key问题</li>
+<li>大Key问题</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><ol>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/ZLHZHJ/article/details/80176988">高并发下缓存和数据库一致性问题（更新淘汰缓存不得不注意的细节）</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/rjzheng/p/9041659.html">分布式之数据库和缓存双写一致性方案解析</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/ziJ8OFiLA1it3sQvycN7Mg">翻越缓存的三座大山</a></li>
+<li><a target="_blank" rel="noopener" href="https://juejin.cn/post/7085530088628256776">解析分布式系统的缓存设计</a></li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/09/20200710-cai-wu-shu-ju-bao-biao-de-kua-tian-zhi-ku/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1723,174 +1973,6 @@ proxy_upstream_tries 5;
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/05/20200705-guan-yu-fu-wu-jian-yi-zhi-xing-he-qian-zhi-xiao-yan-de-si-kao/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/07/05/20200705-guan-yu-fu-wu-jian-yi-zhi-xing-he-qian-zhi-xiao-yan-de-si-kao/" itemprop="url">关于服务间一致性和前置校验的思考</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-05T22:26:48+08:00">
-                2020-07-05
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/07/05/20200705-guan-yu-fu-wu-jian-yi-zhi-xing-he-qian-zhi-xiao-yan-de-si-kao/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2020/07/05/20200705-guan-yu-fu-wu-jian-yi-zhi-xing-he-qian-zhi-xiao-yan-de-si-kao/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><img src="/2020/07/05/20200705-guan-yu-fu-wu-jian-yi-zhi-xing-he-qian-zhi-xiao-yan-de-si-kao/Zidane.jpeg"></p>
-<p>每个服务都有相应的前置校验，有些前置校验逻辑不统一，就会导致服务间数据的不一致。比如风控拦截，服务A未拦截，而服务B却拦截了，从而导致不一致。</p>
-<h3 id="业务描述"><a href="#业务描述" class="headerlink" title="业务描述"></a>业务描述</h3><ul>
-<li>下面描述一个仓库送礼的场景<pre>
-送礼请求----------> 服务A(送礼服务)
-           [1.出仓库礼物]------------>服务B(仓库服务)
-           [2.收礼者加分成]------------>服务C(消费服务[含分成服务])</pre></li>
-</ul>
-<p></p>
-<pre>
-送礼请求----------> 服务A(送礼服务)
-             [1.出仓库礼物]------------>服务B(仓库服务)
-             [2.收礼者加分成]------------>服务C(消费服务[含分成服务])
-                                [查询是否风险用户]------------>服务D(风控服务)
-</pre>
-<p>服务C增加查询之后，如果是风险用户，将会拦截加分成的操作。这样就会导致用户仓库礼物出仓了，但是收礼者却无法接收分成</p>
-<h3 id="如何解决"><a href="#如何解决" class="headerlink" title="如何解决"></a>如何解决</h3><p>服务B也要进行风险用户判断，针对资金操作相关的校验，可以统一逻辑，避免相同逻辑维护多个地方</p>
-<ol>
-<li>服务C增加一个统一判断接口<pre>
-送礼请求----> 服务A(送礼服务)
-          [1.出仓库礼物]----->服务B(仓库服务)
-                        [ 1.1查询用户是否允许资金变动]----->服务C
-                                     [1.1.1查询是否风险用户]--->服务D(风控服务)
-          [2.收礼者加分成]----->服务C(消费服务[含分成服务])
-                            [2.1查询是否风险用户]----->服务D(风控服务)</pre></li>
-</ol>
-<p><br>若用户是风险用户，操作1就会返回失败，不出仓，也无后续的操作2，这样就避免不一致的问题</p>
-<ol start="2">
-<li>收敛消费入口，统一资产类的入口<br>方案1的缺点明显，每个服务都要直接或间接的查询一次风控服务，实际上理想情况下，只需要查询一次即可。<pre>
-送礼请求----------> 服务A(送礼服务)
-          [1.出仓库礼物和加分成]--------->服务C(消费服务)
-                                [1.1查询是否风险用户]------------>服务D(风控服务)
-                                [1.2出仓库礼物]------------>服务B(仓库服务)
-                                [1.3收礼者加分成]</pre></li>
-</ol>
-<p><br>由消费服务统一对资产进行“出”和“入”</p>
-<ol start="3">
-<li>网关服务拦截<br>由网关服务统一调风控服务进行判断，并支持业务类型定制(比如资产类接口应该进行哪些判断)</li>
-</ol>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1946,7 +2028,7 @@ proxy_upstream_tries 5;
 <a href="/archives/">                
 <!--<a href="/archives/%7C%7C%20archive">-->
               
-                  <span class="site-state-item-count">138</span>
+                  <span class="site-state-item-count">139</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1959,7 +2041,7 @@ proxy_upstream_tries 5;
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">145</span>
+                  <span class="site-state-item-count">150</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

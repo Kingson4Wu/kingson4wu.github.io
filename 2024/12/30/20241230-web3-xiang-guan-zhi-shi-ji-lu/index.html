@@ -1,0 +1,1302 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/uploads/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Web3,区块链,blockchain,bitcoin,NFT," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="拉巴力的纸皮箱" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="以下内容都来源于书籍    Web进化史 Web 1.0时代。Web 1.0时代的特点是重信息轻身份，多浏览少输出，因此也被人称为“只读网络”  相较于Web 1.0时代的内容创作者占少数，内容消费者占绝大多数的生态格局，Web 2.0更加以每个用户为中心，注重由用户生成内容(User Generated Content, UGC)，强调交互性。因此有人将Web 2.0称为“交互网络”。  O">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Web3相关知识记录">
+<meta property="og:url" content="http://yoursite.com/2024/12/30/20241230-web3-xiang-guan-zhi-shi-ji-lu/index.html">
+<meta property="og:site_name" content="拉巴力的纸皮箱">
+<meta property="og:description" content="以下内容都来源于书籍    Web进化史 Web 1.0时代。Web 1.0时代的特点是重信息轻身份，多浏览少输出，因此也被人称为“只读网络”  相较于Web 1.0时代的内容创作者占少数，内容消费者占绝大多数的生态格局，Web 2.0更加以每个用户为中心，注重由用户生成内容(User Generated Content, UGC)，强调交互性。因此有人将Web 2.0称为“交互网络”。  O">
+<meta property="og:locale">
+<meta property="og:image" content="http://yoursite.com/2024/12/30/20241230-web3-xiang-guan-zhi-shi-ji-lu/Web3.png">
+<meta property="article:published_time" content="2024-12-30T13:31:14.000Z">
+<meta property="article:modified_time" content="2024-12-31T05:43:45.448Z">
+<meta property="article:author" content="Kingson Wu">
+<meta property="article:tag" content="Web3">
+<meta property="article:tag" content="区块链">
+<meta property="article:tag" content="blockchain">
+<meta property="article:tag" content="bitcoin">
+<meta property="article:tag" content="NFT">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/2024/12/30/20241230-web3-xiang-guan-zhi-shi-ji-lu/Web3.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2024/12/30/20241230-web3-xiang-guan-zhi-shi-ji-lu/"/>
+
+
+
+
+
+  <title>Web3相关知识记录 | 拉巴力的纸皮箱</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">拉巴力的纸皮箱</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2024/12/30/20241230-web3-xiang-guan-zhi-shi-ji-lu/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Web3相关知识记录</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2024-12-30T21:31:14+08:00">
+                2024-12-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2024/12/30/20241230-web3-xiang-guan-zhi-shi-ji-lu/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2024/12/30/20241230-web3-xiang-guan-zhi-shi-ji-lu/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<blockquote>
+<p>以下内容都来源于书籍</p>
+</blockquote>
+</blockquote>
+<p><img src="/2024/12/30/20241230-web3-xiang-guan-zhi-shi-ji-lu/Web3.png"></p>
+<h2 id="Web进化史"><a href="#Web进化史" class="headerlink" title="Web进化史"></a>Web进化史</h2><ul>
+<li><p>Web 1.0时代。Web 1.0时代的特点是重信息轻身份，多浏览少输出，因此也被人称为“只读网络”</p>
+</li>
+<li><p>相较于Web 1.0时代的内容创作者占少数，内容消费者占绝大多数的生态格局，Web 2.0更加以每个用户为中心，注重由用户生成内容(User Generated Content, UGC)，强调交互性。因此有人将Web 2.0称为“交互网络”。</p>
+</li>
+<li><p>O2O本质是连接，如果说Web 1.0开启了人与信息的连接，Web 2.0则增进了人与人的连接，电商模式拉近了人与商品的连接，O2O则连接了消费者与服务者。</p>
+</li>
+<li><p>Web 3.0：数据所有权革命</p>
+</li>
+<li><p>描述了Web 3.0应该具备的几个组成部分：</p>
+<ul>
+<li>一个加密的，去中心化的信息发布系统</li>
+<li>一个基于身份的，但又是匿名的底层通信系统</li>
+<li>一个用于取代中心节点信息验证功能的共识引擎</li>
+<li>一个将上述三点结合在一起的用户交互系统</li>
+</ul>
+</li>
+<li><p>目前更多的人在正式场合采用Web 3.0的表述方式，但是我们应该知道Web 3.0表述具有技术流派风格，而Web3表述则具有用户社区风格。</p>
+</li>
+<li><p>在Web 2.0系统中，个体只是网络中无数节点之一，必须依赖中心节点。中心节点制定规则，决定了其他节点的行为和生存。Web 3.0系统中，个体还是网络中无数节点之一，但每个节点都高度自治，且拥有自己的决策过程。</p>
+</li>
+</ul>
+<h2 id="区块链"><a href="#区块链" class="headerlink" title="区块链"></a>区块链</h2><ul>
+<li><p>区块链是一种去中心化的计算机网络，也是实现Web 3.0世界的诸多技术基础中最重要的一个。</p>
+</li>
+<li><p>通证(tokens)是Web 3.0能够更公平、更有效率的一个关键因素。通证的概念范围非常广</p>
+</li>
+<li><p>加密资产是通证的其中一类，通证并不一定加密，但在Web 3.0的语境里，通常都是指带有去中心化特性（即无法被中心化机构通过在发放通证后部署的代码篡改）的加密通证。</p>
+</li>
+<li><p>加密资产并不一定是加密货币，比如NFT与数字藏品</p>
+</li>
+<li><p>Web 3.0的底层网络架构是基于区块链的，而区块链的第一个应用是比特币。</p>
+</li>
+<li><p>用以下五个指标来评估一个Web 3.0项目的去中心化程度：</p>
+<ul>
+<li>(1)项目钱包的透明性　一个项目的钱包越是透明，越能让大家了解这个项目的参与者构成。如果无法公开透明地了解一个项目的参与者构成，就无法进行更深度地评估。</li>
+<li>(2)初始钱包的通证占比　初始钱包通常是项目方和核心投资者的地址，如果持有过多的通证，就说明他们对项目的影响力极大，这种项目是极其中心化的。</li>
+<li>(3)相关生态的去中心化　在Web 3.0的错综复杂的生态中，大部分项目都并非独立存在而是依附或者嵌套于其他项目的。这时哪怕一个项目在开发层面是去中心化的，其价值和功能也会很大程度上被其他项目影响。而后者若是一个中心化的项目，那前者本质上也依旧是一个中心化的项目。</li>
+<li>(4)项目方的影响力　一部分项目方本身并没持有大比例的通证，但由于他们的声音对项目的开发社群有着极大的影响力。这种情况下这也是一个偏中心化的项目，但中心化程度要比少数人持有大比例通证的项目要低。</li>
+<li>(5)流动性　哪怕比特币作为一个完全独立的项目，并且没有和任何其他项目有嵌套关系，在早期流动性较低的阶段依旧可以轻易受到几个重要参与者深度影响，甚至有可能因为在链上的节点过少或者大部分节点被垄断，导致被篡改项目数据。也就是说，在那些流动性较差的项目上，被大算力主体篡改资产所有权的可能都要大于流动性高的项目。</li>
+</ul>
+</li>
+<li><p>首次代币发行(Initial Coin Offering, ICO)，对应着首次公开募股(Initial Public Offering, IPO)应运而生。</p>
+</li>
+<li><p>以太坊的逻辑就是把现实中的合同去中心化形成智能合约。举个最简单的例子，你去自动售货机买可乐，你付钱后可乐出来，这就是一种智能合约。作为一个自动化的、程序化的机器，你付了钱，它给了货。</p>
+</li>
+<li><p>智能合约的本质就是通过代码程序的方式执行现实社会中的一些底层的制度或者合同。只要条件达到了要求，程序就会执行，解决了谁先出钱，谁先给货的问题。同时，通过区块链的技术，能够让整个交易的过程、结果、代码执行的情况在全网进行记录，且不可篡改。</p>
+</li>
+<li><p>以太坊(Ethereum)就是区块链版的操作系统，是一个为去中心化应用(DApps)而生的全球开源平台。</p>
+</li>
+<li><p>从2013年发布白皮书至今，以太坊在智能合约领域一直处于领先地位。它是当前全球最知名、应用最广泛的区块链智能合约底层平台。以太坊建立了一个可编程的、图灵完备的区块链，在这个区块链上，可以通过简单的程序实现各类加密资产的生成，也可以通过编写程序对以太坊上流通的资产状态进行精确控制。至今全球已经有数千种基于以太坊的去中心化应用程序和加密资产。</p>
+</li>
+<li><p>目前，以太坊上的项目已经划分出众多赛道，针对不同类型的项目大致可以分为：去中心化金融(DeFi)、去中心化交易所(DEX)、游戏、NFT、基础设施等。这些项目会在后文详细介绍。</p>
+</li>
+<li><p>区块链性能的不可能三角：即去中心化、安全性与可扩展性必须舍弃其一</p>
+</li>
+<li><p>Ripple和EOS舍弃了去中心化，IOTA和NANO舍弃了安全性，而比特币和以太坊舍弃了可扩展性。因此，以太坊就不得不消耗大量用于相互验证的算力和能源。</p>
+</li>
+<li><p>区块链可扩展性的提升大致可以分为以下三种：Layer 0（L0跨链交互），Layer 1（L1链上扩容，对主链本身进行改造），Layer 2（L2链下扩容，将主链上部分工作转移至主链以外）。</p>
+</li>
+<li><p>对于以太坊来说，直接对公链本身进行改造对已有的用户等利益相关方影响较大，因此以太坊社区主要关注的是L2，而对于链上扩容方案则采取缓慢过渡的模式。而对于后发的新公链来说，探索直接建立更高可扩展性的公链模型，成为首选。</p>
+</li>
+<li><p>L2，主要是指在主链之外建立一个二层的交易处理平台，负责具体交易的处理。主链只负责存取结算及验证链下上传信息的有效性。L2的扩容方式主要有状态通道(State Channels)、等离子体(Plasma)和卷叠(Rollup)三种方式。</p>
+</li>
+<li><p>随着区块链的发展，在目前，已经进入了一个多链并存的市场架构，并逐渐形成了以以太坊为核心，其他公链众星拱月的局面。从2021年4月开始，以太坊的跨链活动急剧增加。</p>
+</li>
+<li><p>跨链桥是一种链与链连接的桥梁工具，允许将加密资产从一条链转移到另一条链。两条链可以有不同的协议、规则和治理模型，而桥提供了一种相互通信和兼容的方式来安全地在双方进行互操作。用户可以使用跨链桥，快速轻松地实现加密资产交易。</p>
+</li>
+</ul>
+<h2 id="元宇宙"><a href="#元宇宙" class="headerlink" title="元宇宙"></a>元宇宙</h2><ul>
+<li><p>Web 3.0、区块链、元宇宙这三个概念经常交织出现，让人们产生了一定的疑惑。<br>这三个概念中，区块链是最早出现的。2008年区块链正式诞生，它的出现比现在公认出现于2005年的Web 2.0没有晚太多。区块链是为了解决中心化服务器存在的问题而诞生的。</p>
+</li>
+<li><p>Web 2.0这十多年的发展一直沿用的是将用户抓过来、养肥了、再割韭菜的AARRR（Acquisition获客，Activation激活，Retention留存，Referral转推荐，Revenue变现）互联网平台运营模式。在这种模式下，用户就像是动物一样，从始至终都是以S-R（Stimulus刺激，React反应）的行为模式被对待。用户是平台的资产，而不是平台的主人。因此，Web 2.0的用户被称为流量。</p>
+</li>
+<li><p>区块链的到来为Web 2.0带来了新的生机，将Web 2.0升级成为Web 3.0。<br>对Web 2.0时代的企业而言，IPO是最终归宿，在IPO那荣光时刻来临之际，企业必须已经达到一个非常大的量级，成为行业龙头。所谓盈亏同源，Web 2.0的企业盈利与用户无关，IPO或中途并购、退出都是VC的战场，亏损当然也与用户无关。</p>
+</li>
+<li><p>Web 2.0企业的模式是管理团队做，用户用。Web 3.0时代的企业替代物——DAO的所有者是社区，社区成员的每一个人都是DAO的既得利益者。由于Web 3.0的IEO(Initial Exchange Offering)门槛比IPO低，不需要中心化审核，IEO在真正意义上完成了IPO最初想要达成的任务——获取更大的流动性。之所以叫作Initial Exchange Offering而非Initial Public Offering，是因为Web 3.0社区的通证在没有上交易所之前，就是公开的、去中心化的、通常也有广泛的持有人基础，而且也是可以通过区块链交易的。</p>
+</li>
+<li><p>Web 3.0概念的进化线索是从用户与互联网之间的关系去归纳的，从Web 1.0单向接受互联网，到Web 2.0可以与互联网交互读写，再到Web 3.0可以拥有互联网。</p>
+</li>
+<li><p>真正的元宇宙远不只是体验的升级。元宇宙是一个宏大的概念，要构建这样一个数字世界，只提升体验是不够的。如果只是将VR&#x2F;AR设备装在头上，这样的元宇宙不过是个大型游戏，还远不能成为“宇宙”。从深层次出发，用“有关联”来描述Web 3.0和元宇宙之间的关系，显然还不够，它们之间是相辅相成的。从技术角度来看，元宇宙是前端、展示层，Web 3.0是中后端、技术层，只有技术条件满足Web 3.0所需的去中心化的数据库，即分布式数据库，以及配套的加密技术和协议，才有可能实现元宇宙这样宏大的设想。</p>
+</li>
+<li><p>NFT——NFT可以将现实世界与元宇宙的每一个物品一一对应。</p>
+</li>
+<li><p>DAO——元宇宙既是一场技术革命，也是一场社会革命，而DAO作为社区的操作系统，将是元宇宙的关键。DAO提供了一个技术层，提供个人之间的全球性和去中心化的协作，而无须信任第三方或少数代表。</p>
+</li>
+<li><p>之所以字节跳动等大厂和互联网知名人士都认为元宇宙是一个超前的概念，主要是因为其本身就建立在多重计算机技术与网络服务之上，是一套极其复杂的生态技术系统，在短时间内并不可能实现，而目前最接近元宇宙的则是Web 3.0。</p>
+</li>
+<li><p>区块链是支撑Web 3.0发展的底层技术，而Web 3.0的去中心化和确权特性是元宇宙的基础建设。Web 3.0的实现必然早于真正元宇宙的实现，这是元宇宙之所以能成为宇宙的前提条件。</p>
+</li>
+</ul>
+<h2 id="DApps"><a href="#DApps" class="headerlink" title="DApps"></a>DApps</h2><ul>
+<li><p>DApps是建立在区块链上的应用，全称Decentralized Applications。区块链有五层架构（也有一种划分方式，将协议层从应用层中独立出来，分为六层架构），DApps属于其中的最上层——应用层</p>
+</li>
+<li><p>Web 3.0是构建在区块链上的数字世界，而DApps就是用来构建这个世界中我们看得见摸得着的那部分的“砖瓦”。</p>
+</li>
+<li><p>要成为去中心化应用，需要满足以下标准：</p>
+<ul>
+<li>(1)必须完全开源，自动运行，且没有一个实体控制着它的大多数通证。它的数据和记录必须加密后存储在一个公链上。</li>
+<li>(2)必须依据一个标准化算法或一系列准则来生产通证，并且应该在开始运营的时候就将它的部分或全部通证发放给使用者。这个应用必须依赖该通证来运行，而且使用者所作出的贡献应该以该通证作为奖励。</li>
+<li>(3)可以因时制宜地更改它的运行法则，但是这些改变应该被大多数用户所认可，而不是将最终解释权归于某个实体。</li>
+</ul>
+</li>
+<li><p>区块链的基础架构可以分为五层，包括硬件层，数据层、网络层、共识层、应用层（有些说法还会从应用层中拆分出协议层）。    </p>
+</li>
+<li><p>DApps大多数属于应用层。作为一类相对特殊的DApps，基础设施类DApps的作用是为DApps世界与其他四层的交互建立连接。因此基础设施类的DApps通常以“协议”的形式存在</p>
+</li>
+<li><p>◆ 区块链是由一个点对点(Peer-to-Peer)的计算机网络共同进行运算，验证和记录交易的。硬件层(Hardware Layer)就是这些计算机。<br>● 数据层(Data Layer)我们可以理解成数据库，主要可实现两大功能：数据存储、账户和交易的安全。<br>● 网络层(Network Layer)实现三大功能：节点间组网，数据传播，数据验证。<br>● 共识层(Consensus Layer)主要通过共识算法和共识机制实现一个重要功能：节点间的计算达成共识。由于区块链是分布式网络，每个节点均可计算，所以需要共识层做个统筹，让所有节点针对区块数据的有效性达成共识。<br>● 应用层(Application Layer)是最上面一层，有些说法还会在其中将协议层(Protocol Layer)单独分为一层。原因是DApps有“胖协议，瘦应用”的说法。这是相对于Web 2.0 Apps的“瘦协议，胖应用”提出的。所谓“胖协议”，举个例子，在Web 2.0中，数据的安全依靠数据安全公司、杀毒软件、防火墙等应用实现，协议层只负责数据传输；而在Web 3.0中，传输协议本身就保障了数据安全，因此各种数据安全应用、杀毒软件、防火墙应用没有了独立存在的空间。智能合约就是这样的一种协议。</p>
+</li>
+<li><p>交易所<br>针对加密资产的交易所既有中心化的也有去中心化的。中心化交易所目前依然占据着绝对的市场地位，因为他们发展较早，对从Web 2.0过渡进入Web 3.0的用户而言使用体验也比较好。在交易所中交易的加密资产主要为加密货币和NFT。去中心化加密货币交易所我们放在第六章详细介绍，NFT交易所我们放在第七章详细介绍。</p>
+</li>
+</ul>
+<h2 id="DAO"><a href="#DAO" class="headerlink" title="DAO"></a>DAO</h2><ul>
+<li><p>DAO是一种共同管理加密资产以达成共同目标的组织方式。我们可以将DAO视作由成员集体所有和共同管理的Web 3.0版本的新型企业。</p>
+</li>
+<li><p>DAO的实现基于智能合约。因此，在某些语境下，DAO也可以指代支撑DAO运行的智能合约本身。合约界定了组织的规则，管理组织的资金。以太坊是第一个使人们能够建立DAO的区块链。大多数DAO都在以太坊上，但也有其他网络能建立DAO，如Polkadot、Cosmos、EOS和Cardano。</p>
+</li>
+<li><p>DID和传统ID的差异在于，DID基于区块链，而链上数据是公开透明可查并难以篡改的。因此当你在Web 3.0亮出DID，人们并不需要借助某个权威机构，就可以核验这个DID的真伪以及能否准入。</p>
+</li>
+<li><p>Uniswap是一个以协议形式存在的去中心化交易所，而它的治理是以DAO的形式运作的。</p>
+</li>
+<li><p>教你建立一个DAO<br>了解了这么多关于DAO的概念，是不是也想自己动动手？参与或自己建立一个DAO是亲身体验Web 3.0的门槛最低的方式。建立一个DAO几乎和建立一个微信群一样简单。这一节笔者将借助一个名为Aragon的工具，手把手教读者建立一个DAO。<br>第一步：打开<a target="_blank" rel="noopener" href="https://aragon.org/">https://aragon.org/</a></p>
+</li>
+</ul>
+<h2 id="DeFi"><a href="#DeFi" class="headerlink" title="DeFi"></a>DeFi</h2><ul>
+<li>DeFi，全称Decentralized Finance，去中心化金融。</li>
+<li>去中心化交易所是一类基于区块链的交易所，它不需要将用户资金和个人数据转入交易所内，而只是作为一种基础设施来匹配希望买卖加密资产的买家和卖家。在匹配引擎的帮助下，这种交易直接发生在参与者之间。<br>中心化交易所(CEX)，是集传统交易所、券商和投资银行的功能为一体的平台，以币安、Coinbase、FTX交易所为代表，CEX聚集了庞大的用户量和交易量，也带来了足够的交易深度，提供了充分的资产流动性。</li>
+<li>交易所的核心环节一般包括充提、下单、订单撮合、资金结算和提现。CEX均由交易平台本身撮合完成；DEX则是把上述所有环节都置于链上，由智能合约执行全部操作，这样用户的交易过程就无须任何第三方。</li>
+</ul>
+<h2 id="NFT"><a href="#NFT" class="headerlink" title="NFT"></a>NFT</h2><ul>
+<li><p>现实世界与数字世界的差异在于，现实世界不存在完全相同的两个物品，即使是同一个工厂同一批次的商品也会有可能出现不同。而数字世界则可以完全复制同一物品。</p>
+</li>
+<li><p>我们如果要实现元宇宙的最终目标，就需要把现实世界物品的这个特点也搬到数字世界里。区块链能帮我们做到这一点，这就是非同质化通证(Non-Fungible Token, NFT)。</p>
+</li>
+<li><p>同质化通证(Fungible Token, FT)和非同质化通证之间的区别</p>
+</li>
+<li><p>BTC、ETH等加密资产多数是同质化通证。顾名思义，同质化通证是可以与同一事物的另一个单位互换的。例如，一单位BTC等于另一单位BTC，就像一张100美元的价值等于另一张100美元。美元可以进行简单互换，即使序号不同也不影响，对持有者来说没有区别。同质化通证是一种能够互换、具有统一性的通证。而且由于它以数字的形式存在，还可以拆分成近乎无穷小的许多份，每一份也都可以代表相应的价值。<br>与同质化物品不同，非同质化物品或通证彼此之间是不能互换的，它们具有独特的属性。即使看起来相似，但彼此之间也有根本的不同。<br>非同质化通证包含了记录在其智能合约中的识别信息。这些信息使每个通证具有唯一性，因此不能被另一种通证直接替代，没有两个NFT是相同的。此外，绝大多数非同质化通证也不可分割。</p>
+</li>
+<li><p>每个NFT都有区别于其他NFT的数字哈希值。因此，NFT可以作为出处证明。就像现实世界中的证书一样，它不仅能证明原创艺术品和游戏通证等知识产权的所有权和真实性，还能代表股票、房地产等实际资产。现实世界中，真实资产拥有所有权证书。同样，在区块链世界中，NFT也可以作为所有权记录和真实性证明。在艺术品领域，NFT也被称为数字藏品。</p>
+</li>
+<li><p>NFT不仅存在于数字世界，它们也可以代表任何类型的物理资产。NFT可以与物理世界中存在的任何东西相连接，形成一种“数字孪生”，并在数字世界的市场上实现实物资产的所有权交易。</p>
+</li>
+<li><p>NFT目前最为人推崇的应用场景是创作者经济。</p>
+</li>
+<li><p>NFT的3种存储方式是区块链存储、IPFS分布式存储节点存储、中心化服务器存储，安全性依次降低。安全性越高则越符合不可篡改的特性，也越有独特性。</p>
+</li>
+<li><p>万物皆可NFT。这里的NFT指的不仅是艺术品。这个理念不是说万物都可以成为艺术收藏品，而是有着更远大的目标。我们可以将世间万物以数字孪生的方式在数字世界重建一遍。所有的一切都可能以NFT的形式存在，也可以以NFT的产生方式创造出来。</p>
+</li>
+</ul>
+<h2 id="通证经济学"><a href="#通证经济学" class="headerlink" title="通证经济学"></a>通证经济学</h2><ul>
+<li>通证是Web 3.0的核心，身份是通证，NFT是通证，交易媒介也是通证。通证是激励用户参与的奖励，是驱动Web 3.0运行的燃油，也是连接Web 3.0世界各个岛屿的桥梁。通证的发放、分配与流通使用机制是一个Web 3.0项目能否成功的关键因素。</li>
+<li>通证经济（Token Economics，也称Tokenomics）。就像一个普通的经济体系，通证经济逃不过供给和需求的掌控，供不应求则价格上涨，供过于求则价格下跌。</li>
+</ul>
+<h2 id="Web-3-0现存的问题"><a href="#Web-3-0现存的问题" class="headerlink" title="Web 3.0现存的问题"></a>Web 3.0现存的问题</h2><ul>
+<li><p>在失去中心化监管的环境下，加密与匿名也暴露了许多问题。通过加密匿名算法获取的财富，也会被加密匿名地剥夺</p>
+</li>
+<li><p>人类的共识是一个很有意思的东西，它可以如磐石般固执，也可以如鲁珀特之泪的尾巴一样脆弱。当形成共识的那个关键点破灭，建立在共识之上的摩天大楼，就会瞬间崩塌。</p>
+</li>
+<li><p>创作者经济还是炒作者经济</p>
+</li>
+<li><p>Web 3.0的底层是去中心化网络，数据存储和运算是由各个分散的节点完成。那么很自然的，不考虑中心化作业情况下的网络其他参与者在不能达成一致而导致扯皮的情况，对于同样一件事情的处理，协同作业的速度就是比中心化作业要慢、效率更低、消耗能源更多。</p>
+</li>
+<li><p>比特币交易为了替换掉中心化权威而采用了耗能极大的工作证明，让人们消费了能源计算出一个不产生任何价值的问题，这是对权威不信任的代价。具体而言，每一笔比特币交易要消耗2188千瓦时的电量，而Visa是每10万笔交易消耗148千瓦时电量，这代价就是效率下降150万倍。以太坊的耗电量是比特币的1&#x2F;10，相对Visa也有15万倍的差距。Web 3.0的底层架构要想达到Web 2.0的用户体验，只有两条路可以走，其一是降低运算的耗能，其二是调整共识机制。</p>
+</li>
+<li><p>互联网不是法外之地，Web 3.0也不是。网络无国界，但法律是有国界的。目前各国针对Web 3.0的监管法规还在逐步出台中，而Web 3.0未来的发展必然是需要在各国的法律框架下运行的。</p>
+</li>
+<li><p>在Web 2.0时代，监管主体是服务提供商，监管属地是服务器所在地。而在Web 3.0时代，服务代码存放在网络的各个服务器上，也没有一个具体的服务提供商。Web 3.0的互联网活动趋于分布式，这给监管主体和监管属地的确定带来了一定的挑战。<br>另外，由于Web 3.0应用和钱包的匿名性和去中心化，一旦资产丢失，将无法找回。</p>
+</li>
+<li><p>Web 3.0项目的代码一经上线，即无法改动。这就使得在上线前对于代码的审计显得尤为重要。但凡是代码，或多或少都是有漏洞的。上线无法改动的代码犹如一辆在公路上狂奔而没有方向盘的汽车，行驶越久危险系数越高。</p>
+</li>
+<li><p>政府监管和主导从来都是一柄双刃剑，会对技术发展和应用创新造成一定阻碍，但从稳定社会经济、维护金融秩序角度看，合规是一个新兴市场的生存基础。</p>
+</li>
+<li><p>Web 3.0已经被赋予了太多神秘色彩，人们对它寄予了太多不切实际的希望。而只有当我们意识到，区块链发明者的“去中心化”理想主义，注定会被纷至沓来的投机者瓦解得支离破碎的时候，我们才可以平心静气地接受一个基于现实主义的Web 3.0的未来——在一个由核心节点掌握的“中心化”区块链网络上，用“去中心化”的分布式账本和加密散列，保障不同的经济主体之间的数字产权和商业价值不受侵犯，并形成它们互相的契约关系——这也理应是我国的政府、企业和社会组织在Web 3.0浪潮中扮演的角色。！！！！</p>
+</li>
+<li><p>腾讯、阿里巴巴（蚂蚁集团）、百度和京东等都构建了自己的联盟链，从内容版权、股权、保险、债券、供应链金融、税务、司法、商品防伪溯源、物流运输和生态保护等方面提供了“上链”服务。BSN与长安链等国有企业、智库和政府机构成立的联盟链也陆续建立，除了用于商业和政务场景，还致力解决区块链底层公用基础设施和知识产权的自主可控问题。</p>
+</li>
+</ul>
+<h2 id="名词"><a href="#名词" class="headerlink" title="名词"></a>名词</h2><ul>
+<li>DApps（Decentralized Applications，去中心化应用程序）</li>
+</ul>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
+<li>《Web3.0漫游指南》</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Web3/" rel="tag"># Web3</a>
+          
+            <a href="/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/" rel="tag"># 区块链</a>
+          
+            <a href="/tags/blockchain/" rel="tag"># blockchain</a>
+          
+            <a href="/tags/bitcoin/" rel="tag"># bitcoin</a>
+          
+            <a href="/tags/NFT/" rel="tag"># NFT</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2024/12/26/20241226-llm-xiang-guan-ji-zhu-jian-dan-liao-jie/" rel="next" title="LLM相关技术简单了解（绝大部分都是书籍摘要）">
+                <i class="fa fa-chevron-left"></i> LLM相关技术简单了解（绝大部分都是书籍摘要）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.png"
+                alt="" />
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+<a href="/archives/">                
+<!--<a href="/archives/%7C%7C%20archive">-->
+              
+                  <span class="site-state-item-count">139</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">150</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Web%E8%BF%9B%E5%8C%96%E5%8F%B2"><span class="nav-number">1.</span> <span class="nav-text">Web进化史</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8C%BA%E5%9D%97%E9%93%BE"><span class="nav-number">2.</span> <span class="nav-text">区块链</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%83%E5%AE%87%E5%AE%99"><span class="nav-number">3.</span> <span class="nav-text">元宇宙</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DApps"><span class="nav-number">4.</span> <span class="nav-text">DApps</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DAO"><span class="nav-number">5.</span> <span class="nav-text">DAO</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DeFi"><span class="nav-number">6.</span> <span class="nav-text">DeFi</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#NFT"><span class="nav-number">7.</span> <span class="nav-text">NFT</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%9A%E8%AF%81%E7%BB%8F%E6%B5%8E%E5%AD%A6"><span class="nav-number">8.</span> <span class="nav-text">通证经济学</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Web-3-0%E7%8E%B0%E5%AD%98%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">9.</span> <span class="nav-text">Web 3.0现存的问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%8D%E8%AF%8D"><span class="nav-number">10.</span> <span class="nav-text">名词</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">11.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kingson Wu</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'LR34RG5CRdFgzK8ijwc5Hq0B-gzGzoHsz',
+        appKey: 'qqtIlANIluHpfpOnxTUnYrku',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"model":{"jsonPath":"/live2dw/assets/tororo.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"log":false});</script></body>
+</html>

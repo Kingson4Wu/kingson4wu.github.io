@@ -287,6 +287,283 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2023/07/30/20230730-ji-yi-ci-socket-xie-lu-wen-ti-pai-cha-ji-lu/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2023/07/30/20230730-ji-yi-ci-socket-xie-lu-wen-ti-pai-cha-ji-lu/" itemprop="url">记一次socket泄露问题排查记录</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-07-30T13:03:45+08:00">
+                2023-07-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2023/07/30/20230730-ji-yi-ci-socket-xie-lu-wen-ti-pai-cha-ji-lu/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2023/07/30/20230730-ji-yi-ci-socket-xie-lu-wen-ti-pai-cha-ji-lu/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="结论先行"><a href="#结论先行" class="headerlink" title="结论先行"></a>结论先行</h2><ul>
+<li>服务死锁导致大量请求hang住，进程无法提供服务且大量socket泄漏</li>
+</ul>
+<h3 id="具体过程"><a href="#具体过程" class="headerlink" title="具体过程"></a>具体过程</h3><ul>
+<li>服务某些逻辑处理不当导致死锁</li>
+<li>大量请求hang住没有响应</li>
+<li>上层的nginx超时主动关闭连接</li>
+<li>服务被关闭连接，导致大量CLOSE_WAIT</li>
+<li>由于服务对连接处理不当（待分析原因TODO），导致大量socket泄漏</li>
+</ul>
+<hr>
+<h2 id="前置知识"><a href="#前置知识" class="headerlink" title="前置知识"></a>前置知识</h2><h3 id="TCP状态图"><a href="#TCP状态图" class="headerlink" title="TCP状态图"></a>TCP状态图</h3><ul>
+<li>从网上找的<br><img src="/2023/07/30/20230730-ji-yi-ci-socket-xie-lu-wen-ti-pai-cha-ji-lu/TCP%E7%8A%B6%E6%80%81%E5%9B%BE.jpg"></li>
+</ul>
+<h3 id="相关排查命令"><a href="#相关排查命令" class="headerlink" title="相关排查命令"></a>相关排查命令</h3><pre>
+sudo lsof | grep sock | awk '{++S[$1]} END {for(a in S) print a, S[a]}' | sort -nr
+sudo lsof | awk '/sock/ {++S[substr($0, index($0, $9))]} END {for(a in S) print a, S[a]}'
+sudo lsof | grep sock|grep 'identify protocol'|awk ' {++S[$2]} END {for(a in S) print a, S[a]}'| sort -nr
+//打开句柄数目最多的进程
+lsof -n|awk '{print $2}'| sort | uniq -c | sort -nr | head
+//查看close_wait连接统计：
+sudo netstat -anp|grep 'CLOSE_WAIT'|grep 'ssogo'| awk '{print $5}'|sort |uniq -c | sort -nr
+//查看FIN_WAIT2连接统计：
+sudo netstat -anp|grep 'FIN_WAIT2'|grep 'ssogo'| awk '{print $5}'|sort |uniq -c | sort -nr
+//查看CLOSE_WAIT最多的进程
+sudo netstat -anp|grep 'CLOSE_WAIT'| awk '{print $7}'|sort |uniq -c | sort -nr
+sudo netstat -anp|grep 'FIN_WAIT2'| awk '{print $7}'|sort |uniq -c | sort -nr
+</pre>
+
+<h3 id="ss"><a href="#ss" class="headerlink" title="ss"></a>ss</h3><ul>
+<li>在 ss -s 命令的输出中，”closed” 表示已关闭的 TCP 连接的数量。</li>
+</ul>
+<blockquote>
+<blockquote>
+<p>具体地，TCP 的 “closed” 状态表示连接已经关闭，不再使用，并且不再具有任何网络连接或状态信息。这些连接处于已经结束的状态，但它们的套接字资源还未被完全释放或回收。</p>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<p>在输出结果中，”closed” 数量是指当前处于已关闭状态的 TCP 连接的数量。这些连接可能是先前已经建立的连接，已经完成了其通信任务，双方都关闭了连接，并且连接的套接字资源等待系统进行资源回收。</p>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<p>需要注意的是，已关闭的连接数量的增加和减少是动态的，因为在系统的运行过程中，套接字的打开和关闭是常见的网络操作。</p>
+</blockquote>
+</blockquote>
+<h2 id="lsof"><a href="#lsof" class="headerlink" title="lsof"></a>lsof</h2><ul>
+<li><p><code>lsof| grep &quot;can&#39;t identify protocol&quot;</code><br>如果存在很多，则代表socket泄漏，同时会显示哪个进程使用的sock未关闭。</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="http://mdba.cn/2015/03/10/tcp-socket%E6%96%87%E4%BB%B6%E5%8F%A5%E6%9F%84%E6%B3%84%E6%BC%8F/">tcp-socket文件句柄泄漏</a></p>
+</li>
+</ul>
+<hr>
+<h2 id="架构图"><a href="#架构图" class="headerlink" title="架构图"></a>架构图</h2><ul>
+<li>TODO</li>
+</ul>
+<hr>
+<h2 id="处理过程1"><a href="#处理过程1" class="headerlink" title="处理过程1"></a>处理过程1</h2><p><img src="/2023/07/30/20230730-ji-yi-ci-socket-xie-lu-wen-ti-pai-cha-ji-lu/socket%E6%95%B0%E9%87%8F%E6%9A%B4%E6%B6%A8.png"></p>
+<ul>
+<li><p>紧急重启服务（业务Go服务）后socket数量下降</p>
+</li>
+<li><p>在现场已经没了的情况下，分析发现机器上本身已经存在大量socket泄漏的情况</p>
+</li>
+</ul>
+<p>![](20230730-记一次socket泄露问题排查记录&#x2F;identify protocol.png)</p>
+<p><img src="/2023/07/30/20230730-ji-yi-ci-socket-xie-lu-wen-ti-pai-cha-ji-lu/process.png"><br><img src="/2023/07/30/20230730-ji-yi-ci-socket-xie-lu-wen-ti-pai-cha-ji-lu/process2.png"></p>
+<ul>
+<li><p>nginx和gateway都reload，那么nginx会产生新的worker进程，但是应该shutdown的老进程因为和gateway还有连接，所以也不会销毁，这样时间长了会有很多处于shutting状态的进程，这些进程都会占用资源。</p>
+</li>
+<li><p>初步怀疑是这些异常的nginx worker进程导致的，于是处理所有机器上这些异常（kill）</p>
+<ol>
+<li>如果清掉这些异常进程后，问题不再发生，那么很大可能就是这个原因导致的</li>
+<li>如果问题还继续发生，说明是其他的原因</li>
+</ol>
+</li>
+</ul>
+<hr>
+<h2 id="处理过程2"><a href="#处理过程2" class="headerlink" title="处理过程2"></a>处理过程2</h2><ul>
+<li>即使上次清理了所有有问题的nginx worker进程，释放了大量泄漏的socket，相同的问题后续还是发生了</li>
+</ul>
+<p><img src="/2023/07/30/20230730-ji-yi-ci-socket-xie-lu-wen-ti-pai-cha-ji-lu/%E8%BF%87%E7%A8%8B2-1.png"></p>
+<ul>
+<li>还是出现了大量的closed状态，已经大量的close_wait和fin_wait2状态</li>
+</ul>
+<p><img src="/2023/07/30/20230730-ji-yi-ci-socket-xie-lu-wen-ti-pai-cha-ji-lu/%E8%BF%87%E7%A8%8B2-1.png"></p>
+<ul>
+<li>通过lsof查看，确实是Go业务进程泄漏的socket</li>
+</ul>
+<p><img src="/2023/07/30/20230730-ji-yi-ci-socket-xie-lu-wen-ti-pai-cha-ji-lu/%E8%BF%87%E7%A8%8B2-3.png"></p>
+<ul>
+<li><p>上图的正常状态下，close_wait和fin_wait2状态的数量，并没那么多</p>
+</li>
+<li><p>todo： 后续统计一下：</p>
+</li>
+</ul>
+<pre>
+//查看close_wait连接统计：
+sudo netstat -anp|grep 'CLOSE_WAIT'|grep 'ssogo'| awk '{print $5}'|sort |uniq -c | sort -nr
+//查看FIN_WAIT2连接统计：
+sudo netstat -anp|grep 'FIN_WAIT2'|grep 'ssogo'| awk '{print $5}'|sort |uniq -c | sort -nr
+//查看CLOSE_WAIT最多的进程
+sudo netstat -anp|grep 'CLOSE_WAIT'| awk '{print $7}'|sort |uniq -c | sort -nr
+sudo netstat -anp|grep 'FIN_WAIT2'| awk '{print $7}'|sort |uniq -c | sort -nr
+</pre>
+
+<ul>
+<li><p>通过pprof输出进程的goroutine情况，从数量和堆栈分析，大量goroutine锁住，导致请求被hang住 </p>
+</li>
+<li><p>至此，问题的基本表现分析如下</p>
+<ol>
+<li>Go进程出问题hang住大量请求</li>
+<li>上层的nginx超时主动关闭连接，状态变成FIN_WAIT2，而Go进程对应的socket拦截则变成CLOSE_WAIT<ul>
+<li>查看设置为 proxy_read_timeout 10（即10s）：proxy_read_timeout 是用来设置与后端代理服务器之间的读取超时时间，它控制 Nginx 从后端代理服务器读取响应的最长等待时间。当从后端服务器读取响应数据的时间超过了设置的超时时间，Nginx 将认为后端服务器的响应已经超时，并且会中断与后端服务器的连接。</li>
+</ul>
+</li>
+<li>Go进程对已关闭的连接处理异常，导致大量“can’t identify protocol” <ul>
+<li>请求被hang住，进程没释放，socket会占有（不然被新的请求占有造成数据包混乱）</li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+<h3 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h3><h4 id="can’t-identify-protocol-是怎么出现的？"><a href="#can’t-identify-protocol-是怎么出现的？" class="headerlink" title="can’t identify protocol 是怎么出现的？"></a>can’t identify protocol 是怎么出现的？</h4><ul>
+<li><a target="_blank" rel="noopener" href="https://idea.popcount.org/2012-12-09-lsof-cant-identify-protocol/">https://idea.popcount.org/2012-12-09-lsof-cant-identify-protocol/</a></li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> socket</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"></span><br><span class="line">PORT = <span class="number">9918</span></span><br><span class="line"></span><br><span class="line">sd = socket.socket(socket.AF_INET, socket.SOCK_STREAM)</span><br><span class="line">sd.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, <span class="number">1</span>)</span><br><span class="line">sd.bind((<span class="string">&#x27;0.0.0.0&#x27;</span>, PORT))</span><br><span class="line">sd.listen(<span class="number">5</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">10</span>):</span><br><span class="line">    <span class="keyword">if</span> os.fork() == <span class="number">0</span>:</span><br><span class="line">        sd.close()</span><br><span class="line">        cd = socket.socket(socket.AF_INET,</span><br><span class="line">                           socket.SOCK_STREAM)</span><br><span class="line">        cd.connect((<span class="string">&#x27;127.0.0.1&#x27;</span>, PORT))</span><br><span class="line">        sys.exit()</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span> <span class="string">&quot;Server process pid=%i&quot;</span> % (os.getpid(),)</span><br><span class="line">sockets = []</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">10</span>):</span><br><span class="line">    (cd, address) = sd.accept()</span><br><span class="line">    sockets.append(cd)</span><br><span class="line">    cd.shutdown(socket.SHUT_WR)</span><br><span class="line"></span><br><span class="line">os.system(<span class="string">&quot;lsof -p %i&quot;</span> % (os.getpid(),))</span><br><span class="line">```   </span><br><span class="line"></span><br><span class="line">+ `cd.connect((<span class="string">&#x27;127.0.0.1&#x27;</span>, PORT))`之后没有执行`cd.close()`（关闭客户端套接字，确保连接被正确关闭）, 直接执行 sys.exit()，导致连接没有正确关闭，从而出现了<span class="string">&quot;can&#x27;t identify protocol&quot;</span>的问题</span><br><span class="line"></span><br><span class="line"><span class="comment">#### 为什么lsof和ss的执行结果不同</span></span><br><span class="line">+ ss命令显示closed状态的socket，在lsof显示的是can<span class="string">&#x27;t identity protocol</span></span><br><span class="line"><span class="string">+ 大概是两个命令实现的原理差异吧</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">#### 通过模拟client断开，server端hang住</span></span><br><span class="line"><span class="string">+ https://raw.githubusercontent.com/Kingson4Wu/awesome-tools/main/network/http-print.c 加上 `sleep(600);`的代码</span></span><br><span class="line"><span class="string">+ curl --connect-timeout 10 -m 20 &quot;http://XXXXXXX&quot;</span></span><br><span class="line"><span class="string">+ 执行lsof 只出现了‘CLOSE_WAIT’,没有出现 can&#x27;</span>t identity protocol</span><br><span class="line"></span><br><span class="line"><span class="comment">#### go进程为什么没正确关闭socket</span></span><br><span class="line">+ todo</span><br><span class="line">+ strace -p</span><br><span class="line"></span><br><span class="line"><span class="comment">#### strace 怎么使用</span></span><br><span class="line">+ todo</span><br><span class="line"></span><br><span class="line"><span class="comment">### gin怎么设置接受的socket数量</span></span><br><span class="line">+ todo</span><br><span class="line">+ gin接收请求数量上限设置</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">---</span><br><span class="line"></span><br><span class="line"><span class="comment">## 处理过程3</span></span><br><span class="line">+ 分析Go进程死锁原因</span><br><span class="line"></span><br><span class="line">+ 通过分析pprof的goroutine堆栈</span><br><span class="line"></span><br><span class="line">```go</span><br><span class="line"><span class="built_in">type</span> GuardPolicy struct &#123;</span><br><span class="line">	mu      *sync.RWMutex</span><br><span class="line">	errData <span class="built_in">map</span>[*sql.DB]<span class="built_in">int</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">type</span> sortPool struct &#123;</span><br><span class="line">	connPool gorm.ConnPool</span><br><span class="line">	errCnt   <span class="built_in">int</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (s *GuardPolicy) countErr(db *gorm.DB) &#123;</span><br><span class="line">	<span class="keyword">if</span> db.Error == nil || errors.Is(db.Error, gorm.ErrRecordNotFound) &#123;</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> ins, ok := db.Statement.ConnPool.(*sql.DB); ok &#123;</span><br><span class="line">		s.mu.Lock()</span><br><span class="line">		defer s.mu.Unlock()</span><br><span class="line">		s.errData[ins] = s.errData[ins] + <span class="number">1</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func (s *GuardPolicy) Resolve(connPools []gorm.ConnPool) gorm.ConnPool &#123;</span><br><span class="line">	var x = make([]*sortPool, <span class="number">0</span>, <span class="built_in">len</span>(connPools))</span><br><span class="line">	<span class="keyword">for</span> i := <span class="built_in">range</span> connPools &#123;</span><br><span class="line">		p, ok := connPools[i].(*sql.DB)</span><br><span class="line">		<span class="keyword">if</span> !ok &#123;</span><br><span class="line">			x = append(x, &amp;sortPool&#123;connPool: connPools[i], errCnt: <span class="number">0</span>&#125;)</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			s.mu.RLock()</span><br><span class="line">			defer s.mu.RUnlock()</span><br><span class="line">			x = append(x, &amp;sortPool&#123;connPool: connPools[i], errCnt: s.errData[p]&#125;)</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	sort.Slice(x, func(i, j <span class="built_in">int</span>) <span class="built_in">bool</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> x[i].errCnt &lt;= x[j].errCnt</span><br><span class="line">	&#125;)</span><br><span class="line">	<span class="keyword">return</span> x[<span class="number">0</span>].connPool</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>（1） goroutine1: s.mu.RLock()<br>（2） goroutine2: s.mu.Lock() - 等待（1）<br>（3） goroutine1: s.mu.RLock() - 等待（2）<br>相当于goroutine1自己等待自己</p>
+<ul>
+<li>问chatgpt：<br>是的，提供的代码存在死锁风险。死锁可能发生在Resolve方法中。</li>
+</ul>
+<p>在Resolve方法中，对于sql.DB类型的连接，当读取errData映射的错误计数时，使用了RWMutex的读锁（s.mu.RLock()）。但是，在循环的每次迭代中都会调用defer s.mu.RUnlock()，这会在for循环结束时解锁，而不是在每次迭代结束时解锁。</p>
+<p>这意味着如果在某次循环迭代中获取了读锁，但在获取下一个读锁之前已经进入了循环的下一次迭代，那么这两次迭代将持有读锁，但没有释放，从而导致死锁。</p>
+<p>要解决这个问题，可以将读锁的获取和解锁放在同一次循环迭代中，确保每次获取读锁后都会及时释放，而不会在后续迭代中持有读锁。以下是修改后的代码：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *GuardPolicy)</span></span> Resolve(connPools []gorm.ConnPool) gorm.ConnPool &#123;</span><br><span class="line">	<span class="keyword">var</span> x = <span class="built_in">make</span>([]*sortPool, <span class="number">0</span>, <span class="built_in">len</span>(connPools))</span><br><span class="line">	<span class="keyword">for</span> i := <span class="keyword">range</span> connPools &#123;</span><br><span class="line">		p, ok := connPools[i].(*sql.DB)</span><br><span class="line">		<span class="keyword">if</span> !ok &#123;</span><br><span class="line">			x = <span class="built_in">append</span>(x, &amp;sortPool&#123;connPool: connPools[i], errCnt: <span class="number">0</span>&#125;)</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			s.mu.RLock()</span><br><span class="line">			errCnt := s.errData[p]</span><br><span class="line">			s.mu.RUnlock()</span><br><span class="line">			x = <span class="built_in">append</span>(x, &amp;sortPool&#123;connPool: connPools[i], errCnt: errCnt&#125;)</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	sort.Slice(x, <span class="function"><span class="keyword">func</span><span class="params">(i, j <span class="type">int</span>)</span></span> <span class="type">bool</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> x[i].errCnt &lt;= x[j].errCnt</span><br><span class="line">	&#125;)</span><br><span class="line">	<span class="keyword">return</span> x[<span class="number">0</span>].connPool</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="扩展-1"><a href="#扩展-1" class="headerlink" title="扩展"></a>扩展</h2><ul>
+<li>跟这个很像：<a target="_blank" rel="noopener" href="https://ms2008.github.io/2019/07/04/golang-redis-deadlock/">线上一次大量 CLOSE_WAIT 复盘</a></li>
+</ul>
+<hr>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/wodatoucai/article/details/69389288">tcp socket文件句柄泄漏</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/rootq/articles/1403720.html">确认是否有socket泄露</a></li>
+<li><a target="_blank" rel="noopener" href="https://zzyongx.github.io/blogs/socket_fd_leak.html">记一次排查socket fd泄漏</a></li>
+<li><a target="_blank" rel="noopener" href="https://zzyongx.github.io/blogs/socket_fd_leak_2.html">又一次排查socket fd泄漏</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/stpeace/article/details/57103089">socket句柄泄漏问题的定位： losf和strace的联合使用</a></li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2023/07/04/20230704-wo-jie-hong-guo-de-ji-chong-fu-wu-fa-xian-he-rpc/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -3301,191 +3578,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/09/07/20220907-tcp-lian-jie-zhong-de-ge-chong-zhuang-tai/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2022/09/07/20220907-tcp-lian-jie-zhong-de-ge-chong-zhuang-tai/" itemprop="url">TCP连接中的各种状态</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-09-07T20:36:01+08:00">
-                2022-09-07
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2022/09/07/20220907-tcp-lian-jie-zhong-de-ge-chong-zhuang-tai/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2022/09/07/20220907-tcp-lian-jie-zhong-de-ge-chong-zhuang-tai/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><img src="/2022/09/07/20220907-tcp-lian-jie-zhong-de-ge-chong-zhuang-tai/TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B.png"></p>
-<p><img src="/2022/09/07/20220907-tcp-lian-jie-zhong-de-ge-chong-zhuang-tai/TCP%E7%8A%B6%E6%80%81%E5%8F%98%E5%8C%96.png"></p>
-<h2 id="状态说明"><a href="#状态说明" class="headerlink" title="状态说明"></a>状态说明</h2><ul>
-<li>CLOSED：无连接是活动的或正在进行</li>
-<li>LISTEN：服务器在等待进入呼叫</li>
-<li>SYN_RECV：一个连接请求已经到达，等待确认</li>
-<li>SYN_SENT：应用已经开始，打开一个连接</li>
-<li>ESTABLISHED：正常数据传输状态</li>
-<li>FIN_WAIT1：应用说它已经完成</li>
-<li>FIN_WAIT2：另一边已同意释放</li>
-<li>ITMED_WAIT：等待所有分组死掉</li>
-<li>CLOSING：两边同时尝试关闭</li>
-<li>TIME_WAIT：另一边已初始化一个释放</li>
-<li>LAST_ACK：等待所有分组死掉</li>
-</ul>
-<h3 id="flags-标志"><a href="#flags-标志" class="headerlink" title="flags 标志"></a>flags 标志</h3><ul>
-<li>S(SYN)</li>
-<li>F(FIN)</li>
-<li>P(PUSH)</li>
-<li>R(RST)</li>
-</ul>
-<h2 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h2><h3 id="查看主机上的TCP连接状态"><a href="#查看主机上的TCP连接状态" class="headerlink" title="查看主机上的TCP连接状态"></a>查看主机上的TCP连接状态</h3><ul>
-<li><code>netstat –an</code></li>
-<li><code>netstat –an |grep &#39;CLOSE_WAIT&#39;</code></li>
-<li><code>ss -t -n|grep 5000</code></li>
-</ul>
-<h3 id="统计当前各种状态的连接的数量的命令"><a href="#统计当前各种状态的连接的数量的命令" class="headerlink" title="统计当前各种状态的连接的数量的命令"></a>统计当前各种状态的连接的数量的命令</h3><ul>
-<li><code>netstat -n | awk &#39;/^tcp/ &#123;++S[$NF]&#125; END &#123;for(a in S) print a, S[a]&#125;&#39;</code></li>
-</ul>
-<h3 id="查看指定端口的连接"><a href="#查看指定端口的连接" class="headerlink" title="查看指定端口的连接"></a>查看指定端口的连接</h3><ul>
-<li><code>netstat -an | awk &#39;NR==2 || $4~/65016/&#39;</code>（client）</li>
-<li><code>netstat -an | awk &#39;NR==2 || $5~/8080/&#39;</code>（server）</li>
-</ul>
-<h3 id="Linux-netstat命令详解"><a href="#Linux-netstat命令详解" class="headerlink" title="Linux netstat命令详解"></a>Linux netstat命令详解</h3><ul>
-<li><a target="_blank" rel="noopener" href="http://www.cnblogs.com/ggjucheng/archive/2012/01/08/2316661.html">http://www.cnblogs.com/ggjucheng/archive/2012/01/08/2316661.html</a></li>
-</ul>
-<h3 id="tcpdump"><a href="#tcpdump" class="headerlink" title="tcpdump"></a>tcpdump</h3><ul>
-<li><p>想知道我们可以通过哪几个网卡抓包，可以使用-D参数 : <code>tcpdump –D</code></p>
-</li>
-<li><p>将抓包结果存放在文件中(可以用Wireshark打开查看) : <code>tcpdump –w google.cap</code></p>
-</li>
-<li><p>其中http协议的数据包都给过滤出来: <code>tcpdump –r google.cap http</code></p>
-</li>
-<li><p><a target="_blank" rel="noopener" href="http://www.cnblogs.com/zhuimengle/p/5737848.html">http://www.cnblogs.com/zhuimengle/p/5737848.html</a></p>
-</li>
-</ul>
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
-<li><a target="_blank" rel="noopener" href="http://elf8848.iteye.com/blog/1739571">TCP&#x2F;IP TIME_WAIT状态原理</a></li>
-</ul>
-<h2 id="todo"><a href="#todo" class="headerlink" title="todo"></a>todo</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/yunhua_lee/article/details/40513677">tcp 三次握手和四次断连深入分析：连接状态和socket API的关系</a><ul>
-<li>close函数其实本身不会导致tcp协议栈立刻发送fin包，而只是将socket文件的引用计数减1，当socket文件的引用计数变为0的时候，操作系统会自动关闭tcp连接，此时才会发送fin包。</li>
-<li>这也是多进程编程需要特别注意的一点，父进程中一定要将socket文件描述符close，否则运行一段时间后就可能会出现操作系统提示too many open files</li>
-</ul>
-</li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -3541,7 +3633,7 @@
 <a href="/archives/">                
 <!--<a href="/archives/%7C%7C%20archive">-->
               
-                  <span class="site-state-item-count">139</span>
+                  <span class="site-state-item-count">140</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -3554,7 +3646,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">150</span>
+                  <span class="site-state-item-count">151</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

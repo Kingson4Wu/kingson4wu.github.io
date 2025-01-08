@@ -513,8 +513,7 @@ file '【国家地理】COSMOS系列【熟肉-对后十一集修复】 (P10. 气
           
 
   
-    <div class="comments" id="comments">
-    </div>
+    <div id="gitalk-container"></div>
   
 
 
@@ -811,6 +810,26 @@ file '【国家地理】COSMOS系列【熟肉-对后十一集修复】 (P10. 气
 
 
 
+
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+  <script src="/js/src/md5.min.js"></script>
+
+   <script type="text/javascript">
+        var gitalk = new Gitalk({
+          clientID: '3416434437f9f4e049bd',
+          clientSecret: 'a52d69bf90cb77f81a26d135e03dd0f4869fbf84',
+          repo: 'kingson4wu.github.io',
+          owner: 'kingson4wu',
+          admin: ['kingson4wu'],
+
+          id: md5(location.pathname),
+
+          distractionFreeMode: 'true'
+        })
+        gitalk.render('gitalk-container')
+    </script>
 
 
 

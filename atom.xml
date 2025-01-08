@@ -6,7 +6,7 @@
   <link href="http://yoursite.com/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2025-01-06T13:51:35.434Z</updated>
+  <updated>2025-01-08T06:30:12.792Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,38 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>算法在实际业务场景中并非完全无用</title>
+    <link href="http://yoursite.com/2025/01/08/20250108-suan-fa-zai-shi-ji-ye-wu-chang-jing-zhong-bing-fei-wan-quan-wu-yong/"/>
+    <id>http://yoursite.com/2025/01/08/20250108-suan-fa-zai-shi-ji-ye-wu-chang-jing-zhong-bing-fei-wan-quan-wu-yong/</id>
+    <published>2025-01-08T05:33:24.000Z</published>
+    <updated>2025-01-08T06:30:12.792Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><blockquote><p>从事业务开发的同学经常会抱怨经常面试要刷算法，实际上平常的开发99%以上的事情都不会用到。<br>实际情况确实是这样。平常在写业务逻辑代码时，几乎完全不需要。<br>当然有些技术原理在背八股文的时候，懂一点算法能帮助你更好的理解。<br>而有些特殊业务场景，懂一些算法，确实能帮助你很好的解决问题。<br>下面举两个业务中产品提出的需求作为例子，简单描述如何利用算法有效解决。</p></blockquote></blockquote><h2 id="一、从题库（50道题）中随机抽出10道题-且不能重复"><a href="#一、从题库（50道题）中随机抽出10道题-且不能重复" class="headerlink" title="一、从题库（50道题）中随机抽出10道题,且不能重复"></a>一、从题库（50道题）中随机抽出10道题,且不能重复</h2><ul><li><p>最简单的思路：</p><ul><li>循环10次，每次取50以内的随机数</li><li>创建一个hashmap，判断生成的随机数是否在map存在，存在则重新生成</li><li>这个方法的缺点时，极端情况下，会多次生成重复的随机数导致要不断重新生成</li></ul></li><li><p>经过一番思考，我设计了一下从m个数中取n个数的算法(m&gt;n), 保证算法只会循环n次 </p></li><li><p>那时我还是使用Java进行开发</p></li></ul><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="type">int</span>[] randomArr(<span class="type">int</span> m, <span class="type">int</span> n) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (m &lt; n) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">int</span>[]&#123;&#125;;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">int</span>[] result = <span class="keyword">new</span> <span class="title class_">int</span>[n];</span><br><span class="line">    <span class="type">int</span>[] data = <span class="keyword">new</span> <span class="title class_">int</span>[m];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; m; i++) &#123;</span><br><span class="line">        data[i] = i;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> <span class="variable">end</span> <span class="operator">=</span> m;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">0</span>; j &lt; n; j++) &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">y</span> <span class="operator">=</span> ThreadLocalRandom.current().nextInt(end);</span><br><span class="line">        result[j] = data[y];</span><br><span class="line">        data[y] = data[end - <span class="number">1</span>];</span><br><span class="line">        data[end - <span class="number">1</span>] = result[j];</span><br><span class="line">        end--;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><ul><li>后面我才发现原来这个算法叫 洗牌算法（Shuffle Algorithm），或者叫随机乱置算法。</li></ul><h2 id="通过搜索关键字匹配对应的标签id"><a href="#通过搜索关键字匹配对应的标签id" class="headerlink" title="通过搜索关键字匹配对应的标签id"></a>通过搜索关键字匹配对应的标签id</h2><ul><li><p>产品提供了400个标签名称以及对应的标签id，希望能通过搜索的方式找到最相似的标签id，希望能支持模糊匹配</p></li><li><p>一般思路：</p><ul><li>方案1: <ol><li>将400条数据一次性加载的程序内存</li><li>遍历数据400条使用字符串的contains方法，找到第一条匹配数据就跳出，否则继续</li></ol></li><li>方案2:<ol><li>直接将数据导入到ES搜索引擎，利用ES自带的分词等搜索功能</li><li>通过调ES，搜索得到标签id</li></ol></li></ul></li><li><p>简单分析方案：</p><ul><li>方案1，性能太差，极端情况需要遍历所有数据</li><li>方案2，需要新搭建ES集群，实现代价比较高</li></ul></li><li><p>经过一番思考，以及从产品本身实际需求上出发，我涉及出以下的方案</p><ol><li>将数据的标签名字使用中文分词库<a href="https://github.com/go-ego/gse">gse</a>进行分词</li><li>将分词和对应的标签数据，构建前缀匹配树</li><li>当搜索时，使用提前构建好的前缀匹配树，即可快速找到对应的标签id</li></ol></li><li><p>这时我已经转使用Go来开发了</p></li></ul><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">type</span> TrieNode <span class="keyword">struct</span> &#123;</span><br><span class="line">children <span class="keyword">map</span>[<span class="type">rune</span>]*TrieNode</span><br><span class="line">isEnd    <span class="type">bool</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">NewTrieNode</span><span class="params">()</span></span> *TrieNode &#123;</span><br><span class="line"><span class="keyword">return</span> &amp;TrieNode&#123;</span><br><span class="line">children: <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="type">rune</span>]*TrieNode),</span><br><span class="line">isEnd:    <span class="literal">false</span>,</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Trie <span class="keyword">struct</span> &#123;</span><br><span class="line">root *TrieNode</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">NewTrie</span><span class="params">()</span></span> *Trie &#123;</span><br><span class="line"><span class="keyword">return</span> &amp;Trie&#123;</span><br><span class="line">root: NewTrieNode(),</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(t *Trie)</span></span> Insert(word <span class="type">string</span>) &#123;</span><br><span class="line">node := t.root</span><br><span class="line"><span class="keyword">for</span> _, char := <span class="keyword">range</span> word &#123;</span><br><span class="line"><span class="keyword">if</span> _, ok := node.children[char]; !ok &#123;</span><br><span class="line">node.children[char] = NewTrieNode()</span><br><span class="line">&#125;</span><br><span class="line">node = node.children[char]</span><br><span class="line">&#125;</span><br><span class="line">node.isEnd = <span class="literal">true</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(t *Trie)</span></span> Search(word <span class="type">string</span>) <span class="type">bool</span> &#123;</span><br><span class="line">node := t.root</span><br><span class="line"><span class="keyword">for</span> _, char := <span class="keyword">range</span> word &#123;</span><br><span class="line"><span class="keyword">if</span> _, ok := node.children[char]; !ok &#123;</span><br><span class="line"><span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">&#125;</span><br><span class="line">node = node.children[char]</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> node.isEnd</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(t *Trie)</span></span> FuzzySearch(prefix <span class="type">string</span>) []<span class="type">string</span> &#123;</span><br><span class="line"><span class="keyword">var</span> result []<span class="type">string</span></span><br><span class="line">node := t.root</span><br><span class="line"><span class="keyword">for</span> _, char := <span class="keyword">range</span> prefix &#123;</span><br><span class="line"><span class="keyword">if</span> _, ok := node.children[char]; !ok &#123;</span><br><span class="line"><span class="keyword">return</span> result</span><br><span class="line">&#125;</span><br><span class="line">node = node.children[char]</span><br><span class="line">&#125;</span><br><span class="line">t.collectWords(node, prefix, &amp;result)</span><br><span class="line"><span class="keyword">return</span> result</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(t *Trie)</span></span> collectWords(node *TrieNode, prefix <span class="type">string</span>, result *[]<span class="type">string</span>) &#123;</span><br><span class="line"><span class="keyword">if</span> node.isEnd &#123;</span><br><span class="line">*result = <span class="built_in">append</span>(*result, prefix)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> char, child := <span class="keyword">range</span> node.children &#123;</span><br><span class="line">t.collectWords(child, prefix+<span class="type">string</span>(char), result)</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><ul><li>这个算法就是经典的Trie字典树（前缀树），如果我之前没了解过这些算法，可能一时间没那么快能想到用这个方式高效完成这个需求。</li></ul><h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><ul><li>了解一些算法，在实际业务开发，有时候也能运用到。</li><li>另外，现在处于AI时代，即时不了解算法，善于组织语言和上下文，向AI提问，基本它也能引导你找到合适的解决方案。</li></ul>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;从事业务开发的同学经常会抱怨经常面试要刷算法，实际上平常的开发99%以上的事情都不会用到。&lt;br&gt;实际情况确实是这样。平常在写业务逻辑代码时，几乎完全不需要。&lt;br&gt;当然有些技术原理在背八股文的时候，懂一点算法能帮助你更好</summary>
+      
+    
+    
+    
+    
+    <category term="业务方案" scheme="http://yoursite.com/tags/%E4%B8%9A%E5%8A%A1%E6%96%B9%E6%A1%88/"/>
+    
+    <category term="algorithm" scheme="http://yoursite.com/tags/algorithm/"/>
+    
+    <category term="算法" scheme="http://yoursite.com/tags/%E7%AE%97%E6%B3%95/"/>
+    
+    <category term="前缀树" scheme="http://yoursite.com/tags/%E5%89%8D%E7%BC%80%E6%A0%91/"/>
+    
+    <category term="分词" scheme="http://yoursite.com/tags/%E5%88%86%E8%AF%8D/"/>
+    
+  </entry>
   
   <entry>
     <title>简单研究一下人工智能和数学</title>
@@ -546,37 +578,6 @@
     
     
     <category term="开发效率" scheme="http://yoursite.com/tags/%E5%BC%80%E5%8F%91%E6%95%88%E7%8E%87/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>业务开发中使用BI的海量数据处理能力</title>
-    <link href="http://yoursite.com/2024/04/25/20240425-ye-wu-kai-fa-zhong-shi-yong-bi-de-hai-liang-shu-ju-chu-li-neng-li/"/>
-    <id>http://yoursite.com/2024/04/25/20240425-ye-wu-kai-fa-zhong-shi-yong-bi-de-hai-liang-shu-ju-chu-li-neng-li/</id>
-    <published>2024-04-25T11:40:27.000Z</published>
-    <updated>2024-04-25T11:47:53.035Z</updated>
-    
-    <content type="html"><![CDATA[<ul><li>BI的数据统计跑数结果一般是T+1生成的</li></ul><ol><li>实时性要求不高的功能，用于推荐等其他业务功能，可用于统计和监控等</li><li>对实时性要求高的功能，做后置的监控，及早发现逻辑错误</li></ol>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;ul&gt;
-&lt;li&gt;BI的数据统计跑数结果一般是T+1生成的&lt;/li&gt;
-&lt;/ul&gt;
-&lt;ol&gt;
-&lt;li&gt;实时性要求不高的功能，用于推荐等其他业务功能，可用于统计和监控等&lt;/li&gt;
-&lt;li&gt;对实时性要求高的功能，做后置的监控，及早发现逻辑错误&lt;/li&gt;
-&lt;/ol&gt;
-</summary>
-      
-    
-    
-    
-    
-    <category term="业务方案" scheme="http://yoursite.com/tags/%E4%B8%9A%E5%8A%A1%E6%96%B9%E6%A1%88/"/>
-    
-    <category term="BI" scheme="http://yoursite.com/tags/BI/"/>
     
   </entry>
   

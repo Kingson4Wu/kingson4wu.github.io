@@ -287,6 +287,170 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/13/20200713-you-zai-bei-gong-zuo-zhong-yin-fa-de-dui-bi-li-de-si-kao/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/07/13/20200713-you-zai-bei-gong-zuo-zhong-yin-fa-de-dui-bi-li-de-si-kao/" itemprop="url">由灾备工作中引发的对“比例”的思考</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-13T23:31:30+08:00">
+                2020-07-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/07/13/20200713-you-zai-bei-gong-zuo-zhong-yin-fa-de-dui-bi-li-de-si-kao/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2020/07/13/20200713-you-zai-bei-gong-zuo-zhong-yin-fa-de-dui-bi-li-de-si-kao/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><ul>
+<li>关于文章的题目我想了很久，暂时没想到合适的题目，姑且先这样吧</li>
+<li>之前在做灾备工作的时候，经常涉及服务的强弱依赖，超时时间，降级，以及业务折中方面的思考，下面将通过一些例子简要进行描述</li>
+</ul>
+<h3 id="场景描述"><a href="#场景描述" class="headerlink" title="场景描述"></a>场景描述</h3><ul>
+<li><p>从服务所依赖的重要程度上来区分有“强依赖”和“弱依赖”。</p>
+<ol>
+<li>通常上，针对“弱依赖”我们会设置较小的超时时间(比如100ms以内)，并且在失败率较高是进行降级；</li>
+<li>而针对“强依赖”我们会设置一个较大的超时时间，当接口失败时返回“服务繁忙“，表示暂不可用(当然可以产品层面进行合适的引导)</li>
+</ol>
+</li>
+<li><p>我们在灾备演练中，通过停其中一个机房，触发以下的问题</p>
+<ol>
+<li>强依赖超时问题（停机房瞬间）</li>
+<li>弱依赖多变长的问题（停机房期间）</li>
+</ol>
+</li>
+<li><p>从而导致停机房瞬间接口失败率高，停机房期间接口时延上涨严重。由此引发我对“比例“问题的思考。</p>
+<ol>
+<li>强依赖超时时间设长，可以减少失败率，但也有可能导致服务worker线程池被占满而拒绝请求。</li>
+<li>弱依赖虽然每个都设置100ms以内，但是当依赖的服务超过10个时(真实业务真的有)，可能导致总时长超过一秒(弱依赖慢但都没熔断，所以没降级；可异步并发的弱依赖的另说)</li>
+</ol>
+</li>
+</ul>
+<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><ol>
+<li>对强依赖，可设置超时时间的比例（比如只有20%的请求可以超过1s，其他的控制在100ms以内），解决停机房瞬间，线程池占满拒绝请求的问题</li>
+<li>对弱依赖，可控制多个弱依赖的总超时时间，解决停机房期间跨机房调用导致时延一直上涨的问题<ul>
+<li>单个调用超时时间可分级设置比例；多个调用（可熔断）可聚合在一起设置总超时时间比例</li>
+<li>降级优先级排序，控制总时间。熔断线程池，控制比例超时。允许一定的时间超时。流量控制。物理隔离。</li>
+</ul>
+</li>
+</ol>
+<h3 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h3><ol>
+<li>针对<a target="_blank" rel="noopener" href="https://kingson4wu.github.io/2020/07/12/20200712-%E4%BD%BF%E7%94%A8%E5%9B%9E%E8%B0%83%E6%9C%BA%E5%88%B6%E6%8F%90%E9%AB%98%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%80%A7/">使用回调机制提高接口安全性</a>所讲的，某些网络场景可以考虑针对大金额的请求才回调，减少RPC次数，这其实也是一个“比例”问题。</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/12/20200712-shi-yong-hui-diao-ji-zhi-ti-gao-jie-kou-an-quan-xing/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2039,169 +2203,6 @@ proxy_upstream_tries 5;
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/07/20200707-wei-yi-id-de-ji-yin/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/07/07/20200707-wei-yi-id-de-ji-yin/" itemprop="url">唯一ID的基因</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-07T23:15:24+08:00">
-                2020-07-07
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2020/07/07/20200707-wei-yi-id-de-ji-yin/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count valine-comment-count" data-xid="/2020/07/07/20200707-wei-yi-id-de-ji-yin/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><img src="/2020/07/07/20200707-wei-yi-id-de-ji-yin/Zidane_2.jpeg"></p>
-<p>在互联网服务中，经常需要使用唯一ID。其中一个常见的应用场景是作为业务中请求的幂等ID。</p>
-<h3 id="分布式唯一ID生成方案"><a href="#分布式唯一ID生成方案" class="headerlink" title="分布式唯一ID生成方案"></a>分布式唯一ID生成方案</h3><ol>
-<li>uuid</li>
-<li>snowflake</li>
-<li>包含业务属性的唯一ID，如 timestamp+ uid（10-11位）+ 随机3位数字（或递增）</li>
-<li>其他方案</li>
-</ol>
-<p>优劣不在这里讨论</p>
-<h3 id="业务场景分析"><a href="#业务场景分析" class="headerlink" title="业务场景分析"></a>业务场景分析</h3><p>结合目前工作中的现状进行分析</p>
-<ol>
-<li>唯一ID的存储方式：MySQL－bigint(20)</li>
-<li>唯一ID生成方式：snowflake－64位：42位时间戳+5位机器码+5位进程worker标识码+12位自增id（42|5|5|12 &#x3D; 64）</li>
-</ol>
-<ul>
-<li><p>我们把幂等ID作为数据库的唯一键，从而保证幂等；而当数据量越来越大是，我们对数据按月进行分表，提升处理性能。</p>
-</li>
-<li><p>我们在数据库中除了有幂等ID（orderId）字段之外，还有添加时间字段（addTime）;当请求进来之后，根据addTime找到相应的月表。所以实际上要保证请求处理幂等，依赖的是orderId＋addTime 不变（或addTime保证始终落在同一个月）</p>
-</li>
-</ul>
-<h4 id="为什么要依赖addTime保证幂等？"><a href="#为什么要依赖addTime保证幂等？" class="headerlink" title="为什么要依赖addTime保证幂等？"></a>为什么要依赖addTime保证幂等？</h4><ol>
-<li><p>基础组件提供的唯一ID生成服务，对snowflake进行个性化的改造，只能保证ID是唯一的，然而ID的属性并不明显，无法方便的使用唯一ID进行分库（实际上snowflake算法的前n位是时间戳，可以考虑作为分库的属性）</p>
-</li>
-<li><p>一些常见唯一ID的例子</p>
-<pre>
-交易单号:4008722001201707283057762612
-商户单号:2017072809364399365840049582
-订单编号: 60310040822721833
-支付宝交易号: 2017092021001001150522558267
-大众点评订单号36611441412777832
-</pre></li>
-</ol>
-<p>像“商户单号”和“支付宝交易号”，很明显可以使用日期“基因”来分库，不过这种唯一ID不能使用bigint 存储，因为超过64位了</p>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>一个好的唯一ID算法生成的ID，应该具备易用的“基因”。像UUID这种就不是很满足。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2257,7 +2258,7 @@ proxy_upstream_tries 5;
 <a href="/archives/">                
 <!--<a href="/archives/%7C%7C%20archive">-->
               
-                  <span class="site-state-item-count">142</span>
+                  <span class="site-state-item-count">143</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2270,7 +2271,7 @@ proxy_upstream_tries 5;
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">154</span>
+                  <span class="site-state-item-count">156</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

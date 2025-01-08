@@ -91,7 +91,7 @@ deploy:
 #https://github.com/hexojs/hexo-deployer-git
 
 live2d:
-  enable: true
+  enable: false
   scriptFrom: local
   pluginRootPath: live2dw/
   pluginJsPath: lib/

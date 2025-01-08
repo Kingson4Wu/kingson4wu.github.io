@@ -813,7 +813,7 @@ images: images
 version: 5.1.4
 
 gitalk:
-  enable: false
+  enable: true
   githubID: kingson4wu 
   repo: kingson4wu.github.io
   ClientID: 3416434437f9f4e049bd

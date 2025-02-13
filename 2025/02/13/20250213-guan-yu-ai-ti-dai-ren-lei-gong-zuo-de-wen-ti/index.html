@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Go,定时任务,Saturn,UDS,Signal," />
+  <meta name="keywords" content="AI," />
 
 
 
@@ -81,25 +81,18 @@
 
 
 
-<meta name="description" content="基于之前写的这篇谈谈定时任务的原理和应用继续聊。    由于业务进程不是Java编写的，无法使用Saturn提供的Java定时任务，只能使用Shell定时任务  这里选择用UDS实现Shell进程和服务进程之间的通信，实现和使用Java定时任务一样的效果  在上次的实现中，只考虑了如何触发定时任务执行，并没有考虑如何停止   实现对执行中的任务进行停止      通过测试可以知道，当在satur">
+<meta name="description" content="AI的局限性或缺点 难以预测与控制：AI的运行机制像黑箱，难以准确预知其行为，尤其在关键场景下可能会犯致命错误。 无法背锅：AI犯错时，责任归属难以明确，导致无法追究错误的责任，缺乏人类信誉体系的约束。 逻辑推理不严谨：AI的推理基于概率预测，不是绝对严谨的逻辑推理。训练数据如果有误，AI可能无法辨别。 无法创新：AI不具备创造全新概念的能力，更多的是基于历史数据进行知识复述与组合，无法像人类一样">
 <meta property="og:type" content="article">
-<meta property="og:title" content="基于Saturn定时任务的客户端工具设计">
-<meta property="og:url" content="http://yoursite.com/2024/05/30/20240530-ji-yu-saturn-ding-shi-ren-wu-de-ke-hu-duan-gong-ju-she-ji/index.html">
+<meta property="og:title" content="关于AI替代人类工作的问题">
+<meta property="og:url" content="http://yoursite.com/2025/02/13/20250213-guan-yu-ai-ti-dai-ren-lei-gong-zuo-de-wen-ti/index.html">
 <meta property="og:site_name" content="拉巴力的纸皮箱">
-<meta property="og:description" content="基于之前写的这篇谈谈定时任务的原理和应用继续聊。    由于业务进程不是Java编写的，无法使用Saturn提供的Java定时任务，只能使用Shell定时任务  这里选择用UDS实现Shell进程和服务进程之间的通信，实现和使用Java定时任务一样的效果  在上次的实现中，只考虑了如何触发定时任务执行，并没有考虑如何停止   实现对执行中的任务进行停止      通过测试可以知道，当在satur">
+<meta property="og:description" content="AI的局限性或缺点 难以预测与控制：AI的运行机制像黑箱，难以准确预知其行为，尤其在关键场景下可能会犯致命错误。 无法背锅：AI犯错时，责任归属难以明确，导致无法追究错误的责任，缺乏人类信誉体系的约束。 逻辑推理不严谨：AI的推理基于概率预测，不是绝对严谨的逻辑推理。训练数据如果有误，AI可能无法辨别。 无法创新：AI不具备创造全新概念的能力，更多的是基于历史数据进行知识复述与组合，无法像人类一样">
 <meta property="og:locale">
-<meta property="og:image" content="http://yoursite.com/2024/05/30/20240530-ji-yu-saturn-ding-shi-ren-wu-de-ke-hu-duan-gong-ju-she-ji/saturn_uds.drawio.png">
-<meta property="og:image" content="http://yoursite.com/2024/05/30/20240530-ji-yu-saturn-ding-shi-ren-wu-de-ke-hu-duan-gong-ju-she-ji/saturn_signal.drawio.png">
-<meta property="article:published_time" content="2024-05-30T04:15:11.000Z">
-<meta property="article:modified_time" content="2024-07-14T02:54:25.847Z">
+<meta property="article:published_time" content="2025-02-13T07:05:23.000Z">
+<meta property="article:modified_time" content="2025-02-13T07:51:27.323Z">
 <meta property="article:author" content="Kingson Wu">
-<meta property="article:tag" content="Go">
-<meta property="article:tag" content="定时任务">
-<meta property="article:tag" content="Saturn">
-<meta property="article:tag" content="UDS">
-<meta property="article:tag" content="Signal">
+<meta property="article:tag" content="AI">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://yoursite.com/2024/05/30/20240530-ji-yu-saturn-ding-shi-ren-wu-de-ke-hu-duan-gong-ju-she-ji/saturn_uds.drawio.png">
 
 
 
@@ -129,13 +122,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2024/05/30/20240530-ji-yu-saturn-ding-shi-ren-wu-de-ke-hu-duan-gong-ju-she-ji/"/>
+  <link rel="canonical" href="http://yoursite.com/2025/02/13/20250213-guan-yu-ai-ti-dai-ren-lei-gong-zuo-de-wen-ti/"/>
 
 
 
 
 
-  <title>基于Saturn定时任务的客户端工具设计 | 拉巴力的纸皮箱</title>
+  <title>关于AI替代人类工作的问题 | 拉巴力的纸皮箱</title>
   
 
 
@@ -296,7 +289,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2024/05/30/20240530-ji-yu-saturn-ding-shi-ren-wu-de-ke-hu-duan-gong-ju-she-ji/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2025/02/13/20250213-guan-yu-ai-ti-dai-ren-lei-gong-zuo-de-wen-ti/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="">
@@ -313,7 +306,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">基于Saturn定时任务的客户端工具设计</h1>
+          <h1 class="post-title" itemprop="name headline">关于AI替代人类工作的问题</h1>
         
 
         <div class="post-meta">
@@ -325,8 +318,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2024-05-30T12:15:11+08:00">
-                2024-05-30
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2025-02-13T15:05:23+08:00">
+                2025-02-13
               </time>
             
 
@@ -363,36 +356,40 @@
       
 
       
-        <ul>
-<li>基于之前写的这篇<a target="_blank" rel="noopener" href="https://kingson4wu.github.io/2023/07/03/20230703-tan-tan-ding-shi-ren-wu-de-yuan-li-he-ying-yong/">谈谈定时任务的原理和应用</a>继续聊。</li>
+        <h2 id="AI的局限性或缺点"><a href="#AI的局限性或缺点" class="headerlink" title="AI的局限性或缺点"></a>AI的局限性或缺点</h2><ul>
+<li><strong>难以预测与控制</strong>：AI的运行机制像黑箱，难以准确预知其行为，尤其在关键场景下可能会犯致命错误。</li>
+<li><strong>无法背锅</strong>：AI犯错时，责任归属难以明确，导致无法追究错误的责任，缺乏人类信誉体系的约束。</li>
+<li><strong>逻辑推理不严谨</strong>：AI的推理基于概率预测，不是绝对严谨的逻辑推理。训练数据如果有误，AI可能无法辨别。</li>
+<li><strong>无法创新</strong>：AI不具备创造全新概念的能力，更多的是基于历史数据进行知识复述与组合，无法像人类一样发明新技术或理念。</li>
+<li><strong>对超出训练数据的场景应对差</strong>：AI在面对未曾训练过的数据时，表现较差，容易出错。</li>
 </ul>
-<p><img src="/2024/05/30/20240530-ji-yu-saturn-ding-shi-ren-wu-de-ke-hu-duan-gong-ju-she-ji/saturn_uds.drawio.png"></p>
-<ul>
-<li><p>由于业务进程不是Java编写的，无法使用Saturn提供的Java定时任务，只能使用Shell定时任务</p>
+<h2 id="AI的好处"><a href="#AI的好处" class="headerlink" title="AI的好处"></a>AI的好处</h2><ul>
+<li><strong>提高效率</strong>：AI在许多领域极大提升了效率，尤其在数据处理、搜索和重复性任务上。对于程序员来说，它是一个强大的辅助工具，帮助快速解决技术问题。</li>
+<li><strong>降低门槛</strong>：AI减少了对低级重复性任务的需求，拉近了人们在某些知识领域的差距。</li>
+<li><strong>支持决策和监督</strong>：AI辅助决策，尤其是在复杂任务中，能提供数据支持，减少人为错误。</li>
+</ul>
+<h2 id="AI工具下需要的人才"><a href="#AI工具下需要的人才" class="headerlink" title="AI工具下需要的人才"></a><strong>AI工具下需要的人才</strong></h2><ul>
+<li><strong>清晰表述与提问能力</strong>：能够清晰提出问题和有效沟通是与AI协同工作的关键，好的表述能力有助于提高工作效率。</li>
+<li><strong>整理与分析能力</strong>：能够有效梳理信息、分解任务，并向AI提出清晰问题的人，会更善于利用AI工具。</li>
+<li><strong>与产品交互能力</strong>：AI可以编写代码，但仍需要人类与产品经理沟通，理解需求并做出相应调整。</li>
+</ul>
+<h2 id="程序员的利好与不可替代的能力"><a href="#程序员的利好与不可替代的能力" class="headerlink" title="程序员的利好与不可替代的能力"></a><strong>程序员的利好与不可替代的能力</strong></h2><ul>
+<li><strong>AI对程序员的利好</strong>：<ul>
+<li>AI大幅提升了开发效率，尤其在编程辅助、技术搜索、业务方案思考等方面。</li>
+<li>某些低级任务减少了人力需求，使得程序员能更多专注于创造性和复杂问题的解决。</li>
+</ul>
 </li>
-<li><p>这里选择用UDS实现Shell进程和服务进程之间的通信，实现和使用Java定时任务一样的效果</p>
-</li>
-<li><p>在上次的实现中，只考虑了如何触发定时任务执行，并没有考虑如何停止</p>
+<li><strong>程序员不可替代的地方</strong>：<ul>
+<li><strong>清晰的提问和判断能力</strong>：程序员的核心能力在于能理解问题，并准确表达需求，AI只能作为工具辅助工作。</li>
+<li><strong>与产品沟通</strong>：AI生成的代码和解决方案需要程序员与产品团队对接，确保最终结果符合需求。</li>
+<li><strong>决策和经验判断</strong>：AI的能力有限，尤其在面对复杂决策时，仍需依赖经验丰富的程序员来进行判断和修正。</li>
+</ul>
 </li>
 </ul>
-<h2 id="实现对执行中的任务进行停止"><a href="#实现对执行中的任务进行停止" class="headerlink" title="实现对执行中的任务进行停止"></a>实现对执行中的任务进行停止</h2><p><img src="/2024/05/30/20240530-ji-yu-saturn-ding-shi-ren-wu-de-ke-hu-duan-gong-ju-she-ji/saturn_signal.drawio.png">    </p>
-<ul>
-<li><p>通过测试可以知道，当在saturn控制台点击终止任务时，会对shell进程发出terminated信号</p>
-</li>
-<li><p>如何不是通过saturn控制台触发，直接终端执行shell命令时，操作Crtl+C时，会对Shell进程发出interrupt信号</p>
-</li>
-<li><p>基于上述研究，提供以下方式停止业务服务的运行中的定时任务</p>
-<ol>
-<li>通过saturn控制台点击终止任务，发terminated信号</li>
-<li>通过操作Crtl+C，发interrupt信号</li>
-<li>通过执行shell命令，指定任务名称和-stop选项，直接发出终止任务请求</li>
-</ol>
-</li>
-<li><p>具体实现参考：<a target="_blank" rel="noopener" href="https://github.com/Kingson4Wu/saturncli">saturncli</a></p>
-</li>
-</ul>
-<h2 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h2><ul>
-<li>经过测试，saturn的调度不会因为设置的频率太快导致并发运行，只会执行完一个任务再执行下一个</li>
+<h2 id="个人观点"><a href="#个人观点" class="headerlink" title="个人观点"></a><strong>个人观点</strong></h2><ul>
+<li>AI目前主要是利用历史数据和记忆进行信息处理，不能进行创新（如无法创造出类似K8S的技术）。</li>
+<li>尽管AI能提高程序员的工作效率，但目前它更多是辅助工具，而不是替代品。</li>
+<li>对普通程序员来说，理解大模型技术的基本原理和概念非常重要，未来将需要在“AI操作系统”上来构建应用。</li>
 </ul>
 
       
@@ -411,15 +408,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Go/" rel="tag"># Go</a>
-          
-            <a href="/tags/%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1/" rel="tag"># 定时任务</a>
-          
-            <a href="/tags/Saturn/" rel="tag"># Saturn</a>
-          
-            <a href="/tags/UDS/" rel="tag"># UDS</a>
-          
-            <a href="/tags/Signal/" rel="tag"># Signal</a>
+            <a href="/tags/AI/" rel="tag"># AI</a>
           
         </div>
       
@@ -432,8 +421,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2024/05/28/20240528-ye-tan-tan-feed-liu-de-she-ji/" rel="next" title="也谈谈feed流的设计">
-                <i class="fa fa-chevron-left"></i> 也谈谈feed流的设计
+              <a href="/2025/02/13/20250213-shen-du-xue-xi-wei-shi-me-neng-xue-xi-bing-zuo-dui/" rel="next" title="深度学习为什么能学习并做对">
+                <i class="fa fa-chevron-left"></i> 深度学习为什么能学习并做对
               </a>
             
           </div>
@@ -441,10 +430,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2024/07/17/20240717-kan-si-li-ke-shi-ze-wen-ke-kan-si-wen-ke-shi-ze-li-ke/" rel="prev" title="看似理科实则文科，看似文科实则理科">
-                看似理科实则文科，看似文科实则理科 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -581,7 +566,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E5%AF%B9%E6%89%A7%E8%A1%8C%E4%B8%AD%E7%9A%84%E4%BB%BB%E5%8A%A1%E8%BF%9B%E8%A1%8C%E5%81%9C%E6%AD%A2"><span class="nav-number">1.</span> <span class="nav-text">实现对执行中的任务进行停止</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%A9%E5%B1%95"><span class="nav-number">2.</span> <span class="nav-text">扩展</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#AI%E7%9A%84%E5%B1%80%E9%99%90%E6%80%A7%E6%88%96%E7%BC%BA%E7%82%B9"><span class="nav-number">1.</span> <span class="nav-text">AI的局限性或缺点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AI%E7%9A%84%E5%A5%BD%E5%A4%84"><span class="nav-number">2.</span> <span class="nav-text">AI的好处</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AI%E5%B7%A5%E5%85%B7%E4%B8%8B%E9%9C%80%E8%A6%81%E7%9A%84%E4%BA%BA%E6%89%8D"><span class="nav-number">3.</span> <span class="nav-text">AI工具下需要的人才</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A8%8B%E5%BA%8F%E5%91%98%E7%9A%84%E5%88%A9%E5%A5%BD%E4%B8%8E%E4%B8%8D%E5%8F%AF%E6%9B%BF%E4%BB%A3%E7%9A%84%E8%83%BD%E5%8A%9B"><span class="nav-number">4.</span> <span class="nav-text">程序员的利好与不可替代的能力</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%AA%E4%BA%BA%E8%A7%82%E7%82%B9"><span class="nav-number">5.</span> <span class="nav-text">个人观点</span></a></li></ol></div>
             
 
           </div>

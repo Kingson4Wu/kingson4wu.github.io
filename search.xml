@@ -18912,7 +18912,7 @@ Starting from zero, this journey will take time and dedication. Patien
     <content><![CDATA[<h1 id="我的理解"><a href="#我的理解" class="headerlink" title="我的理解"></a>我的理解</h1><ul>
 <li>目前无法解释为什么深度学习可以给出答案，只能大概解释为什么它能学习</li>
 <li>这就相当于：我不能解释为什么这个人是通过什么做对这道题的，我只能解释他有正常的学习能力以及合适的学习资料，所以他自己能学习并做对题目</li>
-<li>所以深度学习是怎么给出答案的，后续获悉应该由它本身来告诉我们。</li>
+<li>所以深度学习是怎么给出答案的，后续或许应该由它本身来告诉我们。</li>
 <li>依据不同人的认知水平，来告诉我们它通过学习所发现的规律。同时人类通过它能快速学习发现事物规律的能力，来进一步帮助提升人类的认知。</li>
 </ul>
 <h1 id="AI对我理解的看法"><a href="#AI对我理解的看法" class="headerlink" title="AI对我理解的看法"></a>AI对我理解的看法</h1><blockquote>
@@ -18968,6 +18968,49 @@ Starting from zero, this journey will take time and dedication. Patien
         <tag>AI</tag>
         <tag>深度学习</tag>
         <tag>Deep-Learning</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>关于AI替代人类工作的问题</title>
+    <url>/2025/02/13/20250213-guan-yu-ai-ti-dai-ren-lei-gong-zuo-de-wen-ti/</url>
+    <content><![CDATA[<h2 id="AI的局限性或缺点"><a href="#AI的局限性或缺点" class="headerlink" title="AI的局限性或缺点"></a>AI的局限性或缺点</h2><ul>
+<li><strong>难以预测与控制</strong>：AI的运行机制像黑箱，难以准确预知其行为，尤其在关键场景下可能会犯致命错误。</li>
+<li><strong>无法背锅</strong>：AI犯错时，责任归属难以明确，导致无法追究错误的责任，缺乏人类信誉体系的约束。</li>
+<li><strong>逻辑推理不严谨</strong>：AI的推理基于概率预测，不是绝对严谨的逻辑推理。训练数据如果有误，AI可能无法辨别。</li>
+<li><strong>无法创新</strong>：AI不具备创造全新概念的能力，更多的是基于历史数据进行知识复述与组合，无法像人类一样发明新技术或理念。</li>
+<li><strong>对超出训练数据的场景应对差</strong>：AI在面对未曾训练过的数据时，表现较差，容易出错。</li>
+</ul>
+<h2 id="AI的好处"><a href="#AI的好处" class="headerlink" title="AI的好处"></a>AI的好处</h2><ul>
+<li><strong>提高效率</strong>：AI在许多领域极大提升了效率，尤其在数据处理、搜索和重复性任务上。对于程序员来说，它是一个强大的辅助工具，帮助快速解决技术问题。</li>
+<li><strong>降低门槛</strong>：AI减少了对低级重复性任务的需求，拉近了人们在某些知识领域的差距。</li>
+<li><strong>支持决策和监督</strong>：AI辅助决策，尤其是在复杂任务中，能提供数据支持，减少人为错误。</li>
+</ul>
+<h2 id="AI工具下需要的人才"><a href="#AI工具下需要的人才" class="headerlink" title="AI工具下需要的人才"></a><strong>AI工具下需要的人才</strong></h2><ul>
+<li><strong>清晰表述与提问能力</strong>：能够清晰提出问题和有效沟通是与AI协同工作的关键，好的表述能力有助于提高工作效率。</li>
+<li><strong>整理与分析能力</strong>：能够有效梳理信息、分解任务，并向AI提出清晰问题的人，会更善于利用AI工具。</li>
+<li><strong>与产品交互能力</strong>：AI可以编写代码，但仍需要人类与产品经理沟通，理解需求并做出相应调整。</li>
+</ul>
+<h2 id="程序员的利好与不可替代的能力"><a href="#程序员的利好与不可替代的能力" class="headerlink" title="程序员的利好与不可替代的能力"></a><strong>程序员的利好与不可替代的能力</strong></h2><ul>
+<li><strong>AI对程序员的利好</strong>：<ul>
+<li>AI大幅提升了开发效率，尤其在编程辅助、技术搜索、业务方案思考等方面。</li>
+<li>某些低级任务减少了人力需求，使得程序员能更多专注于创造性和复杂问题的解决。</li>
+</ul>
+</li>
+<li><strong>程序员不可替代的地方</strong>：<ul>
+<li><strong>清晰的提问和判断能力</strong>：程序员的核心能力在于能理解问题，并准确表达需求，AI只能作为工具辅助工作。</li>
+<li><strong>与产品沟通</strong>：AI生成的代码和解决方案需要程序员与产品团队对接，确保最终结果符合需求。</li>
+<li><strong>决策和经验判断</strong>：AI的能力有限，尤其在面对复杂决策时，仍需依赖经验丰富的程序员来进行判断和修正。</li>
+</ul>
+</li>
+</ul>
+<h2 id="个人观点"><a href="#个人观点" class="headerlink" title="个人观点"></a><strong>个人观点</strong></h2><ul>
+<li>AI目前主要是利用历史数据和记忆进行信息处理，不能进行创新（如无法创造出类似K8S的技术）。</li>
+<li>尽管AI能提高程序员的工作效率，但目前它更多是辅助工具，而不是替代品。</li>
+<li>对普通程序员来说，理解大模型技术的基本原理和概念非常重要，未来将需要在“AI操作系统”上来构建应用。</li>
+</ul>
+]]></content>
+      <tags>
+        <tag>AI</tag>
       </tags>
   </entry>
 </search>

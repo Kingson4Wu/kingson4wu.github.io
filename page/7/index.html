@@ -287,6 +287,403 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/05/05/20220505-zhi-bo-xie-yi-bi-ji/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2022/05/05/20220505-zhi-bo-xie-yi-bi-ji/" itemprop="url">直播流媒体协议——笔记</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-05-05T16:36:21+08:00">
+                2022-05-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <ul>
+<li>RTMP 协议:<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/d511d59b185c">https://www.jianshu.com/p/d511d59b185c</a></li>
+<li>RTMP、RTSP、HTTP视频协议详解（附：直播流地址、播放软件）:<a target="_blank" rel="noopener" href="https://www.hangge.com/blog/cache/detail_1325.html">https://www.hangge.com/blog/cache/detail_1325.html</a></li>
+<li>RTMP、HTTP-FLV、HLS，你了解常见的三大直播协议吗：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/48100533">https://zhuanlan.zhihu.com/p/48100533</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/stringarray/p/13027230.html">网络协议-流媒体协议 </a></li>
+</ul>
+<hr>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/stringarray/p/13027230.html">https://www.cnblogs.com/stringarray/p/13027230.html</a></li>
+</ul>
+<hr>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://cloud.tencent.com/document/product/267/7968">https://cloud.tencent.com/document/product/267/7968</a></li>
+</ul>
+<h2 id="推流协议"><a href="#推流协议" class="headerlink" title="推流协议"></a>推流协议</h2><ul>
+<li>虽然 RTMP 在直播领域不是特别流行，但是在推流服务，也就是“主播”到“服务器”这个方向上 RTMP 居于主导地位，目前国内的视频云服务都是以 RTMP 为主要推流协议（由于直播 SDK 第一个功能模块就是主播推流，所以也被称为是 RTMP SDK）。</li>
+</ul>
+<h2 id="播放协议"><a href="#播放协议" class="headerlink" title="播放协议"></a>播放协议</h2><ul>
+<li><p>目前常见的直播协议包括：RTMP、 FLV、HLS 和 WebRTC。</p>
+</li>
+<li><p>RTMP：RTMP 协议比较全能，既可以用来推送又可以用来直播，其核心理念是将大块的视频帧和音频帧拆分，然后以小数据包的形式在互联网上进行传输，而且支持加密，因此隐私性相对比较理想，但拆包组包的过程比较复杂，所以在海量并发时也容易出现一些不可预期的稳定性问题。</p>
+</li>
+<li><p>FLV：FLV 协议由 Adobe 公司主推，格式极其简单，只是在大块的视频帧和音视频头部加入一些标记头信息，由于这种简洁，在延迟表现和大规模并发方面都很成熟，唯一的不足就是在手机浏览器上的支持非常有限，但是用作手机端 App 直播协议却异常合适。</p>
+</li>
+<li><p>HLS：苹果推出的解决方案，将视频分成5秒 - 10秒的视频小分片，然后用 m3u8 索引表进行管理，由于客户端下载到的视频都是5秒 - 10秒的完整数据，故视频的流畅性很好，但也同样引入了很大的延迟（HLS 的一般延迟在10秒 - 30秒左右）。相比于 FLV， HLS 在 iPhone 和大部分 Android 手机浏览器上的支持非常给力，所以常用于 QQ 和微信朋友圈的 URL 分享。</p>
+</li>
+<li><p>WebRTC：名称源自网页即时通信（Web Real-Time Communication）的缩写，是一个支持网页浏览器进行实时语音对话或视频对话的API。它于2011年06月01日开源并在 Google、Mozilla、Opera 支持下被纳入万维网联盟的 W3C 推荐标准。快直播正是用的 WebRTC 协议，它是标准直播在超低延迟播放场景下的延伸，比传统直播协议延迟更低，为观众提供毫秒级的极致直播观看体验。 能够满足一些对延迟性能要求更高的特定场景需求，例如在线教育、体育赛事直播、在线答题等。</p>
+</li>
+</ul>
+<hr>
+<h1 id="RTC技术（WebRTC）"><a href="#RTC技术（WebRTC）" class="headerlink" title="RTC技术（WebRTC）"></a>RTC技术（WebRTC）</h1><ul>
+<li><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/377100294">https://zhuanlan.zhihu.com/p/377100294</a></p>
+</li>
+<li><p>RTC（Real time communication）实时通信，是实时音视频的一个简称，我们常说的RTC技术一般指的是WebRTC技术，已经被 W3C 和 IETF 发布为正式标准。</p>
+</li>
+<li><p>解决什么问题</p>
+<ul>
+<li>直播中我们关心的几个点：延迟、质量、成本等。 传统rtmp直播痛点：TCP，延迟高、拥塞导致卡顿问题较多（质量问题）。 互联网网络复杂、延时敏感、实时音视频流畅度及清晰度较低以和运营成本较高等。 没有一项技术能兼顾并解决直播中的所有问题，RTC是时延、流畅、质量、成本等的平衡，成为技术选型落地的模型。</li>
+</ul>
+</li>
+</ul>
+<h2 id="RTC-VS-RTMP"><a href="#RTC-VS-RTMP" class="headerlink" title="RTC VS RTMP"></a>RTC VS RTMP</h2><ul>
+<li><p>RTC (UDP) VS RTMP (TCP)</p>
+</li>
+<li><p>RTMP只是TCP上的一个标准协议，所以接入是一个标准体系，推流端可以是OBS这种直播软件工具，也可自开发rtmp推流工具，播放端可以是Flash播放器（Adobe 2020 12月份已经弃用）、服务端有技术成熟的CDN技术和设施进行分发、Native的播放器或者flv.js&#x2F;hls.js这种开源播放器组件，遵循rtmp、flv、hls标准即可，接入成本比较低。而一个完善的RTC服务应用，需要从推流端、服务端、到拉流端，一整套完整的全链路闭环技术。</p>
+</li>
+<li><p>RTC+RTMP</p>
+<ul>
+<li>互动连麦+服务端转推rtmp至CDN，CDN分发给观众。</li>
+</ul>
+</li>
+</ul>
+<h2 id="RTC的应用场景"><a href="#RTC的应用场景" class="headerlink" title="RTC的应用场景"></a>RTC的应用场景</h2><ul>
+<li>视频会议、在线教育小班课、大班课、1v1视频连麦、多人视频连麦互动、语音聊天室、在线面试、在线医疗、云游戏、智能家居、在线签约、在线K歌等，遍地开花。 比如Zoom、腾讯会议、钉钉会议、微信音视频聊天</li>
+</ul>
+<h2 id="RTC服务提供商"><a href="#RTC服务提供商" class="headerlink" title="RTC服务提供商"></a>RTC服务提供商</h2><ul>
+<li>声网、腾讯云音视频、即构、阿里云RTC、华为云RTC、微吼VRTC、网易云信RTC、Ucloud RTC、融云RTC、拍乐云等。</li>
+</ul>
+<hr>
+<h2 id="腾讯云音视频"><a href="#腾讯云音视频" class="headerlink" title="腾讯云音视频"></a>腾讯云音视频</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://cloud.tencent.com/document/product/267/70440">https://cloud.tencent.com/document/product/267/70440</a></li>
+<li>在开播端，基于实时音视频 TRTC 来实现，通过 TRTC 协议完成主播推流。仅需1个TRTC应用 + 1个推流域名，即可把主播的直播流推流至云端。在观众端，默认情况下，使用 CDN 方式进行拉流观看， CDN 观看费用较低。如果主播端有 PK 需求，直接互相播放对方的流即可。</li>
+</ul>
+<h2 id="即构"><a href="#即构" class="headerlink" title="即构"></a>即构</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://doc-zh.zego.im/article/5416">https://doc-zh.zego.im/article/5416</a></li>
+<li>语聊房:<a target="_blank" rel="noopener" href="https://doc-zh.zego.im/article/4903">https://doc-zh.zego.im/article/4903</a><ul>
+<li>麦上用户可以发起混流，即把多路音频流混合成单流。推流后混流，麦下用户在拉流时只需要拉一路流即可收听所上麦上用户的互动音频，降低开发实现上的复杂性以及对设备的性能要求。</li>
+</ul>
+</li>
+<li>秀场直播:<a target="_blank" rel="noopener" href="https://doc-zh.zego.im/article/11202">https://doc-zh.zego.im/article/11202</a></li>
+</ul>
+<h2 id="声网"><a href="#声网" class="headerlink" title="声网"></a>声网</h2><ul>
+<li>互动直播：<a target="_blank" rel="noopener" href="https://www.agora.io/cn/interactive-live-streaming-premium">https://www.agora.io/cn/interactive-live-streaming-premium</a></li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/05/05/20220505-ffmpeg-bi-ji/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2022/05/05/20220505-ffmpeg-bi-ji/" itemprop="url">FFmpeg笔记</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-05-05T12:49:18+08:00">
+                2022-05-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <ul>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzIzOTU0NTQ0MA==&mid=2247491924&idx=1&sn=0fdd9e7a0d290158bf6c3d76725ea943&chksm=e92adc5bde5d554">图片拼接成特效视频</a><ul>
+<li>FFmpeg</li>
+<li>MediaCodec</li>
+<li>OpenGL</li>
+</ul>
+</li>
+</ul>
+<h2 id="JavaCV"><a href="#JavaCV" class="headerlink" title="JavaCV"></a>JavaCV</h2><ul>
+<li><p>JavaCV是对各种常用计算机视觉库的封装后的一组jar包，其中封装了ffmpeg、OpenCV、libdc1394、OpenKinect、videoInput和ARToolKitPlus等计算机视觉编程人员常用库的接口，可以通过其中的utility类方便的在包括Android在内的Java平台上调用这些接口。其中使用最多的应该就是FFmpeg了。</p>
+</li>
+<li><p>找出人脸，同时比较两张图片中的人脸相似度：<a target="_blank" rel="noopener" href="https://blog.csdn.net/nicebooks/article/details/8175002">https://blog.csdn.net/nicebooks/article/details/8175002</a>,<br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/webRobot/p/6216994.html">https://www.cnblogs.com/webRobot/p/6216994.html</a>,<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/u014365862/article/details/48212891">https://blog.csdn.net/u014365862/article/details/48212891</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/xxxlllbbb/article/details/104819683">基于JavaCV技术实现RTMP推流和拉流功能</a></p>
+</li>
+</ul>
+<h2 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h2><ul>
+<li><p>FFmpeg常用命令汇总+文档汇总：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/f07f0be088d0">https://www.jianshu.com/p/f07f0be088d0</a></p>
+</li>
+<li><p>ffplay命令播放媒体</p>
+<ul>
+<li>播放本地文件 : <code>ffplay -window_title &quot;test time&quot; -ss 2 -t 10 -autoexit test.mp4</code></li>
+<li>播放网络流: <code>ffplay -window_title &quot;rtmp stream&quot; rtmp://202.69.69.180:443/webcast/bshdlive-pc</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="怎样快速的转换FLV视频为MP4格式"><a href="#怎样快速的转换FLV视频为MP4格式" class="headerlink" title="怎样快速的转换FLV视频为MP4格式"></a>怎样快速的转换FLV视频为MP4格式</h3><ul>
+<li><p><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/65224766/answer/252226264">https://www.zhihu.com/question/65224766/answer/252226264</a></p>
+</li>
+<li><p>单个文件，就用如下命令：<br><code>ffmpeg -i &quot;input.flv&quot; -c copy &quot;output.mp4&quot;</code></p>
+</li>
+<li><p>如果是整个文件夹中的所有flv文件需要批量转成mp4，那么使用以下命令：<br><code>for %i in (*.flv) do ffmpeg -i &quot;%i&quot; -c copy &quot;%~ni.mp4&quot;</code></p>
+</li>
+<li><p>flv&#x2F;mp4文件的合并有时候通过某些下载工具得到的flv&#x2F;mp4文件是多段的，比如B站视频上下载一集40分钟左右的纪录片实际上是8个小片段，这时候可以新建一个txt文本文件，把你需要合并的flv&#x2F;mp4和这个txt放在同一个文件夹里面，然后把需要合并的flv&#x2F;mp4文件的名字按照顺序写在txt文件中并保存，格式如下：</p>
+<pre>
+file '【国家地理】COSMOS系列【熟肉-对后十一集修复】 (P10. 气候变化)[00].mp4'
+file '【国家地理】COSMOS系列【熟肉-对后十一集修复】 (P10. 气候变化)[01].mp4'
+file '【国家地理】COSMOS系列【熟肉-对后十一集修复】 (P10. 气候变化)[02].mp4'
+file '【国家地理】COSMOS系列【熟肉-对后十一集修复】 (P10. 气候变化)[03].mp4'
+file '【国家地理】COSMOS系列【熟肉-对后十一集修复】 (P10. 气候变化)[04].mp4'
+file '【国家地理】COSMOS系列【熟肉-对后十一集修复】 (P10. 气候变化)[05].mp4'
+file '【国家地理】COSMOS系列【熟肉-对后十一集修复】 (P10. 气候变化)[06].mp4'
+file '【国家地理】COSMOS系列【熟肉-对后十一集修复】 (P10. 气候变化)[07].mp4'
+</pre>
+<p><code>ffmpeg -f concat -safe 0 -i files.txt -c copy output.mp4</code>即可得到一个完整的mp4文件</p>
+</li>
+</ul>
+<h3 id="rtmp推流"><a href="#rtmp推流" class="headerlink" title="rtmp推流"></a>rtmp推流</h3><ul>
+<li><code>ffmpeg -re -i 1.mp4 -c copy -f flv rtmp://127.0.0.1:1935/live/movie</code></li>
+<li><a target="_blank" rel="noopener" href="https://juejin.cn/post/690947934664628634ing3">如何开发一款H5小程序直播</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/c141fc7881e7">利用ffmpeg实现rtmp推流</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/73984438">ffmpeg的RTMP推流</a></li>
+</ul>
+<h2 id="名词概念"><a href="#名词概念" class="headerlink" title="名词概念"></a>名词概念</h2><ul>
+<li>FFmpeg的名称来自MPEG视频编码标准，前面的“FF”代表“Fast Forward”</li>
+<li>解复用(demux)，表示从一路输入中分离出多路流(视频、音频、字幕等)。<br>把不同的流从某种容器中解析出来，这种行为叫做解复用(demux)</li>
+<li>编解码器(Codec)：以帧为单位实现压缩数据和原始数据之间的相互转换的</li>
+<li>复用(mux)：把不同的流按照某种容器的规则放入容器，这种行为叫做复用（mux）</li>
+<li>码率和帧率是视频文件的最重要的基本特征，对于他们的特有设置会决定视频质量。如果我们知道码率和时长那么可以很容易计算出输出文件的大小。</li>
+<li>帧率：帧率也叫帧频率，帧率是视频文件中每一秒的帧数，肉眼想看到连续移动图像至少需要15帧。</li>
+<li>码率：比特率(也叫码率，数据率)是一个确定整体视频&#x2F;音频质量的参数，秒为单位处理的位数，码率和视频质量成正比，在视频文件中中比特率用bps来表达。</li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/117523405">https://zhuanlan.zhihu.com/p/117523405</a></li>
+</ul>
+<h3 id="FFMPEG-中I帧、B帧、P帧、PTS、DTS"><a href="#FFMPEG-中I帧、B帧、P帧、PTS、DTS" class="headerlink" title="FFMPEG 中I帧、B帧、P帧、PTS、DTS"></a>FFMPEG 中I帧、B帧、P帧、PTS、DTS</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/2cfc19b4938c">https://www.jianshu.com/p/2cfc19b4938c</a></li>
+<li>I帧表示关键帧，又称intra picture，I帧画面完整保留，解码时只需要本帧数据就可以完成（因为包含完整画面）。</li>
+<li>P帧前向预测编码帧 又称predictive-frame，表示的是这一帧跟之前的一个关键帧（或P帧）的差别，解码时需要用之前缓存的画面叠加上本帧定义的差别，生成最终画面。（也就是差别帧，P帧没有完整画面数据，只有与前一帧的画面差别的数据）</li>
+<li>B帧双向预测内插编码帧 又称bi-directional interpolated prediction frame，是双向差别帧，也就是B帧记录的是本帧与前后帧的差别，换言之，要解码B帧，不仅要取得之前的缓存画面，还要解码之后的画面，通过前后画面的与本帧数据的叠加取得最终的画面。B帧压缩率高，但是解码时CPU会比较累。</li>
+<li>因此，I帧和P帧的解码算法比较简单，资源占用也比较少，I帧只要自己完成就行了，至于P帧，也只需要解码器把前一个画面缓存一下，遇到P帧时就使用之前缓存的画面就行。如果视频流只有I和P，解码器可以不管后面的数据，边读边解码，线性前进。如果视频流还有B帧，则需要缓存前面和当前的视频帧，待后面视频帧获得后，再解码。</li>
+</ul>
+<h3 id="ffmpeg-x2F-ffplay-x2F-ffprobe区别"><a href="#ffmpeg-x2F-ffplay-x2F-ffprobe区别" class="headerlink" title="ffmpeg&#x2F;ffplay&#x2F;ffprobe区别"></a>ffmpeg&#x2F;ffplay&#x2F;ffprobe区别</h3><ul>
+<li>ffmpeg:<br>Hyper fast Audio and Video encoder<br>超快音视频编码器（类似爱剪辑）</li>
+<li>ffplay:<br>Simple media player<br>简单媒体播放器</li>
+<li>ffprobe:<br>Simple multimedia streams analyzer<br>简单多媒体流分析器</li>
+</ul>
+<h2 id="播放软件推荐：VLC"><a href="#播放软件推荐：VLC" class="headerlink" title="播放软件推荐：VLC"></a>播放软件推荐：VLC</h2><ul>
+<li>要播放视频直播流，或者测试一个直播视频地址是否可以使用。这里推荐 VLC 媒体播放器。功能强大且跨平台。支持 Windows、Mac OS、Linux、Android、iOS。<br>官网地址：<a target="_blank" rel="noopener" href="http://www.videolan.org/">http://www.videolan.org/</a><br>打开播放器，选择菜单中“媒体”-&gt;“打开网络串流…”。在弹出页面中填入视频地址即可。</li>
+</ul>
+<hr>
+<ul>
+<li>windows 录屏软件Captura – TODO</li>
+<li>FFmpeg最全教程：<a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1773248">https://cloud.tencent.com/developer/article/1773248</a></li>
+<li>FFmpeg jar 库，无需安装 –TODO javacv</li>
+<li>​ffprobe 是一个多媒体流分析工具。它从多媒体流中收集信息，并且以人类和机器可读的形式打印出来。它可以用来检测多媒体流的容器类型，以及每一个多媒体流的格式和类型。它可以作为一个独立的应用来使用，也可以结合文本过滤器执行更复杂的处理。</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/05/04/20220504-zhi-bo-xiang-guan-ji-zhu-shu-li-zong-jie/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2435,465 +2832,6 @@ POST /_reindex?wait_for_completion=false
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/03/12/20220312-guan-yu-qing-liang-ji-fen-bu-shi-shi-jian-tong-zhi-de-si-kao/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2022/03/12/20220312-guan-yu-qing-liang-ji-fen-bu-shi-shi-jian-tong-zhi-de-si-kao/" itemprop="url">关于轻量级分布式事件通知的思考</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-03-12T14:03:08+08:00">
-                2022-03-12
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <ul>
-<li><p>有些业务场景，我们需要发出一个事件，通知到每一个进程。<br>比如数据变更，通知每个进程更新本地缓存。</p>
-</li>
-<li><p>使用MQ的话，以NSQ为例，将channel名设置为ip，那么每个进程都会收到这个事件；但是目前现在是k8s的时代，使用k8s部署进程，那么会导致某些旧ip的channel仍然存在，从而造成事件堆积。</p>
-</li>
-<li><p>redis虽然支持事件，但是微服务时代，不太建议每个业务的微服务都连同一个redis（同业务内的通知可以考虑）；使用一个公共的zk获取是一个可以考虑的方案，各服务启动时watch相应的节点即可。</p>
-</li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/02/28/20220228-jing-dian-pai-xu-suan-fa/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2022/02/28/20220228-jing-dian-pai-xu-suan-fa/" itemprop="url">经典排序算法</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-02-28T14:56:23+08:00">
-                2022-02-28
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <ul>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/onepixel/articles/7674659.html">十大经典排序算法（动图演示）</a></li>
-</ul>
-<h2 id="排序算法分类"><a href="#排序算法分类" class="headerlink" title="排序算法分类"></a>排序算法分类</h2><h3 id="一"><a href="#一" class="headerlink" title="(一)"></a>(一)</h3><ul>
-<li>内部排序和外部排序</li>
-</ul>
-<h3 id="（二）"><a href="#（二）" class="headerlink" title="（二）"></a>（二）</h3><ol>
-<li>比较类排序：通过比较来决定元素间的相对次序，由于其时间复杂度不能突破O(nlogn)，因此也称为非线性时间比较类排序。(非线性时间)</li>
-<li>非比较类排序：不通过比较来决定元素间的相对次序，它可以突破基于比较排序的时间下界，以线性时间运行，因此也称为线性时间非比较类排序。 (线性时间)</li>
-</ol>
-<h3 id="（三）"><a href="#（三）" class="headerlink" title="（三）"></a>（三）</h3><ol>
-<li>非线性时间比较类排序：通过比较来决定元素间的相对次序，由于其时间复杂度不能突破O(nlogn)，因此称为非线性时间比较类排序。如：快速排序、归并排序、堆排序、冒泡排序等。在排序的最终结果里，元素之间的次序依赖于它们之间的比较。每个数都必须和其他数进行比较，才能确定自己的位置。</li>
-<li>线性时间非比较类排序：不通过比较来决定元素间的相对次序，它可以突破基于比较排序的时间下界，以线性时间运行，因此称为线性时间非比较类排序。如：计数排序、基数排序、桶排序。非比较排序是通过确定每个元素之前，应该有多少个元素来排序。针对数组arr，计算arr之前有多少个元素，则唯一确定了arr在排序后数组中的位置。</li>
-</ol>
-<h3 id="（四）"><a href="#（四）" class="headerlink" title="（四）"></a>（四）</h3><ol>
-<li>比较类排序<ul>
-<li>交换排序 (swap)<ul>
-<li>冒泡排序 (bubble Sort) - 双重遍历，相邻元素两两比较交换</li>
-<li>快速排序 (quick Sort) - 较复杂</li>
-</ul>
-</li>
-<li>插入排序 (insertion)<ul>
-<li>简单插入排序 (insertion sort) - 分左右两批，遍历有序列表，将无序的元素插入有序的列表</li>
-<li>希尔排序 (shell sort) (缩小增量排序) - 较复杂</li>
-</ul>
-</li>
-<li>选择排序 (selection)<ul>
-<li>简单选择排序 (selection) - 双重遍历，每次找到最小的元素，最后和该趟遍历的第一个元素进行交换</li>
-<li>堆排序 (heap sort)</li>
-</ul>
-</li>
-<li>归并排序 (merge sort) - 即先使每个子序列有序，再使子序列段间有序。若将两个有序表合并成一个有序表，称为2-路归并。 （递归）<ul>
-<li>二路归并排序</li>
-<li>多路归并排序</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>非比较类排序<ul>
-<li>计数排序 (counting sort)</li>
-<li>桶排序 (bucket sort)</li>
-<li>基数排序 (radix sort)(分配排序)</li>
-</ul>
-</li>
-</ol>
-<h3 id="（五）"><a href="#（五）" class="headerlink" title="（五）"></a>（五）</h3><ul>
-<li>算法复杂度</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>排序方法</th>
-<th>时间复杂度（平均）</th>
-<th>时间复杂度（最坏）</th>
-<th>时间复杂度（最好）</th>
-<th>空间复杂度</th>
-<th>稳定性</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>冒泡排序</td>
-<td>O(n^2)</td>
-<td>O(n^2)</td>
-<td>O(n)</td>
-<td>O(1)</td>
-<td>稳定</td>
-</tr>
-<tr>
-<td>快速排序</td>
-<td>O(nlog<sub>2</sub>n)</td>
-<td>O(n^2)</td>
-<td>O(nlog<sub>2</sub>n)</td>
-<td>O(nlog<sub>2</sub>n)</td>
-<td>不稳定</td>
-</tr>
-<tr>
-<td>简单插入排序</td>
-<td>O(n^2)</td>
-<td>O(n^2)</td>
-<td>O(n)</td>
-<td>O(1)</td>
-<td>稳定</td>
-</tr>
-<tr>
-<td>希尔排序</td>
-<td>O(n<sup>1.3</sup>)</td>
-<td>O(n^2)</td>
-<td>O(n)</td>
-<td>O(1)</td>
-<td>不稳定</td>
-</tr>
-<tr>
-<td>简单选择排序</td>
-<td>O(n^2)</td>
-<td>O(n^2)</td>
-<td>O(n^2)</td>
-<td>O(1)</td>
-<td>不稳定</td>
-</tr>
-<tr>
-<td>堆排序</td>
-<td>O(nlog<sub>2</sub>n)</td>
-<td>O(nlog<sub>2</sub>n)</td>
-<td>O(nlog<sub>2</sub>n)</td>
-<td>O(1)</td>
-<td>不稳定</td>
-</tr>
-<tr>
-<td>归并排序</td>
-<td>O(nlog<sub>2</sub>n)</td>
-<td>O(nlog<sub>2</sub>n)</td>
-<td>O(nlog<sub>2</sub>n)</td>
-<td>O(n)</td>
-<td>稳定</td>
-</tr>
-<tr>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>计数排序</td>
-<td>O(n+k)</td>
-<td>O(n+k)</td>
-<td>O(n+k)</td>
-<td>O(n+k)</td>
-<td>稳定</td>
-</tr>
-<tr>
-<td>桶排序</td>
-<td>O(n+k)</td>
-<td>O(n^2)</td>
-<td>O(n)</td>
-<td>O(n+k)</td>
-<td>稳定</td>
-</tr>
-<tr>
-<td>基数排序</td>
-<td>O(n*k)</td>
-<td>O(n*k)</td>
-<td>O(n*k)</td>
-<td>O(n+k)</td>
-<td>稳定</td>
-</tr>
-</tbody></table>
-<ul>
-<li>相关概念：</li>
-</ul>
-<h4 id="1、时间复杂度"><a href="#1、时间复杂度" class="headerlink" title="1、时间复杂度"></a>1、时间复杂度</h4><ul>
-<li>时间复杂度可以认为是对排序数据的总的操作次数。反映当n变化时，操作次数呈现什么规律。</li>
-<li>常见的时间复杂度有：常数阶O(1),对数阶O(log2n),线性阶O(n), 线性对数阶O(nlog2n),平方阶O(n2)</li>
-<li>时间复杂度O(1)：算法中语句执行次数为一个常数，则时间复杂度为O(1),</li>
-</ul>
-<h4 id="2、空间复杂度"><a href="#2、空间复杂度" class="headerlink" title="2、空间复杂度"></a>2、空间复杂度</h4><ul>
-<li>空间复杂度是指算法在计算机内执行时所需存储空间的度量，它也是问题规模n的函数</li>
-<li>空间复杂度O(1)：当一个算法的空间复杂度为一个常量，即不随被处理数据量n的大小而改变时，可表示为O(1)</li>
-<li>空间复杂度O(log2N)：当一个算法的空间复杂度与以2为底的n的对数成正比时，可表示为O(log2n)， ax&#x3D;N，则x&#x3D;logaN，</li>
-<li>空间复杂度O(n)：当一个算法的空间复杂度与n成线性比例关系时，可表示为0(n).</li>
-</ul>
-<h4 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h4><ul>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_42907443/article/details/118329160">常见排序算法分类（排序算法，是算法的基石，你掌握多少？）</a></li>
-<li>大O时间复杂度表示法：表示代码执行时间随数据规模增长的变化趋势，又称渐进时间复杂度</li>
-<li>大O空间复杂度表示法：表示代码执行所占的内存空间随数据规模增长的变化趋势，又称渐进空间复杂度</li>
-<li>复杂度分析法则<ul>
-<li>单段代码，看循环的次数。</li>
-<li>多段代码，看代码循环量级。</li>
-<li>嵌套代码求乘积，比如递归和多重循环。</li>
-<li>多个规模求加法，方法中并行的两个循环。</li>
-</ul>
-</li>
-<li>常用的复杂度级别<ul>
-<li>多项式阶：随着数据规模的增长，算法的执行时间和空间占用，按照多项式的比例增长，包括，O(1)(常数阶)、O(logn)(对数阶)、O(n)(线性阶)、O(nlogn)(线性对数阶)、O(n2)(平方阶)、O(n3)(立方阶)。</li>
-<li>非多项式阶：随着数据规模的增长，算法的执行时间和空间占用暴增，这列算法性能极差。包括，O(2^n)(指数阶)、O(n!)(阶乘阶)</li>
-</ul>
-</li>
-</ul>
-<h3 id="（六）"><a href="#（六）" class="headerlink" title="（六）"></a>（六）</h3><ul>
-<li>稳定性</li>
-<li>假定在待排序的记录序列中，存在多个具有相同的关键字的记录，若经过排序，这些记录的相对次序保持不变，即在原序列中，A1&#x3D;A2，且A1在A2之前，而在排序后的序列中，A1仍在A2之前，则称这种排序算法是稳定的；否则称为不稳定的。</li>
-<li>稳定也可以理解为一切皆在掌握中,元素的位置处在你在控制中.而不稳定算法有时就有点碰运气,随机的成分.当两元素相等时它们的位置在排序后可能仍然相同.但也可能不同.是未可知的.</li>
-<li>不稳定排序算法<ul>
-<li>快选希堆（快速排序，选择排序，希尔排序，堆排序）</li>
-</ul>
-</li>
-</ul>
-<h3 id="（七）"><a href="#（七）" class="headerlink" title="（七）"></a>（七）</h3><ul>
-<li>算法总结</li>
-<li>所需辅助空间最多：归并排序；<br>所需辅助空间最少：堆排序；<br>平均速度最快：快速排序；<br>不稳定：快速排序，希尔排序，堆排序。</li>
-</ul>
-<h4 id="冒泡排序"><a href="#冒泡排序" class="headerlink" title="冒泡排序"></a>冒泡排序</h4><ul>
-<li>1、冒泡排序是一种用时间换空间的排序方法，n小时好</li>
-<li>2、最坏情况是把顺序的排列变成逆序，或者把逆序的数列变成顺序，最差时间复杂度O(N^2)只是表示其操作次数的数量级</li>
-<li>3、最好的情况是数据本来就有序，复杂度为O(n)</li>
-</ul>
-<h4 id="快速排序"><a href="#快速排序" class="headerlink" title="快速排序"></a>快速排序</h4><ul>
-<li>1、n大时好，快速排序比较占用内存，内存随n的增大而增大，但却是效率高不稳定的排序算法。</li>
-<li>2、划分之后一边是一个，一边是n-1个，<br>这种极端情况的时间复杂度就是O(N^2)</li>
-<li>3、最好的情况是每次都能均匀的划分序列，O(N*log2N)</li>
-</ul>
-<h4 id="归并排序"><a href="#归并排序" class="headerlink" title="归并排序"></a>归并排序</h4><ul>
-<li>1、n大时好，归并比较占用内存，内存随n的增大而增大，但却是效率高且稳定的排序算法。</li>
-</ul>
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/onepixel/articles/7674659.html">十大经典排序算法（动图演示）</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/guidao13/article/details/86430483">Go语言经典排序算法实现</a></li>
-<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/42586566">[算法总结] 十大排序算法</a></li>
-<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/116046849">排序算法的稳定性</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/xiaochun126/p/5086037.html">各种排序算法时间复杂度</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_42907443/article/details/118329160">常见排序算法分类（排序算法，是算法的基石，你掌握多少？）</a> !!!</li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2951,7 +2889,7 @@ POST /_reindex?wait_for_completion=false
 <a href="/archives/">                
 <!--<a href="/archives/%7C%7C%20archive">-->
               
-                  <span class="site-state-item-count">143</span>
+                  <span class="site-state-item-count">145</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2964,7 +2902,7 @@ POST /_reindex?wait_for_completion=false
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">156</span>
+                  <span class="site-state-item-count">159</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

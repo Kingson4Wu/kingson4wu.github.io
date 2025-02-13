@@ -1,0 +1,1207 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/uploads/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="AI,LLM,大语言模型," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="拉巴力的纸皮箱" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="记录与大语言模型的对话，探索疑问与思考内容可能持续更新，作为大模型演变的历史备忘    大模型能从训练数据中识别互相矛盾的逻辑吗？或者说，大模型具备逻辑推理能力，能发现逻辑错误吗？ From chatGPT (2025-02-12)  好的，按你给的格式调整后是这样： 大模型，如GPT类模型，能够一定程度地识别并指出逻辑上的矛盾或错误，但它的能力有一定的局限性。具体来说：  从训练数据中识别矛">
+<meta property="og:type" content="article">
+<meta property="og:title" content="大语言模型对话记录与思考备忘录">
+<meta property="og:url" content="http://yoursite.com/2025/02/12/20250212-da-yu-yan-mo-xing-dui-hua-ji-lu-yu-si-kao-bei-wang-lu/index.html">
+<meta property="og:site_name" content="拉巴力的纸皮箱">
+<meta property="og:description" content="记录与大语言模型的对话，探索疑问与思考内容可能持续更新，作为大模型演变的历史备忘    大模型能从训练数据中识别互相矛盾的逻辑吗？或者说，大模型具备逻辑推理能力，能发现逻辑错误吗？ From chatGPT (2025-02-12)  好的，按你给的格式调整后是这样： 大模型，如GPT类模型，能够一定程度地识别并指出逻辑上的矛盾或错误，但它的能力有一定的局限性。具体来说：  从训练数据中识别矛">
+<meta property="og:locale">
+<meta property="article:published_time" content="2025-02-12T11:17:14.000Z">
+<meta property="article:modified_time" content="2025-02-12T11:42:20.209Z">
+<meta property="article:author" content="Kingson Wu">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="LLM">
+<meta property="article:tag" content="大语言模型">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2025/02/12/20250212-da-yu-yan-mo-xing-dui-hua-ji-lu-yu-si-kao-bei-wang-lu/"/>
+
+
+
+
+
+  <title>大语言模型对话记录与思考备忘录 | 拉巴力的纸皮箱</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">拉巴力的纸皮箱</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2025/02/12/20250212-da-yu-yan-mo-xing-dui-hua-ji-lu-yu-si-kao-bei-wang-lu/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">大语言模型对话记录与思考备忘录</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2025-02-12T19:17:14+08:00">
+                2025-02-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<blockquote>
+<p>记录与大语言模型的对话，探索疑问与思考<br>内容可能持续更新，作为大模型演变的历史备忘</p>
+</blockquote>
+</blockquote>
+<hr>
+<h1 id="大模型能从训练数据中识别互相矛盾的逻辑吗？或者说，大模型具备逻辑推理能力，能发现逻辑错误吗？"><a href="#大模型能从训练数据中识别互相矛盾的逻辑吗？或者说，大模型具备逻辑推理能力，能发现逻辑错误吗？" class="headerlink" title="大模型能从训练数据中识别互相矛盾的逻辑吗？或者说，大模型具备逻辑推理能力，能发现逻辑错误吗？"></a>大模型能从训练数据中识别互相矛盾的逻辑吗？或者说，大模型具备逻辑推理能力，能发现逻辑错误吗？</h1><blockquote>
+<p>From chatGPT (2025-02-12)</p>
+</blockquote>
+<p>好的，按你给的格式调整后是这样：</p>
+<p>大模型，如GPT类模型，能够一定程度地识别并指出逻辑上的矛盾或错误，但它的能力有一定的局限性。具体来说：</p>
+<ol>
+<li><p><strong>从训练数据中识别矛盾</strong>：大模型通过暴露于大量文本数据，在训练过程中学会识别常见的逻辑错误或不一致的情况。如果某个陈述前后矛盾或与常识相悖，模型有时能检测到这些问题。然而，这种识别主要依赖于训练数据中的模式，而非深度理解。</p>
+</li>
+<li><p><strong>推理能力</strong>：大模型表面上似乎能够进行推理，但其推理过程更多是基于统计模式匹配，而非逻辑推理。它能在一些标准情境下给出合理的答案，但在面对复杂的逻辑链条或抽象推理时，表现可能不如人类或专门的逻辑推理系统。</p>
+</li>
+<li><p><strong>局限性</strong>：大模型的推理能力受到训练数据质量和多样性的限制。如果训练数据包含不一致的示例或错误的推理模式，模型可能会学到并延续这些错误。对于一些高度专业化的推理任务（如数学证明或严谨的形式逻辑推理），大模型的能力仍然有限。</p>
+</li>
+</ol>
+<p>总结来说，大模型能够识别一些常见的逻辑错误或矛盾，尤其是那些明显的错误，但它的推理能力与人类的深层次逻辑思考存在差距，也不具备专门的推理系统那样的准确性。</p>
+<hr>
+<h1 id="ChatGPT的推理能力是如何实现的？它具备哪些优势和局限？"><a href="#ChatGPT的推理能力是如何实现的？它具备哪些优势和局限？" class="headerlink" title="ChatGPT的推理能力是如何实现的？它具备哪些优势和局限？"></a>ChatGPT的推理能力是如何实现的？它具备哪些优势和局限？</h1><blockquote>
+<p>From chatGPT (2025-02-12)</p>
+</blockquote>
+<p>ChatGPT展现出的推理能力，实际上并不是人类意义上的“思考”，而是基于大量数据和算法模拟的逻辑模式。这种能力的实现可以从以下几个方面理解：</p>
+<ol>
+<li><p><strong>基于大规模语言模型的训练</strong><br>ChatGPT通过大规模语言数据的训练，包括书籍、论文、对话和逻辑推理的例子，学习到了如何理解问题结构、模拟人类的逻辑推导过程，并生成符合逻辑的回答。核心在于，模型并不真正“理解”逻辑，而是通过统计关联，从大量训练数据中学习到解决类似问题的模式。</p>
+</li>
+<li><p><strong>基于概率的回答生成</strong><br>ChatGPT生成回答的过程是基于概率分布的。它会根据问题内容预测接下来的最可能的单词或句子，尤其是在逻辑推理问题中，看起来像是在推理，实际上是在复现训练数据中类似问题的逻辑模式。通过结合训练数据中的逻辑规则，它动态生成符合问题需求的步骤。</p>
+</li>
+<li><p><strong>内部机制：注意力机制与自回归生成</strong>  </p>
+<ul>
+<li><strong>注意力机制（Attention Mechanism）</strong>：这是GPT模型的核心，通过注意力机制，模型可以“记住”上下文内容，从而保持逻辑连贯性。</li>
+<li><strong>自回归生成（Autoregressive Generation）</strong>：模型逐词生成答案，并在生成过程中不断参考之前生成的内容，保证推理步骤清晰、有条理。</li>
+</ul>
+</li>
+<li><p><strong>模拟逻辑推理的实现</strong><br>对于逻辑推理类问题，ChatGPT的表现依赖两个关键点：</p>
+<ul>
+<li><strong>模式识别</strong>：它能够识别问题结构并提取逻辑关系，如“甲说乙说谎”，“丙说甲和乙都说谎”。</li>
+<li><strong>排除矛盾</strong>：通过“假设-验证-排除”过程，模拟人类的假设验证，判断假设是否导致矛盾。这个过程并非真正的推理，而是基于大量类似问题的经验模式。</li>
+</ul>
+</li>
+<li><p><strong>ChatGPT的优势和局限</strong>  </p>
+<ul>
+<li><strong>优势</strong>：<ul>
+<li>在简单的逻辑推理任务中表现良好，尤其是规则清晰、条件有限的问题。</li>
+<li>能快速“推导”出答案并通过自然语言呈现清晰的推理过程。</li>
+</ul>
+</li>
+<li><strong>局限</strong>：<ul>
+<li><strong>不具备真正的理解能力</strong>：它并不是从问题本质进行推理，而是利用数据中学到的模式。</li>
+<li><strong>复杂逻辑容易出错</strong>：如果逻辑嵌套太深或需要跨领域知识，可能会出错。</li>
+<li><strong>缺乏主动性</strong>：无法主动思考问题的背景或意图，只能根据输入提供答案。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<p><strong>总结</strong><br>ChatGPT的推理能力是通过模式匹配、注意力机制和语言生成技术实现的。它能够模拟逻辑推理的步骤，但并不具备真正的逻辑思维或理解能力。这种能力本质上是深度学习在海量数据上的“概率学习”和“语言模式复现”，通过这种方式实现了让人类看起来“像在思考”的效果。</p>
+<hr>
+<h1 id="有甲乙丙三个人，有人只说真话有人只说假话。现在，甲说乙说谎，乙说丙说谎，丙说甲和乙都说谎。问谁是说谎的"><a href="#有甲乙丙三个人，有人只说真话有人只说假话。现在，甲说乙说谎，乙说丙说谎，丙说甲和乙都说谎。问谁是说谎的" class="headerlink" title="有甲乙丙三个人，有人只说真话有人只说假话。现在，甲说乙说谎，乙说丙说谎，丙说甲和乙都说谎。问谁是说谎的"></a>有甲乙丙三个人，有人只说真话有人只说假话。现在，甲说乙说谎，乙说丙说谎，丙说甲和乙都说谎。问谁是说谎的</h1><blockquote>
+<p>From chatGPT (2025-02-12)</p>
+</blockquote>
+<p>这个问题可以通过逻辑推理来解答。我们可以假设每个人分别说真话或说谎，并根据他们的陈述进行推理。</p>
+<h3 id="陈述内容："><a href="#陈述内容：" class="headerlink" title="陈述内容："></a>陈述内容：</h3><ul>
+<li>甲说乙说谎。</li>
+<li>乙说丙说谎。</li>
+<li>丙说甲和乙都说谎。</li>
+</ul>
+<h3 id="假设："><a href="#假设：" class="headerlink" title="假设："></a>假设：</h3><p>假设甲说的是真的，那么：</p>
+<ul>
+<li>甲说乙说谎。所以乙是说谎者。</li>
+<li>乙说丙说谎。如果乙是说谎者，那么乙说的应该是假的，即丙不说谎。</li>
+<li>丙说甲和乙都说谎。如果丙不说谎，那么丙的说法应该是真的。所以甲和乙都应该是说谎者，但这与我们的假设矛盾，因为我们已经假设甲是说真话的。</li>
+</ul>
+<p>所以，假设甲说真话的情况矛盾，甲不可能是说真话的。</p>
+<p>接下来，假设乙说的是真的：</p>
+<ul>
+<li>乙说丙说谎，所以丙是说谎者。</li>
+<li>丙说甲和乙都说谎。因为丙是说谎者，丙的话不成立，因此甲和乙至少有一个是说真话的，这与假设乙说真话一致。</li>
+<li>甲说乙说谎。如果甲是说谎者，那么甲的话应该是假的，所以乙说的是真的，符合假设。</li>
+</ul>
+<p>因此，乙是说真话的，甲和丙是说谎的。</p>
+<h3 id="结论："><a href="#结论：" class="headerlink" title="结论："></a>结论：</h3><p>甲和丙是说谎的，乙是说真话的。</p>
+<hr>
+<h1 id="ChatGPT是如何“算”出单词中字母“t”的个数的？"><a href="#ChatGPT是如何“算”出单词中字母“t”的个数的？" class="headerlink" title="ChatGPT是如何“算”出单词中字母“t”的个数的？"></a>ChatGPT是如何“算”出单词中字母“t”的个数的？</h1><p>ChatGPT并不是通过逐一计算字母“t”的个数来得出答案，而是通过以下几个步骤来实现的：</p>
+<ol>
+<li><p><strong>文本解析和模式识别</strong><br>当接收到像“Attention有几个t”这样的问题时，模型识别到这是与字母统计相关的查询，并提取出关键词“attention”，随后在该单词的字符序列中查找所有的字母“t”。</p>
+</li>
+<li><p><strong>背后逻辑的实现</strong><br>ChatGPT生成答案的过程其实涉及语言生成的几个步骤：</p>
+<ul>
+<li><strong>拆分单词：</strong> 模型识别出字符串“attention”。</li>
+<li><strong>统计字母：</strong> 模型检测每个字母的出现次数，特别关注字母“t”。</li>
+<li><strong>生成回答：</strong> 模型根据其训练中学到的模式直接输出答案，例如“3个t”。</li>
+</ul>
+</li>
+<li><p><strong>本质：语言生成vs算法实现</strong><br>虽然从表面看，ChatGPT像是在“数”字母“t”，但其实：</p>
+<ul>
+<li>它可能基于训练数据中“attention”单词的字符分布知识，快速得出答案。</li>
+<li>如果该单词在训练数据中从未出现过，模型会尝试通过字符分析来推测答案，但这不如专门编写的统计算法准确。</li>
+</ul>
+</li>
+</ol>
+<p><strong>人类方式与模型行为的对比</strong><br>若由人类解答：</p>
+<ol>
+<li>人类会直接肉眼数出字母“t”的个数。</li>
+<li>确认答案。</li>
+</ol>
+<p>而ChatGPT则模拟这一过程，通过对字符模式的分析，快速生成一个类似的答案。</p>
+<p><strong>总结</strong><br>ChatGPT并没有像传统程序那样逐一遍历字符串，而是基于对字符和单词模式的理解，快速生成了答案。</p>
+<hr>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/AI/" rel="tag"># AI</a>
+          
+            <a href="/tags/LLM/" rel="tag"># LLM</a>
+          
+            <a href="/tags/%E5%A4%A7%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B/" rel="tag"># 大语言模型</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2025/01/08/20250108-suan-fa-zai-shi-ji-ye-wu-chang-jing-zhong-bing-fei-wan-quan-wu-yong/" rel="next" title="算法在实际业务场景中并非完全无用">
+                <i class="fa fa-chevron-left"></i> 算法在实际业务场景中并非完全无用
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2025/02/13/20250213-shen-du-xue-xi-wei-shi-me-neng-xue-xi-bing-zuo-dui/" rel="prev" title="深度学习为什么能学习并做对">
+                深度学习为什么能学习并做对 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div id="gitalk-container"></div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.png"
+                alt="" />
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+<a href="/archives/">                
+<!--<a href="/archives/%7C%7C%20archive">-->
+              
+                  <span class="site-state-item-count">145</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">159</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A4%A7%E6%A8%A1%E5%9E%8B%E8%83%BD%E4%BB%8E%E8%AE%AD%E7%BB%83%E6%95%B0%E6%8D%AE%E4%B8%AD%E8%AF%86%E5%88%AB%E4%BA%92%E7%9B%B8%E7%9F%9B%E7%9B%BE%E7%9A%84%E9%80%BB%E8%BE%91%E5%90%97%EF%BC%9F%E6%88%96%E8%80%85%E8%AF%B4%EF%BC%8C%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%85%B7%E5%A4%87%E9%80%BB%E8%BE%91%E6%8E%A8%E7%90%86%E8%83%BD%E5%8A%9B%EF%BC%8C%E8%83%BD%E5%8F%91%E7%8E%B0%E9%80%BB%E8%BE%91%E9%94%99%E8%AF%AF%E5%90%97%EF%BC%9F"><span class="nav-number">1.</span> <span class="nav-text">大模型能从训练数据中识别互相矛盾的逻辑吗？或者说，大模型具备逻辑推理能力，能发现逻辑错误吗？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ChatGPT%E7%9A%84%E6%8E%A8%E7%90%86%E8%83%BD%E5%8A%9B%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E7%9A%84%EF%BC%9F%E5%AE%83%E5%85%B7%E5%A4%87%E5%93%AA%E4%BA%9B%E4%BC%98%E5%8A%BF%E5%92%8C%E5%B1%80%E9%99%90%EF%BC%9F"><span class="nav-number">2.</span> <span class="nav-text">ChatGPT的推理能力是如何实现的？它具备哪些优势和局限？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9C%89%E7%94%B2%E4%B9%99%E4%B8%99%E4%B8%89%E4%B8%AA%E4%BA%BA%EF%BC%8C%E6%9C%89%E4%BA%BA%E5%8F%AA%E8%AF%B4%E7%9C%9F%E8%AF%9D%E6%9C%89%E4%BA%BA%E5%8F%AA%E8%AF%B4%E5%81%87%E8%AF%9D%E3%80%82%E7%8E%B0%E5%9C%A8%EF%BC%8C%E7%94%B2%E8%AF%B4%E4%B9%99%E8%AF%B4%E8%B0%8E%EF%BC%8C%E4%B9%99%E8%AF%B4%E4%B8%99%E8%AF%B4%E8%B0%8E%EF%BC%8C%E4%B8%99%E8%AF%B4%E7%94%B2%E5%92%8C%E4%B9%99%E9%83%BD%E8%AF%B4%E8%B0%8E%E3%80%82%E9%97%AE%E8%B0%81%E6%98%AF%E8%AF%B4%E8%B0%8E%E7%9A%84"><span class="nav-number">3.</span> <span class="nav-text">有甲乙丙三个人，有人只说真话有人只说假话。现在，甲说乙说谎，乙说丙说谎，丙说甲和乙都说谎。问谁是说谎的</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%99%88%E8%BF%B0%E5%86%85%E5%AE%B9%EF%BC%9A"><span class="nav-number">3.0.1.</span> <span class="nav-text">陈述内容：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%81%87%E8%AE%BE%EF%BC%9A"><span class="nav-number">3.0.2.</span> <span class="nav-text">假设：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%93%E8%AE%BA%EF%BC%9A"><span class="nav-number">3.0.3.</span> <span class="nav-text">结论：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ChatGPT%E6%98%AF%E5%A6%82%E4%BD%95%E2%80%9C%E7%AE%97%E2%80%9D%E5%87%BA%E5%8D%95%E8%AF%8D%E4%B8%AD%E5%AD%97%E6%AF%8D%E2%80%9Ct%E2%80%9D%E7%9A%84%E4%B8%AA%E6%95%B0%E7%9A%84%EF%BC%9F"><span class="nav-number">4.</span> <span class="nav-text">ChatGPT是如何“算”出单词中字母“t”的个数的？</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kingson Wu</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+  <script src="/js/src/md5.min.js"></script>
+
+   <script type="text/javascript">
+        var gitalk = new Gitalk({
+          clientID: '3416434437f9f4e049bd',
+          clientSecret: 'a52d69bf90cb77f81a26d135e03dd0f4869fbf84',
+          repo: 'kingson4wu.github.io',
+          owner: 'kingson4wu',
+          admin: ['kingson4wu'],
+
+          id: md5(location.pathname),
+
+          distractionFreeMode: 'true'
+        })
+        gitalk.render('gitalk-container')
+    </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

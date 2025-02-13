@@ -287,6 +287,370 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/08/20/20200820-guan-yu-cdn-huan-cun/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/08/20/20200820-guan-yu-cdn-huan-cun/" itemprop="url">关于CDN缓存总结摘要</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-08-20T22:06:31+08:00">
+                2020-08-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="CDN缓存的几点总结"><a href="#CDN缓存的几点总结" class="headerlink" title="CDN缓存的几点总结"></a>CDN缓存的几点总结</h3><ol>
+<li>CDN资源的标识: url</li>
+<li>跟HTTP缓存无关的请求头不影响CDN缓存（亲测）</li>
+<li>不仅是静态资源，接口的数据可以做CDN缓存（亲测）</li>
+<li>CDN服务一般都有默认的缓存配置（比如一分钟），服务端可以通过设置HTTP缓存相关的Header控制是否适用CDN缓存</li>
+<li>HTTP缓存和CDN缓存分别作为客户端缓存和服务端缓存</li>
+</ol>
+<h3 id="HTTP缓存"><a href="#HTTP缓存" class="headerlink" title="HTTP缓存"></a>HTTP缓存</h3><p>关键字段有Expires，Cache-Control ，Last-Modified ，Etag 四个字段，Expires和Cache-Control用来确定确定缓存的存储时间，Last-Modified 和Etag则用来确定缓存是否要被更新</p>
+<h4 id="强制缓存"><a href="#强制缓存" class="headerlink" title="强制缓存"></a>强制缓存</h4><p>控制强制缓存的字段分别是Cache-Control和Expires，其中Cache-Control优先级比Expires高</p>
+<ol>
+<li>Expires: HTTP1.0的，已废弃</li>
+<li>Cache-Control: HTTP1.1中用来控制缓存时间的参数 (Cache-Control:max-age&#x3D;30;xxx;)<pre>
+public: 表明响应可以被任何对象（包括：发送请求的客户端，代理服务器，等等）缓存。
+private: 表明响应只能被单个用户缓存，不能作为共享缓存（即代理服务器不能缓存它）。
+max-age=seconds: 设置缓存存储的最大周期，相对于请求的时间缓存seconds秒，在此时间内，访问资源直接读取本地缓存，不向服务器发出请求。（与expires同时出现时，max-age优先级更高）
+s-maxage=seconds: 规则等同max-age，覆盖max-age 或者 Expires 头，但是仅适用于共享缓存(比如各个代理)，并且私有缓存中它被忽略。（与expires或max-age同时出现时，s-maxage优先级更高）
+no-store: 不缓存服务器响应的任何内容，每次访问资源都需要服务器完整响应
+no-cache: 缓存资源，但立即过期，每次请求都需要跟服务器对比验证资源是否被修改。（等同于max-age=0）
+</pre></li>
+</ol>
+<h4 id="协商缓存"><a href="#协商缓存" class="headerlink" title="协商缓存"></a>协商缓存</h4><p>协商缓存就是强制缓存失效后，浏览器携带缓存标识向服务器发起请求，由服务器根据缓存标识决定是否使用缓存的过程。控制协商缓存的字段分别有：Last-Modified &#x2F; If-Modified-Since和Etag &#x2F; If-None-Match，其中Etag &#x2F; If-None-Match的优先级比Last-Modified &#x2F; If-Modified-Since高。</p>
+<ol start="2">
+<li>Last-modified: 源头服务器认定的资源做出修改的日期及时间。精确度比Etag低。包含有If-Modified-Since或 If-Unmodified-Since首部的条件请求会使用这个字段。</li>
+<li>Etag: HTTP响应头是资源的特定版本的标识符。</li>
+</ol>
+<h4 id="如何控制不使用缓存"><a href="#如何控制不使用缓存" class="headerlink" title="如何控制不使用缓存"></a>如何控制不使用缓存</h4><ul>
+<li>F5刷新：<br>(Cache-Control: max-age&#x3D;0)<br>浏览器会设置max-age&#x3D;0，跳过强缓存判断，会进行协商缓存判断【浏览器直接对本地的缓存文件过期，但是会带上If-Modifed-Since，If-None-Match（如果上一次response带Last-Modified, Etag）这就意味着服务器会对文件检查新鲜度，返回结果可能是304，也有可能是200.】</li>
+<li>强制刷新 (command+shift+R)：浏览器不使用缓存，因此发送的请求头部均带有 Cache-control: no-cache(为了兼容，还带了 Pragma: no-cache),服务器直接返回 200 和最新内容。<br>ctrl+F5强制刷新：<br>(Cache-Control: no-cache)<br>跳过强缓存和协商缓存，直接从服务器拉取资源。【浏览器不仅会对本地文件过期，而且不会带上If-Modifed-Since，If-None-Match，相当于之前从来没有请求过，返回结果是200.】</li>
+<li>如何不缓存<br>Cache-Control其他字段：<br>no-cache: 虽然字面意义是“不要缓存”。但它实际上的机制是，仍然对资源使用缓存，但每一次在使用缓存之前必须向服务器对缓存资源进行验证。<br>no-store: 不使用任何缓存<br>禁止缓存：<br>Cache-Control: no-cache, no-store, must-revalidate<br>Expires：设为当前时间之前</li>
+<li>强缓存存在两种形式：from memory cache 与 from disk cache (浏览器F12查看)</li>
+</ul>
+<h3 id="CDN缓存"><a href="#CDN缓存" class="headerlink" title="CDN缓存"></a>CDN缓存</h3><ul>
+<li>cdn缓存是一种服务端缓存</li>
+<li>与http缓存规则不同的是，这个规则并不是规范性的，而是由cdn服务商来制定</li>
+<li>回源的意思就是返回源站，何为源站，就是我们自己的服务器;CDN回源，没有资源就去源站读取，有资源就直接发送给用户。</li>
+<li>cdn缓存配置，整体来说，建议和http缓存配置保持统一</li>
+</ul>
+<h4 id="不一致的影响"><a href="#不一致的影响" class="headerlink" title="不一致的影响"></a>不一致的影响</h4><p>cdn的缓存配置会受到http缓存配置的影响，而且各个cdn服务商并不完全一致，以腾讯云为例，在缓存配置的文档中特别有以下说明。<br>这会对我们有什么影响呢？</p>
+<ol>
+<li>如果我们http缓存设置cache-control: max-age&#x3D;600，即缓存10分钟，但cdn缓存配置中设置文件缓存时间为1小时，那么就会出现如下情况，文件被访问后第12分钟修改并上传到服务器，用户重新访问资源，响应码会是304，对比缓存未修改，资源依然是旧的，一个小时后再次访问才能更新为最新资源</li>
+<li>如果不设置cache-control呢，在http缓存中我们说过，如果不设置cache-control，那么会有默认的缓存时间，但在这里，cdn服务商明确会在没有cache-control字段时主动帮我们添加cache-control: max-age&#x3D;600。<br>注：针对问题1，也并非没有办法，当我们必须要在缓存期内修改文件，并且不向想影响用户体验，那么我们可以使用cdn服务商提供的强制更新缓存功能，主要注意的是，这里的强制更新是更新服务端缓存，http缓存依然按照http头部规则进行自己的缓存处理，并不会受到影响。</li>
+</ol>
+<h4 id="缓存配置"><a href="#缓存配置" class="headerlink" title="缓存配置"></a>缓存配置</h4><ul>
+<li>cdn缓存的配置并不复杂， 复杂的情况在于cdn缓存配置会受到http缓存配置的影响，并且不同的cdn运营商对于这种影响的处理也都不一致，实际使用时，建议去对应的cdn服务商文档中找到对应的注意事项。</li>
+<li>CDN缓存控制:如果源站设置了 no-cache 、private、 max-age &#x3D; 0 都遵循源站，CDN 是不会进行缓存的。</li>
+<li>又拍云为开发者执行缓存刷新提供了主动更新和被动更新两种方式。<ol>
+<li>主动更新主要是指同名资源在源服务器更新之后，开发者手动刷新文件。又拍云提供了可视化的操作台供用户执行缓存刷新操作，同时支持 URL 刷新和规则刷新。此外开发者也可通过 API 接口完成刷新操作。</li>
+<li>被动刷新则是等文件在 CDN 节点的缓存过期之后，节点回源拉取源服务器上最新的文件。这个过程由 CDN 自动完成，无需手动操作。</li>
+</ol>
+</li>
+</ul>
+<h3 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h3><ul>
+<li><p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/eb974c412399">动态CDN加速</a></p>
+</li>
+<li><p>CDN的全称是Content Delivery Network，即内容分发网络</p>
+</li>
+<li><p>动态CDN加速:非静态数据，通过CDN的加速来起到快速回源的效果的。使用到的就是CDN的快速传输的能力。其实也就是DSA(Dynamic Site Acceleration)</p>
+<ul>
+<li>传统的DSA有:<ul>
+<li>TCP 优化：设计算法来处理网络拥堵和包丢失，加快这些情况下的数据从cdn的恢复以及一些常见的TCP瓶颈</li>
+<li>Route optimization：就是优化从源到用户端的请求的线路，以及可靠性，就是不断的测量计算得到更快更可靠的路线</li>
+<li>Connection management：就是边缘和源之间，包括CDN之前的线路，采用长连接，而不是每一个请求一个连接</li>
+<li>On-the-fly compression：就是数据在刚刚离开源的时候就进行压缩，可以缩短在整个网络之中的流通时间</li>
+<li>SSL offload：加速或者说减少一些安全监测，减少原服务器执行这种计算密集型的压力</li>
+<li>Pre-fetching：有的服务可以解析HTML文件，并将原始服务器预取缓存对象嵌入到文件中</li>
+</ul>
+</li>
+<li>更可靠的连接(只要负责连接边缘服务器，如果直接走回源线路的话，线路会很长，不可靠)</li>
+</ul>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/EasonJim/p/8323578.html">使用CDN隐藏服务器真实IP</a></p>
+<ul>
+<li>隐藏服务器真实IP是解决问题最好和最快的方法，但只针对小流量，大流量同样会扛不住。<br>服务器前端加CDN中转，比如阿里云、百度云加速、360网站卫士、加速乐、安全宝等，如果资金充裕的话，可以购买高防的盾机，用于隐藏服务器真实IP，域名解析使用CDN的IP，所有解析的子域名都使用CDN的IP地址。此外，服务器上部署的其他域名也不能使用真实IP解析，全部都使用CDN来解析。</li>
+<li>另外防止服务器对外传送信息泄漏IP，最常见的是，服务器不使用发送邮件功能，如果非要发送邮件，可以通过第三方代理(例如sendcloud)发送，这样对外显示的IP是代理的IP。</li>
+</ul>
+</li>
+</ul>
+<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/baf12d367fe7">聊聊 CDN 缓存与浏览器缓存</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_34043301/article/details/87964291">http缓存与cdn缓存配置指南</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/83486624">CDN 基础架构及缓存控制</a></li>
+<li><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000006673084">从HTTP响应头看各家CDN缓存技术</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/58685072">HTTP 缓存机制</a></li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/08/04/20200804-da-shang-lei-ye-wu-huo-bi-ti-xi-jian-shu/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/08/04/20200804-da-shang-lei-ye-wu-huo-bi-ti-xi-jian-shu/" itemprop="url">打赏类业务货币体系简述</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-08-04T00:08:36+08:00">
+                2020-08-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <ul>
+<li>在打赏类业务中，消费跟分成是紧紧挂钩的。比如在直播间送礼，用户通过花费虚拟货币给对方送礼，而对方则得到相应的分成。</li>
+<li>定义：用户花费的是“金币”，接受者得到的是“银币”。</li>
+</ul>
+<h3 id="设计概要"><a href="#设计概要" class="headerlink" title="设计概要"></a>设计概要</h3><p><img src="/2020/08/04/20200804-da-shang-lei-ye-wu-huo-bi-ti-xi-jian-shu/%E9%87%91%E9%92%B1%E6%9C%8D%E5%8A%A1%E4%BD%93%E7%B3%BB.png"></p>
+<h4 id="一、用户货币类型组成"><a href="#一、用户货币类型组成" class="headerlink" title="一、用户货币类型组成"></a>一、用户货币类型组成</h4><ol>
+<li>用户通过充值或活动赠币等方式得到“金币(coin)”<ul>
+<li>充值行为得到的是“充值金币(money)”</li>
+<li>活动赠币等非充值行为得到的是“非充值金币(virtualCoin)”</li>
+<li>coin&#x3D;money + virtualCoin</li>
+</ul>
+</li>
+<li>消费行为的接受者（收益方）得到的是“银币(bean)”</li>
+</ol>
+<h4 id="二、业务情况"><a href="#二、业务情况" class="headerlink" title="二、业务情况"></a>二、业务情况</h4><p>所有的业务场景其实都是对上述几种货币类型的加减，主要分为以下几类：</p>
+<ol>
+<li>充值业务</li>
+<li>消费业务（伴随着分成）</li>
+<li>赠币业务（活动获取）</li>
+<li>兑换业务（“银币”可以兑换成“金币”进行消费）</li>
+<li>结算业务（“银币”可以进行提现）</li>
+<li>管理员调整（运营行为，对用户货币进行调整）</li>
+</ol>
+<h4 id="三、冻结账户设计"><a href="#三、冻结账户设计" class="headerlink" title="三、冻结账户设计"></a>三、冻结账户设计</h4><p>针对消费场景，有两种形式的消费：</p>
+<ol>
+<li>即时消费(比如送礼)；<ul>
+<li>用户消费的同时，收益方立即得到相应的分成</li>
+</ul>
+</li>
+<li>延迟消费(比如申请上麦)<ul>
+<li>先对用户的“金币“进行冻结，根据最终的结果，对用户冻结的金币进行结算或退回；用户的消费时间为实际结算的时间（不是冻结时的时间）。</li>
+</ul>
+</li>
+</ol>
+<p><img src="/2020/08/04/20200804-da-shang-lei-ye-wu-huo-bi-ti-xi-jian-shu/%E9%87%91%E9%92%B1%E5%86%BB%E7%BB%93%E8%B4%A6%E6%88%B7%E8%AE%BE%E8%AE%A1.png"></p>
+<ul>
+<li>冻结&amp;结算 和 消费&amp;退款 在技术实现设计上的差异：<ol>
+<li>前者两次RPC，后者一次RPC</li>
+<li>前者以结算时间作为消费完成时间；后者是以扣币时间作为消费完成时间，且退款会导致营收数据受影响</li>
+</ol>
+</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/21/20200721-cheng-xu-yuan-de-zhi-ye-su-yang-zhai-yao/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2028,333 +2392,6 @@ Robert C.Martin
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/14/20200714-dan-yuan-ce-shi-de-gong-ju-he-ji-qiao/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/07/14/20200714-dan-yuan-ce-shi-de-gong-ju-he-ji-qiao/" itemprop="url">单元测试的工具和技巧</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-14T21:42:41+08:00">
-                2020-07-14
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="提高单元测试覆盖率"><a href="#提高单元测试覆盖率" class="headerlink" title="提高单元测试覆盖率"></a>提高单元测试覆盖率</h3><ul>
-<li><p>提高bean类的覆盖率</p>
-<ol>
-<li>pojo-tester</li>
-<li>lombok [lɒmˈbɒk]</li>
-<li>kotlin</li>
-</ol>
-</li>
-<li><p>定义一些过滤规则</p>
-</li>
-</ul>
-<h3 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h3><ul>
-<li>mock神器：mockito</li>
-<li>sql模拟测试：h2</li>
-<li>对测试进行参数化: JUnitParams</li>
-<li>Awaitility: 一个小型的Java领域专用语言（DSL），用于对异步的操作进行同步。<br><a target="_blank" rel="noopener" href="https://www.ctolib.com/topics-109441.html">https://www.ctolib.com/topics-109441.html</a></li>
-<li>WireMock: 用于模拟HTTP服务的工具 （对外部服务打桩） </li>
-<li>Selenium：编写UI驱动的端到端测试</li>
-</ul>
-<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><ul>
-<li><p>使用 集成测试 覆盖若干个完整的核心流程</p>
-</li>
-<li><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/2tBrkzjeufAP-CNrNcJb9A">测试金字塔（深度好文）</a></p>
-</li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/14/20200714-ye-wu-chong-gou-shi-jian-zong-jie/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/07/14/20200714-ye-wu-chong-gou-shi-jian-zong-jie/" itemprop="url">业务重构实践总结</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-14T20:14:58+08:00">
-                2020-07-14
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote>
-<blockquote>
-<p>业务重构似乎是必然且合理的过程。一个项目刚开始为了快速上线和试错，总会或多或少出现不合理的地方。当项目活下来了，为了寻求下一步的发展，服务的稳定和扩展性提升了优先级，自然就需要有人来重构了，这也是项目历史遗留的技术债务。</p>
-</blockquote>
-</blockquote>
-<h3 id="项目背景"><a href="#项目背景" class="headerlink" title="项目背景"></a>项目背景</h3><ul>
-<li>公司原有的业务几乎都是PHP编写的，并且处于一个很大的项目里维护和运行，可以说是大杂烩。随着业务发展和用户量的提升，渐渐得暴露了很多问题：<ol>
-<li>PHP运行效率较低，业务未进行隔离，出问题时相互影响；</li>
-<li>PHP 过于灵活的语言特性，导致后期较高的后期维护成本；</li>
-<li>基础框架和服务对PHP支持不足；</li>
-<li>实现灾备比较困难。</li>
-</ol>
-</li>
-</ul>
-<h3 id="重构语言选择"><a href="#重构语言选择" class="headerlink" title="重构语言选择"></a>重构语言选择</h3><ul>
-<li>我们选择Java作为开发语言进行重构<ol>
-<li>静态类型，多人协作开发和维护更加安全可靠；</li>
-<li>内部基础组件的 Java 版生态比较完善；</li>
-<li>学习成本低，且开发效率较 PHP 没有明显降低。</li>
-</ol>
-</li>
-</ul>
-<h3 id="重构的工作是什么？"><a href="#重构的工作是什么？" class="headerlink" title="重构的工作是什么？"></a>重构的工作是什么？</h3><ol>
-<li>最简单直接的主要工作：就是充当PHP到Java语言的翻译，将PHP代码转化成Java代码，并保持逻辑不变，对上层业务是无感知的；</li>
-<li>除此之外，对业务逻辑进行优化和简化，提高后续的可维护性和开发效率；对服务架构进行优化，提升服务的稳定性和可靠性。这是重构的主要意义；</li>
-<li>重构完成之后，制定完善的验证和上线方案。</li>
-</ol>
-<h3 id="实施过程"><a href="#实施过程" class="headerlink" title="实施过程"></a>实施过程</h3><ul>
-<li>Step 1. 用 Java 重构逻辑<ul>
-<li>对外暴露的协议（HTTP 、RPC 接口定义和返回数据）与之前保持一致（保持协议一致很重要，之后迁移依赖方会更方便）</li>
-<li>尽量翻译而不是重构优化（至少第一版重构采取这样的策略）</li>
-</ul>
-</li>
-<li>Step 2. 验证新逻辑正确性<ul>
-<li>当代码重构完成后，在将流量切换到新逻辑之前，我们会先验证新服务的正确性。</li>
-<li>考验对业务的熟悉程度和翻译的准确度（代码太久远，最熟悉的可能只有你自己）</li>
-<li>单元测试保证</li>
-</ul>
-</li>
-<li>Step 3. 灰度放量<ul>
-<li>当一切验证通过之后，我们会开始按照百分比转发流量。</li>
-<li>PHP入口对接底层新逻辑（验证逻辑正确性；之所以不直接从流量入口切换，是为了保证稳定性，在出现问题时可以迅速回滚。）</li>
-<li>外网代理切到新接口（保持协议一致，无需前端修改，切换彻底）</li>
-</ul>
-</li>
-</ul>
-<h3 id="经验总结"><a href="#经验总结" class="headerlink" title="经验总结"></a>经验总结</h3><ol>
-<li>PHP代码太复杂，项目又不容易跑起来怎么办？<ul>
-<li>默默睁大眼睛翻译还能怎样。。。</li>
-<li>如何验证是否翻译正确？</li>
-<li>找个在线PHP执行平台把复杂的代码片断跑起来，按照执行结果编写测试用例</li>
-</ul>
-</li>
-<li>PHP代码太狗血太久远，万一翻译到半死发现这段逻辑根本已经没用了怎么办？<ul>
-<li>把你的服务当nginx用，参数不符合条件的转发到旧服务，记录入参和返回结果，打日志和监控观察流量</li>
-</ul>
-</li>
-</ol>
-<h3 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h3><ol>
-<li>不能相信自己</li>
-<li>不能相信别人</li>
-<li>只能相信自己</li>
-<li>乖乖覆盖测试用例</li>
-</ol>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2412,7 +2449,7 @@ Robert C.Martin
 <a href="/archives/">                
 <!--<a href="/archives/%7C%7C%20archive">-->
               
-                  <span class="site-state-item-count">143</span>
+                  <span class="site-state-item-count">145</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2425,7 +2462,7 @@ Robert C.Martin
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">156</span>
+                  <span class="site-state-item-count">159</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

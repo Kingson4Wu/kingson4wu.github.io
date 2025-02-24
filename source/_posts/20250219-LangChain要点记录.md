@@ -51,7 +51,15 @@ Human: (human_input)
 Chatbot:"""
 </pre>    
 
++ LangChain 框架由以下开发库组成。
+    - （1）LangChain-Core：基础抽象和 LangChain 表达语言（LCEL）。
+    - （2）LangChain-Community：组件及内置的大量第三方技术集成模块，一般被封装为合作伙伴模块（例如 LangChain-openai）。
+    - （3）LangChain：构成应用架构的上层核心组件，包括 Chains、Agents 等。
+    - （4）Templates：官方提供的一些常见的应用模板。
+    - （5）LangServe：将 LangChain 链部署为 REST API 的平台。
+    - （6）LangSmith：帮助开发者跟踪调试、测试、评估和监控大模型应用的在线平台。
 
 
 # Reference
 + 《LangChain入门指南构建高可复用、可扩展的LLM应用程序》
++ 《基于大模型的RAG应用开发与优化——构建企业级LLM应用》

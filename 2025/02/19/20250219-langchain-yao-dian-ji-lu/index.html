@@ -90,7 +90,7 @@
 <meta property="og:locale">
 <meta property="og:image" content="http://yoursite.com/2025/02/19/20250219-langchain-yao-dian-ji-lu/LangChain.png">
 <meta property="article:published_time" content="2025-02-19T12:53:32.000Z">
-<meta property="article:modified_time" content="2025-02-25T08:18:02.964Z">
+<meta property="article:modified_time" content="2025-02-25T12:37:43.839Z">
 <meta property="article:author" content="Kingson Wu">
 <meta property="article:tag" content="AI">
 <meta property="article:tag" content="LLM">
@@ -422,6 +422,63 @@ Chatbot:"""
 </ul>
 </li>
 </ul>
+<h1 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h1><ul>
+<li><p>Langchain agent是怎么找到search工具并使用的</p>
+<ul>
+<li>可以正确识别和调用它，因为它主要是通过 description 语义匹配，而不是看 name 的具体字符串。</li>
+<li>但 name 仍然有一定作用，比如：LLM 可能会参考 name 来做初步判断；调试时 name 可以帮助你看日志，知道 Agent 选了哪个工具</li>
+</ul>
+</li>
+<li><p>LLM本身没有内在记忆，每个查询都是独立进行的</p>
+<ul>
+<li>所谓的记忆和检索增强生成（RAG）是通过外部手段实现的，即将相关信息添加到提示词模板中</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h1><h2 id="Langchain是怎么做到通过分析语义找到对应工具的"><a href="#Langchain是怎么做到通过分析语义找到对应工具的" class="headerlink" title="Langchain是怎么做到通过分析语义找到对应工具的"></a>Langchain是怎么做到通过分析语义找到对应工具的</h2><ul>
+<li>From ChatGPT (2025-02-18)</li>
+</ul>
+<p>LangChain 通过 <strong>LLM（大模型）+ ReAct 框架</strong> 来分析语义并选择工具。它的核心逻辑是让 LLM <strong>先思考</strong>，再决定用哪个工具，并按照工具的格式调用它。  </p>
+<h3 id="核心机制"><a href="#核心机制" class="headerlink" title="核心机制"></a><strong>核心机制</strong></h3><ol>
+<li><strong>解析用户问题</strong> → 让 LLM 提取关键语义  </li>
+<li><strong>匹配工具描述</strong> → 让 LLM 判断哪个工具最适合  </li>
+<li><strong>生成调用指令</strong> → LLM 生成工具的调用格式并执行  </li>
+<li><strong>工具返回结果</strong> → LLM 解析工具返回的数据并回复用户</li>
+</ol>
+<p>这套逻辑基于 <strong>ReAct（Reasoning + Acting）</strong> 框架，在 LangChain 里 Agent 主要是用这个方法来动态决策。  </p>
+<h3 id="1-解析用户问题"><a href="#1-解析用户问题" class="headerlink" title="1. 解析用户问题"></a><strong>1. 解析用户问题</strong></h3><p>假设你输入：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">agent.run(<span class="string">&quot;计算 25 * 4 + 10&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p>LangChain 会把这个问题交给 LLM（如 GPT-4），让它理解用户的意图。</p>
+<p>LLM 可能会把你的问题理解成：</p>
+<ul>
+<li>这是一个数学计算问题  </li>
+<li>需要找到一个能进行数学计算的工具  </li>
+<li>计算表达式 <code>25 * 4 + 10</code></li>
+</ul>
+<h3 id="2-匹配工具描述"><a href="#2-匹配工具描述" class="headerlink" title="2. 匹配工具描述"></a><strong>2. 匹配工具描述</strong></h3><p>假设你有两个工具：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Tool(</span><br><span class="line">    name=<span class="string">&quot;Calculator&quot;</span>,</span><br><span class="line">    func=calculator_tool,</span><br><span class="line">    description=<span class="string">&quot;用于数学计算。输入一个数学表达式（如 3 + 5 * 2），输出结果。&quot;</span>,</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">Tool(</span><br><span class="line">    name=<span class="string">&quot;Wikipedia&quot;</span>,</span><br><span class="line">    func=wiki.run,</span><br><span class="line">    description=<span class="string">&quot;查询 Wikipedia 词条，输入一个关键词（如 &#x27;Python programming&#x27;），获取相关信息。&quot;</span>,</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>LLM 会对比问题和 <code>description</code>，发现 <strong>Calculator 的描述里提到了“数学计算”</strong>，所以它会选择 <code>Calculator</code> 这个工具。</p>
+<blockquote>
+<p><strong>关键点</strong>：LangChain 让 LLM 直接读 <code>description</code>，所以工具的名字 <code>name</code> 只是一个标识，核心还是 <code>description</code> 的语义匹配。</p>
+</blockquote>
+<h3 id="3-生成调用指令"><a href="#3-生成调用指令" class="headerlink" title="3. 生成调用指令"></a><strong>3. 生成调用指令</strong></h3><p>LangChain 让 LLM 生成一个类似 JSON 的格式，表示它要调用哪个工具：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;action&quot;</span><span class="punctuation">:</span> <span class="string">&quot;Calculator&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;action_input&quot;</span><span class="punctuation">:</span> <span class="string">&quot;25 * 4 + 10&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>然后 LangChain 会<strong>解析这个指令</strong>，找到 <code>Calculator</code> 工具，并把 <code>25 * 4 + 10</code> 传给 <code>func</code> 去执行。</p>
+<h3 id="4-工具返回结果"><a href="#4-工具返回结果" class="headerlink" title="4. 工具返回结果"></a><strong>4. 工具返回结果</strong></h3><p>计算工具执行：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">eval</span>(<span class="string">&quot;25 * 4 + 10&quot;</span>)  <span class="comment"># 计算得到 110</span></span><br></pre></td></tr></table></figure>
+<p>LangChain 把 <code>110</code> 返回给 LLM，LLM 可能会回复：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">25 * 4 + 10 = 110</span><br></pre></td></tr></table></figure>
+<p>最终 <code>agent.run()</code> 会输出这个结果。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a><strong>总结</strong></h3><p>LangChain 让 LLM 负责：</p>
+<ol>
+<li><strong>分析用户语义</strong></li>
+<li><strong>匹配工具（通过 <code>description</code>）</strong></li>
+<li><strong>生成调用工具的指令</strong></li>
+<li><strong>解释工具返回的结果</strong></li>
+</ol>
+<p>它的核心是利用 <strong>LLM 的推理能力</strong>，结合 ReAct 让它“思考后再行动”。所以只要 <code>description</code> 够清晰，即使 <code>name</code> 乱写，它也能找到正确的工具！</p>
+<hr>
 <h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><ul>
 <li>《LangChain入门指南构建高可复用、可扩展的LLM应用程序》</li>
 <li>《基于大模型的RAG应用开发与优化——构建企业级LLM应用》</li>
@@ -609,7 +666,7 @@ Chatbot:"""
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#LangChain-%E6%8F%90%E4%BE%9B%E4%BA%86%E5%A4%9A%E7%A7%8D%E6%A8%A1%E6%9D%BF%E4%BE%9B%E9%80%89%E6%8B%A9"><span class="nav-number">1.</span> <span class="nav-text">LangChain 提供了多种模板供选择</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%B0%E5%BF%86%E6%8F%90%E7%A4%BA%E8%AF%8D"><span class="nav-number">2.</span> <span class="nav-text">记忆提示词</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Reference"><span class="nav-number">3.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#LangChain-%E6%8F%90%E4%BE%9B%E4%BA%86%E5%A4%9A%E7%A7%8D%E6%A8%A1%E6%9D%BF%E4%BE%9B%E9%80%89%E6%8B%A9"><span class="nav-number">1.</span> <span class="nav-text">LangChain 提供了多种模板供选择</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%B0%E5%BF%86%E6%8F%90%E7%A4%BA%E8%AF%8D"><span class="nav-number">2.</span> <span class="nav-text">记忆提示词</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B6%E4%BB%96"><span class="nav-number">3.</span> <span class="nav-text">其他</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%89%A9%E5%B1%95"><span class="nav-number">4.</span> <span class="nav-text">扩展</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Langchain%E6%98%AF%E6%80%8E%E4%B9%88%E5%81%9A%E5%88%B0%E9%80%9A%E8%BF%87%E5%88%86%E6%9E%90%E8%AF%AD%E4%B9%89%E6%89%BE%E5%88%B0%E5%AF%B9%E5%BA%94%E5%B7%A5%E5%85%B7%E7%9A%84"><span class="nav-number">4.1.</span> <span class="nav-text">Langchain是怎么做到通过分析语义找到对应工具的</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E6%9C%BA%E5%88%B6"><span class="nav-number">4.1.1.</span> <span class="nav-text">核心机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E8%A7%A3%E6%9E%90%E7%94%A8%E6%88%B7%E9%97%AE%E9%A2%98"><span class="nav-number">4.1.2.</span> <span class="nav-text">1. 解析用户问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%8C%B9%E9%85%8D%E5%B7%A5%E5%85%B7%E6%8F%8F%E8%BF%B0"><span class="nav-number">4.1.3.</span> <span class="nav-text">2. 匹配工具描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E7%94%9F%E6%88%90%E8%B0%83%E7%94%A8%E6%8C%87%E4%BB%A4"><span class="nav-number">4.1.4.</span> <span class="nav-text">3. 生成调用指令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E5%B7%A5%E5%85%B7%E8%BF%94%E5%9B%9E%E7%BB%93%E6%9E%9C"><span class="nav-number">4.1.5.</span> <span class="nav-text">4. 工具返回结果</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">4.1.6.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Reference"><span class="nav-number">5.</span> <span class="nav-text">Reference</span></a></li></ol></div>
             
 
           </div>

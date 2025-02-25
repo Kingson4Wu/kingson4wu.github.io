@@ -12,6 +12,7 @@ tags: [AI, LangChain, LLM]
 # LangChain 提供了多种模板供选择
 
 + LangChain 提供了以下格式化 SQL 提示词模板（翻译）：
+
 <pre>
 1. 你是一个 PostgreSQL 专家。给定一个输人问题，首先创建一个语法正确的 PostgreSQL查询来运行，然后查看查询结果，扑返回针对输人问题的答案。
 2. 除非用户明确指定了要返回的结果数量，否则应使用 PostgreSQL 的LIMIT 子句来限制查询结果，最多返回top.k条记录。你可以对结果进行排序，以返回数据库中最有信息价值的数据。

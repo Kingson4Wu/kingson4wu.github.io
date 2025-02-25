@@ -60,6 +60,100 @@ Chatbot:"""
     - （5）LangServe：将 LangChain 链部署为 REST API 的平台。
     - （6）LangSmith：帮助开发者跟踪调试、测试、评估和监控大模型应用的在线平台。
 
+# 其他
+
++ Langchain agent是怎么找到search工具并使用的
+    - 可以正确识别和调用它，因为它主要是通过 description 语义匹配，而不是看 name 的具体字符串。
+    - 但 name 仍然有一定作用，比如：LLM 可能会参考 name 来做初步判断；调试时 name 可以帮助你看日志，知道 Agent 选了哪个工具
+
++ LLM本身没有内在记忆，每个查询都是独立进行的
+    - 所谓的记忆和检索增强生成（RAG）是通过外部手段实现的，即将相关信息添加到提示词模板中
+
+
+---
+
+# 扩展
+
+## Langchain是怎么做到通过分析语义找到对应工具的
++ From ChatGPT (2025-02-18)
+
+LangChain 通过 **LLM（大模型）+ ReAct 框架** 来分析语义并选择工具。它的核心逻辑是让 LLM **先思考**，再决定用哪个工具，并按照工具的格式调用它。  
+
+### **核心机制**
+1. **解析用户问题** → 让 LLM 提取关键语义  
+2. **匹配工具描述** → 让 LLM 判断哪个工具最适合  
+3. **生成调用指令** → LLM 生成工具的调用格式并执行  
+4. **工具返回结果** → LLM 解析工具返回的数据并回复用户  
+
+这套逻辑基于 **ReAct（Reasoning + Acting）** 框架，在 LangChain 里 Agent 主要是用这个方法来动态决策。  
+
+
+### **1. 解析用户问题**
+假设你输入：
+```python
+agent.run("计算 25 * 4 + 10")
+```
+LangChain 会把这个问题交给 LLM（如 GPT-4），让它理解用户的意图。
+
+LLM 可能会把你的问题理解成：
+- 这是一个数学计算问题  
+- 需要找到一个能进行数学计算的工具  
+- 计算表达式 `25 * 4 + 10`
+
+
+### **2. 匹配工具描述**
+假设你有两个工具：
+```python
+Tool(
+    name="Calculator",
+    func=calculator_tool,
+    description="用于数学计算。输入一个数学表达式（如 3 + 5 * 2），输出结果。",
+)
+
+Tool(
+    name="Wikipedia",
+    func=wiki.run,
+    description="查询 Wikipedia 词条，输入一个关键词（如 'Python programming'），获取相关信息。",
+)
+```
+LLM 会对比问题和 `description`，发现 **Calculator 的描述里提到了“数学计算”**，所以它会选择 `Calculator` 这个工具。
+
+> **关键点**：LangChain 让 LLM 直接读 `description`，所以工具的名字 `name` 只是一个标识，核心还是 `description` 的语义匹配。
+
+
+### **3. 生成调用指令**
+LangChain 让 LLM 生成一个类似 JSON 的格式，表示它要调用哪个工具：
+```json
+{
+    "action": "Calculator",
+    "action_input": "25 * 4 + 10"
+}
+```
+然后 LangChain 会**解析这个指令**，找到 `Calculator` 工具，并把 `25 * 4 + 10` 传给 `func` 去执行。
+
+
+### **4. 工具返回结果**
+计算工具执行：
+```python
+eval("25 * 4 + 10")  # 计算得到 110
+```
+LangChain 把 `110` 返回给 LLM，LLM 可能会回复：
+```
+25 * 4 + 10 = 110
+```
+最终 `agent.run()` 会输出这个结果。
+
+### **总结**
+LangChain 让 LLM 负责：
+1. **分析用户语义**
+2. **匹配工具（通过 `description`）**
+3. **生成调用工具的指令**
+4. **解释工具返回的结果**
+
+它的核心是利用 **LLM 的推理能力**，结合 ReAct 让它“思考后再行动”。所以只要 `description` 够清晰，即使 `name` 乱写，它也能找到正确的工具！
+
+
+---
 
 # Reference
 + 《LangChain入门指南构建高可复用、可扩展的LLM应用程序》

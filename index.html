@@ -546,7 +546,7 @@
 </ul>
 </li>
 </ul>
-<h1 id="整体的结构"><a href="#整体的结构" class="headerlink" title="整体的结构"></a>整体的结构</h1><ul>
+<h1 id="LlamaIndex-框架整体结构"><a href="#LlamaIndex-框架整体结构" class="headerlink" title="LlamaIndex 框架整体结构"></a>LlamaIndex 框架整体结构</h1><ul>
 <li>(1)Core Framework:这是 LlamaIndex 的核心框架，实现了 LlamaIndex 框 架中大量可扩展的基础组件与工具组件。</li>
 <li>(2)Integrations:这是在 Core Framework 基础上由官方或者第三方提供的 大量扩展组件。这些组件大大扩充了 LlamaIndex 框架的兼容能力与应用场景， 包括各种类型的数据加载器、大语言模型与嵌入模型、向量库、Agent 工具等。</li>
 <li>(3)Templates:这是官方或者第三方提供的更上层的应用模板。开发者可 以基于这些模板来修改和开发自己的应用。</li>
@@ -728,21 +728,30 @@
 </blockquote>
 <p><img src="/2025/02/19/20250219-langchain-yao-dian-ji-lu/LangChain.png"></p>
 <h1 id="LangChain-提供了多种模板供选择"><a href="#LangChain-提供了多种模板供选择" class="headerlink" title="LangChain 提供了多种模板供选择"></a>LangChain 提供了多种模板供选择</h1><ul>
-<li>LangChain 提供了以下格式化 SQL 提示词模板（翻译）：<pre></pre></li>
+<li>LangChain 提供了以下格式化 SQL 提示词模板（翻译）：</li>
 </ul>
-<ol>
-<li>你是一个 PostgreSQL 专家。给定一个输人问题，首先创建一个语法正确的 PostgreSQL查询来运行，然后查看查询结果，扑返回针对输人问题的答案。</li>
-<li>除非用户明确指定了要返回的结果数量，否则应使用 PostgreSQL 的LIMIT 子句来限制查询结果，最多返回top.k条记录。你可以对结果进行排序，以返回数据库中最有信息价值的数据。</li>
-<li>绝对不要查询表中的所有列。你只能在询回答问题所需的列。用双引号（”）将每个列名包裹起来，表示官们是界定的标识符。</li>
-<li>注意只使用你在表巾可以看到的列名，不要责询不存在的列。此外，要注意哪一列在哪个表中。</li>
-<li>如果问题涉及“今天”，请注意使用 CURRENT_DATE 函数获取当前日期。</li>
-</ol>
-<p>使用以下格式：</p>
-<p>问题：这里的问题<br>SQL查询：要运行的 SQL 查询<br>SQL结果：SQL 查询的结果<br>答案：这里的最终答案</p>
-<p>只使用以下表：</p>
-<p>(table_info)</p>
-<p>问题：｛input｝</p>
-<p></p>
+<pre>
+1. 你是一个 PostgreSQL 专家。给定一个输人问题，首先创建一个语法正确的 PostgreSQL查询来运行，然后查看查询结果，扑返回针对输人问题的答案。
+2. 除非用户明确指定了要返回的结果数量，否则应使用 PostgreSQL 的LIMIT 子句来限制查询结果，最多返回top.k条记录。你可以对结果进行排序，以返回数据库中最有信息价值的数据。
+3. 绝对不要查询表中的所有列。你只能在询回答问题所需的列。用双引号（"）将每个列名包裹起来，表示官们是界定的标识符。
+4. 注意只使用你在表巾可以看到的列名，不要责询不存在的列。此外，要注意哪一列在哪个表中。
+5. 如果问题涉及“今天”，请注意使用 CURRENT_DATE 函数获取当前日期。
+
+使用以下格式：
+
+问题：这里的问题
+SQL查询：要运行的 SQL 查询
+SQL结果：SQL 查询的结果
+答案：这里的最终答案
+
+只使用以下表：
+
+(table_info)
+
+问题：｛input｝
+
+</pre>
+
 <ul>
 <li>想象一下，如果没有 LangChain 提供的这个提示词模板，当你要开始编写一段SQL查询代码时，会走多少弯路？LLM 应用开发的最后1公里，其意义是确保开发者无须为了一个小细节而多走弯路，正如居民无须跑很远坐公交车一样，每一个关键的细节都能得到及时而准确的处理，使得整个开发过程更为高效。</li>
 </ul>

@@ -1,0 +1,1266 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/uploads/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="AI,LLM,Prompt," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="拉巴力的纸皮箱" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="网上资料摘要一些个人理解   大模型交互的核心：提示词工程  以下基于个人理解，并通过claude优化（2025-02-26）    提示词（Prompt）是大模型的输入，也是调用大模型能力的接口，用以激发或引导大模型生成特定类型的回答。 提示词工程的目的是尽量把任务说清楚，让大模型能充分理解我们的意图，以按照正确的方向回答问题。   在不微调大模型的情况下，外部与大模型交互的唯一途径就是提示">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关于大模型的Prompt">
+<meta property="og:url" content="http://yoursite.com/2025/02/25/20250225-guan-yu-da-mo-xing-de-prompt/index.html">
+<meta property="og:site_name" content="拉巴力的纸皮箱">
+<meta property="og:description" content="网上资料摘要一些个人理解   大模型交互的核心：提示词工程  以下基于个人理解，并通过claude优化（2025-02-26）    提示词（Prompt）是大模型的输入，也是调用大模型能力的接口，用以激发或引导大模型生成特定类型的回答。 提示词工程的目的是尽量把任务说清楚，让大模型能充分理解我们的意图，以按照正确的方向回答问题。   在不微调大模型的情况下，外部与大模型交互的唯一途径就是提示">
+<meta property="og:locale">
+<meta property="article:published_time" content="2025-02-25T13:48:37.000Z">
+<meta property="article:modified_time" content="2025-02-26T11:10:33.548Z">
+<meta property="article:author" content="Kingson Wu">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="LLM">
+<meta property="article:tag" content="Prompt">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2025/02/25/20250225-guan-yu-da-mo-xing-de-prompt/"/>
+
+
+
+
+
+  <title>关于大模型的Prompt | 拉巴力的纸皮箱</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">拉巴力的纸皮箱</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2025/02/25/20250225-guan-yu-da-mo-xing-de-prompt/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">关于大模型的Prompt</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2025-02-25T21:48:37+08:00">
+                2025-02-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<blockquote>
+<p>网上资料摘要<br>一些个人理解</p>
+</blockquote>
+</blockquote>
+<h1 id="大模型交互的核心：提示词工程"><a href="#大模型交互的核心：提示词工程" class="headerlink" title="大模型交互的核心：提示词工程"></a>大模型交互的核心：提示词工程</h1><blockquote>
+<blockquote>
+<p>以下基于个人理解，并通过claude优化（2025-02-26）</p>
+</blockquote>
+</blockquote>
+<ul>
+<li>提示词（Prompt）是大模型的输入，也是调用大模型能力的接口，用以激发或引导大模型生成特定类型的回答。</li>
+<li>提示词工程的目的是尽量把任务说清楚，让大模型能充分理解我们的意图，以按照正确的方向回答问题。  </li>
+<li>在不微调大模型的情况下，外部与大模型交互的唯一途径就是提示工程。即便是已经微调过的大模型，后续与其沟通的唯一途径仍是通过提供提示词，尽管微调可能改变模型对提示词的响应方式。</li>
+<li>所谓的RAG、短期记忆（对话历史）、长期记忆等功能，都是基于提示工程这一与大模型交互的路径作为切入点，建立的其他优化策略和架构。</li>
+</ul>
+<h1 id="ICIO框架（Prompt包含的要素）"><a href="#ICIO框架（Prompt包含的要素）" class="headerlink" title="ICIO框架（Prompt包含的要素）"></a>ICIO框架（Prompt包含的要素）</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/xYC6saH3PU6nJc9mzV5alw">从原理出发 - 提示词如何影响大模型的输出</a></li>
+<li>核心思想，是通过明确定义任务的各个方面，来提高AI响应时的效率和准确性。</li>
+<li>在ICIO的框架的设计中，Prompt可能包含四要素：<ul>
+<li>Instruction（指令）：这是最重要的部分，它直接告诉模型需要执行的具体任务。</li>
+<li>Context（上下文&#x2F;背景）：上下文提供了任务执行所需的背景信息，帮助模型理解任务的情景和环境。</li>
+<li>Input Data（输入数据）：输入数据是模型需要处理的具体信息。</li>
+<li>Output Indicator（输出指示器）：输出指示器告诉模型用户期望的输出类型或格式。</li>
+</ul>
+</li>
+<li>其中除了指令以外，其他要素都是可选的，说明指令对于大模型来说是最重要的，其他要素都是对指令的补充。</li>
+<li>优质的Prompt，可以清晰地传达用户的意图</li>
+</ul>
+<h1 id="Prompt五大框架"><a href="#Prompt五大框架" class="headerlink" title="Prompt五大框架"></a>Prompt五大框架</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/u-79q3R0l01oO-7WWUNF2A">大模型Prompt技巧全解析</a>    </li>
+<li>RTF框架 <ul>
+<li>R-Role(角色)、R-Role(角色)、F-Format(格式)</li>
+</ul>
+</li>
+<li>思考链模式 <ul>
+<li>适合一些复杂的任务处理</li>
+<li>要使用这种模式，只需要在末尾添加”让我们逐步思考”即可</li>
+</ul>
+</li>
+<li>RISEN框架<ul>
+<li>R-Role:大模型扮演的角色</li>
+<li>I-Instructions: 指示命令，和Task-任务差不多</li>
+<li>S-Steps: 步骤</li>
+<li>E-End Goal: 最终目标</li>
+<li>N-Narrowing(Constraints): 缩小范围(约束条件)，和RTF框架中的Format有异曲同工之妙</li>
+<li>该框架主要适合<ul>
+<li>撰写具有特定约束的任务(例如博客文章)</li>
+<li>有明确指导方针的任务（例如商业计划）</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>RODES框架<ul>
+<li>R-Role: 角色、O - Objective: 目标、D - Details: 详细的细节、E - Examples: 示例、S - Sense Check: 感官检查</li>
+</ul>
+</li>
+<li>密度链模式<ul>
+<li>使用递归来创建越来越好的输出的提示，与普通提示生成的 GPT-4 摘要相比，它生成的摘要更加密集且更适合人们理解</li>
+<li>适合：总结、改进您最喜欢的提示、通过递归生成可用的长格式内容</li>
+</ul>
+</li>
+</ul>
+<h1 id="打造高效Prompt的两大核心原则"><a href="#打造高效Prompt的两大核心原则" class="headerlink" title="打造高效Prompt的两大核心原则"></a>打造高效Prompt的两大核心原则</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/u-79q3R0l01oO-7WWUNF2A">大模型Prompt技巧全解析</a> </li>
+<li>原则一：编写明确和具体的指令<ul>
+<li>策略1：使用分隔符清晰界定输入部分</li>
+<li>策略2：要求结构化输出</li>
+<li>策略3：要求模型检查条件是否满足</li>
+<li>策略4：Few-shot prompting（少样本提示）</li>
+</ul>
+</li>
+<li>原则二：给予模型充足的思考时间<ul>
+<li>策略1：明确完成任务所需的步骤</li>
+<li>策略2：引导模型在得出结论前充分思考方案</li>
+</ul>
+</li>
+</ul>
+<h1 id="Prompt技术剖析与应用"><a href="#Prompt技术剖析与应用" class="headerlink" title="Prompt技术剖析与应用"></a>Prompt技术剖析与应用</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/u-79q3R0l01oO-7WWUNF2A">大模型Prompt技巧全解析</a> </li>
+<li>一、零样本提示（Zero-Shot Prompting）</li>
+<li>二、少样本提示（Few-Shot Prompting）<ul>
+<li>在零样本提示效果不佳时发挥作用</li>
+</ul>
+</li>
+<li>三、思维链提示（Chain-of-Thought Prompting）<ul>
+<li>与少样本提示结合，增强效果，尤其适用于算术、常识推理等任务，帮助模型更有条理地处理问题</li>
+</ul>
+</li>
+<li>四、自我一致性（Self-Consistency）   <ul>
+<li>主要用于优化思维链提示中的推理路径选择</li>
+<li>核心思想是通过提供多个少样本推理示例，让模型从多样的推理结果中筛选出最一致的答案，增强模型在算术和常识推理任务中的可靠性</li>
+</ul>
+</li>
+<li>五、生成知识提示（Generated Knowledge Prompting）<ul>
+<li>主要用于解决模型在处理需要额外知识的任务时出现的局限性   </li>
+<li>个人理解：一种特殊的RAG罢了</li>
+</ul>
+</li>
+<li>六、链式提示（Prompt Chaining）<ul>
+<li>将复杂任务拆解为多个子任务，通过逐个子任务生成提示并传递结果的方式来实现复杂任务的有序处理</li>
+</ul>
+</li>
+<li>七、思维树（ToT）<ul>
+<li>为了帮助模型应对复杂的探索性任务而设计</li>
+<li>通过维护一棵思维树，让模型在解决问题时能够生成和评估中间思维步骤，并结合搜索算法进行系统性探索</li>
+</ul>
+</li>
+<li>八、检索增强生成（RAG）<ul>
+<li>将信息检索与文本生成相结合，专门用于处理知识密集型任务</li>
+<li>通过检索相关文档来为模型提供额外的知识支持，从而缓解模型的“幻觉”问题</li>
+</ul>
+</li>
+<li>九、自动推理并使用工具（ART）<ul>
+<li>使模型能够自动生成包含推理步骤的程序，并在需要时调用外部工具</li>
+</ul>
+</li>
+<li>十、自动提示工程师（APE）<ul>
+<li>自动生成和筛选任务指令</li>
+<li>利用大型语言模型生成指令候选项，再依据评估分数选择最佳指令，从而提升提示生成的效率与效果</li>
+</ul>
+</li>
+<li>十一、Active-Prompt<ul>
+<li>用于解决思维链示例有效性的问题</li>
+<li>通过先查询模型生成多个答案，计算不确定度后挑选最不确定的问题由人类注释示例，再用新示例推断其他问题，从而优化模型对不同任务的适应性</li>
+</ul>
+</li>
+<li>十二、方向性刺激提示（Directional Stimulus Prompting）<ul>
+<li>通过训练策略 LM 生成引导提示，增强对模型生成结果的掌控力。例如文本摘要任务</li>
+</ul>
+</li>
+<li>十三、PAL（程序辅助语言模型）<ul>
+<li>让模型生成程序来解决问题，借助编程运行时提升解决复杂问题的能力</li>
+</ul>
+</li>
+<li>十四、ReAct 框架<ul>
+<li>ReAct 框架使模型交错生成推理轨迹和操作，提升答案的可靠性与可解释性</li>
+</ul>
+</li>
+<li>十五、自我反思（Reflexion）<ul>
+<li>包含参与者、评估者和自我反思三个模型，旨在帮助模型从错误中学习并提升性能</li>
+</ul>
+</li>
+</ul>
+<h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/xYC6saH3PU6nJc9mzV5alw">从原理出发 - 提示词如何影响大模型的输出</a><ul>
+<li>大模型如何理解Prompt<ul>
+<li>基于Transformer的解码器的大模型</li>
+<li>最核心的两层<ul>
+<li>掩码多头自注意力层（Masked Multi Self Attention Layers，对应Transformer的Masked Multi-Head Attention，简称MHA）</li>
+<li>前置反馈网络层（Feed Forward Networks Layers，简称FFN）</li>
+</ul>
+</li>
+<li>Prompt会影响自注意力层对上下文信息的捕捉</li>
+<li>自注意力机制<ul>
+<li>它的核心思想是模仿人类的注意力，即在处理大量信息时，能够聚焦于当前任务最相关的部分，而忽略其他不太重要的信息</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/u-79q3R0l01oO-7WWUNF2A">大模型Prompt技巧全解析</a>            </li>
+<li><a target="_blank" rel="noopener" href="https://kingson4wu.github.io/2024/12/26/20241226-llm-xiang-guan-ji-zhu-jian-dan-liao-jie/">LLM相关技术简单了解</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/q2iMW0t5456btmIPS1ba6Q">大型语言模型的提示注入</a><ul>
+<li>三种防范此类漏洞的方法<ul>
+<li>可以在提示中添加指令</li>
+<li>使用对抗性探测器添加第二层保护</li>
+<li>对模型进行微调，使其更符合用户需求，同时提供最高级别的保护，防止提示注入和窃取</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/AI/" rel="tag"># AI</a>
+          
+            <a href="/tags/LLM/" rel="tag"># LLM</a>
+          
+            <a href="/tags/Prompt/" rel="tag"># Prompt</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2025/02/21/20250221-da-mo-xing-ying-yong-kai-fa-ai-agent-yao-dian-ji-lu/" rel="next" title="大模型应用开发AI Agent要点记录">
+                <i class="fa fa-chevron-left"></i> 大模型应用开发AI Agent要点记录
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div id="gitalk-container"></div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.png"
+                alt="" />
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+<a href="/archives/">                
+<!--<a href="/archives/%7C%7C%20archive">-->
+              
+                  <span class="site-state-item-count">151</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">163</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A4%A7%E6%A8%A1%E5%9E%8B%E4%BA%A4%E4%BA%92%E7%9A%84%E6%A0%B8%E5%BF%83%EF%BC%9A%E6%8F%90%E7%A4%BA%E8%AF%8D%E5%B7%A5%E7%A8%8B"><span class="nav-number">1.</span> <span class="nav-text">大模型交互的核心：提示词工程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ICIO%E6%A1%86%E6%9E%B6%EF%BC%88Prompt%E5%8C%85%E5%90%AB%E7%9A%84%E8%A6%81%E7%B4%A0%EF%BC%89"><span class="nav-number">2.</span> <span class="nav-text">ICIO框架（Prompt包含的要素）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Prompt%E4%BA%94%E5%A4%A7%E6%A1%86%E6%9E%B6"><span class="nav-number">3.</span> <span class="nav-text">Prompt五大框架</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%89%93%E9%80%A0%E9%AB%98%E6%95%88Prompt%E7%9A%84%E4%B8%A4%E5%A4%A7%E6%A0%B8%E5%BF%83%E5%8E%9F%E5%88%99"><span class="nav-number">4.</span> <span class="nav-text">打造高效Prompt的两大核心原则</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Prompt%E6%8A%80%E6%9C%AF%E5%89%96%E6%9E%90%E4%B8%8E%E5%BA%94%E7%94%A8"><span class="nav-number">5.</span> <span class="nav-text">Prompt技术剖析与应用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Reference"><span class="nav-number">6.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kingson Wu</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+  <script src="/js/src/md5.min.js"></script>
+
+   <script type="text/javascript">
+        var gitalk = new Gitalk({
+          clientID: '3416434437f9f4e049bd',
+          clientSecret: 'a52d69bf90cb77f81a26d135e03dd0f4869fbf84',
+          repo: 'kingson4wu.github.io',
+          owner: 'kingson4wu',
+          admin: ['kingson4wu'],
+
+          id: md5(location.pathname),
+
+          distractionFreeMode: 'true'
+        })
+        gitalk.render('gitalk-container')
+    </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

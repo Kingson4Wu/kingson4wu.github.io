@@ -287,6 +287,147 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2023/07/30/20230730-ru-he-zai-da-liang-shu-ju-zhong-pan-duan-gei-ding-de-shi-fou-zai-qi-zhong/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2023/07/30/20230730-ru-he-zai-da-liang-shu-ju-zhong-pan-duan-gei-ding-de-shi-fou-zai-qi-zhong/" itemprop="url">如何在大量数据中判断给定的是否在其中</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-07-30T16:27:34+08:00">
+                2023-07-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="1、-Bloom-Filter"><a href="#1、-Bloom-Filter" class="headerlink" title="1、 Bloom Filter"></a>1、 Bloom Filter</h2><ul>
+<li>缺点：只能增不能减，且有误判场景需要单独处理</li>
+<li>可以使用当前进程级的Bloom Filter，也可以使用Redis的Bloom Filter</li>
+</ul>
+<h2 id="2、-文件存储"><a href="#2、-文件存储" class="headerlink" title="2、 文件存储"></a>2、 文件存储</h2><ul>
+<li><p>可以使用类似Java的MappedByteBuffer来保存数据</p>
+</li>
+<li><p>缺点：只能保存连续的一定范围的数字对应的值</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/353988136">Java文件读写与MappedByteBuffer</a></p>
+</li>
+<li><p>使用示例：</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.junit.Test;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.File;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.net.URI;</span><br><span class="line"><span class="keyword">import</span> java.nio.MappedByteBuffer;</span><br><span class="line"><span class="keyword">import</span> java.nio.channels.FileChannel;</span><br><span class="line"><span class="keyword">import</span> java.nio.file.Paths;</span><br><span class="line"><span class="keyword">import</span> java.nio.file.StandardOpenOption;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MappedByteBufferTest</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;==&quot;</span>+ ID_SIZE);</span><br><span class="line">        System.out.println(<span class="string">&quot;==&quot;</span>+ getBufferIndex(<span class="number">1032387525</span>));</span><br><span class="line">        System.out.println(<span class="string">&quot;==&quot;</span>+ getBufferIndex(<span class="number">227081157</span>));</span><br><span class="line">        <span class="comment">// 两个数字模结果冲突</span></span><br><span class="line">        <span class="comment">// 这种方案只能保存连续的一定范围的数字对应的值</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">ID_SIZE</span> <span class="operator">=</span> <span class="number">1024</span> * <span class="number">1024</span> * <span class="number">32</span> * <span class="number">8</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">int</span> <span class="title function_">getBufferIndex</span><span class="params">(<span class="type">long</span> idx)</span> &#123;</span><br><span class="line">        <span class="comment">//每个id占用8个字节</span></span><br><span class="line">        <span class="keyword">return</span> (<span class="type">int</span>) ((idx % ID_SIZE) * <span class="number">8</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * 写入：mappedByteBuffer.putLong(int index, long value);</span></span><br><span class="line"><span class="comment">     * 读取：mappedByteBuffer.getLong(int index);</span></span><br><span class="line"><span class="comment">     * 注：MappedByteBuffer对index的最大范围是Int.MaxValue()</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 上面的表述计算有问题</span></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 2G = 2^31 字节</span></span><br><span class="line"><span class="comment">     * ==&gt; 1b= 2^3 ; 1k = 2^10 b ; 1M = 2^20 b ; 1G = 2^30 b; 2G = 2^31 字节</span></span><br><span class="line"><span class="comment">     * long 64 位，即 2^3 字节 = 2^3</span></span><br><span class="line"><span class="comment">     * 2G = 2^31 字节 能存储多少个，应该是 2^31 / 2^3 = 2^28</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 31 - 3 = 28 = 10 + 10 + 5 = 1024 * 1024 * 32 * 8</span></span><br><span class="line">    <span class="comment">// 根据每个模之后的倍数放在不通的文件，所以不会冲突</span></span><br><span class="line">    <span class="comment">//如果分文件，比如10个，那么78在第8个文件的低第七个； 78%10、78/10</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * https://zhuanlan.zhihu.com/p/353988136</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> IOException</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">testMappedByteBuffer</span><span class="params">()</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">        <span class="type">File</span> <span class="variable">file</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">File</span>(<span class="string">&quot;/Users/kingsonwu/downloads/test.log&quot;</span>);</span><br><span class="line">        <span class="keyword">if</span>(!file.exists())&#123;</span><br><span class="line">            file.createNewFile();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">FileChannel</span> <span class="variable">fileChannel</span> <span class="operator">=</span> FileChannel.open(Paths.get(URI.create(<span class="string">&quot;file:/Users/kingsonwu/downloads/test.log&quot;</span>)),</span><br><span class="line">                StandardOpenOption.WRITE, StandardOpenOption.READ);</span><br><span class="line">        <span class="type">MappedByteBuffer</span> <span class="variable">mappedByteBuffer</span> <span class="operator">=</span> fileChannel.map(FileChannel.MapMode.READ_WRITE, <span class="number">0</span>, Integer.MAX_VALUE);</span><br><span class="line">        <span class="comment">//fileChannel.close();</span></span><br><span class="line">        <span class="comment">//mappedByteBuffer.position(1024);</span></span><br><span class="line">        <span class="comment">//mappedByteBuffer.putLong(10000L);</span></span><br><span class="line"></span><br><span class="line">        mappedByteBuffer.putLong(getBufferIndex(<span class="number">1032387525</span>), <span class="number">1032387528111L</span>);</span><br><span class="line">        mappedByteBuffer.putLong(getBufferIndex(<span class="number">1032387526</span>), <span class="number">1032387529567L</span>);</span><br><span class="line">        mappedByteBuffer.putLong((ID_SIZE - <span class="number">2</span>)*<span class="number">8</span>, <span class="number">4032387529569443654L</span>);</span><br><span class="line">        <span class="comment">//mappedByteBuffer.putLong((ID_SIZE_2)*8, 1032387529569L);</span></span><br><span class="line"></span><br><span class="line">        mappedByteBuffer.force();</span><br><span class="line"></span><br><span class="line">        System.out.println(mappedByteBuffer.getLong(getBufferIndex(<span class="number">1032387525</span>)));</span><br><span class="line">        System.out.println(mappedByteBuffer.getLong(getBufferIndex(<span class="number">1032387526</span>)));</span><br><span class="line">        System.out.println(mappedByteBuffer.getLong((ID_SIZE - <span class="number">2</span>)*<span class="number">8</span>));</span><br><span class="line">        <span class="comment">//System.out.println(mappedByteBuffer.getLong((ID_SIZE_2 )*8));</span></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="3、Tendis"><a href="#3、Tendis" class="headerlink" title="3、Tendis"></a>3、Tendis</h2><ul>
+<li>使用tendis可以将数据存储到磁盘，避免全部数据都保存在内存，从而节约内存</li>
+<li>Redis的痛点之一就是内存成本高，访问频率(QPS)没那么高, 依然占用大量机器, 维护成本很高</li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/Tencent_TEG/article/details/115878121">Redis vs Tendis：冷热混合存储版架构揭秘</a></li>
+<li>使用 rocksdb 作为存储引擎, LSM Tree</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2023/07/30/20230730-ji-yi-ci-socket-xie-lu-wen-ti-pai-cha-ji-lu/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -3357,132 +3498,11 @@ sudo netstat -anp|grep 'FIN_WAIT2'| awk '{print $7}'|sort |uniq -c | sort -nr
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/09/08/20220908-wo-de-ji-zhang-tcp-yuan-li-xue-xi-shou-hui-tu/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2022/09/08/20220908-wo-de-ji-zhang-tcp-yuan-li-xue-xi-shou-hui-tu/" itemprop="url">我的几张TCP原理学习手绘图</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-09-08T14:16:54+08:00">
-                2022-09-08
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="网络寻址原理"><a href="#网络寻址原理" class="headerlink" title="网络寻址原理"></a>网络寻址原理</h2><p><img src="/2022/09/08/20220908-wo-de-ji-zhang-tcp-yuan-li-xue-xi-shou-hui-tu/%E7%BD%91%E7%BB%9C%E5%AF%BB%E5%9D%80%E5%8E%9F%E7%90%86.jpg"></p>
-<h2 id="负载均衡模式"><a href="#负载均衡模式" class="headerlink" title="负载均衡模式"></a>负载均衡模式</h2><p><img src="/2022/09/08/20220908-wo-de-ji-zhang-tcp-yuan-li-xue-xi-shou-hui-tu/%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E6%A8%A1%E5%BC%8F.jpg"></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/4/">&lt;</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" href="/page/6/">&gt;</a>
+    <a class="extend prev" rel="prev" href="/page/4/">&lt;</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><a class="extend next" rel="next" href="/page/6/">&gt;</a>
   </nav>
 
 
@@ -3535,7 +3555,7 @@ sudo netstat -anp|grep 'FIN_WAIT2'| awk '{print $7}'|sort |uniq -c | sort -nr
 <a href="/archives/">                
 <!--<a href="/archives/%7C%7C%20archive">-->
               
-                  <span class="site-state-item-count">150</span>
+                  <span class="site-state-item-count">151</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -3548,7 +3568,7 @@ sudo netstat -anp|grep 'FIN_WAIT2'| awk '{print $7}'|sort |uniq -c | sort -nr
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">162</span>
+                  <span class="site-state-item-count">163</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

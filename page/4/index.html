@@ -287,6 +287,207 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2024/04/07/20240407-cong-java-zhuan-go-de-ge-ren-ti-hui/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2024/04/07/20240407-cong-java-zhuan-go-de-ge-ren-ti-hui/" itemprop="url">从Java转Go的个人体会</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2024-04-07T09:22:08+08:00">
+                2024-04-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<blockquote>
+<p>这里仅从一个业务开发的角度谈谈体会，格局较低，仅做个人记录<br>编程语言是程序员接触和使用最多的工具<br>后端技术基础的深度是快速学习和适应新语言的关键</p>
+</blockquote>
+</blockquote>
+<ul>
+<li><p>基于<a target="_blank" rel="noopener" href="https://kingson4wu.github.io/2023/07/02/20230702-dui-gong-zuo-zhong-jie-hong-guo-de-ji-chong-bian-cheng-yu-yan-ji-qi-bu-shu-jia-gou-de-kan-fa/">对工作中接触过的几种编程语言及其部署架构的看法</a>继续聊。</p>
+</li>
+<li><p>截至目前，职业生涯五分之四的时间都是在使用Java。出于个人意愿和兴趣，以及行业的发展形势，也系统的自学了Go语言，并在个人的小项目实践。在一次意外的组织变动中，我转岗到了新团队，并开始使用Go，由于之前自己的自学基础，基本是无缝切换到新语言。可能是由于团队人员大部分是从Lua或PHP开始转Go的，在那里甚至感觉自己稍稍领先。</p>
+</li>
+<li><p>Go抽象业务比Java麻烦，代码不美观，但是它原生高并发，而且微服务下很多时候就一个后端服务，业务足够小，不需要复杂的设计模式等，并不需要像以前写大型Java应用这样做非常多的抽象，还能打二进制包，甚至还能保证一个团队所有人代码都是相同风格</p>
+</li>
+<li><p>以下讲一些个人看法，比较乱甚至不正确，仅做个人记录</p>
+<ol>
+<li>小型项目省内存</li>
+<li>写命令行程序方便简单</li>
+<li>现在绝大部分功能都有相应的官方库和开源库</li>
+<li>运行无需环境依赖，直接打包成二进制可执行程序（Java现在也可以了，可能大部分业务场景下体积还较大）</li>
+<li>支持交叉编译，不要特定平台</li>
+<li>打包体积小（根据代码实际使用情况打包-这点是我一直苦苦寻找的）<ul>
+<li>Go语言中有未用代码消除和可执行文件瘦身机制。只有在程序执行路径上被调用的函数才会进入最终的可执行文件，未被调用的函数会被消除</li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/s60J4eA_d0hqrXj-XMPpXA">Go未用代码消除与可执行文件瘦身</a></li>
+</ul>
+</li>
+</ol>
+</li>
+<li><p>为什么现在大多数人都会认为Java启动慢占内存呢？</p>
+<ul>
+<li>首先不是Java自身的原因，而是跟实际使用场景有关</li>
+<li>使用Java大多数用来做业务开发，也习惯引入很多依赖库，首当其冲就是SpringBoot等框架</li>
+<li>多数都是spring相关类、proxy&#x2F;cglib，以及各种bean配置</li>
+<li>而且很多类都是在启动的时候初始化的</li>
+</ul>
+</li>
+<li><p>微服务下的编程语言</p>
+<ul>
+<li>在K8S流行之前，Java通常是使用SpringCloud</li>
+<li>其实微服务相关技术，在K8S已经实现了</li>
+<li>无论是使用Go还是Java，目前都应该向K8S靠近</li>
+<li>还有一点，K8S本身就是用Go实现的</li>
+</ul>
+</li>
+</ul>
+<h2 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h2><ul>
+<li><p><a target="_blank" rel="noopener" href="https://github.com/Kingson4Wu/graalvm_demo">体验Graalvm+SpringBoot+Java21构建原生程序</a></p>
+</li>
+<li><p>在内存利用效率上，Go语言确实比Java做得更好，在4个不同的角度来总结</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/-N4eqdXb9a93uvOWfE4ScQ">Golang与Java全方位对比总结</a></li>
+</ul>
+<ol>
+<li>Java的JIT策略比Golang的AOT策略<ul>
+<li>Java在运行时相比Golang多占用了一些内存。原因在于：<ul>
+<li>Java运行态中包含了一个完整的解释器、一个JIT编译期以及一个垃圾回收器，这会显著地增加内存。</li>
+<li>Golang语言直接编译到机器码，运行态只包含机器码和一个垃圾回收器。</li>
+</ul>
+</li>
+<li>因此Golang的运行态相对消耗内存较少。</li>
+</ul>
+</li>
+<li>内存分配和垃圾回收器<ul>
+<li>Java确实在起步占用上偏多，毕竟jvm需要更多内存做jit，默认的gc算法对内存要求偏高，但这不能代表后续占用仍然线性增长。如果目标是启动成百上千个内存需求较少的进程，那Java确实不擅长。</li>
+</ul>
+</li>
+<li>并发<ul>
+<li>协程模型比线程模型更加节省内存。</li>
+</ul>
+</li>
+<li>反射<ul>
+<li>Golang的反射更加简单，导致框架的内存消耗Golang程序比Java程序优秀。主要是因为： Java的框架实现中大量使用反射，并使用hashmap缓存信息，这2个都是极度消耗内存的行为。 Golang的框架中也使用reflect、map。但是Golang是面向interface和值类型的，这导致Golang的反射模型要比Java的反射模型简单非常多，反射过程要产生的对象数量也少非常多。</li>
+</ul>
+</li>
+</ol>
+</li>
+<li><p>为什么一些已经选择 Java 的公司，现在又开始考虑使用 Go？</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/ZKL-M54IBx9CSkYKoLdsUA">为什么要用Go重写Dubbo？</a></li>
+<li>相较于 Java，Go 在启动速度、编译速度、内存使用和高并发（如协程）方面都有明显优势。所以，那些已经采用 Java 的公司现在也在考虑引入 Go。但要注意的是，目前这样的公司仍然是少数。另外，一些公司并没有严格规定技术栈的选择，因此新成立的部门或新业务团队可以自由选择，而他们可能更倾向于选择 Go 作为开发语言。</li>
+<li>小结: 总的来说，无论是选择 Java 还是 Go，都是有其合理性的。一家公司同时选择这两种语言也同样合理。尽管这样的公司占比不大，但 Java 与 Go 之间的交流需求仍然存在。</li>
+</ul>
+</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2024/04/06/20240406-ji-lu-xian-mian-ye-wu-de-jing-yan/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1605,232 +1806,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2024/03/26/20240326-xiao-tuan-dui-guan-li-jing-yan/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2024/03/26/20240326-xiao-tuan-dui-guan-li-jing-yan/" itemprop="url">小团队管理经验</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2024-03-26T10:39:17+08:00">
-                2024-03-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote>
-<blockquote>
-<p>转眼工作十年了，从20年10月开始，断断续续做了近三年的小团队管理，这里作简要总结一下。</p>
-</blockquote>
-</blockquote>
-<blockquote>
-<blockquote>
-<p>所谓小团队管理，其实就是现在说的虚线组长，需要写代码、给团队提供指导等，但是由于不是高级别大领导，不需要应付很多烦人的破事。从这层来看，挺适合我这种性格的人。</p>
-</blockquote>
-</blockquote>
-<blockquote>
-<blockquote>
-<p>以下是以小团队为背景来总结的，格局显得较小；当然每个人的观点不一样，不一定是正确的理解。</p>
-</blockquote>
-</blockquote>
-<h2 id="核心要点（对自己）"><a href="#核心要点（对自己）" class="headerlink" title="核心要点（对自己）"></a>核心要点（对自己）</h2><ul>
-<li>情商、基于别人的角度思考<ul>
-<li>个人习惯采取对内温和对外强硬的方式；当然结合自身情况和环境具体选择；这个方法可以让你更好的理解人和事情；我不认为所谓的“情商高”就是“老好人”。</li>
-</ul>
-</li>
-<li>以身作则<ul>
-<li>以自己为榜样，让团队其他成员看到正确的做事方式等；包括技术方案、沟通方式等，当然包括一些无法避免的脏活累活等；用高效和人性化等方式应对 。</li>
-</ul>
-</li>
-<li>令人信服的技术功底<ul>
-<li>小团队管理的特点，就是领头的人也是需要写代码和干实事，而且跟团队成员的距离是最近的；需要保持自己良好的技术功底，才能更好的给团队提供有效的建议；另外作为有追求的技术人，谁都想跟着比自己优秀的人一起共事。</li>
-</ul>
-</li>
-<li>保证成员尽量免干扰、休息时间如无必要不打扰<ul>
-<li>这一点是我基于人性化的角度考虑的，有些人可能会觉得不重要。给团队提供深度工作的环境，才能提升效率；在一些不紧急的事情少，要做到不随意打扰，减少团队的负面情绪。对应上面第一条，将心比心，每个人都想要良好的工作体验。</li>
-</ul>
-</li>
-<li>真诚、谦虚、透明<ul>
-<li>尽量保持团队一定的透明度，减少不必要的暗箱操作。大部分情况下不需要开会，只需要一篇简明扼要的文档，即可让团队快速了解事情的内容。团队成员也在发展，要清楚有一天他们的能力会超过你。而我一直坚持的做法是，业务上坚持写文档，尽量减少业务壁垒（也是为自己放假偷懒准备），技术上提供合理的建议，不遗余力的提高自己的“可替代性”。</li>
-<li>认清自己。领导需要团队的力量才能发挥作用。不要错把平台的能力当作自己的能力。把公司的给予当作自己的给予。</li>
-</ul>
-</li>
-<li>人性化管理<ul>
-<li>现在很多公司都追求狼性文化，说着各种假话哄下属为自己加班干活</li>
-<li>个人管理经验理念是，先做人再做领导</li>
-<li>如非必要。不严厉。许多人还没到那个层级就采取低端没人情味的管理方式。要和同事成为朋友，营造友好的工作环境，而不是一味向上管理。</li>
-</ul>
-</li>
-<li>尽量保持技术更新升级<ul>
-<li>在确保充分测试，稳定灰度的同时，适量的升级有利于系统的稳定，增加维护人员的积极性。这种东西无法直接给出具体收益，但应该长远考虑，一味的保守只会让技术越来越落后</li>
-</ul>
-</li>
-</ul>
-<h2 id="核心要点（对团队）"><a href="#核心要点（对团队）" class="headerlink" title="核心要点（对团队）"></a>核心要点（对团队）</h2><ul>
-<li>聪明、叙述简明扼要、能抓重点</li>
-<li>乐于分享、采用高效的分享手段（文章即可）、实事求是</li>
-<li>有团队主人翁意识，主动了解业务</li>
-<li>对技术原理好奇并积极探索</li>
-<li>尊重别人的时间</li>
-<li>跟进事情有反馈和结论</li>
-<li>在正确的事情面前，敢于说不</li>
-<li>重视自己的“可替代性”、免于个人单点、提升团队容错性</li>
-</ul>
-<h2 id="小团队技术管理者的事项列表"><a href="#小团队技术管理者的事项列表" class="headerlink" title="小团队技术管理者的事项列表"></a>小团队技术管理者的事项列表</h2><ul>
-<li>业务侧<ul>
-<li>快速满足需求</li>
-<li>通用业务组件抽象</li>
-<li>旧业务熟悉</li>
-<li>定期删除无用代码，增加代码可维护性</li>
-<li>遗留需求记录和跟进</li>
-<li>业务知识文档化，方便查阅和备忘</li>
-<li>需求上线时间定时跟进（你就是项目经理）</li>
-</ul>
-</li>
-<li>技术侧<ul>
-<li>旧业务梳理和重构</li>
-<li>架构灾备和优化、资源隔离等</li>
-<li>通用工具类封装</li>
-<li>管理后台搭建 （解放技术）</li>
-<li>服务异常监控（后端接口，前端APM等各个维度）</li>
-<li>技术组件升级，提升团队技术广度</li>
-<li>废弃业务下线，回收资源</li>
-<li>业务技术调研，团队具备快速满足产品新需求的能力</li>
-<li>分享，相互学习，个人认为文档就行了，会议实际上挺形式和浪费大家的时间</li>
-<li>帮助review方案和代码</li>
-<li>技术债务登记和逐步处理（分优先级[每个季度一定要完成一定比例的低优先级任务]，保持代码洁癖，不给后来人挖坑）</li>
-<li>开发规范制定（避免后续维护混乱，也方便大家日常开发查阅）</li>
-<li>开发阶段和上线阶段checklist，避免犯重复的错误，避免上线遗漏导致项目延期</li>
-<li>技术面试</li>
-<li>应急处理、日常维护等文档化（公开、透明、高效）</li>
-<li>团队文档整理规划<ul>
-<li>新人指引</li>
-<li>业务模块（服务模块、业务知识整理、业务交接记录、业务安全风险点）</li>
-<li>工作规划（需求列表、技术规划、技术债务）</li>
-<li>开发规范（项目上线流程、公共库说明、开发协议、服务架构图、业务逻辑开发套路等）</li>
-<li>工作文档（应急、日常维护等）<ul>
-<li>常见问题处理导航</li>
-</ul>
-</li>
-<li>技术文档（技术型、分享类）</li>
-<li>技术方案（日常需求上线方案归档）</li>
-<li>复盘、故障报告</li>
-<li>业务调研</li>
-<li>其他备份</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://kingson4wu.github.io/2021/08/13/20210813-ge-ren-guan-li-jing-yan-zong-jie/">个人管理经验总结</a></li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1888,7 +1863,7 @@
 <a href="/archives/">                
 <!--<a href="/archives/%7C%7C%20archive">-->
               
-                  <span class="site-state-item-count">151</span>
+                  <span class="site-state-item-count">152</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1901,7 +1876,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">163</span>
+                  <span class="site-state-item-count">164</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

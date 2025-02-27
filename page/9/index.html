@@ -287,6 +287,135 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/02/20/20220220-nba-xuan-xiu-chou-qian-ju-ti-shi-ru-he-cao-zuo-de/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2022/02/20/20220220-nba-xuan-xiu-chou-qian-ju-ti-shi-ru-he-cao-zuo-de/" itemprop="url">nba选秀抽签具体是如何操作的？</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-02-20T20:26:21+08:00">
+                2022-02-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/52895544">nba选秀抽签具体是如何操作的？</a></p>
+<ul>
+<li>14个乒乓球分别贴上1-14数字，随机滚出4个，加起来是1001可能，其中11、12、13、14这个组合不算，剩下1000种可能。</li>
+</ul>
+<p><img src="/2022/02/20/20220220-nba-xuan-xiu-chou-qian-ju-ti-shi-ru-he-cao-zuo-de/nba%E9%80%89%E7%A7%80%E6%8A%BD%E7%AD%BE.jpg"></p>
+<ul>
+<li>闲来无事，使用Go粗暴模拟了一下</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;fmt&quot;</span></span><br><span class="line">	<span class="string">&quot;math/rand&quot;</span></span><br><span class="line">	<span class="string">&quot;sort&quot;</span></span><br><span class="line">	<span class="string">&quot;time&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">https://www.zhihu.com/question/52895544</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	n := <span class="number">14</span></span><br><span class="line">	m := <span class="number">4</span></span><br><span class="line">	nn := <span class="number">1</span></span><br><span class="line">	mm := <span class="number">1</span></span><br><span class="line">	nm := <span class="number">1</span></span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">1</span>; i &lt;= n; i++ &#123;</span><br><span class="line">		nn = nn * i</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">1</span>; i &lt;= m; i++ &#123;</span><br><span class="line">		mm = mm * i</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">1</span>; i &lt;= (n - m); i++ &#123;</span><br><span class="line">		nm = nm * i</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	all_result := <span class="built_in">make</span>([]<span class="type">string</span>, <span class="number">1000</span>)</span><br><span class="line">	all_result_map := <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="type">string</span>]<span class="type">int</span>)</span><br><span class="line"></span><br><span class="line">	count := <span class="number">0</span></span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">1</span>; i &lt;= <span class="number">11</span>; i++ &#123;</span><br><span class="line">		<span class="keyword">for</span> j := i + <span class="number">1</span>; j &lt;= <span class="number">12</span>; j++ &#123;</span><br><span class="line">			<span class="keyword">for</span> k := j + <span class="number">1</span>; k &lt;= <span class="number">13</span>; k++ &#123;</span><br><span class="line">				<span class="keyword">for</span> l := k + <span class="number">1</span>; l &lt;= <span class="number">14</span>; l++ &#123;</span><br><span class="line">					<span class="comment">//fmt.Printf(&quot;%d -&gt; %d -&gt; %d -&gt; %d\n&quot;, i, j, k, l)</span></span><br><span class="line">					<span class="keyword">if</span> i == <span class="number">11</span> &amp;&amp; j == <span class="number">12</span> &amp;&amp; k == <span class="number">13</span> &amp;&amp; l == <span class="number">14</span> &#123;</span><br><span class="line">						<span class="keyword">continue</span></span><br><span class="line">					&#125;</span><br><span class="line">					all_result[count] = fmt.Sprintf(<span class="string">&quot;%d-%d-%d-%d&quot;</span>, i, j, k, l)</span><br><span class="line">					count++</span><br><span class="line">					all_result_map[fmt.Sprintf(<span class="string">&quot;%d-%d-%d-%d&quot;</span>, i, j, k, l)] = count</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	weight_arr := [<span class="number">14</span>]<span class="type">int</span>&#123;<span class="number">250</span>, <span class="number">199</span>, <span class="number">156</span>, <span class="number">119</span>, <span class="number">88</span>, <span class="number">63</span>, <span class="number">43</span>, <span class="number">28</span>, <span class="number">17</span>, <span class="number">11</span>, <span class="number">8</span>, <span class="number">7</span>, <span class="number">6</span>, <span class="number">5</span>&#125;</span><br><span class="line">	all_weight := <span class="number">0</span></span><br><span class="line">	source_map := <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="type">int</span>]<span class="type">int</span>)</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> num, weight := <span class="keyword">range</span> weight_arr &#123;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; weight; i++ &#123;</span><br><span class="line">			source_map[i+<span class="number">1</span>+all_weight] = num + <span class="number">1</span></span><br><span class="line">		&#125;</span><br><span class="line">		all_weight = all_weight + weight</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	模拟前三顺位</span></span><br><span class="line"><span class="comment">	*/</span></span><br><span class="line">	all_hit_result := []<span class="type">int</span>&#123;<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>&#125;</span><br><span class="line">	all_hit_result_second_round := []<span class="type">int</span>&#123;<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>&#125;</span><br><span class="line">	all_hit_result_third_round := []<span class="type">int</span>&#123;<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>&#125;</span><br><span class="line">	r := rand.New(rand.NewSource(time.Now().Unix()))</span><br><span class="line">	<span class="keyword">for</span> xx := <span class="number">0</span>; xx &lt; <span class="number">1000000</span>; xx++ &#123;</span><br><span class="line"></span><br><span class="line">		hit_map := <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="type">int</span>]<span class="type">int</span>)</span><br><span class="line">		<span class="keyword">for</span> round := <span class="number">0</span>; round &lt; <span class="number">3</span>; round++ &#123;</span><br><span class="line">			all_ball := []<span class="type">int</span>&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">10</span>, <span class="number">11</span>, <span class="number">12</span>, <span class="number">13</span>, <span class="number">14</span>&#125;</span><br><span class="line"></span><br><span class="line">			chosen_ball := <span class="built_in">make</span>([]<span class="type">int</span>, <span class="number">4</span>)</span><br><span class="line">			<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="number">4</span>; i++ &#123;</span><br><span class="line"></span><br><span class="line">				hit := r.Intn(<span class="number">14</span> - i)</span><br><span class="line">				chosen_ball[i] = all_ball[hit]</span><br><span class="line">				index := hit</span><br><span class="line">				all_ball = <span class="built_in">append</span>(all_ball[:index], all_ball[index+<span class="number">1</span>:]...)</span><br><span class="line"></span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			sort.Ints(chosen_ball)</span><br><span class="line">			result := fmt.Sprintf(<span class="string">&quot;%d-%d-%d-%d&quot;</span>, chosen_ball[<span class="number">0</span>], chosen_ball[<span class="number">1</span>], chosen_ball[<span class="number">2</span>], chosen_ball[<span class="number">3</span>])</span><br><span class="line"></span><br><span class="line">			<span class="keyword">if</span> result == <span class="string">&quot;11-12-13-14&quot;</span> &#123;</span><br><span class="line">				round--</span><br><span class="line">				<span class="keyword">continue</span></span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			result_rank := source_map[all_result_map[result]]</span><br><span class="line"></span><br><span class="line">			value := hit_map[result_rank]</span><br><span class="line">			<span class="keyword">if</span> value == <span class="number">1</span> &#123;</span><br><span class="line">				round--</span><br><span class="line">				<span class="keyword">continue</span></span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			<span class="keyword">if</span> round == <span class="number">0</span> &#123;</span><br><span class="line">				all_hit_result[result_rank<span class="number">-1</span>]++</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">if</span> round == <span class="number">1</span> &#123;</span><br><span class="line">				all_hit_result_second_round[result_rank<span class="number">-1</span>]++</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">if</span> round == <span class="number">2</span> &#123;</span><br><span class="line">				all_hit_result_third_round[result_rank<span class="number">-1</span>]++</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			hit_map[result_rank] = <span class="number">1</span></span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line">	fmt.Println(<span class="string">&quot;第一轮&quot;</span>)</span><br><span class="line">	<span class="keyword">for</span> i, resut_hit := <span class="keyword">range</span> all_hit_result &#123;</span><br><span class="line">		fmt.Printf(<span class="string">&quot;%d -&gt; %d\n&quot;</span>, i+<span class="number">1</span>, resut_hit)</span><br><span class="line">	&#125;</span><br><span class="line">	fmt.Println(<span class="string">&quot;第二轮&quot;</span>)</span><br><span class="line">	<span class="keyword">for</span> i, resut_hit := <span class="keyword">range</span> all_hit_result_second_round &#123;</span><br><span class="line">		fmt.Printf(<span class="string">&quot;%d -&gt; %d\n&quot;</span>, i+<span class="number">1</span>, resut_hit)</span><br><span class="line">	&#125;</span><br><span class="line">	fmt.Println(<span class="string">&quot;第三轮&quot;</span>)</span><br><span class="line">	<span class="keyword">for</span> i, resut_hit := <span class="keyword">range</span> all_hit_result_third_round &#123;</span><br><span class="line">		fmt.Printf(<span class="string">&quot;%d -&gt; %d\n&quot;</span>, i+<span class="number">1</span>, resut_hit)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">		模拟100万次</span></span><br><span class="line"><span class="comment">		第一轮</span></span><br><span class="line"><span class="comment">	1 -&gt; 249512</span></span><br><span class="line"><span class="comment">	2 -&gt; 198836</span></span><br><span class="line"><span class="comment">	3 -&gt; 155714</span></span><br><span class="line"><span class="comment">	4 -&gt; 118849</span></span><br><span class="line"><span class="comment">	5 -&gt; 88395</span></span><br><span class="line"><span class="comment">	6 -&gt; 63352</span></span><br><span class="line"><span class="comment">	7 -&gt; 43285</span></span><br><span class="line"><span class="comment">	8 -&gt; 28016</span></span><br><span class="line"><span class="comment">	9 -&gt; 16892</span></span><br><span class="line"><span class="comment">	10 -&gt; 11093</span></span><br><span class="line"><span class="comment">	11 -&gt; 7894</span></span><br><span class="line"><span class="comment">	12 -&gt; 7004</span></span><br><span class="line"><span class="comment">	13 -&gt; 6100</span></span><br><span class="line"><span class="comment">	14 -&gt; 5058</span></span><br><span class="line"><span class="comment">	第二轮</span></span><br><span class="line"><span class="comment">	1 -&gt; 215647</span></span><br><span class="line"><span class="comment">	2 -&gt; 188267</span></span><br><span class="line"><span class="comment">	3 -&gt; 157704</span></span><br><span class="line"><span class="comment">	4 -&gt; 125474</span></span><br><span class="line"><span class="comment">	5 -&gt; 96543</span></span><br><span class="line"><span class="comment">	6 -&gt; 71033</span></span><br><span class="line"><span class="comment">	7 -&gt; 49195</span></span><br><span class="line"><span class="comment">	8 -&gt; 32360</span></span><br><span class="line"><span class="comment">	9 -&gt; 19803</span></span><br><span class="line"><span class="comment">	10 -&gt; 13185</span></span><br><span class="line"><span class="comment">	11 -&gt; 9521</span></span><br><span class="line"><span class="comment">	12 -&gt; 8252</span></span><br><span class="line"><span class="comment">	13 -&gt; 7031</span></span><br><span class="line"><span class="comment">	14 -&gt; 5985</span></span><br><span class="line"><span class="comment">	第三轮</span></span><br><span class="line"><span class="comment">	1 -&gt; 177455</span></span><br><span class="line"><span class="comment">	2 -&gt; 171603</span></span><br><span class="line"><span class="comment">	3 -&gt; 155736</span></span><br><span class="line"><span class="comment">	4 -&gt; 133323</span></span><br><span class="line"><span class="comment">	5 -&gt; 106458</span></span><br><span class="line"><span class="comment">	6 -&gt; 81193</span></span><br><span class="line"><span class="comment">	7 -&gt; 58185</span></span><br><span class="line"><span class="comment">	8 -&gt; 38863</span></span><br><span class="line"><span class="comment">	9 -&gt; 24146</span></span><br><span class="line"><span class="comment">	10 -&gt; 15550</span></span><br><span class="line"><span class="comment">	11 -&gt; 11508</span></span><br><span class="line"><span class="comment">	12 -&gt; 10064</span></span><br><span class="line"><span class="comment">	13 -&gt; 8634</span></span><br><span class="line"><span class="comment">	14 -&gt; 7282</span></span><br><span class="line"><span class="comment">	*/</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/02/08/20220208-java11-ji-chu-yuan-li-he-shi-jian/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2234,286 +2363,6 @@ We obviously did not consider Windows as a serious platform so far, and that's w
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/08/13/20210813-xiao-gou-qian-qian-bi-ji/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2021/08/13/20210813-xiao-gou-qian-qian-bi-ji/" itemprop="url">《小狗钱钱》-笔记</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-08-13T19:06:22+08:00">
-                2021-08-13
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><ul>
-<li><p>财务自由是今天每个人都可能实现的目标，当然这需要我们拥有追求自己真正想要的生活的勇气。正如一句名言所说：“并非困难使我们放弃，而是因为我们放弃，才显得如此困难。</p>
-</li>
-<li><p>什么都无法阻挡你将金钱的规律铭记在心，你就会发现自己的财务状况在日益改善。没有任何东西能够阻挡一个顺应时势的想法。这一点也适用于每一个人的生活。什么都无法阻挡你享受自己与生俱来的权利——富裕。富有尊严、财务上游刃有余的生活符合我们的自然法则。只要你不放弃，那就没有任何东西可以阻碍你达到这个目标。就是现在，马上行动起来吧。我们的生活是一次旅行。如果我们掌握了金钱的规律，那么这次旅行就可以为我们开创机遇，并将我们引向那个自己从未想过的方向。</p>
-</li>
-</ul>
-<h3 id="第一章-白色的拉布拉多犬"><a href="#第一章-白色的拉布拉多犬" class="headerlink" title="第一章 白色的拉布拉多犬"></a>第一章 白色的拉布拉多犬</h3><ul>
-<li>中国的智者老子说过：‘天下难事，必作于易；天下大事，必作于细。</li>
-</ul>
-<h3 id="第二章-梦想储蓄罐和梦想相册"><a href="#第二章-梦想储蓄罐和梦想相册" class="headerlink" title="第二章 梦想储蓄罐和梦想相册"></a>第二章 梦想储蓄罐和梦想相册</h3><ul>
-<li><p>学习就是认识新观念和新想法的过程。假如人们始终以同一种思维方式来考虑问题的话，那么始终只会得到同样的结果。因为我对你讲述的许多内容是你以前从未接触过的，所以我建议你，在你还没有做之前，不要轻易下结论。没有想象力的人是很难成就大事的。我们对一件事投入的精力越多，成功的可能性也越大。可是大多数人把精力放在自己并不喜欢的事情上，而不去想象自己希望得到的东西。</p>
-</li>
-<li><p>看看你的爸爸妈妈，他们拥有的钱比你零花钱的10倍还要多得多，也许是你的100倍。尽管如此，他们的情况也并不好。钱的数目并不是决定性因素，更重要的是我们怎么来使用它。我们首先必须学会量入为出，只有这样，我们才有能力获得更多的钱。</p>
-</li>
-</ul>
-<h3 id="第三章-达瑞，一个很会挣钱的男孩"><a href="#第三章-达瑞，一个很会挣钱的男孩" class="headerlink" title="第三章 达瑞，一个很会挣钱的男孩"></a>第三章 达瑞，一个很会挣钱的男孩</h3><ul>
-<li>第一，为别人解决一个难题，那么你就能赚到许多钱；第二，把精力集中在你知道的、能做的和拥有的东西上。</li>
-</ul>
-<h3 id="第四章-堂兄的挣钱之道"><a href="#第四章-堂兄的挣钱之道" class="headerlink" title="第四章 堂兄的挣钱之道"></a>第四章 堂兄的挣钱之道</h3><ul>
-<li><p>你最好想清楚你喜欢做什么，然后再考虑你怎么用它来挣钱。我就是这样想出派送面包这项服务的。</p>
-</li>
-<li><p>“但是，我想提醒你两件重要的事情。”我听见马塞尔说，“第一，无论在什么时候都不能把希望只寄托在一份工作上，它持续的时间不会像你设想的那么长，所以你要立即寻找另一份替代的工作。”</p>
-</li>
-<li><p>这些困难是你现在还难以预料的。到那时候就能看出来，你到底是一个洋娃娃似的胆小鬼呢，还是一个像我一样能挣很多钱的人。情况顺利的时候，人人都能挣到钱。只有在逆境中，一切才能见分晓。”</p>
-</li>
-</ul>
-<h3 id="第五章-钱钱以前的主人"><a href="#第五章-钱钱以前的主人" class="headerlink" title="第五章 钱钱以前的主人"></a>第五章 钱钱以前的主人</h3><ul>
-<li>72小时规定！”“72小时规定？”我紧接着问钱钱。“很简单。当你决定做一件事情的时候，你必须在72小时之内完成，否则你很可能永远不会再做了。</li>
-</ul>
-<h3 id="第六章-爸爸妈妈犯下的错误"><a href="#第六章-爸爸妈妈犯下的错误" class="headerlink" title="第六章 爸爸妈妈犯下的错误"></a>第六章 爸爸妈妈犯下的错误</h3><ul>
-<li><p>“大多数人都认为工作肯定是一件艰苦而令人不愉快的事情，”他向我解释道，“其实只有做自己喜欢的事情的人，才能真正获得成功。”</p>
-</li>
-<li><p>钱钱接着说：“第二个忠告是，应当尽可能少地偿还贷款——也就是大人们说的分期付款。</p>
-</li>
-<li><p>如果每年偿还1%，虽然需要支付的利息逐年减少，但最后总共支付的利息数额仍会达到贷款数额的3倍左右。为了能快一点儿还清1万马克贷款，人们当然选择每年付较高的分期付款。许多人和银行约定的分期付款数额刚好在他们承受能力的上限，因此他们手里的钱一直很紧张。</p>
-</li>
-<li><p>第三个忠告是针对消费贷款的。消费贷款是与住房无关的贷款。假如人们为了购置新的汽车、家具、电视机或其他用于生活的商品而贷款，就是消费贷款。这时候贷款的人应当遵守的一个原则，就是将不用于生活的那部分钱的一半存起来，另一半用于偿还贷款。”“可是我奶奶常说，债务应当尽快还清，”我想起奶奶的话，“所以应该把所有不用于生活的钱都用来还债。”“当你还清了债务的时候，又达到了什么目标呢？”钱钱问我。“爸爸妈妈总是说，那时候他们肩上的一个重担就可以卸下来了。”我试着给钱钱解释。“他们是这么以为的。”钱钱赞同地点点头，“可是事实上，当他们还清了债务的时候，他们拥有的财产为零，也就是一无所有。一无所有可不是目标呀。”我吃了一惊，问道：“那么目标该是什么呢？”“去美国旅行，买笔记本电脑——这些才是目标，”钱钱耐心地解释给我听，“或者把不花的钱都积攒起来。”</p>
-</li>
-<li><p>所有的消费贷款都是不明智的。聪明的做法是只把以前积攒起来的财富用于支出。</p>
-</li>
-<li><p>将扣除生活费后剩下的钱的一半存起来，剩下的一半用于支付消费贷款。最好根本不申请消费贷款。</p>
-</li>
-</ul>
-<h3 id="第七章-在金先生家"><a href="#第七章-在金先生家" class="headerlink" title="第七章 在金先生家"></a>第七章 在金先生家</h3><ul>
-<li><p>你当然也应该得到一点儿什么……让我想想。你照顾钱钱很长一段时间了，确切地说，是一年多。如果我一天付你10马克，你觉得怎么样？”我一点儿都不高兴。我气呼呼地说：“我愿意照顾钱钱是因为我一见到它就喜欢上了它，而不是为了挣什么钱。”金先生笑了，但我并不觉得他是在嘲笑我——这两者之间还是有一点儿细微差别的。他向我解释道：“吉娅，大多数人都是这么想的，我曾经也这么想。可是请你告诉我，你为什么不能因为做了一件自己喜欢的事情而挣到钱呢？”类似的话我已经听过许多次了。的确如此，马塞尔对我说过，汉内坎普先生也说过。尽管如此，我还是觉得心里有些不安。“我要告诉你一件事，”金先生接着说，“恰恰是因为你喜欢我的钱钱，我才要每天付你10马克，因为由此我知道，它在你身边过得很舒服，你也会继续好好地照顾它。正是你的真情实意才让你的劳动显得那样珍贵。”</p>
-</li>
-<li><p>“鹅代表你的钱。如果你存钱，你就会得到利息。利息就相当于金蛋。”我不敢肯定自己是不是真的懂了。金先生接着说：“大多数人生来并没有‘鹅’。这就是说，他们的钱不足以让他们依靠利息来生活。”“可是要靠利息生活的话，这个人肯定得有很多很多的钱才行，是这样吗？”我不解地打断了金先生的话。“你需要的钱其实比你想象的要少得多。”金先生答道，“如果你有2.5万马克，能得到12%的利息的话，那每年就有3000马克。”</p>
-</li>
-<li><p>那么2.5万马克就是你的‘鹅’，而你是不会‘杀’它的。</p>
-</li>
-<li><p>“你必须作出选择！”金先生点点头，“你可以马上拿出你的钱，用在任何一个地方——比如一旦你有了3000马克，你可以马上飞往加利福尼亚——可是那样的话，你也就‘杀死’了你的‘鹅’；你也可以选择将一部分钱存起来，那样过了一段时间之后，仅靠每年的利息，你就可以飞往加利福尼亚了。”</p>
-</li>
-<li><p>我已经想好该怎么分配我的钱了，我也要把50%的收入变成我的‘鹅’，40%放入我的梦想储蓄罐，剩下的10%用来花。”金先生看着我，眼光中充满了赞许。</p>
-</li>
-<li><p>越是把注意力放在疼痛上，我就越会觉得疼。谈论疼痛就像给植物施肥一样。所以我很多年以前就改掉了抱怨的习惯。</p>
-</li>
-</ul>
-<h3 id="第十一章-爸爸妈妈不明白"><a href="#第十一章-爸爸妈妈不明白" class="headerlink" title="第十一章 爸爸妈妈不明白"></a>第十一章 爸爸妈妈不明白</h3><ul>
-<li><p>幸运其实只是充分准备加上努力工作的结果。</p>
-</li>
-<li><p>你干的活最多只值报酬的一半，另一半报酬源于你的想法和实施这个想法的勇气。</p>
-</li>
-</ul>
-<h3 id="第十二章-陶穆太太归来"><a href="#第十二章-陶穆太太归来" class="headerlink" title="第十二章 陶穆太太归来"></a>第十二章 陶穆太太归来</h3><ul>
-<li><p>要想过更幸福、更满意的生活，人就得改变自身。这和钱无关，金钱本身既不会使人幸福，也不会带来不幸。金钱是中性的，既不好，也不坏。只有当钱属于某一个人的时候，它才会对这个人产生好的影响或者坏的影响。钱可以被用于好的用途，也可以被用于坏的用途。一个幸福的人有了钱会更幸福；而一个悲观忧虑的人，钱越多，烦恼就越多。</p>
-</li>
-<li><p>“我妈妈总说，金钱会使人的本性变坏。”我反驳道。“金钱会暴露一个人的本性，”陶穆太太解释说，“金钱就像一个放大镜，它帮你更充分地展现出你本来的样子。好人可以用钱做很多好事。而如果你是盗贼，那你很可能会把钱挥霍在一些蠢事上。”</p>
-</li>
-</ul>
-<h3 id="第十三章-巨大的危机"><a href="#第十三章-巨大的危机" class="headerlink" title="第十三章 巨大的危机"></a>第十三章 巨大的危机</h3><ul>
-<li>“我想，你刚刚又找到了一个做有钱人的很好的理由。”钱钱提示我。我疑惑地望着它。“你可以做一个有能力帮助别人的人，而别人也会相信你，愿意接受你的帮助。”钱钱解释说。</li>
-</ul>
-<h3 id="第十四章-投资俱乐部"><a href="#第十四章-投资俱乐部" class="headerlink" title="第十四章 投资俱乐部"></a>第十四章 投资俱乐部</h3><p>1．确定自己希望获得财务上的成功。<br>2．自信，有想法，做自己喜欢做的事。<br>3．把钱分成日常开销、梦想目标和金鹅账户三部分。<br>4．进行明智的投资。<br>5．享受生活。</p>
-<h3 id="第十五章-演讲"><a href="#第十五章-演讲" class="headerlink" title="第十五章 演讲"></a>第十五章 演讲</h3><ul>
-<li>如果你没有做今天这件事情，你就永远不会知道，给自己一些压力之后，你能够做到些什么。一个人觉得最引以为自豪的事情，往往是那些做起来最艰难的事情。这一点你千万不要忘记。</li>
-</ul>
-<h3 id="第十六章-俱乐部的投资行动"><a href="#第十六章-俱乐部的投资行动" class="headerlink" title="第十六章 俱乐部的投资行动"></a>第十六章 俱乐部的投资行动</h3><ul>
-<li><p>基金就像一口大锅，许多没有时间、没有相关的知识或者没有兴趣亲自去买股票的投资人都会把钱投进这口锅里，这些钱由金融界的专家——也就是所谓的基金经理人——去投资买股票。国家对此进行严格的监督，基金经理人必须遵守一定的规定。比如，他们至少必须购买20种不同的股票。</p>
-</li>
-<li><p>如果我们打算投资买基金，就要准备把自己的钱在里面放上5～10年。对于那些能等这么长时间的人来说，基金几乎是一种零风险的投资。”</p>
-</li>
-<li><p>挑选基金时的注意事项：1．基金应该至少有10年历史。假如它在这么长时间内一直有丰厚的利润，那我们可以认为，未来它也会运作良好。2．应该选择大型的跨国股票基金。这种基金在世界各地购买股票，以此分散风险，所以十分安全。3．对基金的走势图进行比较。我们应该观察在过去10年间哪些基金的年终利润最好。</p>
-</li>
-<li><p>“有一个相当简单的公式，如果你们运用这个公式的话，可以不用去看那些又复杂又麻烦的表格。它的名字叫72公式。”老太太讲解说，“你们直接用72除以你们投资的年利润百分比，得出的数字就是这笔钱翻一倍所要的年数。”“啊？”莫尼卡嘟哝了一声。“72除以12是多少？”陶穆太太问。“6。”马塞尔飞快地算了出来。“对！这就是说，如果你们每年能得到12%的利润，6年以后你们的钱就会翻一倍。”马塞尔一边思考，一边说：“要想知道15%的时候会怎么样，那我就必须用72除以15，等于4.8年。”</p>
-</li>
-<li><p>“简单地说，如果你们投资的收益率是15%，差不多5年以后，钱就会翻一倍。</p>
-</li>
-<li><p>”陶穆太太说道，“也就是说，如果将来我们也能得到15%，那5年以后我们的2万马克就会涨到4万马克，10年以后就会是8万，15年后是16万，而20年后是32万。”</p>
-</li>
-</ul>
-<h3 id="第十七章-爷爷奶奶害怕风险"><a href="#第十七章-爷爷奶奶害怕风险" class="headerlink" title="第十七章 爷爷奶奶害怕风险"></a>第十七章 爷爷奶奶害怕风险</h3><ul>
-<li><p>只有当我们把它卖出的时候，才会有亏损。可是我们并没有这么做。</p>
-</li>
-<li><p>现在我们可以用比实际价值低的价钱购买股票和基金。不久以后，又有人会愿意付出相当于它们实际价值的钱，把它们买进。这样我们就会大赚一笔。</p>
-</li>
-<li><p>银行存折肯定不是保存钱的最合适的地方，金先生总是把银行存折叫作“吞钱机器”。</p>
-</li>
-<li><p>你要理解你的爷爷奶奶，他们是为你好。他们只是想让你免受损失，想尽他们所知来帮助你。</p>
-</li>
-<li><p>到了他们这个年纪，很可能有过几次吃亏的经历。现在他们想保护自己，也保护你。这是可以理解的。不过说真的，你应该多谢你的爷爷奶奶，因为他们可能帮你避免了一个错误。”“避免了什么错误？”“我觉得，你们现在用2万马克再次买进基金不是一个好主意。我认为最多1万马克就够了。”</p>
-</li>
-<li><p>可是如果行情继续下跌怎么办呢？所以你最好不要投入太多的钱。而且如果行情真的继续下跌，那时要是你手头还有钱用来再一次买进的话，不是更好吗？”“但我们并不知道，行情是不是真的还会继续下跌。”“没错，我们是不知道。没有人能知道，所有试图预测未来走势的专家总是计算失误，意想不到的情况很多。正因为如此，你应该始终储备一些现金。决不能把你全部的钱都投资在股票或者基金上面。”</p>
-</li>
-<li><p>我怎么知道通货膨胀率有多高，会吃掉我多少钱呢？”“目前是3%左右。如果你现在想计算具体的数目，我可以告诉你一个相当简单的公式，就是72公式。这个公式很实用，我们可以通过它计算出自己的钱翻一倍需要多少年，也可以用来帮助我们计算通货膨胀。它可以告诉我们，在一定通货膨胀率下，我们的钱在多长时间后会贬值一半。按72除以3%的通货膨胀率计算，得到24，就是说24年以后，你的钱只值现在的一半。”</p>
-</li>
-<li><p>没错！所以我把存折叫作‘吞钱机器’。因为你从这里得到的利息连通货膨胀带来的损失都抵消不了</p>
-</li>
-<li><p>但是我们几乎没有别的选择。你总不能把你所有的钱都投资买股票。就算你还很年轻，也该留一些现金做储备。只有这样才能达到分散风险的最佳效果。”</p>
-</li>
-<li><p>当然也有一些储蓄种类的利率比较高，可是你必须把钱放在银行里存很长一段时间。这种方式的坏处是，碰上再次买进的合适时机，你不能马上采取行动。”“那么，我该拿百分之几的钱投资日拆呢？”“这要根据你的具体情况而定。你还小，20%就够了。”</p>
-</li>
-<li><p>我决定向金钱魔法师们建议，每人只拿出2500马克用来再次买进基金，剩下840马克，可以投资在日拆上。</p>
-</li>
-</ul>
-<h3 id="第十八章-大冒险的结局"><a href="#第十八章-大冒险的结局" class="headerlink" title="第十八章 大冒险的结局"></a>第十八章 大冒险的结局</h3><ul>
-<li><p>而自从他买了一辆新车之后，甚至比往常提早一个小时就起床了。当一个人不需要再为钱的问题烦心之后，竟然会发生如此巨大的变化，真令人难以置信。</p>
-</li>
-<li><p>我们买的第一只基金的行情虽然持续下跌了7个月，但我们并没有卖出，所以没有亏损。这以后行情开始爬升，如果我们卖出的话，可以获取不少利润。不过我们没有理由这样做，我们想要的是让我们的鹅不断地长大。马塞尔曾经想过卖出手里的基金，他说这叫提取利润。陶穆太太却问他准备怎样处置这笔钱，怎样让它继续增长。我们得出的结论是：再次选择同样的基金进行投资。于是马塞尔立即意识到现在卖出基金毫无意义。</p>
-</li>
-<li><p>我想起了金先生对我说过的一句话：不要为失去的东西而忧伤，而要对拥有它的时光心存感激。对我来说，这句话的意思是：从现在开始，我再也得不到钱钱的建议了，但我还是必须应对各种情况。</p>
-</li>
-</ul>
-<h3 id="自力更生——写给成年人的后记"><a href="#自力更生——写给成年人的后记" class="headerlink" title="自力更生——写给成年人的后记"></a>自力更生——写给成年人的后记</h3><ul>
-<li><p>钱钱拆除了偏见的围墙，让人眼前豁然开朗，它告诉我们：经营活动并不是童工劳动，而是一种能激发人的热情的游戏；赚钱并不枯燥，相反会带来激动人心的时刻，释放人的发明创造的才能。</p>
-</li>
-<li><p>我们推崇一种聪明的、简朴的生活方式。也就是说，宁愿购买一件一流产品，也不要不停地买许多的二流产品。而且，不要仅仅因为一件产品的外观不再时髦而新产品正在流行，就不断追逐新鲜的东西。生活质量不是由越来越多的高科技产品堆砌而成的，而体现在一些别的方面，比如悠闲地享受一下生活，增进邻里关系，</p>
-</li>
-<li><p>表达感情或者从事艺术性和创造性的活动。</p>
-</li>
-</ul>
-<h3 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h3><ul>
-<li>股票是一家公司的股权证明——你可以购买这家公司的一份或若干份股权。每一份股权就是一张股票。如果公司赢利（赚钱），你就可以根据自己所拥有的股份数量，从公司的利润中分得一部分。你的股份越少，分到的利润就越少；股份越多，分到的利润就越多。如果公司亏损，那么你所持有的股票就会贬值。在这种情况下，你不应该急于卖出股票，而应该等待公司重新赢利。在第十六章中，陶穆太太对此有详细说明。</li>
-</ul>
-<hr>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul>
-<li>并非困难使我们放弃，而是因为我们放弃，才显得如此困难。</li>
-<li>无论在什么时候都不能把希望只寄托在一份工作上，它持续的时间不会像你设想的那么长，所以你要立即寻找另一份替代的工作。</li>
-<li>72小时规定</li>
-<li>尽可能少地偿还贷款</li>
-<li>消费贷款是不明智的</li>
-<li>基金</li>
-</ul>
-<hr>
-<ul>
-<li>评论：转：聪明理财五大定律<br>4321定律：家庭资产合理配置比例是家庭收入的40%用于供房及其他方面投资，30%用于家庭生活开支，20%用于银行存款以备应急之需，10%用于保险。<br>72定律：不拿回利息利滚利存款，本金增值一倍所需要的时间等于72除以年收益率。比如，如果在银行存10万元，年利率是2%，每年利滚利，多少年能变20万元？答案是36年。<br>80定律：股票占总资产的合理比重等于80减去年龄的得数添上一个百分号(%)。比如，30岁时股票可占总资产50%，50岁时则占30%为宜。<br>家庭保险双十定律：家庭保险设定的恰当额度应为家庭年收入的10倍，保费支出的恰当比重应为家庭年收入的10%。</li>
-<li>评论：转<br>吞钱机器：储蓄利息永远跑不赢通货膨胀。把钱存在银行，你的存款金额看起来是在增加，然而它的实际购买力是在不断降低的。所以，真正富有的人，钱都不会存在银行，而是通过理财投资，跑赢通货膨胀。</li>
-<li>评论：投短线叫投机，投长线才叫投资。价格终会回归价值，长期投资价值，才有相对稳定的收益。</li>
-<li>评论：转：<ul>
-<li>关于基金的三原则：<ol>
-<li>基金就像一口大锅，许多没有时间、没有相关的知识或者没有兴趣亲自去买股票的投资人都会把钱投进这口锅里，这些钱由金融界的专家——也就是所谓的基金经理人——去投资买股票。国家对此进行严格的监督，基金经理人必须遵守一定的规定。比如，他们至少必须购买20种不同的股票。</li>
-<li>基金符合投资的一切要求。由于它的这些特点，它也非常适合儿童和青少年。如果能够在5～10年内不动用这些钱，基金投资是很保险的，它会带来丰厚的利润……</li>
-<li>基金也符合第三条原则，它很容易操作，几乎就像在银行开一个普通的账户一样简单。</li>
-</ol>
-</li>
-<li>挑选基金时的注意事项：<br>  1．基金应该至少有10年历史。假如它在这么长时间内一直有丰厚的利润，那我们可以认为，未来它也会运作良好。<br>  2．应该选择大型的跨国股票基金。这种基金在世界各地购买股票，以此分散风险，所以十分安全。<br>  3．对基金的走势图进行比较。我们应该观察在过去10年间哪些基金的年终利润最好。</li>
-</ul>
-<p>	</p>
-</li>
-<li>评论：比特币不跌50%以上不入手，入手拿5年！等第5年比特币牛市，比特币不赚10倍不出货！</li>
-</ul>
-<p>		</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2571,7 +2420,7 @@ We obviously did not consider Windows as a serious platform so far, and that's w
 <a href="/archives/">                
 <!--<a href="/archives/%7C%7C%20archive">-->
               
-                  <span class="site-state-item-count">151</span>
+                  <span class="site-state-item-count">152</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2584,7 +2433,7 @@ We obviously did not consider Windows as a serious platform so far, and that's w
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">163</span>
+                  <span class="site-state-item-count">164</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

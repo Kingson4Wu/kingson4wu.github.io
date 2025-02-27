@@ -19010,6 +19010,16 @@ Starting from zero, this journey will take time and dedication. Patien
 </ol>
 <p>而ChatGPT则模拟这一过程，通过对字符模式的分析，快速生成一个类似的答案。</p>
 <p><strong>总结</strong><br>ChatGPT并没有像传统程序那样逐一遍历字符串，而是基于对字符和单词模式的理解，快速生成了答案。</p>
+<h3 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h3><ul>
+<li><a href="https://mp.weixin.qq.com/s/VuewffOUGhqxA-7qGqm9kg">为什么大模型连”Strawberry”的”r”都数不对？</a><ul>
+<li>大模型的生成过程本质上便是在“根据上文预测下一个Token”，而这个概率分布即是在模型训练过程中从大量的文本数据中学习到的，使得大模型学习到了语言的基本知识与模式。</li>
+<li>在Prompt中加入一定的引导就能获得理想答案，比如说我们可以利用CoT思维链的方式编写Prompt，引导大模型逐步思考并解决问题。</li>
+<li>CoT为思维链（Chain-of-Thought）的缩写简称，是提示工程领域最为重要的提示方法之一，它的核心思路在于通过引导模型逐步展示其推理过程，从而提高其理解和解决复杂问题的能力。在Few-shot（少样本）设置下表现为 在提供的样例中解释推理过程，引导大模型回答时也解释推理过程；而在Zero-shot（零样本）设置下表现为 加入类似“让我们一步步思考（Let’s think step by step）”的引导话术。</li>
+<li>对于大模型而言，它的语言本身即是思考，并不存在诉诸于语言之前的思考过程，所以我们也需要引导它像人类一样先思考再判断，将思考过程以语言的方式表达出来。</li>
+<li>在大模型推理的时候，我们可以限制大模型 先输出理由，再输出答案，让大模型根据“深度思考”获得的理由与推理过程来预测“答案”，从而大大提升其表现。</li>
+</ul>
+</li>
+</ul>
 <hr>
 <h2 id="数学中9-11和9-9哪个大"><a href="#数学中9-11和9-9哪个大" class="headerlink" title="数学中9.11和9.9哪个大"></a>数学中9.11和9.9哪个大</h2><blockquote>
 <blockquote>
@@ -19146,7 +19156,7 @@ Starting from zero, this journey will take time and dedication. Patien
 </ul>
 <hr>
 <hr>
-<h1 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h1><h2 id="“Grok3”的“DeepSearch”和“Think”这两个功能的作用"><a href="#“Grok3”的“DeepSearch”和“Think”这两个功能的作用" class="headerlink" title="“Grok3”的“DeepSearch”和“Think”这两个功能的作用"></a>“Grok3”的“DeepSearch”和“Think”这两个功能的作用</h2><blockquote>
+<h1 id="扩展-1"><a href="#扩展-1" class="headerlink" title="扩展"></a>扩展</h1><h2 id="“Grok3”的“DeepSearch”和“Think”这两个功能的作用"><a href="#“Grok3”的“DeepSearch”和“Think”这两个功能的作用" class="headerlink" title="“Grok3”的“DeepSearch”和“Think”这两个功能的作用"></a>“Grok3”的“DeepSearch”和“Think”这两个功能的作用</h2><blockquote>
 <blockquote>
 <p>From Grok3 (2025-02-25)</p>
 </blockquote>
@@ -19689,10 +19699,7 @@ Chatbot:"""
 <li><p>上下文整合与生成：检索到的文本片段会以纯文本形式插入到一个提示模板中，作为上下文连同用户的问题一起输入到生成模型中。生成模型（如大语言模型）基于这些上下文生成最终的回答。</p>
 </li>
 </ul>
-<hr>
-<h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><ul>
-<li><p>《基于大模型的RAG应用开发与优化——构建企业级LLM应用》</p>
-</li>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><ul>
 <li><p><a href="https://developer.aliyun.com/article/1628030">精通RAG架构：从0到1，基于LLM+RAG构建生产级企业知识库</a></p>
 <ul>
 <li>向量数据库对比</li>
@@ -19712,6 +19719,23 @@ Chatbot:"""
 <li>LLM 可以从纯文本中提取图谱信息，并将其存储到像 Neo4J 这样的数据库</li>
 </ul>
 </li>
+<li><p><a href="https://mp.weixin.qq.com/s/Za26pIabmREPn6u2bEkBUw">“无”中生有：基于知识增强的RAG优化实践</a></p>
+<ul>
+<li>感觉做这个东西就是在不停找各种优化方法反复尝试看效果，而且目前还处于很乱的早起阶段</li>
+</ul>
+</li>
+<li><p><a href="https://mp.weixin.qq.com/s/Q7nAold78HRuNhUiHSVUxA">微软推出的 LazyGraphRAG</a>   </p>
+<ul>
+<li>传统方法（如基于向量的 RAG）在处理局部化任务时表现良好，例如从特定文本片段中检索直接答案。然而，当涉及需要全面理解数据集的全局性查询时，这些方法往往难以胜任。</li>
+<li>相比之下，图支持的 RAG 系统通过利用数据结构中的关系，可以更好地解决此类更广泛的问题。然而，与图 RAG 系统相关的高索引成本，使其难以被成本敏感的场景所接受。因此，在可扩展性、经济性和质量之间实现平衡，仍然是现有技术的关键瓶颈。</li>
+<li>相比之下，图支持的 RAG 系统通过利用数据结构中的关系，可以更好地解决此类更广泛的问题。然而，与图 RAG 系统相关的高索引成本，使其难以被成本敏感的场景所接受。因此，在可扩展性、经济性和质量之间实现平衡，仍然是现有技术的关键瓶颈。</li>
+<li>LazyGraphRAG 将 VectorRAG 与 GraphRAG 相结合，“同时克服了二者的各自局限性”。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><ul>
+<li>《基于大模型的RAG应用开发与优化——构建企业级LLM应用》</li>
 </ul>
 ]]></content>
       <tags>
@@ -19929,6 +19953,39 @@ Chatbot:"""
         <tag>AI</tag>
         <tag>LLM</tag>
         <tag>Prompt</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>开源知识库系统试用</title>
+    <url>/2025/02/26/20250226-kai-yuan-zhi-shi-ku-xi-tong-shi-yong/</url>
+    <content><![CDATA[<blockquote>
+<blockquote>
+<p>帮助朋友的公司搭建内部知识库的原型<br>简单记录一下相关技术</p>
+</blockquote>
+</blockquote>
+<p><img src="/2025/02/26/20250226-kai-yuan-zhi-shi-ku-xi-tong-shi-yong/dify.drawio.png"></p>
+<ul>
+<li><p>目前看权限管理都很不精细，只在固定角色上进行控制，用于内部团队管理仍不是很方便</p>
+</li>
+<li><p>文档嵌入效果一般，可能要研究里面一些复杂的选项用法，或者寻求其他方案</p>
+</li>
+<li><p>除了dify，还有很多其他开源的知识库系统，比如 Cherry Studio、MaxKB、FastGPT、AnythingLLM、Ragflow等</p>
+</li>
+<li><p>dify功能很多，anythingllm功能较少，Cherry Studio 就是个人知识库</p>
+</li>
+<li><p>所谓的各种助手其实就是提示词模版</p>
+</li>
+</ul>
+<h1 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h1><ul>
+<li>传统RAG通常依赖单次检索，这可能不足以处理需要逐步构建上下文的复杂查询</li>
+<li>向量相似性检索依赖知识库中明确提及的信息，可能无法捕捉隐含或关系信息。相比之下，知识图谱（如GraphRAG）通过利用数据结构中的关系，能更好地处理需要全面理解数据集的全局查询</li>
+</ul>
+]]></content>
+      <tags>
+        <tag>AI</tag>
+        <tag>LLM</tag>
+        <tag>RAG</tag>
+        <tag>知识库</tag>
       </tags>
   </entry>
 </search>

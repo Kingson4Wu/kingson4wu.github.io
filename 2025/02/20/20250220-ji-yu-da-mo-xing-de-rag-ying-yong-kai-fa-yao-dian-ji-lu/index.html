@@ -90,7 +90,7 @@
 <meta property="og:locale">
 <meta property="og:image" content="http://yoursite.com/2025/02/20/20250220-ji-yu-da-mo-xing-de-rag-ying-yong-kai-fa-yao-dian-ji-lu/RAG.png">
 <meta property="article:published_time" content="2025-02-20T13:12:52.000Z">
-<meta property="article:modified_time" content="2025-02-26T13:16:09.376Z">
+<meta property="article:modified_time" content="2025-03-05T05:45:47.207Z">
 <meta property="article:author" content="Kingson Wu">
 <meta property="article:tag" content="AI">
 <meta property="article:tag" content="LLM">
@@ -514,6 +514,26 @@
 <li>LazyGraphRAG 将 VectorRAG 与 GraphRAG 相结合，“同时克服了二者的各自局限性”。</li>
 </ul>
 </li>
+<li><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/N-oPDmkb3EKqB2IM_reO1A">DeepSearcher深度解读：Agentic RAG的出现，传统RAG的黄昏</a></p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/zilliztech/deep-searcher">https://github.com/zilliztech/deep-searcher</a></li>
+<li>所谓Agentic RAG，是一种融合智能代理（Agent）能力的RAG架构。通过动态规划、多步骤推理和自主决策机制，Agentic RAG可以在复杂任务中实现闭环的检索-加工-验证-优化</li>
+<li>Agentic RAG相比传统RAG有着三大优势：<ul>
+<li>（1）被动响应变为主动响应；</li>
+<li>（2）单次的关键词检索，升级为多轮的动态调整检索，并拥有自我修正能力；</li>
+<li>（3）适用场景，从最基础的简单事实问答，升级为复杂推理、复杂报告生成等开放域任务。</li>
+</ul>
+</li>
+<li>长期来看，Agentic RAG必定会取代传统RAG。一方面，传统RAG对需求的响应还停留在非常基础的阶段，另一方面，现实中，我们大部分的需求表达背后，都是有隐含逻辑的，并不能被一步检索到位，必须通过推理-反思-迭代-优化来对其进行拆解与反馈。</li>
+<li>VS Graph RAG<ul>
+<li>Graph RAG主要聚焦于对存在连接关系的文档展开查询，在处理多跳类问题上表现出色。</li>
+<li>例如，当导入一部长篇小说时，它能够精准抽取各个人物之间错综复杂的关系。其运作方式是在文档导入环节，就对实体间关系进行抽取。因此，这一过程会大量消耗大模型的token资源 。</li>
+<li>而在查询阶段，不论是否是查询图中某些节点的信息，都会进行图结构的搜索，这使得这一框架不太灵活。</li>
+<li>反观Agentic RAG，它的资源消耗模式与Graph RAG恰好相反。在数据导入阶段，Agentic RAG无需执行额外特殊操作，而在回答用户提问时，才会产生较多大模型的token消耗。</li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 <hr>
 <h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><ul>
@@ -649,7 +669,7 @@
 <a href="/archives/">                
 <!--<a href="/archives/%7C%7C%20archive">-->
               
-                  <span class="site-state-item-count">152</span>
+                  <span class="site-state-item-count">153</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -662,7 +682,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">164</span>
+                  <span class="site-state-item-count">165</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

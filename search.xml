@@ -17627,8 +17627,18 @@ what? 不仅一天全开会了，还没有任何有用的结论？
 <h3 id="Rust简易版本"><a href="#Rust简易版本" class="headerlink" title="Rust简易版本"></a>Rust简易版本</h3><ul>
 <li><a href="https://github.com/Kingson4Wu/mesh-talk">https://github.com/Kingson4Wu/mesh-talk</a> （使用windsurf生成）</li>
 </ul>
+<p>&#x3D;&#x3D;&#x3D;&#x3D;</p>
+<h2 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h2><blockquote>
+<blockquote>
+<p>发现已经有了相关实现，非常棒！</p>
+</blockquote>
+</blockquote>
+<ul>
+<li><a href="https://github.com/localsend/localsend">https://github.com/localsend/localsend</a> 局域网文件传输，广播发现，可以简易发消息</li>
+</ul>
 ]]></content>
       <tags>
+        <tag>Rust</tag>
         <tag>UDP</tag>
       </tags>
   </entry>
@@ -19812,6 +19822,20 @@ Chatbot:"""
 <li>反观Agentic RAG，它的资源消耗模式与Graph RAG恰好相反。在数据导入阶段，Agentic RAG无需执行额外特殊操作，而在回答用户提问时，才会产生较多大模型的token消耗。</li>
 </ul>
 </li>
+</ul>
+</li>
+<li><p><a href="https://mp.weixin.qq.com/s/VZq2zsuJGsGaYTx6POqUzg">高阶RAG技巧：探索提升RAG系统性能的不同技巧</a></p>
+<ul>
+<li>索引优化技术（如数据预处理和分块）专注于格式化外部数据以提高其效率和可搜索性。</li>
+<li>预检索技术旨在通过重写、重新格式化或将查询路由到专用流水线来优化用户查询本身。</li>
+<li>检索优化策略通常侧重于在检索阶段优化搜索结果。 </li>
+<li>检索后优化策略旨在通过各种技术提高生成结果的准确性，包括对检索结果进行重新排序、增强或压缩（检索）上下文以及操纵提示或生成模型 (LLM)。</li>
+</ul>
+</li>
+<li><p>KBLAM 是在 RAG（Retrieval-Augmented Generation） 和 知识图谱增强推理 的基础上发展而来。它的关键点是：</p>
+<ul>
+<li>利用结构化知识（如三元组：subject–predicate–object）进行多跳推理</li>
+<li>结合语言模型对自然语言的理解能力，实现可控的知识推理流程</li>
 </ul>
 </li>
 </ul>

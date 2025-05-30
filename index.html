@@ -306,7 +306,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2025/05/31/20250531-ren-gong-zhi-neng-yi-ci-shi-fou-zhun-que-yi-ci-guan-yu-ai-ben-zhi-de-fan-si/" itemprop="url">20250531-“人工智能”一词是否准确？一次关于AI本质的反思</a></h1>
+                <a class="post-title-link" href="/2025/05/31/20250531-ren-gong-zhi-neng-yi-ci-shi-fou-zhun-que-yi-ci-guan-yu-ai-ben-zhi-de-fan-si/" itemprop="url">“人工智能”一词是否准确？一次关于AI本质的反思</a></h1>
         
 
         <div class="post-meta">
@@ -1917,6 +1917,37 @@ Chatbot:"""
 </ol>
 </li>
 </ul>
+<h1 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h1><h2 id="参数、输入向量和嵌入模型的真正关系"><a href="#参数、输入向量和嵌入模型的真正关系" class="headerlink" title="参数、输入向量和嵌入模型的真正关系"></a>参数、输入向量和嵌入模型的真正关系</h2><ul>
+<li><p>在神经网络中，“参数”特指模型在训练过程中学习得到的变量，主要包括<strong>权重（weights）和偏置（biases）</strong>，它们决定了模型如何处理输入并生成输出，是模型内部真正“学到的知识”。输入特征的数量（即输入维度）常被初学者误认为是“参数”，但实际上，它属于输入数据的结构，而非模型的可训练部分。每个神经元在接受输入时，会对输入向量进行<strong>加权求和并加上偏置</strong>，将这个结果作为激活函数的输入，激活函数再施加非线性变换，产生神经元的输出。虽然权重确实与输入一一对应，但激活函数并不直接作用于原始输入，而是作用于这个线性组合的结果。</p>
+</li>
+<li><p>在现代深度学习模型中，尤其是语言模型（如 GPT），输入向量的维度是固定的，这一维度通常由<strong>嵌入模型（embedding layer）或输入预处理过程</strong>所决定。例如，文本经过分词和嵌入后，每个 token 被映射为一个固定长度的向量（如 768 维），整个输入变为一个定长矩阵。为了确保矩阵运算的可行性与模型结构的稳定性，输入长度往往被限制在最大长度内，不足时通过填充处理，超长则截断。因此，嵌入层不仅是将离散信息转为向量表示的桥梁，也是模型输入维度的决定因素之一。</p>
+</li>
+</ul>
+<h2 id="感知机、激活函数和神经网络三者关系"><a href="#感知机、激活函数和神经网络三者关系" class="headerlink" title="感知机、激活函数和神经网络三者关系"></a>感知机、激活函数和神经网络三者关系</h2><ul>
+<li>感知机是神经网络的基本构建单元，它通过对输入加权求和后传入激活函数来决定输出。激活函数引入非线性，使神经网络能拟合复杂关系。神经网络由多个感知机层叠构成，层与层之间通过激活函数连接，从而具备强大的表达和学习能力。三者关系为：<strong>激活函数是感知机的一部分，感知机是神经网络的基础单元。</strong></li>
+</ul>
+<h3 id="三者之间的关系总结："><a href="#三者之间的关系总结：" class="headerlink" title="三者之间的关系总结："></a>三者之间的关系总结：</h3><table>
+<thead>
+<tr>
+<th>组成层级</th>
+<th>关系说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>感知机</td>
+<td>最基础的神经元模型，是神经网络的最小单元</td>
+</tr>
+<tr>
+<td>激活函数</td>
+<td>是感知机或神经元的核心部分，引入非线性</td>
+</tr>
+<tr>
+<td>神经网络</td>
+<td>是多个感知机&#x2F;神经元的组合，通过激活函数形成强大的拟合能力</td>
+</tr>
+</tbody></table>
+<p>可以这样理解它们的层级结构：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">神经网络 = 多个感知机（神经元）组成</span><br><span class="line">感知机 = 线性加权求和 + 激活函数</span><br><span class="line">激活函数 = 赋予神经网络非线性表达能力的关键</span><br></pre></td></tr></table></figure>
 
           
         

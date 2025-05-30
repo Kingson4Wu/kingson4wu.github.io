@@ -90,7 +90,7 @@
 <meta property="og:locale">
 <meta property="og:image" content="http://yoursite.com/2025/02/20/20250220-ji-yu-da-mo-xing-de-rag-ying-yong-kai-fa-yao-dian-ji-lu/RAG.png">
 <meta property="article:published_time" content="2025-02-20T13:12:52.000Z">
-<meta property="article:modified_time" content="2025-04-10T06:35:40.578Z">
+<meta property="article:modified_time" content="2025-05-28T08:51:07.835Z">
 <meta property="article:author" content="Kingson Wu">
 <meta property="article:tag" content="AI">
 <meta property="article:tag" content="LLM">
@@ -460,9 +460,31 @@
 </ul>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>LlamaIndex 的向量存储索引确实和 MySQL 的索引差别很大，它更像是一个专门为高维向量设计的“搜索加速器”。叫“索引”是因为它不仅存向量，还组织向量以提升查询效率，而不是简单的数据存储。</p>
 <hr>
-<h1 id="个人对于深度强化学习的思考"><a href="#个人对于深度强化学习的思考" class="headerlink" title="个人对于深度强化学习的思考"></a>个人对于深度强化学习的思考</h1><ul>
-<li>对于RAG应用，优化方法有很多。我的想法是，把这些优化方法想象成一堆‘工具’，然后用强化学习这个‘聪明助手’来挑出最好用的组合。</li>
-<li>“优化策略”变成了“工具”，“强化学习”变成了“聪明助手”，“奖励函数”简化为“任务需求”</li>
+<h1 id="关于RAG的优化：个人结合深度强化学习的思考"><a href="#关于RAG的优化：个人结合深度强化学习的思考" class="headerlink" title="关于RAG的优化：个人结合深度强化学习的思考"></a>关于RAG的优化：个人结合深度强化学习的思考</h1><ul>
+<li><p>对于RAG应用，优化方法有很多。我的想法是，把这些优化方法想象成一堆‘工具’，然后用强化学习这个‘聪明助手’来挑出最好用的组合。</p>
+</li>
+<li><p>“优化策略”变成了“工具”，“强化学习”变成了“聪明助手”，“奖励函数”简化为“任务需求”</p>
+</li>
+<li><p>From ChatGPT</p>
+</li>
+<li><p>你表达的意思可以理解为：你试图用一个类比来形象地说明深度强化学习在RAG（Retrieval-Augmented Generation）系统优化中的角色与价值。</p>
+</li>
+<li><p>具体地说：</p>
+<ul>
+<li><strong>RAG优化方法</strong>很多，比如检索器选择、reranker排序、embedding优化、prompt设计等，这些在你眼中就像一堆**“工具”**。</li>
+<li>这些工具的使用方式组合非常多，所以你不想手动去调优，而是引入一个“聪明助手”——也就是<strong>强化学习智能体</strong>，来<strong>自动地组合和选择最合适的优化策略</strong>。</li>
+<li><strong>任务需求</strong>（比如更高的准确率、更好的用户体验）就变成了强化学习中的<strong>奖励函数</strong>，引导智能体不断试错、学习，找到最优解法。</li>
+</ul>
+</li>
+<li><p>所以你的思路是用深度强化学习作为一种<strong>元优化方法</strong>，来学习在不同场景下该怎么调配RAG的各类优化手段，从而达到最好的表现。</p>
+</li>
+<li><p>这是一个很有潜力的方向，本质上是将强化学习用作策略搜索或控制器，帮助系统自动适配复杂环境下的参数和策略组合。你可以进一步细化这个设想，比如：</p>
+<ul>
+<li>工具组合的action space怎么定义？</li>
+<li>每种任务需求下的reward如何设计？</li>
+<li>环境如何模拟或构建，才能训练出泛化能力强的“助手”？</li>
+</ul>
+</li>
 </ul>
 <hr>
 <h1 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h1><h2 id="如果嵌入模型知道“你好”和“再见”的向量，它可以将“你好再见”转化为一个向量吗？"><a href="#如果嵌入模型知道“你好”和“再见”的向量，它可以将“你好再见”转化为一个向量吗？" class="headerlink" title="如果嵌入模型知道“你好”和“再见”的向量，它可以将“你好再见”转化为一个向量吗？"></a>如果嵌入模型知道“你好”和“再见”的向量，它可以将“你好再见”转化为一个向量吗？</h2><ul>
@@ -683,7 +705,7 @@
 <a href="/archives/">                
 <!--<a href="/archives/%7C%7C%20archive">-->
               
-                  <span class="site-state-item-count">153</span>
+                  <span class="site-state-item-count">154</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -736,7 +758,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#LlamaIndex-%E6%A1%86%E6%9E%B6%E6%95%B4%E4%BD%93%E7%BB%93%E6%9E%84"><span class="nav-number">1.</span> <span class="nav-text">LlamaIndex 框架整体结构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#LlamaIndex-%E7%9A%84%E5%90%91%E9%87%8F%E5%AD%98%E5%82%A8%E7%B4%A2%E5%BC%95%E5%92%8C%E4%BC%A0%E7%BB%9F%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%88%E5%A6%82-MySQL%EF%BC%89%E7%9A%84%E7%B4%A2%E5%BC%95%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">2.</span> <span class="nav-text">LlamaIndex 的向量存储索引和传统数据库（如 MySQL）的索引的区别</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%A0%E7%BB%9F%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B4%A2%E5%BC%95%EF%BC%88%E5%A6%82-MySQL%EF%BC%89-vs-%E5%90%91%E9%87%8F%E5%AD%98%E5%82%A8%E7%B4%A2%E5%BC%95"><span class="nav-number">2.1.</span> <span class="nav-text">传统数据库索引（如 MySQL） vs 向量存储索引</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E4%BC%A0%E7%BB%9F%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B4%A2%E5%BC%95%EF%BC%88B-%E6%A0%91%E3%80%81%E5%93%88%E5%B8%8C%E7%B4%A2%E5%BC%95%E7%AD%89%EF%BC%89"><span class="nav-number">2.1.1.</span> <span class="nav-text">1. 传统数据库索引（B-树、哈希索引等）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-LlamaIndex-%E7%9A%84%E5%90%91%E9%87%8F%E5%AD%98%E5%82%A8%E7%B4%A2%E5%BC%95"><span class="nav-number">2.1.2.</span> <span class="nav-text">2. LlamaIndex 的向量存储索引</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E5%8F%AB%E2%80%9C%E5%90%91%E9%87%8F%E5%AD%98%E5%82%A8%E7%B4%A2%E5%BC%95%E2%80%9D%E8%80%8C%E4%B8%8D%E6%98%AF%E2%80%9C%E5%90%91%E9%87%8F%E5%AD%98%E5%82%A8%E6%95%B0%E6%8D%AE%E2%80%9D%EF%BC%9F"><span class="nav-number">2.2.</span> <span class="nav-text">为什么叫“向量存储索引”而不是“向量存储数据”？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BE%E4%B8%AA%E7%B1%BB%E6%AF%94"><span class="nav-number">2.3.</span> <span class="nav-text">举个类比</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">2.4.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%AA%E4%BA%BA%E5%AF%B9%E4%BA%8E%E6%B7%B1%E5%BA%A6%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%9A%84%E6%80%9D%E8%80%83"><span class="nav-number">3.</span> <span class="nav-text">个人对于深度强化学习的思考</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%89%A9%E5%B1%95"><span class="nav-number">4.</span> <span class="nav-text">扩展</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E6%9E%9C%E5%B5%8C%E5%85%A5%E6%A8%A1%E5%9E%8B%E7%9F%A5%E9%81%93%E2%80%9C%E4%BD%A0%E5%A5%BD%E2%80%9D%E5%92%8C%E2%80%9C%E5%86%8D%E8%A7%81%E2%80%9D%E7%9A%84%E5%90%91%E9%87%8F%EF%BC%8C%E5%AE%83%E5%8F%AF%E4%BB%A5%E5%B0%86%E2%80%9C%E4%BD%A0%E5%A5%BD%E5%86%8D%E8%A7%81%E2%80%9D%E8%BD%AC%E5%8C%96%E4%B8%BA%E4%B8%80%E4%B8%AA%E5%90%91%E9%87%8F%E5%90%97%EF%BC%9F"><span class="nav-number">4.1.</span> <span class="nav-text">如果嵌入模型知道“你好”和“再见”的向量，它可以将“你好再见”转化为一个向量吗？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RAG%E7%9A%84%E7%9B%B8%E5%85%B3%E5%8E%9F%E7%90%86"><span class="nav-number">4.2.</span> <span class="nav-text">RAG的相关原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B6%E4%BB%96"><span class="nav-number">4.3.</span> <span class="nav-text">其他</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Reference"><span class="nav-number">5.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#LlamaIndex-%E6%A1%86%E6%9E%B6%E6%95%B4%E4%BD%93%E7%BB%93%E6%9E%84"><span class="nav-number">1.</span> <span class="nav-text">LlamaIndex 框架整体结构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#LlamaIndex-%E7%9A%84%E5%90%91%E9%87%8F%E5%AD%98%E5%82%A8%E7%B4%A2%E5%BC%95%E5%92%8C%E4%BC%A0%E7%BB%9F%E6%95%B0%E6%8D%AE%E5%BA%93%EF%BC%88%E5%A6%82-MySQL%EF%BC%89%E7%9A%84%E7%B4%A2%E5%BC%95%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">2.</span> <span class="nav-text">LlamaIndex 的向量存储索引和传统数据库（如 MySQL）的索引的区别</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%A0%E7%BB%9F%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B4%A2%E5%BC%95%EF%BC%88%E5%A6%82-MySQL%EF%BC%89-vs-%E5%90%91%E9%87%8F%E5%AD%98%E5%82%A8%E7%B4%A2%E5%BC%95"><span class="nav-number">2.1.</span> <span class="nav-text">传统数据库索引（如 MySQL） vs 向量存储索引</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E4%BC%A0%E7%BB%9F%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B4%A2%E5%BC%95%EF%BC%88B-%E6%A0%91%E3%80%81%E5%93%88%E5%B8%8C%E7%B4%A2%E5%BC%95%E7%AD%89%EF%BC%89"><span class="nav-number">2.1.1.</span> <span class="nav-text">1. 传统数据库索引（B-树、哈希索引等）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-LlamaIndex-%E7%9A%84%E5%90%91%E9%87%8F%E5%AD%98%E5%82%A8%E7%B4%A2%E5%BC%95"><span class="nav-number">2.1.2.</span> <span class="nav-text">2. LlamaIndex 的向量存储索引</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E5%8F%AB%E2%80%9C%E5%90%91%E9%87%8F%E5%AD%98%E5%82%A8%E7%B4%A2%E5%BC%95%E2%80%9D%E8%80%8C%E4%B8%8D%E6%98%AF%E2%80%9C%E5%90%91%E9%87%8F%E5%AD%98%E5%82%A8%E6%95%B0%E6%8D%AE%E2%80%9D%EF%BC%9F"><span class="nav-number">2.2.</span> <span class="nav-text">为什么叫“向量存储索引”而不是“向量存储数据”？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BE%E4%B8%AA%E7%B1%BB%E6%AF%94"><span class="nav-number">2.3.</span> <span class="nav-text">举个类比</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">2.4.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%B3%E4%BA%8ERAG%E7%9A%84%E4%BC%98%E5%8C%96%EF%BC%9A%E4%B8%AA%E4%BA%BA%E7%BB%93%E5%90%88%E6%B7%B1%E5%BA%A6%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%9A%84%E6%80%9D%E8%80%83"><span class="nav-number">3.</span> <span class="nav-text">关于RAG的优化：个人结合深度强化学习的思考</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%89%A9%E5%B1%95"><span class="nav-number">4.</span> <span class="nav-text">扩展</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E6%9E%9C%E5%B5%8C%E5%85%A5%E6%A8%A1%E5%9E%8B%E7%9F%A5%E9%81%93%E2%80%9C%E4%BD%A0%E5%A5%BD%E2%80%9D%E5%92%8C%E2%80%9C%E5%86%8D%E8%A7%81%E2%80%9D%E7%9A%84%E5%90%91%E9%87%8F%EF%BC%8C%E5%AE%83%E5%8F%AF%E4%BB%A5%E5%B0%86%E2%80%9C%E4%BD%A0%E5%A5%BD%E5%86%8D%E8%A7%81%E2%80%9D%E8%BD%AC%E5%8C%96%E4%B8%BA%E4%B8%80%E4%B8%AA%E5%90%91%E9%87%8F%E5%90%97%EF%BC%9F"><span class="nav-number">4.1.</span> <span class="nav-text">如果嵌入模型知道“你好”和“再见”的向量，它可以将“你好再见”转化为一个向量吗？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RAG%E7%9A%84%E7%9B%B8%E5%85%B3%E5%8E%9F%E7%90%86"><span class="nav-number">4.2.</span> <span class="nav-text">RAG的相关原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B6%E4%BB%96"><span class="nav-number">4.3.</span> <span class="nav-text">其他</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Reference"><span class="nav-number">5.</span> <span class="nav-text">Reference</span></a></li></ol></div>
             
 
           </div>

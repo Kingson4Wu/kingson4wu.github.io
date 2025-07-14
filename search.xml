@@ -20673,6 +20673,25 @@ AI这个名字其实并不准确
 </ul>
 </li>
 </ol>
+<h2 id="并查集"><a href="#并查集" class="headerlink" title="并查集"></a>并查集</h2><h2 id="例题：684-冗余连接"><a href="#例题：684-冗余连接" class="headerlink" title="例题：684. 冗余连接"></a>例题：<a href="https://leetcode.cn/problems/redundant-connection/description">684. 冗余连接</a></h2><ul>
+<li>在含有一个环的无向图中找出一条可删边使其变为树</li>
+</ul>
+<h3 id="解题流程：-2"><a href="#解题流程：-2" class="headerlink" title="解题流程："></a>解题流程：</h3><ul>
+<li>使用并查集判断边是否构成环：<ul>
+<li>初始化每个节点为不同集合；<ul>
+<li>遍历 edges 中每条边 (u, v)：<ul>
+<li>如果 u 与 v 已在同一集合中，说明这条边构成环 → 返回它；</li>
+<li>否则合并 u 和 v；</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>因为题目要求返回「最后构成环的边」，只需从前往后遍历一次即可。</li>
+</ul>
+</li>
+</ul>
+<h3 id="实现代码"><a href="#实现代码" class="headerlink" title="实现代码"></a>实现代码</h3><figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">findRedundantConnection</span><span class="params">(edges [][]<span class="type">int</span>)</span></span> []<span class="type">int</span> &#123;</span><br><span class="line">    parent := <span class="built_in">make</span>([]<span class="type">int</span>, <span class="built_in">len</span>(edges)+<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">for</span> i := <span class="keyword">range</span> parent &#123;</span><br><span class="line">        parent[i] = i</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">var</span> find <span class="function"><span class="keyword">func</span><span class="params">(<span class="type">int</span>)</span></span> <span class="type">int</span></span><br><span class="line">    find = <span class="function"><span class="keyword">func</span><span class="params">(x <span class="type">int</span>)</span></span> <span class="type">int</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> parent[x] != x &#123;</span><br><span class="line">            parent[x] = find(parent[x])</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> parent[x]</span><br><span class="line">    &#125;</span><br><span class="line">    union := <span class="function"><span class="keyword">func</span><span class="params">(from, to <span class="type">int</span>)</span></span> <span class="type">bool</span> &#123;</span><br><span class="line">        x, y := find(from), find(to)</span><br><span class="line">        <span class="keyword">if</span> x == y &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">        &#125;</span><br><span class="line">        parent[x] = y</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> _, e := <span class="keyword">range</span> edges &#123;</span><br><span class="line">        <span class="keyword">if</span> !union(e[<span class="number">0</span>], e[<span class="number">1</span>]) &#123;</span><br><span class="line">            <span class="keyword">return</span> e</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <h1 id="堆"><a href="#堆" class="headerlink" title="堆"></a>堆</h1><h3 id="基本性质与操作（以最大堆为例）"><a href="#基本性质与操作（以最大堆为例）" class="headerlink" title="基本性质与操作（以最大堆为例）"></a>基本性质与操作（以最大堆为例）</h3><ol>
 <li><p>最大堆的性质</p>
 <ul>
@@ -20837,7 +20856,7 @@ AI这个名字其实并不准确
 <ul>
 <li><strong>Kahn 算法实质上是 BFS 的变种</strong>，关注“入度为 0”的节点而不是“邻接点”。</li>
 </ul>
-<h3 id="✅-Kahn-算法-vs-广度优先搜索（BFS）"><a href="#✅-Kahn-算法-vs-广度优先搜索（BFS）" class="headerlink" title="✅ Kahn 算法 vs 广度优先搜索（BFS）"></a>✅ Kahn 算法 vs 广度优先搜索（BFS）</h3><table>
+<h3 id="Kahn-算法-vs-广度优先搜索（BFS）"><a href="#Kahn-算法-vs-广度优先搜索（BFS）" class="headerlink" title="Kahn 算法 vs 广度优先搜索（BFS）"></a>Kahn 算法 vs 广度优先搜索（BFS）</h3><table>
 <thead>
 <tr>
 <th>项目</th>

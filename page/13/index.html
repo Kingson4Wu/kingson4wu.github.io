@@ -287,6 +287,344 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/08/31/20200831-guan-yu-mha-consul-mysql-gao-ke-yong-fang-an-de-jian-dan-zong-jie-he-si-kao/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/08/31/20200831-guan-yu-mha-consul-mysql-gao-ke-yong-fang-an-de-jian-dan-zong-jie-he-si-kao/" itemprop="url">关于MHA_Consul_MySQL高可用方案的简单总结和思考</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-08-31T21:39:33+08:00">
+                2020-08-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>MHA + Consul + MySQL的高可用方案，网上已经有很多资料，这里只是做一下简要的总结和思考。文章部分文字摘自Reference中的链接。<br>直接先上一张图</p>
+<p><img src="/2020/08/31/20200831-guan-yu-mha-consul-mysql-gao-ke-yong-fang-an-de-jian-dan-zong-jie-he-si-kao/MHA_Consul_MySQL%E5%88%87%E6%8D%A2.png"></p>
+<ol>
+<li>图中的灾备架构适用于同城主备架构的业务，比如金钱业务；</li>
+<li>DB层是一主多从，主库至在其中一个机房，并在DB集群上搭建跨IDC的MHA；同样Consul也是跨IDC的集群；</li>
+<li>业务的写主流量配置在主库机房的一侧，当主库故障发生DB切换产生新主库时，流量也跟从新主库一同切换；</li>
+<li>主库切换通过MHA完成，并通过Consul集群和应用的SDK通知到业务服务。</li>
+<li>MySQL采用默认的异步复制方式</li>
+</ol>
+<h3 id="解决什么问题"><a href="#解决什么问题" class="headerlink" title="解决什么问题"></a>解决什么问题</h3><ol>
+<li>解决MySQL的单点问题。当主库发生故障时能提升从库为新的主库，且应用层能自动识别；从而缩短故障的处理时间；</li>
+<li>通过Consul能支持从库的故障切换以及从库扩容或下线；</li>
+</ol>
+<h3 id="每个组件各自的作用"><a href="#每个组件各自的作用" class="headerlink" title="每个组件各自的作用"></a>每个组件各自的作用</h3><ol>
+<li>MHA：监控主节点，可以在故障时自动或手动切换、非故障时手动主从切换。切换时会进行数据补齐，并将新的master信息更新到consul中。</li>
+<li>Consul：MySQL服务注册并提供健康检查、记录最新的master；还可以提供其他配置性的服务，比如dns，可解析数据库域名。</li>
+<li>SDK: sdk通过consul-api监控MySQL ip列表的变化，能连接新的库和去掉已下线的库。</li>
+</ol>
+<p>下面的部分将对使用到的技术逐一简要描述和总结。</p>
+<h2 id="MHA"><a href="#MHA" class="headerlink" title="MHA"></a>MHA</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><pre>
+MySQL MHA架构介绍：
+
+MHA（Master High Availability）目前在MySQL高可用方面是一个相对成熟的解决方案，它由日本DeNA公司youshimaton（现就职于Facebook公司）开发，是一套优秀的作为MySQL高可用性环境下故障切换和主从提升的高可用软件。在MySQL故障切换过程中，MHA能做到在0~30秒之内自动完成数据库的故障切换操作，并且在进行故障切换的过程中，MHA能在最大程度上保证数据的一致性，以达到真正意义上的高可用。
+
+该软件由两部分组成：MHA Manager（管理节点）和MHA Node（数据节点）。MHA Manager可以单独部署在一台独立的机器上管理多个master-slave集群，也可以部署在一台slave节点上。MHA Node运行在每台MySQL服务器上，MHA Manager会定时探测集群中的master节点，当master出现故障时，它可以自动将最新数据的slave提升为新的master，然后将所有其他的slave重新指向新的master。整个故障转移过程对应用程序完全透明。
+
+在MHA自动故障切换过程中，MHA试图从宕机的主服务器上保存二进制日志，最大程度的保证数据的不丢失，但这并不总是可行的。例如，如果主服务器硬件故障或无法通过ssh访问，MHA没法保存二进制日志，只进行故障转移而丢失了最新的数据。使用MySQL 5.5的半同步复制，可以大大降低数据丢失的风险。MHA可以与半同步复制结合起来。如果只有一个slave已经收到了最新的二进制日志，MHA可以将最新的二进制日志应用于其他所有的slave服务器上，因此可以保证所有节点的数据一致性。
+
+目前MHA主要支持一主多从的架构，要搭建MHA,要求一个复制集群中必须最少有三台数据库服务器，一主二从，即一台充当master，一台充当备用master，另外一台充当从库，因为至少需要三台服务器，出于机器成本的考虑，淘宝也在该基础上进行了改造，目前淘宝TMHA已经支持一主一从。（出自：《深入浅出MySQL(第二版)》）
+</pre>
+
+<pre>
+MHA工作原理总结为以下几条：
+（1）从宕机崩溃的master保存二进制日志事件（binlog events）;
+（2）识别含有最新更新的slave;
+（3）应用差异的中继日志(relay log) 到其他slave;
+（4）应用从master保存的二进制日志事件(binlog events);
+（5）提升一个slave为新master;
+（6）使用其他的slave连接新的master进行复制。
+</pre>
+
+<pre>
+自带脚本：
+自动切换脚本：/usr/local/bin/master_ip_failover
+手动切换脚本：/usr/local/bin/master_ip_online_change
+</pre>
+
+<h3 id="图中的MHA阐述"><a href="#图中的MHA阐述" class="headerlink" title="图中的MHA阐述"></a>图中的MHA阐述</h3><ol>
+<li>服务为主备架构，部署在IDC-A和IDC-B，其中主流量在IDC-A；MHA MANAGER则部署在IDC-C（第三个机房），这样才能保证任意一边的IDC出问题，都不影响MHA的切换；</li>
+<li>为了防止来回切导致严重数据问题。可以设置，当MHA发生自动切换时，MHA MANAGER无论成功与否都会退出；</li>
+<li>MHA在故障时可以进行数据补齐。</li>
+</ol>
+<h2 id="MySQL-半同步复制"><a href="#MySQL-半同步复制" class="headerlink" title="MySQL 半同步复制"></a>MySQL 半同步复制</h2><h3 id="主从复制的基本原理"><a href="#主从复制的基本原理" class="headerlink" title="主从复制的基本原理"></a>主从复制的基本原理</h3><ol>
+<li>[master] SQL操作存入binLog中;</li>
+<li>[slave] 连接master，进行数据同步;</li>
+<li>[master] dump thread 把binlog数据发送到slave中;</li>
+<li>[slave] 创建I&#x2F;O线程读取 master传输过来的binlog内容并写入到relay Log;</li>
+<li>[slave] 创建SQL线程，从relay Log读取并执行。</li>
+</ol>
+<h3 id="主从复制的方式"><a href="#主从复制的方式" class="headerlink" title="主从复制的方式"></a>主从复制的方式</h3><ol>
+<li><p>异步复制（Asynchronous replication）</p>
+<ul>
+<li>MySQL默认的复制即是异步的，主库先提交事务，然后立即响应客户端。</li>
+<li>如果主库crash，且主库上已经提交的事务还没有同步到相应的从库上，那么当从库提升为主时，会导致新主上的数据不完整。</li>
+<li>性能最好</li>
+</ul>
+</li>
+<li><p>全同步复制（Fully synchronous replication）</p>
+<ul>
+<li>当主库执行完一个事务，且所有的从库都同步完之后才响应客户端。</li>
+<li>性能差</li>
+</ul>
+</li>
+<li><p>半同步复制（Semisynchronous replication）</p>
+<ul>
+<li>AFTER_COMMIT；即参数 rpl_semi_sync_master_wait_point &#x3D; after_commit</li>
+<li>介于异步复制和全同步复制之间，主库提交完事务之后不立即响应客户端，而是等待至少一个从库接收到并写到relay log中才响应客户端。相对于异步复制，半同步复制提高了数据的安全性，同时它也造成了一定程度的延迟，这个延迟最少是一个TCP&#x2F;IP往返的时间。所以，半同步复制最好在低延时的网络中使用。</li>
+<li>等待的时间以rpl_semi_sync_master_timeout参数为准，默认为10秒。在这等待的10秒里，对其他会话该事务是可见的；所以一旦master发生宕机，对外就会产生不一致的影响</li>
+<li>Slave ACK超时，将退化为异步复制模式 （所以半同步复制并不是严格意义上的半同步复制）</li>
+</ul>
+</li>
+<li><p>增强半同步（Loss-less Semi-Synchronous）</p>
+<ul>
+<li>AFTER_SYNC；即参数 rpl_semi_sync_master_wait_point &#x3D; after_sync</li>
+<li>after sync是MySQL5.7官方新加以解决MySQL5.6半同步缺陷的选项，也是官方推荐的方式。</li>
+<li>原理：客户端发送过来一个请求，经过mysql的SQL分析，存储引擎处理，写入binlog，然后		写入从库的relaylog，存储引擎层提交，最后返回给客户端。</li>
+<li>优点：主库把SQL操作先发给从库的relay log，然后再提交，再响应给客户端，这个过程即使		在storage commit之后主crash了，日志也已经写入到relay log中，从库和主库数据一致。</li>
+<li>在commit之前等待Slave ACK，可以堆积事务，利于group commit，有利于提升性能。</li>
+<li>在master接受到Slave ACK之前，数据的变化对其他会话时不可见的，因为此时并未提交，从	而也不会产生数据不一致的影响。</li>
+<li>同样，Ack超时，也将退化为异步复制模式</li>
+</ul>
+</li>
+<li><p>组复制 MySQL Group Replication（MGR）</p>
+<ul>
+<li>MGR内部实现了分布式数据一致性协议，paxos通过其来保证数据一致性。</li>
+</ul>
+</li>
+</ol>
+<h3 id="after-commit-VS-after-sync"><a href="#after-commit-VS-after-sync" class="headerlink" title="after_commit VS after_sync"></a>after_commit VS after_sync</h3><p><img src="/2020/08/31/20200831-guan-yu-mha-consul-mysql-gao-ke-yong-fang-an-de-jian-dan-zong-jie-he-si-kao/after_commit.png"><br><img src="/2020/08/31/20200831-guan-yu-mha-consul-mysql-gao-ke-yong-fang-an-de-jian-dan-zong-jie-he-si-kao/after_sync.png"></p>
+<ul>
+<li>after_commit：master把每一个事务写到二进制日志并保存到磁盘上，并且提交（commit）事务，再把事务发送给从库，开始等待slave的应答。响应后master返回结果给客户端，客户端才可继续。</li>
+<li>after_sync  ：master把每一个事务写到二进制日志并保存磁盘上，并且把事务发送给从库，开始等待slave的应答。确认slave响应后，再提交（commit）事务到存储引擎，并返回结果给客户端，客户端才可继续。</li>
+<li>半同步和增强半同步都是等待slave的ACK后才给客户端返回成功（也就是整个流程完成）</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p><img src="/2020/08/31/20200831-guan-yu-mha-consul-mysql-gao-ke-yong-fang-an-de-jian-dan-zong-jie-he-si-kao/MySQL_copy.png"></p>
+<ul>
+<li>一致性要求高的，比如金融类的（相比其他业务TPS较低），可以考虑开启增强半同步复制</li>
+</ul>
+<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><ol>
+<li>MySQL 5.7新增了rpl_semi_sync_master_wait_for_slave_count系统变量，可以用来控制主库接收多少个从库写事务成功反馈，给高可用架构切换提供了灵活性。	当该变量值为2时，主库需等待两个从库的ACK。</li>
+</ol>
+<h2 id="Consul"><a href="#Consul" class="headerlink" title="Consul"></a>Consul</h2><h3 id="介绍-1"><a href="#介绍-1" class="headerlink" title="介绍"></a>介绍</h3><ul>
+<li>Consul is a tool for service discovery and configuration. Consul is distributed, highly available, and extremely scalable</li>
+<li>Consul是一个服务管理软件。支持多数据中心下，分布式高可用的，服务发现和配置共享。采用 Raft 算法,用来保证服务的高可用。</li>
+<li>Consul使用Gossip Protocol来管理成员资格并向集群广播消息。所有这些都是通过使用Serf库提供的。</li>
+<li>关于raft算法原理，可以后续再讲。</li>
+</ul>
+<h3 id="和MHA的结合使用"><a href="#和MHA的结合使用" class="headerlink" title="和MHA的结合使用"></a>和MHA的结合使用</h3><ol>
+<li>checkmysql 脚本部署到每台 consul server 中, 实现了多点检测 MySQL 是否正常;</li>
+<li>checkmysql 脚本在超过半数的情况下调用 masterha_manager_consul 脚本进行主从切换;</li>
+</ol>
+<h4 id="主从切换"><a href="#主从切换" class="headerlink" title="主从切换"></a>主从切换</h4><ul>
+<li>MHA 是切换工具，控制数据库主从切换和数据补齐；</li>
+<li>MHA 进行故障检测，故障时进行切换并通知Consul下发新的主库配置到应用服务。</li>
+</ul>
+<h4 id="从库上下线"><a href="#从库上下线" class="headerlink" title="从库上下线"></a>从库上下线</h4><ul>
+<li>Consul可以对从库进行健康检查，通过配置下发控制从库上下线。</li>
+</ul>
+<h2 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h2><h3 id="CMDB"><a href="#CMDB" class="headerlink" title="CMDB"></a>CMDB</h3><ul>
+<li>配置管理数据库( Configuration Management Database,CMDB)</li>
+<li>自动化运维立足之本。在容灾切换管理工具中，可以直接一键从CMDB中同步所有业务系统，并能够非常灵活的定义每个业务系统的切换过程环节以及每个环节所有执行的具体操作。</li>
+<li><a target="_blank" rel="noopener" href="https://blog.51cto.com/031028/2426950">CMDB与容灾备份的关联</a></li>
+<li><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/news/302057">好的CMDB建设，应该具备这些要素</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_42556618/article/details/107345128">【运维探讨】如何实现更加简单、高效、安全的灾备切换管理？</a></li>
+</ul>
+<h3 id="脑裂"><a href="#脑裂" class="headerlink" title="脑裂"></a>脑裂</h3><ul>
+<li>脑裂问题是分布式多活建设必须面临的问题之一。</li>
+<li>以上面的架构进行描述，当IDC-A和IDC-B、IDC-C网络不通时，其实IDC-A就是一个网络孤岛。<br>这时候时IDC-B中的从库就会提升为主库，并开始接收写操作。因为IDC-A已经是个数据孤岛，服务的主从库并未发生改变(接收不到consul下发的配置)，此时也接受外部的写操作请求，那么就会造成两边数据都有写操作，错误的双主架构导致错误的数据问题。</li>
+</ul>
+<h4 id="如何避免脑裂问题"><a href="#如何避免脑裂问题" class="headerlink" title="如何避免脑裂问题"></a>如何避免脑裂问题</h4><ol>
+<li>如何让IDC的服务可以判断自身是否孤岛，从而拒绝服务，避免数据问题呢？</li>
+<li>其中一个方案使用Consul作为选主服务来解决。后续另开文章叙述。</li>
+<li>使用etcd：<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/VFJg14JcapijOyhfJJMYUg">etcd 实现故障时主备秒级切换高可用架构</a></li>
+<li>分布式锁服务Chubby（参见文献[Bur06]）集群锁服务提供一个与文件系统类似的API用来操作锁。Chubby 可以处理异地、跨机房级别的锁请求。Chubby 使用Paxos协议来提供分布式一致性（具体描述参看第23章）。Chubby 是实现主实例选举（Master-Election）过程的关键组件。例如，一个服务有5个冗余实例在同时运行，但是只有一个实例可以处理对外请求，一般的做法是通过Chubby进行自动选举，选择一个实例成为主实例。Chubby适合存放那种对一致性要求非常高的数据。—《SRE：Google运维解密》</li>
+</ol>
+<h4 id="结合raft的思考"><a href="#结合raft的思考" class="headerlink" title="结合raft的思考"></a>结合raft的思考</h4><ul>
+<li>为了避免脑裂，需要有选主机制，一般超半数的投票才能成为leader；Consul就是基于raft是实现的；</li>
+<li>在线上部署consul必须至少是三个机房，因为如果只有两个机房，其中一个机房挂了（刚好是大多数机器的机房），服务将不可用；</li>
+<li>分布式存储系统，需要解决数据的一致性问题和脑裂问题。<ol>
+<li>raft有实现，但是首先得基于raft协议的文件存储；</li>
+<li>使用MySQL作为存储，Consul作为选主服务的业务：Consul可以解决脑裂问题<ul>
+<li>MySQL的增强半同步复制机制 支持配置n个从库ack才响应客户端（其实和raft大多数结点写成功才算成功有点类似[Quorum机制]），可以很大程度的避免丢数据导致不一致。</li>
+</ul>
+</li>
+</ol>
+</li>
+<li>一般金钱业务使用同城两个机房，主备架构，那么不能完全和raft三机房匹配（三机房意味着一定每个机房至少有一个结点接收到数据才算成功）。当然每个机房可以有多个DB，比如同城的两个机房A合B，A有一主一丛，B有两从。增强半同步可以根据实际情况配置rpl_semi_sync_master_wait_for_slave_count参数，指定必须多少个从库成功。<ul>
+<li>MySQL使用异步复制的，一般情况下，切完机房保持数据一致性或检查监控数据一致性的方案，需要业务方自行监控和修正。</li>
+<li>就算使用了增强半同步，理论上数据也只是落盘到relay log，极端情况下，从库也可以立马故障，甚至无法恢复。这种极端情况基本不考虑了，只能业务自己权衡，允不允许丢数据，有没有其他修复数据机制（日志文件或对账等），要不要继续提供服务了。</li>
+</ul>
+</li>
+</ul>
+<h2 id="Q-amp-A"><a href="#Q-amp-A" class="headerlink" title="Q&amp;A"></a>Q&amp;A</h2><h3 id="为什么Dump和I-x2F-O线程不能多线程？"><a href="#为什么Dump和I-x2F-O线程不能多线程？" class="headerlink" title="为什么Dump和I&#x2F;O线程不能多线程？"></a>为什么Dump和I&#x2F;O线程不能多线程？</h3><ol>
+<li>dump线程和IO线程都是负责网络传输，如果将这里扩展为多线程那么会将一份Binlog日志分割为多份，并行传输，那么在slave端将会要额外的增加代码考虑如何将多份日志还原为原来的Binlog，大大增加难度。</li>
+<li>性能瓶颈不在IO，扩展后也没有多大效率提升。</li>
+<li>为什么Redis 6.0使用IO多线程增强性能，MySQL这里使用IO多线程却不行？<ul>
+<li>Redis是多个Client节点一个Server节点（暂且这么看），IO线程需要处理多个不同Client来源的请求；MySQL主从复制，本质上是1个Client端一个Server端，增大IO线程也无济于事。</li>
+</ul>
+</li>
+</ol>
+<h3 id="增强半同步是否会导致从有数据而主却没有？"><a href="#增强半同步是否会导致从有数据而主却没有？" class="headerlink" title="增强半同步是否会导致从有数据而主却没有？"></a>增强半同步是否会导致从有数据而主却没有？</h3><ul>
+<li>是。在Loss-less Semi-Synchronous模式下，master在调用binlog sync之后，engine层commit之前等待Slave ACK（需要收到至少一个Slave节点回复的ACK后）。这样只有在确认Slave收到事务events后，master事务才会提交，然后把结果返回给客户端。此时此事务才对其他事务可见。在这种模式下解决了after_commit模式带来的幻读和数据丢失问题，因为主库没有提交事务。但也会有个问题，假设主库在存储引擎提交之前挂了，那么很明显这个事务是不成功的，但由于对应的Binlog已经做了Sync操作，从库已经收到了这些Binlog，并且执行成功，相当于在从库上多了数据，也算是有问题的，但多了数据，问题一般不算严重。这个问题可以这样理解，作为MySQL，在没办法解决分布式数据一致性问题的情况下，它能保证的是不丢数据，多了数据总比丢数据要好。</li>
+</ul>
+<h3 id="MHA本身就支持自动切，为什么还要使用Consul？"><a href="#MHA本身就支持自动切，为什么还要使用Consul？" class="headerlink" title="MHA本身就支持自动切，为什么还要使用Consul？"></a>MHA本身就支持自动切，为什么还要使用Consul？</h3><ul>
+<li>MHA本身提供了自动切换主库的功能，但是MHA本身没有提供通知应用等机制。因此采用比较成熟的方案MHA+consul，并以SDK的方式接入。</li>
+</ul>
+<h3 id="自动切换安全吗？"><a href="#自动切换安全吗？" class="headerlink" title="自动切换安全吗？"></a>自动切换安全吗？</h3><ol>
+<li>直接启用masterha_manager 自动切换脚本并不安全，主要因为在网络抖动的情况下并不能保证数据库真的不能访问。不能仅通过一个点的检测就判断数据库不可访问。</li>
+<li>通过 Consul( Consul 提供 dns 接口)集群的特性, 增加多点检测机制, 在 n 个集群的环境中, 有超过半数的检测点检测到数据库有问题, 就认为数据库不可访问, 这时调用 masterha_manager 脚本进行切换。</li>
+<li>网络问题千变万化，在发生切换事件之后，需有相应的方案对主从流水数据进行对账或修正（确定基于binlog与应用日志的重要数据校验与补偿机制）。</li>
+<li>发生切换事件之后，在确定数据已经无异常之前，需要防止再自动切回去，造成严重的数据异常。所以一般情况下，只能自动切一次，直到人工介入确认无异常，重新设置为自动切模式。当然，有完善的监控比对数据异常机制的情况下，可以考虑做成自动化，无需依赖人工介入。</li>
+</ol>
+<h3 id="MHA切换之后，主库禁写后，现有的连接是否还能继续写入"><a href="#MHA切换之后，主库禁写后，现有的连接是否还能继续写入" class="headerlink" title="MHA切换之后，主库禁写后，现有的连接是否还能继续写入?"></a>MHA切换之后，主库禁写后，现有的连接是否还能继续写入?</h3><p><img src="/2020/08/31/20200831-guan-yu-mha-consul-mysql-gao-ke-yong-fang-an-de-jian-dan-zong-jie-he-si-kao/MySQL_%E6%9D%83%E9%99%90.png"><br>mha切库禁写时，直接锁住整个实例，新操作无法写入，直接就设置read_only。</p>
+<h3 id="自动切的时机如何把握？"><a href="#自动切的时机如何把握？" class="headerlink" title="自动切的时机如何把握？"></a>自动切的时机如何把握？</h3><ol>
+<li>自动切的最佳时机很难人为，必须经过多种故障场景的测试，确定合适尽可能安全的切换策略和参数。</li>
+<li>在实践中，初期可以先告警人工介入决定是否切换；确定好合适的切换策略和参数后，自动切在非核心业务中稳定正确运行一段时间后才在核心业务运用。</li>
+</ol>
+<h3 id="MHA能保证数据一定不丢吗？"><a href="#MHA能保证数据一定不丢吗？" class="headerlink" title="MHA能保证数据一定不丢吗？"></a>MHA能保证数据一定不丢吗？</h3><ul>
+<li>在MHA自动故障切换过程中，MHA试图从宕机的主服务器上保存二进制日志，最大程度的保证数据的不丢失。但如上所述，网络等问题时无解的，理论上还是存在丢的可能性。一致性要求高的，比如金钱类的（相比其他业务TPS较低），可以考虑开启半同步复制，大大降低数据丢失的风险。</li>
+</ul>
+<h3 id="新的主库和原主库数据一致性问题如何解决？"><a href="#新的主库和原主库数据一致性问题如何解决？" class="headerlink" title="新的主库和原主库数据一致性问题如何解决？"></a>新的主库和原主库数据一致性问题如何解决？</h3><ol>
+<li>MHA只能尽量保证数据补齐；</li>
+<li>主从延迟较大时，切主库有风险；</li>
+<li>开启半同步复制可以大大降低丢数据的风险，但也带来一定的性能损耗；</li>
+<li>要做好切库后，主从日志流水对比修复方案</li>
+</ol>
+<h3 id="不一致如何止损？"><a href="#不一致如何止损？" class="headerlink" title="不一致如何止损？"></a>不一致如何止损？</h3><ol>
+<li>根据业务情况进行实现，比如在发生切换事件的一端时间内(比如一个小时)，阻断大额交易操作，等待开发确认后再恢复；</li>
+<li>具体实现可以使用redis存储数据快照，执行前和数据库的数据进行对比判断是否阻断，或其他可行方案；</li>
+<li>是否应该阻断，公司的利益和用户的利益，这是个哲学问题。。。</li>
+</ol>
+<h3 id="扩展-1"><a href="#扩展-1" class="headerlink" title="扩展"></a>扩展</h3><ul>
+<li>云数据库使用数据库代理进行连接:<a target="_blank" rel="noopener" href="https://cloud.tencent.com/document/product/236/72619">读写分离扩展云数据库 MySQL 性能</a></li>
+<li><a target="_blank" rel="noopener" href="https://cloud.tencent.com/document/product/236/35671">切换网络</a></li>
+</ul>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ol>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/arstercz/p/6963920.html">基于 consul 架构的 MHA 自动切换</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/yangjianrong1985/article/details/102479034">基于MHA+consul的MySQL高可用设计</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/xuanzhi201111/p/4231412.html">MySQL高可用之MHA的搭建</a></li>
+<li><a target="_blank" rel="noopener" href="https://code.google.com/p/mysql-master-ha/">MHA官方介绍</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzA3MzYwNjQ3NA==&mid=2651297535&idx=1&sn=2138d7d09cf5294c73810b133eed67e3&chksm=84ff42dab388cbcc90d9642b6cd3ed5de8e524cc10737947ce0c46eb287e95f4bae62472fa24&mpshare=1&scene=1&srcid=0518czFAsyzFLKkM07SIauWS#rd">京东MySQL数据库主从切换自动化</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/sunss/archive/2010/10/05/1844204.html">MySQL数据库的授权原则</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/zhoujinyi/p/3808673.html">MySQL MHA 搭建&amp;测试</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/ivictor/p/5735580.html">MySQL半同步复制</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_33330687/article/details/107496954">MySQL - 异步复制，半同步复制，增强半同步复制，组复制，全告诉你</a></li>
+<li><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1537291">mysql 半同步复制</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/allenhu320/p/11316276.html">增强半同步复制</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/3bfb0bfb8b34">【MySQL】5.7增强半同步AFTER SYNC&amp;AFTER COMMIT</a></li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/08/31/20200831-shi-yong-redis-shi-xian-bang-dan/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2146,207 +2484,6 @@ Robert C.Martin
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/15/20200715-canal-shi-yong-zong-jie/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/07/15/20200715-canal-shi-yong-zong-jie/" itemprop="url">canal使用总结</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-15T23:07:33+08:00">
-                2020-07-15
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>本文只讲自己在使用canal之后的一些总结，关于canal的基础用法和介绍，不在这里赘述。</p>
-<h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><ul>
-<li><p>canal的原理是基于mysql binlog技术，所以这里一定需要开启mysql的binlog写入功能，建议配置binlog模式为row</p>
-</li>
-<li><p>原文：<a target="_blank" rel="noopener" href="https://blog.csdn.net/liupeifeng3514/article/details/79687130">https://blog.csdn.net/liupeifeng3514/article/details/79687130</a> </p>
-</li>
-<li><p>mysql的自带复制技术可分成三步：</p>
-<ol>
-<li>master将改变记录到二进制日志(binary log)中（这些记录叫做二进制日志事件，binary log events，可以通过show binlog events进行查看）；</li>
-<li>slave将master的binary log events拷贝到它的中继日志(relay log)，这里是I&#x2F;O thread线程；</li>
-<li>slave重做中继日志中的事件，将改变反映它自己的数据，这里是SQL thread线程。</li>
-</ol>
-</li>
-<li><p>基于canal&amp;otter的复制技术和mysql复制类似，具有类比性：</p>
-<ol>
-<li>Canal对应于I&#x2F;O thread，接收Master Binary Log；</li>
-<li>Otter对应于SQL thread，通过Canal获取Binary Log数据，执行同步插入数据库；</li>
-</ol>
-</li>
-<li><p>两者的区别在于：</p>
-<ol>
-<li>otter目前嵌入式依赖canal，部署为同一个jvm，目前设计为不产生Relay Log，数据不落地；</li>
-<li>otter目前允许自定义同步逻辑，解决各类需求；<br>  a. ETL转化. 比如Slave上目标表的表名，字段名，字段类型不同，字段个数不同等.<br>  b. 异构数据库. 比如Slave可以是oracle或者其他类型的存储,nosql等.<br>  c. M-M部署，解决数据一致性问题<br>  d. 基于manager部署，方便监控同步状态和管理同步任务.</li>
-</ol>
-</li>
-<li><p>canal的工作原理：</p>
-<ul>
-<li>canal模拟mysql slave的交互协议，伪装自己为mysql slave，向mysql master发送dump协议</li>
-<li>mysql master收到dump请求，开始推送binary log给slave(也就是canal)</li>
-<li>canal解析binary log对象(原始为byte流)</li>
-</ul>
-</li>
-</ul>
-<h3 id="使用简述"><a href="#使用简述" class="headerlink" title="使用简述"></a>使用简述</h3><ol>
-<li>对MySQL给canal-server授权<ul>
-<li><code>CREATE USER &#39;canal_server&#39; IDENTIFIED BY &#39;canal_server&#39;;</code></li>
-<li><code>GRANT SELECT, REPLICATION SLAVE, REPLICATION CLIENT ON *.* TO &#39;canal_server&#39;;</code></li>
-</ul>
-</li>
-<li>canal使用ZK来做HA，因为涉及多个client时，消费计算的业务较为复杂的问题，所以目前在使用上只是单点部署，基本能满足需求。</li>
-</ol>
-<h3 id="使用总结"><a href="#使用总结" class="headerlink" title="使用总结"></a>使用总结</h3><ol>
-<li>可以通过指定binlog文件和position来重放binlog数据：</li>
-<li>如何查看MySQL位点：<a target="_blank" rel="noopener" href="https://blog.csdn.net/c1052981766/article/details/80604083">https://blog.csdn.net/c1052981766/article/details/80604083</a><ul>
-<li><code>show master status</code></li>
-<li><code>show binary logs</code></li>
-<li><code>show binlog events in &#39;binlog.000368&#39; limit 10;</code> &#x2F;&#x2F;pos 就是位点, 重启 canal</li>
-<li>如何查到旧记录的位点？<ol>
-<li>由canal-server中meta.dat记录</li>
-<li>通过 mysqlbinlog 命令分析 mysql-bin.xxx 文件内容，确定增量恢复到的时间点（运维协助）。</li>
-</ol>
-</li>
-</ul>
-</li>
-<li>除了用pos点的办法进行恢复，也可以通过指定时间区间进行恢复，按时间恢复需要用mysqlbinlog命令读取binlog日志内容，找时间节点。<ul>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/zyz511919766/article/details/38089393">使用mysqlbinlog工具进行基于位置或时间点的数据恢复</a></li>
-</ul>
-</li>
-<li>重跑。修改instance.properties文件设置重跑起始位点，删除meta.dat文件并重启。注意回放数据时视业务情况，可能要忽略第一个位点对应的数据。</li>
-<li>重启之后batchId会变，所以不能使用batchId来做幂等处理</li>
-<li>使用mysql主从同步和使用canal同步的区别? 同步数据为什么不直接用主从同步机制？<ol>
-<li>mysql版本不一致，不支持主从同步</li>
-<li>并不是自己的库，只需要同步几张表，运维不会做这种定制化</li>
-<li>完成同步目标后，可方便拆卸和控制</li>
-</ol>
-</li>
-<li>client重启如何对应原来的位点<ul>
-<li>canal client和server交互之间的身份标识，目前clientId写死为1001. (目前canal server上的一个instance只能有一个client消费，clientId的设计是为1个instance多client消费模式而预留的，暂时不需要理会)</li>
-</ul>
-</li>
-</ol>
-<h3 id="canal和MySQL相关资料"><a href="#canal和MySQL相关资料" class="headerlink" title="canal和MySQL相关资料"></a>canal和MySQL相关资料</h3><ol>
-<li>下载：<a target="_blank" rel="noopener" href="https://github.com/alibaba/canal/releases/download/canal-1.1.4/canal.deployer-1.1.4.tar.gz">https://github.com/alibaba/canal/releases/download/canal-1.1.4/canal.deployer-1.1.4.tar.gz</a></li>
-<li><code>canal.instance.gtidon</code>   是否启用mysql gtid的订阅模式 <ul>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/wmq880204/article/details/53160078">Mysql GTID 模式详解</a></li>
-</ul>
-</li>
-<li><a target="_blank" rel="noopener" href="https://github.com/alibaba/canal/wiki/QuickStart">https://github.com/alibaba/canal/wiki/QuickStart</a><br><a target="_blank" rel="noopener" href="https://github.com/alibaba/canal/wiki/AdminGuide">https://github.com/alibaba/canal/wiki/AdminGuide</a><br><a target="_blank" rel="noopener" href="https://github.com/alibaba/canal/wiki/ClientExample">https://github.com/alibaba/canal/wiki/ClientExample</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/sunss/archive/2010/10/05/1844204.html">MySQL数据库的授权原则</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/0f580647905c">canal 高可用介绍</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/f-zhao/p/7681960.html">canal和otter的高可靠性分析</a></li>
-</ol>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2404,7 +2541,7 @@ Robert C.Martin
 <a href="/archives/">                
 <!--<a href="/archives/%7C%7C%20archive">-->
               
-                  <span class="site-state-item-count">156</span>
+                  <span class="site-state-item-count">157</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2417,7 +2554,7 @@ Robert C.Martin
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">166</span>
+                  <span class="site-state-item-count">172</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

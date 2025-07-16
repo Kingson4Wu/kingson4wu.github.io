@@ -287,6 +287,142 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/29/20200329-fa-ban-guo-cheng-de-jian-rong-xing-kao-lu/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/03/29/20200329-fa-ban-guo-cheng-de-jian-rong-xing-kao-lu/" itemprop="url">发版过程的兼容性考虑</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-29T13:35:18+08:00">
+                2020-03-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><img src="/2020/03/29/20200329-fa-ban-guo-cheng-de-jian-rong-xing-kao-lu/Torres.jpg"></p>
+<ul>
+<li>一般情况下，服务一般不是仅有一台服务器提供服务的，因此服务上线的过程中其实会经历一个灰度过程</li>
+</ul>
+<p><img src="/2020/03/29/20200329-fa-ban-guo-cheng-de-jian-rong-xing-kao-lu/mermaid-diagram-20200329140016.png"></p>
+<p>如上所示，服务器A是新代码，走的是新逻辑，服务器B和C未发版，走的旧逻辑。</p>
+<ul>
+<li>如果新上线的变更只涉及读逻辑的，那么这样的灰度上线是没问题的。</li>
+<li>但如果上线的内容涉及写逻辑的变更，甚至还关联到异步处理的变更。那么这样的上线方式可能是不兼容的，会导致处理异常。</li>
+<li>在服务全量发版之后，新的流量可能正常，但发版过程中导致一定的脏数据。</li>
+</ul>
+<p>(图不画了，自行想象)</p>
+<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><ul>
+<li>开关！用配置中心开关控制，走新逻辑还是旧逻辑。默认旧逻辑。</li>
+<li>代码需要保留两套，通过开关控制走哪个分支。</li>
+<li>全量发版之后，此时线上全是新代码了，通过开关灰度(此时是业务灰度而不是机器灰度了)</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/29/20200329-biao-jie-gou-bian-geng-shi-fou-xu-yao-chu-li-li-shi-yue-biao/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1216,7 +1352,7 @@
 <a href="/archives/">                
 <!--<a href="/archives/%7C%7C%20archive">-->
               
-                  <span class="site-state-item-count">156</span>
+                  <span class="site-state-item-count">157</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1229,7 +1365,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">166</span>
+                  <span class="site-state-item-count">172</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

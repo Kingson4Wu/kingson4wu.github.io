@@ -287,6 +287,272 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2023/07/02/20230702-dui-gong-zuo-zhong-jie-hong-guo-de-ji-chong-bian-cheng-yu-yan-ji-qi-bu-shu-jia-gou-de-kan-fa/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2023/07/02/20230702-dui-gong-zuo-zhong-jie-hong-guo-de-ji-chong-bian-cheng-yu-yan-ji-qi-bu-shu-jia-gou-de-kan-fa/" itemprop="url">对工作中接触过的几种编程语言及其部署架构的看法</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-07-02T22:15:20+08:00">
+                2023-07-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="公司V"><a href="#公司V" class="headerlink" title="公司V"></a>公司V</h2><p><img src="/2023/07/02/20230702-dui-gong-zuo-zhong-jie-hong-guo-de-ji-chong-bian-cheng-yu-yan-ji-qi-bu-shu-jia-gou-de-kan-fa/01.V_Java.drawio.png"></p>
+<ul>
+<li><p>使用Java作为编程语言</p>
+</li>
+<li><p>使用Spring-MVC框架</p>
+</li>
+<li><p>使用Tomcat作为Web容器</p>
+</li>
+<li><p>打包运行方式：</p>
+<ol>
+<li>服务器预安装了Java和Tomcat</li>
+<li>将代码打包成war包</li>
+<li>将war包上传到服务器的Tomcat的web目录</li>
+<li>重启tomcat更新服务</li>
+</ol>
+</li>
+</ul>
+<h2 id="公司U"><a href="#公司U" class="headerlink" title="公司U"></a>公司U</h2><p><img src="/2023/07/02/20230702-dui-gong-zuo-zhong-jie-hong-guo-de-ji-chong-bian-cheng-yu-yan-ji-qi-bu-shu-jia-gou-de-kan-fa/02.U_Java.drawio.png"></p>
+<ul>
+<li><p>使用Java作为编程语言</p>
+</li>
+<li><p>使用二次开发的Play1.x作为web框架（底层基于Netty）</p>
+</li>
+<li><p>公司在框架自行研发了服务发现等功能</p>
+</li>
+<li><p>打包运行方式：</p>
+<ol>
+<li>服务器预安装了Java</li>
+<li>将代码打包成Zip包</li>
+<li>将zip包上传到服务器的指定目录</li>
+<li>通过信号停止服务（kill），通过Java命令启动服务</li>
+</ol>
+</li>
+</ul>
+<h2 id="公司B"><a href="#公司B" class="headerlink" title="公司B"></a>公司B</h2><p><img src="/2023/07/02/20230702-dui-gong-zuo-zhong-jie-hong-guo-de-ji-chong-bian-cheng-yu-yan-ji-qi-bu-shu-jia-gou-de-kan-fa/03.D_Java.drawio.png"></p>
+<ul>
+<li><p>使用Java作为编程语言</p>
+</li>
+<li><p>使用Spring-Boot框架</p>
+</li>
+<li><p>使用Tomcat作为Web容器</p>
+</li>
+<li><p>打包运行方式：</p>
+<ol>
+<li>服务器预安装了Java和Tomcat</li>
+<li>将代码打包成war包</li>
+<li>将war包上传到服务器的Tomcat的web目录</li>
+<li>重启tomcat更新服务</li>
+</ol>
+</li>
+</ul>
+<h2 id="公司K"><a href="#公司K" class="headerlink" title="公司K"></a>公司K</h2><h3 id="Java"><a href="#Java" class="headerlink" title="Java"></a>Java</h3><p><img src="/2023/07/02/20230702-dui-gong-zuo-zhong-jie-hong-guo-de-ji-chong-bian-cheng-yu-yan-ji-qi-bu-shu-jia-gou-de-kan-fa/04.K_Java.drawio.png"></p>
+<ul>
+<li><p>使用Java作为编程语言</p>
+</li>
+<li><p>使用二次开发的Spring-Boot和Spring-Cloud作为web框架</p>
+</li>
+<li><p>公司在框架自行研发了服务发现，服务治理，数据库切换、容灾相关等功能</p>
+</li>
+<li><p>打包运行方式：</p>
+<ol>
+<li>服务器预安装了Java</li>
+<li>将代码打包成Zip包</li>
+<li>将zip包上传到服务器的指定目录</li>
+<li>通过信号停止服务（kill），通过Java命令启动服务</li>
+</ol>
+</li>
+</ul>
+<h3 id="Lua"><a href="#Lua" class="headerlink" title="Lua"></a>Lua</h3><p><img src="/2023/07/02/20230702-dui-gong-zuo-zhong-jie-hong-guo-de-ji-chong-bian-cheng-yu-yan-ji-qi-bu-shu-jia-gou-de-kan-fa/04.K_Lua.drawio.png"></p>
+<ul>
+<li><p>使用Lua作为编程语言</p>
+</li>
+<li><p>使用OpenResty作为服务器</p>
+</li>
+<li><p>公司开发了一些通用的sdk，在OpenResty配置中include即可</p>
+</li>
+<li><p>打包运行方式：</p>
+<ol>
+<li>服务器预安装了OpenResty</li>
+<li>将代码文件上传到指定的目录</li>
+<li>执行 <code>nginx -s reload</code> 更新OpenResty的lua文件即可</li>
+</ol>
+</li>
+</ul>
+<h3 id="PHP"><a href="#PHP" class="headerlink" title="PHP"></a>PHP</h3><p><img src="/2023/07/02/20230702-dui-gong-zuo-zhong-jie-hong-guo-de-ji-chong-bian-cheng-yu-yan-ji-qi-bu-shu-jia-gou-de-kan-fa/04.K_PHP.drawio.png"></p>
+<ul>
+<li><p>使用PHP作为编程语言</p>
+</li>
+<li><p>使用OpenResty作为服务器</p>
+</li>
+<li><p>打包运行方式：</p>
+<ol>
+<li>服务器预安装了OpenResty和PHP</li>
+<li>将代码文件上传到指定的目录</li>
+<li>执行 <code>nginx -s reload</code> 更新OpenResty的PHP文件即可</li>
+</ol>
+</li>
+</ul>
+<h3 id="Go"><a href="#Go" class="headerlink" title="Go"></a>Go</h3><p><img src="/2023/07/02/20230702-dui-gong-zuo-zhong-jie-hong-guo-de-ji-chong-bian-cheng-yu-yan-ji-qi-bu-shu-jia-gou-de-kan-fa/04.K_Go.drawio.png"></p>
+<ul>
+<li><p>使用Go作为编程语言</p>
+</li>
+<li><p>打包运行方式：</p>
+<ol>
+<li>将代码打包成二进制可执行文件</li>
+<li>使用nohup运行二进制即可（有的使用supervisor，有的使用systemctl）</li>
+</ol>
+</li>
+</ul>
+<h2 id="对这些编程语言和运行方式的理解和看法"><a href="#对这些编程语言和运行方式的理解和看法" class="headerlink" title="对这些编程语言和运行方式的理解和看法"></a>对这些编程语言和运行方式的理解和看法</h2><h3 id="Java-1"><a href="#Java-1" class="headerlink" title="Java"></a>Java</h3><ul>
+<li>编译语言</li>
+<li>Java服务需要运行在JVM上，而JVM是使用C++实现的</li>
+<li>Java代码编译后本质上是一堆字节码文件，不具备单独运行的能力</li>
+<li>运行Java字节码，需要JRE环境</li>
+</ul>
+<h3 id="PHP-1"><a href="#PHP-1" class="headerlink" title="PHP"></a>PHP</h3><ul>
+<li>脚本语言</li>
+<li>PHP通常和Web服务器搭配（比如Apache和Nginx），对外提供Web服务</li>
+<li>以Nginx为例，Nginx不能直接处理PHP脚本，需要使用FastCGI协议将请求转发到PHP解释器<br>（因此，首先需要安装PHP和FastCGI进程管理器，例如php-fpm）</li>
+<li>通常情况下，PHP解释器会安装在机器本机上。当Nginx通过FastCGI协议与PHP解释器进行通信时，它会将请求转发到运行在本机的FastCGI进程管理器，然后再将请求转发到本机上运行的PHP解释器</li>
+</ul>
+<h3 id="Lua-1"><a href="#Lua-1" class="headerlink" title="Lua"></a>Lua</h3><ul>
+<li>脚本语言</li>
+<li>以OpenResty作为web服务器运行Lua脚本是一种方式</li>
+<li>Nginx + LuaJIT &#x3D; OpenResty</li>
+</ul>
+<h4 id="OpenResty"><a href="#OpenResty" class="headerlink" title="OpenResty"></a>OpenResty</h4><ul>
+<li>OpenResty本质上是将 LuaJIT 的虚拟机嵌入到 Nginx 的管理进程和工作进程中，同一个进程内的所有协程都会共享这个虚拟机，并在虚拟机中执行Lua代码。在性能上，OpenResty接近或超过 Nginx 的C模块，而且开发效率更高。</li>
+<li>OpenResty中的核心技术cosocket将 Lua 协程和 Nginx 的事件机制结合在一起，最终实现了非阻塞网络IO。不仅和HTTP客户端之间的网络通信是非阻塞的，与MySQL、Memcached以及Redis等众多后端之间的网络通信也是非阻塞的。</li>
+</ul>
+<h4 id="Openresty-是怎么嵌入lua虚拟机的"><a href="#Openresty-是怎么嵌入lua虚拟机的" class="headerlink" title="Openresty 是怎么嵌入lua虚拟机的"></a>Openresty 是怎么嵌入lua虚拟机的</h4><ul>
+<li>OpenResty 是一个基于 Nginx 的 Web 应用服务器，它可以通过嵌入 Lua 脚本语言来实现高性能的 Web 应用程序。OpenResty 在运行过程中通过 LuaJIT 虚拟机来解释执行 Lua 代码。</li>
+<li>OpenResty 在编译时会将 LuaJIT 虚拟机源代码打包成动态链接库，然后将其嵌入到 Nginx 中。OpenResty 运行时会通过 LuaJIT 虚拟机来加载和执行 Lua 代码，从而实现了高性能的 Web 应用程序。</li>
+</ul>
+<h3 id="Go-1"><a href="#Go-1" class="headerlink" title="Go"></a>Go</h3><ul>
+<li>编译语言</li>
+<li>编译成二进制文件后，可以直接在服务器运行，相比其他语言，一般可以认为没其他依赖</li>
+</ul>
+<h3 id="个人看法"><a href="#个人看法" class="headerlink" title="个人看法"></a>个人看法</h3><ul>
+<li>Lua比较小众，不适合做大型的业务开发，而且debug比较不方便；</li>
+<li>PHP在业界已经是快被淘汰的语言了，不做仔细研究，初步体验感觉一般（可能是受限于公司的维护环境过于糟糕，各种老版本，和高深莫测的代码）；</li>
+<li>Java是我职业生涯接触最久的编程语言，谈不上喜欢也谈不上讨厌，但自从学习了Go之后，有了新的体会；</li>
+<li>当初学习Go的其中一个原因是自己的个人项目比较轻量，Go其中一个优势是不依赖其他软件就可以运行，而且分发方便；</li>
+<li>Go使用AOT的方式编译，针对特定平台，除了加快启动速度，也使程序打包体积大大减少；</li>
+<li>当然Java也可以用graalvm打成二进制文件启动（没尝试过，感觉还是有不少前置条件）；</li>
+<li>除此之外，还有很多其他以后补充</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2023/03/02/20230302-ruan-ji-neng-dai-ma-zhi-wai-de-sheng-cun-zhi-nan-notes/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -3173,146 +3439,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/09/06/20220906-you-liao-tcp-de-keepalive-ying-yong-ceng-huan-xu-yao-shi-xian-bao-huo-luo-ji-ma/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2022/09/06/20220906-you-liao-tcp-de-keepalive-ying-yong-ceng-huan-xu-yao-shi-xian-bao-huo-luo-ji-ma/" itemprop="url">有了TCP的keepalive，应用层还需要实现保活逻辑吗？</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-09-06T22:02:39+08:00">
-                2022-09-06
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><ul>
-<li>对于实时性高的业务，基本都需要在应用层自行实现保活逻辑，应用层的心跳协议是必不可少的</li>
-</ul>
-<h2 id="TCP-keepalive-的-问题"><a href="#TCP-keepalive-的-问题" class="headerlink" title="TCP keepalive 的 问题"></a>TCP keepalive 的 问题</h2><ol>
-<li>检测周期长，开启后默认是2h（系统内核参数 tcp_keepalive_time），这就意味着服务端可能维持着一个死连接；</li>
-<li>TCP keepalive 是由操作系统负责探查，即便进程死锁，或阻塞等，操作系统也会收发 TCP keepalive 消息，无法及时感知客户端已经实际已经下线；</li>
-</ol>
-<h2 id="应用层实现心跳的基本做法"><a href="#应用层实现心跳的基本做法" class="headerlink" title="应用层实现心跳的基本做法"></a>应用层实现心跳的基本做法</h2><ol>
-<li>服务端和客户端都开启tcp keepalive</li>
-<li>客户端定时发心跳包到服务端</li>
-<li>服务端根据自定义的规则，在一定时间内收不到心跳包的时，断开客户端的连接。</li>
-</ol>
-<h2 id="应用层实现心跳保活逻辑的好处"><a href="#应用层实现心跳保活逻辑的好处" class="headerlink" title="应用层实现心跳保活逻辑的好处"></a>应用层实现心跳保活逻辑的好处</h2><ol>
-<li>可以在发送心跳包的同时顺带业务或指令数据，这样服务端获得客户端的详细状态，同时可以更好满足业务场景</li>
-<li>可以灵活控制探查客户端的时间和策略，更快下线有异常的连接，减少服务端不必要的负担</li>
-</ol>
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
-<li><a target="_blank" rel="noopener" href="http://www.zhihu.com/question/35013918">在以TCP为连接方式的服务器中，为什么在服务端设计当中需要考虑心跳？</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.felix021.com/blog/read.php?2076">闲说HeartBeat心跳包和TCP协议的KeepAlive机制</a></li>
-<li><a target="_blank" rel="noopener" href="http://www.nowamagic.net/academy/detail/23350382">TCP协议的KeepAlive机制与HeartBeat心跳包</a></li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -3370,7 +3496,7 @@
 <a href="/archives/">                
 <!--<a href="/archives/%7C%7C%20archive">-->
               
-                  <span class="site-state-item-count">156</span>
+                  <span class="site-state-item-count">157</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -3383,7 +3509,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">166</span>
+                  <span class="site-state-item-count">172</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

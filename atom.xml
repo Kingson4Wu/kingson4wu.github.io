@@ -6,7 +6,7 @@
   <link href="http://yoursite.com/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2025-07-16T14:51:44.252Z</updated>
+  <updated>2025-07-16T16:22:06.782Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -17,11 +17,37 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>quick_worker 项目分析：基于 Channel 的高效异步批处理与 CPU 空转问题解析</title>
+    <link href="http://yoursite.com/2025/07/17/20250717-quick-worker-xiang-mu-fen-xi-ji-yu-channel-de-gao-xiao-yi-bu-pi-chu-li-yu-cpu-kong-zhuan-wen-ti-jie-xi/"/>
+    <id>http://yoursite.com/2025/07/17/20250717-quick-worker-xiang-mu-fen-xi-ji-yu-channel-de-gao-xiao-yi-bu-pi-chu-li-yu-cpu-kong-zhuan-wen-ti-jie-xi/</id>
+    <published>2025-07-16T16:20:44.000Z</published>
+    <updated>2025-07-16T16:22:06.782Z</updated>
+    
+    <content type="html"><![CDATA[<p><a href="https://github.com/Kingson4Wu/quick_worker"><code>quick_worker</code></a> 是一个用 Go 实现的轻量级异步批处理框架。它通过 channel 和 goroutine 构建了一个高效的生产者-消费者模型，支持按批量大小或超时触发数据处理，适合高并发、吞吐敏感的场景。</p><p>本文将围绕其核心并发模型进行分析，重点讨论：</p><ul><li>是否存在 CPU 空转（Busy Waiting）问题</li><li><code>select</code> 和 channel 的阻塞特性</li><li>在什么情况下应考虑使用 <code>sync.Cond</code> 替代主动轮询</li></ul><hr><h3 id="一、项目核心架构概览"><a href="#一、项目核心架构概览" class="headerlink" title="一、项目核心架构概览"></a>一、项目核心架构概览</h3><p><code>quick_worker</code> 的核心工作流程：</p><ol><li><strong>数据投递</strong>：调用方通过 <code>Produce</code> 方法投递任务数据。</li><li><strong>缓冲通道</strong>：数据进入内部 <code>dataChan</code> 缓冲通道。</li><li><strong>消费者循环</strong>：独立的消费者 goroutine 执行 <code>consume</code> 方法，负责从通道中取出数据并批量处理。</li><li><strong>触发机制</strong>：处理可以由达到最大批量（maxBatchSize）或等待超时（maxWaitDuration）触发。</li><li><strong>退出控制</strong>：通过 <code>doneChan</code> 通知消费者优雅退出。</li></ol><p>这一模型兼具性能与可靠性，典型用于日志聚合、异步队列、延迟任务聚合等场景。</p><hr><h3 id="二、关于-CPU-空转（Busy-Waiting）问题的分析"><a href="#二、关于-CPU-空转（Busy-Waiting）问题的分析" class="headerlink" title="二、关于 CPU 空转（Busy Waiting）问题的分析"></a>二、关于 CPU 空转（Busy Waiting）问题的分析</h3><h4 id="1-消费者循环是否会导致空转？"><a href="#1-消费者循环是否会导致空转？" class="headerlink" title="1. 消费者循环是否会导致空转？"></a>1. 消费者循环是否会导致空转？</h4><p><code>core/worker.go</code> 中的主循环如下：</p><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> &#123;</span><br><span class="line">    <span class="keyword">select</span> &#123;</span><br><span class="line">    <span class="keyword">case</span> data, ok := &lt;-w.dataChan:</span><br><span class="line">        <span class="comment">// 接收并处理数据</span></span><br><span class="line">    <span class="keyword">case</span> &lt;-timer.C:</span><br><span class="line">        <span class="comment">// 超时触发处理</span></span><br><span class="line">    <span class="keyword">case</span> &lt;-w.doneChan:</span><br><span class="line">        <span class="comment">// 接收到退出信号</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>该循环具有以下特性：</p><ul><li><strong>select 是阻塞式的</strong>：当所有分支都不满足时，<code>select</code> 会自动挂起，不占用 CPU。</li><li>只要 <code>dataChan</code> 中没有数据、<code>timer</code> 没有到期、<code>doneChan</code> 没有信号，该 goroutine 会自然休眠。</li><li><strong>结论：这段代码不会导致 CPU 空转，是标准的 Go 并发写法。</strong></li></ul><h4 id="2-生产者逻辑是否安全？"><a href="#2-生产者逻辑是否安全？" class="headerlink" title="2. 生产者逻辑是否安全？"></a>2. 生产者逻辑是否安全？</h4><p>生产者调用 <code>Produce</code> 方法将数据投递进通道时，使用了非阻塞的 <code>select</code>：</p><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> &#123;</span><br><span class="line"><span class="keyword">case</span> w.dataChan &lt;- data:</span><br><span class="line">    <span class="comment">// 投递成功</span></span><br><span class="line"><span class="keyword">default</span>:</span><br><span class="line">    <span class="comment">// 通道已满，放弃投递</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>这避免了阻塞与死循环，也没有任何 busy loop 行为。</p><h4 id="3-可能导致空转的场景分析"><a href="#3-可能导致空转的场景分析" class="headerlink" title="3. 可能导致空转的场景分析"></a>3. 可能导致空转的场景分析</h4><table><thead><tr><th>场景</th><th>quick_worker 中是否存在</th><th>说明</th></tr></thead><tbody><tr><td><code>for &#123;&#125;</code> 死循环</td><td>❌</td><td>无此代码</td></tr><tr><td><code>for &#123; select &#123;&#125; &#125;</code> 且无阻塞分支</td><td>❌</td><td>每个 select 都含有阻塞通道</td></tr><tr><td>定时器设置过小，频繁唤醒</td><td>⚠️</td><td>频繁 wakeup 但不构成空转</td></tr><tr><td>通道满后生产者死循环 retry</td><td>❌</td><td>当前实现非阻塞，未重试</td></tr></tbody></table><h4 id="✅-总结结论："><a href="#✅-总结结论：" class="headerlink" title="✅ 总结结论："></a>✅ 总结结论：</h4><ul><li><code>quick_worker</code> 中的核心并发逻辑是以阻塞式 channel + timer 驱动的。</li><li>消费者 goroutine 不存在任何 busy waiting。</li><li>项目天然避免了 CPU 空转问题，性能开销可控。</li></ul><hr><h3 id="三、sync-Cond：在什么情况下必须使用它来避免-CPU-空转？"><a href="#三、sync-Cond：在什么情况下必须使用它来避免-CPU-空转？" class="headerlink" title="三、sync.Cond：在什么情况下必须使用它来避免 CPU 空转？"></a>三、sync.Cond：在什么情况下必须使用它来避免 CPU 空转？</h3><p>虽然 <code>quick_worker</code> 本身没有使用 <code>sync.Cond</code>，但了解它的用途对于设计其他复杂同步场景非常重要。</p><h4 id="1-什么是-CPU-空转？"><a href="#1-什么是-CPU-空转？" class="headerlink" title="1. 什么是 CPU 空转？"></a>1. 什么是 CPU 空转？</h4><p>CPU 空转（Busy Waiting）是指：<strong>线程在等待某个条件成立时，不阻塞、不 sleep，而是反复检查条件的状态，导致 CPU 被无意义地占用</strong>。</p><p>例如：</p><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> !ready &#123;</span><br><span class="line">    <span class="comment">// 空转：一直检查条件，浪费 CPU</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>这段代码没有任何阻塞操作，会让 CPU 持续忙碌。</p><h4 id="2-如何使用-sync-Cond-避免空转？"><a href="#2-如何使用-sync-Cond-避免空转？" class="headerlink" title="2. 如何使用 sync.Cond 避免空转？"></a>2. 如何使用 sync.Cond 避免空转？</h4><p><code>sync.Cond</code> 提供了条件变量机制，允许我们在等待某个条件时挂起 goroutine，直到条件成立被显式唤醒。</p><p>示例：</p><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> mu sync.Mutex</span><br><span class="line"><span class="keyword">var</span> cond = sync.NewCond(&amp;mu)</span><br><span class="line"><span class="keyword">var</span> ready <span class="type">bool</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 等待方（消费者）</span></span><br><span class="line">mu.Lock()</span><br><span class="line"><span class="keyword">for</span> !ready &#123;</span><br><span class="line">    cond.Wait() <span class="comment">// 阻塞等待，自动释放锁，避免空转</span></span><br><span class="line">&#125;</span><br><span class="line">mu.Unlock()</span><br><span class="line"></span><br><span class="line"><span class="comment">// 通知方（生产者）</span></span><br><span class="line">mu.Lock()</span><br><span class="line">ready = <span class="literal">true</span></span><br><span class="line">cond.Signal() <span class="comment">// 或 cond.Broadcast()</span></span><br><span class="line">mu.Unlock()</span><br></pre></td></tr></table></figure><p>优点：</p><ul><li><code>Wait()</code> 会阻塞 goroutine，而不是让它空转。</li><li><code>Signal()</code> 只唤醒一个等待者，<code>Broadcast()</code> 唤醒所有等待者。</li></ul><h4 id="3-使用-sync-Cond-的典型场景"><a href="#3-使用-sync-Cond-的典型场景" class="headerlink" title="3. 使用 sync.Cond 的典型场景"></a>3. 使用 sync.Cond 的典型场景</h4><table><thead><tr><th>适用场景</th><th>原因</th></tr></thead><tbody><tr><td>缓存读取等待写入</td><td>等待数据可用，不适合用 channel 表达</td></tr><tr><td>对象池等待资源释放</td><td>条件复杂或需共享状态，channel 难以表达</td></tr><tr><td>多线程 barrier 同步</td><td>等待多个条件成立后同时唤醒</td></tr><tr><td>控制 goroutine 启停</td><td>管理状态而不是数据流</td></tr></tbody></table><h4 id="4-channel-和-sync-Cond-的选择建议"><a href="#4-channel-和-sync-Cond-的选择建议" class="headerlink" title="4. channel 和 sync.Cond 的选择建议"></a>4. channel 和 sync.Cond 的选择建议</h4><table><thead><tr><th>特性</th><th>channel</th><th>sync.Cond</th></tr></thead><tbody><tr><td>数据流驱动</td><td>✅（首选）</td><td>❌（不适合）</td></tr><tr><td>条件状态驱动</td><td>❌（难表达）</td><td>✅（适合表达条件判断）</td></tr><tr><td>是否易用</td><td>简单直观</td><td>需要配合锁、小心竞态</td></tr><tr><td>是否阻塞</td><td>✅（天然阻塞）</td><td>✅（Wait 手动阻塞）</td></tr></tbody></table><p><strong>结论：</strong></p><blockquote><p>如果你在等待某个“条件”而非“数据”，又无法用 channel 表达，那么使用 <code>sync.Cond</code> 可以有效避免 busy loop。</p></blockquote><hr><h3 id="四、总结"><a href="#四、总结" class="headerlink" title="四、总结"></a>四、总结</h3><ul><li><code>quick_worker</code> 项目使用阻塞式 select 循环，无 busy loop 行为，不存在 CPU 空转问题。</li><li>Go 的 channel 和 timer 本身就是高效的阻塞机制，只要 select 内有阻塞分支，goroutine 就不会占用 CPU。</li><li>只有在使用 <code>for + 条件判断</code> 等原始自旋方式等待状态时，才需要引入 <code>sync.Cond</code>。</li><li><code>sync.Cond</code> 更适合资源池、复杂状态条件协作等无法使用 channel 描述的场景。</li></ul>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;&lt;a href=&quot;https://github.com/Kingson4Wu/quick_worker&quot;&gt;&lt;code&gt;quick_worker&lt;/code&gt;&lt;/a&gt; 是一个用 Go 实现的轻量级异步批处理框架。它通过 channel 和 goroutine 构建了一个高效的</summary>
+      
+    
+    
+    
+    
+    <category term="Go" scheme="http://yoursite.com/tags/Go/"/>
+    
+    <category term="CPU" scheme="http://yoursite.com/tags/CPU/"/>
+    
+    <category term="批处理任务" scheme="http://yoursite.com/tags/%E6%89%B9%E5%A4%84%E7%90%86%E4%BB%BB%E5%8A%A1/"/>
+    
+  </entry>
+  
+  <entry>
     <title>QuicKit：高效并发任务管理工具库详解</title>
     <link href="http://yoursite.com/2025/07/16/20250716-quickit-gao-xiao-bing-fa-ren-wu-guan-li-gong-ju-ku-xiang-jie/"/>
     <id>http://yoursite.com/2025/07/16/20250716-quickit-gao-xiao-bing-fa-ren-wu-guan-li-gong-ju-ku-xiang-jie/</id>
     <published>2025-07-16T14:50:57.000Z</published>
-    <updated>2025-07-16T14:51:44.252Z</updated>
+    <updated>2025-07-16T16:13:40.932Z</updated>
     
     <content type="html"><![CDATA[<p>在现代软件开发中，高效的任务管理与并发处理是提升系统性能的关键。<strong>QuicKit</strong> 是一个基于 Java 的工具库，专注于并发任务调度、执行控制、重试机制等通用能力的封装。本文将深入介绍 QuicKit 的核心功能及其实现原理。</p><hr><h2 id="1-延迟任务调度：DelayQueueUtils"><a href="#1-延迟任务调度：DelayQueueUtils" class="headerlink" title="1. 延迟任务调度：DelayQueueUtils"></a>1. 延迟任务调度：<code>DelayQueueUtils</code></h2><p><code>DelayQueueUtils</code> 使用 <strong>HashedWheelTimer</strong> 实现延迟任务的高效调度。</p><h3 id="实现原理："><a href="#实现原理：" class="headerlink" title="实现原理："></a>实现原理：</h3><ul><li><strong>时间轮机制</strong>：将时间划分为多个槽（slots），类似时钟的刻度。</li><li><strong>任务分配</strong>：任务根据设定的延迟时间分配至对应槽中。</li><li><strong>槽激活</strong>：时间轮旋转，当指针指向某个槽时，执行该槽内的所有任务。</li></ul><blockquote><p>✅ 优势：极大减少内存消耗和调度开销，适合高频延迟任务场景。</p></blockquote><hr><h2 id="2-执行频率控制：ExecutionFrequencyUtils"><a href="#2-执行频率控制：ExecutionFrequencyUtils" class="headerlink" title="2. 执行频率控制：ExecutionFrequencyUtils"></a>2. 执行频率控制：<code>ExecutionFrequencyUtils</code></h2><p>用于<strong>控制任务执行频率</strong>，防止系统被大量任务压垮。</p><h3 id="实现原理：-1"><a href="#实现原理：-1" class="headerlink" title="实现原理："></a>实现原理：</h3><ul><li><strong>任务分片</strong>：将任务列表切分为多个子任务，每批任务在一定时间间隔内执行。</li><li><strong>频率限制</strong>：可配置每秒允许执行的任务数量，避免突发任务过载系统。</li></ul><blockquote><p>✅ 应用场景：接口限流、批量处理限速、系统保护。</p></blockquote><hr><h2 id="3-并行任务处理：ParallelTask"><a href="#3-并行任务处理：ParallelTask" class="headerlink" title="3. 并行任务处理：ParallelTask"></a>3. 并行任务处理：<code>ParallelTask</code></h2><p>提供简洁高效的<strong>并行处理能力</strong>，充分利用多核 CPU 性能。</p><h3 id="实现原理：-2"><a href="#实现原理：-2" class="headerlink" title="实现原理："></a>实现原理：</h3><ul><li><strong>并行流</strong>：基于 Java 8 的 <code>parallelStream()</code> 并行处理任务。</li><li><strong>线程池管理</strong>：使用 <code>ExecutorService</code> 管理线程，降低线程创建销毁开销。</li></ul><blockquote><p>✅ 适用场景：批量任务处理、并发计算、数据转换等。</p></blockquote><hr><h2 id="4-重试机制：RetryUtils"><a href="#4-重试机制：RetryUtils" class="headerlink" title="4. 重试机制：RetryUtils"></a>4. 重试机制：<code>RetryUtils</code></h2><p>内置灵活的<strong>重试机制</strong>，应对任务失败后的自动恢复。</p><h3 id="实现原理：-3"><a href="#实现原理：-3" class="headerlink" title="实现原理："></a>实现原理：</h3><ul><li><strong>重试策略配置</strong>：通过 <code>RetryerBuilder</code> 设置重试次数、间隔、终止条件等。</li><li><strong>异常捕获与处理</strong>：根据异常类型与策略自动判断是否重试。</li></ul><blockquote><p>✅ 典型用途：数据库重试、远程服务调用、临时异常容忍。</p></blockquote><hr><h2 id="5-读写锁封装：ReadWriteLockWrapper"><a href="#5-读写锁封装：ReadWriteLockWrapper" class="headerlink" title="5. 读写锁封装：ReadWriteLockWrapper"></a>5. 读写锁封装：<code>ReadWriteLockWrapper</code></h2><p>封装 Java 原生 <code>ReentrantReadWriteLock</code>，简化并发数据访问控制。</p><h3 id="实现原理：-4"><a href="#实现原理：-4" class="headerlink" title="实现原理："></a>实现原理：</h3><ul><li><strong>读写分离</strong>：多个线程可同时读，写需独占。</li><li><strong>锁降级支持</strong>：支持写锁降级为读锁，提升吞吐性能。</li></ul><blockquote><p>✅ 适用场景：缓存读取、配置中心、共享资源管理等。</p></blockquote><hr><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p><strong>QuicKit</strong> 通过提供一系列高性能并发工具，极大简化了任务调度、线程管理与错误恢复的复杂性。无论你在构建分布式系统、服务中间件，还是日常业务逻辑开发，QuicKit 都是一个值得使用的并发基础组件库。</p><hr><p>📦 <strong>项目地址</strong>：<br>👉 <a href="https://github.com/Kingson4Wu/QuicKit">https://github.com/Kingson4Wu/QuicKit</a></p><p>📚 <strong>文档地址</strong>：<br>👉 <a href="https://deepwiki.com/Kingson4Wu/QuicKit">https://deepwiki.com/Kingson4Wu/QuicKit</a></p>]]></content>
     
@@ -34,6 +60,18 @@
     
     
     
+    
+    <category term="Java" scheme="http://yoursite.com/tags/Java/"/>
+    
+    <category term="并发" scheme="http://yoursite.com/tags/%E5%B9%B6%E5%8F%91/"/>
+    
+    <category term="延迟队列" scheme="http://yoursite.com/tags/%E5%BB%B6%E8%BF%9F%E9%98%9F%E5%88%97/"/>
+    
+    <category term="频率控制" scheme="http://yoursite.com/tags/%E9%A2%91%E7%8E%87%E6%8E%A7%E5%88%B6/"/>
+    
+    <category term="失败重试" scheme="http://yoursite.com/tags/%E5%A4%B1%E8%B4%A5%E9%87%8D%E8%AF%95/"/>
+    
+    <category term="读写锁" scheme="http://yoursite.com/tags/%E8%AF%BB%E5%86%99%E9%94%81/"/>
     
   </entry>
   
@@ -582,33 +620,6 @@
     <category term="LLM" scheme="http://yoursite.com/tags/LLM/"/>
     
     <category term="大模型" scheme="http://yoursite.com/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>人工智能相关技术简要总结记录</title>
-    <link href="http://yoursite.com/2024/12/03/20241203-ren-gong-zhi-neng-xiang-guan-ji-zhu-jian-yao-zong-jie-ji-lu/"/>
-    <id>http://yoursite.com/2024/12/03/20241203-ren-gong-zhi-neng-xiang-guan-ji-zhu-jian-yao-zong-jie-ji-lu/</id>
-    <published>2024-12-03T13:37:02.000Z</published>
-    <updated>2024-12-31T07:32:07.848Z</updated>
-    
-    <content type="html"><![CDATA[<blockquote><blockquote><p>持续补充…</p></blockquote></blockquote><p><img src="/2024/12/03/20241203-ren-gong-zhi-neng-xiang-guan-ji-zhu-jian-yao-zong-jie-ji-lu/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD.jpg"></p><h2 id="人工智能的三种形态"><a href="#人工智能的三种形态" class="headerlink" title="人工智能的三种形态"></a>人工智能的三种形态</h2><ul><li>来自：<a href="https://zhuanlan.zhihu.com/p/64467701">人工智能是什么？——人工智能图谱</a></li><li>弱人工智能：弱人工智能 (Artificial Narrow Intelligence, ANI) 是擅长与单个方面的人工智能，比如有能战胜象棋世界冠军的人工智能，但是它只会下象棋，你要问它怎样更好地在硬盘上存储数据，它就不知道怎么回答你了；</li><li>强人工智能：强人工智能 (Artificial General Intelligence, AGI) ，是人类级别的人工智能，强人工智能是指在各方面都能和人类比肩的人工智能，人类能干的脑力活它都能干。创造强人工智能比创造弱人工智能要难得多，我们现在还做不到。Linda Gottfredson教授把智能定义为“一种宽泛的心理能力，能够进行思考、计划、解决问题、抽象思维、理解复杂理念，快速学习和从经验中学习等操作”。强人工智能在进行这些操作时，应该和人类一样得心应手；</li><li>超人工智能：超人工智能 (Artificial Super Intelligence, ASI)，牛津哲学家，知名人工智能思想家Nick Bostrom把超级智能定义为“在几乎所有领域都比最聪明的人类大脑都聪明很多，包括科技创新、通识和社交技能”。超人工智能可以是各方面都比人类强一点，也可以是各方面都比人类强万亿倍，超人工智能也正是为什么人工智能这个话题这么火热的缘故，同样也是为什么永生和灭绝这两个词会在本文中多次出现。</li></ul><h2 id="关于大模型的扩展思考"><a href="#关于大模型的扩展思考" class="headerlink" title="关于大模型的扩展思考"></a>关于大模型的扩展思考</h2><ul><li>目前的AI是一个无限能量和记忆的辅助工具，但跟人有差别，比如犯错时难以追责，毕竟人需要信誉等等….</li><li>cursor、 Windsurf</li></ul><h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul><li><a href="https://zhuanlan.zhihu.com/p/64467701">人工智能是什么？——人工智能图谱</a></li></ul>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;blockquote&gt;
-&lt;blockquote&gt;
-&lt;p&gt;持续补充…&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;&lt;img src=&quot;/2024/12/03/20241203-ren-gong-zhi-neng-xiang-guan-ji-zhu-jia</summary>
-      
-    
-    
-    
-    
-    <category term="AI" scheme="http://yoursite.com/tags/AI/"/>
     
   </entry>
   

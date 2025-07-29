@@ -20989,7 +20989,7 @@ AI这个名字其实并不准确
 <li><code>adjust</code> 函数中需确保越界处理、优先选择较大子节点交换；</li>
 </ul>
 </blockquote>
-<h2 id="贪心算法"><a href="#贪心算法" class="headerlink" title="贪心算法"></a>贪心算法</h2><ul>
+<h1 id="贪心算法（Greedy）"><a href="#贪心算法（Greedy）" class="headerlink" title="贪心算法（Greedy）"></a>贪心算法（Greedy）</h1><ul>
 <li><p><strong>贪心算法：通过局部最优解实现全局最优</strong></p>
 </li>
 <li><p><a href="https://leetcode.cn/problems/jump-game/description/">55. 跳跃游戏</a></p>

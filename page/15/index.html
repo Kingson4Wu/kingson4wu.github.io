@@ -287,6 +287,533 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/13/20200713-you-zai-bei-gong-zuo-zhong-yin-fa-de-dui-bi-li-de-si-kao/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/07/13/20200713-you-zai-bei-gong-zuo-zhong-yin-fa-de-dui-bi-li-de-si-kao/" itemprop="url">由灾备工作中引发的对“比例”的思考</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-13T23:31:30+08:00">
+                2020-07-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><ul>
+<li>关于文章的题目我想了很久，暂时没想到合适的题目，姑且先这样吧</li>
+<li>之前在做灾备工作的时候，经常涉及服务的强弱依赖，超时时间，降级，以及业务折中方面的思考，下面将通过一些例子简要进行描述</li>
+</ul>
+<h3 id="场景描述"><a href="#场景描述" class="headerlink" title="场景描述"></a>场景描述</h3><ul>
+<li><p>从服务所依赖的重要程度上来区分有“强依赖”和“弱依赖”。</p>
+<ol>
+<li>通常上，针对“弱依赖”我们会设置较小的超时时间(比如100ms以内)，并且在失败率较高是进行降级；</li>
+<li>而针对“强依赖”我们会设置一个较大的超时时间，当接口失败时返回“服务繁忙“，表示暂不可用(当然可以产品层面进行合适的引导)</li>
+</ol>
+</li>
+<li><p>我们在灾备演练中，通过停其中一个机房，触发以下的问题</p>
+<ol>
+<li>强依赖超时问题（停机房瞬间）</li>
+<li>弱依赖多变长的问题（停机房期间）</li>
+</ol>
+</li>
+<li><p>从而导致停机房瞬间接口失败率高，停机房期间接口时延上涨严重。由此引发我对“比例“问题的思考。</p>
+<ol>
+<li>强依赖超时时间设长，可以减少失败率，但也有可能导致服务worker线程池被占满而拒绝请求。</li>
+<li>弱依赖虽然每个都设置100ms以内，但是当依赖的服务超过10个时(真实业务真的有)，可能导致总时长超过一秒(弱依赖慢但都没熔断，所以没降级；可异步并发的弱依赖的另说)</li>
+</ol>
+</li>
+</ul>
+<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><ol>
+<li>对强依赖，可设置超时时间的比例（比如只有20%的请求可以超过1s，其他的控制在100ms以内），解决停机房瞬间，线程池占满拒绝请求的问题</li>
+<li>对弱依赖，可控制多个弱依赖的总超时时间，解决停机房期间跨机房调用导致时延一直上涨的问题<ul>
+<li>单个调用超时时间可分级设置比例；多个调用（可熔断）可聚合在一起设置总超时时间比例</li>
+<li>降级优先级排序，控制总时间。熔断线程池，控制比例超时。允许一定的时间超时。流量控制。物理隔离。</li>
+</ul>
+</li>
+</ol>
+<h3 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h3><ol>
+<li>针对<a target="_blank" rel="noopener" href="https://kingson4wu.github.io/2020/07/12/20200712-%E4%BD%BF%E7%94%A8%E5%9B%9E%E8%B0%83%E6%9C%BA%E5%88%B6%E6%8F%90%E9%AB%98%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%80%A7/">使用回调机制提高接口安全性</a>所讲的，某些网络场景可以考虑针对大金额的请求才回调，减少RPC次数，这其实也是一个“比例”问题。</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/12/20200712-shi-yong-hui-diao-ji-zhi-ti-gao-jie-kou-an-quan-xing/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/07/12/20200712-shi-yong-hui-diao-ji-zhi-ti-gao-jie-kou-an-quan-xing/" itemprop="url">使用回调机制提高接口安全性</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-12T23:29:36+08:00">
+                2020-07-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><ul>
+<li>接口回调在平常的业务开发中并不罕见。做过渠道推广业务，对接过广告平台接口的同学应该比较熟悉。</li>
+<li>在业务的作用主要是两个<ol>
+<li>异步通知</li>
+<li>业务查询</li>
+</ol>
+</li>
+</ul>
+<p>本文主要讲的第二种，并通过一个业务例子来展开描述</p>
+<h3 id="业务描述"><a href="#业务描述" class="headerlink" title="业务描述"></a>业务描述</h3><p>有以下业务场景，用户通过充值加金币：</p>
+<pre>
+充值请求----------> 服务A（充值服务）
+             [1.验证用户已经支付成功]
+             [2.发起加金币请求]------------>服务B（金币服务）
+</pre>
+
+<ul>
+<li><p>服务B如何验证加金币操作的请求是合法，从而保证资金安全呢？</p>
+<ul>
+<li>有一种方法是通过分配业务对应的秘钥和服务端签名对比，验证请求的合法性</li>
+</ul>
+</li>
+<li><p>通过秘钥和验签的方式无法避免以下问题</p>
+<ol>
+<li>其他业务方误用秘钥</li>
+<li>因误操作而发加币请求</li>
+<li>业务方有bug一次充值多次加币</li>
+</ol>
+</li>
+</ul>
+<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><ul>
+<li>其实以上描述的业务有一个特点：每一次操作都有对应的前置操作，比如<ol>
+<li>充值加金币的前置操作是：充值支付成功</li>
+<li>活动类加金币的前置操作是：用户达到活动要求</li>
+</ol>
+</li>
+</ul>
+<p>那么作为底层的金币服务，可以使用定义一种同样的回查机制，由各业务方实现查询逻辑，金币服务通过回查来检验请求的合法性，从而提高安全性。</p>
+<ul>
+<li>基础服务（金币服务）接收回调链接地址有两种方式：</li>
+</ul>
+<ol>
+<li>通过后台配置，每个业务配置对应回调链接和相应的参数 （相比可能比较安全可控，但不灵活）</li>
+<li>通过参数获取，如callback参数（灵活，但是要设计完善的校验机制保证安全）<ul>
+<li>可结合公司的基础服务实现，如可以通过服务发现获取服务对应的地址，只需传uri即可</li>
+</ul>
+</li>
+</ol>
+<pre>
+充值请求----------> 服务A（充值服务）
+             [1.验证用户已经支付成功]
+             [2.发起加金币请求]------------>服务B（金币服务）
+                                <----------[3.回调验证] [4.加金币] < pre>
+
+<ul>
+<li>统一回调接口返回格式</li>
+</ul>
+<pre>
+回调接口返回格式
+{
+    "code": 0,
+    "message": "success"
+}
+0 代表成功；其他：失败
+
+回调用于查询业务订单是否存在，检验是否非法订单
+一般实现逻辑建议业务方直接查主库
+</pre>
+
+<ul>
+<li>回调无法绝对解决以上提出的问题，只能说一定程度上提升接口的安全性级别。</li>
+</ul>
+<h2 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h2><ul>
+<li>使用非对称加密，是不是可以替换回调验证？（客户端使用公钥解密，服务端使用私钥加密，前提是私钥不泄漏）</li>
+</ul>
+</----------[3.回调验证]></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/11/20200711-fen-bu-shi-xian-liu-jian-dan-zong-jie/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/07/11/20200711-fen-bu-shi-xian-liu-jian-dan-zong-jie/" itemprop="url">分布式限流简单总结</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-11T23:01:37+08:00">
+                2020-07-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="基本描述"><a href="#基本描述" class="headerlink" title="基本描述"></a>基本描述</h3><ul>
+<li><p>限流分类</p>
+<ol>
+<li>单机限流</li>
+<li>分布式限流</li>
+</ol>
+</li>
+<li><p>限流的指标</p>
+<ul>
+<li>每秒处理的事务数 (TPS)，每秒请求数 (hits per second)</li>
+<li>使用 hits per second 作为限流指标</li>
+</ul>
+</li>
+<li><p>限流规则包含三个部分：时间粒度，接口粒度，最大限流值。</p>
+</li>
+<li><p>选择单机限流还是分布式限流</p>
+<ol>
+<li>单机限流一般针对服务负载，防止突发流量压垮服务器</li>
+<li>分布式限流一般针对在业务侧做细粒度限流</li>
+</ol>
+</li>
+</ul>
+<h3 id="限流算法"><a href="#限流算法" class="headerlink" title="限流算法"></a>限流算法</h3><ol>
+<li>固定时间窗口<ul>
+<li>首先需要选定一个时间起点，之后每次接口请求到来都累加计数器，如果在当前时间窗口内，根据限流规则（比如每秒钟最大允许 100 次接口请求），累加访问次数超过限流值，则限流熔断拒绝接口请求。当进入下一个时间窗口之后，计数器清零重新计数。</li>
+<li>限流策略过于粗略，无法应对两个时间窗口临界时间内的突发流量。</li>
+</ul>
+</li>
+<li>滑动时间窗口<ul>
+<li>滑动时间窗口限流算法可以保证任意时间窗口内接口请求次数都不会超过最大限流值，但是仍然不能防止在细时间粒度上面访问过于集中的问题</li>
+</ul>
+</li>
+<li>令牌桶算法(Token Bucket)<ul>
+<li>接口限制 t 秒内最大访问次数为 n，则每隔 t&#x2F;n 秒会放一个 token 到桶中；桶中最多可以存放 b 个 token</li>
+<li>令牌桶大小为 b，所以是可以应对突发流量的</li>
+<li>没有提前预热的令牌桶，如果做否决式限流，会导致误杀很多请求</li>
+</ul>
+</li>
+<li>漏桶算法(Leaky Bucket)<ul>
+<li>漏桶算法稍微不同与令牌桶算法的一点是：对于取令牌的频率也有限制，要按照 t&#x2F;n 固定的速度来取令牌，所以可以看出漏桶算法对流量的整形效果更加好，流量更加平滑，任何突发流量都会被限流。</li>
+</ul>
+</li>
+</ol>
+<h3 id="分布式限流"><a href="#分布式限流" class="headerlink" title="分布式限流"></a>分布式限流</h3><ol>
+<li>采用redis+lua的方案做分布式限流 (参考业界实现方案即可，需注意原子性)</li>
+<li>由于使用中心存储计数的方式性能较差，在业务允许的情况下可以考虑将限制的数量分摊到每个服务(服务数通过服务发现接口获取)，间接使用单机限流提升性能。</li>
+</ol>
+<h3 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h3><ol>
+<li>Google的Guava包中的RateLimiter<ul>
+<li>令牌桶算法的解决方案，假设1S需要限流5次；也就是1S会往桶里面方5个Token;如果在这1S内桶满了则不再加请求，如果空了则表示达到限制的上线了，会阻塞，直到有数据加入再次处理。</li>
+</ul>
+</li>
+<li>[ratelimiter4j] (<a target="_blank" rel="noopener" href="https://github.com/wangzheng0822/ratelimiter4j">https://github.com/wangzheng0822/ratelimiter4j</a>)<ul>
+<li>分布式限流算法的性能瓶颈主要在中心计数器 Redis，从我们开源的 ratelimiter4j 压测数据来看，在没有做 Redis sharding 的情况下，基于单实例 Redis 的分布式限流算法的性能要远远低于基于内存的单机限流算法，基于我们的压测环境，单机限流算法可以达到 200 万 TPS，而分布式限流算法只能做到 5 万 TPS。所以，在应用分布式限流算法时，一定要考量限流算法的性能是否满足应用场景，如果微服务接口的 TPS 已经超过了限流框架本身的 TPS，则限流功能会成为性能瓶颈影响接口本身的性能。</li>
+</ul>
+</li>
+</ol>
+<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><ol>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/k9tm-4lBwm69nxnYp9octA">微服务接口限流的设计与思考</a></li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/11/20200711-fen-bu-shi-suo-jian-dan-zong-jie/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1576,446 +2103,11 @@ proxy_upstream_tries 5;
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/07/20200707-wei-yi-id-de-ji-yin/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/07/07/20200707-wei-yi-id-de-ji-yin/" itemprop="url">唯一ID的基因</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-07T23:15:24+08:00">
-                2020-07-07
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><img src="/2020/07/07/20200707-wei-yi-id-de-ji-yin/Zidane_2.jpeg"></p>
-<p>在互联网服务中，经常需要使用唯一ID。其中一个常见的应用场景是作为业务中请求的幂等ID。</p>
-<h3 id="分布式唯一ID生成方案"><a href="#分布式唯一ID生成方案" class="headerlink" title="分布式唯一ID生成方案"></a>分布式唯一ID生成方案</h3><ol>
-<li>uuid</li>
-<li>snowflake</li>
-<li>包含业务属性的唯一ID，如 timestamp+ uid（10-11位）+ 随机3位数字（或递增）</li>
-<li>其他方案</li>
-</ol>
-<p>优劣不在这里讨论</p>
-<h3 id="业务场景分析"><a href="#业务场景分析" class="headerlink" title="业务场景分析"></a>业务场景分析</h3><p>结合目前工作中的现状进行分析</p>
-<ol>
-<li>唯一ID的存储方式：MySQL－bigint(20)</li>
-<li>唯一ID生成方式：snowflake－64位：42位时间戳+5位机器码+5位进程worker标识码+12位自增id（42|5|5|12 &#x3D; 64）</li>
-</ol>
-<ul>
-<li><p>我们把幂等ID作为数据库的唯一键，从而保证幂等；而当数据量越来越大是，我们对数据按月进行分表，提升处理性能。</p>
-</li>
-<li><p>我们在数据库中除了有幂等ID（orderId）字段之外，还有添加时间字段（addTime）;当请求进来之后，根据addTime找到相应的月表。所以实际上要保证请求处理幂等，依赖的是orderId＋addTime 不变（或addTime保证始终落在同一个月）</p>
-</li>
-</ul>
-<h4 id="为什么要依赖addTime保证幂等？"><a href="#为什么要依赖addTime保证幂等？" class="headerlink" title="为什么要依赖addTime保证幂等？"></a>为什么要依赖addTime保证幂等？</h4><ol>
-<li><p>基础组件提供的唯一ID生成服务，对snowflake进行个性化的改造，只能保证ID是唯一的，然而ID的属性并不明显，无法方便的使用唯一ID进行分库（实际上snowflake算法的前n位是时间戳，可以考虑作为分库的属性）</p>
-</li>
-<li><p>一些常见唯一ID的例子</p>
-<pre>
-交易单号:4008722001201707283057762612
-商户单号:2017072809364399365840049582
-订单编号: 60310040822721833
-支付宝交易号: 2017092021001001150522558267
-大众点评订单号36611441412777832
-</pre></li>
-</ol>
-<p>像“商户单号”和“支付宝交易号”，很明显可以使用日期“基因”来分库，不过这种唯一ID不能使用bigint 存储，因为超过64位了</p>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>一个好的唯一ID算法生成的ID，应该具备易用的“基因”。像UUID这种就不是很满足。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/07/20200707-ru-he-chu-li-rpc-fan-hui-de-cuo-wu-ma/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/07/07/20200707-ru-he-chu-li-rpc-fan-hui-de-cuo-wu-ma/" itemprop="url">如何处理RPC返回的错误码？</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-07T22:39:01+08:00">
-                2020-07-07
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><img src="/2020/07/07/20200707-ru-he-chu-li-rpc-fan-hui-de-cuo-wu-ma/Zlatan.jpeg"></p>
-<h4 id="RPC调用的返回结果"><a href="#RPC调用的返回结果" class="headerlink" title="RPC调用的返回结果"></a>RPC调用的返回结果</h4><ol>
-<li>成功</li>
-<li>失败</li>
-<li>超时</li>
-</ol>
-<p>超时情况是不确定的，需要调用方重试或查询等，根据业务情况进行处理</p>
-<h4 id="返回结果表示方法"><a href="#返回结果表示方法" class="headerlink" title="返回结果表示方法"></a>返回结果表示方法</h4><ol>
-<li>使用http协议的状态码</li>
-<li>使用业务错误码（在业务处理中比较常见）<ul>
-<li>0表示成功</li>
-<li>1表示失败</li>
-<li>其他错误码代表具体的失败业务场景</li>
-</ul>
-</li>
-</ol>
-<h4 id="失败错误码类型"><a href="#失败错误码类型" class="headerlink" title="失败错误码类型"></a>失败错误码类型</h4><ol>
-<li>业务错误（参数错误，或业务场景校验限制，请求已经处理完成）</li>
-<li>处理速度慢（msg:”请求处理中”）</li>
-<li>限流（msg:”你的操作太快了”）</li>
-<li>未知错误</li>
-<li>其他</li>
-</ol>
-<p>针对2或4的场景，很可能提交的RPC实际上已经成功，属于不确定的情况（同超时），业务方不能直接当成失败处理；1的场景中“请求已经处理完成”，实际上已经成功，只是调用方的接口返回不幂等。</p>
-<h4 id="错误码处理"><a href="#错误码处理" class="headerlink" title="错误码处理"></a>错误码处理</h4><p>定义RPC请求中，成功，失败，不确定三种结果对应的错误码集合（最好可配置），业务针对不同的结果进行相应处理。</p>
-<ol>
-<li>成功（错误码：A,B,C ….）</li>
-<li>失败（错误码：E,F,G ….）</li>
-<li>不确定（错误码：H,I,J …. 和 ”超时“）</li>
-</ol>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/06/20200706-shang-xian-xu-yao-zuo-na-xie-zhun-bei/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/07/06/20200706-shang-xian-xu-yao-zuo-na-xie-zhun-bei/" itemprop="url">上线需要做哪些准备？</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-06T20:12:16+08:00">
-                2020-07-06
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><img src="/2020/07/06/20200706-shang-xian-xu-yao-zuo-na-xie-zhun-bei/Carlos.jpg"></p>
-<p>一般常规的上线，需要做哪些准备，确保不会因为遗漏这种低级错误导致线上问题？</p>
-<ol start="0">
-<li>开发中遇到问题标注TODO，避免遗漏，单元测试覆盖业务逻辑</li>
-<li>准备上线checklist，验收方案</li>
-<li>检查上线配置</li>
-<li>是否需要配置定时任务</li>
-<li>重新检查一遍变更的代码</li>
-</ol>
-<h3 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h3><ol>
-<li>涉及app的，需要考虑旧版本兼容和回归测试（重点回归若干个高流量的旧版本）</li>
-<li>若上线后出现问题，先回滚再查问题（适用于大多数场景）</li>
-<li>核心业务要重点测试</li>
-</ol>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/14/">&lt;</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><span class="page-number current">15</span><a class="page-number" href="/page/16/">16</a><a class="extend next" rel="next" href="/page/16/">&gt;</a>
+    <a class="extend prev" rel="prev" href="/page/14/">&lt;</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><span class="page-number current">15</span><a class="page-number" href="/page/16/">16</a><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/16/">&gt;</a>
   </nav>
 
 
@@ -2068,7 +2160,7 @@ proxy_upstream_tries 5;
 <a href="/archives/">                
 <!--<a href="/archives/%7C%7C%20archive">-->
               
-                  <span class="site-state-item-count">160</span>
+                  <span class="site-state-item-count">163</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2081,7 +2173,7 @@ proxy_upstream_tries 5;
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">176</span>
+                  <span class="site-state-item-count">180</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/uploads/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="家庭网络,公网IP," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="拉巴力的纸皮箱" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="以下内容由AI生成   在日常使用家庭宽带时，很多人会遇到“到底我家有没有独立公网 IP”的问题。这不仅关系到能否顺利访问外网，更影响到是否可以在家中搭建服务器、使用 P2P 应用等。本文将系统梳理家庭宽带 IP 的分配方式、运营商 NAT 的机制以及其对用户的实际影响。  1. 家庭宽带的几种典型 IP 分配方式（1）独立公网 IP 家庭路由器的 WAN 口直接获取公网 IPv4 地址（或独">
+<meta property="og:type" content="article">
+<meta property="og:title" content="家庭宽带中的公网与内网 IP 分配机制解析">
+<meta property="og:url" content="http://yoursite.com/2025/08/17/20250817-jia-ting-kuan-dai-zhong-de-gong-wang-yu-nei-wang-ip-fen-pei-ji-zhi-jie-xi/index.html">
+<meta property="og:site_name" content="拉巴力的纸皮箱">
+<meta property="og:description" content="以下内容由AI生成   在日常使用家庭宽带时，很多人会遇到“到底我家有没有独立公网 IP”的问题。这不仅关系到能否顺利访问外网，更影响到是否可以在家中搭建服务器、使用 P2P 应用等。本文将系统梳理家庭宽带 IP 的分配方式、运营商 NAT 的机制以及其对用户的实际影响。  1. 家庭宽带的几种典型 IP 分配方式（1）独立公网 IP 家庭路由器的 WAN 口直接获取公网 IPv4 地址（或独">
+<meta property="og:locale">
+<meta property="article:published_time" content="2025-08-17T05:10:04.000Z">
+<meta property="article:modified_time" content="2025-08-17T05:11:11.489Z">
+<meta property="article:author" content="Kingson Wu">
+<meta property="article:tag" content="家庭网络">
+<meta property="article:tag" content="公网IP">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2025/08/17/20250817-jia-ting-kuan-dai-zhong-de-gong-wang-yu-nei-wang-ip-fen-pei-ji-zhi-jie-xi/"/>
+
+
+
+
+
+  <title>家庭宽带中的公网与内网 IP 分配机制解析 | 拉巴力的纸皮箱</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">拉巴力的纸皮箱</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2025/08/17/20250817-jia-ting-kuan-dai-zhong-de-gong-wang-yu-nei-wang-ip-fen-pei-ji-zhi-jie-xi/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">家庭宽带中的公网与内网 IP 分配机制解析</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2025-08-17T13:10:04+08:00">
+                2025-08-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<blockquote>
+<p>以下内容由AI生成</p>
+</blockquote>
+</blockquote>
+<p>在日常使用家庭宽带时，很多人会遇到“到底我家有没有独立公网 IP”的问题。这不仅关系到能否顺利访问外网，更影响到是否可以在家中搭建服务器、使用 P2P 应用等。本文将系统梳理家庭宽带 IP 的分配方式、运营商 NAT 的机制以及其对用户的实际影响。</p>
+<hr>
+<h2 id="1-家庭宽带的几种典型-IP-分配方式"><a href="#1-家庭宽带的几种典型-IP-分配方式" class="headerlink" title="1. 家庭宽带的几种典型 IP 分配方式"></a>1. 家庭宽带的几种典型 IP 分配方式</h2><h3 id="（1）独立公网-IP"><a href="#（1）独立公网-IP" class="headerlink" title="（1）独立公网 IP"></a>（1）独立公网 IP</h3><ul>
+<li>家庭路由器的 <strong>WAN 口直接获取公网 IPv4 地址</strong>（或独立 IPv6 前缀）。</li>
+<li>此时家庭就是一个独立的外网节点，可直接与互联网通信（除非被防火墙限制）。</li>
+<li><strong>典型场景</strong>：早期 ADSL 宽带、当前部分电信&#x2F;联通&#x2F;移动的 IPv6 分配。</li>
+</ul>
+<p><strong>优势</strong>：可开放端口、搭建服务器，外网可直接访问家庭设备。</p>
+<hr>
+<h3 id="（2）共享公网-IP（运营商-NAT-x2F-CGNAT）"><a href="#（2）共享公网-IP（运营商-NAT-x2F-CGNAT）" class="headerlink" title="（2）共享公网 IP（运营商 NAT &#x2F; CGNAT）"></a>（2）共享公网 IP（运营商 NAT &#x2F; CGNAT）</h3><ul>
+<li><p>由于 IPv4 地址紧张，很多家庭宽带 WAN 口拿到的并不是公网地址，而是内网地址：</p>
+<ul>
+<li><code>100.64.x.x</code>（CGNAT 专用）、<code>10.x.x.x</code>、<code>172.16–31.x.x</code>、<code>192.168.x.x</code> 等。</li>
+</ul>
+</li>
+<li><p>运营商在核心网部署 NAT，把成百上千家庭流量映射到同一个公网 IP 上。</p>
+</li>
+</ul>
+<p><strong>特点与问题</strong>：</p>
+<ul>
+<li>家庭没有独立公网出口，而是和他人“拼”一个公网 IP。</li>
+<li><strong>限制</strong>：端口映射困难甚至不可能 → 无法轻易搭建对外服务。</li>
+</ul>
+<hr>
+<h3 id="（3）混合模式（IPv6-公网-IPv4-NAT）"><a href="#（3）混合模式（IPv6-公网-IPv4-NAT）" class="headerlink" title="（3）混合模式（IPv6 公网 + IPv4 NAT）"></a>（3）混合模式（IPv6 公网 + IPv4 NAT）</h3><ul>
+<li>家庭可获得独立的 <strong>IPv6 前缀</strong>（相当于独立公网地址）。</li>
+<li>IPv4 依旧通过 NAT，共享公网 IP。</li>
+<li>这种情况在目前逐渐普及，算是“半独立外网”。</li>
+</ul>
+<hr>
+<h2 id="2-内网与外网的关系"><a href="#2-内网与外网的关系" class="headerlink" title="2. 内网与外网的关系"></a>2. 内网与外网的关系</h2><ul>
+<li><strong>LAN 内网 IP</strong>：路由器分配给家庭设备的地址（如 192.168.x.x），可支持上百台设备。</li>
+<li><strong>WAN IP</strong>：路由器外网口的地址，可能是真公网，也可能是运营商 NAT 内网（如 100.64.x.x）。</li>
+</ul>
+<p><strong>关键点</strong>：</p>
+<ul>
+<li><p>家庭可分配的内网 IP 数量不受共享公网限制，理论上仍可支持数百设备。</p>
+</li>
+<li><p>共享公网真正的限制在于：</p>
+<ul>
+<li>端口映射受阻</li>
+<li>P2P 软件连接困难</li>
+<li>搭建家庭服务器几乎不可能</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="3-CGNAT-的工作机制"><a href="#3-CGNAT-的工作机制" class="headerlink" title="3. CGNAT 的工作机制"></a>3. CGNAT 的工作机制</h2><p>CGNAT 的核心是 <strong>端口映射表</strong>。</p>
+<ol>
+<li>家庭路由器将内网设备请求 NAT 成 <strong>WAN IP + 端口</strong>。</li>
+<li>运营商 CGNAT 再将 WAN IP + 端口转换为 <strong>公网 IP + 唯一端口</strong>。</li>
+<li>返回数据时，CGNAT 通过映射表查找，精准把数据包发回正确的家庭。</li>
+</ol>
+<p><strong>要点</strong>：</p>
+<ul>
+<li>即使不同家庭设备端口相同，CGNAT 会分配不同的公网端口 → 不会冲突。</li>
+<li>每个家庭必须有唯一的 WAN IP（即便是私有地址），否则映射表无法区分连接。</li>
+</ul>
+<hr>
+<h2 id="4-特殊地址段：100-64-x-x"><a href="#4-特殊地址段：100-64-x-x" class="headerlink" title="4. 特殊地址段：100.64.x.x"></a>4. 特殊地址段：100.64.x.x</h2><ul>
+<li><p><strong>定义</strong>：RFC 6598 规定 <code>100.64.0.0/10</code> 专用于 <strong>运营商级 NAT</strong>。</p>
+</li>
+<li><p><strong>特性</strong>：</p>
+<ul>
+<li>不是公网 IP（外网无法直达）。</li>
+<li>不是家庭 LAN 内网（192.168&#x2F;10.x&#x2F;172.16–31），而是运营商内部“二级内网”。</li>
+</ul>
+</li>
+<li><p><strong>工作方式</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">家庭设备 192.168.1.2</span><br><span class="line">    ↓ 家庭路由器 NAT</span><br><span class="line">WAN: 100.64.1.2  ← 运营商私有地址</span><br><span class="line">    ↓ 运营商 CGNAT</span><br><span class="line">公网 IP: 1.2.3.4</span><br><span class="line">    ↓ Internet</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p><strong>注意</strong>：家庭网络不应使用 100.64.x.x 作为 LAN 地址，否则会和运营商 CGNAT 冲突，导致公网无法访问。</p>
+<hr>
+<h2 id="5-总结"><a href="#5-总结" class="headerlink" title="5. 总结"></a>5. 总结</h2><ol>
+<li><strong>独立公网 IP</strong>：可直接对外通信，最自由。</li>
+<li><strong>共享公网 IP（CGNAT）</strong>：常见于 IPv4，无法轻易开放端口，但家庭内网不受影响。</li>
+<li><strong>IPv6 普及下的混合模式</strong>：IPv6 独立公网，IPv4 仍共享。</li>
+<li><strong>100.64.x.x 是运营商内网地址</strong>，不是公网 IP。</li>
+<li><strong>核心差异</strong>：家庭内网数量不受限制，但共享公网时外网访问受阻。</li>
+</ol>
+<hr>
+<p>📌 <strong>一句话总结</strong>：<br>大多数家庭宽带并没有独立公网 IPv4，而是通过 CGNAT 与他人共享出口。要想获得真正独立的公网地址，需要向运营商申请“公网 IP 服务”或使用企业宽带。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E5%AE%B6%E5%BA%AD%E7%BD%91%E7%BB%9C/" rel="tag"># 家庭网络</a>
+          
+            <a href="/tags/%E5%85%AC%E7%BD%91IP/" rel="tag"># 公网IP</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2025/08/17/20250817-vpn-yu-zheng-xiang-dai-li-de-yuan-li-yu-chai-yi-fen-xi/" rel="next" title="VPN 与正向代理的原理与差异分析">
+                <i class="fa fa-chevron-left"></i> VPN 与正向代理的原理与差异分析
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div id="gitalk-container"></div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.png"
+                alt="" />
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+<a href="/archives/">                
+<!--<a href="/archives/%7C%7C%20archive">-->
+              
+                  <span class="site-state-item-count">163</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">180</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E5%AE%B6%E5%BA%AD%E5%AE%BD%E5%B8%A6%E7%9A%84%E5%87%A0%E7%A7%8D%E5%85%B8%E5%9E%8B-IP-%E5%88%86%E9%85%8D%E6%96%B9%E5%BC%8F"><span class="nav-number">1.</span> <span class="nav-text">1. 家庭宽带的几种典型 IP 分配方式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%EF%BC%881%EF%BC%89%E7%8B%AC%E7%AB%8B%E5%85%AC%E7%BD%91-IP"><span class="nav-number">1.1.</span> <span class="nav-text">（1）独立公网 IP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%EF%BC%882%EF%BC%89%E5%85%B1%E4%BA%AB%E5%85%AC%E7%BD%91-IP%EF%BC%88%E8%BF%90%E8%90%A5%E5%95%86-NAT-x2F-CGNAT%EF%BC%89"><span class="nav-number">1.2.</span> <span class="nav-text">（2）共享公网 IP（运营商 NAT &#x2F; CGNAT）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%EF%BC%883%EF%BC%89%E6%B7%B7%E5%90%88%E6%A8%A1%E5%BC%8F%EF%BC%88IPv6-%E5%85%AC%E7%BD%91-IPv4-NAT%EF%BC%89"><span class="nav-number">1.3.</span> <span class="nav-text">（3）混合模式（IPv6 公网 + IPv4 NAT）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E5%86%85%E7%BD%91%E4%B8%8E%E5%A4%96%E7%BD%91%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="nav-number">2.</span> <span class="nav-text">2. 内网与外网的关系</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-CGNAT-%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%9C%BA%E5%88%B6"><span class="nav-number">3.</span> <span class="nav-text">3. CGNAT 的工作机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E7%89%B9%E6%AE%8A%E5%9C%B0%E5%9D%80%E6%AE%B5%EF%BC%9A100-64-x-x"><span class="nav-number">4.</span> <span class="nav-text">4. 特殊地址段：100.64.x.x</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E6%80%BB%E7%BB%93"><span class="nav-number">5.</span> <span class="nav-text">5. 总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kingson Wu</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+  <script src="/js/src/md5.min.js"></script>
+
+   <script type="text/javascript">
+        var gitalk = new Gitalk({
+          clientID: '3416434437f9f4e049bd',
+          clientSecret: 'a52d69bf90cb77f81a26d135e03dd0f4869fbf84',
+          repo: 'kingson4wu.github.io',
+          owner: 'kingson4wu',
+          admin: ['kingson4wu'],
+
+          id: md5(location.pathname),
+
+          distractionFreeMode: 'true'
+        })
+        gitalk.render('gitalk-container')
+    </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -287,6 +287,1162 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/09/26/20200926-guan-yu-close-wait-he-httpclient-de-shi-yong/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/09/26/20200926-guan-yu-close-wait-he-httpclient-de-shi-yong/" itemprop="url">关于CLOSE_WAIT和HttpClient的使用</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-09-26T13:58:25+08:00">
+                2020-09-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><img src="/2020/09/26/20200926-guan-yu-close-wait-he-httpclient-de-shi-yong/TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B.png"><br><img src="/2020/09/26/20200926-guan-yu-close-wait-he-httpclient-de-shi-yong/tcp_normal_close.png"></p>
+<p>ESTABLISHED 表示正在进行网络连接的数量<br>TIME_WAIT 表示表示等待系统主动关闭网络连接的数量<br>CLOSE_WAIT 表示被动等待程序关闭的网络连接数量</p>
+<ol start="0">
+<li>查看系统TCP状态的命令：<code>netstat -n | awk &#39;/^tcp/ &#123;++S[$NF]&#125; END &#123;for(a in S) print a, S[a]&#125;&#39;</code></li>
+<li>CLOSE_WAIT 是被动关闭产生的一种状态，当用户程序正常close之后将变成LAST_ACK状态。</li>
+<li>TIME_WAIT状态可以通过优化服务器参数得到解决(当然也有可能是程序处理不当产生太多连接)。而CLOSE_WAIT数目过大一般是由于程序被动关闭连接处理不当导致的。</li>
+<li>以HttpClient为例<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="type">String</span> <span class="variable">resp</span> <span class="operator">=</span> <span class="string">&quot;&quot;</span>;</span><br><span class="line">    <span class="type">HttpResponse</span> <span class="variable">response</span> <span class="operator">=</span> client.execute(get);</span><br><span class="line">    <span class="keyword">if</span> (response.getStatusLine().getStatusCode() != <span class="number">200</span>) &#123;</span><br><span class="line">        get.abort();</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">HttpEntity</span> <span class="variable">entity</span> <span class="operator">=</span> response.getEntity();</span><br><span class="line">    <span class="keyword">if</span> (entity != <span class="literal">null</span>) &#123;</span><br><span class="line">        in = entity.getContent();</span><br><span class="line">        resp = in.xxx;</span><br><span class="line">        <span class="comment">//xxx</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> resp;</span><br><span class="line">&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">    get.abort();</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;&quot;</span>;</span><br><span class="line">&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (in != <span class="literal">null</span>) &#123;</span><br><span class="line">        in.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+在异常时显示调用abort，直接中止本次连接，避免in未赋值导致连接未关闭的问题。</li>
+<li>HttpClient连接关闭。一种是主动，一种是被动。在代码API的使用上没进行区分。主动关闭时当调用Close()，发出FIN包由ESTABLISHED进入FIN_WAIT_1 状态；被动关闭时当调用Close()，发出FIN包由CLOSE_WAIT进入LAST_ACK状态。</li>
+<li>使用PoolingClientConnectionManager？</li>
+</ol>
+<h2 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h2><h3 id="httpclient-的timeout参数"><a href="#httpclient-的timeout参数" class="headerlink" title="httpclient 的timeout参数"></a>httpclient 的timeout参数</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/btlas/article/details/53710854">httpclient SocketTimeout ConnectTimeout ConnectionRequestTimeout</a></li>
+<li>ConnectionRequestTimeout<ul>
+<li>httpclient使用连接池来管理连接，这个时间就是从连接池获取连接的超时时间，可以想象下数据库连接池；</li>
+</ul>
+</li>
+<li>ConnectTimeout<ul>
+<li>连接建立时间，三次握手完成时间；</li>
+</ul>
+</li>
+<li>SocketTimeout<ul>
+<li>关于readimeout的含义: Defines a timeout for reading a response from the proxied server. The timeout is set only between two successive read operations, not for the transmission of the whole response. If the proxied server does not transmit anything within this time, the connection is closed.</li>
+<li>数据传输过程中数据包之间间隔的最大时间；</li>
+<li>SocketTimeout的值表示的是“a”、”b”、”c”这三个报文，每两个相邻的报文的间隔时间不能超过SocketTimeout</li>
+<li>虽然报文(“abc”)返回总共用了6秒，如果SocketTimeout设置成4秒，实际程序执行的时候是不会抛出java.net.SocketTimeoutException: Read timed out异常的</li>
+</ul>
+</li>
+</ul>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/sunxucool/p/3449068.html">服务器TIME_WAIT和CLOSE_WAIT详解和解决办法</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/shootyou/article/details/6615051">HttpClient连接池抛出大量ConnectionPoolTimeoutException: Timeout waiting for connection异常排查</a></li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/09/12/20200912-fen-bu-shi-yi-zhi-xing-xie-yi/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/09/12/20200912-fen-bu-shi-yi-zhi-xing-xie-yi/" itemprop="url">分布式一致性协议概览</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-09-12T21:30:00+08:00">
+                2020-09-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <ul>
+<li>本文内容基本来源：网上资料总结</li>
+</ul>
+<h2 id="共识（Consensus）-和-一致性（Consistency）"><a href="#共识（Consensus）-和-一致性（Consistency）" class="headerlink" title="共识（Consensus） 和 一致性（Consistency）"></a>共识（Consensus） 和 一致性（Consistency）</h2><ul>
+<li>分布式一致性（共识）协议 (consensus protocol)</li>
+<li>Consensus !&#x3D; Consistency</li>
+<li>CAP 定理中的 C 和数据库 ACID 的 C 才是真正的“一致性”—— consistency 问题</li>
+<li>在早些的文献中，共识（consensus）也叫做协商（agreement）</li>
+<li>共识（Consensus），很多时候会见到与一致性（Consistency）术语放在一起讨论。严谨地讲，两者的含义并不完全相同。</li>
+<li>一致性的含义比共识宽泛，在不同场景（基于事务的数据库、分布式系统等）下意义不同。具体到分布式系统场景下，一致性指的是多个副本对外呈现的状态。如前面提到的顺序一致性、线性一致性，描述了多节点对数据状态的共同维护能力。而共识，则特指在分布式系统中多个节点之间对某个事情（例如多个事务请求，先执行谁？）达成一致意见的过程。因此，达成某种共识并不意味着就保障了一致性。</li>
+<li>实践中，要保证系统满足不同程度的一致性，往往需要通过共识算法来达成。</li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/KKrxuVCrjlXXWMPTXQ-fvA">分布式之系统底层原理</a></li>
+</ul>
+<h2 id="共识问题"><a href="#共识问题" class="headerlink" title="共识问题"></a>共识问题</h2><ul>
+<li>在分布式系统中，共识就是系统中的多个节点对某个值达成一致。共识问题可以用数学语言来描述：一个分布式系统包含 n 个进程 {0, 1, 2,…, n-1}，每个进程都有一个初值，进程之间互相通信，设计一种算法使得尽管出现故障，进程们仍协商出某个不可撤销的最终决定值，且每次执行都满足以下三个性质：<ul>
+<li>终止性（Termination）：所有正确的进程最终都会认同某一个值。</li>
+<li>协定性（Agreement）：所有正确的进程认同的值都是同一个值。</li>
+<li>完整性（Integrity），也称作有效性（Validity）：如果正确的进程都提议同一个值，那么所有处于认同状态的正确进程都选择该值。</li>
+</ul>
+</li>
+<li>完整性可以有一些变化，例如，一种较弱的完整性是认定值等于某些正确经常提议的值，而不必是所有进程提议的值。完整性也隐含了，最终被认同的值必定是某个节点提出过的。</li>
+<li>算法共识&#x2F;一致性算法有两个最核心的约束：1) 安全性（Safety），2) 存活性（Liveness）：<ul>
+<li>Safety：保证决议（Value）结果是对的，无歧义的，不会出现错误情况。<ul>
+<li>只有是被提案者提出的提案才可能被最终批准；</li>
+<li>在一次执行中，只批准（chosen）一个最终决议。被多数接受（accept）的结果成为决议；</li>
+</ul>
+</li>
+<li>Liveness：保证决议过程能在有限时间内完成。<ul>
+<li>决议总会产生，并且学习者最终能获得被批准的决议。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>根据解决的场景是否允许拜占庭（Byzantine）错误，共识算法可以分为 Crash Fault Tolerance (CFT) 和 Byzantine Fault Tolerance（BFT）两类。<ul>
+<li>对于非拜占庭错误的情况，已经存在不少经典的算法，包括 Paxos（1990 年）、Raft（2014 年）及其变种等。这类容错算法往往性能比较好，处理较快，容忍不超过一半的故障节点。</li>
+<li>对于要能容忍拜占庭错误的情况，包括 PBFT（Practical Byzantine Fault Tolerance，1999 年）为代表的确定性系列算法、PoW（1997 年）为代表的概率算法等。确定性算法一旦达成共识就不可逆转，即共识是最终结果；而概率类算法的共识结果则是临时的，随着时间推移或某种强化，共识结果被推翻的概率越来越小，最终成为事实上结果。拜占庭类容错算法往往性能较差，容忍不超过 1&#x2F;3 的故障节点。</li>
+</ul>
+</li>
+<li>副本控制协议可以分为两大类：“中心化(centralized)副本控制协议”和“去中心化(decentralized)副本控制协议”。</li>
+</ul>
+<h2 id="分布式系统的几个主要难题"><a href="#分布式系统的几个主要难题" class="headerlink" title="分布式系统的几个主要难题"></a>分布式系统的几个主要难题</h2><ol>
+<li>网络问题</li>
+<li>时钟问题</li>
+<li>节点故障问题</li>
+</ol>
+<h2 id="达成共识还可以解决分布式系统中的以下经典问题"><a href="#达成共识还可以解决分布式系统中的以下经典问题" class="headerlink" title="达成共识还可以解决分布式系统中的以下经典问题"></a>达成共识还可以解决分布式系统中的以下经典问题</h2><ol>
+<li>互斥（Mutual exclusion）：哪个进程进入临界区访问资源？</li>
+<li>选主（Leader election）：在单主复制的数据库，需要所有节点就哪个节点是领导者达成共识。如果一些由于网络故障而无法与其他节点通信，可能会产生两个领导者，它们都会接受写入，数据就可能会产生分歧，从而导致数据不一致或丢失。</li>
+<li>原子提交（Atomic commit）：跨多节点或跨多分区事务的数据库中，一个事务可能在某些节点上失败，但在其他节点上成功。如果我们想要维护这种事务的原子性，必须让所有节点对事务的结果达成共识：要么全部提交，要么全部中止&#x2F;回滚。</li>
+</ol>
+<ul>
+<li>总而言之，在共识的帮助下，分布式系统就可以像单一节点一样工作——所以共识问题是分布式系统最基本的问题。</li>
+</ul>
+<h2 id="FLP-不可能（FLP-Impossibility）"><a href="#FLP-不可能（FLP-Impossibility）" class="headerlink" title="FLP 不可能（FLP Impossibility）"></a>FLP 不可能（FLP Impossibility）</h2><ul>
+<li>早在 1985 年，Fischer、Lynch 和 Paterson （FLP）在 “Impossibility of Distributed Consensus with One Faulty Process[5]” 证明了：在一个异步系统中，即使只有一个进程出现了故障，也没有算法能保证达成共识。</li>
+<li>简单来说，因为在一个异步系统中，进程可以随时发出响应，所以没有办法分辨一个进程是速度很慢还是已经崩溃，这不满足终止性（Termination）。</li>
+<li>FLP给后来的人们提供了研究的思路——不再尝试寻找异步通信系统中共识问题完全正确的解法。FLP 不可能是指无法确保达成共识，并不是说如果有一个进程出错，就永远无法达成共识。</li>
+</ul>
+<h2 id="同步系统中的共识"><a href="#同步系统中的共识" class="headerlink" title="同步系统中的共识"></a>同步系统中的共识</h2><ul>
+<li>Dolev 和 Strong 在论文 “Authenticated Algorithms for Byzantine Agreement[9]” 中证明了：同步系统中，如果 N 个进程中最多有 f 个会出现崩溃故障，那么经过 f + 1 轮消息传递后即可达成共识。</li>
+<li>在一个有 f 个拜占庭故障节点的系统中，必须总共至少有 3f + 1 个节点才能够达成共识。即 N &gt;&#x3D; 3f + 1。</li>
+<li>虽然同步系统下拜占庭将军问题的确存在解，但是代价很高，需要 O(N^f+1 ) 的信息交换量，只有在那些安全威胁很严重的地方使用（例如：航天工业）</li>
+<li>PBFT(Practical Byzantine Fault Tolerance)[12] 算法顾名思义是一种实用的拜占庭容错算法，由 Miguel Castro 和 Barbara Liskov 发表于 1999 年。</li>
+<li>算法的主要细节不再展开。PBFT 也是通过使用同步假设保证活性来绕过 FLP 不可能。PBFT 算法容错数量同样也是 N &gt;&#x3D; 3f + 1，但只需要 O(n^2 ) 信息交换量，即每台计算机都需要与网络中其他所有计算机通讯。</li>
+</ul>
+<h2 id="一致性模型"><a href="#一致性模型" class="headerlink" title="一致性模型"></a>一致性模型</h2><ul>
+<li>一致性（Consistency）是指多副本（Replications）问题中的数据一致性。</li>
+</ul>
+<ol>
+<li>强一致性：数据更新成功后，任意时刻所有副本中的数据都是一致的，一般采用同步的方式实现。</li>
+<li>弱一致性：数据更新成功后，系统不承诺立即可以读到最新写入的值，也不承诺具体多久之后可以读到。</li>
+<li>最终一致性：弱一致性的一种形式，数据更新成功后，系统不承诺立即可以返回最新写入的值，但是保证最终会返回上一次更新操作的值。</li>
+</ol>
+<ul>
+<li>分布式中一致性是非常重要的，分为弱一致性和强一致性。现在主流的一致性协议一般都选择的是弱一致性的特殊版本：最终一致性。</li>
+</ul>
+<h2 id="CAP"><a href="#CAP" class="headerlink" title="CAP"></a>CAP</h2><ul>
+<li>CAP是指在一个分布式系统中，一致性（Consistency）、可用性（Availability）、分区容错性（Partition tolerance）这三个要素最多只能同时实现两点，不可能三者兼顾。</li>
+<li>CAP理论提出就是针对分布式环境的，所以，P 这个属性是必须具备的。</li>
+</ul>
+<ol>
+<li>Consistency 一致性<br>一致性指“all nodes see the same data at the same time”，即更新操作成功并返回客户端完成后，所有节点在同一时间的数据完全一致。等同于所有节点拥有数据的最新版本。<br>CAP中的C指的是强一致性。</li>
+<li>Availability 可用性<br>可用性指“Reads and writes always succeed”，即服务一直可用，而且是正常响应时间。<br>对于一个可用性的分布式系统，每一个非故障的节点必须对每一个请求作出响应。如果不考虑一致性，这个是很好实现的，立即返回本地节点的数据即可，而不需要等到数据一致才返回。</li>
+<li>Partition Tolerance 分区容忍性<br>Tolerance也可以翻译为容错，分区容忍性具体指“the system continues to operate despite arbitrary message loss or failure of part of the system”，即系统容忍网络出现分区，分区之间网络不可达的情况，分区容忍性和扩展性紧密相关，Partition Tolerance特指在遇到某节点或网络分区故障的时候，仍然能够对外提供满足一致性和可用性的服务。</li>
+</ol>
+<ul>
+<li><p>传统数据库都是假设不保证P的，因为传统数据库都是单机或者很小的本地集群，假设网络不存在问题，出现问题手工修复。所以，损失分区容错(P)只保证CA相当于就是一个单体应用，根本不是分布式。</p>
+</li>
+<li><p>分布式是要求单个节点故障(概率太高了)系统仍能完成运行。搭建分布式就是间接要求必须保证P，即P是现实，那C和A就无法同时做到，需要在这两者之间做平衡。</p>
+</li>
+<li><p>像银行系统，是通过损失可用性(A)来保障CP，银行系统是内网，很少出现分区不可达故障状态，一旦出现，不可达的节点对应的ATM就没法使用，即变为不可用。同时如果数据在各分区未达到一致，ATM也是Loading状态即不可用。</p>
+</li>
+<li><p>在互联网实践中，可用性又是极其重要的，因此大部分是通过损失一致性(C)来保障AP，当然也非完全牺牲一致性，使用弱一致性，即一定时间后一致的弱一致性，当数据还在同步时(WRITE之后)，使用上一次的数据。</p>
+</li>
+<li><p>Google 2009年 在Transaction Across DataCenter 的分享中，对一致性协议在业内的实践做了一简单的总结，如下图所示，这是 CAP 理论在工业界应用的实践经验。<br><img src="/2020/09/12/20200912-fen-bu-shi-yi-zhi-xing-xie-yi/cap-sumarry.png"></p>
+</li>
+</ul>
+<h3 id="BASE-理论"><a href="#BASE-理论" class="headerlink" title="BASE 理论"></a>BASE 理论</h3><ul>
+<li>Basically Available（基本可用）</li>
+<li>Soft state（软状态）</li>
+<li>Eventually consistent（最终一致性）</li>
+</ul>
+<ul>
+<li>BASE 理论是对 CAP 中的一致性和可用性进行一个权衡的结果，理论的核心思想就是：我们无法做到强一致，但每个应用都可以根据自身的业务特点，采用适当的方式来使系统达到最终一致性。</li>
+<li>BASE理论是对大规模的互联网分布式系统实践的总结，用弱一致性来换取可用性，不同于ACID，属于AP系统。</li>
+</ul>
+<h3 id="ACID"><a href="#ACID" class="headerlink" title="ACID"></a>ACID</h3><ul>
+<li>ACID（Atomicity原子性，Consistency一致性，Isolation隔离性，Durability持久性）是事务的特点，具有强一致性，一般用于单机事务，分布式事务若采用这个原则会丧失一定的可用性，属于CP系统。</li>
+</ul>
+<h2 id="分类"><a href="#分类" class="headerlink" title="分类"></a>分类</h2><h3 id="按单主和多主进行分类"><a href="#按单主和多主进行分类" class="headerlink" title="按单主和多主进行分类"></a>按单主和多主进行分类</h3><ol>
+<li>单主协议，即整个分布式集群中只存在一个主节点。主备复制、2PC、 Paxos、Raft、ZAB。<ul>
+<li>（不允许数据分歧）：整个分布式系统就像一个单体系统，所有写操作都由主节点处理并且同步给其他副本。</li>
+</ul>
+</li>
+<li>多主协议，即整个集群中不只存在一个主节点。Pow、Gossip协议。<ul>
+<li>（允许数据分歧）：所有写操作可以由不同节点发起，并且同步给其他副本。</li>
+</ul>
+</li>
+</ol>
+<ul>
+<li>单主协议由一个主节点发出数据，传输给其余从节点，能保证数据传输的有序性。而多主协议则是从多个主节点出发传输数据，传输顺序具有随机性，因而数据的有序性无法得到保证，只保证最终数据的一致性。这是单主协议和多主协议之间最大的区别。</li>
+</ul>
+<pre>
+－－－单主－－主备复制、2PC、 Paxos、Raft、ZAB
+｜
+－－－多主－－Pow、Gossip
+</pre>
+
+<h3 id="按CAP中的P分类"><a href="#按CAP中的P分类" class="headerlink" title="按CAP中的P分类"></a>按CAP中的P分类</h3><ul>
+<li>分区容忍的一致性协议跟所有的单主协议一样，它也是只有一个主节点负责写入（提供顺序一致性），但它跟 2PC 的区别在于它只需要保证大多数节点（一般是超过半数）达成一致就可以返回客户端结果，这样可以提高了性能，同时也能容忍网络分区（少数节点分区不会导致整个系统无法运行）。分区容忍的一致性算法保证大多数节点数据一致后才返回客户端，同样实现了顺序一致性。</li>
+</ul>
+<pre>
+－－－非P－－主备复制、2PC
+｜
+－－－P   －－Paxos、Raft
+</pre>
+
+<h2 id="算法简介"><a href="#算法简介" class="headerlink" title="算法简介"></a>算法简介</h2><h3 id="1、主备复制"><a href="#1、主备复制" class="headerlink" title="1、主备复制"></a>1、主备复制</h3><ul>
+<li>主备复制可以说是最常用的数据复制方法，也是最基础的方法，很多其他协议都是基于它的变种。 主备复制要求所有的写操作都在主节点上进行，然后将操作的日志发送给其他副本。可以发现由于主备复制是有延迟的，所以它实现的是最终一致性。</li>
+<li>主备复制的实现方式：主节点处理完写操作之后立即返回结果给客户端，写操作的日志异步同步给其他副本。这样的好处是性能高，客户端不需要等待数据同步，缺点是如果主节点同步数据给副本之前数据缺失了，那么这些数据就永久丢失了。MySQL 的主备同步就是典型的异步复制。</li>
+</ul>
+<h3 id="2、2PC"><a href="#2、2PC" class="headerlink" title="2、2PC"></a>2、2PC</h3><ul>
+<li>2PC 是典型的 CA 系统，为了保证一致性和可用性，2PC 一旦出现网络分区或者节点不可用就会被拒绝写操作，把系统变成只读的。</li>
+<li>由于 2PC 容易出现节点宕机导致一直阻塞的情况，所以在数据复制的场景中不常用，一般多用于分布式事务中。</li>
+<li>如果网络环境较好，该协议一般还是能很好的工作的，2PC广泛应用于关系数据库的分布式事务处理，如mysql的内部与外部XA都是基于2PC的，一般想要把多个操作打包未原子操作也可以用2PC。</li>
+</ul>
+<pre>
+｜－－－1. Prepare(Vote Request) 
+｜
+｜－－－2. Global Commit (1－ return (Vote Commit)) （正常流程）
+｜
+｜－－－2. Global Rollback (1－ return (Vote Abort)) （异常流程）
+</pre>
+
+<ul>
+<li>缺点：    <ol>
+<li>性能问题(两个阶段都涉及同步等待阻塞，极大降低了吞吐量)</li>
+<li>协调者单点故障问题</li>
+<li>丢失消息导致的数据不一致问题</li>
+</ol>
+</li>
+</ul>
+<h3 id="3、3PC"><a href="#3、3PC" class="headerlink" title="3、3PC"></a>3、3PC</h3><ul>
+<li><p>相对于2PC，3PC主要解决的单点故障问题，并减少阻塞。在2PC的基础上增加了CanCommit阶段，并引入了超时机制。一旦事务参与者迟迟没有收到协调者的Commit请求，就会自动进行本地commit，这样相对有效地解决了协调者单点故障的问题;但是性能问题和不一致问题仍然没有根本解决。</p>
+</li>
+<li><p>CanCommit阶段: 检查下自身状态的健康性，看有没有能力进行事务操作。</p>
+</li>
+<li><p>和2PC区别：</p>
+<ol>
+<li>相比较2PC而言，3PC对于协调者（Coordinator）和参与者（Partcipant）都设置了超时时间，而2PC只有协调者才拥有超时机制。这个优化点，主要是避免了参与者在长时间无法与协调者节点通讯（协调者挂掉了）的情况下，无法释放资源的问题，因为参与者自身拥有超时机制会在超时后，自动进行本地commit从而进行释放资源。而这种机制也侧面降低了整个事务的阻塞时间和范围。</li>
+<li>通过CanCommit、PreCommit、DoCommit三个阶段的设计，相较于2PC而言，多设置了一个缓冲阶段保证了在最后提交阶段之前各参与节点的状态是一致的。</li>
+</ol>
+</li>
+<li><p>无论是2PC还是3PC都无法彻底解决分布式的一致性问题。Google Chubby的作者Mike Burrows说过， there is only one consensus protocol, and that’s Paxos” – all other approaches are just broken versions of Paxos。意即世上只有一种一致性算法，那就是Paxos，所有其他一致性算法都是Paxos算法的不完整版。</p>
+</li>
+</ul>
+<h3 id="4、MVCC"><a href="#4、MVCC" class="headerlink" title="4、MVCC"></a>4、MVCC</h3><ul>
+<li>MVCC(Multi-version Cocurrent Control，多版本并发控制)技术。MVCC 技术最初也是在数据库系统中被提出，但这种思想并不局限于单机的分布式系统，在分布式系统中同样有效。</li>
+</ul>
+<h3 id="5、Paxos协议"><a href="#5、Paxos协议" class="headerlink" title="5、Paxos协议"></a>5、Paxos协议</h3><ul>
+<li>2PC、3PC 两个协议的协调者都需要人为设置而无法自动生成，是不完整的分布式协议，而Paxos 就是一个真正的完整的分布式算法。系统一共有几个角色：Proposer（提出提案）、Acceptor（参与决策）、Learner（不参与提案，只负责接收已确定的提案，一般用于提高集群对外提供读服务的能力），实践中一个节点可以同时充当多个角色。</li>
+<li>作者在描述Paxos时，列举了希腊城邦选举的例子，所以该算法又被称为希腊城邦算法。</li>
+<li>Paxos是非常经典的一致性协议，但是因为过于理论化，难以直接工程化，因此工业界出现了诸多基于Paxos思想出发的变种。虽然这些变种最终很多都和原始的Paxos有比较大的差距，甚至完全演变成了新的协议，但是作为奠基者的Paxos在分布式一致性协议中依然持有不可撼动的地位。</li>
+<li>Paxos协议的容错性很好，只要有超过半数的节点可用，整个集群就可以自己进行Leader选举，也可以对外服务，通常用来保证一份数据的多个副本之间的一致性，适用于构建一个分布式的一致性状态机。</li>
+<li>Google的分布式锁服务Chubby就是用了Paxos协议，而开源的ZooKeeper使用的是Paxos的变种ZAB协议。</li>
+</ul>
+<h3 id="6、Raft协议"><a href="#6、Raft协议" class="headerlink" title="6、Raft协议"></a>6、Raft协议</h3><ul>
+<li>Raft协议是斯坦福的Diego Ongaro、John Ousterhout两人于2013年提出，作者表示流行的Paxos算法难以理解，且其过于理论化致使直接应用于工程实现时出现很多困难，因此作者希望提出一个能被大众比较容易地理解接受，且易于工程实现的协议。Raft由此应运而生。不得不说，Raft作为一种易于理解，且工程上能够快速实现一个较完整的原型的算法，受到业界的广泛追捧。</li>
+<li>Raft协议对标Paxos，容错性和性能都是一致的，但是Raft比Paxos更易理解和实施。系统分为几种角色：Leader（发出提案）、Follower（参与决策）、Candidate（Leader选举中的临时角色）。</li>
+<li>在Raft协议出来之前，Paxos是分布式领域的事实标准，但是Raft的出现打破了这一个现状（raft作者也是这么想的，请看论文），Raft协议把Leader选举、日志复制、安全性等功能分离并模块化，使其更易理解和工程实现，将来发展怎样我们拭目以待（挺看好）。</li>
+<li>Raft协议目前被用于 cockrouchDB，TiKV等项目中</li>
+<li>Raft 算法实际上是 Multi-Paxos 的一个变种，通过新增两个约束：<ul>
+<li>追加日志约束：Raft 中追加节点的日志必须是串行连续的，而 Multi-Paxos 中则可以并发追加日志（实际上 Multi-Paxos 的并发也只是针对日志追加，最后应用到内部 State Machine 的时候还是必须保证顺序）。</li>
+<li>选主限制：Raft 中只有那些拥有最新、最全日志的节点才能当选 Leader 节点，而 Multi-Paxos 由于允许并发写日志，因此无法确定一个拥有最新、最全日志的节点，因此可以选择任意一个节点作为 Leader，但是选主之后必须要把 Leader 节点的日志补全。</li>
+<li>基于这两个限制，Raft 算法的实现比 Multi-Paxos 更加简单易懂，不过由于 Multi-Paxos 的并发度更高，因此从理论上来说 Multi-Paxos 的性能会更好一些，但是到现在为止业界也没有一份权威的测试报告来支撑这一观点。</li>
+</ul>
+</li>
+</ul>
+<h3 id="Paxos和Raft的对比"><a href="#Paxos和Raft的对比" class="headerlink" title="Paxos和Raft的对比"></a>Paxos和Raft的对比</h3><ul>
+<li>Paxos算法和Raft算法有显而易见的相同点和不同点。二者的共同点在于，它们本质上都是单主的一致性算法，且都以不存在拜占庭将军问题作为前提条件。二者的不同点在于，Paxos算法相对于Raft，更加理论化，原理上理解比较抽象，仅仅提供了一套理论原型，这导致很多人在工业上实现Paxos时，不得已需要做很多针对性的优化和改进，但是改进完却发现算法整体和Paxos相去甚远，无法从原理上保证新算法的正确性，这一点是Paxos难以工程化的一个很大原因。相比之下Raft描述清晰，作者将算法原型的实现步骤完整地列在论文里，极大地方便了业界的工程师实现该算法，因而能够受到更广泛的应用。</li>
+<li>从根本上来看，Raft的核心思想和Paxos是非常一致的，甚至可以说，Raft是基于Paxos的一种具体化实现和改进，它让一致性算法更容易为人所接受，更容易得到实现。由此亦可见，Paxos在一致性算法中的奠基地位是不可撼动的。</li>
+</ul>
+<h3 id="7、Gossip算法"><a href="#7、Gossip算法" class="headerlink" title="7、Gossip算法"></a>7、Gossip算法</h3><ul>
+<li>Gossip又被称为流行病算法，它与流行病毒在人群中传播的性质类似，由初始的几个节点向周围互相传播，到后期的大规模互相传播，最终达到一致性。</li>
+<li>Gossip协议与上述所有协议最大的区别就是它是去中心化的，上面所有的协议都有一个类似于Leader的角色来统筹安排事务的响应、提交与中断，但是Gossip协议中就没有Leader，每个节点都是平等的。</li>
+<li>Gossip协议被广泛应用于P2P网络，同时一些分布式的数据库，如Redis集群的消息同步使用的也是Gossip协议，另一个重大应用是被用于比特币的交易信息和区块信息的传播。</li>
+<li>去中心化的Gossip看起来很美好：没有单点故障，看似无上限的对外服务能力……本来随着Cassandra火了一把，但是现在Cassandra也被抛弃了，去中心化的架构貌似难以真正应用起来。归根到底我觉得还是因为去中心化本身管理太复杂，节点之间沟通成本高，最终一致等待时间较长……往更高处看，一个企业（甚至整个社会）不也是需要中心化的领导（或者制度）来管理吗，如果没有领导（或者制度）管理，大家就是一盘散沙，难成大事啊。</li>
+<li>事实上现代互联网架构只要把单点做得足够强大，再加上若干个强一致的热备，一般问题都不大。</li>
+<li>应用：数据同步；缺点：节点之间沟通成本高，最终一致等待时间较长</li>
+</ul>
+<h3 id="8、Pow（Proof-of-work）"><a href="#8、Pow（Proof-of-work）" class="headerlink" title="8、Pow（Proof of work）"></a>8、Pow（Proof of work）</h3><ul>
+<li>Proof-of-work算法又被称为Pow算法。工作量证明算法。</li>
+<li>Pow最为人所熟知的应用是比特币。代表者是比特币（BTC），区块链1.0</li>
+<li>PoW（Proof of Work，工作量证明）的字面意思是谁干的活多，谁的话语权就大，在一定层面上类似于现实生活中“多劳多得”的概念。以比特币为例，比特币挖矿就是通过计算符合某一个比特币区块头的哈希散列值争夺记账权。这个过程需要通过大量的计算实现，简单理解就是挖矿者进行的计算量越大（工作量大），它尝试解答问题的次数也就变得越多，解出正确答案的概率自然越高，从而就有大概率获得记账权，即该矿工所挖出的区块被串接入主链。</li>
+<li>基于PoW节点网络的安全性令人堪忧。大于51%算力的攻击。</li>
+<li>51%算力攻击目前仅在“PoW”共识机制中存在，因为“PoW”共识机制依赖算力计算获胜，也就是谁算得快，谁的胜率就高。在使用了“PoW”共识机制的区块链网络中，我们称参与计算哈希的所有计算机资源为算力，那么全网络的算力就是100%，当超过51%的算力掌握在同一阵营中时，这个阵营的计算哈希胜出的概率将会大幅提高。为什么是51%？50.1%不行吗？当然也是可以的，之所以取51%是为了取一个最接近50%，且比50%大的整数百分比，这样当算力值达到51%后的效果将会比50.1%的计算效果更明显。举个例子，如果诚实节点的算力值是50.1%，那么坏节点的算力值就是49.9%。两者的差距不算太大，这样容易导致最终的区块竞争你来我往、长期不分上下。如果算力资源分散，不是高度集中的，那么整个区块链网络是可信的。然而，当算力资源集中于某一阵营的时候，算力的拥有者就能使用算力资源去逆转区块，导致区块链分叉严重，</li>
+</ul>
+<h3 id="9、PoS（Proof-of-Stake）"><a href="#9、PoS（Proof-of-Stake）" class="headerlink" title="9、PoS（Proof of Stake）"></a>9、PoS（Proof of Stake）</h3><ul>
+<li>代表者是以太坊（ETH），以太坊正在从PoW过渡到PoS，区块链2.0</li>
+<li>PoS（Proof of Stake，股权证明）是由点点币（PPCoin）首先应用的。该算法没有挖矿过程，而是在创世区块内写明股权分配比例，之后通过转让、交易的方式，也就是我们说的IPO（Initial Public Offerings）公开募股方式，逐渐分散到用户钱包地址中去，并通过“利息”的方式新增货币，实现对节点地址的奖励。PoS的意思是股份制。也就是说，谁的股份多，谁的话语权就大，这和现实生活中股份制公司的股东差不多。但是，在区块链的应用中，我们不可能真实地给链中的节点分配股份，取而代之的是另外一些东西，例如代币，让这些东西来充当股份，再将这些东西分配给链中的各节点。</li>
+<li>PoS共识算法具有下面的优缺点：（1）优点•缩短了共识达成的时间，链中共识块的速度更快。•不再需要大量消耗能源挖矿，节能。•作弊得不偿失。如果一名持有多于50%以上股权的人（节点）作弊，相当于他坑了自己，因为他是拥有股权最多的人，作弊导致的结果往往是拥有股权越多的人损失越多。（2）缺点•攻击成本低，只要节点有物品数量，例如代币数量，就能发起脏数据的区块攻击。•初始的代币分配是通过IPO方式发行的，这就导致“少数人”（通常是开发者）获得了大量成本极低的加密货币，在利益面前，很难保证这些人不会大量抛售。•拥有代币数量大的节点获得记账权的概率会更大，使得网络共识受少数富裕账户支配，从而失去公正性。</li>
+<li>区块链2.0仍存在性能上的缺陷，难以支持大规模的商业应用开发。与支付宝在“双十一”时26.5万笔交易&#x2F;秒的性能相比，像以太坊这样的区块链系统只能做到几百笔交易&#x2F;秒的水平。交易需由多个参与方确认，是影响区块链性能的主要原因。</li>
+</ul>
+<h3 id="10、DPoS"><a href="#10、DPoS" class="headerlink" title="10、DPoS"></a>10、DPoS</h3><ul>
+<li>代表者是柚子（EOS），区块链3.0</li>
+</ul>
+<h3 id="11、"><a href="#11、" class="headerlink" title="11、"></a>11、</h3><ul>
+<li>PBFT拜占庭容错，联盟链中常用。</li>
+</ul>
+<h3 id="Gossip算法和Pow算法对比"><a href="#Gossip算法和Pow算法对比" class="headerlink" title="Gossip算法和Pow算法对比"></a>Gossip算法和Pow算法对比</h3><ul>
+<li>同为去中心化算法，Gossip算法和Pow算法都能实现超大集群的一致性，但是它们的特性可谓有天壤之别。Gossip算法往往应用于超大集群快速达成一致性的目的。它的特性是如流感一般超强的传播速度，以及自身能够管理的数量可观的节点数。但是对于流传的消息没有特别的管控，无法辨别其中的虚假信息，并且只关注与最终的一致性，不关心消息的顺序性。而Pow算法则完全专注于尽可能地解决”拜占庭将军”问题，防止消息的篡改。它可以不计代价地去要求各个节点参与竞选，以付出巨大算力为代价保证平台的安全性。</li>
+</ul>
+<h2 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h2><ul>
+<li>区块链：PoW、PoS、Gossip</li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><h3 id="2PC和TCC什么关系"><a href="#2PC和TCC什么关系" class="headerlink" title="2PC和TCC什么关系"></a>2PC和TCC什么关系</h3><ol>
+<li><p>2PC在“分布式一致性协议“的范畴，属于CA层面的一个协议，一般作为和其他协议(PAXOS，Raft)进行对比的形式出现。</p>
+</li>
+<li><p>2PC在“分布式事务“的范畴，属于数据库层面，XA协议的基础。TCC算是一种特殊的2PC。TCC事务的处理流程与2PC两阶段提交类似，不过2PC通常都是在跨库的DB层面，而TCC本质上就是一个应用层面的2PC，需要通过业务逻辑来实现。</p>
+</li>
+<li><p>TCC是分布式事务的范畴，但其本质也是分布式一致性的一种协议，只是特指业务上的协议。而一般情况下我们所说的分布式一致性协议，一般是指底层系统实现上的，偏向基础服务上的。如果以后有人对TCC进行改造，描述出底层系统(非业务)的TCC，那么它也属于这篇文章所包含的其中一种分布式一致性协议。对于其他分布式事务的实现方案同理。</p>
+</li>
+</ol>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><ul>
+<li>从Paxos到Raft再到EPaxos：<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/ex7CgJTbxbd5FA2F-BvSVQ">一文总结：分布式一致性技术是如何演进的？</a></li>
+<li>众所周知，Paxos是出了名的晦涩难懂，不仅难以理解，更难以实现。而Raft则以可理解性和易于实现为目标，Raft的提出大大降低了使用分布式一致性的门槛，将分布式一致性变的大众化、平民化，因此当Raft提出之后，迅速得到青睐，极大地推动了分布式一致性的工程应用。</li>
+<li>EPaxos的提出比Raft还早，但却长期无人问津，很大一个原因就是EPaxos实在是难以理解。EPaxos基于Paxos，但却比Paxos更难以理解，大大地阻碍了EPaxos的工程应用。不过，是金子总会发光的，EPaxos因着它独特的优势，终于被人们发现，具有广阔的前景。</li>
+<li>EPaxos更适用于跨AZ跨地域场景，对可用性要求极高的场景，Leader容易形成瓶颈的场景。Multi-Paxos和Raft本身非常相似，适用场景也类似，适用于内网场景，一般的高可用场景，Leader不容易形成瓶颈的场景。</li>
+</ul>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/130974371">分布式一致性协议概述</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/558acf897628">分布式系统：一致性协议</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/demon7552003/article/details/86657767">分布式一致性协议</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/jQrPSmPhC_yNbIRcufR8KQ">分布式事务：深入理解什么是2PC、3PC及TCC协议</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/UfbMFXxJqRhLDXUntKVE8A">详解分布式一致性机制</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/qxaR832GsXQBpc6YxgX63Q">漫谈分布式共识问题</a>！！</li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/KKrxuVCrjlXXWMPTXQ-fvA">分布式之系统底层原理</a>！！！！</li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/IbBC38rhhQ-mEfw3yf9AVA">深度介绍分布式系统原理与设计</a></li>
+<li>[区块链：以太坊DApp开发实战]</li>
+<li>[区块链：分布式商业与智数未来]</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/09/12/20200912-fen-bu-shi-shi-wu-jian-yao-zong-jie/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/09/12/20200912-fen-bu-shi-shi-wu-jian-yao-zong-jie/" itemprop="url">分布式事务简要总结</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-09-12T14:41:45+08:00">
+                2020-09-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><ul>
+<li>本文涉及一些理论基础</li>
+<li>业界目前的分布式事务的解决方案</li>
+<li>简单的分类和总结</li>
+<li>基本内容都来源网上</li>
+</ul>
+<h2 id="理论基础"><a href="#理论基础" class="headerlink" title="理论基础"></a>理论基础</h2><h3 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h3><ol>
+<li>事务：事务是由一组操作构成的可靠的独立的工作单元，事务具备ACID的特性，即原子性、一致性、隔离性和持久性。</li>
+<li>本地事务：当事务由资源管理器本地管理时被称作本地事务。本地事务的优点就是支持严格的ACID特性，高效，可靠，状态可以只在资源管理器中维护，而且应用编程模型简单。但是本地事务不具备分布式事务的处理能力，隔离的最小单位受限于资源管理器。</li>
+<li>全局事务：当事务由全局事务管理器进行全局管理时成为全局事务，事务管理器负责管理全局的事务状态和参与的资源，协同资源的一致提交回滚。</li>
+</ol>
+<h3 id="ACID-数据库事务4个特性"><a href="#ACID-数据库事务4个特性" class="headerlink" title="ACID(数据库事务4个特性)"></a>ACID(数据库事务4个特性)</h3><ol>
+<li>Atomicity（原子性）</li>
+<li>Consistency（一致性)</li>
+<li>Isolation（隔离性）</li>
+<li>Durablity（持久性）</li>
+</ol>
+<h3 id="分布式事务-Distributed-Transaction"><a href="#分布式事务-Distributed-Transaction" class="headerlink" title="分布式事务 (Distributed Transaction)"></a>分布式事务 (Distributed Transaction)</h3><ol>
+<li>在互联网技术里面，强调追求最终一致性。异地多活就是围绕这一点来做的。</li>
+<li>分布式事务从实质上看与数据库事务的概念是一致的，既然是事务也就需要满足事务的基本特性（ACID），只是分布式事务相对于本地事务而言其表现形式有很大的不同。</li>
+</ol>
+<h3 id="分布式一致性协议-consensus-protocol"><a href="#分布式一致性协议-consensus-protocol" class="headerlink" title="分布式一致性协议 (consensus protocol)"></a>分布式一致性协议 (consensus protocol)</h3><ol>
+<li>两阶段提交协议（The two-phase commit protocol，2PC）</li>
+<li>3PC</li>
+<li>PAXOS</li>
+<li>Raft 等</li>
+</ol>
+<ul>
+<li><p>无论是2PC还是3PC都无法彻底解决分布式的一致性问题。Google Chubby的作者Mike Burrows说过， ”there is only one consensus protocol, and that’s Paxos” – all other approaches are just broken versions of Paxos。意即世上只有一种一致性算法，那就是Paxos，所有其他一致性算法都是Paxos算法的不完整版。</p>
+</li>
+<li><p>详情看：<a target="_blank" rel="noopener" href="https://kingson4wu.gitee.io/2020/09/12/20200912-%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%80%E8%87%B4%E6%80%A7%E5%8D%8F%E8%AE%AE/">分布式一致性协议概览</a></p>
+</li>
+</ul>
+<h3 id="DTP-Distributed-Transaction-Processing"><a href="#DTP-Distributed-Transaction-Processing" class="headerlink" title="DTP(Distributed Transaction Processing)"></a>DTP(Distributed Transaction Processing)</h3><ul>
+<li><p>DTP（Distributed Transaction Processing Reference Model）：分布式事务处理模型。TM、RM、AP等角色的分布式事务的模型。<br><img src="/2020/09/12/20200912-fen-bu-shi-shi-wu-jian-yao-zong-jie/DTP.png"></p>
+</li>
+<li><p>AP（Application Program，应用程序）</p>
+</li>
+<li><p>TM（Transaction Manager，事务管理器）</p>
+</li>
+<li><p>RM（Resource Manager，资源管理器）</p>
+</li>
+<li><p>DTP规范中主要包含了AP、RM、TM三个部分，其中AP是应用程序，是事务发起和结束的地方；RM是资源管理器，主要负责管理每个数据库的连接数据源；TM是事务管理器，负责事务的全局管理，包括事务的生命周期管理和资源的分配协调等。</p>
+</li>
+<li><p>XA是DTP的一部分接口规范。</p>
+</li>
+</ul>
+<h3 id="分布式事务框架"><a href="#分布式事务框架" class="headerlink" title="分布式事务框架"></a>分布式事务框架</h3><ul>
+<li><p>大多数分布式事务框架，也多借鉴了DTP（Distributed Transaction Processing）模型</p>
+</li>
+<li><p>RM负责本地事务的提交，同时完成分支事务的注册、锁的判定，扮演事务参与者角色。</p>
+</li>
+<li><p>TM负责整体事务的提交与回滚的指令的触发，扮演事务的总体协调者角色。</p>
+</li>
+<li><p>不同框架在实现时，各组件角色的功能、部署形态会根据需求进行调整，例如TM有的是以jar包形式与应用部署在一起，有的则剥离出来需要单独部署（例如Seata中将TM的主要功能放到一个逻辑上集中的Server上，叫做TC( Transaction Coordinator )）</p>
+</li>
+<li><p>一个好的分布式事务框架应用尽可能满足以下特性：<br>业务改造成本低；1<br>性能损耗低；2<br>隔离性保证完整。3<br>但如同CAP，这三个特性是相互制衡</p>
+</li>
+<li><p>基于业务补偿的Saga满足1.2；TCC满足2.3；Seata（AT模式）满足1.3</p>
+</li>
+</ul>
+<p><img src="/2020/09/12/20200912-fen-bu-shi-shi-wu-jian-yao-zong-jie/Saga_TCC_AT.png"></p>
+<h3 id="分布式事务的4种模式"><a href="#分布式事务的4种模式" class="headerlink" title="分布式事务的4种模式"></a>分布式事务的4种模式</h3><ol>
+<li>AT - (无侵入的分布式事务解决方案)</li>
+<li>TCC (业务层的2PC)</li>
+<li>Saga (一种补偿协议，长事务解决方案)</li>
+<li>XA (DB层的2PC)</li>
+</ol>
+<ul>
+<li>阿里seata框架 实现了这四种模式。</li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/78599954">分布式事务的4种模式</a></li>
+</ul>
+<p><img src="/2020/09/12/20200912-fen-bu-shi-shi-wu-jian-yao-zong-jie/Seata.jpg"></p>
+<ul>
+<li>性能最高的是Saga，其次是TCC。</li>
+<li>隔离性最好的是XA（资源层），最差的是Saga。</li>
+<li>除了XA，其他三个为柔性事务，补偿式事务。</li>
+</ul>
+<h3 id="补偿型事务"><a href="#补偿型事务" class="headerlink" title="补偿型事务"></a>补偿型事务</h3><p>补偿型事务处理机制构建在 事务资源 之上（要么在中间件层面，要么在应用层面），事务资源 本身对分布式事务是无感知的。<br><img src="/2020/09/12/20200912-fen-bu-shi-shi-wu-jian-yao-zong-jie/%E8%A1%A5%E5%81%BF%E5%9E%8B%E4%BA%8B%E5%8A%A1.png"></p>
+<h3 id="分类"><a href="#分类" class="headerlink" title="分类"></a>分类</h3><ul>
+<li>分布式事务实现方案从ACID的角度上，分刚性事务、柔型事务。</li>
+<li>刚性事务：通常无业务改造，强一致性，原生支持回滚&#x2F;隔离性，低并发，适合短事务;<br>柔性事务：有业务改造，最终一致性，实现补偿接口，实现资源锁定接口，高并发，适合长事务。</li>
+<li>刚性事务满足ACID理论；柔性事务满足BASE理论（基本可用，最终一致）</li>
+<li>刚性事务：XA 协议（2PC、JTA、JTS）、3PC；<br>柔型事务：TCC&#x2F;FMT、Saga（状态机模式、Aop模式）、本地事务消息、消息事务（半消息）。</li>
+</ul>
+<h3 id="柔性事务"><a href="#柔性事务" class="headerlink" title="柔性事务"></a>柔性事务</h3><ul>
+<li>柔性事务（如分布式事务）为了满足可用性、性能与降级服务的需要，降低一致性（Consistency）与隔离性（Isolation）的要求，遵循 BASE 理论。</li>
+<li>柔性事务也部分遵循 ACID 规范：<ol>
+<li>原子性：严格遵循</li>
+<li>一致性：事务完成后的一致性严格遵循；事务中的一致性可适当放宽</li>
+<li>隔离性：并行事务间不可影响；事务中间结果可见性允许安全放宽</li>
+<li>持久性：严格遵循</li>
+</ol>
+</li>
+</ul>
+<h3 id="柔性事务的分类"><a href="#柔性事务的分类" class="headerlink" title="柔性事务的分类"></a>柔性事务的分类</h3><p>柔性事务分为：两阶段型、补偿型、异步确保型、最大努力通知型。</p>
+<ol>
+<li>两阶段型 (这个并不算柔性事务，资源层，强一致性！)<br>分布式事务二阶段提交，对应技术上的 XA、JTA&#x2F;JTS，这是分布式环境下事务处理的典型模式。</li>
+<li>补偿型<br>TCC 型事务（Try-Confirm-Cancel）可以归为补偿型。在 Try 成功的情况下，如果事务要回滚，Cancel 将作为一个补偿机制，回滚 Try 操作；TCC 各操作事务本地化，且尽早提交（没有两阶段约束）；当全局事务要求回滚时，通过另一个本地事务实现“补偿”行为。<br>TCC 是将资源层的二阶段提交协议转换到业务层，成为业务模型中的一部分。</li>
+<li>异步确保型<br>将一些有同步冲突的事务操作变为异步操作，避免对数据库事务的争用，如消息事务机制。</li>
+<li>最大努力通知型<br>通过通知服务器（消息通知）进行，允许失败，有补充机制。</li>
+</ol>
+<ul>
+<li>针对不同的分布式场景业界常见的解决方案有2PC、TCC、可靠消息最终一致性、最大努力通知这几种。</li>
+</ul>
+<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><ul>
+<li>JTA（Java Transaction API）：分布式事务的编程API，按照XA、DTP的模型和规范实现，在J2EE中，单库事务通过JDBC事务来支持，跨库事务通过JTA API来支持，通过JTA API可以协调和管理横跨多个数据库的分布式事务，一般来说会结合JNDI。</li>
+</ul>
+<h2 id="分布式事务解决方案"><a href="#分布式事务解决方案" class="headerlink" title="分布式事务解决方案"></a>分布式事务解决方案</h2><h3 id="本地消息服务方案-ebay"><a href="#本地消息服务方案-ebay" class="headerlink" title="本地消息服务方案(ebay)"></a>本地消息服务方案(ebay)</h3><ul>
+<li><p>eBay 事件队列方案——最终一致性</p>
+</li>
+<li><p>eBay 的架构师Dan Pritchett，曾在一篇解释BASE 原理的论文《Base：An Acid Alternative》中提到一个eBay 分布式系统一致性问题的解决方案。它的核心思想是将需要分布式处理的任务通过消息或者日志的方式来异步执行，消息或日志可以存到本地文件、数据库或消息队列，再通过业务规则进行失败重试，它要求各服务的接口是幂等的。</p>
+</li>
+<li><p>(任务表，定时任务或人工自动重试)。</p>
+</li>
+<li><p>优点：</p>
+<ul>
+<li>消息的时效性比较高；</li>
+<li>从应用设计的角度实现了消息数据的可靠性，消息数据的可靠性不依赖于MQ中间件，弱化了对MQ中间件特性的依赖；</li>
+<li>方案轻量级，容易实现。</li>
+</ul>
+</li>
+<li><p>缺点：</p>
+<ul>
+<li>与具体的业务场景绑定，耦合性强，不可以共用；</li>
+<li>消息数据与业务数据同步，占用业务系统资源；</li>
+<li>业务系统在使用关系型数据库的情况下消息服务性能会受到关系型数据库的并发性能限制。</li>
+</ul>
+</li>
+<li><p>本地消息表:一种非常经典的实现，基本避免了分布式事务，实现了“最终一致性”。但是，关系型数据库的吞吐量和性能方面存在瓶颈，频繁的读写消息会给数据库造成压力。所以，在真正的高并发场景下，该方案也会有瓶颈和限制的。</p>
+</li>
+<li><p>其他类似方案：<a target="_blank" rel="noopener" href="https://www.infoq.cn/article/b4VPvP3m8DA-PM7ZqMGZ">去哪儿网消息队列设计与实现</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://insights.thoughtworks.cn/backend-development-eda/">事件驱动架构(EDA)编码实践</a> (事件表方式)</p>
+</li>
+</ul>
+<h3 id="消息队列MQ事务"><a href="#消息队列MQ事务" class="headerlink" title="消息队列MQ事务"></a>消息队列MQ事务</h3><ul>
+<li>2PC、3PC的时候我们说没有根本解决性能问题，而如果通过MQ的事务消息来进行异步解耦，并实现系统的数据的最终一致性的话会不会好很多呢？实际上这就是我们下一篇文章要继续讲述的《分布式事务之如何基于RocketMQ的事务消息特性实现分布式系统的最终一致性？:<a target="_blank" rel="noopener" href="https://blog.csdn.net/u014532775/article/details/100830995">https://blog.csdn.net/u014532775/article/details/100830995</a></li>
+</ul>
+<h4 id="以支付系统为例"><a href="#以支付系统为例" class="headerlink" title="以支付系统为例"></a>以支付系统为例</h4><ol>
+<li>上游服务（支付系统）如何确保完成自身支付成功状态更新后消息100%的能够投递到下游服务（用户余额系统）指定的Topic中？<br>1)在这个流程中上游服务在进行本地数据库事务操作前，会先发送一个状态为“待确认”的消息至可靠消息服务，而不是直接将消息投递到MQ服务的指定Topic。<br>2)之后上游服务就会开启本地数据库事务执行业务逻辑操作，这里支付系统就会将该笔支付订单状态更新为“已成功”。<br>3)如果上游服务本地数据库事务执行成功，则继续向可靠消息服务发送消息确认消息，此时可靠消息服务就会正式将消息投递到MQ服务，并且同时更新消息数据库中的消息状态为“已发送”。<br>4)相反，如果上游本地数据库事务执行失败，则需要向可靠消息服务发送消息删除消息，可靠消息服务此时就会将消息删除，这样就意味着事务在上游消息投递过程中就被回滚了，而流程也就此结束了<pre>
+实现数据一致性是一个复杂的活。在这个方案中可靠消息服务作为基础性的服务除了执行正常的逻辑外，还得处理复杂的异常场景。在实现过程中可靠消息服务需要启动相应的后台线程，不断轮训消息的状态，这里会轮训消息状态为“待确认”的消息，并判断该消息的状态的持续时间是否超过了规定的时间，如果超过规定时间的消息还处于“待确认”的状态，就会触发上游服务状态询问机制。</pre></li>
+</ol>
+<p>可靠消息服务就会调用上游服务提供的相关借口，询问这笔消息的处理情况，如果这笔消息在上游服务处理成功，则后台线程就会继续触发上图中的步骤5，更新消息状态为“已发送”并投递消息至MQ服务；反之如果这笔消息上游服务处理失败，可靠消息服务则会进行消息删除。通过这样以上机制就确保了“上游服务本地事务成功处理+消息成功投递”处于一个原子操作了。<br><br>2. 下游服务（用户余额系统）如何确保对MQ服务Topic消息的消费100%都能处理成功？</p>
+<pre>
+在正常的流程中，下游服务等待消费Topic的消息并进行自身本地数据库事务的处理，如果处理成功则会主动通知可靠消息服务，可靠消息服务此时就会将消息的状态更新为“已完成”；反之，处理失败下游服务就无法再主动向可靠消息服务发送通知消息了。
+
+此时，与消息投递过程中的异常逻辑一样，可靠消息服务也会启动相应的后台线程，轮询一直处于“已发送”状态的消息，判断状态持续时间是否超过了规定时间，如果超时，可靠消息服务就会再次向MQ服务投递此消息，从而确保消息能被再次消费处理。（注意，也可能出现下游服务处理成功，但是通知消息发送失败的情况，所以为了确保幂等，下游服务也需要在业务逻辑上做好相应的防重处理）。
+</pre>
+
+<ul>
+<li><p>事实上，支付系统的数据一致性是一个复杂的问题，原因在于支付流程的各个环节都存在异步的不确定性，例如支付系统需要跟第三方渠道进行交互，不同的支付渠道交互流程存在差异，并且有异步支付结果回调的情况。</p>
+</li>
+<li><p>除此以外，支付系统内部本身又是由多个不同子系统组成，除核心支付系统外，还有账务系统、商户通知系统等等，而核心支付系统本身也会被拆分为多个不同的服务模块，如风控、路由等用以实现不同的功能逻辑。某些场景我们无法通过分布式事务来实现数据一致性，只能通过额外的业务补偿手段，如二次轮训、支付对账等来实现数据最终一致性。</p>
+</li>
+<li><p>综上所述，支付系统是一个复杂的系统，要完全实现数据的一致性单靠某一种手段是无法实现的，大部分情况下我们可以通过额外的业务补偿逻辑来实现数据最终一致性，只是这样补偿逻辑需要以更多的业务开发逻辑为代价，并且在时效性上会存在延迟的问题。</p>
+</li>
+<li><p>MQ（事务消息）(notify-两阶段提交加回调机制)－ RocketMQ</p>
+</li>
+</ul>
+<p><img src="/2020/09/12/20200912-fen-bu-shi-shi-wu-jian-yao-zong-jie/%E6%AD%A3%E5%B8%B8%E6%83%85%E5%86%B5_%E4%BA%8B%E5%8A%A1%E4%B8%BB%E5%8A%A8%E6%96%B9%E5%8F%91%E6%B6%88%E6%81%AF.png"><br><img src="/2020/09/12/20200912-fen-bu-shi-shi-wu-jian-yao-zong-jie/%E5%BC%82%E5%B8%B8%E6%83%85%E5%86%B5_%E4%BA%8B%E5%8A%A1%E4%B8%BB%E5%8A%A8%E6%96%B9%E6%B6%88%E6%81%AF%E6%81%A2%E5%A4%8D.jpeg"></p>
+<h4 id="RocketMQ"><a href="#RocketMQ" class="headerlink" title="RocketMQ"></a>RocketMQ</h4><ul>
+<li><p>很像阿里的notify</p>
+</li>
+<li><p>事务发起方首先发送 prepare 消息到 MQ。<br>在发送 prepare 消息成功后执行本地事务。<br>根据本地事务执行结果返回 commit 或者是 rollback。<br>如果消息是 rollback，MQ 将删除该 prepare 消息不进行下发，如果是 commit 消息，MQ 将会把这个消息发送给 consumer 端。<br>如果执行本地事务过程中，执行端挂掉，或者超时，MQ 将会不停的询问其同组的其他 producer 来获取状态。<br>Consumer 端的消费成功机制有 MQ 保证。</p>
+</li>
+<li><p>从用户侧来说，用户需要分别实现本地事务执行以及本地事务回查方法，因此只需关注本地事务的执行状态即可；而在 service 层，则对事务消息的两阶段提交进行了抽象，同时针对超时事务实现了回查逻辑，通过不断扫描当前事务推进状态，来不断反向请求 Producer 端获取超时事务的执行状态，在避免事务挂起的同时，也避免了 Producer 端的单点故障。而在存储层，RocketMQ 通过 Bridge 封装了与底层队列存储的相关操作，用以操作两个对应的内部队列，用户也可以依赖其他存储介质实现自己的 service，RocketMQ 会通过 ServiceProvider 加载进来。<br>从上述事务消息设计中可以看到，RocketMQ 事务消息较好的解决了事务的最终一致性问题，事务发起方仅需要关注本地事务执行以及实现回查接口给出事务状态判定等实现，而且在上游事务峰值高时，可以通过消息队列，避免对下游服务产生过大压力。<br>事务消息不仅适用于上游事务对下游事务无依赖的场景，还可以与一些传统分布式事务架构相结合，而 MQ 的服务端作为天生的具有高可用能力的协调者，使得我们未来可以基于 RocketMQ 提供一站式轻量级分布式事务解决方案，用以满足各种场景下的分布式事务需求。</p>
+</li>
+<li><p>RocketMQ 阿里开源的消息中间件,原来叫做MetaQ; RocketMQ的各个环节,包括生产者,消费者,broker都是分布式的,所以基本可以保障由于网络原因丢掉,且RocketMQ存在重复消费的问题,所以文档明确表明了应该业务方自己实现幂等性.</p>
+</li>
+</ul>
+<p><img src="/2020/09/12/20200912-fen-bu-shi-shi-wu-jian-yao-zong-jie/RocketMQ.png"></p>
+<ul>
+<li>Pulsar、RocketMQ、NSQ、RabbitMQ、Kafka TODO</li>
+</ul>
+<h4 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h4><ul>
+<li>如果由于上游程序bug，下游程序又有二次校验，会导致消息迟迟没消费成功而堆积。（如上游出仓，下游加分成等）</li>
+</ul>
+<h3 id="AT-自动模式"><a href="#AT-自动模式" class="headerlink" title="AT (自动模式)"></a>AT (自动模式)</h3><ul>
+<li><p>AT 模式是一种无侵入的分布式事务解决方案。下面以Seata为例。</p>
+</li>
+<li><p>Seata实现了AT模式：<a target="_blank" rel="noopener" href="http://seata.io/zh-cn/docs/dev/mode/at-mode.html">Seata AT 模式</a></p>
+</li>
+<li><p>在 AT 模式下，用户只需关注自己的“业务 SQL”，用户的 “业务 SQL” 作为一阶段，Seata 框架会自动生成事务的二阶段提交和回滚操作。</p>
+</li>
+<li><p>一阶段：Seata 会拦截“业务 SQL”，首先解析 SQL 语义，找到“业务 SQL”要更新的业务数据，在业务数据被更新前，将其保存成“before image”，然后执行“业务 SQL”更新业务数据，在业务数据更新之后，再将其保存成“after image”，最后生成行锁。以上操作全部在一个数据库事务内完成，这样保证了一阶段操作的原子性。</p>
+</li>
+<li><p>二阶段提交：因为“业务 SQL”在一阶段已经提交至数据库， 所以 Seata 框架只需将一阶段保存的快照数据和行锁删掉，完成数据清理即可。</p>
+</li>
+<li><p>二阶段回滚：Seata 需要回滚一阶段已经执行的“业务 SQL”，还原业务数据。回滚方式便是用“before image”还原业务数据；但在还原前要首先要校验脏写，对比“数据库当前业务数据”和 “after image”，如果两份数据完全一致就说明没有脏写，可以还原业务数据，如果不一致就说明有脏写，出现脏写就可能需要转人工处理。</p>
+</li>
+<li><p>写隔离<br>一阶段本地事务提交前，需要确保先拿到 全局锁 。<br>拿不到 全局锁 ，不能提交本地事务。<br>拿 全局锁 的尝试被限制在一定范围内，超出范围将放弃，并回滚本地事务，释放本地锁。</p>
+</li>
+<li><p>读隔离<br>在数据库本地事务隔离级别 读已提交（Read Committed） 或以上的基础上，Seata（AT 模式）的默认全局隔离级别是 读未提交（Read Uncommitted） 。<br>如果应用在特定场景下，必需要求全局的 读已提交 ，目前 Seata 的方式是通过 SELECT FOR UPDATE 语句的代理。</p>
+</li>
+</ul>
+<h4 id="回滚"><a href="#回滚" class="headerlink" title="回滚"></a>回滚</h4><ul>
+<li>如果要人工处理。不太适合金钱业务，因为“after image”基本都是在变的。</li>
+<li>官方回答：<pre>
+Q: 5.脏数据回滚失败如何处理?
+A:
+1.脏数据需手动处理，根据日志提示修正数据或者将对应undo删除（可自定义实现FailureHandler做邮件通知或其他）
+2.关闭回滚时undo镜像校验，不推荐该方案。</pre></li>
+</ul>
+<p>注：建议事前做好隔离保证无脏数据<br></p>
+<ul>
+<li>实践验证：TODO</li>
+</ul>
+<h3 id="TCC"><a href="#TCC" class="headerlink" title="TCC"></a>TCC</h3><ul>
+<li>TCC（Try-Confirm-Cancel）的概念来源于 Pat Helland 发表的一篇名为“Life beyond Distributed Transactions:an Apostate’s Opinion”的论文。</li>
+<li>TCC 提出了一种新的事务模型，基于业务层面的事务定义，锁粒度完全由业务自己控制，目的是解决复杂业务中，跨表跨库等大颗粒度资源锁定的问题。TCC 把事务运行过程分成 Try、Confirm &#x2F; Cancel 两个阶段，每个阶段的逻辑由业务代码控制。</li>
+<li>Try 阶段失败可以 Cancel，如果 Confirm 和 Cancel 阶段失败了怎么办？<ul>
+<li>TCC 中会添加事务日志，如果 Confirm 或者 Cancel 阶段出错，则会进行重试，所以这两个阶段需要支持幂等；如果重试失败，则需要人工介入进行恢复和处理等。</li>
+</ul>
+</li>
+<li>相对于 AT 模式，TCC 模式对业务代码有一定的侵入性，但是 TCC 模式无 AT 模式的全局行锁，TCC 性能会比 AT 模式高很多。</li>
+<li>关键属性：应用层面的两阶段操作(应用的侵入性非常强，实现成本高), 强隔离性（预提交校验），性能并非最佳。</li>
+</ul>
+<h4 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h4><ol>
+<li>解决了跨服务的业务操作原子性问题，例如组合支付、下订单减库存等场景非常实用</li>
+<li>TCC的本质原理是把数据库的二阶段提交上升到微服务来实现，从而避免数据库二阶段中锁冲突的长事务引起的低性能风险</li>
+<li>TCC异步高性能，它采用了try先检查，然后异步实现confirm，真正提交是在confirm方法中。</li>
+</ol>
+<h4 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h4><ol>
+<li>对微服务的侵入性强，微服务的每个事务都必须实现try、confirm、cancel等3个方法，开发成本高，今后维护改造的成本也高</li>
+<li>为了达到事务的一致性要求，try、confirm、cancel接口必须实现幂等性操作</li>
+<li>由于事务管理器要记录事务日志，必定会损耗一定的性能，并使得整个TCC事务时间拉长，可以考虑采用Redis的方式来记录事务日志</li>
+</ol>
+<h4 id="实践经验"><a href="#实践经验" class="headerlink" title="实践经验"></a>实践经验</h4><ul>
+<li>蚂蚁金服TCC实践,总结以下注意事项:<pre>
+➢业务模型分2阶段设计
+➢并发控制
+➢允许空回滚
+➢防悬挂控制
+➢幂等控制
+</pre></li>
+</ul>
+<ol>
+<li>允许空回滚<ul>
+<li>Cancel 接口设计时需要允许空回滚。在 Try 接口因为丢包时没有收到，事务管理器会触发回滚，这时会触发 Cancel 接口，这时 Cancel 执行时发现没有对应的事务 xid 或主键时，需要返回回滚成功。让事务服务管理器认为已回滚，否则会不断重试，而 Cancel 又没有对应的业务数据可以进行回滚。</li>
+</ul>
+</li>
+</ol>
+<p><img src="/2020/09/12/20200912-fen-bu-shi-shi-wu-jian-yao-zong-jie/%E5%85%81%E8%AE%B8%E7%A9%BA%E5%9B%9E%E6%BB%9A.png"></p>
+<ol start="2">
+<li>防悬挂控制<ul>
+<li>悬挂的意思是：Cancel 比 Try 接口先执行，出现的原因是 Try 由于网络拥堵而超时，事务管理器生成回滚，触发 Cancel 接口，而最终又收到了 Try 接口调用，但是 Cancel 比 Try 先到。按照前面允许空回滚的逻辑，回滚会返回成功，事务管理器认为事务已回滚成功，则此时的 Try 接口不应该执行，否则会产生数据不一致，所以我们在 Cancel 空回滚返回成功之前先记录该条事务 xid 或业务主键，标识这条记录已经回滚过，Try 接口先检查这条事务xid或业务主键如果已经标记为回滚成功过，则不执行 Try 的业务操作。</li>
+</ul>
+</li>
+</ol>
+<p><img src="/2020/09/12/20200912-fen-bu-shi-shi-wu-jian-yao-zong-jie/%E9%98%B2%E6%82%AC%E6%8C%82%E6%8E%A7%E5%88%B6.png"></p>
+<h3 id="Saga-‘sɑɡə"><a href="#Saga-‘sɑɡə" class="headerlink" title="Saga [‘sɑɡə]"></a>Saga [‘sɑɡə]</h3><ul>
+<li><p>Saga 理论出自 Hector &amp; Kenneth 1987发表的论文 Sagas。Saga 模式是一种长事务解决方案。</p>
+</li>
+<li><p>Saga 是一种补偿协议，在 Saga 模式下，分布式事务内有多个参与者，每一个参与者都是一个冲正补偿服务，需要用户根据业务场景实现其正向操作和逆向回滚操作。</p>
+</li>
+<li><p>分布式事务执行过程中，依次执行各参与者的正向操作，如果所有正向操作均执行成功，那么分布式事务提交。如果任何一个正向操作执行失败，那么分布式事务会退回去执行前面各参与者的逆向回滚操作，回滚已提交的参与者，使分布式事务回到初始状态。</p>
+</li>
+<li><p>Saga 正向服务与补偿服务也需要业务开发者实现。因此是业务入侵的。</p>
+</li>
+<li><p>Saga可以看做一个异步的、利用队列实现的补偿事务。Saga 模式下分布式事务通常是由事件驱动的，各个参与者之间是异步执行。</p>
+</li>
+<li><p>使用 Saga 模式开发分布式事务时，有两种协调不同服务的方式，一种是协同（Choreography），另一种是编排（Orchestration）</p>
+<ol>
+<li>选择使用协同的方式处理事务时，服务之间的通信其实就是通过事件进行的，每一个本的事务最终都会向服务的下游发送一个新的事件，既可以是消息队列中的消息，也可以是 RPC 的请求，只是下游提供的接口需要保证幂等和重入</li>
+<li>编排的方式引入了中心化的协调器节点，我们通过一个 Saga 对象来追踪所有的子任务的调用情况，根据任务的调用情况决定是否需要调用对应的补偿方案，并在网络请求出现超时时进行重试</li>
+</ol>
+<ul>
+<li>(下游约束)使用 Saga 对分布式事务进行开发时，会对分布式事务的参与者有一定的约束，每一个事务的参与者都需要保证：<ol>
+<li>提供接口和补偿副作用的接口；</li>
+<li>接口支持重入并通过全局唯一的 ID 保证幂等</li>
+</ol>
+</li>
+</ul>
+</li>
+<li><p>Saga定义了两种恢复策略：</p>
+<ol>
+<li>向后恢复，对整个Saga的执行结果撤销。</li>
+<li>向前恢复，适用于必须要成功的场景。</li>
+</ol>
+</li>
+<li><p>使用 Saga 实现分布式事务的优点有：</p>
+<ul>
+<li><strong>微服务架构：</strong>通过对一些基础服务进行组合 &#x2F; 编排来完成各种业务需求。</li>
+<li><strong>数据库兼容性高：</strong>对每个服务使用何种数据库技术没有任何要求，服务甚至可以不使用数据库。</li>
+</ul>
+</li>
+<li><p>使用 Saga 实现分布式事务的缺点有：</p>
+<ul>
+<li><strong>要求服务提供补偿接口：</strong>增加了开发和维护的成本。</li>
+<li><strong>不符合 ACID：</strong>没有涉及 Isolation 和 Durability。</li>
+</ul>
+</li>
+<li><p>Saga 从流程上，还可分为两种模式：Orchestration（交响乐）和 Choreography（齐舞）。</p>
+</li>
+<li><p>关键：每一个参与者都是一个冲正补偿服务、异步。</p>
+</li>
+<li><p>关键定义：补偿式事务的 Saga</p>
+</li>
+<li><p>关键属性：性能较好，隔离性较差</p>
+</li>
+</ul>
+<h4 id="方案例子"><a href="#方案例子" class="headerlink" title="方案例子"></a>方案例子</h4><ol>
+<li>Ebay提出的基于消息表，即可靠消息最终一致模型，但本质上这也属于Saga模式的一种特定实现。</li>
+<li>消息队列MQ事务(可靠消息)(支持事务的消息中间件) <ul>
+<li>Apache开源的RocketMQ中间件能够支持一种事务消息机制，确保本地操作和发送消息的异步处理达到本地事务的结果一致。</li>
+</ul>
+</li>
+<li>Saga Orchestration（引入了类似 XA 中的协调者的角色，来驱动整个流程）；基于 Saga Orchestration 和 Kafka 的分布式事务：<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/o11kXLV94hUn9YylcQ2ayA">微服务中台技术解析之分布式事务方案和实践</a></li>
+</ol>
+<h4 id="Saga详细说明"><a href="#Saga详细说明" class="headerlink" title="Saga详细说明"></a>Saga详细说明</h4><ul>
+<li>最直接的方法就是按照逻辑依次调用服务，但出现异常怎么办?那就对那些已经成功的进行补偿，补偿成功就一致了，这种朴素的模型就是Saga。但Saga这种方式并不能保证隔离性，于是出现了TCC。在实际交易逻辑前先做业务检查、对涉及到的业务资源进行“预留”，或者说是一种“中间状态”，如果都预留成功则完成这些预留资源的真正业务处理，典型的如票务座位等场景。</li>
+<li>当然还有像Ebay提出的基于消息表，即可靠消息最终一致模型，但本质上这也属于Saga模式的一种特定实现，它的关键点有两个：<br>基于应用共享事务记录执行轨迹；<br>然后通过异步重试确保交易最终一致（这也使得这种方式不适用那些业务上允许补偿回滚的场景）。</li>
+<li>仔细对比这些方案与XA，会发现这些方案本质上都是将两阶段提交从资源层提升到了应用层。</li>
+</ul>
+<ol>
+<li>Saga的核心就是补偿，一阶段就是服务的正常顺序调用（数据库事务正常提交），如果都执行成功，则第二阶段则什么都不做；但如果其中有执行发生异常，则依次调用其补偿服务（一般多逆序调用未已执行服务的反交易）来保证整个交易的一致性。应用实施成本一般。</li>
+<li>TCC的特点在于业务资源检查与加锁，一阶段进行校验，资源锁定，如果第一阶段都成功，二阶段对锁定资源进行交易逻辑，否则，对锁定资源进行释放。应用实施成本较高。</li>
+<li>基于可靠消息最终一致，一阶段服务正常调用，同时同事务记录消息表，二阶段则进行消息的投递，消费。应用实施成本较低。</li>
+</ol>
+<h4 id="Saga-模式使用场景"><a href="#Saga-模式使用场景" class="headerlink" title="Saga 模式使用场景"></a>Saga 模式使用场景</h4><ul>
+<li>Saga 模式适用于业务流程长且需要保证事务最终一致性的业务系统，Saga 模式一阶段就会提交本地事务，无锁、长流程情况下可以保证性能。</li>
+<li>事务参与者可能是其它公司的服务或者是遗留系统的服务，无法进行改造和提供 TCC 要求的接口，可以使用 Saga 模式。</li>
+</ul>
+<h4 id="优点-1"><a href="#优点-1" class="headerlink" title="优点"></a>优点</h4><ul>
+<li>一阶段提交本地数据库事务，无锁，高性能；</li>
+<li>参与者可以采用事务驱动异步执行，高吞吐；</li>
+<li>补偿服务即正向服务的“反向”，易于理解，易于实现；</li>
+</ul>
+<h4 id="缺点-1"><a href="#缺点-1" class="headerlink" title="缺点"></a>缺点</h4><ul>
+<li>Saga 模式由于一阶段已经提交本地数据库事务，且没有进行“预留”动作，所以不能保证隔离性。</li>
+</ul>
+<h4 id="实践经验-1"><a href="#实践经验-1" class="headerlink" title="实践经验"></a>实践经验</h4><ul>
+<li>与TCC实践经验相同的是，Saga 模式中，每个事务参与者的冲正、逆向操作，需要支持：<ul>
+<li>空补偿：逆向操作早于正向操作时；</li>
+<li>防悬挂控制：空补偿后要拒绝正向操作</li>
+<li>幂等</li>
+</ul>
+</li>
+</ul>
+<h4 id="注意-1"><a href="#注意-1" class="headerlink" title="注意"></a>注意</h4><ul>
+<li>这里要注意的是，在Saga模式中不能保证隔离性，因为没有锁住资源，其他事务依然可以覆盖或者影响当前事务。隔离性导致在金钱业务的情景中，可能出现”不够扣”的情况（给用户加钱之后，无法撤销，因为被用户花完了）。</li>
+</ul>
+<h3 id="XA-eXtended-Architecture"><a href="#XA-eXtended-Architecture" class="headerlink" title="XA (eXtended Architecture)"></a>XA (eXtended Architecture)</h3><ul>
+<li>XA 规范 是 X&#x2F;Open 组织定义的分布式事务处理（DTP，Distributed Transaction Processing）标准。</li>
+<li>XA协议由Tuxedo首先提出的，并交给X&#x2F;Open组织，作为资源管理器（数据库）与事务管理器的接口标准。XA 规范主要定义了事务协调者（Transaction Manager）和资源管理器（Resource Manager）之间的接口。</li>
+<li>XA则规范了TM与RM之间的通信接口，在TM与多个RM之间形成一个双向通信桥梁，从而在多个数据库资源下保证ACID四个特性。</li>
+<li>TM和RM之间使用2PC协议。在XA规范的描述中，2PC是TM协调RM们完成已定义的全局事务的方法，AP找TM申请&#x2F;注册全局事务的动作并不是二阶段提交的保障内容。</li>
+<li>目前MySQL中只有InnoDB存储引擎支持XA协议。<ul>
+<li><a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/5.7/en/xa.html">https://dev.mysql.com/doc/refman/5.7/en/xa.html</a></li>
+</ul>
+</li>
+<li>XA模式下的 开源框架有atomikos，其开发公司也有商业版本。</li>
+<li>优点：<ul>
+<li><strong>强一致性：</strong>实现了数据在多个数据库上的强一致提交。</li>
+<li><strong>业务侵入性小：</strong>完全靠数据库本身的支持实现分布式事务，不需要改动业务逻辑。</li>
+</ul>
+</li>
+<li>缺点：<ul>
+<li><strong>单点故障：</strong>协调者或者任意一个 XA 数据库都是能引起故障的单点（Single point of failure)。</li>
+<li><strong>低性能：</strong>支持 XA 特性的数据库在设计上有大量的阻塞和资源占位操作， 数据体量和吞吐量扩展性差。</li>
+<li><strong>数据库选型限制：</strong>对于服务的数据库选型引入了支持 XA 协议这个限制。</li>
+</ul>
+</li>
+<li>XA 在设计上没有考虑到分布式系统的特点，事实上是一个强一致、低可用的设计方案，对网络分隔的容忍度较差。</li>
+<li>XA模式缺点：事务粒度大。高并发下，系统可用性低。因此很少使用。</li>
+<li>关键属性：DB层面（资源层）</li>
+</ul>
+<h4 id="Seata-的XA模式"><a href="#Seata-的XA模式" class="headerlink" title="Seata 的XA模式"></a>Seata 的XA模式</h4><ul>
+<li><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/163335038">分布式事务如何实现？深入解读 Seata 的 XA 模式</a></p>
+</li>
+<li><p>Seata 已经支持的 3 大事务模式：AT、TCC、Saga 都是 补偿型 的。</p>
+</li>
+<li><p>补偿型 事务处理机制构建在 事务资源 之上（要么在中间件层面，要么在应用层面），事务资源 本身对分布式事务是无感知的。</p>
+</li>
+<li><p>事务资源 对分布式事务的无感知存在一个根本性的问题：无法做到真正的 全局一致性 。</p>
+</li>
+<li><p>Seata 1.2.0 版本重磅发布新的事务模式：XA 模式，实现对 XA 协议的支持。</p>
+</li>
+<li><p>XA 的价值：与 补偿型 不同，XA 协议 要求 事务资源 本身提供对规范和协议的支持。因为 事务资源 感知并参与分布式事务处理过程，所以 事务资源（如数据库）可以保障从任意视角对数据的访问有效隔离，满足全局数据一致性。</p>
+</li>
+<li><p>除了 全局一致性 这个根本性的价值外，支持 XA 还有如下几个方面的好处：</p>
+<ol>
+<li>业务无侵入：和 AT 一样，XA 模式将是业务无侵入的，不给应用设计和开发带来额外负担。</li>
+<li>数据库的支持广泛：XA 协议被主流关系型数据库广泛支持，不需要额外的适配即可使用。</li>
+<li>多语言支持容易：因为不涉及 SQL 解析，XA 模式对 Seata 的 RM 的要求比较少，为不同语言开发 SDK 较之 AT 模式将更 薄，更容易。</li>
+<li>传统基于 XA 应用的迁移：传统的，基于 XA 协议的应用，迁移到 Seata 平台，使用 XA 模式将更平滑。</li>
+</ol>
+</li>
+<li><p>从编程模型上，XA 模式与 AT 模式保持完全一致。上层编程模型与 AT 模式完全相同。只需要修改数据源代理，即可实现 XA 模式与 AT 模式之间的切换。</p>
+</li>
+</ul>
+<p><img src="/2020/09/12/20200912-fen-bu-shi-shi-wu-jian-yao-zong-jie/Seata.jpg"></p>
+<h3 id="最大努力通知型"><a href="#最大努力通知型" class="headerlink" title="最大努力通知型"></a>最大努力通知型</h3><ul>
+<li>回调客户端确认：支付宝会每间隔一段时间后，再向客户方发起回调请求，直到输出成功标识为止。</li>
+</ul>
+<h3 id="其他-1"><a href="#其他-1" class="headerlink" title="其他"></a>其他</h3><ol>
+<li>为了交易系统更可靠，我们一般会在类似交易这种高级别的服务代码中，加入详细日志记录的，一旦系统内部引发类似致命异常（如超时情况），会有邮件通知。同时，后台会有定时任务扫描和分析此类日志，检查出这种特殊的情况，会尝试通过程序来补偿并邮件通知相关人员。</li>
+<li>在某些特殊的情况下，还会有“人工补偿”的，这也是最后一道屏障。</li>
+</ol>
+<h2 id="Seata"><a href="#Seata" class="headerlink" title="Seata"></a>Seata</h2><ul>
+<li>阿里开源分布式事务解决方案 Fescar:<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/TFGRcHV6EgeLB45OEJPRXw">https://mp.weixin.qq.com/s/TFGRcHV6EgeLB45OEJPRXw</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/seata/seata">https://github.com/seata/seata</a></li>
+<li><a target="_blank" rel="noopener" href="https://seata.io/zh-cn/docs/overview/what-is-seata.html">https://seata.io/zh-cn/docs/overview/what-is-seata.html</a></li>
+</ul>
+<h3 id="四种模式分析"><a href="#四种模式分析" class="headerlink" title="四种模式分析"></a>四种模式分析</h3><p>四种分布式事务模式，分别在不同的时间被提出，每种模式都有它的适用场景</p>
+<ol>
+<li>AT 模式是无侵入的分布式事务解决方案，适用于不希望对业务进行改造的场景，几乎0学习成本。</li>
+<li>TCC 模式是高性能分布式事务解决方案，适用于核心系统等对性能有很高要求的场景。</li>
+<li>Saga 模式是长事务解决方案，适用于业务流程长且需要保证事务最终一致性的业务系统，Saga 模式一阶段就会提交本地事务，无锁，长流程情况下可以保证性能，多用于渠道层、集成层业务系统。事务参与者可能是其它公司的服务或者是遗留系统的服务，无法进行改造和提供 TCC 要求的接口，也可以使用 Saga 模式。</li>
+<li>XA模式是分布式强一致性的解决方案，但性能低而使用较少。</li>
+</ol>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ol>
+<li>金钱业务的冻结&amp;结算 接口，其实就是TCC模式，而消费&amp;退款 就是Saga模式。</li>
+<li>数据库事务对应刚性事务，以XA模式为例；业务事务对应柔性事务，以TCC，Saga，AT模式为例。</li>
+<li>2PC一般是分布式事务的基础协议，具有普适性。</li>
+<li>要多考虑“防悬挂控制“、”允许空回滚“。</li>
+</ol>
+<h3 id="分类归纳"><a href="#分类归纳" class="headerlink" title="分类归纳"></a>分类归纳</h3><ol>
+<li><p>分布式事务两种大分类</p>
+<ol>
+<li>按模式分类：XA、AT、TCC、Saga。</li>
+<li>按柔性事务分类：补偿型、异步确保型、最大努力通知型。</li>
+</ol>
+</li>
+<li><p>补偿型(资源之上－业务层或中间件)：AT、TCC、Saga。</p>
+</li>
+<li><p>业务无侵入：XA、AT；业务侵入：TCC、Saga。</p>
+</li>
+<li><p>性能：Saga &gt; TCC&gt; XA、AT。</p>
+</li>
+<li><p>隔离型：XA&gt;TCC、AT&gt;Saga。</p>
+</li>
+<li><p>刚性事务满足ACID理论；柔性事务满足BASE理论（基本可用，最终一致）。</p>
+</li>
+<li><p>刚性事务：XA；柔性事务：AT、TCC、Saga。</p>
+</li>
+<li><p>异步确保型（可靠消息最终一致性）：本地消息服务方案(ebay)、消息队列MQ事务；异步回调：最大努力通知型。</p>
+</li>
+<li><p>Saga：普通RPC重试、异步确保型（主动）、异步回调（被动）。(异步只是提升性能的一种方式)</p>
+</li>
+<li><p>总结</p>
+<ol>
+<li>一致性保证：XA &gt; TCC &#x3D; SAGA &gt; 事务消息</li>
+<li>业务友好性：XA &gt; 事务消息 &gt; SAGA &gt; TCC</li>
+<li>性能损耗：XA &gt; TCC &gt; SAGA &#x3D; 事务消息</li>
+</ol>
+</li>
+<li><p>分布式事务的解决方案都很难做到有高一致性的同时，也有高性能，同时在实现上也有一定的难度。在业务允许的情况下，我们通常处理分布式事务的一般原则应是：业务规避 &gt; 最终一致 &gt; 强一致。</p>
+</li>
+</ol>
+<h2 id="Q-amp-A"><a href="#Q-amp-A" class="headerlink" title="Q&amp;A"></a>Q&amp;A</h2><h3 id="XA跟2PC什么关系？"><a href="#XA跟2PC什么关系？" class="headerlink" title="XA跟2PC什么关系？"></a>XA跟2PC什么关系？</h3><ol>
+<li>XA规范中2PC是TM协调RM的方式。</li>
+</ol>
+<h3 id="XA-VS-TCC"><a href="#XA-VS-TCC" class="headerlink" title="XA VS TCC"></a>XA VS TCC</h3><ol start="0">
+<li>XA是数据库的2PC，TCC是业务层的2PC</li>
+<li>XA是数据库的分布式事务，强一致性，在整个过程中，数据一张锁住状态，即从prepare到commit、rollback的整个过程中，TM一直把持着数据库的锁，如果有其他人要修改数据库的该条数据，就必须等待锁的释放，存在长事务风险。</li>
+<li>TCC是业务的分布式事务，最终一致性，不会出现长事务的锁风险，try是本地事务，锁定资源后就提交事务，confirm／cancel也是本地事务，可以直接提交事务，所以多个短事务不会出现长事务的风险。</li>
+</ol>
+<p><img src="/2020/09/12/20200912-fen-bu-shi-shi-wu-jian-yao-zong-jie/XA_TCC.png"></p>
+<h3 id="XA如何在分布式事务中如何保证隔离性？"><a href="#XA如何在分布式事务中如何保证隔离性？" class="headerlink" title="XA如何在分布式事务中如何保证隔离性？"></a>XA如何在分布式事务中如何保证隔离性？</h3><ol>
+<li>由RM直接连接各个数据源(支持XA协议)，RM一般是个单独的服务？</li>
+<li>后续通过Seata的XA模式深入了解TODO</li>
+</ol>
+<h3 id="分布式事务一致性与Paxos一致性的思考"><a href="#分布式事务一致性与Paxos一致性的思考" class="headerlink" title="分布式事务一致性与Paxos一致性的思考"></a>分布式事务一致性与Paxos一致性的思考</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/zp1kJ895zBb9vA7fgJ20eQ">聊一聊分布式事务</a></li>
+<li>分布式事务解决方案，如TCC、Saga、本地消息表等，其本质都是2PC。</li>
+<li>Paxos算法解决的问题是一个分布式系统如何就某个值（决议）达成一致。</li>
+<li>2PC和Paxos都是解决关于“一致性”的问题，其实细想它们解决的问题不在一个层面。<ul>
+<li>2PC要求分布式系统中的每个节点要不全部成功，要不全部失败，强调的是原子性。</li>
+<li>Paxos要求多个副本之间的数据一致性，其实这里用“一致性”并不准确，应该用“共识（Consensus）”才对。例如2PC中的协调者单点的问题可以用Paxos算法通过选举出新的协调者来解决。</li>
+</ul>
+</li>
+</ul>
+<h2 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h2><ol>
+<li><a target="_blank" rel="noopener" href="https://developer.aliyun.com/article/598758">GTS-阿里巴巴全新分布式事务解决方案</a><ul>
+<li>GTS既不在资源层也不在应用层，它是在中间件层解决事务的问题，这是它们本质的区别。</li>
+<li>GTS有两个使用模式，AT和MT。AT是自动模式，可以完全自动回滚，可以覆盖90%左右的业务场景，所以比较推荐使用AT模式，它对业务无侵入，高效，强一致性。还有一种MT模式是GTS推出的兼容TCC的模式，因为有一些情况下是无法避免的要使用TCC模式。</li>
+<li>强一致？感觉不是。</li>
+</ul>
+</li>
+</ol>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://ld246.com/article/1588748307781">XA 规范与 TCC 事务模型</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/d9e4982384a2">分布式事务（4）XA规范</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/6c1fd2420274">初识Open&#x2F;X XA</a></li>
+<li><a target="_blank" rel="noopener" href="https://publications.opengroup.org/c193">Distributed Transaction Processing: The XA Specification</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/agilestyle/p/11623047.html">TCC、XA 、DTP区别</a></li>
+<li><a target="_blank" rel="noopener" href="https://ld246.com/article/1588748307781">XA 规范与 TCC 事务模型</a></li>
+<li><a target="_blank" rel="noopener" href="https://help.aliyun.com/document_detail/132895.html">柔性事务的定义与分类</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/48586408">MySQL 中基于 XA 实现的分布式事务</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/78599954">分布式事务的4种模式</a> </li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/163335038">分布式事务如何实现？深入解读 Seata 的 XA 模式</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.sohu.com/a/336224977_673711">讲清楚分布式事务选型：XA、2PC、TCC、Saga、阿里Seata</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/jQrPSmPhC_yNbIRcufR8KQ">分布式事务：深入理解什么是2PC、3PC及TCC协议</a></li>
+<li><a target="_blank" rel="noopener" href="http://mp.weixin.qq.com/s/ROVuCPr2Rg3G1m_daYu-Vg">一种提高微服务架构的稳定性与数据一致性的方法</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.infoq.com/cn/articles/solution-of-distributed-system-transaction-consistency">分布式系统事务一致性解决方案</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.51cto.com/xvjunjie/2420402">分布式事务中的三种解决方案详解</a></li>
+<li><a target="_blank" rel="noopener" href="https://draveness.me/distributed-transaction-principle">分布式事务的实现原理</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/omtkduEIZxVIIgkdTlzzSQ">关于如何实现一个TCC分布式事务框架的一点思考</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.sohu.com/a/295542601_505827">还不理解“分布式事务”？这篇给你讲清楚！</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzI4MTY5NTk4Ng==&mid=2247488985&amp;idx=1&amp;sn=cafd8ce4b47bf098c7e87846318eff4d&source=41#wechat_redirect">RocketMQ 4.3正式发布，支持分布式事务</a></li>
+<li><a target="_blank" rel="noopener" href="https://insights.thoughtworks.cn/backend-development-eda/">事件驱动架构(EDA)编码实践</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/o11kXLV94hUn9YylcQ2ayA">微服务中台技术解析之分布式事务方案和实践</a></li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/09/08/20200908-jin-rong-ye-wu-rong-zai-qie-huan-hou-jian-kong-he-xiu-zheng-fang-an/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1770,937 +2926,11 @@ no-cache: 缓存资源，但立即过期，每次请求都需要跟服务器对�
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/21/20200721-cheng-xu-yuan-de-zhi-ye-su-yang-zhai-yao/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/07/21/20200721-cheng-xu-yuan-de-zhi-ye-su-yang-zhai-yao/" itemprop="url">《程序员的职业素养》摘要</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-21T23:14:29+08:00">
-                2020-07-21
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><img src="/2020/07/21/20200721-cheng-xu-yuan-de-zhi-ye-su-yang-zhai-yao/Shanghai_Beach_3.png"></p>
-<p>6年前看的书，重新整理一下</p>
-<p><img src="/2020/07/21/20200721-cheng-xu-yuan-de-zhi-ye-su-yang-zhai-yao/%E7%A8%8B%E5%BA%8F%E5%91%98%E7%9A%84%E8%81%8C%E4%B8%9A%E7%B4%A0%E5%85%BB.jpeg"></p>
-<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p><img src="/2020/07/21/20200721-cheng-xu-yuan-de-zhi-ye-su-yang-zhai-yao/%E7%A8%8B%E5%BA%8F%E5%91%98%E7%9A%84%E8%81%8C%E4%B8%9A%E7%B4%A0%E5%85%BB%E5%89%8D%E8%A8%80.jpeg"></p>
-<h3 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h3><h4 id="一-专业主义"><a href="#一-专业主义" class="headerlink" title="一 (专业主义)"></a>一 (专业主义)</h4><ol>
-<li>专业主义的精髓就在于将公司的利益视同个人的利益。(这个呢，看情况吧)</li>
-<li>不能忽略完整的测试环节，否则就交付软件是不负责任的。</li>
-<li>为自己的不完美负责。代码难免出现bug，但这并不意味着你不用对它们负责。</li>
-<li>让QA找不出任何问题。把自己没把握的代码发送给QA是不专业的，违背了“不行损害之事”的原则。</li>
-<li>有些代码很难测试，是因为设计时就没考虑如何测试。唯一的解决办法就是要设计易于测试的代码，最好事先写测试，再写要测的代码。(前半句挺对，后半句实际上比较难操作？)</li>
-<li>职业发展是你自己的事。雇主没有义务确保你在职场能够立于不败之地。<ul>
-<li>雇主出了钱，你必须付出时间和精力。一周工作60个小时，前40小时给雇主，后20小时是给自己的。你应该看书，练习，学习，做一些提升职业能力的事情。</li>
-<li>每天大概是3个小时是给自己提升的，你可以在路上学习，在公交学习等，利用一些时间碎片。</li>
-<li>一周有168小时，给你雇主40小时，为自己的职业发展留20小时，剩下的108小时再留56小时给睡眠，那么还剩52小时可做其他的事。</li>
-<li>其实这样让你免于枯竭匮乏，假设你热爱软件开发，渴望成为专业开发者，在那20个小时里，就应该做能够激发，强化你的热情的事，那20小时是充满乐趣！</li>
-</ul>
-</li>
-<li>IT行业发展迅猛，要时常了解自己的领域，坚持广泛学习才不至于落伍，但并不意味着忘掉过去。别忘了桑塔亚纳的诅咒：“不能铭记过去的人，注定重蹈先人的覆辙”。</li>
-<li>每个软件开发人员必须精通的事项：<pre>
-设计模式。GOF书中的全部24种模式。
-设计原则。必须了解SOLID原则，而且深刻了解组件设计原则。
-方法。必须理解XP，Scrum，精益，看板，瀑布，结构化分析及结构化设计等。
-实践。必须掌握测试驱动开发，面向对象设计，结构化编程，持续集成和结对编程。
-工件。必须了解如何使用UML图，DFD图，结构图，Petri网络图，状态迁移图表，流程图和决策表。
-</pre></li>
-<li><hr>
-<ul>
-<li>练习。业精于勤，真正专业人士往往勤学苦干，以求得自身技能的纯属精炼。</li>
-<li>合作。学习的第二个最佳方法就是与他人合作。从彼此身上学到很多东西，而且能在更短的时间内更高质量地完成更多工作。并不是要花全部时间一直和别人共事，独处的时间也更重要。</li>
-<li>辅导。教学相长，想迅速牢固地掌握某些事实和观念，最好的方法就是与由你负责的人交流这些内容。传道授业中，导师也会从中受益。</li>
-</ul>
-</li>
-<li>了解业务领域。了解自己所开发项目的业务领域，了解该领域的基本架构和基本知识，一边同客户和用户访谈。花时间与业内专家交流，了解他们的原则和价值观念。</li>
-<li>雇主的问题就是你的问题。弄明白这些问题，并寻求最佳解决方案。开发系统时，站在雇主的角度思考，确保开发的功能真正满足雇主的需要。</li>
-</ol>
-<h4 id="二-说“不”"><a href="#二-说“不”" class="headerlink" title="二 (说“不”)"></a>二 (说“不”)</h4><ol>
-<li>许诺“尝试”，就意味着你承认自己之前未尽全力，承认自己还有余力可施。<br>只要你许诺会去“尝试”，你其实是在承诺你会确保成功。<br>从本质上讲，承诺“尝试”就是一种不诚实的表现。你这么做的原因，可能是为了护住面子和避免冲突。</li>
-<li>坚守专业主义精神，不能为了赶工而写出糟糕的代码，如果不能做到，当初就应该说“不”。<br>(这个吧，尽量吧，前提老板是个讲道理的人。。。。)</li>
-</ol>
-<h4 id="三-说“是”"><a href="#三-说“是”" class="headerlink" title="三 (说“是”)"></a>三 (说“是”)</h4><ol>
-<li><p>口头上说。心里认真。付诸行动。<br>做出承诺，包含三个步骤。<br>1口头上说自己将会去做。<br>2心里认真对待做出的承诺。<br>3真正付诸行动。</p>
-</li>
-<li><p>没有做到自己对他人之前的承诺，会让自己难堪。言必信，行必果。<br>你只能承诺自己能完全控制的事。<br>如果你不尽早告诉别人可能的问题，就错失了让他们帮助你达成目标，兑现承诺的机会。<br>(前提是老板要讲道理啊。。。)</p>
-</li>
-<li><p>若为了赶工完成任务，周六日加班，那么要求周三才上班也是应该的。 (现实情况。。。)</p>
-</li>
-</ol>
-<h4 id="四-编码"><a href="#四-编码" class="headerlink" title="四 (编码)"></a>四 (编码)</h4><ol>
-<li>编码是一项颇具挑战也十分累人的智力活动。相比其他，编码要求更加聚精会神。<br>自己的代码要让其他人看得懂。(将心比心啊！)</li>
-<li>如果感到疲劳或者心烦意乱，千万不要编码。<br>奉献精神和职业素养，更多意义上指要遵循纪律原则而非成为长时间工作的工作狂。<br>要确保自己已经将睡眠，健康和生活方式调整到最佳状况，这样才能做到每天的8个小时工作时间内全力以赴。 (虽然生活欺骗了你，但自己也别自暴自弃。。。。)</li>
-<li>中断无法避免，总有人会打断你，消耗你的时间。发生这种情况时要记住一点，也许下次也会轮到你去打断别人请求帮助。因此，礼貌地表现出乐于助人的态度才是专业的态度。(还是将心比心！)</li>
-<li>当大脑已经无法正常思考却硬逼自己在深夜还加班解决问题，你只会把自己折腾得更累，回家洗澡之类的反而会豁然开朗。<br>当碰到困难而受阻时，当你感到疲倦时，就离开一会儿，让富有创造力的潜意识接管问题。<br>精力分配得当，你将能在更短的时间内以更少的精力完成更多的事情。让自己保持好节奏，让团队保持好节奏。<br>了解你的创造力和智力运行的模式，充分发挥它们的优势而非与之背道而驰。<br>埋头忙于解决问题时，有时候可能会由于和问题贴得太近，无法看清楚所有的可选项。由于大脑中富有创造力的部分被紧张的专注力所抑制，你会错过漂亮的解决方案。<br>(适当放松一下，欲速则不达！！)</li>
-<li>互相帮助是每个程序员的职责所在。作为专业人士，要以随时帮助别人为荣。<br>当然你需要独处时间，你可以直接并礼貌的告诉别人你在某个时间段不希望被人打扰。<br>(自重感啊)</li>
-<li>接受他人的帮助。如果有人向你伸出援手，要诚挚接受，心怀感激地接受帮助并诚意合作。<br>不要因为自己进度压力很大，就推开伸来的援手。不妨给他半个小时的时间。如果到时那个人不能真正帮到你，再礼貌地致歉用感谢结束谈话也不迟。要记住，如同要以乐于助人为荣一样，也要以乐于接受别人的帮助为荣。<br>要学会如何求助。如果帮助唾手可得却让自己一个人堵在那儿，是很不专业的表现。<br>(透明透明！不盲目埋头苦干！)</li>
-<li>辅导缺乏经验的程序员是那些经验丰富的程序员的职责。向资深导师寻求辅导也是年轻程序员的专业职责。(大家都那么菜，别不好意思！)</li>
-</ol>
-<h4 id="六-练习"><a href="#六-练习" class="headerlink" title="六 (练习)"></a>六 (练习)</h4><ol>
-<li>保持不落伍的一种方法是为开源项目贡献代码。</li>
-<li>职业程序员是用自己的时间来练习。老板的职责不包括避免你的技术落伍，也不包括为你打造一份好看的履历。<br>既然你是用自己的时间练习，就不必限制在老板规定的语言和平台。可以选择你喜欢的语言，练习你喜欢的技术。<br>(要多多学习啊！)</li>
-</ol>
-<h4 id="九-时间管理"><a href="#九-时间管理" class="headerlink" title="九 (时间管理)"></a>九 (时间管理)</h4><ol>
-<li>受到邀请的会议没有必要全部参加。参加的会议太多，其实只能证明你不够专业。理智使用时间，谨慎选择，礼貌拒绝。<br>邀请你参加会议的人并不负责管理你的时间，为时间负责的只有你。<br>领导最重要的责任之一，就是帮你从某些会议脱身。好的领导一定会主动维护你拒绝出席的决定，因为他和你一样关心你的时间。<br>(时间宝贵，无效浪费还不如用来睡觉。。。)</li>
-<li>如果会议让人厌烦，就离席。如果你发现参加某个会议是在浪费时间，就应当想个礼貌的方法退出来。<br>重要的是，你应当明白，继续呆在会议室里是浪费时间；继续参加对你没有太多意义的会议，是不专业的行为。</li>
-<li>如果受到会议邀请，务必弄清楚指定的议题是什么，每个议题花多长时间没要取得什么成果。如果得不到确切的答案，你可以礼貌拒绝。</li>
-<li>专业开发人员会安排好他们的睡眠，保证清晨有饱满的注意力去上班。</li>
-<li>运动需要肌肉的注意力，而编程需要的是心智的注意力。肌肉注意力有助于改善心智注意力。</li>
-<li>时间拆分与番茄工作法。</li>
-<li>专业开发人员会评估每个任务的优先级，排除个人喜好和需要，按照真实的紧急程度来执行任务</li>
-<li>选择了走不通的技术道路，你对这个决定越是坚持，浪费时间就越多。<br>专业开发人员不会执拗于某个不容放弃的主意，他们会保持开放的头脑来听取其他意见，让自己有多种选择，一旦看清楚，就会避开。</li>
-</ol>
-<h4 id="十-预估"><a href="#十-预估" class="headerlink" title="十(预估)"></a>十(预估)</h4><ol>
-<li>专业开发人员能够清楚区分预估和承诺。只有在确切知道可以完成的前提下，他们才会给出承诺。而且会尽可能清楚说明预估的概率分布，这样主管就可以做出合适的计划。</li>
-<li>大多数情况下，专业人士都不会给出确切的承诺，而是提供概率预估，来描述期望完成时间及可能的变数。</li>
-</ol>
-<h4 id="十一-压力"><a href="#十一-压力" class="headerlink" title="十一(压力)"></a>十一(压力)</h4><ol>
-<li>即使有压力，专业人士也会冷静果断。尽管压力不断增大，他仍然会坚守所受的训练和纪律，他知道这些是他赖以战胜有最后期限和承诺所带来的压力感的最好方法。</li>
-<li>快速前进确保最后期限的方法，便是保持整洁。专业人士不会为了快点前进而乱来。脏乱只会导致缓慢。</li>
-<li>观察自己在危机时刻的反应，就可以了解自己的信念。如果在危机中依然遵循着你守持的纪律，就说明你确信这些纪律。<br>如果在平常时候你会注意保持代码整洁，但在危机时刻你却产出混乱的代码，就说明你并不真正相信混乱会导致速度下降。<br>如果你遵守的纪律原则是工作的最佳方式，那么即使是深度危机中，也要坚决秉持这些纪律原则。</li>
-</ol>
-<h4 id="十二-协作"><a href="#十二-协作" class="headerlink" title="十二(协作)"></a>十二(协作)</h4><ol>
-<li><p>专业程序员最糟糕的表现就是两耳不闻窗外事，只顾一头将自己埋在技术堆里，甚至连公司业务火烧眉毛行将崩溃了也不闻不问。<br>你的工作职责就是要让业务免于陷入困顿，让公司可以长久发展下去。<br>专业程序员会花时间去理解业务。他们会和用户讨论他们正在使用的软件，会和销售人员与市场人员讨论所遭遇的问题，会和经理们沟通，明确团队的短期目标和长期目标。</p>
-</li>
-<li><p>不正常的团队最糟糕的症状是，每个程序员在自己代码周边筑起一道高墙，拒绝让其他程序员接触到这些代码。<br>这样会造成许多重复代码，模块间的接口完全是杂乱混淆而非正交的。<br>将代码所有权的各种隔断全部打破，由整个团队共同拥有全部代码的做法，相较于此要好得多。<br>专业开发人员不会阻止别人修改代码的。他们通过合作来达到学习的目的。</p>
-</li>
-</ol>
-<h4 id="十四-辅导、学徒期与技艺"><a href="#十四-辅导、学徒期与技艺" class="headerlink" title="十四(辅导、学徒期与技艺)"></a>十四(辅导、学徒期与技艺)</h4><ol>
-<li>计算机科班毕业生的质量一直令我颇感失望。究其原因，并不是这些毕业生不够聪明或缺乏天份，而是由于大学并没有教授真正的编程之道。</li>
-<li>我们今天的做法和我所提倡的理想化的学徒制程序，这两者之间的主要差异在于技术方面的传授，培训，督导和检查。<br>观念上最大差别在于，专业主义价值观和技术敏锐度需要进行不断的传授，培育，滋养和文火慢炖，直至其深植入文化当中。<br>我们当前的做法之所以传承无力， 主要是因为其中缺少了资深人士辅导新人向其传授技艺的环节。</li>
-</ol>
-<p><img src="/2020/07/21/20200721-cheng-xu-yuan-de-zhi-ye-su-yang-zhai-yao/%E7%A8%8B%E5%BA%8F%E5%91%98%E7%9A%84%E8%81%8C%E4%B8%9A%E7%B4%A0%E5%85%BB%E6%80%BB%E7%BB%93.jpeg"></p>
-<hr>
-<h3 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h3><pre>
-编辑推荐
-
-编程大师Bob大叔40年编程生涯心得体会
-讲解成为真正专业程序员所需态度原则
-业界权威好评，广受赞誉
-助您职业生涯迈上更高台阶
-
-媒体推荐
-
-Bob大叔的这本新作又一次抬高了专业程序员的门槛，指出了他们需要在历练尚浅的软件开发职业生涯中需要不断精进的内容。
-——Markus Gartner,it-agile公司资深软件开发者
-
-有一些技术书颇具启发与教益，有一些则读来轻松喜悦且富有趣味，但很少有技术书籍能够同时兼具所有这四个特色。我感觉Martin所有的书都可归入此列。
-——George Bullock，微软公司资深程序经理
-
-如果计算机科学学位要求有“毕业后必读书单”，本书当在其列。本书描述了迈向专业程序员的修炼旅程……而且阅读起来确实异常有趣。
-——Jeff Overvey，伊利诺伊大学厄本那-香槟分校
-
-如果你期望自己能成为软件专业人士，那么本书不容错过。
-——R.L.Bogetti,Baxter Healthcare公司系统主设计师
-
-作者简介
-
-Robert C.Martin
-世界级软件开发大师，设计模式和敏捷开发先驱，敏捷联盟首任主席，C++ Report前主编，背后辈程序员尊称为“Bob大叔”。20世纪70年代初成为职业程序员，后创办Object Mentor公司并任总裁。Martin还是一名多产的作家，至今已发表数百篇文章、论文和博客，除本书外，还著有《代码整洁之道》、《敏捷软件开发：原则、模式和实践》、《UML：Java程序员指南》等。他最近创办了cleancoders.com网站，专为软件开发人员提供教育视频。
-
-目录
-
-目　录
-
-第1章　专业主义　1
-1.1　清楚你要什么　2
-1.2　担当责任　2
-1.3　首先，不行损害之事　4
-1.3.1　不要破坏软件功能　4
-1.3.2　不要破坏结构　7
-1.4　职业道德　8
-1.4.1　了解你的领域　10
-1.4.2　坚持学习　11
-1.4.3　练习　11
-1.4.4　合作　12
-1.4.5　辅导　12
-1.4.6　了解业务领域　13
-1.4.7　与雇主/客户保持一致　13
-1.4.8　谦逊　13
-1.5　参考文献　14
-
-第2章　说“不”　15
-2.1　对抗角色　17
-2.2　高风险时刻　20
-2.3　要有团队精神　22
-2.3.1　试试看　24
-2.3.2　消极对抗　25
-2.4　说“是”的成本　27
-2.5　如何写出好代码　34
-
-第3章　说“是”　37
-3.1　承诺用语　39
-3.1.1　识别“缺乏承诺”的征兆　40
-3.1.2　真正的承诺听起来是怎样的　41
-3.1.3　总结　43
-3.2　学习如何说“是”　43
-3.2.1　“试试”的另一面　43
-3.2.2　坚守原则　44
-3.3　结论　47
-
-第4章　编码　48
-4.1　做好准备　49
-4.1.1　凌晨3点写出的代码　50
-4.1.2　焦虑时写下的代码　51
-4.2　流态区　53
-4.2.1　音乐　54
-4.2.2　中断　55
-4.3　阻塞　55
-4.4　调试　57
-4.5　保持节奏　60
-4.5.1　知道何时应该离开一会　60
-4.5.2　开车回家路上　61
-4.5.3　洗澡　61
-4.6　进度延迟　61
-4.6.1　期望　62
-4.6.2　盲目冲刺　62
-4.6.3　加班加点　63
-4.6.4　交付失误　63
-4.6.5　定义“完成”　64
-4.7　帮助　64
-4.7.1　帮助他人　64
-4.7.2　接受他人的帮助　65
-4.7.3　辅导　66
-4.8　参考文献　66
-
-第5章　测试驱动开发　67
-5.1　此事已有定论　69
-5.2　TDD的三项法则　69
-5.3　TDD的优势　70
-5.3.1　确定性　70
-5.3.2　缺陷注入率　71
-5.3.3　勇气　71
-5.3.4　文档　72
-5.3.5　设计　72
-5.3.6　专业人士的选择　73
-5.4　TDD的局限　73
-5.5　参考文献　74
-
-第6章　练习　75
-6.1　引子　75
-6.1.1　10的22次方　76
-6.1.2　转变　77
-6.2　编程柔道场　79
-6.2.1　卡塔　80
-6.2.2　瓦萨　81
-6.2.3　自由练习　81
-6.3　自身经验的拓展　82
-6.3.1　开源　82
-6.3.2　关于练习的职业道德　82
-6.4　结论　83
-6.5　参考文献　83
-
-第7章　验收测试　84
-7.1　需求的沟通　84
-7.1.1　过早精细化　86
-7.1.2　迟来的模糊性　87
-7.2　验收测试　89
-7.2.1　“完成”的定义　89
-7.2.2　沟通　91
-7.2.3　自动化　92
-7.2.4　额外工作　93
-7.2.5　验收测试什么时候写，由谁来写　93
-7.2.6　开发人员的角色　94
-7.2.7　测试的协商与被动推进　95
-7.2.8　验收测试和单元测试　96
-7.2.9　图形界面及其他复杂因素　97
-7.2.10　持续集成　98
-7.3　结论　98
-
-第8章　测试策略　99
-8.1　QA应该找不到任何错误　100
-8.1.1　QA也是团队的一部分　100
-8.1.2　需求规约定义者　100
-8.1.3　特性描述者　100
-8.2　自动化测试金字塔　101
-8.2.1　单元测试　101
-8.2.2　组件测试　102
-8.2.3　集成测试　103
-8.2.4　系统测试　104
-8.2.5　人工探索式测试　104
-8.3　结论　105
-8.4　参考文献　105
-
-第9章　时间管理　106
-9.1　会议　107
-9.1.1　拒绝　107
-9.1.2　离席　108
-9.1.3　确定议程与目标　109
-9.1.4　立会　109
-9.1.5　迭代计划会议　109
-9.1.6　迭代回顾和DEMO展示　110
-9.1.7　争论/反对　110
-9.2　注意力点数　111
-9.2.1　睡眠　112
-9.2.2　咖啡因　112
-9.2.3　恢复　112
-9.2.4　肌肉注意力　112
-9.2.5　输入与输出　113
-9.3　时间拆分和番茄工作法　113
-9.4　要避免的行为　114
-9.5　死胡同　115
-9.6　泥潭　115
-9.7　结论　116
-
-第10章　预估　117
-10.1　什么是预估　119
-10.1.1　承诺　119
-10.1.2　预估　120
-10.1.3　暗示性承诺　121
-10.2　PERT　122
-10.3　预估任务　125
-10.4　大数定律　127
-10.5　结论　127
-10.6　参考文献　128
-
-第11章　压力　129
-11.1　避免压力　131
-11.1.1　承诺　131
-11.1.2　保持整洁　132
-11.1.3　危机中的纪律　132
-11.2　应对压力　133
-11.2.1　不要惊慌失措　133
-11.2.2　沟通　133
-11.2.3　依靠你的纪律原则　133
-11.2.4　寻求帮助　134
-11.3　结论　134
-
-第12章　协作　135
-12.1　程序员与人　137
-12.1.1　程序员与雇主　137
-12.1.2　程序员与程序员　140
-12.2　小脑　142
-12.3　结论　143
-
-第13章　团队与项目　144
-13.1　只是简单混合吗　144
-13.1.1　有凝聚力的团队　145
-13.1.2　如何管理有凝聚力的团队　146
-13.1.3　项目承包人的困境　147
-13.2　结论　148
-13.3　参考文献　148
-
-第14章　辅导、学徒期与技艺　149
-14.1　失败的学位教育　149
-14.2　辅导　150
-14.2.1　DIGI-COMP I, 我的第一台计算机　150
-14.2.2　高中时代的ECP-18　152
-14.2.3　非常规辅导　154
-14.2.4　艰难的锤炼　155
-14.3　学徒期　156
-14.3.1　软件学徒期　158
-14.3.2　现实情况　159
-14.4　技艺　160
-14.5　结论　161
-
-附录　工具　162
-</pre>
-
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/19/20200719-ren-xing-de-ruo-dian-zhai-yao/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/07/19/20200719-ren-xing-de-ruo-dian-zhai-yao/" itemprop="url">《人性的弱点》摘要</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-19T21:19:46+08:00">
-                2020-07-19
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><img src="/2020/07/19/20200719-ren-xing-de-ruo-dian-zhai-yao/Shanghai_Beach_2.png"></p>
-<p>十年前看过这本书，现在早就忘掉差不多了，重新整理一下。</p>
-<hr>
-<ol>
-<li>与人相处的大秘窍：献出你真实，诚恳的赞赏。</li>
-<li>如果这样做，你将到处受欢迎：真诚的对别人发生兴趣。</li>
-<li>在辩论中，获得最大利益的唯一方法，就是避免辩论。</li>
-<li>要真诚的以他人的观点去看事情。</li>
-<li>在批评对方之前，不妨先谈谈你自己的错误。</li>
-<li>请对方帮忙。</li>
-</ol>
-<hr>
-<h2 id="第一篇-待人的基本技巧"><a href="#第一篇-待人的基本技巧" class="headerlink" title="第一篇　待人的基本技巧"></a>第一篇　待人的基本技巧</h2><h3 id="第一章如欲采蜜，勿蹴蜂房"><a href="#第一章如欲采蜜，勿蹴蜂房" class="headerlink" title="第一章如欲采蜜，勿蹴蜂房"></a>第一章如欲采蜜，勿蹴蜂房</h3><ul>
-<li>批评是没有用的，因它使人增加一层防御，而且竭力的替自己辩护。批评也是危险的，它会伤害了一个人的自尊，和自重的感觉，并激起他的反抗。</li>
-<li>人类自然的天性，是做错事只会责备别人，而绝不会责备自己，我们每个人都是如此的。</li>
-<li>不要批评，责怪或抱怨。</li>
-</ul>
-<h3 id="第二章-与人相处的大秘窍"><a href="#第二章-与人相处的大秘窍" class="headerlink" title="第二章　与人相处的大秘窍"></a>第二章　与人相处的大秘窍</h3><ul>
-<li>自重感，这是一种痛苦的，而且急待解决的人类「饥饿」，如果能诚挚的满足这种内心饥饿的人，就可以将人们掌握在他手掌之中。</li>
-<li>寻求自重感的欲望，是人类和动物间，一项重要的差别。它使人努力成为伟人或强盗。</li>
-<li>献出你真实，诚恳的赞赏。</li>
-</ul>
-<h3 id="第三章-左右逢源的方法"><a href="#第三章-左右逢源的方法" class="headerlink" title="第三章　左右逢源的方法"></a>第三章　左右逢源的方法</h3><ul>
-<li>如果有一个成功秘诀的话，那就是如何得到对方『立场」 的能力；由他的观点设想，正同由你自己的观点一样。</li>
-<li>一个人能设身于他人境地，能了解他人意念活动，他不必考虑到将来的前途如何。</li>
-<li>永远站在别人立场去打算、设想，并由对方的观点，去观察事物的趋向。</li>
-<li>先激起对方某种迫切的需要，若能做到这点就可左右逢源，否则到处碰壁。</li>
-<li>威立姆．温德，有一次说过：「表现自己，那是人性最主要的需要。」可是，为什么在我们事业上，不用这种同样的心理学呢？<br>引起别人的渴望。</li>
-</ul>
-<pre>
-●提要
-不要批评，责怪或抱怨。
-献出你真实，诚恳的赞赏。
-引起别人的渴望。
-</pre>
-
-<hr>
-<h2 id="第二篇-使人喜欢你的六种方法"><a href="#第二篇-使人喜欢你的六种方法" class="headerlink" title="第二篇 使人喜欢你的六种方法"></a>第二篇 使人喜欢你的六种方法</h2><h3 id="第一章-如果这样做，你将到处受欢迎"><a href="#第一章-如果这样做，你将到处受欢迎" class="headerlink" title="第一章　如果这样做，你将到处受欢迎"></a>第一章　如果这样做，你将到处受欢迎</h3><ul>
-<li>真诚的对别人发生兴趣。</li>
-</ul>
-<h3 id="第二章-如何给人好印象"><a href="#第二章-如何给人好印象" class="headerlink" title="第二章　如何给人好印象"></a>第二章　如何给人好印象</h3><ul>
-<li>微笑！</li>
-<li>如果你希望别人用一副高兴、欢愉的神情来接待你，那么你自己先要用这样的神情去对别人。</li>
-<li>遇到人就展开一个轻松的微笑。</li>
-<li>行动该是追随着一个人自己的感受………可是事实上，行动和感受，是并道而驰的。所以你需要快乐时，可以强迫自己快乐起来。</li>
-<li>没有给人微笑的人，更需要别人给他微笑。</li>
-</ul>
-<h3 id="第三章-你要避免发生麻烦，就请这样做"><a href="#第三章-你要避免发生麻烦，就请这样做" class="headerlink" title="第三章　你要避免发生麻烦，就请这样做"></a>第三章　你要避免发生麻烦，就请这样做</h3><ul>
-<li>你要记住你所接触中，每一个人的姓名。</li>
-<li>最简单、最明显、而又是最重要的如何获得好感的方法，就是记住对方的姓名，使别人感到自己很重要</li>
-</ul>
-<h3 id="第四章-如何养成优美而得人好感的谈吐"><a href="#第四章-如何养成优美而得人好感的谈吐" class="headerlink" title="第四章　如何养成优美而得人好感的谈吐"></a>第四章　如何养成优美而得人好感的谈吐</h3><ul>
-<li>做一个善于静听的人，鼓励别人多谈谈他们自己。</li>
-<li>很少人能拒受那专心注意所包含的谄媚。</li>
-<li>专心静听着对你讲话的人，那是最重要的，再也没有比这个更重要的了</li>
-<li>最爱挑剔的人，最激烈的批评者，往往会在一个怀有忍耐、同情的静听者面前软化下来</li>
-<li>他们所喜欢的，不是善于谈话的人，是那些静静听着的人。能养成善于静听能力的人，似乎要比任何好性格的人少见。</li>
-<li>要使别人对你感到兴趣，先要对别人感到兴趣。</li>
-</ul>
-<h3 id="第五章-如何使人感到兴趣"><a href="#第五章-如何使人感到兴趣" class="headerlink" title="第五章　如何使人感到兴趣"></a>第五章　如何使人感到兴趣</h3><ul>
-<li>就别人的兴趣谈论。</li>
-</ul>
-<h3 id="第六章-如何使人很快的喜欢你"><a href="#第六章-如何使人很快的喜欢你" class="headerlink" title="第六章　如何使人很快的喜欢你"></a>第六章　如何使人很快的喜欢你</h3><ul>
-<li>使别人感觉到他的重要–必需真诚的这样做。</li>
-<li>如果我们是那样的卑贱自私，不从别人身上得到什么，就不愿意分给别人一点快乐，假如我们的气量比一个酸苹果还小，那我们所要遭遇到的，也绝对是失败。</li>
-<li>自重的欲望，是人们天性中最急切的要求。</li>
-<li>最重要的定律：「你希望别人怎样待你，你就该怎样去对待别人。」</li>
-<li>真诚，一股出自内心的赞赏的力量。</li>
-<li>爱默生所说的：「凡我所遇到的人，都有比我优越的地方，而在那些方面，我能向他学习。」<pre>
-●提要
-使人喜欢你的六种方法
-第一项规则：真诚的对别人发生兴趣。
-第二项规则：微笑。
-第三项规则：记住你所接触中，每一个人的姓名。
-第四项规则：做一个善于静听的人，鼓励别人多谈谈他们自己。
-第五项规则：就别人的兴趣谈论。
-第六项规则：使别人感觉到他的重要--必需真诚的这样做。
-</pre></li>
-</ul>
-<hr>
-<h2 id="第三篇-得人同意于你的十二种方法"><a href="#第三篇-得人同意于你的十二种方法" class="headerlink" title="第三篇　得人同意于你的十二种方法"></a>第三篇　得人同意于你的十二种方法</h2><h3 id="第一章-你不可能在争辩中获胜"><a href="#第一章-你不可能在争辩中获胜" class="headerlink" title="第一章　你不可能在争辩中获胜"></a>第一章　你不可能在争辩中获胜</h3><ul>
-<li>在辩论中，获得最大利益的唯一方法，就是避免辩论。</li>
-<li>「永远避免正面的冲突！」</li>
-<li>天下只有一种方法，能得到辩论的最大胜利，那就是尽量避免辩论………避免辩论，就像避开毒蛇和地震一样。</li>
-<li>「我们绝不可能用辩论使一个无知的人心服口服。」</li>
-<li>「跟这种冷厉，傲慢，固执的稽查员讲理，那等于是废话……．跟他争辩愈久，他愈是固执，所以我决定避免跟他争论，换个话题，赞赏他几句。</li>
-<li>释迦牟尼曾这样说过：「恨永远无法止恨，只有爱可以止恨。」<br>所以误会不能用争论来解决，而需要用外交手腕，和赋予对方同情来解决。</li>
-</ul>
-<h3 id="第二章-如何避免制造敌人"><a href="#第二章-如何避免制造敌人" class="headerlink" title="第二章　如何避免制造敌人"></a>第二章　如何避免制造敌人</h3><ul>
-<li>你可以用神态、声调，或是手势，告诉一个人他错了，就像我们用话一样的有效……而如果你告诉他错了，你以为他会感激你？不，永远不会！因为你对他的智力、判断、自信、自尊，都直接的给予打击，他不但不会改变他的意志，而且还想向你反击。如果你运用柏拉图、康德的逻辑来跟他理论，他还是不会改变自己的意志，因为你已伤了他的自尊。</li>
-<li>我所知道的只有一件事，那就是我什么也不知道。</li>
-<li>很少人有逻辑性，我们大多数的人，都怀有成见，我们之间，都受到嫉妒、猜疑、恐惧，和傲慢所毁伤。</li>
-<li>任何事情只要运用若干的手腕；并不需要告诉对方，他是如何的错误。</li>
-<li>尊重别人的意见，永速别指摘对方是错的。</li>
-</ul>
-<h3 id="第三章-如果你错了就承认"><a href="#第三章-如果你错了就承认" class="headerlink" title="第三章　如果你错了就承认"></a>第三章　如果你错了就承认</h3><ul>
-<li>迅速、坦白的承认错误</li>
-<li>假如我们已知道一定要受到责罚，那我们何不先责备自己，找出自己的缺点，那是不是比从别人嘴说出的批评，要好受得多？<br>你如在别人责备你之前，很快的找个机会承认自己的错误，对方想要说的话，你已替他说了，他就没有话可说，那你有百分之九十九会获得他的谅解。</li>
-<li>任何一个愚蠢的人，都会尽力辩护自己的过错………而多数愚蠢的人是这样的一个能承认自己错误的人，却可使他出类拔萃，并且给人一种尊贵、高尚的感觉。</li>
-<li>若是我们对了，我们巧妙婉转的让别人赞同我们的观点。可是，当我们错误的时候，我们要快速的、坦直的承认我们的错误。运用这种方法，不但能获得惊人的效果，而且在若干情形下，比替自己辩护更为有趣。</li>
-<li>「用争夺的方法，你永远无法得到满足。可是当你谦让的时候，你可以得到比你所期望的更多。」</li>
-</ul>
-<h3 id="第四章-使你走上理智的大路"><a href="#第四章-使你走上理智的大路" class="headerlink" title="第四章　使你走上理智的大路"></a>第四章　使你走上理智的大路</h3><ul>
-<li>以友善的方法开始。</li>
-<li>温柔、友善的力量，永远胜过愤怒和暴力。</li>
-<li>『让我们坐下一起商量，如果我们之间意见不同，我们不妨想想看原因到底何在，主要的症结是什么？。我们不久就可看出，彼此的意见相距并不很远，不同的地方很少，而相同的地方却很多。也就是说只要忍耐，加上彼此的诚意，我们就可以更接近了。」</li>
-</ul>
-<h3 id="第五章-苏格拉底的秘密"><a href="#第五章-苏格拉底的秘密" class="headerlink" title="第五章　苏格拉底的秘密"></a>第五章　苏格拉底的秘密</h3><ul>
-<li>跟人们谈话时，别开始就谈你们意见相左的事，不妨谈些彼此间赞同的事情。</li>
-<li>有说话技巧的人，开始的时候就能得到很多「是」的反应，唯有如此，他才能将听者的心埋，导向正面方向。</li>
-<li>他的处世技巧，现在被称为「苏格拉底辩论法」，就是以「是，是，」作为他唯一的反应观点。他问的问题，都是他的反对者，所愿意接受而同意的。他连续不断的获得对方的同意、承认，到最后，使反对者在不知不觉中，接受了在数分钟前，他还坚决否认的结论。</li>
-</ul>
-<h3 id="第六章-处理一个抱怨者的安全手法"><a href="#第六章-处理一个抱怨者的安全手法" class="headerlink" title="第六章　处理一个抱怨者的安全手法"></a>第六章　处理一个抱怨者的安全手法</h3><ul>
-<li>这是实在的，即使是我们的朋友，也宁愿多谈他们自己的成就；喜欢听我们吹嘘的人，可说少之又少。</li>
-<li>法国哲学家洛希夫克，曾这样说过：「如果你想得到仇人，你就胜过你的朋友，可是，如果想获得更多的朋友，就让你的朋友胜过你。」</li>
-<li>因为当朋友胜过我们时，那就可以满足了他的自重感。可是，当我们显出胜过朋友时，那会使他有种自卑的感觉，并会引起猜疑和妒忌。</li>
-<li>德国人有句俗语，那是：「当我们所猜疑、妒忌的人，发生一桩不幸的事时，会使我们有一种恶意的快感。」</li>
-<li>所以，别让我们表现出太多的成就来，我们要虚怀若谷、处处谦冲，那样会永远使人喜欢你，谁都愿意跟你接近。</li>
-<li>生命是短促的，别把我们不值一提的成就，作为谈话的资料，令人听了厌烦。我们要鼓励别人多说话。仔细想一想，你实在没有什么可以夸耀的。</li>
-</ul>
-<h3 id="第七章-如何使人跟你合作"><a href="#第七章-如何使人跟你合作" class="headerlink" title="第七章　如何使人跟你合作"></a>第七章　如何使人跟你合作</h3><ul>
-<li>没有人喜欢强迫自己去买一样东西，或是被人派遣去做一件事。我们都喜欢随自已的心愿买东西，或是照着自己的意思去做事情。同时，希望有人跟我们谈谈我们的愿望、需要、想法。</li>
-<li>要让他觉得这是他自己的意思。</li>
-</ul>
-<h3 id="第八章-一个创造奇迹的公式"><a href="#第八章-一个创造奇迹的公式" class="headerlink" title="第八章　一个创造奇迹的公式"></a>第八章　一个创造奇迹的公式</h3><ul>
-<li>要真诚的以他人的观点去看事情。</li>
-<li>你接触到每一件事时，会处处替别人着想。而且以对方的观点，去观察这件事情。</li>
-</ul>
-<h3 id="第九章-每个人所需要的"><a href="#第九章-每个人所需要的" class="headerlink" title="第九章　每个人所需要的"></a>第九章　每个人所需要的</h3><ul>
-<li>同情对方的意念和欲望。</li>
-<li>你是不是愿意得到一句神妙的语句？一个可以停止争辩，消除怨恨，制造好感，使人们注意的听你谈话的语句。<br>是的，就有这样一句话，让我告诉你。你对人开始这样说：「对你所感觉到的情形，我一点也不会责怪你，如果我是你的话，我也有同样的感觉。」<br>就这样一句简单的话，世界上最狡猾，最固执的人，也会软化下来。可是你必需极是真诚的说出那些话来，假如你是对方的话，你当然有他同样的感觉。</li>
-<li>你明天遇到的人，其中可能有四分之三都饥渴似的需要同情…．！如果你同情他们，他们就会喜欢你。</li>
-<li>当你接到这样一封信的时候，第一件事，就是如何用严正的措辞，去对付一个不礼貌而鲁莽的人，接着，或许你就动笔写信了。<br>可是，如果你是一个聪明的人，你会把这封信放进抽屉里锁起来，经过两天后，再把这封信拿出来……像这类的信，迟上几天寄出，也不会受到什么影响。但当你两天后再拿出这封信来看时，你就不会投入邮箱，那就是我所采取的途径。</li>
-<li>盖慈博士在他那一部著名的「教育心理学」书上，这样写着：一人类普遍的追求同情，孩子们会急切的显示他受伤的地方。有的甚至于故意自己割伤、弄伤，以博得大人们的同情。」<br>成人们也有类似的情形，他们会到处向人显示他的损伤，说出他们的意外事故，所患的疾病，特别是开刀手术后的经过。「自怜! 实际上是一般人的习性。」</li>
-</ul>
-<h3 id="第十章-人人都喜欢的吸引力"><a href="#第十章-人人都喜欢的吸引力" class="headerlink" title="第十章　人人都喜欢的吸引力"></a>第十章　人人都喜欢的吸引力</h3><ul>
-<li>事实确实是如此，凡你所见到的人–甚至你照镜子时所看到的那个人- 都会把自己看得很高尚，他对自己的估计，都希望是良好而不自私的。<br>银行家摩根，在他一篇分析的文稿中说：人会做一件事，都有两种理由存在……一种是好听的，一种是真实的。</li>
-<li>要改变一个人的意志，需要激发他高尚的动机</li>
-</ul>
-<h3 id="第十一章-实行、推进，别停顿下来"><a href="#第十一章-实行、推进，别停顿下来" class="headerlink" title="第十一章　实行、推进，别停顿下来"></a>第十一章　实行、推进，别停顿下来</h3><ul>
-<li>现在是表演的时代，只是叙述其中的原理，还不能有具体的效果。这种原理需要生动、活泼，需要使它更有趣、更戏剧化，所以必需用有效的「表演术」。</li>
-<li>使你的意念戏剧化。</li>
-</ul>
-<h3 id="第十二章-当你无计可施时，不妨试试这个"><a href="#第十二章-当你无计可施时，不妨试试这个" class="headerlink" title="第十二章　当你无计可施时，不妨试试这个"></a>第十二章　当你无计可施时，不妨试试这个</h3><ul>
-<li>让司华伯用他自己的话来解释：「如果我们想要完成一件事，必须鼓励竞争，那并不是说争着去赚钱，而是要有一种胜过别人的欲望。」<br>争胜的欲望加上挑战的心理，对一个有血气的人来说，是一种最有效的激励。</li>
-<li>激将法<ul>
-<li>党魁伯位德用了激将法，他转身向罗斯福大声的说：「难道圣巨恩山的英雄，竟是这样一个弱者？」</li>
-<li>司密斯见他犹疑不决的样子，微笑说：「年轻人，我不会怪你感到害怕……是的，那边确实不是一个太平的地方，那是需要一个有、大人物。才干的人，才能有这份魄力去做的。」</li>
-</ul>
-</li>
-<li>只有竞争，才能发挥他们的工作效能。</li>
-<li>争强的欲望，自重感的欲望。</li>
-</ul>
-<pre>
-● 提要
-得人同意于你的十二种方法
-第一项规则：在辩论中，获得最大利益的唯一方法，就是避免辩论。
-第二项规则：尊重别人的意见，永远别指摘对方是错的。
-第三项规则：如果你错了，迅速、郑重的承认下来。
-第四项规则：以友善的方法开始。
-第五项规则：使对方很快的回答「是！是！」。
-第六项规则：尽量让对方，有多说话的机会。
-第七顼规则：使对方以为这是他的意念。
-第八项规则：要真诚的以他人的观点去看事情。
-第九项规则：同情对方的意念和欲望。
-第十项规则：激发更高尚的动机。
-第十一项规则：使你的意念戏剧化。
-第十二项规则：提出一个挑战。
-</pre>
-
-<hr>
-<h2 id="第四篇-使人同意你的九种方法"><a href="#第四篇-使人同意你的九种方法" class="headerlink" title="第四篇　使人同意你的九种方法"></a>第四篇　使人同意你的九种方法</h2><h3 id="第一章如果你必须批评，这是开始的方法"><a href="#第一章如果你必须批评，这是开始的方法" class="headerlink" title="第一章如果你必须批评，这是开始的方法"></a>第一章如果你必须批评，这是开始的方法</h3><ul>
-<li>当我们听到别人对我们的称赞后，如果再听到其它不愉快的话，就比较容易接受了。</li>
-<li>不使对方难堪、反感，而改变一个人的意志</li>
-<li>用称赞和真诚的欣赏作开始。</li>
-</ul>
-<h3 id="第二章-如何批评才不致招怨"><a href="#第二章-如何批评才不致招怨" class="headerlink" title="第二章　如何批评才不致招怨"></a>第二章　如何批评才不致招怨</h3><ul>
-<li>我们要劝阻一件事，永远躲开正面的批评这是必需要记住的。如果有这个必要的话，我们不妨旁敲侧击的去暗示对方。对人正面的批评，那会毁损了他的自重，剥夺了他的自尊。如果你旁敲侧击，对方知道你用心良善，他不但接受，而且还会感激你。</li>
-<li>间接的指出人们的过错。</li>
-</ul>
-<h3 id="第三章-先说出你自己的错误"><a href="#第三章-先说出你自己的错误" class="headerlink" title="第三章　先说出你自己的错误"></a>第三章　先说出你自己的错误</h3><ul>
-<li>如果批评的人，开始先谦冲的承认自己也不是十全十美的、无可指责的，然后再指出人们的错误，这样就比较容易让人接受了。</li>
-<li>在批评对方之前，不妨先谈谈你自己的错误。</li>
-</ul>
-<h3 id="第四章-没有人喜欢接受命令"><a href="#第四章-没有人喜欢接受命令" class="headerlink" title="第四章　没有人喜欢接受命令"></a>第四章　没有人喜欢接受命令</h3><ul>
-<li>你不妨可以考虑一下。」或者是「你认为那个有效吗？」</li>
-<li>运用那种方法，他保持了对方的自尊，而且使那人有了自重感。那种方法，也很容易取得对方的真诚合作，而对方不会有任何的反抗，或是拒绝。</li>
-<li>发问时，别用直接的命令。</li>
-</ul>
-<h3 id="第五章-让对方保持他的面子"><a href="#第五章-让对方保持他的面子" class="headerlink" title="第五章　让对方保持他的面子"></a>第五章　让对方保持他的面子</h3><h3 id="第六章-如何鼓励人们成功"><a href="#第六章-如何鼓励人们成功" class="headerlink" title="第六章　如何鼓励人们成功"></a>第六章　如何鼓励人们成功</h3><ul>
-<li>即使只有稍微的进步，我们也要称赞，这样可以鼓励别人继续进步。</li>
-<li>我们具有各种潜在的能力，可是却惯于不会利用。这潜在的能力，其中一项，就是称赞别人、激励别人，让他们知道自己这股潜在的能力，所蕴藏的神奇效力。</li>
-</ul>
-<h3 id="第七章-给狗取个好名字"><a href="#第七章-给狗取个好名字" class="headerlink" title="第七章　给狗取个好名字"></a>第七章　给狗取个好名字</h3><ul>
-<li>一般人，都会愿意接受指导，如果你得到他的敬重，并且对他的某种能力表示敬重的话。」<br>我们也可以这样说，如果你想改善一个人某方面的缺点，你要表示出，他已经具有这方面的优点了。</li>
-<li>莎士比亚说：「如果你没有某种美德，就假定你有。」是好是「假定」对方有你所要激发的美德，给他一个美好的名誉去表现，他会尽其所能，也不愿意使你感到失望的。</li>
-<li>几乎包括了富人、穷人、乞丐、盗贼，每一个人都愿意竭尽其所能，保持别人赠予他的「诚实」的美誉。</li>
-<li>给人一个美名让他去保全。</li>
-</ul>
-<h3 id="第八章-使错误看起来容易改正"><a href="#第八章-使错误看起来容易改正" class="headerlink" title="第八章　使错误看起来容易改正"></a>第八章　使错误看起来容易改正</h3><ul>
-<li>告诉一个孩子、一个丈夫，或是一个员工，他在某一件事上愚蠢至极，没有一点的天伦，他所做的完全不对。那你就破坏了他想要进取、上进的心情。可是，如果运用一种相反的技巧，多给人们一些鼓励，把事情看成很容易。使对方知道，你对他有信心，他有尚未发展出的才干，那他就会付出最大的努力，争取到这个胜利。</li>
-<li>用鼓励，使你要改正的错误，看来很容易做到；使你要对方所做的事，好象很容易做到。</li>
-</ul>
-<h3 id="第九章-使人们乐意做你所要的事"><a href="#第九章-使人们乐意做你所要的事" class="headerlink" title="第九章　使人们乐意做你所要的事"></a>第九章　使人们乐意做你所要的事</h3><ul>
-<li>人与人之间关系中，一项重要的规则，那是：「永远使人们乐意去做你所建议的事。」</li>
-<li>可是就有这样一件事，发生在拿破仑身上。当他训练荣誉军时，发出一千五百枚十宇徽章给他的士兵，封他的十八位将军为「法国大将」，称他的军队为「伟大的军队」的时候，人们也说他「孩子气」，讥笑他拿玩具给那些出生入死的老军人。拿破仑回答说：「是的，有时人就是受玩具所统治。」<br>这种以名衔、或权威赠予的方法，对拿破仑有效，对你同样有效。</li>
-</ul>
-<pre>
-●　提要
-改变人而不触犯或引起反感的九种方法
-第一项规则：用称赞和真诚的欣赏作开始。
-第二项规则：间接的指出人们的错误。
-第三项规则：在批评对方之前，不妨先谈谈你自己的过错。
-第四项规则：发问时，别用直接的命令。
-第五项规则：顾全对方的面子。
-第六项规则：称赞最细微的进步，而且称赞每一个进步。
-第七项规则：给人们一个美名让他去保全。
-第八项规则：用鼓励，使你要改正的错误，看来很易做到；使你要对方所做的事，好象很易做到。
-第九项规则：使人们乐意去做你所建议的事。
-</pre>
-
-<hr>
-<h2 id="第五篇-创造奇迹的信件"><a href="#第五篇-创造奇迹的信件" class="headerlink" title="第五篇　创造奇迹的信件"></a>第五篇　创造奇迹的信件</h2><ul>
-<li>这封信里的语气、含意，使人很愿意为发信人做一点事情，并且使对方有一种自重、高贵的感觉。因为请对方帮忙，使对方有了自尊、自重的感觉。</li>
-<li>巧妙的运用这种「帮我一个忙」的心理学。</li>
-<li>我们需要尽量鼓起对方的自尊心，但不是运用谄媚，或是虚伪，如果引误了这个出发点，是绝不会有效果的。<br>必需记住：我们每一个人，都是希望如何被人欣赏、如何被人重视……甚至会不顾一切的去达到这个目的。可是，没有人会接受不诚恳的、虚伪的奉承。<br>我愿意再说一遍：这书中所告诉你的原则，必需出自由衷才会有效果出现。</li>
-</ul>
-<p><img src="/2020/07/19/20200719-ren-xing-de-ruo-dian-zhai-yao/WULEI_Barcelona.jpg"></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/19/20200719-ru-he-yu-gu-kai-fa-shi-jian/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/07/19/20200719-ru-he-yu-gu-kai-fa-shi-jian/" itemprop="url">如何预估开发时间</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-19T17:43:06+08:00">
-                2020-07-19
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <ol start="0">
-<li>大的需求应预留时间方案设计和评审</li>
-<li>方案时间( 包括跟相关依赖方确认方案时间)<ul>
-<li>确定依赖方工作量和时间点</li>
-<li>工作项拆分</li>
-</ul>
-</li>
-<li>需求细节确认预留</li>
-<li>开发时间</li>
-<li>联调时间</li>
-<li>配合测试时间（改bug）</li>
-<li>单元测试</li>
-<li>产品验收（测试环境）</li>
-<li>需求改动预留</li>
-<li>代码审核时间</li>
-<li>处理其他突发事情预留</li>
-<li>上线跟进</li>
-<li>记录延期原因（需求变更，需求优先级调整，方案改动等；并同步相关人）</li>
-<li>数据需求(可能影响方案实现细节)</li>
-</ol>
-<h3 id="参考场景"><a href="#参考场景" class="headerlink" title="参考场景"></a>参考场景</h3><ol>
-<li>需求方需要一个相对准确的时间点；</li>
-<li>给自己一个合理靠谱，相对科学的心理预估，避免坑人坑自己；</li>
-<li>紧急情况特事特办。。。</li>
-</ol>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/12/">&lt;</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><span class="page-number current">13</span><a class="page-number" href="/page/14/">14</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><a class="extend next" rel="next" href="/page/14/">&gt;</a>
+    <a class="extend prev" rel="prev" href="/page/12/">&lt;</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><span class="page-number current">13</span><a class="page-number" href="/page/14/">14</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/14/">&gt;</a>
   </nav>
 
 
@@ -2753,7 +2983,7 @@ Robert C.Martin
 <a href="/archives/">                
 <!--<a href="/archives/%7C%7C%20archive">-->
               
-                  <span class="site-state-item-count">160</span>
+                  <span class="site-state-item-count">163</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2766,7 +2996,7 @@ Robert C.Martin
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">176</span>
+                  <span class="site-state-item-count">180</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

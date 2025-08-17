@@ -287,6 +287,590 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2025/01/08/20250108-suan-fa-zai-shi-ji-ye-wu-chang-jing-zhong-bing-fei-wan-quan-wu-yong/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2025/01/08/20250108-suan-fa-zai-shi-ji-ye-wu-chang-jing-zhong-bing-fei-wan-quan-wu-yong/" itemprop="url">算法在实际业务场景中并非完全无用</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2025-01-08T13:33:24+08:00">
+                2025-01-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<blockquote>
+<p>从事业务开发的同学经常会抱怨经常面试要刷算法，实际上平常的开发99%以上的事情都不会用到。<br>实际情况确实是这样。平常在写业务逻辑代码时，几乎完全不需要。<br>当然有些技术原理在背八股文的时候，懂一点算法能帮助你更好的理解。<br>而有些特殊业务场景，懂一些算法，确实能帮助你很好的解决问题。<br>下面举两个业务中产品提出的需求作为例子，简单描述如何利用算法有效解决。</p>
+</blockquote>
+</blockquote>
+<h2 id="一、从题库（50道题）中随机抽出10道题-且不能重复"><a href="#一、从题库（50道题）中随机抽出10道题-且不能重复" class="headerlink" title="一、从题库（50道题）中随机抽出10道题,且不能重复"></a>一、从题库（50道题）中随机抽出10道题,且不能重复</h2><ul>
+<li><p>最简单的思路：</p>
+<ul>
+<li>循环10次，每次取50以内的随机数</li>
+<li>创建一个hashmap，判断生成的随机数是否在map存在，存在则重新生成</li>
+<li>这个方法的缺点时，极端情况下，会多次生成重复的随机数导致要不断重新生成</li>
+</ul>
+</li>
+<li><p>经过一番思考，我设计了一下从m个数中取n个数的算法(m&gt;n), 保证算法只会循环n次 </p>
+</li>
+<li><p>那时我还是使用Java进行开发</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="type">int</span>[] randomArr(<span class="type">int</span> m, <span class="type">int</span> n) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (m &lt; n) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">int</span>[]&#123;&#125;;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">int</span>[] result = <span class="keyword">new</span> <span class="title class_">int</span>[n];</span><br><span class="line">    <span class="type">int</span>[] data = <span class="keyword">new</span> <span class="title class_">int</span>[m];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; m; i++) &#123;</span><br><span class="line">        data[i] = i;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> <span class="variable">end</span> <span class="operator">=</span> m;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">0</span>; j &lt; n; j++) &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">y</span> <span class="operator">=</span> ThreadLocalRandom.current().nextInt(end);</span><br><span class="line">        result[j] = data[y];</span><br><span class="line">        data[y] = data[end - <span class="number">1</span>];</span><br><span class="line">        data[end - <span class="number">1</span>] = result[j];</span><br><span class="line">        end--;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>后面我才发现原来这个算法叫 洗牌算法（Shuffle Algorithm），或者叫随机乱置算法。</li>
+</ul>
+<h2 id="通过搜索关键字匹配对应的标签id"><a href="#通过搜索关键字匹配对应的标签id" class="headerlink" title="通过搜索关键字匹配对应的标签id"></a>通过搜索关键字匹配对应的标签id</h2><ul>
+<li><p>产品提供了400个标签名称以及对应的标签id，希望能通过搜索的方式找到最相似的标签id，希望能支持模糊匹配</p>
+</li>
+<li><p>一般思路：</p>
+<ul>
+<li>方案1: <ol>
+<li>将400条数据一次性加载的程序内存</li>
+<li>遍历数据400条使用字符串的contains方法，找到第一条匹配数据就跳出，否则继续</li>
+</ol>
+</li>
+<li>方案2:<ol>
+<li>直接将数据导入到ES搜索引擎，利用ES自带的分词等搜索功能</li>
+<li>通过调ES，搜索得到标签id</li>
+</ol>
+</li>
+</ul>
+</li>
+<li><p>简单分析方案：</p>
+<ul>
+<li>方案1，性能太差，极端情况需要遍历所有数据</li>
+<li>方案2，需要新搭建ES集群，实现代价比较高</li>
+</ul>
+</li>
+<li><p>经过一番思考，以及从产品本身实际需求上出发，我涉及出以下的方案</p>
+<ol>
+<li>将数据的标签名字使用中文分词库<a target="_blank" rel="noopener" href="https://github.com/go-ego/gse">gse</a>进行分词</li>
+<li>将分词和对应的标签数据，构建前缀匹配树</li>
+<li>当搜索时，使用提前构建好的前缀匹配树，即可快速找到对应的标签id</li>
+</ol>
+</li>
+<li><p>这时我已经转使用Go来开发了</p>
+</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">type</span> TrieNode <span class="keyword">struct</span> &#123;</span><br><span class="line">	children <span class="keyword">map</span>[<span class="type">rune</span>]*TrieNode</span><br><span class="line">	isEnd    <span class="type">bool</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">NewTrieNode</span><span class="params">()</span></span> *TrieNode &#123;</span><br><span class="line">	<span class="keyword">return</span> &amp;TrieNode&#123;</span><br><span class="line">		children: <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="type">rune</span>]*TrieNode),</span><br><span class="line">		isEnd:    <span class="literal">false</span>,</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Trie <span class="keyword">struct</span> &#123;</span><br><span class="line">	root *TrieNode</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">NewTrie</span><span class="params">()</span></span> *Trie &#123;</span><br><span class="line">	<span class="keyword">return</span> &amp;Trie&#123;</span><br><span class="line">		root: NewTrieNode(),</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(t *Trie)</span></span> Insert(word <span class="type">string</span>) &#123;</span><br><span class="line">	node := t.root</span><br><span class="line">	<span class="keyword">for</span> _, char := <span class="keyword">range</span> word &#123;</span><br><span class="line">		<span class="keyword">if</span> _, ok := node.children[char]; !ok &#123;</span><br><span class="line">			node.children[char] = NewTrieNode()</span><br><span class="line">		&#125;</span><br><span class="line">		node = node.children[char]</span><br><span class="line">	&#125;</span><br><span class="line">	node.isEnd = <span class="literal">true</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(t *Trie)</span></span> Search(word <span class="type">string</span>) <span class="type">bool</span> &#123;</span><br><span class="line">	node := t.root</span><br><span class="line">	<span class="keyword">for</span> _, char := <span class="keyword">range</span> word &#123;</span><br><span class="line">		<span class="keyword">if</span> _, ok := node.children[char]; !ok &#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">		&#125;</span><br><span class="line">		node = node.children[char]</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> node.isEnd</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(t *Trie)</span></span> FuzzySearch(prefix <span class="type">string</span>) []<span class="type">string</span> &#123;</span><br><span class="line">	<span class="keyword">var</span> result []<span class="type">string</span></span><br><span class="line">	node := t.root</span><br><span class="line">	<span class="keyword">for</span> _, char := <span class="keyword">range</span> prefix &#123;</span><br><span class="line">		<span class="keyword">if</span> _, ok := node.children[char]; !ok &#123;</span><br><span class="line">			<span class="keyword">return</span> result</span><br><span class="line">		&#125;</span><br><span class="line">		node = node.children[char]</span><br><span class="line">	&#125;</span><br><span class="line">	t.collectWords(node, prefix, &amp;result)</span><br><span class="line">	<span class="keyword">return</span> result</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(t *Trie)</span></span> collectWords(node *TrieNode, prefix <span class="type">string</span>, result *[]<span class="type">string</span>) &#123;</span><br><span class="line">	<span class="keyword">if</span> node.isEnd &#123;</span><br><span class="line">		*result = <span class="built_in">append</span>(*result, prefix)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> char, child := <span class="keyword">range</span> node.children &#123;</span><br><span class="line">		t.collectWords(child, prefix+<span class="type">string</span>(char), result)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>这个算法就是经典的Trie字典树（前缀树），如果我之前没了解过这些算法，可能一时间没那么快能想到用这个方式高效完成这个需求。</li>
+</ul>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><ul>
+<li>了解一些算法，在实际业务开发，有时候也能运用到。</li>
+<li>另外，现在处于AI时代，即时不了解算法，善于组织语言和上下文，向AI提问，基本它也能引导你找到合适的解决方案。</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2025/01/06/20250106-jian-dan-yan-jiu-yi-xia-ren-gong-zhi-neng-he-shu-xue/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2025/01/06/20250106-jian-dan-yan-jiu-yi-xia-ren-gong-zhi-neng-he-shu-xue/" itemprop="url">简单研究一下人工智能和数学</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2025-01-06T18:02:28+08:00">
+                2025-01-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<blockquote>
+<p>简单记录，未完善<br>内容基本来源书籍</p>
+</blockquote>
+</blockquote>
+<p><img src="/2025/01/06/20250106-jian-dan-yan-jiu-yi-xia-ren-gong-zhi-neng-he-shu-xue/%E6%95%B0%E5%AD%A6.png"></p>
+<p>&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</p>
+<h1 id="初等数学"><a href="#初等数学" class="headerlink" title="初等数学"></a>初等数学</h1><h2 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h2><ul>
+<li>函数的表示方法主要有三种：解析法（公式法）、图像法和表格法。在微积分中讨论的函数几乎都是用解析法表示的。</li>
+</ul>
+<h2 id="二项式定理"><a href="#二项式定理" class="headerlink" title="二项式定理"></a>二项式定理</h2><ul>
+<li>二项式定理又称为牛顿二项式定理，它可将两个数之和的整数次幂展开为相应项之和。</li>
+</ul>
+<p>&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</p>
+<h1 id="高等数学"><a href="#高等数学" class="headerlink" title="高等数学"></a>高等数学</h1><h2 id="微积分"><a href="#微积分" class="headerlink" title="微积分"></a>微积分</h2><p>&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</p>
+<h1 id="人工智能数学"><a href="#人工智能数学" class="headerlink" title="人工智能数学"></a>人工智能数学</h1><ul>
+<li><p>从发展历程来看，人工智能先后经历了推理机、专家系统及机器学习三个阶段。</p>
+</li>
+<li><p>当前的人工智能系统多为学习型。为了减小误差，其用数据去训练假设模型，也就是进行所谓的学习，当误差降到最小时，就把这个假设模型用于其他现实问题。</p>
+</li>
+<li><p>人工智能实际上是一个将数学、算法理论和工程实践紧密结合的领域。人工智能从本质上来看就是算法，是概率论、统计学等各种数学理论的体现。数学作为表达与刻画人工智能模型的工具，是深入理解人工智能算法原理必备的基础知识。人工智能与数学高度相关，可以说人工智能的核心是数学，计算机只是实现人工智能模型的工具。</p>
+</li>
+<li><p>函数逼近：随着大数据和人工智能技术的发展，机器学习和深度学习在大数据挖掘、模式识别和智能分析越来越受重视。机器学习是一种基于数据的学习方法，其从观测数据所包含的有限信息中构造一个模型，利用该模型对未知数据或无法观测的数据进行尽可能准确的预测，这种模型称为学习机器。对数据科学而言，所有的数据都是以数字形式表示的，通过定义损失函数，选择合适的核函数或激活函数，反复学习后可达到一种最佳逼近状态，因此，机器学习问题实际上是函数估计问题或函数逼近问题。</p>
+</li>
+</ul>
+<h2 id="微积分-1"><a href="#微积分-1" class="headerlink" title="微积分"></a>微积分</h2><ul>
+<li>求导是微积分的基本概念之一，也是很多理工科领域的基础运算。导数是变化率的极限，是用来找到“线性近似”的数学工具，是一种线性变换，体现了无穷、极限、分割的数学思想，主要用来解决极值问题。人工智能算法的最终目标是得到最优化模型，其最后都可转化为求极大值或极小值的问题。</li>
+<li>比如，梯度下降法和牛顿法是人工智能的基础算法，现在主流的求解代价函数最优解的方法都是基于这两种算法改造的，如随机梯度法和拟牛顿法，其底层运算就是基础的导数运算。</li>
+<li>级数也是微积分中非常重要的概念，常见的级数有泰勒级数、傅里叶级数等，它们在人工智能算法中也有非常重要的地位。</li>
+<li>泰勒级数体现了用多项式近似和逼近函数的思想。</li>
+<li>泰勒级数在人工智能算法的底层起到了非常重要的作用，泰勒级数对理解很多基础算法的原理很有帮助。例如，梯度下降法的数学原理涉及代价函数的一阶泰勒近似，而牛顿法的推导过程应用了目标函数的二阶泰勒近似。</li>
+<li>凸函数也是微积分中的重要概念，人工智能算法中涉及的优化问题要求函数模型必须是凸函数，否则优化问题没有最优解。</li>
+<li>微积分中还有许多概念，如方向导数、梯度、伽马函数等，它们都在人工智能中有广泛的应用</li>
+</ul>
+<h2 id="线性代数"><a href="#线性代数" class="headerlink" title="线性代数"></a>线性代数</h2><ul>
+<li>线性代数的基本原理在人工智能算法中处于核心地位，在人工智能的语义分析、推荐系统、卷积神经网络等方面有大量应用，是目前最前沿的深度学习算法原理的基础。</li>
+</ul>
+<h2 id="概率论"><a href="#概率论" class="headerlink" title="概率论"></a>概率论</h2><ul>
+<li>很多机器学习算法是以概率统计的理论为基础支撑推导出来的，比如代价函数的最小二乘形式、逻辑回归算法都基于对模型的最大似然估计。</li>
+<li>概率论中的高斯函数及中心极限定理被广泛用于人工智能算法。独立同分布的不同随机变量之和会随变量数的增加而趋于高斯分布，因此，很多模型假设都采用高斯函数进行建模。</li>
+</ul>
+<h2 id="数理统计"><a href="#数理统计" class="headerlink" title="数理统计"></a>数理统计</h2><ul>
+<li>概率论作用的前提是随机变量的分布已知，其根据已知的分布来分析随机变量的特征与规律；数理统计的研究对象则是分布未知的随机变量，其研究方法是对随机变量进行独立重复的观察，根据得到的观察结果对原始分布做出推断，数理统计可以看作逆向的概率论。</li>
+<li>若检验是通过随机抽取的样本来对一个总体的判断结果进行认可或否定，则可以将其用于估计机器学习模型的泛化能力。</li>
+</ul>
+<h2 id="最优化理论"><a href="#最优化理论" class="headerlink" title="最优化理论"></a>最优化理论</h2><ul>
+<li>人工智能的目标就是最优化，就是在复杂环境与多体交互中做出最优决策。几乎所有的人工智能问题最后都会归结为一个优化问题的求解，因此，最优化理论同样是学习、研究人工智能必备的基础知识。<br>最优化理论研究的问题是判定给定目标函数是否存在最大值或最小值，并找到令目标函数取最大值或最小值的数值。如果把给定的目标函数看成连绵的山脉，最优化的过程就是找到顶峰（谷底）且到达顶峰（谷底）的过程。</li>
+<li>最优化理论的研究内容主要包括线性规划、（不）精确搜索、梯度下降法、牛顿法、共轭梯度法、拟牛顿法、（非）线性最小二乘法、约束优化最优性条件、二次规划、罚函数法和信赖域法等。</li>
+<li>要实现最小化或最大化的函数称为目标函数，大多数最优化问题都可以通过使目标函数￼最小化解决，最大化问题也可以通过最小化￼来解决。最优化方法找到的可能是目标函数的全局最小值，也可能是局部极小值，两者的区别在于全局最小值比定义域内所有其他点的函数值都小，而局部极小值只比所有邻近点的函数值小。</li>
+<li>当目标函数的输入参数较多、解空间较大时，大多数实用的最优化方法都不能满足全局搜索对计算复杂度的要求，因而只能求出局部极小值。但是，在人工智能和深度学习的应用场景中，只要目标函数的取值足够小，就可以把这个值当作全局最小值使用，以此作为对性能和复杂度的折中。</li>
+</ul>
+<p>&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</p>
+<blockquote>
+<blockquote>
+<p>程序员的数学</p>
+</blockquote>
+</blockquote>
+<h2 id="迈向机器学习的第一步"><a href="#迈向机器学习的第一步" class="headerlink" title="迈向机器学习的第一步"></a>迈向机器学习的第一步</h2><ul>
+<li><p>由输入和目标组成的数据称为训练数据。机器学习中所谓的学习，就是为了通过给定的输入得到和目标尽可能接近的输出，使用训练数据对参数进行调整的过程。使用训练数据对参数进行过调整的模型称为训练好的模型。对于训练好的模型，需要用测试数据对其进行测试，从而评价训练的效果。</p>
+</li>
+<li><p>在机器学习中对参数进行调整的过程，不是由程序员完成的，而是由计算机通过训练数据自动完成的，这正是机器学习的一大特征。</p>
+</li>
+<li><p>这里先做个总结吧。我们面对预测问题，首先要有好的模型加上大量的训练数然后，我们需要的是“能根据输人向量，得到和目标向量尽量接近的输出向量”这样一个训练好的模型。</p>
+</li>
+<li><p>解决分类问题的过程，也可以说是从大量数据中总结规律和规则，从而发现模式的过程。机器学习并不会要求程序员提前研究手写字符的各种形态再去设计程序，而是由计算机根据训练数据来调整参数，从而得到分类模型，这才是它的特征所在。</p>
+</li>
+</ul>
+<p><img src="/2025/01/06/20250106-jian-dan-yan-jiu-yi-xia-ren-gong-zhi-neng-he-shu-xue/%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0.png"><br><img src="/2025/01/06/20250106-jian-dan-yan-jiu-yi-xia-ren-gong-zhi-neng-he-shu-xue/%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B02.png"></p>
+<ul>
+<li><p>如果机器对训练数据能给出完美的输出，对测试数据给出的结果却不尽如人意，很有可能是发生了过拟合（overfitting）。用学生来说，就好比是课堂上做过的训练题都能解得很好，但考试成绩却不怎么理想。</p>
+</li>
+<li><p>在学习的过程中，需要比较输出和正确的值。拿这个简单的例子来说，要比较的对象就是由输入x1，x2通过给定模型得到的输出y和目标t。如果y和的值一致，那当然好，但一般并不会这么理想。对学习结果（输出）的评价不是单纯的“好与不好”，而是要知道它与训练数据中给出的目标相比“到底有多不好”。为了实现这种评价，需要引入损失函数。<br>在具体的机器学习问题中，如何选取恰当的损失函数是个重要且有难度的问题。比如使用平方和误差函数。</p>
+</li>
+<li><p>要通过调整模型中的权重参数，使得损失函数值尽可能接近于0。</p>
+</li>
+<li><p>梯度下降法<br><img src="/2025/01/06/20250106-jian-dan-yan-jiu-yi-xia-ren-gong-zhi-neng-he-shu-xue/%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%E6%B3%95.png"></p>
+</li>
+<li><p>作为程序员要做些什么</p>
+<ul>
+<li>在构建模型这个阶段，程序员是要参与的，但是参数的自动调整过程，程序员不会参与。也就是说，程序员不去直接指定参数的具体数值，而是通过模型、损失函数、训练数据，间接地让参数的选取向着更优的方向变化，从而得到需要的参数。即使模型、损失函数都相同，只要训练数据不同，学习后得到的模型也会截然不同。</li>
+<li>机器学习是基于数据让机器去学习，程序员并不直接参与其中。这就像硬件配置完全同的计算机，如果软件系统不一样，整个运行模式也会不一样。把软件换掉，同一套硬件系统也会根据不同的指令做出不一样的事情。道理类似，就算模型一样，只要训练数据不同，最后模型的运行模式也会不一样。</li>
+</ul>
+</li>
+<li><p>神经网络是指，把像感知器一样有输入和输出的节点排列起来形成的带有层次的结构。神经网络（neural network）这个词来源于生物的信息传递方式。在感知器中，输出是二元的，取值只有0或1两种情况，而神经网络中的节点输出的就不是二元，而是可以进行微分运算的连续值。</p>
+</li>
+</ul>
+<p><img src="/2025/01/06/20250106-jian-dan-yan-jiu-yi-xia-ren-gong-zhi-neng-he-shu-xue/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C.png"></p>
+<ul>
+<li><p>深度学习是在神经网络的基础上，通过增加层数得到的更加“深化”的模型。增加层数是为了更加精确地拟合复杂函数，就算涉及的参数个数不做大的变动，也能得到更好的模型。至于如何“深化”在理论上更为有效，依然是现在研究的热点之一。</p>
+</li>
+<li><p>强化学习是在“无监督”的条件下进行的“学习”。也就是说，在学习过程中没有标准答案可供参考。强化学习通过试错来寻找最优输出，对每个输出，系统都会提供反馈（奖励），模型的参数可以根据得到的反馈来调整。</p>
+</li>
+<li><p>做出决策</p>
+<ul>
+<li>机器学习会根据输人的数据预测未来。这种意义下的预测，是基于先前的经验进行的，得到的是未来最有可能发生的情况（数值）。但是，得到预测值之后“应该做些什么”，机器是无法决定的。也就是说，它们无法进行决策。</li>
+<li>通过机器学习这个方法，机器可以告诉我们在未来什么样的行动会导致事情如何发展。</li>
+<li>但是，做决策这件事本身，并不能让机器来做。</li>
+<li>顺着这个话题继续讲下去，就不是技术问题，而是伦理问题了。比如，在减轻痛苦和延续生命之中二选一的问题等，只能由个人的意志来决定，不可能委托给机器学习。</li>
+</ul>
+</li>
+</ul>
+<p>&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</p>
+<h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><ul>
+<li>《人工智能数学基础》</li>
+<li>《程序员的数学》</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2025/01/01/20250101-shi-yong-ai-zong-jie-liao-zhe-ge-wang-zhan-de-nei-rong/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2025/01/01/20250101-shi-yong-ai-zong-jie-liao-zhe-ge-wang-zhan-de-nei-rong/" itemprop="url">使用AI总结了这个网站的内容</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2025-01-01T00:29:21+08:00">
+                2025-01-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<blockquote>
+<p>使用google的notebooklm总结目前该网站的所有文章内容<br><a target="_blank" rel="noopener" href="https://notebooklm.google.com/">https://notebooklm.google.com/</a><br>问题：全面阐述和总结一下这个博客网站的内容，涉及领域，博主风格等</p>
+</blockquote>
+</blockquote>
+<hr>
+<p>该博客网站的内容主要涵盖了<strong>个人成长和职业发展</strong>两个方面，涉及领域包括：</p>
+<ul>
+<li><strong>自我营销</strong>:  如何打造个人品牌，提升影响力。</li>
+<li><strong>时间管理</strong>: 如何提高工作效率，克服拖延。</li>
+<li><strong>学习方法</strong>: 如何快速学习，进行深度学习，构建个人知识体系。</li>
+<li><strong>心理素质</strong>: 如何拥有积极心态，提升情绪力。</li>
+<li><strong>职业发展</strong>: 如何成为一名专业的软件开发人员，进行有效的薪酬谈判。</li>
+<li><strong>创业</strong>: 如何打造成功的产品，制定切实可行的创业计划。</li>
+<li><strong>健身</strong>: 如何利用科技产品实现健身目标。</li>
+<li><strong>人际关系</strong>: 如何与他人相处，建立良好的人际关系。</li>
+<li><strong>精神</strong>: 如何利用心灵的力量，克服天性，实现个人成长。</li>
+<li><strong>金融</strong>: 如何理解金融危机，以及金融政策的作用。</li>
+<li><strong>公司文化</strong>: 如何打造面向未来的新型组织文化，以网飞为例。</li>
+<li><strong>历史</strong>: 如何理解人类社会的发展，以文字和政治组织为例。</li>
+</ul>
+<p>博主风格：</p>
+<ul>
+<li><strong>注重实用性</strong>: 博主的内容以解决实际问题为导向，提供具体可行的建议和方法。</li>
+<li><strong>结合个人经验</strong>: 博主经常结合自身经历和感悟，使得内容更具说服力。</li>
+<li><strong>善于运用类比</strong>: 博主擅长用通俗易懂的类比来解释复杂的概念，使读者更容易理解。</li>
+<li><strong>强调深度思考</strong>: 博主鼓励读者进行深度思考，并将知识与自身实际相结合。</li>
+<li><strong>注重科学依据</strong>: 博主经常引用科学研究和理论来支持自己的观点，增强内容的可信度。</li>
+</ul>
+<p>总而言之，该博客网站的内容丰富实用，风格清晰易懂，对于想要提升个人能力和实现职业成功的读者来说，具有很高的参考价值。</p>
+<hr>
+<h2 id="排除掉笔记类文章后"><a href="#排除掉笔记类文章后" class="headerlink" title="排除掉笔记类文章后"></a>排除掉笔记类文章后</h2><p>这个博客网站的内容主要涉及<strong>软件开发和技术管理</strong>领域，涵盖了<strong>业务方案、架构设计、技术实践、团队管理和个人成长</strong>等方面。博主的写作风格<strong>简洁、实用、注重经验总结和思考</strong>，文章内容多来自实际工作中的问题和解决方案，并结合个人思考和学习心得进行阐述。</p>
+<p>以下是该博客网站内容的详细分析：</p>
+<p><strong>一、内容领域：</strong></p>
+<ul>
+<li><strong>业务方案：</strong>涵盖了分页、兼容性、事务、前置校验、幂等、错误码处理、接口安全、容灾降级、货币体系设计、榜单实现等常见业务场景的解决方案和实践经验总结。</li>
+<li><strong>架构设计：</strong>探讨了微服务架构、服务间一致性、数据库高可用方案、容灾架构、聚合层设计等架构设计理念和实践经验。</li>
+<li><strong>技术实践：</strong>分享了RPC调用、事务处理、数据库同步、Redis应用、单元测试、配置中心、序列化协议等技术点的实践经验和工具技巧。</li>
+<li><strong>团队管理：</strong>总结了个人管理经验、小团队管理要点、项目管理技巧、团队协作、沟通技巧等团队管理方面的经验和思考。</li>
+<li><strong>个人成长：</strong>记录了博主从PHP、C++、Lua到Java、Go、Rust等不同编程语言的学习和实践经历，以及对技术发展趋势的思考和个人职业发展的感悟。</li>
+</ul>
+<p><strong>二、博主风格:</strong></p>
+<ul>
+<li><strong>简洁实用：</strong>文章语言简洁明了，直击问题核心，注重实用性，避免过多理论和概念的堆砌。</li>
+<li><strong>经验总结：</strong>文章内容多来自博主实际工作中遇到的问题和解决方案，并进行总结提炼，形成可供参考的经验。</li>
+<li><strong>思考深入：</strong>博主不局限于问题本身，而是深入思考问题背后的原因和本质，并提出自己的见解和解决方案。</li>
+<li><strong>持续学习：</strong>博主不断学习新的技术和知识，并将其应用到实际工作中，乐于分享自己的学习心得和体会。</li>
+</ul>
+<p><strong>三、其他特点:</strong></p>
+<ul>
+<li><strong>注重代码质量：</strong>博主强调单元测试、代码规范、代码扫描工具等提升代码质量的方法。</li>
+<li><strong>关注团队协作：</strong>博主重视团队沟通、信息透明、知识分享等，提倡高效的团队协作方式。</li>
+<li><strong>追求技术进步：</strong>博主积极探索新的技术和架构，并思考技术发展趋势对个人和团队的影响。</li>
+</ul>
+<p><strong>总结:</strong></p>
+<p>该博客网站内容丰富，涵盖了软件开发和技术管理的多个方面，体现了博主丰富的实践经验和深入的思考。博主的写作风格简洁实用，注重经验总结和思考，对于从事相关领域工作的读者具有较高的参考价值。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2024/12/31/20241231-ai-gong-ye-ge-ming-xia-de-ruo-gan-si-kao/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2430,1209 +3014,11 @@ Starting from zero, this journey will take time and dedication. Patien
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2024/10/25/20241025-ren-zhi-jue-xing-bi-ji/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2024/10/25/20241025-ren-zhi-jue-xing-bi-ji/" itemprop="url">《认知觉醒》-笔记</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2024-10-25T14:43:45+08:00">
-                2024-10-25
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><img src="/2024/10/25/20241025-ren-zhi-jue-xing-bi-ji/%E8%AE%A4%E7%9F%A5%E8%A7%89%E9%86%92.jpg"></p>
-<hr>
-<ul>
-<li>无论在大脑构造、潜意识、元认知、刻意练习等基本概念的解读上，还是在自控力、专注力、行动力、学习力、情绪力等具体能力的使用策略（包括早起、冥想、阅读、写作、运动等必备习惯的养成）上，都有相对独到的原理呈现和具体可行的方法提供。</li>
-</ul>
-<h3 id="每日反思"><a href="#每日反思" class="headerlink" title="每日反思"></a>每日反思</h3><ul>
-<li>记录时间对我最大的意义，就是让自己能够觉知到时间的存在，让自己过得更加踏实。</li>
-<li>每天只需花一点点时间，对当天最触动自己的事情或感悟进行复盘。</li>
-<li>通过反思，我越来越多地觉知到生活中的很多细节，无须外界的帮助，就可以从小处不断完善自己。</li>
-<li>如果你去练习反思，也必然会关注身体、情绪和思维三个层面，进而不断优化和改进自己。当然也会产生很多灵感、顿悟和创意，只要你去实践，就会有很多发现。</li>
-<li>正视痛苦- 少数人会选择正视痛苦，反思错误，而大多数人选择逃避，沉浸在负面情绪中。</li>
-<li>谨记：反思的最终目的是改变，而不是形式的完美，所以哪怕只有一句话，且这句话让自己发生了改变，那么反思的目的也就达到了。</li>
-</ul>
-<h2 id="第一章-大脑——一切问题的起源"><a href="#第一章-大脑——一切问题的起源" class="headerlink" title="第一章 大脑——一切问题的起源"></a>第一章 大脑——一切问题的起源</h2><ul>
-<li><p>人类三重大脑</p>
-<ul>
-<li>本能脑（源于爬行动物，主管本能，对环境快速做出本能反应）</li>
-<li>情绪脑（源于哺乳动物，主管情绪，在恶劣的环境中趋利避害，提升生存优势，比如恐惧情绪可以让他远离危险，兴奋情绪可以让他专注捕猎）</li>
-<li>理智脑（源于灵长类动物，主管认知，理性地思考）</li>
-</ul>
-</li>
-<li><p>“我怜悯恶人，我该死，应该受报应。”事实上，如果这位农夫懂得一些大脑知识，就不会犯如此低级的错误了。蛇这种冷血的爬行动物根本就没有发达的情绪脑，它不知感恩为何物，只会依靠本能行事，遇到危险要么战斗、要么逃跑；而愚昧的农夫竟然以为蛇和人类一样有善恶之心，会知恩图报，结果使自己命丧黄泉。！！！</p>
-</li>
-<li><p>令人欣慰的是，高级的理智脑是我们人类所独有的，它使我们富有远见、善于权衡，能立足未来获得延时满足</p>
-</li>
-<li><p>理智脑虽然高级，但比起本能脑和情绪脑，它的力量实在是太弱小了</p>
-</li>
-<li><p>本能脑早在婴儿时期就比较完善了，情绪脑则要等到青春期早期才趋于完善，而理智脑最晚，要等到成年早期才基本发育成熟。</p>
-</li>
-<li><p>所以在人生的前20年里，我们总是显得心智幼稚不成熟。</p>
-</li>
-<li><p>理智脑对大脑的控制能力很弱，所以我们在生活中做的大部分决策往往源于本能和情绪，而非理智。</p>
-</li>
-<li><p>为了生存，他们必须借助本能和情绪的力量对危险做出快速反应，对食物进行即时享受，对舒适产生强烈欲望，才不至于被吃掉、被饿死</p>
-</li>
-<li><p>为了生存，原始人还要尽量节省能量，像思考、锻炼这种耗能高的行为都会被视为对生存的威胁，会被本能脑排斥，而不用动脑的娱乐消遣行为则深受本能脑和情绪脑的欢迎</p>
-</li>
-<li><p>本能脑和情绪脑的基因一直被生存压力塑造着，所以它们的天性自然成了目光短浅、即时满足</p>
-</li>
-<li><p>我们当前遇到的几乎所有的成长问题都可以归结到目光短浅、即时满足的天性上，不过在现代社会，用避难趋易和急于求成来代指它们显然更加贴切。</p>
-</li>
-<li><p>成长就是克服天性的过程！！</p>
-</li>
-<li><p>而觉醒和成长就是让理智脑尽快变强，以克服天性</p>
-</li>
-<li><p>因为大脑和肌肉一样，遵循用进废退的原则。</p>
-</li>
-<li><p>理智脑不是直接干活的，干活是本能脑和情绪脑的事情，因为它们的“力气”大；上天赋予理智脑智慧，是让它驱动本能和情绪，而不是直接取代它们</p>
-</li>
-<li><p>学习知识，提升认知，运用策略</p>
-</li>
-<li><p>归结起来，焦虑的原因就两条：想同时做很多事，又想立即看到效果。王小波说：人的一切痛苦，本质上都是对自己无能的愤怒。焦虑的本质也契合这一观点：自己的欲望大于能力，又极度缺乏耐心。焦虑就是因为欲望与能力之间差距过大。</p>
-</li>
-<li><p>急于求成，想同时做很多事；避难趋易，想不怎么努力就立即看到效果。这才是焦虑真正的根源！焦虑是天性，是人类的默认设置。</p>
-</li>
-<li><p>我们没有必要自责或愧疚，也没有必要与天性较劲，而应想办法看清背后的机理并设法改变。</p>
-</li>
-<li><p>得耐心者得天下</p>
-</li>
-<li><p>缺乏耐心根本不是什么可耻的事，和自己的道德品质也全无关系，这仅仅是天生属性罢了，每个人都一样。</p>
-</li>
-<li><p>复利效应显示了价值积累的普遍规律：前期增长非常缓慢，但到达一个拐点后会飞速增长。这个“世界第八大奇迹”</p>
-</li>
-<li><p>我们需要冷静面对前期缓慢的增长并坚持到拐点。</p>
-</li>
-<li><p>复利曲线和舒适区边缘是一对好朋友，它们组合在一起可以让我们在宏观上看到保持耐心的力量，而且这种力量适用于每一个普通人。</p>
-</li>
-<li><p>即对于学习而言，学习之后的思考、思考之后的行动、行动之后的改变更重要，如果不盯住内层的改变量，那么在表层投入再多的学习量也会事倍功半；因此，从权重上看，改变量﹥行动量﹥思考量﹥学习量</p>
-</li>
-<li><p>单纯保持学习输入是简单的，而思考、行动和改变则相对困难。在缺乏觉知的情况下，我们会本能地避难趋易，不自觉地沉浸在表层的学习量中。</p>
-</li>
-<li><p>我们不会因自己进步缓慢而沮丧，也不会因别人成长迅速而焦虑</p>
-</li>
-<li><p>毕竟各自所处的阶段不同，只要持续创造价值，别人的今天就是自己的明天。</p>
-</li>
-<li><p>耐心不是毅力带来的结果，而是具有长远目光的结果。</p>
-</li>
-<li><p>对外部世界的规律的认知能使我们耐心倍增。</p>
-</li>
-<li><p>首先，面对天性，放下心理包袱，坦然接纳自己。当我们明白缺乏耐心是自己的天性时，就坦然接纳吧！从现在开始，对自己表现出的任何急躁、焦虑、不耐烦，都不要感到自责和愧疚</p>
-</li>
-<li><p>面对诱惑，学会延迟满足，变对抗为沟通。</p>
-</li>
-<li><p>该有的享受一点都不会少，只是不是现在享受，而是在完成重要的事情之后。”这是一个有效的策略，因为放弃享受，它们是不会同意的，但延迟享受，它们是能接受的。</p>
-</li>
-<li><p>最高级的方法是请本能脑和情绪脑出动来解决困难。</p>
-</li>
-<li><p>所以，想办法让本能脑和情绪脑感受到困难事物的乐趣并上瘾，才是理智脑的最高级的策略</p>
-</li>
-</ul>
-<h2 id="第二章-潜意识——生命留给我们的彩蛋"><a href="#第二章-潜意识——生命留给我们的彩蛋" class="headerlink" title="第二章 潜意识——生命留给我们的彩蛋"></a>第二章 潜意识——生命留给我们的彩蛋</h2><ul>
-<li><p>模糊：人生是一场消除模糊的比赛</p>
-</li>
-<li><p>为了更好地生存，进化之手巧妙地采用了意识分层的手段，它让潜意识负责生理系统，让意识负责社会系统，如此分工，意识便得到了解放，可以全力投入高级的社会活动。</p>
-</li>
-<li><p>这种模糊让人心生迷茫和恐惧，而迷茫和恐惧又使我们的认知、情绪和行动遭遇各种困扰，继而影响人生的走向。模糊，正是人生困扰之源。而人生也像是一场消除模糊的比赛，谁的模糊越严重，谁就越混沌；谁的模糊越轻微，谁就越清醒。</p>
-</li>
-<li><p>正如你知道了“元认知”，就知道了该如何反观自己；知道了“刻意练习”，就明白了如何精进自己；知道了“运动改造大脑”，就清楚了如何激发自己的运动热情</p>
-</li>
-<li><p>不幸的是，人类天生不喜欢学习和思考，因为这类事极其耗能。在漫长的进化过程中，生命的首要任务是生存，于是，基因自我设计的第一原则是节能，凡耗能高的事情都会被视为是对生存的威胁</p>
-</li>
-<li><p>学习知识的目的是“消除模糊”，而获取知识的方法也是“消除模糊”，目的和方法相统一</p>
-</li>
-<li><p>《思考力》一书的作者上田正仁提示：思考力的本质就是“丢弃所有已经消化的信息，让问题的核心浮出水面”；·《刻意练习》中的核心方法论是：不要重复练习已经会的，要不断寻找那些稍有难度的部分；·《原则》一书的作者瑞·达利欧罗列了工作和生活中的原则，用以清晰地指导自己行事；·《超越感觉》一书告诉我们，想拥有清晰的逻辑，就坚持一点：凡事不要凭模糊的感觉判断，要寻找清晰的证据。种种现象都在告诉我们一个事实</p>
-</li>
-<li><p>学霸”和普通同学之间的差异不仅体现在勤奋的程度上，还体现在努力的模式上：谁更愿意做高耗能的事——消除模糊，制造清晰。</p>
-</li>
-<li><p>受苦比解决问题来得容易，承受不幸比享受幸福来得简单。</p>
-</li>
-<li><p>因为解决问题需要动脑，享受幸福也需要动脑平衡各种微妙的关系，而承受痛苦则只需陷在那里不动。</p>
-</li>
-<li><p>真正的困难总比想象的要小很多。人们拖延、纠结、畏惧、害怕的根本原因往往不是事情本身有多难，而是内心的想法变得模糊。</p>
-</li>
-<li><p>如果我们再积极些，学会从一开始就主动正视它、拆解它、看清它，或许那种紧张就不困扰自己了，我们甚至能从容地“享受”比赛。</p>
-</li>
-<li><p>要想不受其困扰，唯一的办法就是正视它、看清它、拆解它、化解它，不给它进入潜意识的机会，不给它变模糊的机会；即使已经进入潜意识，也要想办法将它挖出来。</p>
-</li>
-<li><p>虽然直面情绪不会让痛苦马上消失，甚至短时间内还会加剧痛苦，但这会让你主导形势，至少不会被情绪无端恐吓。</p>
-</li>
-<li><p>行动力不足的真正原因是选择模糊。</p>
-</li>
-<li><p>选择模糊就是一种不确定性，而人类面对不确定性时会不自觉逃避</p>
-</li>
-<li><p>当我们没有足够清晰的指令或者目标时，就很容易选择享乐，放弃那些本该坚持但比较烧脑的选项。</p>
-</li>
-<li><p>在现代生活中，要想让自己更胜一筹，就必须学会花费更多的脑力和心力去思考如何拥有足够清晰的目标。我们要把目标和过程细化、具体化，在诸多可能性中建立一条单行通道，让自己始终处于“没得选”的状态。</p>
-</li>
-<li><p>在这条赛道上，领先的群体都有意无意地做着同一件事：消除认知、情绪和行动上的模糊。</p>
-</li>
-<li><p>先用感性能力帮助自己选择，再用理性能力帮助自己思考。</p>
-</li>
-<li><p>读书也是这样，如果单纯运用理性，我们通常会在看完整本书后花大量时间梳理作者的框架、思路，以此来表明自己读懂、读透了这本书；</p>
-</li>
-<li><p>一个人若是没有人生目标，纵然每天有吃、有喝、有书读、有班上，也会像一个迷失的人一样，内心没有喜悦、生活没有激情，甚至会厌恶自己，因为目标是存放我们热情和精力的地方。很多人为了找到自己的人生目标，费尽心思地分析什么事情最值得做，最后得到的答案往往是“变得很有钱”或“被别人崇拜”。这样的目标不能说有错，但往往不能长久，也无法给人真正的动力，因为这是理性思维权衡利弊和考量得失之后的结果，其动机往往来自“自我索取和外在评价”，时间一长，很容易使人迷失方向，使动力枯竭。</p>
-</li>
-<li><p>真正的觉醒者往往会有意无意地用感知力来代替思考力    </p>
-</li>
-<li><p>比如《美好人生运营指南》一书的作者一稼就提出了6条寻找人生使命的建议。·这个世界有很多事情可以做，你最想帮助哪些人？·什么事让你废寝忘食？·你在做什么事情的时候最让自己感动？·你最让人感动的时刻是什么？·如果没有任何经济压力，你会如何度过余生？·闲暇的时候，你关注最多的是哪方面的信息？</p>
-</li>
-<li><p>理智的分析和计算无法解出内心的真正需求，唯有感性的觉知和洞察才能让答案浮出水面。而且正确的答案往往都是利他的，因为真正长久的人生意义和幸福只能从他人的反馈中获得。</p>
-</li>
-<li><p>设想你即将离开世界，回首一生会为什么事情而后悔？·想一想你最喜欢的人物是谁？·你年轻的时候是怎么度过闲暇时光的？</p>
-</li>
-<li><p>对于你喜欢的人物，不管是虚构的还是真实的，只要让你深深地着迷，就可以从这些人物身上反射出内心理想的自己；</p>
-</li>
-<li><p>而年轻的时候没有家庭、工作负担，那时的追求更加遵从内心，不会受外界压力的干扰。</p>
-</li>
-<li><p>归纳起来，我们可以发现，理性思维虽然很高级，但在判断与选择方面可能并不具有优势，它那蹩脚的性能实在无法与灵敏快速的感性媲美。所以，先用感性选择，再用理性思考，或许是一个更好的策略，尤其是在做那些重大选择时。诚如洪兰教授的建议：小事听从你的脑，大事听从你的心。这话不无道理。</p>
-</li>
-<li><p>梦境。梦境是潜意识传递信息的一种方式，它可能是内心真实想法的展示，也可能是灵感的启发。</p>
-</li>
-<li><p>身体不会说话，却是最诚实的。无论生理还是心理上的不适，都会通过身体如实地反映出来，记得多关注这些反馈。</p>
-</li>
-</ul>
-<h2 id="第三章-元认知——人类的终极能力"><a href="#第三章-元认知——人类的终极能力" class="headerlink" title="第三章 元认知——人类的终极能力"></a>第三章 元认知——人类的终极能力</h2><ul>
-<li><p>早在15万年之前，人类就已经拥有这种能力，当然不是指人的身体真的飞到空中，而是指意识与本体分离，“飞”到更高处去反观自己。</p>
-</li>
-<li><p>你如果仔细观察过这个世界上优秀的人，就会发现他们几乎都是“飞”着前进的；</p>
-</li>
-<li><p>元认知能力就是我们习以为常、见怪不怪的反思能力。这种能力不仅为我们人类所独有，也是我们成为万物之灵[插图]的根源</p>
-</li>
-<li><p>当一个人能主动开启第三视角、开始持续反观自己的思维和行为时，就意味着他真正开始觉醒了，他有了快速成长的可能。</p>
-</li>
-<li><p>高级的元认知——时刻帮你从高处、深处、远处看待现在的自己，让自己保持清醒、不迷失，保持动力、不懈怠，保持平和、不冲动。</p>
-</li>
-<li><p>元认知能力总能让你站在高处俯瞰全局，不会让你一头扎进生活的细节，迷失其中。</p>
-</li>
-<li><p>未来视角总是当前行动的指南针</p>
-</li>
-<li><p>提高元认知能力的方法有很多，但最让人意想不到是下面这条——冥想。是的，冥想就是那种只要静坐在某处，然后放松身体，把注意力完全集中到呼吸和感受上的活动。</p>
-</li>
-<li><p>不难发现这些活动本质上都在做同一件事：监控自己的注意力，然后将其集中到自己需要关注的地方。</p>
-</li>
-<li><p>元认知正是人类认知能力的反馈回路，有了它，我们才可能进入快速进化的通道。</p>
-</li>
-<li><p>有的人能看到事物更多的意义，赋予目标强烈的价值，因此他们比其他人的专注力、执行力和意志力更强；有的人能觉察他人的想法，克制自己的言行，从而显得情商更高。他们真正的竞争力不在于学习能力，而在于强大的元认知能力。！！！</p>
-</li>
-<li><p>很多学习能力、运算能力超强的学霸，他们的理智脑虽然同样强大，但未必能过好自己的人生。</p>
-</li>
-<li><p>在“元时间”内我们要做什么呢？很简单，就做一件事：想清楚。如果不在这些选择的节点想清楚，我们就会陷入模糊状态，而模糊是潜意识的领地，它会使我们产生本能的反应——娱乐。所以，基本的应对策略便是：在选择的节点审视自己的第一反应，并产生清晰明确的主张。</p>
-</li>
-<li><p>虽然这样做会更累，但这正是锻炼元认知能力的最佳时机，就像是在举思想哑铃，让自己的理智脑变得更强大</p>
-</li>
-<li><p>元认知能力强的一个突出表现是：对模糊零容忍。换句话说，就是想尽一切办法让自己找出那个最重要的、唯一的选项，让自己在某一个时间段里只有一条路可以走。这道理很简单，既然权重都差不多，那么做哪件事都没有损失。犹豫不决，什么都想做又什么都做不好，才是最大的损失。</p>
-</li>
-<li><p>元认知能力强的人就是这样：无论是当下的注意力、当天的日程安排，还是长期的人生目标，他们都力求想清楚意义、进行自我审视和主动控制，而不是随波逐流。</p>
-</li>
-</ul>
-<h2 id="第四章-专注力——情绪和智慧的交叉地带"><a href="#第四章-专注力——情绪和智慧的交叉地带" class="headerlink" title="第四章 专注力——情绪和智慧的交叉地带"></a>第四章 专注力——情绪和智慧的交叉地带</h2><ul>
-<li><p>一是觉得当下太无聊，所以追求更有意思的事情；二是觉得当下太痛苦，于是追求更舒适的事情。因为身体受困于现实，只好让思想天马行空。</p>
-</li>
-<li><p>可见，分心走神的本质是逃避，所以，面对困难时，身心分离的人总会不自觉地退回舒适区，而身心合一的人则更容易跳出舒适区，直面困难。</p>
-</li>
-<li><p>身体感受永远是进入当下状态的最好媒介，而感受事物消失的过程更是一种很好的专注力训练。它提示我们，身心合一的要领不仅是专注于当下，更是享受当下，而这种享受必将使我们更从容，不慌张。</p>
-</li>
-<li><p>行者又问：“那何谓得道？”老和尚说：“得道前，砍柴时惦记着挑水，挑水时惦记着做饭；得道后，砍柴即砍柴，担水即担水，做饭即做饭。”</p>
-</li>
-<li><p>变聪明的秘诀就是：先保持极度专注，想不出答案时再将注意力转换到另一件与此毫不相干的事情上。即事前聚精会神，让意识极度投入；事后完全忘记，让意识彻底撒手。这样，灵感和答案就会大概率地出现。</p>
-</li>
-<li><p>很多例子都表明，科学发现或其他智力上的突破都是在当事人毫无期待、正在想别的事情的时候出现的。</p>
-</li>
-<li><p>李大钊也说过：“要学就学个踏实，要玩就玩个痛快！”说明界线分明的习惯对人性情和能力的培养都很有好处。</p>
-</li>
-<li><p>能获得有效的反馈。一般而言，不论做什么事情我们都需要反馈来准确识别自己在哪些方面还存在不足，以及为什么会存在不足。</p>
-</li>
-<li><p>始终在拉伸区练习。一味重复已经掌握的事情是没有意义的，但挑战太难的任务也会让自己感到挫败，二者都无法使人进入沉浸状态，好的状态应该介于二者之间。</p>
-</li>
-</ul>
-<h2 id="第五章-学习力——学习不是一味地努力"><a href="#第五章-学习力——学习不是一味地努力" class="headerlink" title="第五章 学习力——学习不是一味地努力"></a>第五章 学习力——学习不是一味地努力</h2><ul>
-<li><p>找一个自己能坚持做下去的方式，比单纯按照标准化的时间和方式做更重要。</p>
-</li>
-<li><p>我们就应该花大量的时间去梳理哪些内容处在自己的拉伸区，即梳理那些“会做但特别容易错或不会做但稍微努力就能懂”的内容，然后在这个区域内努力。</p>
-</li>
-<li><p>千万不要认为没有管束的生活很美好，一旦进入完全自由的时间，虽然开始会很舒服，但很快，我们就会迷失在众多选项中——做这个也行，做那个也行。</p>
-</li>
-<li><p>做选择是一件极为耗能的事情，如果没有与之匹配的清醒和定力，绝大多数人最终都会被强大的天性支配，去选择娱乐消遣。在有约束的环境下我们反而效率更高，生活更充实。</p>
-</li>
-<li><p>不管做什么，不管当前做得怎么样，只要让自己处在舒适区的边缘持续练习，你的舒适区就会不断扩大，拉伸区也就会不断扩展，原先的困难区也会慢慢变成拉伸区，甚至是舒适区，所以成长是必然的。</p>
-</li>
-<li><p>这个问题太大、太模糊。所以，你只要拆解目标——把大目标拆分为小目标，任务就会立即从困难区转移到拉伸区，这样你就愿意行动了。</p>
-</li>
-<li><p>跳出舒适区的最好办法就是去发现和收集那些要点，也就是每次行动的小目标</p>
-</li>
-<li><p>种种迹象表明，快速、简便、轻松的方式使人们避难趋易、急于求成的天性得到了放大，理智脑的潜能受到了抑制，而深度学习的能力几乎全部依赖高级理智脑的支撑。</p>
-</li>
-<li><p>被动学习：如听讲、阅读、视听、演示，这些活动对学习内容的平均留存率为5%、10%、20%和30%。主动学习：如通过讨论、实践、教授给他人，将被动学习的内容留存率提升到50%、75%和90%。</p>
-</li>
-<li><p>以阅读为例，从浅到深依次为：听书、自己读书、自己读书+摘抄金句、自己读书+思维导图&#x2F;读书笔记、自己读书+践行操练、自己读书+践行操练+输出教授。</p>
-</li>
-<li><p>还有一类人的数量也不少。这类人能够自己阅读，也做读书笔记或思维导图，但遗憾的是，他们的读书笔记往往只是把书中的内容梳理罗列了一番，看起来更像是一个大纲。很多人醉心于此，似乎对全书的知识了然于胸，殊不知，自己只是做了简单的搬运工作而已。虽然这种做法在一定程度上属于主动学习，但它仅仅是简单的知识陈述，与高级别的知识转换有很大的不同。更深一层的是，读完书能去实践书中的道理，哪怕有那么一两点内容让生活发生了改变，也是很了不起的，因为从这一刻开始，书本中的知识得到了转化。</p>
-</li>
-<li><p>请注意，遇到这种困难才是深度学习真正的开始！因为你必须动用已有的知识去解释新知识，当你能够把新学的知识解释清楚时，就意味着把它纳入了自己的知识体系，同时达到了可以教授他人的水平，并可能创造新的知识。</p>
-</li>
-<li><p>浅层学习满足输入，深度学习注重输出。从想法到语言再到文字，即将网状的思维变成树状的结构再变成线性的文字，相当于把思想从气态变成液态再变成固态——那些固态的东西才真正属于自己。</p>
-</li>
-<li><p>毕竟任何知识都不可避免地会损耗，并且这种损耗一直存在，如果不想办法把自己学到的东西固定下来，时间一长，这些知识就会烟消云散，留不下多少痕迹。</p>
-</li>
-<li><p>教的最高境界是用最简洁的话让一个外行人明白你讲的东西</p>
-</li>
-<li><p>所以，逼迫自己获取高质量的知识以及深度缝接新知识，再用自己的语言或文字教授他人，是为深度学习之道。</p>
-</li>
-<li><p>深度学习有以下3个步骤：</p>
-<ul>
-<li>(1)获取高质量的知识；(2)深度缝接新知识；(3)输出成果去教授。</li>
-</ul>
-</li>
-<li><p>人与人之间的差距不是来自年龄，甚至不是来自经验，而是来自经验总结、反思和升华的能力。</p>
-</li>
-<li><p>持续反思让我对生活细节的感知能力变得越来越强，从生活中获得的东西也越来越多。</p>
-</li>
-<li><p>深度学习除了能让我们不再浮躁，能磨炼理智，还能带来诸多好处，比如跨界能力的提升。 </p>
-</li>
-<li><p>深度学习还能让人产生更多灵感。</p>
-</li>
-<li><p>只有在自己的领域探索得足够深入时，灵感才可能在潜意识的帮助下显现。虽然我们不是科学家，但深度学习也能让我们更大概率地收获意外的惊喜。</p>
-</li>
-<li><p>与此同时，深度学习还能让我们看到不同事物之间更多的关联，产生洞见。   </p>
-</li>
-<li><p>专注于深度学习，同时对浅学习保持开放。</p>
-</li>
-<li><p>无关联，不学习</p>
-</li>
-<li><p>常年遨游在知识的海洋中，始终无法进阶，这其中最根本的阻碍在于他们意识不到新学习的知识点是孤立的。不管这个新知识让人多警醒、使人多震撼，若是无法与已有的知识发生足够的关联，它存活不了太久。</p>
-</li>
-<li><p>如果你了解人类大脑的学习原理，就很容易从这幅图联想到大脑中神经元工作的情景。因为无论是学习动作，还是背记公式，从本质上来说都是大脑中神经细胞建立连接的过程。用神经科学术语解释就是：通过大量的重复动作，大脑中两个或者多个原本并不关联的神经元经过反复刺激产生了强关联。</p>
-</li>
-<li><p>如果没有关联这个过程，就算有再多脑细胞，你也不会变得更聪明。</p>
-</li>
-<li><p>鉴于此，我时常也鼓励人们写作。因为单纯阅读时，人容易满足于获取新知识，而一旦开始写作，就必须逼迫自己把所学的知识关联起来，所以写作就是一条深度学习的自然路径。</p>
-</li>
-<li><p>放眼看去，按照关联意识的强弱，人在不知不觉间被分成了两个群体：绝大多数人习惯以孤立的思维看待事物，喜欢花大量时间收集和占有信息；而另一批先行者则更喜欢拨弄信息之间的关联，从而在不知不觉间变得聪明了起来。</p>
-</li>
-<li><p>所以，我们在关联时，需要牢牢聚焦自身最迫切的需求，换句话说，就是让一切与自己有关。</p>
-</li>
-<li><p>知识的获取不在于多少，而在于是否与自己有关联，以及这种关联有多充分。</p>
-</li>
-<li><p>对别人有用的东西可能与自己并没有关系，那就果断将其放弃，把握“与自己有关”的筛选原则，会让关联效能大大提升。</p>
-</li>
-<li><p>知识与认知的区别</p>
-</li>
-<li><p>真正的知识不是你知道了它，而是能运用它帮助自己做出正确的判断和选择，解决实际问题。这一点正是“学术知识体系”和“个人知识体系”的重要区别。所以在个人成长领域，没有最优、最确定、最权威的认知体系，只有最适合我们当前状态的认知体系。</p>
-</li>
-<li><p>用掌握学术知识的方法去对待别人的认知体系，所以不禁沉迷于全面掌握和全盘照搬他人的体系，甚至感觉如果没有完全掌握对方的认知体系，就有可能前功尽弃。</p>
-</li>
-<li><p>根据能力圈法则可知，人的能力是无法跳跃发展的，只能在现有基础上一点一点向外扩展，而扩展的最佳区域就在舒适区边缘。</p>
-</li>
-<li><p>我们不需要全盘掌握他人的知识体系，只需要掌握那些最能触动自己、离自己需求最近的知识</p>
-</li>
-<li><p>体系的本质就是用独特的视角将一些零散的、独立的知识、概念或观点整合为应对这个世界的方法和技巧。</p>
-</li>
-<li><p>这就是搭建个人认知体系的真相：打碎各家的认知体系，只取其中最触动自己的点或块，然后将其拼接成自己的认知网络。</p>
-</li>
-<li><p>随着我们自身认知体系的不断完善，原来距离我们较远的知识就会相对变近，于是又能触动我们，所以暂时放弃一些知识并不可怕，只要持续学习，我们不会损失什么。</p>
-</li>
-<li><p>很多人读书的时候往往只关注自己是否理解了书中的内容，却经常忽视头脑中冒出的想法。其实这些想法是非常珍贵的，放过了它们，我们的学习效果就会大打折扣。</p>
-</li>
-<li><p>在生活中能够经常练习或使用这些知识，因为实践是产生强关联的终极方法。</p>
-</li>
-<li><p>在舒适区边缘，一点一点向外扩展。</p>
-</li>
-<li><p>莫迷恋打卡，打卡打不出未来</p>
-</li>
-<li><p>认知闭合，效能降低单纯地依赖打卡，不仅会转移行动的动机，还会降低行动的效能。这源自另一个重要的心理机制——认知闭合需求。</p>
-</li>
-<li><p>一件事若迟迟没有完成，心里就总是记挂，期盼着早点结束；此事一旦完成，做这件事的动机就会立即趋向于零。</p>
-</li>
-<li><p>我们之所以有这种心理是因为人类的大脑喜欢确定性，不喜欢未知或不确定性。</p>
-</li>
-<li><p>这就是打卡心态的特性：学不到，假装一下；学到了，立即停止。</p>
-</li>
-<li><p>现代人很难获得幸福感，多是因为这种快节奏和急心理，但在这种状态下，生活何其枯燥，它无法让我们享受过程，只会让身心紧张、焦虑、麻木和分裂。！！！</p>
-</li>
-<li><p>用记录代替打卡</p>
-</li>
-<li><p>只要专注于学习成长活动本身，体会其中的乐趣，就能保持强烈的学习动机，化被动学习为主动学习。</p>
-</li>
-<li><p>我们在任务设置时要使用新策略：设下限，不设上限。</p>
-</li>
-<li><p>从《微习惯》一书中获得的启示。作者斯蒂芬·盖斯为了养成好习惯，要求自己每天只做一个俯卧撑、每天只读一页书、每天只写50个字，这种无负担的习惯养成法最终促使他拥有了良好的身材，养成了阅读习惯，还写出了自己的书。他称这种方法简单到不可能失败。</p>
-</li>
-<li><p>无反馈，不学习</p>
-</li>
-<li><p>大多数人往往缺少输出和反馈意识，虽然他们极其理性，甚至能以超越常人的毅力不断激励自己努力，但最终收获的仍然是痛苦和失败。</p>
-</li>
-<li><p>他们似乎从来没有考虑过要尽快产出点什么，以换取反馈，通过另一种方式来激励自己。</p>
-</li>
-<li><p>持续的正向反馈才能真正激发本能脑和情绪脑的强大行动力。</p>
-</li>
-<li><p>我们的理智脑虽然聪明、有远见，但它身单力薄，真的不适合亲自上阵，真正需要它做的，是运用聪明才智去制定策略，让本能脑和情绪脑不断接受强烈的正向反馈，愉悦地朝着目标一路狂奔。</p>
-</li>
-<li><p>所以科学的学习策略是产出作品、获取反馈，驱动本能脑和情绪脑去“玩玩玩”，而不是一味地努力坚持，让理智脑苦苦地去“学学学”。</p>
-</li>
-<li><p>教是最好的学；·用是最好的学；·输出倒逼输入；·请用作品说话……那些先行者确实都有相同的品质，他们在学习的时候经常不按常理出牌，不管是不是新知识、技能，他们都直接用、直接做。当然，一开始常常用不好、做不好，但他们肯定要“鼓捣”出一个东西，然后抛出去获取反馈，不断打磨迭代</p>
-</li>
-<li><p>我知道这就是在驱动情绪脑为自己工作，如果自己写的文章没有任何反馈，我真不敢保证仅凭意志力和长远的认知能走到现在。所以“锁定价值—打磨作品—换取反馈”正是我持续写作的真正策略和真实动力。</p>
-</li>
-<li><p>分享不是随意分享半成品，而是尽最大力气将作品打磨成自己当前能力范围内可完成的最好的样子。</p>
-</li>
-<li><p>对待作品要像对待自己的孩子一样，每次出门前都要尽可能把它们打扮得漂亮精致，让人眼前一亮。这种要求必然会逼迫自己在能力舒适区边缘快速成长，因为这符合刻意练习的基本原则。</p>
-</li>
-<li><p>制定分享策略，展示给那些能力不及你的人。</p>
-</li>
-<li><p>最后，冷静客观地对待打击。</p>
-</li>
-<li><p>真正的学习成长不是“努力，努力再努力”，而是“反馈，反馈再反馈”，只有不断产出，获得反馈，我们的人生才会发生真正的变化。</p>
-</li>
-<li><p>“刻意练习四要素”：定义明确的目标、极度的专注、有效的反馈、在拉伸区练习。</p>
-</li>
-<li><p>那些持续刻苦、争分夺秒、舍不得休息一下的人，他们的精力总量势必呈一条持续下降的曲线</p>
-</li>
-<li><p>那些轻松的学霸，他们学习时从不过度消耗自己，只要感到精力不足，就停下来主动休息，这反而使他们精力桶的水位得到快速回升。</p>
-</li>
-<li><p>专注这个品质在信息时代已日渐成为稀缺品质。要学就学个踏实，要玩就玩个痛快。</p>
-</li>
-<li><p>面对大量的信息干扰和巨大的竞争压力，在这种情况下，大多数人只会本能地告诉自己要更刻苦、更努力，却很少有人能意识到，更科学的模式应该是：极度专注+主动休息，如此反复。</p>
-</li>
-<li><p>一个真正的自控高手，不是一个只知道冲刺的人，而是一个善于主动休息、保持平衡的人。</p>
-</li>
-<li><p>只要开始学习或工作，就尽量保持极度专注的状态，哪怕保持专注的时间很短也是有意义的；一旦发现自己开始因为精力不足而分心走神，就主动停下来调整片刻。</p>
-</li>
-<li><p>当然辅助工具也是有的。在时间管理领域，有一个著名的番茄工作法。</p>
-</li>
-<li><p>就在我想通“主动休息”这个原理的瞬间，脑海里第一个闪过的念头竟是番茄工作法，因为它符合学霸模式的所有特征：极度专注、主动休息、循环往复。</p>
-</li>
-<li><p>然后开始5分钟的休息计时。在这5分钟里，我会做与阅读或写作无关的事情，比如：看看窗外、收收衣服、拆拆包裹，等等，但刷手机、玩游戏这些被动使用注意力的事情我不推荐，因为它们仍然是消耗精力的。！！！</p>
-</li>
-<li><p>而且这个“主动停止”的动作一定要坚决。很多人在一开始的时候，由于精力分散得还不明显，就不愿意主动停下来，但这往往会得不偿失。主动休息犹如主动喝水，当感到很渴的时候再喝水，其实已经晚了，你想让精力保持高位，就要学会主动停下来，这甚至可以作为一个关键点。</p>
-</li>
-<li><p>刻苦，是一种宏观态度，轻松，是一种微观智慧。</p>
-</li>
-</ul>
-<h2 id="第六章-行动力——没有行动世界只是个概念"><a href="#第六章-行动力——没有行动世界只是个概念" class="headerlink" title="第六章 行动力——没有行动世界只是个概念"></a>第六章 行动力——没有行动世界只是个概念</h2><ul>
-<li><p>在经历了无数次的失败之后，我终于发现与天性对抗是没有出路的，也隐约感觉到自制力强并不代表行动力强。在随后的探索中，这个猜想逐渐得到证实：真正的行动力并不完全来源于自制力。</p>
-</li>
-<li><p>在一天开始的时候，一头扎进手机信息或是自己觉得有趣的事情中，然后迷失其中。这好比把这份珍贵的礼物直接摔在了地上，长此以往，自然就得不到命运的眷顾了。</p>
-</li>
-<li><p>如果起床后我们能刻意避开轻松和娱乐的吸引，先去读书、锻炼，或者做些重要的工作，精力就会呈聚合状态，并自动增强。比如起床后先去锻炼，就能让自己头脑清晰、精力充沛，在这种状态下做重要的工作就会非常顺利，工作越顺利，状态就越好，回路逐渐增强；再比如早起后先去阅读，读得越多，脑子里的问题和感触就越多，反过来又会产生更强烈的阅读欲望，回路逐渐增强。行动回路一旦增强，我们就会进入高效和充实的状态，此时我们哪还有精力去关注那些可看可不看的消息呢？注意力的增强回路是正向的还是负向的，很大程度上取决于你最初的选择，这也是老生常谈的道理：要事第一！！！！</p>
-</li>
-<li><p>在初始阶段，强迫自己先做重要的事情，一旦进入正向的增强回路，你便能拥有强大的行动力——这正是增强自制力、提升行动力的秘密</p>
-</li>
-<li><p>清晰力才是行动力</p>
-</li>
-<li><p>知道和做到相差十万八千里，这其中的差距到底在哪里呢？答案正是前文所说的“模糊”。</p>
-</li>
-<li><p>一切都只知道个大概，这对提升行动力来说，是很致命的。</p>
-</li>
-<li><p>写下当天所有要做的事，然后清空大脑，按权重将列出的事项标上序号，这样，目标就变得清晰可见；</p>
-</li>
-<li><p>通过持续的规划和记录，我对自由时间的掌控变得越来越强。我能够主动约束自己，我总知道下一步要做什么、什么事情最重要，即使不小心被各类消息牵绊，也能在自我提醒下快速跳出来，这一切得益于清晰力。</p>
-</li>
-<li><p>“写下来”就是有这样神奇的效果，因为“写下来”会清空我们的工作记忆。当我们把头脑中所有的想法和念头全部倒出来后，脑子就会瞬间变得清晰，同时，所有的想法都变得清晰且确定，这样一来，我们就进入了一种“没得选”的状态，在过程中不需要花脑力去思考或做选择。</p>
-</li>
-<li><p>事实上并不会，因为做规划的目的并不是让自己严格地按计划执行，而只是为了让自己心中有数。如果当天计划有变也没关系，有了这份预案，你能够在处理完临时任务后，把自己迅速拉回正轨，但如果没有这份预案，你极有可能在目标和时间都模糊的情况下选择娱乐消遣。所以，做规划十分有效，平时遇到干扰只要及时调整计划就好了。</p>
-</li>
-<li><p>一切源于“想清楚”</p>
-</li>
-<li><p>你陷入怠惰、懒散、空虚的情绪中动弹不得时，往往是因为你的大脑处于模糊状态。大脑要么不清楚自己想要什么；要么同时想做的事太多，无法确定最想实现的目标是什么；要么知道目标，但没想好具体要在什么时候以什么方式去实现。</p>
-</li>
-<li><p>认知越清晰，行动越坚定。</p>
-</li>
-<li><p>聪明的思考者都知道“想清楚”才是一切的关键，在“想清楚”这件事上。</p>
-</li>
-<li><p>在普通人眼里是“知易行难”，而在聪明人眼里是“知难行易”，这一点值得我们反思。</p>
-</li>
-<li><p>想先看到结果再行动的人往往无法看到结果。耍小聪明的人会因为结果不明朗，担心付出没有回报，所以不愿行动，以致永远停留在原地</p>
-</li>
-<li><p>事实上，只要道理正确，就别在乎那些小聪明，带着不计得失的心态向前走，你会发现目标越来越清晰</p>
-</li>
-<li><p>你觉得学英语没用，是因为你看不到生活中有需要英语的地方。只有英语学好了，和英语有关的机会才会慢慢地出现在你的周围。你觉得学历没用，是因为你根本不知道学习对你的生活轨迹能带来多少改变，你只是基于当时的场景，认为自己手里只是额外多了一张纸。你觉得锻炼身体没有用，正是因为你不去运动，所以感受不到它的价值</p>
-</li>
-<li><p>没错，这个世界是有认知层次的。处在下一个认知层次的人往往看不到上一个认知层次的风景，因而只能用狭隘的视角来判断：这些东西虽然很有道理，但似乎看起来并没有什么用。这些东西在他们眼里确实没什么用，因为人们无法证明一件没有发生过的事。想要打破这个悖论，只有让自己行动起来，将认知提升到更高的层次，才能做出不同的判断。</p>
-</li>
-<li><p>我此前一直强调“想清楚”的重要性，但当我们绞尽脑汁去想却仍然想不清楚的时候，就要依据前人的假设先行动起来</p>
-</li>
-<li><p>人生目标才可能慢慢浮现。</p>
-</li>
-<li><p>思考很重要，但光想不做，贻害无穷。</p>
-</li>
-<li><p>打破这些悖论的方法就是不计得失地先行动起来。</p>
-</li>
-<li><p>我们在行动时也应如此，我们要专注、要持续行动，直到突破阈值</p>
-</li>
-<li><p>这里的“傻”，并不是盲目和冲动，而是有原理、有依据的坚定</p>
-</li>
-<li><p>行动力强，是因为自己赞同行动背后的原理、依据和意义，而不是别人说做这个好，自己不深入了解就跟风去做，那才是真的傻。</p>
-</li>
-<li><p>换句话说，如果你觉得别人讲的道理有理有据，而自己暂时无法反驳，碰巧自己又非常想做这件事，那就相信他们说的是对的，然后笃定地行动</p>
-</li>
-<li><p>在实践途中，你自然也要保持思考，用行动反复验证他们的理论，不适则改、适则用，直到自己真正做到为止。届时你不仅能做成那件事，还能探索出自己的理论，成为别人眼中的高手。</p>
-</li>
-<li><p>道理再好，如果不去刻意练习，不去刺激相关神经元的强关联，这些美好的认知将永远不会真正对自己产生影响。</p>
-</li>
-<li><p>从现在开始，把认知当成技能，知道或想通一个道理时，不要高兴得太早，想想后面还要做大量的练习，这样就不浮躁了。</p>
-</li>
-<li><p>从大脑的学习机制推断，无论学习一项技能，还是养成一个习惯，背后都是相关神经元从少到多、从弱到强的关联过程。那么在一开始、在神经元关联很弱的情况下，做不好是正常的。</p>
-</li>
-<li><p>我们已经不是孩子了，我们应该学会用更成熟的心态包容自己最初的笨拙，即使做不好，也要持续练习，给神经元留够关联时间。</p>
-</li>
-<li><p>不发生真正改变的学习都是无效的学习。一篇文章、一本书就算讲得再有道理，倘若最终没有促成自己改变，我便认为读这篇文章、这本书的过程是无效的学习</p>
-</li>
-<li><p>现实和理论都告诉我们：懂得百点不如改变一点。真正的成长不在于自己懂得了多少道理，而在于自己改变了多少。</p>
-</li>
-<li><p>因为在这个世界上，知而不行的人实在太多了，只要你有所行动，就可以超越一大批人。</p>
-</li>
-<li><p>对成长来讲，道理都是“空头支票”，改变才是“真金白银”</p>
-</li>
-</ul>
-<h2 id="第七章-情绪力——情绪是多角度看问题的智慧"><a href="#第七章-情绪力——情绪是多角度看问题的智慧" class="headerlink" title="第七章 情绪力——情绪是多角度看问题的智慧"></a>第七章 情绪力——情绪是多角度看问题的智慧</h2><h3 id="第一节-心智带宽：唯有富足，方能解忧"><a href="#第一节-心智带宽：唯有富足，方能解忧" class="headerlink" title="第一节　心智带宽：唯有富足，方能解忧"></a>第一节　心智带宽：唯有富足，方能解忧</h3><ul>
-<li><p>贫穷造成的稀缺俘获了人的注意力，进而降低了人的心智带宽。</p>
-</li>
-<li><p>所谓心智带宽，就是心智的容量，它支撑着人的认知力、行动力和自控力。心智带宽一旦降低，人很容易丧失判断力，做出不明智的选择，或急于求成，做事缺乏耐心，难以抵挡享乐的诱惑。</p>
-</li>
-<li><p>不难预见，这些短视行为带来的糟糕结果会加剧稀缺心态：吃剩饭吃坏肚子，在医院的花费会远远超过饭菜钱；对孩子发火会让自己压力更大；而在学习时不停地刷手机，自己会更加忧心忡忡。恶性循环会增强负面回路，让忧者更忧。</p>
-</li>
-<li><p>可见稀缺只是“变笨”的一种诱因，事实上，任何能制造压力的事件都会挤占我们的心智带宽，比如明天的演讲、考试的期限、失业的担忧，等等。只要我们的注意力被某一个巨大的事物吸引，我们就有可能进入稀缺状态，进而降低心智带宽，做出不明智的行为。</p>
-</li>
-<li><p>“恋爱中的男女智商为零”</p>
-</li>
-<li><p>本质上就是稀缺心态导致判断力下降。</p>
-</li>
-<li><p>现代社会虽然给我们提供了更多便利和选择，同时也带来了前所未有的快节奏，仿佛一不留神就会落在队伍后面，这不由得迫使每个人加快脚步，不自觉地想要更多优势</p>
-</li>
-<li><p>心智带宽被占用殆尽，自然就没有心力支撑自己的远见、耐心、行动力和自控力了，最终只能让自己在痛苦中彷徨，甚至做不好当下的小事。</p>
-</li>
-<li><p>很多同学或职场人希望在假期或空闲时间提升自己，于是把日程安排得满满当当，不留一丝余地，结果每次都是“理想很丰满，现实很骨感”，不仅实现不了目标，反而在娱乐中无法自拔。这道理其实是一样的：当一个人同时面临很多任务的时候，他的心智带宽就会降低，反而没有了行动力和自控力。</p>
-</li>
-<li><p>有生活经验的人都会尽量克制自己的欲望，在做重要之事的同时主动安排娱乐活动，尽量保持日程的闲余——这种方法是科学的、智慧的。</p>
-</li>
-<li><p>陷入盲目尝试、乱学一通、急于求成的陷阱</p>
-</li>
-<li><p>既有人生未知的后台程序，又有各种急于实现的多线程任务。在这种状态下，一个人是很难走出来的，因为已经没有资源来支撑他的远见、耐心、行动力和自控力了。</p>
-</li>
-<li><p>现代生活虽然缓解了生存压力，却又带来了自控上的压力。抵制诱惑和欲望无一不消耗我们的心智带宽</p>
-</li>
-<li><p>唯有心智富足，方能解忧</p>
-</li>
-<li><p>物质条件无法决定我们的命运，真正影响我们的是心智带宽是否富足。有了富足的心智带宽，我们就能在任何环境中拥有支撑自己的远见、耐心、行动力和自控力，在变化的环境中解救自己。那么如何才能获取心智带宽呢？我想，最重要的莫过于保持自我觉知了。对此，我给大家备上五帖觉知“良药”，请各位按需取用。</p>
-<ol>
-<li>第一帖，保持环境觉知，理智选择。</li>
-<li>第二帖，保持目标觉知，少即是多。</li>
-<li>第三帖，保持欲望觉知，审视决策。<ul>
-<li>脑子里存在大量任务和念头的时候，往往是我们行动力最弱的时候。所以保持对欲望的觉知，及时地审视它们，是清理自己心智带宽的好办法。</li>
-<li>真正的行动力高手不是有能耐在同一时间做很多事的人，而是会想办法避免同时做很多事的人。</li>
-</ul>
-</li>
-<li>第四帖，保持情绪觉知，谨慎决定。<ul>
-<li>不要在最兴奋的时候做决定，也不要在最愤怒的时候做决定，尤其是重大决定。大喜大悲的时候，我们的心智带宽往往很窄，判断力也很弱。</li>
-<li>一个心智带宽富足的人，也会是一个心平气和的人。</li>
-</ul>
-</li>
-<li>第五帖，保持闲余觉知，自我设限。<ul>
-<li>过多的闲余可不是什么好事，如果有大量的金钱，就容易萌生无谓的欲望；有大量的时间，也容易陷入低效的状态。</li>
-<li>心智带宽虽足，但若不运行有效的人生程序，自然也是白费。</li>
-<li>如果你的人生有如此好运，一切都很富足，不妨想办法给自己设限，适当制造稀缺，以成就自己。</li>
-</ul>
-</li>
-</ol>
-</li>
-</ul>
-<h3 id="你的坏情绪，源于视角单一"><a href="#你的坏情绪，源于视角单一" class="headerlink" title="你的坏情绪，源于视角单一"></a>你的坏情绪，源于视角单一</h3><ul>
-<li><p>事实上，在面对各种困境的时候，多角度看问题的能力往往是考验解决问题能力的关键</p>
-</li>
-<li><p>那些习惯从单一角度识人的人，往往比较单纯，也更容易受伤，本质上是因为他们缺乏多角度认知事物的意识。</p>
-</li>
-<li><p>一个人的性格和脾气好不好，也取决于他多角度看问题的能力：视角单一的人容易固执、急躁和钻牛角尖，而视角多元的人则表现得更为智慧、平和与包容。</p>
-</li>
-<li><p>我们每个人因为生活环境不同、经历不同、学识不同，所以在看待同一个问题时，理解层次和还原程度也不尽相同。</p>
-</li>
-<li><p>如果你确定自己的相机比他们的更高级，那就应该有“向下兼容”的意识——要么对其一笑而过，要么拿出自己的高清照片，耐心地向他们讲解什么是更好的，而不是一味地指责对方拍出来的东西很糟糕。毕竟低层的事物不会也不能向上兼容，但我们通过引导，让它们不断升级倒是有可能的。如果自己也曾有一台“落后的相机”，那就更应该体会和包容对方的立场。</p>
-</li>
-<li><p>在“相机”这件事情上，我们一定要保持觉知，要清醒地意识到自己的视角偏误，时刻做好向上升级、向下兼容的准备。拥有这种心态，不仅我们自己能越来越完善，还能与其他人都合得来。</p>
-</li>
-<li><p>不要被原始视角束缚，主动转换视角可能会看到一个新天地。</p>
-</li>
-<li><p>要想拥有多视角能力，就要进行刻意练习，直到形成新的路径依赖</p>
-</li>
-<li><p>一是勤移动。顾名思义，就是多移动你的“相机”机位，尝试用不同的视角看问题。比如设身处地地站在孩子的角度、老人的角度、对手的角度看问题，而不是仅凭自己的感受就直接认定孩子不懂事、老人不体谅、对手不讲理。</p>
-</li>
-<li><p>在焦虑、紧张的时候，不妨假设自己是一个局外人，用第三视角来观察自己，你会发现自己的很多担心其实是多余的，因为别人并不是那么在乎你。</p>
-</li>
-<li><p>如果陷入悲伤，无法自拔，那就假设自己处于十年之后，用未来视角反观现在，你会发现当下的悲伤没有任何意义，还不如收起情绪好好干活。</p>
-</li>
-<li><p>这种多视角观察的能力其实就体现了元认知能力。有了元认知，我们更容易在自我观察上保持觉知，进而在语言表达上也体现出“高情商”的特质。</p>
-</li>
-<li><p>二是善学习。</p>
-</li>
-<li><p>三是要开放。</p>
-</li>
-<li><p>忘我地聆听对方的想法。过程中没有判断、没有辩论、没有对错，把自己完全置身在对方的位置，以对方的眼睛来看世界；第二步，从“我”的角度来分享，过程中只说自己的客观感受，而不指责对方或告诉对方该怎么做。比如，说“家里满地臭袜子，我觉得精神紧张，心里很不舒适”，而不是“家里满地都是臭袜子，你不觉得难受吗”。</p>
-</li>
-<li><p>四是寻帮助。</p>
-</li>
-<li><p>原来出现特殊情况时，飞行员的注意力会被巨大的危险所俘获，心智带宽降低，容易陷入单一视角，而此时，指挥员可以给飞行员提供有效的外部视角，帮助他们更好地处置特殊情况。</p>
-</li>
-<li><p>同理，当我们对情绪问题或工作问题百思不得其解的时候，不要一个人闷头苦想，要学会主动寻求外部帮助，借助他人的多维视角来克服自己单一视角的局限。</p>
-</li>
-<li><p>五是多运动。</p>
-</li>
-<li><p>适当的有氧运动会提升我们体内多巴胺的水平，而多巴胺对于创造力和多角度思考能力来说都很重要。锻炼不仅能帮我们从负面情绪中快速走出来，也会引导大脑从新的角度看待事物，或者从不同角度观察问题，所以，越是心情不好的时候就越要多运动，越是想不通的时候越要多运动。</p>
-</li>
-<li><p>六是常反思。</p>
-</li>
-<li><p>通过写作抚平自己的内心，</p>
-</li>
-<li><p>无论什么时候，你的笔或键盘都能帮你跳出单一视角，看到更多维度。</p>
-</li>
-</ul>
-<h3 id="第三节-游戏心态：幸福的人，总是在做另外一件事"><a href="#第三节-游戏心态：幸福的人，总是在做另外一件事" class="headerlink" title="第三节　游戏心态：幸福的人，总是在做另外一件事"></a>第三节　游戏心态：幸福的人，总是在做另外一件事</h3><ul>
-<li><p>“先别减速，等跑到前面10米那个地方再减速也不迟。”等我跑到那个点后，我的目光又落到了前面的10米处，我觉得这样的距离很短，还可以继续来一次，等跑到那个点后，我又把眼光投向下一个10米处</p>
-</li>
-<li><p>幸福源自主动掌控现代积极心理学中，最引人瞩目的莫过于爱德华·德西和理查德·瑞恩的“自我决定理论”了。它指出人类有三种天生的内在需求：关系需求、能力需求和自主需求</p>
-</li>
-<li><p>一个人想要生活幸福，需要具备以下因素。·有良好的人际关系，得到别人的爱与尊敬；·有独特的本领、技能，为他人带去独特价值；·有自主选择的权力，能做自己想做的事情。</p>
-</li>
-<li><p>特别是“自主需求”，它是自我决定理论的关键与核心。也就是说，我们如果能主动选择和掌控所做的事情，就会产生内在动力，获取幸福。</p>
-</li>
-<li><p>放眼现实生活，我们总是要面对很多“不想做但必须做”的事情。比如1 500米跑步考核、堆积如山的作业、不得不洗的衣服、不得不见的人、不得不做的工作……面对这些事情，我们会不自觉地感到沮丧、抗拒和排斥，因为这些都不是我们自己主动做出的选择，而是外界给的压力。</p>
-</li>
-<li><p>我并不是在做这件事，我只是在做另外一件事。</p>
-</li>
-<li><p>我并不是在做跑步测试，我只是在玩追逐游戏；·我并不是在写作业，我只是在挑战自己的速度；·我并不是在洗衣服，我只是在活动自己的手脚；·我并不是去见领导，我只是和一个普通人聊天；·我并不是为老板做事，我只是为了提升自己。</p>
-</li>
-<li><p>事情本身并不重要，我们只是在通过它获取另外一种乐趣，顺便把这件事给做了。在心理学上，这个方法叫作“动机转移”。</p>
-</li>
-<li><p>缺乏觉知的人，其行事动机通常都由外部事物牵引，少有自主选择和掌控的余地，容易陷入“为做而做”的境地。但有觉知的人会适时觉察自己的行事动机是否停留在与目标任务无关的外部事物上，如果是，他们就主动想办法将其转移到内部，以拥有自主选择和掌控的能力，而这种掌控的窍门基本上可以分为两类：为自己而做和为玩而做。</p>
-</li>
-<li><p>为自己而做产生内部动机最好的方式莫过于立足于让自己变好。</p>
-</li>
-<li><p>而真正希望通过写作建立影响力的人是不会完全被“稿酬”“流量”等外部动机束缚的，他们往往是为自己的成长而写、为众人的需求而写、为长远的价值而写、为创造一个属于自己的世界而写。即使没有鲜花和掌声，他们也会坚持输出和成长，收获的反馈和奖励都只是意外和惊喜，不是必然和期待。</p>
-</li>
-<li><p>这道理不仅适用于个人层面，企业发展也是如此。比如华为公司之所以坚持不上市，就是不希望企业的发展动机被外部力量控制。如果公司上市，虽然可以在短时间内身价暴涨，但它将不可避免地把眼光放到下个季度的财报上。</p>
-</li>
-<li><p>那些对内在动机更敏感和坚持的人，总会与众不同。他们不会为外界的奖励或评价而刻意表现，只会为自己的成长和进步而努力进取，这样的人很难被困难击倒。</p>
-</li>
-<li><p>当人的注意力都在享受上时，他对跑步的心态就不一样了。相比起来，别人为了身材和身体苦苦坚持，而他只是享受愉快的跑步过程。</p>
-</li>
-<li><p>而我除了把跑步当成玩，其他很多事在我眼里也都是玩。比如阅读这件事。我从来不认为自己是在阅读，而是设想自己在和智者聊天。每本书在我眼里都是一个人，而我的书架就是智者朋友圈</p>
-</li>
-<li><p>为自己而做，通常是为了应对外部的压力和要求，为玩而做，则是为了应对重复、枯燥的事情</p>
-</li>
-<li><p>成长啊，有时候要看长远，让自己明白意义，心生动力；有时候要看得近些，让自己不惧困难，欢快前行。</p>
-</li>
-<li><p>这个世界的模样取决于我们看待它的角度</p>
-</li>
-<li><p>事实上，人是一种自我解释的动物，世界的意义是人类赋予的。既然做事情就是赋予意义的过程，那我们为什么不赋予它们有用又好玩的意义呢？</p>
-</li>
-<li><p>为自己而做可以解放情绪，为玩而做可以解放注意力</p>
-</li>
-</ul>
-<h2 id="第八章-早冥读写跑，人生五件套——成本最低的成长之道"><a href="#第八章-早冥读写跑，人生五件套——成本最低的成长之道" class="headerlink" title="第八章 早冥读写跑，人生五件套——成本最低的成长之道"></a>第八章 早冥读写跑，人生五件套——成本最低的成长之道</h2><h3 id="第一节-早起：无闹钟、不参团、不打卡，我是如何坚持早起的"><a href="#第一节-早起：无闹钟、不参团、不打卡，我是如何坚持早起的" class="headerlink" title="第一节　早起：无闹钟、不参团、不打卡，我是如何坚持早起的"></a>第一节　早起：无闹钟、不参团、不打卡，我是如何坚持早起的</h3><ul>
-<li><p>日本作家中岛孝志写的《4点起床：最养生和高效的时间管理》这本书。</p>
-</li>
-<li><p>浅层非快速眼动睡眠与快速眼动睡眠的组合。根据这一规律，人在睡眠后的3小时、4.5小时、6小时、7.5小时这几个节点醒来，就会觉得神清气爽，精力充沛。我对早起的实践就是从对这个理论的神奇体验开始的。</p>
-</li>
-<li><p>这个理论让我明白了为什么有时候我们睡了很长时间，但醒来后还是精神不佳，原因就是醒来的时机不在睡眠节点上，而是在睡眠周期中。</p>
-</li>
-<li><p>放弃闹钟。</p>
-</li>
-<li><p>中岛孝志说：“闹钟不会照顾你的睡眠周期，时间一到，就会把手伸进你的脑子里，让你的脑子发生一场大地震，潜意识会被搅得一团糟。因为你是被闹钟吵醒的，大脑深处其实还睡着，所以明明睡了8小时，可总会觉得没睡饱，整个人昏昏沉沉的。”</p>
-</li>
-<li><p>而当我有了感知睡眠节点的能力和习惯后（大约用了两周），根本不用担心醒不过来或错过正常的起床时间，这个生物时钟非常准。</p>
-</li>
-<li><p>放弃闹钟的另一个好处是，不影响家人或室友的休息，这样更容易得到他们的支持。</p>
-</li>
-<li><p>抓住大脑工作的高峰期。</p>
-</li>
-<li><p>分泌高峰期正好是早上7点左右，这时，人的工作效率非常高。人体进食后，能量也会在1小时后转变为葡萄糖，输送到大脑，人的记忆力、理解力就会提高，大脑的运转速度会迎来峰值，直至4小时后才降到谷底。所以人们要顺应规律，抓住效率高峰期，把最困难的工作放在这个时间段完成，就能达到事半功倍的效果。另外，正常吃早餐的人，上午的工作效率更高（午饭后的效率峰值在14点到16点间出现）。</p>
-</li>
-<li><p>一旦认知上想通想透了，行动时就不需要用大把大把的意志力来支撑了。</p>
-</li>
-<li><p>相比在7点左右起床，我每天多出了2小时，按一天8小时工作时长计算，每年可以多出约90个工作日，如果坚持40年，就相当于一个人全年无休工作10年。</p>
-</li>
-<li><p>有了这些不被打扰的时间，我可以高效地做下面这些事情。一　规划。利用10分钟左右的时间，罗列全天的工作，对它们进行排序，这样可以让自己保持头脑清晰，对全天的时间产生一种掌控感，保证自己的工作不会走弯路。二　跑步。我个人习惯起床后先跑步，毕竟此时大脑还没完全苏醒，直接进行脑力活动可能不容易迅速进入状态，但跑完步之后再冲个热水澡，精神状态就完全不同了，身体的每个细胞都被激活了，此时再读书写作就会很轻松。这种精神状态会延续到上午，当大家正常起床懵懵懂懂地去上班时，自己已经精神抖擞了。早起跑步可以让自己整个上午都享受身体的轻盈感，冬天会更耐寒。经过长期的锻炼，身型和体质也会得到极大的改善。另外，早起后，大部分人还都在睡梦中，我就可以独自一人享受晨间的静谧，这种感觉非常美妙，不会像夜间锻炼那样，经常遇到熟人而需要不停地打招呼，使锻炼效率变得很低。三　反思。这是我给自己定的功课，每天复盘一些工作、梳理一些思绪，或把一些心得感受记录下来。这么做可以很好地提升自己。四　读书或写作。平时受家庭及工作的影响，我很少有大块的时间进行自我提升，因此，早起后的这些时间非常宝贵，我的很多文章就是在这个时间段写的。五　困难的工作。我有时也会把一些困难的任务放在这个时间段攻克，通常效率会很高。早上上班的时候，那种完成了最困难的工作的心情令我从容和愉悦，这样，我就可以在很轻松的状态下做些超前或拓展性工作。以上是我目前主要的收获：清晰的时间安排、强健的体魄、良好的精神状态、不受干扰的锻炼氛围、专注的学习环境、从容的工作心态、持续的个人成长等。</p>
-</li>
-<li><p>除此之外，生活中焦虑也减少了很多。长期的坚持也增强了我的毅力，更重要的是，到了晚上10点，我就想着爬上床了，熬夜的恶习彻底改正。如果没有养成早起的习惯，我肯定还处于那个熬夜成性、无精打采、忙忙碌碌、无所长进的状态，不敢想象5年或10年之后会成什么样子。</p>
-</li>
-</ul>
-<h3 id="第二节-冥想：终有一天，你要解锁这条隐藏赛道"><a href="#第二节-冥想：终有一天，你要解锁这条隐藏赛道" class="headerlink" title="第二节　冥想：终有一天，你要解锁这条隐藏赛道"></a>第二节　冥想：终有一天，你要解锁这条隐藏赛道</h3><ul>
-<li>普通人和聪明人最大的能力差异是什么？是长时间保持极度专注的能力。</li>
-<li>能够迅速进入专注状态，以及能够长期保持专注状态，是高效学习的两个最重要的习惯。</li>
-<li>科学研究表明，通过这种集中注意力的冥想练习，人大脑皮层表面积增大，大脑灰质变厚，这意味着这种练习可以从物理上让我们变得更加聪明，因为一个人大脑皮层表面积和大脑灰质厚度是影响人聪明程度的因素。</li>
-<li>闭眼静坐，专注于自己的呼吸，每天持续15分钟以上……你会感受到它的效果。</li>
-<li>把心中的困惑写出来的原因，因为只要写出来，那些紧张、担忧、畏惧、害怕等情绪就会在清晰的观察下无处遁形，小球的重量自然会减轻</li>
-</ul>
-<h3 id="第三节-阅读：如何让自己真正爱上阅读"><a href="#第三节-阅读：如何让自己真正爱上阅读" class="headerlink" title="第三节　阅读：如何让自己真正爱上阅读"></a>第三节　阅读：如何让自己真正爱上阅读</h3><ul>
-<li><p>想要快速成为一个行业的高手，最好的方法就是和行业专家交流，直接向他们请教</p>
-</li>
-<li><p>但现实是普通人很少有这样的机会和资源。</p>
-</li>
-<li><p>书籍是传承思想的最好介质，顶级的思想都能从书籍中找到，只要选书得当，就能以极低的成本找到行业里顶级的思想。</p>
-</li>
-<li><p>阅读可以让我们的思维能随时与顶级的思想交锋，对一个主题进行深度全面的理解，并与自己的实际充分关联，这种思维状态在平淡生活中是很少有的，但是只要拿起书本就可以马上拥有</p>
-</li>
-<li><p>一　读书要先学会选书。</p>
-</li>
-<li><p>选书比读书本身更重要。</p>
-</li>
-<li><p>多关注那些经过时间检验的书籍通常不会错。</p>
-</li>
-<li><p>二　阅读是为了改变。</p>
-</li>
-<li><p>真正读好一本书，往往需要花费数倍于阅读的时间去思考和实践，并输出自己的东西——可能是一篇文章，也可能是养成一个习惯——这个过程比阅读本身要费力得多。</p>
-</li>
-<li><p>从权重上看，阅读量&lt;思考量&lt;行动量&lt;改变量。阅读仅仅是最表层的行为，最终的目的是通过思考和行动改变自己。</p>
-</li>
-<li><p>阅读的深度比速度重要，阅读的质量比数量重要。读得多、读得快并不一定是好事，这很可能是自我陶醉的假象</p>
-</li>
-<li><p>只要紧紧盯住“改变”这个根本目标，很多阅读障碍就会立即消失</p>
-</li>
-<li><p>三　高阶读书法。</p>
-</li>
-<li><p>第一个是要特别注意自己在阅读时产生的关联。</p>
-</li>
-<li><p>第二个是读写不分家。如果你在阅读后还能把所学知识用自己的语言重新阐释，甚至将它们教授给他人，那这个知识将在你脑中变得非常牢固。</p>
-</li>
-<li><p>用一生的时间去探索、实践。</p>
-</li>
-</ul>
-<h3 id="第四节-写作：谢谢你，费曼先生"><a href="#第四节-写作：谢谢你，费曼先生" class="headerlink" title="第四节　写作：谢谢你，费曼先生"></a>第四节　写作：谢谢你，费曼先生</h3><ul>
-<li><p>向一个没有任何背景知识的人说清楚一件事是很难的。正因为这种有意无意的训练，费曼养成了一种独特的思维习惯。在从事物理研究的时候，他也会要求同事在向他汇报或者解释一个新事物时，必须用最简单的话来讲清楚。一旦解释过于冗余或者复杂，就说明他根本没有理解透彻。所谓费曼技巧就是通过自己的语言，用最简单的话把一件事情讲清楚，最好让外行人也能听懂。</p>
-</li>
-<li><p>这就不难理解为什么我们每个人都天生喜欢轻松愉快和简单的事情，比如在读书或读文章的时候，我们往往更愿意听故事而不是听道理。只要想明白了这一点，我想任何写作的人都会调整自己的创作方式。</p>
-</li>
-<li><p>先用合适的故事引起对方“感性小人”的兴趣和注意，然后把想要表达的道理通过“感性小人”转达给“理性小人”</p>
-</li>
-<li><p>特别是讲知识、讲道理的书籍，最好不要随意堆砌抽象概念，让人感觉很高深，看得云里雾里的。如果上来就摆图表、讲模型、说概念，或许“理性小人”没什么意见，但“感性小人”早就不耐烦了，于是他拉起“理性小人”的手说：“没意思，我们走吧。”“感性小人”的力气很大，所以说教式的写作很难吸引读者。当然，我们也不能成为“标题党”，把人吸引过来之后，又没有什么实质性的内容，这样，“理性小人”也会不满意。</p>
-</li>
-<li><p>能用简单的语言就不要用复杂的，这就是费曼技巧的核心之一。不过，简单不仅仅意味着轻松，还意味着简洁和形象。</p>
-</li>
-<li><p>我们大多数人都低估了类比（比喻）的作用，认为它只是文学中的一种修辞，事实上，它是我们的思维方式，更是我们的认知工具。</p>
-</li>
-<li><p>认知语言学科的创始人乔治·莱考夫曾这样定义和评价“类比”。以一种事物认知另一种事物，恰恰是学习的本质！</p>
-</li>
-<li><p>因为人类只能通过已知事物来解释未知事物，我们很难凭空去理解一个自己从未见过的东西。而类比，正是连接未知事物与已知事物的桥梁。</p>
-</li>
-<li><p>用自己的语言</p>
-</li>
-<li><p>费曼技巧的另一个核心就是“用自己的语言表达”，这一点比“用简单的语言表达”更为关键和奇妙。因为只有当我们使用自己的语言去解释所学时，才会真正调动自己原有的知识，才能将松散的信息编织成紧密的体系和网络，甚至创造新的认知。换言之，用自己的语言重新表达就是在调动自己的千军万马。</p>
-</li>
-<li><p>一个人想要真正成长，一定要学会写作，因为“只读不写”的学习是不完整的，是低效的。而写作时如果不学会用自己的语言转述，则是无用的。</p>
-</li>
-<li><p>因为“教”才是最好的“学”。教授他人会逼迫我们通过自己的语言，用最简单的话把一件事情讲清楚，甚至让外行人也能听得懂，而写作的优势就在于它可以让我们在磨炼这项技能的路上不断调整、反复修改，直至自己满意。</p>
-</li>
-</ul>
-<h3 id="第五节-运动：灵魂想要走得远，身体必须在路上"><a href="#第五节-运动：灵魂想要走得远，身体必须在路上" class="headerlink" title="第五节　运动：灵魂想要走得远，身体必须在路上"></a>第五节　运动：灵魂想要走得远，身体必须在路上</h3><ul>
-<li><p>好的事物往往是“正相关”的</p>
-</li>
-<li><p>因为运动能够调节人体的各种激素，使人达到最佳状态，使身体这个内部生态系统充满能量和活力。时常运动的人，体内生态系统犹如一汪清泉，而久坐不动的人，体内生态系统则更像是一潭死水。</p>
-</li>
-<li><p>一个长期缺乏运动的人可能会变“笨”。</p>
-</li>
-<li><p>运动能够使大脑长出更多的新的神经元，这意味着运动可以在物理上让人变得更“聪明”。</p>
-</li>
-<li><p>由此可以做出如下推演：运动不仅能使人身材更好、精神更佳，同时能增强大脑功能，提升注意力、记忆力、理解力、自制力，从而增强学习效果，让人创造更大的成就，获取更多资源。</p>
-</li>
-<li><p>好的模式是“运动+学习”</p>
-</li>
-<li><p>运动不是关键，运动之后的活动安排及环境刺激才是关键。</p>
-</li>
-<li><p>有效的模式是这样的：在运动后的1~2小时内进行高强度、高难度的脑力活动，比如阅读、解题、背记、写作、编程，等等，或是一些需要复杂技巧的体力活动，诸如舞蹈、钢琴，以及参加不同于以往的社交活动，如接触新的环境、人物或事物，这么做可以让新的神经元受到刺激，不断生长。换句话说，运动之后，脑子需要充分接受考验或挑战，才能让自己不断地变“聪明”。</p>
-</li>
-<li><p>“运动+学习”的模式需要坚持，因为新的神经元从生长到成熟通常需要28天</p>
-</li>
-<li><p>所以绝大多数运动者的硬伤就在这里：运动之后缺乏主动学习的意识和习惯。他们习惯于在运动后看电视、刷手机、玩游戏、逛街、聚会、和朋友们闲聊，甚至直接睡觉，做那些无须动脑或让自己感到很舒服的事。真的很遗憾，那些好不容易生长出来的神经元随即消散，他们因此错失了变“聪明”的机会。</p>
-</li>
-<li><p>比如在10分钟的有氧热身之后练习瑜伽、舞蹈、体操、太极，等等，这些复杂的活动能让大脑的全部神经细胞参与其中。活动越复杂，神经突触的联系也就越复杂，突触生长也更密集，所以好的运动方式一定同时包含有氧运动和复杂运动</p>
-</li>
-<li><p>运动更大的意义不在于健身而在于健脑，它不仅能使人更加乐观，还能使头脑更加灵活，最终使健康水平和认知水平实现双重提升。</p>
-</li>
-<li><p>语言是会影响思维的，“四肢发达，头脑简单”这句话应该修改为“四肢发达，头脑更发达”才合理，而身体和灵魂也并非只能二选一，你不能只学习不运动，或只运动不学习，也不能随心情交替进行这两项活动。我相信你现在肯定更倾向于这样的表述：灵魂想要走得远，身体必须在路上。认知越清晰，行动越坚定。从现在开始，给自己的运动计划赋予一个新的意义吧！</p>
-</li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2024/10/23/20241023-jin-qian-ye-wu-shu-ju-ku-shi-wu-xiang-guan-yao-dian-ji-lu/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2024/10/23/20241023-jin-qian-ye-wu-shu-ju-ku-shi-wu-xiang-guan-yao-dian-ji-lu/" itemprop="url">金钱业务数据库事务相关要点记录</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2024-10-23T15:59:48+08:00">
-                2024-10-23
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="表结构"><a href="#表结构" class="headerlink" title="表结构"></a>表结构</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> `user_balance` (</span><br><span class="line">`user_id` <span class="type">varchar</span>(<span class="number">128</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;&#x27;</span> COMMENT <span class="string">&#x27;用户ID&#x27;</span>,</span><br><span class="line">`coin` <span class="type">bigint</span>(<span class="number">20</span>) unsigned <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;0&#x27;</span> COMMENT <span class="string">&#x27;余额&#x27;</span>,</span><br><span class="line">`create_time` datetime <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;创建时间&#x27;</span>,</span><br><span class="line">`update_time` datetime <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;更新时间&#x27;</span>,</span><br><span class="line"><span class="keyword">PRIMARY</span> KEY (`user_id`),</span><br><span class="line">KEY `idx_updatetime` (`update_time`)</span><br><span class="line">) ENGINE<span class="operator">=</span>InnoDB <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>utf8mb4 COMMENT<span class="operator">=</span><span class="string">&#x27;账户余额表&#x27;</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> `user_balance_log` (</span><br><span class="line">`log_id` <span class="type">bigint</span>(<span class="number">20</span>) unsigned <span class="keyword">NOT</span> <span class="keyword">NULL</span> AUTO_INCREMENT COMMENT <span class="string">&#x27;流水id&#x27;</span>,</span><br><span class="line">`order_id` <span class="type">varchar</span>(<span class="number">128</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;&#x27;</span> COMMENT <span class="string">&#x27;业务订单ID&#x27;</span>,</span><br><span class="line">`user_id` <span class="type">varchar</span>(<span class="number">128</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;&#x27;</span> COMMENT <span class="string">&#x27;用户ID&#x27;</span>,</span><br><span class="line">`type` tinyint(<span class="number">4</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;0&#x27;</span> COMMENT <span class="string">&#x27;1：加，2：减&#x27;</span>,</span><br><span class="line">`coin` <span class="type">bigint</span>(<span class="number">20</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;0&#x27;</span> COMMENT <span class="string">&#x27;变更金额&#x27;</span>,</span><br><span class="line">`coin_after` <span class="type">bigint</span>(<span class="number">20</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;0&#x27;</span> COMMENT <span class="string">&#x27;变更后的金额&#x27;</span>,</span><br><span class="line">`create_time` datetime <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;创建时间&#x27;</span>,</span><br><span class="line"><span class="keyword">PRIMARY</span> KEY (`log_id`),</span><br><span class="line">KEY `idx_createtime` (`create_time`)</span><br><span class="line">) ENGINE<span class="operator">=</span>InnoDB <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>utf8mb4 COMMENT<span class="operator">=</span><span class="string">&#x27;账户余额表流水表&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> `user_balance`(`user_id`, `coin`, `create_time`, `update_time`) <span class="keyword">VALUES</span> (<span class="string">&#x27;kxw&#x27;</span>, <span class="number">20000000</span>, <span class="string">&#x27;2024-10-23 00:00:00&#x27;</span>, <span class="string">&#x27;2024-10-23 00:00:00&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">UPDATE</span> `user_balance` <span class="keyword">SET</span> `coin`<span class="operator">=</span> `coin` <span class="operator">-</span> <span class="number">1000</span> <span class="keyword">WHERE</span> `user_id` <span class="operator">=</span> <span class="string">&#x27;kxw&#x27;</span> <span class="keyword">AND</span> `coin` <span class="operator">&gt;=</span> <span class="number">1000</span>;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-<h2 id="操作用户余额时注意"><a href="#操作用户余额时注意" class="headerlink" title="操作用户余额时注意"></a>操作用户余额时注意</h2><ol>
-<li>可重复读（记录扣费后余额快照）(select <code>coin</code> 后记录到user_balance_log表的<code>coin_after</code>)</li>
-<li>乐观锁（扣费冲突）（set <code>coin</code> - 1000 where <code>coin</code> &gt;&#x3D; 1000）</li>
-<li>业务幂等（不同业务使用相应的订单表）</li>
-<li>事务（用户余额表<code>user_balance</code>、日志流水表<code>user_balance_log</code>、业务订单表绑定）</li>
-<li>canal 监听 binlog 识别业务异常 (对比 binlog监听的<code>user_balance</code>表<code>coin</code>变化量 和 <code>user_balance_log</code>的 <code>coin</code>记录总量 是否一致)</li>
-</ol>
-<h2 id="流水表只需要记录coin-after"><a href="#流水表只需要记录coin-after" class="headerlink" title="流水表只需要记录coin_after"></a>流水表只需要记录coin_after</h2><h3 id="事务过程"><a href="#事务过程" class="headerlink" title="事务过程"></a>事务过程</h3><table>
-<thead>
-<tr>
-<th>事务1</th>
-<th>事务2</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>BEGIN;</td>
-<td></td>
-</tr>
-<tr>
-<td></td>
-<td>BEGIN;</td>
-</tr>
-<tr>
-<td>SELECT * FROM <code>user_balance</code> WHERE <code>user_id</code> &#x3D; ‘kxw’; (coin&#x3D;20000000)</td>
-<td></td>
-</tr>
-<tr>
-<td>UPDATE <code>user_balance</code> SET <code>coin</code>&#x3D; <code>coin</code> - 1000 WHERE <code>user_id</code> &#x3D; ‘kxw’ AND <code>coin</code> &gt;&#x3D; 1000;</td>
-<td></td>
-</tr>
-<tr>
-<td></td>
-<td>SELECT * FROM <code>user_balance</code> WHERE <code>user_id</code> &#x3D; ‘kxw’; (coin&#x3D;20000000)</td>
-</tr>
-<tr>
-<td></td>
-<td>UPDATE <code>user_balance</code> SET <code>coin</code>&#x3D; <code>coin</code> - 1000 WHERE <code>user_id</code> &#x3D; ‘kxw’ AND <code>coin</code> &gt;&#x3D; 1000;</td>
-</tr>
-<tr>
-<td>SELECT * FROM <code>user_balance</code> WHERE <code>user_id</code> &#x3D; ‘kxw’; (coin&#x3D;19999000)</td>
-<td></td>
-</tr>
-<tr>
-<td>COMMIT;</td>
-<td></td>
-</tr>
-<tr>
-<td></td>
-<td>SELECT * FROM <code>user_balance</code> WHERE <code>user_id</code> &#x3D; ‘kxw’; (coin&#x3D;19998000)</td>
-</tr>
-<tr>
-<td></td>
-<td>COMMIT;</td>
-</tr>
-</tbody></table>
-<ul>
-<li>流水表只需要记录<code>coin_after</code>（变更后的余额）即可，因为变更前的余额，可能因为并发导致不准确，除非开启事务后，使用<code>select for update</code>来查询，而不是用普通的快照读</li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2024/10/22/20241022-jian-dan-ji-lu-wo-zai-ji-jia-gong-si-de-jing-li/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2024/10/22/20241022-jian-dan-ji-lu-wo-zai-ji-jia-gong-si-de-jing-li/" itemprop="url">简单记录我在几家公司的经历</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2024-10-22T14:36:03+08:00">
-                2024-10-22
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <ul>
-<li><p>经历了一次大家普遍觉得“没考好”的高考后，我补录进入了广州一家末流的一本学校。出身于广东四五线城市的普通家庭，在高考前我并没有认真研究自己想要选择的专业。经过简单的网上搜索就业率后，我选择了网络工程这个专业。当时我并不认为这个专业与编程有什么关联，甚至可以说我对编程一无所知。</p>
-</li>
-<li><p>进入大学后，习惯于自学的我感到如同置身地狱（初中和高中时期我都是习惯自己看书、解题，几乎很少主动向老师请教）。现在回想起来，这种极端的习惯可能是我未能进一步提升，或走了一些弯路的原因。之所以称之为“地狱难度”，是因为我真的一无所知，只知道努力却无法抓住重点。在大学里，没有明确的方向，学习的内容繁多而杂乱。</p>
-</li>
-<li><p>另一方面，我也得为自己辩解一下。中国的大学（我没有见识过其他国家的情况）计算机专业的教育在一定程度上与社会脱节。缺乏引路人或足够的主动性和渴望，很难在未来的就业中具备足够的竞争力。当然，那时的网络没有现在这么发达，优质的教程较为匮乏。因此，我始终相信年轻人会越来越聪明，只要愿意学习，网络上有很多免费的优质资源，能够帮助我们少走很多弯路。毕竟，站在巨人的肩膀上学习，可以大大提高效率，节约时间。</p>
-</li>
-</ul>
-<h2 id="毕业进入第一家公司-V"><a href="#毕业进入第一家公司-V" class="headerlink" title="毕业进入第一家公司 V"></a>毕业进入第一家公司 V</h2><blockquote>
-<blockquote>
-<p>时长：两年<br>社会经验尚浅，没有好好体会和感受就离开了。<br>个人成长：业务和技术启蒙，基本开发技术和业务流程的熟悉与掌握，大公司职场的适应。</p>
-</blockquote>
-</blockquote>
-<ul>
-<li><p>我首先要感谢三个人：飞哥、龙哥和强哥。</p>
-</li>
-<li><p>飞哥是我关系最好的同事，我们在工作中配合默契，工作之外也相处得非常融洽。他曾告诉我：“我不是来工作的，我是来交朋友的。”随着年龄的增长，我越来越认同，对于绝大多数人来说，人脉确实非常重要。</p>
-</li>
-<li><p>龙哥回想起来应该是我当时工作中的业务小组长。由于刚参加工作，我对这个角色并没有太多概念，我们平常就像普通同事那样相处。龙哥像大哥一样指导我解决工作中的问题，也会和我讨论业务和技术，推荐阅读技术书籍，鼓励我相信自己的学习能力，多读英文书，获取一手资料。工作之外，我们也常常开玩笑，偶尔一起出去吃下午茶。</p>
-</li>
-<li><p>强哥是我遇到的技术能力最强的同事，思维敏捷、动手能力出众。我现在的许多工作习惯都是向他学习的。强哥当时负责组内的基础建设，算是技术含量最高的小组。我后来主动去学习，并自然地加入了这个小组。虽然强哥有时显得严肃，但可能是对某些事情无法忍受。聪明的人有时会觉得与不太聪明的人共事很困难，因此难免会有些暴躁，现在我偶尔也能体会到这种感觉。与强哥的故事并未结束，后来我还跟着他一起创业了一段时间。</p>
-</li>
-<li><p>在这里，我交到了最多的朋友，大家都非常友好。</p>
-</li>
-</ul>
-<h2 id="第二家公司-U"><a href="#第二家公司-U" class="headerlink" title="第二家公司 U"></a>第二家公司 U</h2><blockquote>
-<blockquote>
-<p>时长：一年三个月<br>技术基础较好的公司，但气氛却比较压抑，难以适应。<br>个人成长：学习能力和方法，技术基础原理的积累。</p>
-</blockquote>
-</blockquote>
-<ul>
-<li><p>在这里，我遇到了两个不错的同事，阿舜和阿君。总体来说，我与某些同事相处得较好，但总感觉有些同事特别冷漠，虽然不是故意的，似乎普遍存在社交恐惧，平常默默去食堂吃饭也不打招呼。可能是性格、职业属性、职场压力和公司文化等多方面原因，我个人的感受比较压抑。</p>
-</li>
-<li><p>作为国内前几的大公司，里面确实汇聚了很多人才和技术沉淀，光是在内网的论坛上就能学到不少知识。</p>
-</li>
-<li><p>此外，我在这家公司体验到了大公司内部创业的团队模式，以及组织架构调整和人员变动的经历。</p>
-</li>
-</ul>
-<h2 id="第三家公司-D"><a href="#第三家公司-D" class="headerlink" title="第三家公司 D"></a>第三家公司 D</h2><blockquote>
-<blockquote>
-<p>时长：三个月<br>一家创业公司，最累但也是最开心的时光，同事相处融洽。<br>个人成长：技术管理者全局思考能力的培养，技术规划等经验。</p>
-</blockquote>
-</blockquote>
-<ul>
-<li><p>加入这家公司是前一家公司的强哥邀请的，他是团队的创始人之一，后来他也辞去了前公司的职务，全职加入。</p>
-</li>
-<li><p>团队规模较小，大约十三人，其中开发人员七个，没有专门的测试人员。虽然我只在这里待了三个月就宣布解散，但还是体验到了创业公司的开放与忙碌，当然也有混乱和无奈等。团队的技术人员经验虽然较浅，但各有优点和潜力。其中阿韬是我邀请到下家公司一起共事的。</p>
-</li>
-</ul>
-<h2 id="第四家公司-K"><a href="#第四家公司-K" class="headerlink" title="第四家公司 K"></a>第四家公司 K</h2><blockquote>
-<blockquote>
-<p>时长：六年<br>收入最多，但在大公司光环下却是一个相对奇葩的小作坊。在这里，我的个人能力得到了充分发挥。<br>个人成长：各方面能力的积累与提升，职场经验和事务处理的积累。</p>
-</blockquote>
-</blockquote>
-<ul>
-<li><p>不确定是什么原因，前期技术和业务能力的积累、个人职业能力的成熟、对职场规则的理解，还是这里人才密度不足的影响。在这里，我的职业发展如鱼得水。在六年中经历了多次组织调整和三四次换领导，我也开始带领小规模的技术团队。在这段时间，我得到了同事们不同程度的认可，六年来每年的绩效都是优秀或以上。</p>
-</li>
-<li><p>我认为有几个因素促成了这一点：遇到优秀的领导、扎实的个人技术能力、良好的透明沟通等。最核心的窍门在于，在正确的职场价值观前提下，常常换位思考，这样基本能做出合理的选择。当然，有时在某些原则下可能会产生冲突和不愉快，或许有更好的处理方式，但我个人尚未掌握，某些方面也不想耗费额外时间，显得比较直接。另外，我的行事风格也在增加自己的“可替代性”。</p>
-</li>
-<li><p>在这里，我结识了许多关系良好的同事，毕竟待了很多年。其中，特别提到阿拳、阿杰和阿韬。</p>
-</li>
-<li><p>阿拳是我偶然发现的校友，比我小一届。有些人天然有种默契，眼神一对，自然而然就成了好朋友。他是一个喜欢技术挑战，渴望提升自己能力的人，但似乎在职场上的投入和专注不足，始终未能如愿。经历了换团队后，他也没有改观，最终离开了，加入了其他公司。现在看到他职业发展越来越好，生活也越来越丰富，我意识到，合适的环境和机遇对我们来说确实很重要。</p>
-</li>
-<li><p>阿杰是我刚加入公司时的同事，后来换团队后的领导。他与之前的领导不同，比较平易近人，尽量将公司的各种政策和职场潜规则向我们说明白。尽管身处职场，他总能从一个打工人的角度保持良心。大多数情况下，我们的相处就像朋友一样。</p>
-</li>
-<li><p>阿韬是前公司 D 的同事，他给我留下的印象最深刻的就是人际关系很好，从未见他与任何人发生冲突，平常开朗，喜欢群体活动。加入公司后，除了工作，我们私下相处的时间也最多，成为了我最好的朋友。在公司，他的评价一直很好，大家有心事都会找他倾诉，我常戏称他为“中央空调”。在这里，虽然技术能力是基础，但大多数情况下，沟通能力更为重要。</p>
-</li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/2/">&lt;</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><a class="extend next" rel="next" href="/page/4/">&gt;</a>
+    <a class="extend prev" rel="prev" href="/page/2/">&lt;</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/4/">&gt;</a>
   </nav>
 
 
@@ -3685,7 +3071,7 @@ Starting from zero, this journey will take time and dedication. Patien
 <a href="/archives/">                
 <!--<a href="/archives/%7C%7C%20archive">-->
               
-                  <span class="site-state-item-count">160</span>
+                  <span class="site-state-item-count">163</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -3698,7 +3084,7 @@ Starting from zero, this journey will take time and dedication. Patien
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">176</span>
+                  <span class="site-state-item-count">180</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

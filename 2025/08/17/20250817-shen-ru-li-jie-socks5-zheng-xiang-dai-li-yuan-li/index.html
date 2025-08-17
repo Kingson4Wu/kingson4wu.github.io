@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/uploads/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="正向代理,SOCKS5," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="拉巴力的纸皮箱" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="以下内容由AI生成，本人审阅   在网络代理领域，SOCKS5 是一种常用的正向代理协议。它不同于传统的 HTTP 代理，能够为各种应用层协议提供通用的转发支持。本文将从概念、协议机制、工作流程和应用场景几个层次，系统梳理 SOCKS5 的技术原理。  1. 正向代理的基本概念正向代理是指客户端主动使用代理服务器，把请求先发给代理，再由代理去访问目标服务器，并把结果返回客户端。 主要作用：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入理解 SOCKS5 正向代理原理">
+<meta property="og:url" content="http://yoursite.com/2025/08/17/20250817-shen-ru-li-jie-socks5-zheng-xiang-dai-li-yuan-li/index.html">
+<meta property="og:site_name" content="拉巴力的纸皮箱">
+<meta property="og:description" content="以下内容由AI生成，本人审阅   在网络代理领域，SOCKS5 是一种常用的正向代理协议。它不同于传统的 HTTP 代理，能够为各种应用层协议提供通用的转发支持。本文将从概念、协议机制、工作流程和应用场景几个层次，系统梳理 SOCKS5 的技术原理。  1. 正向代理的基本概念正向代理是指客户端主动使用代理服务器，把请求先发给代理，再由代理去访问目标服务器，并把结果返回客户端。 主要作用：">
+<meta property="og:locale">
+<meta property="article:published_time" content="2025-08-17T04:54:40.000Z">
+<meta property="article:modified_time" content="2025-08-17T04:55:51.683Z">
+<meta property="article:author" content="Kingson Wu">
+<meta property="article:tag" content="正向代理">
+<meta property="article:tag" content="SOCKS5">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2025/08/17/20250817-shen-ru-li-jie-socks5-zheng-xiang-dai-li-yuan-li/"/>
+
+
+
+
+
+  <title>深入理解 SOCKS5 正向代理原理 | 拉巴力的纸皮箱</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">拉巴力的纸皮箱</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2025/08/17/20250817-shen-ru-li-jie-socks5-zheng-xiang-dai-li-yuan-li/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">深入理解 SOCKS5 正向代理原理</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2025-08-17T12:54:40+08:00">
+                2025-08-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<blockquote>
+<p>以下内容由AI生成，本人审阅</p>
+</blockquote>
+</blockquote>
+<p>在网络代理领域，<strong>SOCKS5</strong> 是一种常用的正向代理协议。它不同于传统的 HTTP 代理，能够为各种应用层协议提供通用的转发支持。本文将从概念、协议机制、工作流程和应用场景几个层次，系统梳理 SOCKS5 的技术原理。</p>
+<hr>
+<h2 id="1-正向代理的基本概念"><a href="#1-正向代理的基本概念" class="headerlink" title="1. 正向代理的基本概念"></a>1. 正向代理的基本概念</h2><p><strong>正向代理</strong>是指客户端主动使用代理服务器，把请求先发给代理，再由代理去访问目标服务器，并把结果返回客户端。</p>
+<p><strong>主要作用</strong>：</p>
+<ul>
+<li>隐藏客户端真实 IP</li>
+<li>绕过访问限制（如内网封锁、跨境访问）</li>
+<li>统一出口流量，便于管理和审计</li>
+</ul>
+<hr>
+<h2 id="2-SOCKS-协议简介"><a href="#2-SOCKS-协议简介" class="headerlink" title="2. SOCKS 协议简介"></a>2. SOCKS 协议简介</h2><p><strong>SOCKS (Socket Secure)</strong> 是一种通用的代理协议，不依赖特定的应用层协议。</p>
+<ul>
+<li><p><strong>SOCKS5</strong> 是该协议的第 5 版，支持更多功能：</p>
+<ul>
+<li>TCP 与 UDP 转发</li>
+<li>用户认证（无认证、用户名&#x2F;密码等）</li>
+<li>IPv4 &#x2F; IPv6 &#x2F; 域名解析</li>
+</ul>
+</li>
+</ul>
+<p>👉 与 HTTP 代理相比，SOCKS5 并不解析上层应用协议，只做数据字节的透明转发，因此适用范围更广。</p>
+<hr>
+<h2 id="3-SOCKS5-的工作流程"><a href="#3-SOCKS5-的工作流程" class="headerlink" title="3. SOCKS5 的工作流程"></a>3. SOCKS5 的工作流程</h2><p>假设客户端配置了一个 SOCKS5 代理，整个交互过程如下：</p>
+<h3 id="1）客户端与代理握手"><a href="#1）客户端与代理握手" class="headerlink" title="1）客户端与代理握手"></a>1）客户端与代理握手</h3><ul>
+<li>客户端告知代理：“我支持哪些认证方式（无认证 &#x2F; 用户名密码 &#x2F; …）”</li>
+<li>代理回应：“我要求用某种认证方式”</li>
+<li>若需认证，客户端提交凭证，通过后进入下一阶段</li>
+</ul>
+<h3 id="2）客户端请求目标地址"><a href="#2）客户端请求目标地址" class="headerlink" title="2）客户端请求目标地址"></a>2）客户端请求目标地址</h3><ul>
+<li>客户端通过代理的 TCP 连接，发送目标地址和端口，例如：<code>example.com:80</code></li>
+<li>代理尝试与目标服务器建立连接</li>
+</ul>
+<h3 id="3）代理回应结果"><a href="#3）代理回应结果" class="headerlink" title="3）代理回应结果"></a>3）代理回应结果</h3><ul>
+<li>连接成功：返回成功报文，允许数据传输</li>
+<li>连接失败：返回错误码（如目标不可达、连接被拒绝等）</li>
+</ul>
+<h3 id="4）数据转发"><a href="#4）数据转发" class="headerlink" title="4）数据转发"></a>4）数据转发</h3><ul>
+<li>客户端与目标服务器的所有数据均通过代理中转</li>
+<li>代理只做字节转发，不理解应用层协议内容</li>
+<li>这使得 SOCKS5 成为一种非常通用的代理机制</li>
+</ul>
+<hr>
+<h2 id="4-TCP-与-UDP-的支持"><a href="#4-TCP-与-UDP-的支持" class="headerlink" title="4. TCP 与 UDP 的支持"></a>4. TCP 与 UDP 的支持</h2><p>SOCKS5 协议既能代理 <strong>TCP</strong>，也能代理 <strong>UDP</strong>：</p>
+<ul>
+<li><p><strong>TCP CONNECT</strong></p>
+<ul>
+<li>客户端请求代理建立到目标服务器的 TCP 连接</li>
+<li>数据传输过程中，代理双向转发 TCP 流量</li>
+<li>应用场景：网页浏览、SSH、邮件收发等</li>
+</ul>
+</li>
+<li><p><strong>UDP ASSOCIATE</strong></p>
+<ul>
+<li>客户端先通过 TCP 控制通道告诉代理要进行 UDP 转发</li>
+<li>代理返回一个专用的 UDP 端口</li>
+<li>客户端将 UDP 数据包（带 SOCKS5 UDP 头）发送到该端口，代理再转发到目标服务器</li>
+<li>应用场景：DNS 查询、在线游戏、视频流</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="5-TCP-与-UDP-的关系"><a href="#5-TCP-与-UDP-的关系" class="headerlink" title="5. TCP 与 UDP 的关系"></a>5. TCP 与 UDP 的关系</h2><p>需要特别注意：</p>
+<ol>
+<li><p><strong>控制信道：必然是 TCP</strong></p>
+<ul>
+<li>无论最终转发 TCP 还是 UDP，客户端和代理之间都要先建立一条 TCP 连接</li>
+<li>握手、认证、UDP 转发上下文都依赖该 TCP 控制信道</li>
+</ul>
+</li>
+<li><p><strong>数据通道：因请求而异</strong></p>
+<ul>
+<li><strong>CONNECT 命令</strong> → 代理 TCP 流量</li>
+<li><strong>UDP ASSOCIATE 命令</strong> → 代理 UDP 数据包</li>
+</ul>
+</li>
+</ol>
+<p>👉 简单比喻：</p>
+<ul>
+<li>TCP 就像一条“电话线”，你先打电话告诉代理你要去哪</li>
+<li>如果是 TCP 业务，代理帮你中继对话</li>
+<li>如果是 UDP 业务，代理给你一个“邮局地址”，你把信件（UDP 包）寄过去，它帮你转发</li>
+</ul>
+<hr>
+<h2 id="6-为什么-SOCKS5-常用"><a href="#6-为什么-SOCKS5-常用" class="headerlink" title="6. 为什么 SOCKS5 常用"></a>6. 为什么 SOCKS5 常用</h2><p>SOCKS5 在现代网络应用中被广泛使用，原因在于：</p>
+<ul>
+<li><strong>协议层次低</strong>：位于 TCP&#x2F;UDP 之上，应用层之下，对上层协议透明</li>
+<li><strong>适用性广</strong>：能代理任意应用层协议，不仅限于 HTTP</li>
+<li><strong>支持 UDP 转发</strong>：满足实时性要求高的业务场景</li>
+<li><strong>支持身份认证与 IPv6</strong>：更安全，适应新网络环境</li>
+<li><strong>比 HTTP 代理更灵活</strong>：不做解析，只做转发</li>
+</ul>
+<hr>
+<h2 id="7-总结"><a href="#7-总结" class="headerlink" title="7. 总结"></a>7. 总结</h2><p>一句话概括：<br><strong>SOCKS5 正向代理的原理是——客户端和代理建立 TCP 会话，告诉代理要访问的目标地址，代理再代表客户端发起连接，并负责转发所有 TCP&#x2F;UDP 数据。代理本身不理解应用层协议，只是透明转发。</strong></p>
+<hr>
+<p>⚡关键点回顾：</p>
+<ul>
+<li>SOCKS5 协议本身基于 TCP</li>
+<li>可代理 TCP 与 UDP 流量</li>
+<li>UDP 转发依赖 TCP 控制信道维持会话</li>
+<li>对应用层协议透明，通用性极强</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E6%AD%A3%E5%90%91%E4%BB%A3%E7%90%86/" rel="tag"># 正向代理</a>
+          
+            <a href="/tags/SOCKS5/" rel="tag"># SOCKS5</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2025/08/17/20250817-shen-ru-li-jie-zheng-xiang-dai-li-yu-fan-xiang-dai-li-http-bao-wen-yu-tcp-lian-jie-de-qu-bie/" rel="next" title="深入理解正向代理与反向代理：HTTP 报文与 TCP 连接的区别">
+                <i class="fa fa-chevron-left"></i> 深入理解正向代理与反向代理：HTTP 报文与 TCP 连接的区别
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2025/08/17/20250817-vpn-yu-zheng-xiang-dai-li-de-yuan-li-yu-chai-yi-fen-xi/" rel="prev" title="VPN 与正向代理的原理与差异分析">
+                VPN 与正向代理的原理与差异分析 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div id="gitalk-container"></div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.png"
+                alt="" />
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+<a href="/archives/">                
+<!--<a href="/archives/%7C%7C%20archive">-->
+              
+                  <span class="site-state-item-count">163</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">180</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E6%AD%A3%E5%90%91%E4%BB%A3%E7%90%86%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-number">1.</span> <span class="nav-text">1. 正向代理的基本概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-SOCKS-%E5%8D%8F%E8%AE%AE%E7%AE%80%E4%BB%8B"><span class="nav-number">2.</span> <span class="nav-text">2. SOCKS 协议简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-SOCKS5-%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B"><span class="nav-number">3.</span> <span class="nav-text">3. SOCKS5 的工作流程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%EF%BC%89%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%B8%8E%E4%BB%A3%E7%90%86%E6%8F%A1%E6%89%8B"><span class="nav-number">3.1.</span> <span class="nav-text">1）客户端与代理握手</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%EF%BC%89%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%AF%B7%E6%B1%82%E7%9B%AE%E6%A0%87%E5%9C%B0%E5%9D%80"><span class="nav-number">3.2.</span> <span class="nav-text">2）客户端请求目标地址</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3%EF%BC%89%E4%BB%A3%E7%90%86%E5%9B%9E%E5%BA%94%E7%BB%93%E6%9E%9C"><span class="nav-number">3.3.</span> <span class="nav-text">3）代理回应结果</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4%EF%BC%89%E6%95%B0%E6%8D%AE%E8%BD%AC%E5%8F%91"><span class="nav-number">3.4.</span> <span class="nav-text">4）数据转发</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-TCP-%E4%B8%8E-UDP-%E7%9A%84%E6%94%AF%E6%8C%81"><span class="nav-number">4.</span> <span class="nav-text">4. TCP 与 UDP 的支持</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-TCP-%E4%B8%8E-UDP-%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="nav-number">5.</span> <span class="nav-text">5. TCP 与 UDP 的关系</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-%E4%B8%BA%E4%BB%80%E4%B9%88-SOCKS5-%E5%B8%B8%E7%94%A8"><span class="nav-number">6.</span> <span class="nav-text">6. 为什么 SOCKS5 常用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-%E6%80%BB%E7%BB%93"><span class="nav-number">7.</span> <span class="nav-text">7. 总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kingson Wu</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+  <script src="/js/src/md5.min.js"></script>
+
+   <script type="text/javascript">
+        var gitalk = new Gitalk({
+          clientID: '3416434437f9f4e049bd',
+          clientSecret: 'a52d69bf90cb77f81a26d135e03dd0f4869fbf84',
+          repo: 'kingson4wu.github.io',
+          owner: 'kingson4wu',
+          admin: ['kingson4wu'],
+
+          id: md5(location.pathname),
+
+          distractionFreeMode: 'true'
+        })
+        gitalk.render('gitalk-container')
+    </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

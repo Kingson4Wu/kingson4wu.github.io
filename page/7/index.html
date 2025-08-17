@@ -287,6 +287,418 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/11/18/20221118-ji-zhu-xuan-xing-yao-zhu-yi-shi-me/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2022/11/18/20221118-ji-zhu-xuan-xing-yao-zhu-yi-shi-me/" itemprop="url">技术选型要注意什么?</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-11-18T13:59:51+08:00">
+                2022-11-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><img src="/2022/11/18/20221118-ji-zhu-xuan-xing-yao-zhu-yi-shi-me/messi3.png"></p>
+<ul>
+<li><p>充分了解才能用，基本了解，大局实现，</p>
+</li>
+<li><p>充分测试，压测分析profile，</p>
+</li>
+<li><p>非核心业务试行，</p>
+</li>
+<li><p>业界选择，不是说别人牛，是因为别人拿业务来验证过</p>
+</li>
+<li><p>待整理</p>
+</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/10/18/20221018-wo-de-chong-gou-fan-yi-jing-li/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2022/10/18/20221018-wo-de-chong-gou-fan-yi-jing-li/" itemprop="url">我的重构（翻译）经历</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-10-18T23:05:58+08:00">
+                2022-10-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><img src="/2022/10/18/20221018-wo-de-chong-gou-fan-yi-jing-li/messi4.png"></p>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><ol>
+<li>这里的重构基本指的是：把用A语言写的服务，使用B语言重写</li>
+<li>工作的大部分内容其实就是人肉代码翻译</li>
+<li>当然，重构通常也伴随的架构的优化和调整</li>
+<li>最后，为了保证工作的顺利进行和服务的稳定切换，也总结了一些经验</li>
+<li>下面将简要讲述作者的三段重构经历，分别是将三种不同的语言重构成Java（本人公司的所在的业务的主要语言就是Java，个人没特殊语言癖好），作者其实对这三种语言都不熟悉，是怎么完成重构任务的呢？</li>
+</ol>
+<h2 id="一、PHP重构成Java（“一比一”迁移）"><a href="#一、PHP重构成Java（“一比一”迁移）" class="headerlink" title="一、PHP重构成Java（“一比一”迁移）"></a>一、PHP重构成Java（“一比一”迁移）</h2><ul>
+<li>负责该业务的模块</li>
+<li>启动环境太复杂，较复杂的逻辑通过在线工具运行验证</li>
+<li>和熟悉该业务的PHP同事合作</li>
+<li>切换服务接口使用灰度策略和配置开关</li>
+<li>覆盖好测试用例</li>
+</ul>
+<ul>
+<li>没本地环境，必要时在线运行验证</li>
+</ul>
+<h2 id="二、C-重构成Java（站在“巨人的肩膀”上重新出发）"><a href="#二、C-重构成Java（站在“巨人的肩膀”上重新出发）" class="headerlink" title="二、C++重构成Java（站在“巨人的肩膀”上重新出发）"></a>二、C++重构成Java（站在“巨人的肩膀”上重新出发）</h2><ul>
+<li>其他公司业务调整，业务并入，需复制一套业务功能基本相同的服务</li>
+<li>通过参考原业务的代码，发现其中架构存在的问题，进行优化；参考其中的实现，避免在新实现中出现考虑不周（站在“巨人的肩膀”上）</li>
+<li>和第一段重构经历不同的是，原服务只是作为参考，在业务功能上一摸一样，并不需要在内部实现上保持和原来完全一致，但是新服务需要融入现有的服务基础体系</li>
+<li>有意思的优化，原来因为业务逻辑的需要使用单体服务，新服务使用新的巧妙设计，是服务可以有多实例运行</li>
+</ul>
+<ul>
+<li>不需要本地环境，阅读参考即可</li>
+</ul>
+<h2 id="三、Lua重构成Java（对当前“一无所知”也没关系）"><a href="#三、Lua重构成Java（对当前“一无所知”也没关系）" class="headerlink" title="三、Lua重构成Java（对当前“一无所知”也没关系）"></a>三、Lua重构成Java（对当前“一无所知”也没关系）</h2><ul>
+<li>本地把环境跑起来，通过调试验证逻辑</li>
+<li>新业务需要，需要参考部分逻辑，同时进行重构，反哺原业务团队</li>
+</ul>
+<ul>
+<li>需要本地环境，验证原本一无所知的逻辑</li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ol>
+<li>编程语言的语言其实大同小异，花半天左右基本可以快速熟悉语法，在阅读代码的时候遇到不懂的地方，即时查阅即可；</li>
+<li>对于一些复杂的逻辑，可以通过编写代码块，执行验证输出；可以在本地环境运行，也可以利用在线工具运行；</li>
+<li>对于历史包袱较重的，要善于利用灰度策略；</li>
+<li>阅读代码后，跟熟悉业务的同学请教确认，和同事们讨论有时也是很有必要的。</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/09/08/20220908-wo-de-ji-zhang-tcp-yuan-li-xue-xi-shou-hui-tu/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2022/09/08/20220908-wo-de-ji-zhang-tcp-yuan-li-xue-xi-shou-hui-tu/" itemprop="url">我的几张TCP原理学习手绘图</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-09-08T14:16:54+08:00">
+                2022-09-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="网络寻址原理"><a href="#网络寻址原理" class="headerlink" title="网络寻址原理"></a>网络寻址原理</h2><p><img src="/2022/09/08/20220908-wo-de-ji-zhang-tcp-yuan-li-xue-xi-shou-hui-tu/%E7%BD%91%E7%BB%9C%E5%AF%BB%E5%9D%80%E5%8E%9F%E7%90%86.jpg"></p>
+<h2 id="负载均衡模式"><a href="#负载均衡模式" class="headerlink" title="负载均衡模式"></a>负载均衡模式</h2><p><img src="/2022/09/08/20220908-wo-de-ji-zhang-tcp-yuan-li-xue-xi-shou-hui-tu/%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E6%A8%A1%E5%BC%8F.jpg"></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/09/07/20220907-tcp-lian-jie-zhong-de-ge-chong-zhuang-tai/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1652,565 +2064,11 @@ content-length: 23
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/08/02/20220802-shuo-shuo-cdn/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2022/08/02/20220802-shuo-shuo-cdn/" itemprop="url">说说CDN</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-08-02T21:54:30+08:00">
-                2022-08-02
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="相关名词"><a href="#相关名词" class="headerlink" title="相关名词"></a>相关名词</h2><ul>
-<li>CDN（Content Delivery Network）（内容分发网络）：提供内容给用户就近访问</li>
-</ul>
-<h2 id="CDN域名解析流程"><a href="#CDN域名解析流程" class="headerlink" title="CDN域名解析流程"></a>CDN域名解析流程</h2><ul>
-<li>浏览器发起HTTP请求到本地DNS服务器，本地DNS服务器使用CNAME的方式，将资源域名重定向到CDN服务</li>
-</ul>
-<ol>
-<li>用户机器（比如浏览器）-&gt; LocalDNS</li>
-<li>LocalDNS -&gt; 域名授权DNS服务 (返回域名CNAME)</li>
-<li>LocalDNS -&gt; 请求CNAME域名（重新走域名解析流程，DNS根服务器，域服务器等）（返回CNAME对应的ip）</li>
-<li>LocalDNS -&gt; CNAME对应的CDN服务器（CDN策略，查找出最佳的CDN节点的IP地址）</li>
-<li>LocalDNS返回CDN节点IP地址给浏览器</li>
-<li>用户机器（比如浏览器）-&gt; CDN节点（若无缓存）</li>
-<li>CDN节点 -&gt; 回源服务器拉取资源 (可选)</li>
-</ol>
-<ul>
-<li>添加CNAME记录需要在您的域名厂商处配置；CNAME的配置和域名的解析配置一起的</li>
-</ul>
-<h2 id="Q-amp-A"><a href="#Q-amp-A" class="headerlink" title="Q&amp;A"></a>Q&amp;A</h2><h3 id="服务接口的数据可以使用CDN来缓存？"><a href="#服务接口的数据可以使用CDN来缓存？" class="headerlink" title="服务接口的数据可以使用CDN来缓存？"></a>服务接口的数据可以使用CDN来缓存？</h3><ul>
-<li>CDN不仅可以缓存静态资源（图片，视频等），对于一些数据变更不大的接口，可以适当缓存接口数据。比如配置，利用CDN缓存几分钟是合理的。</li>
-</ul>
-<h3 id="不能缓存数据的接口，可以使用CDN吗？"><a href="#不能缓存数据的接口，可以使用CDN吗？" class="headerlink" title="不能缓存数据的接口，可以使用CDN吗？"></a>不能缓存数据的接口，可以使用CDN吗？</h3><ul>
-<li>结论：可以使用CDN，但注意GET接口响应头设置为不缓存(比如设置 Cache-Control:no-cache)</li>
-</ul>
-<ol>
-<li>通过CDN加速回源效果（使用CDN快速传输的特性）<ul>
-<li>比如一般情况下，用户访问通过普通公网，需要经过20个路由才到达服务器</li>
-<li>使用CDN加速后，通过5CDN节点就到达服务器了（这里涉及服务器端在CDN的接入点、用户端CDN部署的覆盖范围是否足够大）</li>
-</ul>
-</li>
-<li>使用CDN隐藏服务器真实IP,起到提升安全性等作用</li>
-</ol>
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/2000101">DNS、CDN加速和域名解析之间的关系</a></li>
-<li><a target="_blank" rel="noopener" href="https://kingson4wu.github.io/2020/08/20/20200820-%E5%85%B3%E4%BA%8ECDN%E7%BC%93%E5%AD%98/">关于CDN缓存总结摘要</a></li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/08/01/20220801-dns-jie-huo/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2022/08/01/20220801-dns-jie-huo/" itemprop="url">DNS解惑</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-08-01T17:00:30+08:00">
-                2022-08-01
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="相关名词"><a href="#相关名词" class="headerlink" title="相关名词"></a>相关名词</h2><ul>
-<li>DNS（Domain Name System）域名系统: 域名和IP地址映射关系</li>
-<li>LocalDNS : 本地DNS服务器，一般是ISP（Internet Service Provider）提供。ISP，即是互联网服务提供商(比如电信、联通和移动三大电信运营商)；对于不同运营商间的互联互通，一般是采用BGP peering（对等）的方式进行</li>
-<li>地址解析协议，即ARP（Address Resolution Protocol）是将IP地址转换为MAC地址（TCP&#x2F;IP数据链路层协议）；DNS协议则是将域名转换为IP地址（TCP&#x2F;IP应用层协议）</li>
-<li>ICANN  互联网名称与数字地址分配机构（The Internet Corporation for Assigned Names and Numbers）,全世界域名的最高管理机构。</li>
-<li>CNNIC：中国互联网络信息中心（China Internet Network Information Center，CNNIC）是经国家主管部门批准，于1997年6月3日组建的管理和服务机构，行使国家互联网络信息中心的职责。</li>
-<li>可逆DNS（rDNS，reverse DNS）是一种把一个IP地址分解成一个域名的方法，正像域名系统（DNS）把域名分解成关联的IP地址。</li>
-</ul>
-<h2 id="DNS解析流程"><a href="#DNS解析流程" class="headerlink" title="DNS解析流程"></a>DNS解析流程</h2><ul>
-<li>不考虑每部分DNS缓存的情况下，DNS解析流程大致如下：</li>
-</ul>
-<ol>
-<li>【递归查询】用户机器（比如浏览器）-&gt; 本地DNS服务器 </li>
-<li>【迭代查询】本地DNS服务器 -&gt; DNS根服务器(返回域服务器)</li>
-<li>【迭代查询】本地DNS服务器 -&gt; 域服务器(返回DNS服务器列表)</li>
-<li>【迭代查询】本地DNS服务器(选择一个DNS服务器) -&gt; DNS服务器(返回域名对应的IP)（或返回其他权限服务器的IP地址，取决于域名的解析配置）</li>
-<li>本地DNS服务器 -&gt; 权限服务器（可选步骤，取决于上一步的返回）</li>
-<li>用户机器（根据IP发送请求访问）</li>
-</ol>
-<p><img src="/2022/08/01/20220801-dns-jie-huo/dns-resolution-linux-1920x994.webp"></p>
-<ul>
-<li><p><a target="_blank" rel="noopener" href="https://devconnected.com/how-to-flush-dns-cache-on-linux/">https://devconnected.com/how-to-flush-dns-cache-on-linux/</a></p>
-</li>
-<li><p>浏览器等各个部分一般会缓存DNS记录一段时间</p>
-</li>
-<li><p>本地DNS服务器（LocalDNS）使用迭代查询的方式请求；请求发起方（浏览器）使用递归查询的方式请求</p>
-</li>
-<li><p>递归查询：本机向本地域名服务器发出一次查询请求，就静待最终的结果。如果本地域名服务器无法解析，自己会以DNS客户机的身份向其它域名服务器查询，直到得到最终的IP地址告诉本机</p>
-</li>
-<li><p>迭代查询：本地域名服务器向根域名服务器查询，根域名服务器告诉它下一步到哪里去查询，然后它再去查，每次它都是以客户机的身份去各个服务器查询。</p>
-</li>
-<li><p>通俗地说，递归就是把一件事情交给别人，如果事情没有办完，哪怕已经办了很多，都不要把结果告诉我，我要的是你的最终结果，而不是中间结果；如果你没办完，请你找别人办完。<br>迭代则是我交给你一件事，你能办多少就告诉我你办了多少，然后剩下的事情就由我来办。</p>
-</li>
-</ul>
-<h2 id="域名的管理"><a href="#域名的管理" class="headerlink" title="域名的管理"></a>域名的管理</h2><ul>
-<li><p>.com等国际顶级域名的管理机构是ICANN；.cn等国内域名的管理机构是CNNIC</p>
-</li>
-<li><p>用whois可以查询域名的相关信息</p>
-</li>
-<li><p>域名具有管理密码和转移密码，域名转移密码又称为授权码（Authorization code）或 域名EPP代码（EPP Key）</p>
-</li>
-<li><p>域名其实是具有一定的层次结构的，从上到下依次为：根域名、顶级域名（top level domain，TLD）、二级域名、（三级域名）<br>先来讲讲顶级域名（TLD），即最高层级的域名。简单说，就是网址的最后一个部分。比如，网址<a target="_blank" rel="noopener" href="http://www.baidu.com/">www.baidu.com</a> 的顶级域名就是 .com。ICANN 的一项主要工作，就是规定哪些字符串可以当作顶级域名。</p>
-</li>
-<li><p>ICANN 自己不会去管理这些顶级域名，因为根本管不过来。想想看，顶级域名有1000多个，每个顶级域名下面都有许多批发商，如果每个都要管，就太麻烦了。ICANN 的政策是，每个顶级域名都找一个托管商，该域名的所有事项都由托管商负责。ICANN 只与托管商联系，这样管理起来就容易多了。举例来说，.cn 国家顶级域名的托管商就是中国互联网络信息中心（CNNIC），它决定了 .cn 域名的各种政策。</p>
-</li>
-<li><p>由于 ICANN 管理着所有的顶级域名，所以它是最高一级的域名节点，被称为根域名（root domain）。在有些场合，<a target="_blank" rel="noopener" href="http://www.xxx.com/">www.xxx.com</a> 被写成 <a target="_blank" rel="noopener" href="http://www.xxx.com.,即最后还会多出一个点.这个点就是根域名./">www.xxx.com.，即最后还会多出一个点。这个点就是根域名。</a></p>
-</li>
-<li><p>理论上，所有域名的查询都必须先查询根域名，因为只有根域名才能告诉你，某个顶级域名由哪台服务器管理。事实上也确实如此，ICANN 维护着一张列表（根域名列表），里面记载着顶级域名和对应的托管商。</p>
-</li>
-</ul>
-<h2 id="DNS服务器类别"><a href="#DNS服务器类别" class="headerlink" title="DNS服务器类别"></a>DNS服务器类别</h2><h3 id="权威-DNS"><a href="#权威-DNS" class="headerlink" title="权威 DNS"></a>权威 DNS</h3><ul>
-<li>权威 DNS 指域名在域名注册商处所设置的 DNS 服务器地址。该地址决定了该域名的解析管理权（新增，删除，修改等）。比如 DNSPod 的权威服务器：*.dnspod.net, * dnsv3.com 等。当域名设置权威服务器并设置了解析记录后，客户端请求域名时，权威服务器将返回该域名的对应的解析记录信息。</li>
-</ul>
-<h3 id="Local-DNS"><a href="#Local-DNS" class="headerlink" title="Local DNS"></a>Local DNS</h3><ul>
-<li><p>Local DNS 是 DNS 查询中的第一个节点。Local DNS 作为客户端与 DNS 域名服务器的中间人。客户端发送 DNS 查询时，Local DNS 将使用缓存的数据进行响应，或者将向根域名服务器发送请求，接着向根域名服务器发送另一个请求，然后向权威 DNS 发送最后一个请求。收到来自包含已请求 IP 地址的权威 DNS 服务器的响应后，Local DNS 将向客户端发送响应。</p>
-</li>
-<li><p>在此过程中，Local DNS 将缓存从权威 DNS 服务器收到的信息。当一个客户端请求的域名 IP 地址是另一个客户端最近请求的 IP 地址时，Local DNS 可绕过与域名服务器进行通信的过程，并仅从第二个客户端的缓存中为第一个客户端提供所请求的记录。</p>
-</li>
-</ul>
-<h3 id="公共-DNS"><a href="#公共-DNS" class="headerlink" title="公共 DNS"></a>公共 DNS</h3><ul>
-<li>公共DNS，指面向所有互联网用户的全球公共递归域名解析服务。和仅使用本地 LocalDNS 的传统解析服务相比，公共解析服务，一般具备更加“快速”、“稳定”、“安全”互联网访问。</li>
-</ul>
-<h2 id="DNS常用命令"><a href="#DNS常用命令" class="headerlink" title="DNS常用命令"></a>DNS常用命令</h2><ul>
-<li>dig、 host、nslookup、traceroute、whois</li>
-</ul>
-<h2 id="解惑"><a href="#解惑" class="headerlink" title="解惑"></a>解惑</h2><h3 id="域名提供商和电信服务提供商之间DNS的关系？"><a href="#域名提供商和电信服务提供商之间DNS的关系？" class="headerlink" title="域名提供商和电信服务提供商之间DNS的关系？"></a>域名提供商和电信服务提供商之间DNS的关系？</h3><ol>
-<li>域名提供商(域名注册商)（ICANN等授权的管理机构）；电信服务提供商（ISP）</li>
-<li>ISP的DNS：LocalDNS</li>
-<li>域名提供商的DNS （腾讯、阿里云等），将自己的dns服务的ip直接在各个ISP中进行登记，使得ISP的DNS服务能转发过来查找，得到域名对应的ip</li>
-<li>域名并不依赖平台，比如阿里万网只是个注册商，注册完域名后有相应的转移密码。转移密码有多种用途，比如可以在多个DNS服务商托管域名解析（有的域名注册商不一定有对应的DNS服务，而且在多个DNS服务商解析可以起到容灾作用）</li>
-</ol>
-<h3 id="运营商DNS和公共DNS"><a href="#运营商DNS和公共DNS" class="headerlink" title="运营商DNS和公共DNS"></a>运营商DNS和公共DNS</h3><ul>
-<li>如何不特意去设置，我们用的就是运营商DNS（由DHCP分配）</li>
-<li>目前国内电信运营商通过使用DNS劫持和DNS污染的方法，干扰用户正常上网，使得用户无法访问众多国外常用服务，因此可以使用公共DNS</li>
-</ul>
-<h3 id="自己创建的域名怎么让其他dns服务器解析"><a href="#自己创建的域名怎么让其他dns服务器解析" class="headerlink" title="自己创建的域名怎么让其他dns服务器解析"></a>自己创建的域名怎么让其他dns服务器解析</h3><ul>
-<li>除非用户自行设置指定你的dns服务公网ip，否则只有成为认证通过的注册服务商才行</li>
-<li>比如阿里云域名的解析生效，第一步是 阿里云 DNS 必须首先生效，然后等待世界各地 Local DNS 生效，可以通俗的理解为各大电信运营管理的 DNS 需要及时同步 阿里云 DNS 解析记录，才能最终生效。 网站是否能访问，直接相关的是 Local DNS， 阿里 云解析都是实时生效的，一般只需几秒即可同步到各地 Local DNS 上，但各地 Local DNS 均有缓存机制，解析的最终生效取决于各运营商刷新时间。</li>
-</ul>
-<h3 id="DNS解析相关疑问"><a href="#DNS解析相关疑问" class="headerlink" title="DNS解析相关疑问"></a>DNS解析相关疑问</h3><ul>
-<li>DNS协议是应用层的协议，解析过程发生在用户态。</li>
-<li>DNS协议既使用了UDP，也使用了TCP，使用的端口号都为 53。大多数情况下 DNS 都使用 UDP 进行传输。</li>
-<li>DNS在区域传输的时候使用TCP协议，其他时候使用UDP协议；DNS区域传输的时候使用TCP协议</li>
-<li>举个例子：浏览器返回某个HTTP服务<ol>
-<li>浏览器调用“DNS解析模块”发出UDP请求得到域名的ip（DNS 应用层）</li>
-<li>浏览器调用TCP（内核系统调用）发出HTTP请求（TCP 传输层）</li>
-<li>TCP通过ARP协议得到mac地址 （ARP 数据链路层）</li>
-</ol>
-</li>
-<li>“DNS解析模块” 是在哪里实现的？<ol>
-<li>程序自行解析实现（从&#x2F;etc&#x2F;resolv.conf中取出本地dns server地址列表， 发送DNS请求(UDP报文)并获得结果）</li>
-<li>调用到c标准库的getaddrinfo或getnameinfo函数<ul>
-<li>要想知道getaddrinfo是如何查询信息的，可以用strace工具，追踪getaddrinfo函数 在执行时打开了哪些文件</li>
-<li>resolv.conf是各种操作系统域名系统解析器（DNS Resolver）的配置文件。每当一个程序需要通过域名来访问Internet上面的其它主机时，需要利用Resolver库函数将域名转换成对应的IP，然后才可进行访问。</li>
-<li>域名系统解析器（DNS Resolver）并非一个可执行程序，而是C语言的一系列库函数，用于解析resolv.conf获取域名对应的IP。</li>
-</ul>
-</li>
-<li>操作系统中并不存在“DNS 查询”这个系统调用; 不同程序可能采用不同的策略获取名字对应的 IP 地址</li>
-</ol>
-</li>
-</ul>
-<h3 id="dns-resolver相关"><a href="#dns-resolver相关" class="headerlink" title="dns-resolver相关"></a>dns-resolver相关</h3><ul>
-<li><a target="_blank" rel="noopener" href="https://docs.microsoft.com/en-us/windows/win32/dns/dns-resolvers">https://docs.microsoft.com/en-us/windows/win32/dns/dns-resolvers</a></li>
-<li><a target="_blank" rel="noopener" href="https://datacadamia.com/os/linux/resolv.conf">https://datacadamia.com/os/linux/resolv.conf</a>    </li>
-<li><a target="_blank" rel="noopener" href="https://www.kernel.org/doc/html/latest/networking/dns_resolver.html">DNS Resolver Module</a><ul>
-<li>The DNS resolver module provides a way for kernel services to make DNS queries by way of requesting a key of key type dns_resolver. These queries are upcalled to userspace through &#x2F;sbin&#x2F;request-key.</li>
-</ul>
-</li>
-</ul>
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/2000101">DNS、CDN加速和域名解析之间的关系</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.vpsgongyi.net/archives/2197.html">权威DNS、Local DNS、公共DNS有什么区别</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/wuyepeng/p/9835839.html">DNS用的是TCP协议还是UDP协议</a></li>
-<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/351059293">超详细 DNS 协议解析</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/baidu_37964071/article/details/80500825">DNS（域名解析协议）详解</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/battzion/p/4235562.html">getaddrinfo工作原理分析</a></li>
-<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/42898476">Linux DNS 查询剖析</a></li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/07/20/20220720-tan-tan-kua-yu/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2022/07/20/20220720-tan-tan-kua-yu/" itemprop="url">谈谈跨域</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-07-20T21:50:26+08:00">
-                2022-07-20
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <ul>
-<li><p>JQuery的jsonp的success与jsonpCallback的关系:<a target="_blank" rel="noopener" href="https://www.cnblogs.com/non-clockwork-cheng/p/6637491.html">https://www.cnblogs.com/non-clockwork-cheng/p/6637491.html</a>,<br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/tapt/p/6524946.html">https://www.cnblogs.com/tapt/p/6524946.html</a></p>
-</li>
-<li><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$.<span class="title function_">ajax</span>(&#123;</span><br><span class="line">              <span class="attr">type</span>: <span class="string">&quot;get&quot;</span>,</span><br><span class="line">              <span class="attr">async</span>:<span class="literal">false</span>,</span><br><span class="line">              <span class="attr">url</span>: <span class="string">&quot;http://192.168.1.102:8080/carop/jsonp&quot;</span>,</span><br><span class="line">              <span class="attr">dataType</span>: <span class="string">&quot;jsonp&quot;</span>,</span><br><span class="line">              <span class="attr">jsonpCallback</span>:<span class="string">&quot;jsonpCallback&quot;</span>,              </span><br><span class="line">              <span class="attr">success</span>: <span class="keyword">function</span>(<span class="params">data</span>)&#123;</span><br><span class="line">              <span class="title function_">alert</span>(data.<span class="property">name</span>+<span class="string">&quot;\n &quot;</span>+data.<span class="property">tel</span>);</span><br><span class="line">              &#125;</span><br><span class="line"> &#125;); </span><br><span class="line"></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>jsonp和jsonpcallback的使用:<a target="_blank" rel="noopener" href="https://www.cnblogs.com/zhangruiqi/p/7880642.html">https://www.cnblogs.com/zhangruiqi/p/7880642.html</a></p>
-</li>
-</ul>
-<pre>
-1. jsonp、jsonpCallback  jsonp跨域时可以自定义的两个参数
-2. jsonp: 回掉函数名的参数名，默认callback，服务端通过它来获取到回调函数名
-3. jsonpCallback: 回调函数名，默认jquery自动生成
-4. 指定jsonpCallback时可以将回掉函数写在ajax外面做其他操作，不指定时不能这样做，只能在success里做操作
-
-一般jquery跨域用到的两个方法为：$.ajax 和$.getJSON
-
-最后，仔细安静下来，细读 json 官方文档后发现这么一段：
-
-JSON数据是一种能很方便通过JavaScript解析的结构化数据。如果获取的数据文件存放在远程服务器上（域名不同，也就是跨域获取数据），则需要使用jsonp类型。使用这种类型的话，会创建一个查询字符串参数 callback=? ，这个参数会加在请求的URL后面。服务器端应当在JSON数据前加上回调函数名，以便完成一个有效的JSONP请求。如果要指定回调函数的参数名来取代默认的callback，可以通过设置$.ajax()的jsonp参数。
-
-其实jquery跨域的原理是通过外链 <script>  来实现的,然后在通过回调函数加上回调函数的参数来实现真正的跨域
-
-Jquery 在每次跨域发送请求时都会有callback这个参数，其实这个参数的值就是回调函数名称，所以，服务器端在发送json数据时，应该把这个参数放到前面，这个参数的值往往是随机生成的，如：jsonp1294734708682，同时也可以通过 $.ajax 方法设置 jsonpcallback 方法的名称。
-</pre>
-
-<ul>
-<li><p>解决跨域有几种</p>
-<ol>
-<li>通过jsonp跨域(需要服务端配合),原理:动态创建script.jsonp的解决方式（仅支持GET方式）</li>
-<li>跨域资源共享（CORS）,服务端设置Access-Control-Allow-Origin<ul>
-<li>nginx反向代理接口跨域 : <code>add_header Access-Control-Allow-Origin http://www.domain1.com; </code></li>
-</ul>
-</li>
-<li>使用jsonp还不如响应添加Access-Control-Allow-Origin?<ul>
-<li>传统的跨域请求没有好的解决方案，无非就是jsonp和iframe，随着跨域请求的应用越来越多，W3C提供了跨域请求的标准方案（Cross-Origin Resource Sharing）。IE8、Firefox 3.5 及其以后的版本、Chrome浏览器、Safari 4 等已经实现了 Cross-Origin Resource Sharing 规范，实现了跨域请求。<br>在服务器响应客户端的时候，带上Access-Control-Allow-Origin头信息。</li>
-<li>说明jsonp其实已经过时?是以前  CORS没出现前的方案?</li>
-</ul>
-</li>
-</ol>
-</li>
-<li><p>springboot中通过cors协议解决跨域问题：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/520playboy/p/7306008.html">https://www.cnblogs.com/520playboy/p/7306008.html</a></p>
-</li>
-</ul>
-</script></pre>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/6/">&lt;</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><a class="extend next" rel="next" href="/page/8/">&gt;</a>
+    <a class="extend prev" rel="prev" href="/page/6/">&lt;</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><span class="page-number current">7</span><a class="page-number" href="/page/8/">8</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/8/">&gt;</a>
   </nav>
 
 
@@ -2263,7 +2121,7 @@ Jquery 在每次跨域发送请求时都会有callback这个参数，其实这�
 <a href="/archives/">                
 <!--<a href="/archives/%7C%7C%20archive">-->
               
-                  <span class="site-state-item-count">160</span>
+                  <span class="site-state-item-count">163</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2276,7 +2134,7 @@ Jquery 在每次跨域发送请求时都会有callback这个参数，其实这�
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">176</span>
+                  <span class="site-state-item-count">180</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

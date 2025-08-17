@@ -6,7 +6,7 @@
   <link href="http://yoursite.com/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2025-08-16T16:43:06.545Z</updated>
+  <updated>2025-08-17T05:11:11.489Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,93 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>家庭宽带中的公网与内网 IP 分配机制解析</title>
+    <link href="http://yoursite.com/2025/08/17/20250817-jia-ting-kuan-dai-zhong-de-gong-wang-yu-nei-wang-ip-fen-pei-ji-zhi-jie-xi/"/>
+    <id>http://yoursite.com/2025/08/17/20250817-jia-ting-kuan-dai-zhong-de-gong-wang-yu-nei-wang-ip-fen-pei-ji-zhi-jie-xi/</id>
+    <published>2025-08-17T05:10:04.000Z</published>
+    <updated>2025-08-17T05:11:11.489Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><blockquote><p>以下内容由AI生成</p></blockquote></blockquote><p>在日常使用家庭宽带时，很多人会遇到“到底我家有没有独立公网 IP”的问题。这不仅关系到能否顺利访问外网，更影响到是否可以在家中搭建服务器、使用 P2P 应用等。本文将系统梳理家庭宽带 IP 的分配方式、运营商 NAT 的机制以及其对用户的实际影响。</p><hr><h2 id="1-家庭宽带的几种典型-IP-分配方式"><a href="#1-家庭宽带的几种典型-IP-分配方式" class="headerlink" title="1. 家庭宽带的几种典型 IP 分配方式"></a>1. 家庭宽带的几种典型 IP 分配方式</h2><h3 id="（1）独立公网-IP"><a href="#（1）独立公网-IP" class="headerlink" title="（1）独立公网 IP"></a>（1）独立公网 IP</h3><ul><li>家庭路由器的 <strong>WAN 口直接获取公网 IPv4 地址</strong>（或独立 IPv6 前缀）。</li><li>此时家庭就是一个独立的外网节点，可直接与互联网通信（除非被防火墙限制）。</li><li><strong>典型场景</strong>：早期 ADSL 宽带、当前部分电信&#x2F;联通&#x2F;移动的 IPv6 分配。</li></ul><p><strong>优势</strong>：可开放端口、搭建服务器，外网可直接访问家庭设备。</p><hr><h3 id="（2）共享公网-IP（运营商-NAT-x2F-CGNAT）"><a href="#（2）共享公网-IP（运营商-NAT-x2F-CGNAT）" class="headerlink" title="（2）共享公网 IP（运营商 NAT &#x2F; CGNAT）"></a>（2）共享公网 IP（运营商 NAT &#x2F; CGNAT）</h3><ul><li><p>由于 IPv4 地址紧张，很多家庭宽带 WAN 口拿到的并不是公网地址，而是内网地址：</p><ul><li><code>100.64.x.x</code>（CGNAT 专用）、<code>10.x.x.x</code>、<code>172.16–31.x.x</code>、<code>192.168.x.x</code> 等。</li></ul></li><li><p>运营商在核心网部署 NAT，把成百上千家庭流量映射到同一个公网 IP 上。</p></li></ul><p><strong>特点与问题</strong>：</p><ul><li>家庭没有独立公网出口，而是和他人“拼”一个公网 IP。</li><li><strong>限制</strong>：端口映射困难甚至不可能 → 无法轻易搭建对外服务。</li></ul><hr><h3 id="（3）混合模式（IPv6-公网-IPv4-NAT）"><a href="#（3）混合模式（IPv6-公网-IPv4-NAT）" class="headerlink" title="（3）混合模式（IPv6 公网 + IPv4 NAT）"></a>（3）混合模式（IPv6 公网 + IPv4 NAT）</h3><ul><li>家庭可获得独立的 <strong>IPv6 前缀</strong>（相当于独立公网地址）。</li><li>IPv4 依旧通过 NAT，共享公网 IP。</li><li>这种情况在目前逐渐普及，算是“半独立外网”。</li></ul><hr><h2 id="2-内网与外网的关系"><a href="#2-内网与外网的关系" class="headerlink" title="2. 内网与外网的关系"></a>2. 内网与外网的关系</h2><ul><li><strong>LAN 内网 IP</strong>：路由器分配给家庭设备的地址（如 192.168.x.x），可支持上百台设备。</li><li><strong>WAN IP</strong>：路由器外网口的地址，可能是真公网，也可能是运营商 NAT 内网（如 100.64.x.x）。</li></ul><p><strong>关键点</strong>：</p><ul><li><p>家庭可分配的内网 IP 数量不受共享公网限制，理论上仍可支持数百设备。</p></li><li><p>共享公网真正的限制在于：</p><ul><li>端口映射受阻</li><li>P2P 软件连接困难</li><li>搭建家庭服务器几乎不可能</li></ul></li></ul><hr><h2 id="3-CGNAT-的工作机制"><a href="#3-CGNAT-的工作机制" class="headerlink" title="3. CGNAT 的工作机制"></a>3. CGNAT 的工作机制</h2><p>CGNAT 的核心是 <strong>端口映射表</strong>。</p><ol><li>家庭路由器将内网设备请求 NAT 成 <strong>WAN IP + 端口</strong>。</li><li>运营商 CGNAT 再将 WAN IP + 端口转换为 <strong>公网 IP + 唯一端口</strong>。</li><li>返回数据时，CGNAT 通过映射表查找，精准把数据包发回正确的家庭。</li></ol><p><strong>要点</strong>：</p><ul><li>即使不同家庭设备端口相同，CGNAT 会分配不同的公网端口 → 不会冲突。</li><li>每个家庭必须有唯一的 WAN IP（即便是私有地址），否则映射表无法区分连接。</li></ul><hr><h2 id="4-特殊地址段：100-64-x-x"><a href="#4-特殊地址段：100-64-x-x" class="headerlink" title="4. 特殊地址段：100.64.x.x"></a>4. 特殊地址段：100.64.x.x</h2><ul><li><p><strong>定义</strong>：RFC 6598 规定 <code>100.64.0.0/10</code> 专用于 <strong>运营商级 NAT</strong>。</p></li><li><p><strong>特性</strong>：</p><ul><li>不是公网 IP（外网无法直达）。</li><li>不是家庭 LAN 内网（192.168&#x2F;10.x&#x2F;172.16–31），而是运营商内部“二级内网”。</li></ul></li><li><p><strong>工作方式</strong>：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">家庭设备 192.168.1.2</span><br><span class="line">    ↓ 家庭路由器 NAT</span><br><span class="line">WAN: 100.64.1.2  ← 运营商私有地址</span><br><span class="line">    ↓ 运营商 CGNAT</span><br><span class="line">公网 IP: 1.2.3.4</span><br><span class="line">    ↓ Internet</span><br></pre></td></tr></table></figure></li></ul><p><strong>注意</strong>：家庭网络不应使用 100.64.x.x 作为 LAN 地址，否则会和运营商 CGNAT 冲突，导致公网无法访问。</p><hr><h2 id="5-总结"><a href="#5-总结" class="headerlink" title="5. 总结"></a>5. 总结</h2><ol><li><strong>独立公网 IP</strong>：可直接对外通信，最自由。</li><li><strong>共享公网 IP（CGNAT）</strong>：常见于 IPv4，无法轻易开放端口，但家庭内网不受影响。</li><li><strong>IPv6 普及下的混合模式</strong>：IPv6 独立公网，IPv4 仍共享。</li><li><strong>100.64.x.x 是运营商内网地址</strong>，不是公网 IP。</li><li><strong>核心差异</strong>：家庭内网数量不受限制，但共享公网时外网访问受阻。</li></ol><hr><p>📌 <strong>一句话总结</strong>：<br>大多数家庭宽带并没有独立公网 IPv4，而是通过 CGNAT 与他人共享出口。要想获得真正独立的公网地址，需要向运营商申请“公网 IP 服务”或使用企业宽带。</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;以下内容由AI生成&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;在日常使用家庭宽带时，很多人会遇到“到底我家有没有独立公网 IP”的问题。这不仅关系到能否顺利访问外网，更影响到是否可以在家中搭建服</summary>
+      
+    
+    
+    
+    
+    <category term="家庭网络" scheme="http://yoursite.com/tags/%E5%AE%B6%E5%BA%AD%E7%BD%91%E7%BB%9C/"/>
+    
+    <category term="公网IP" scheme="http://yoursite.com/tags/%E5%85%AC%E7%BD%91IP/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>VPN 与正向代理的原理与差异分析</title>
+    <link href="http://yoursite.com/2025/08/17/20250817-vpn-yu-zheng-xiang-dai-li-de-yuan-li-yu-chai-yi-fen-xi/"/>
+    <id>http://yoursite.com/2025/08/17/20250817-vpn-yu-zheng-xiang-dai-li-de-yuan-li-yu-chai-yi-fen-xi/</id>
+    <published>2025-08-17T04:59:59.000Z</published>
+    <updated>2025-08-17T05:12:17.215Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><blockquote><p>以下内容由AI生成，本人审阅</p></blockquote></blockquote><h2 id="一、VPN-的基本原理"><a href="#一、VPN-的基本原理" class="headerlink" title="一、VPN 的基本原理"></a>一、VPN 的基本原理</h2><p>**VPN（Virtual Private Network，虚拟专用网络）**的核心思想是在 <strong>公网上（Internet）</strong> 建立一条 <strong>加密隧道</strong>，使用户的数据能够像在同一局域网中一样安全传输。其关键机制包括：</p><ol><li><p><strong>隧道封装（Tunneling）</strong></p><ul><li>将原始 IP 包或 TCP&#x2F;UDP 流量再次封装后发送至 VPN 服务器。</li><li>VPN 服务器解封装后再转发至目标网站或服务。</li><li>常见协议包括 PPTP、L2TP、IPSec、OpenVPN（基于 TLS&#x2F;SSL）、WireGuard 等。</li></ul></li><li><p><strong>数据加密（Encryption）</strong></p><ul><li>VPN 的核心能力之一就是加密，例如 AES、ChaCha20。</li><li>运营商或中间路由器看到的只是加密数据流，而无法识别内容。</li></ul></li><li><p><strong>虚拟网卡（Virtual NIC）</strong></p><ul><li>客户端安装 VPN 时会创建虚拟网卡。</li><li>系统将原始流量交给虚拟网卡，由 VPN 客户端进行加密与封装，再传输至服务器。</li></ul></li></ol><hr><h2 id="二、正向代理的基本原理"><a href="#二、正向代理的基本原理" class="headerlink" title="二、正向代理的基本原理"></a>二、正向代理的基本原理</h2><p><strong>正向代理（Forward Proxy）</strong> 是一种由客户端主动指定的代理模式：</p><ul><li>客户端 → <strong>代理服务器</strong> → 目标网站</li><li>代理服务器替代客户端访问网站。</li></ul><p>常见类型包括：</p><ul><li><strong>HTTP Proxy</strong>：仅代理网页流量。</li><li><strong>SOCKS5 Proxy</strong>：支持 TCP&#x2F;UDP，更通用。</li></ul><p>👉 如果在正向代理的基础上增加加密，就得到 <strong>加密正向代理</strong>，例如：</p><ul><li><strong>Shadowsocks</strong>（基于 SOCKS5 + 加密）</li><li><strong>V2Ray、Trojan</strong>（自定义协议 + 加密）</li></ul><hr><h2 id="三、VPN-与正向代理的关系"><a href="#三、VPN-与正向代理的关系" class="headerlink" title="三、VPN 与正向代理的关系"></a>三、VPN 与正向代理的关系</h2><ol><li><p><strong>共性</strong></p><ul><li>都是正向代理的广义形式，用户请求最终都由中间服务器转发。</li><li>都可以实现数据加密、突破访问限制、保护隐私。</li></ul></li><li><p><strong>差异</strong></p><ul><li><strong>VPN</strong>：工作在 <strong>网络层</strong>，接管整个系统的所有流量，不需要应用单独配置。</li><li><strong>加密代理（Shadowsocks&#x2F;V2Ray&#x2F;Trojan 等）</strong>：工作在 <strong>传输层&#x2F;应用层</strong>，更灵活，可以选择性分流。</li></ul></li></ol><p>✅ 准确的表述是：</p><blockquote><p><strong>VPN 是一种在网络层实现的“全流量加密隧道代理”；而机场协议（如 Shadowsocks&#x2F;V2Ray&#x2F;Trojan）是工作在传输层或应用层的“加密正向代理”。</strong></p></blockquote><hr><h2 id="四、为什么“机场代理”常被叫做-VPN"><a href="#四、为什么“机场代理”常被叫做-VPN" class="headerlink" title="四、为什么“机场代理”常被叫做 VPN"></a>四、为什么“机场代理”常被叫做 VPN</h2><ul><li>手机或电脑端的 Shadowsocks&#x2F;V2Ray 客户端通常会申请系统的 <strong>VPN 权限（VPNService）</strong>，创建虚拟网卡，将流量导入代理。</li><li>在用户体验上，表现为“一键开启，所有流量都出国”，与 VPN 相似。</li><li>但协议层面，它们并非传统 VPN，而是 <strong>加密正向代理 + VPN 伪装</strong> 的结合体。</li></ul><hr><h2 id="五、效果、效率与使用体验差异"><a href="#五、效果、效率与使用体验差异" class="headerlink" title="五、效果、效率与使用体验差异"></a>五、效果、效率与使用体验差异</h2><h3 id="1-效果层面"><a href="#1-效果层面" class="headerlink" title="1. 效果层面"></a>1. 效果层面</h3><ul><li><strong>VPN</strong>：全流量隧道，统一加密转发。</li><li><strong>机场代理</strong>：通过加密代理转发流量，用户体验上几乎无差别。</li></ul><h3 id="2-效率与性能"><a href="#2-效率与性能" class="headerlink" title="2. 效率与性能"></a>2. 效率与性能</h3><ul><li><strong>VPN</strong>：底层封装，效率较高（WireGuard 延迟小、速度快）。</li><li><strong>代理</strong>：协议转换可能增加开销，但现代实现已高度优化。</li></ul><h3 id="3-使用体验"><a href="#3-使用体验" class="headerlink" title="3. 使用体验"></a>3. 使用体验</h3><ul><li><strong>VPN</strong>：系统级全局接管，适合企业远程办公、统一管控。</li><li><strong>机场代理</strong>：支持灵活分流（国际流量走代理、国内直连），更适合个人日常使用。</li></ul><hr><h2 id="六、典型场景对比"><a href="#六、典型场景对比" class="headerlink" title="六、典型场景对比"></a>六、典型场景对比</h2><ol><li><p><strong>公司 VPN</strong></p><ul><li>常见模式是 <strong>全隧道（Full Tunnel）</strong>，所有流量经由公司出口，安全统一但效率偏低。</li><li>有些公司支持 <strong>分隧道（Split Tunnel）</strong>，仅内网走 VPN，外网直连，但安全性存在隐患。</li></ul></li><li><p><strong>机场代理</strong></p><ul><li>可选择 <strong>全局代理</strong>，模拟 VPN 效果。</li><li>或使用 <strong>规则分流</strong>（PAC 模式），国际流量走代理，国内直连，更高效。</li></ul></li></ol><hr><h2 id="七、总结"><a href="#七、总结" class="headerlink" title="七、总结"></a>七、总结</h2><ul><li><strong>VPN</strong>：本质是 <strong>网络层的加密隧道代理</strong>，接管系统所有流量。</li><li><strong>机场协议（Shadowsocks、V2Ray、Trojan）</strong>：本质是 <strong>传输层&#x2F;应用层的加密正向代理</strong>，通过虚拟网卡实现“伪装成 VPN”的体验。</li><li><strong>共同点</strong>：都加密、都代理、都能突破限制。</li><li><strong>差异点</strong>：VPN 更底层、统一接管；机场代理更灵活、支持分流。</li></ul><p>👉 一句话概括：<br><strong>VPN 与机场协议都是“加密正向代理”，区别只在于工作层级和使用方式。</strong></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;以下内容由AI生成，本人审阅&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&quot;一、VPN-的基本原理&quot;&gt;&lt;a href=&quot;#一、VPN-的基本原理&quot; class=&quot;headerlink&quot; t</summary>
+      
+    
+    
+    
+    
+    <category term="正向代理" scheme="http://yoursite.com/tags/%E6%AD%A3%E5%90%91%E4%BB%A3%E7%90%86/"/>
+    
+    <category term="VPN" scheme="http://yoursite.com/tags/VPN/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>深入理解 SOCKS5 正向代理原理</title>
+    <link href="http://yoursite.com/2025/08/17/20250817-shen-ru-li-jie-socks5-zheng-xiang-dai-li-yuan-li/"/>
+    <id>http://yoursite.com/2025/08/17/20250817-shen-ru-li-jie-socks5-zheng-xiang-dai-li-yuan-li/</id>
+    <published>2025-08-17T04:54:40.000Z</published>
+    <updated>2025-08-17T04:55:51.683Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><blockquote><p>以下内容由AI生成，本人审阅</p></blockquote></blockquote><p>在网络代理领域，<strong>SOCKS5</strong> 是一种常用的正向代理协议。它不同于传统的 HTTP 代理，能够为各种应用层协议提供通用的转发支持。本文将从概念、协议机制、工作流程和应用场景几个层次，系统梳理 SOCKS5 的技术原理。</p><hr><h2 id="1-正向代理的基本概念"><a href="#1-正向代理的基本概念" class="headerlink" title="1. 正向代理的基本概念"></a>1. 正向代理的基本概念</h2><p><strong>正向代理</strong>是指客户端主动使用代理服务器，把请求先发给代理，再由代理去访问目标服务器，并把结果返回客户端。</p><p><strong>主要作用</strong>：</p><ul><li>隐藏客户端真实 IP</li><li>绕过访问限制（如内网封锁、跨境访问）</li><li>统一出口流量，便于管理和审计</li></ul><hr><h2 id="2-SOCKS-协议简介"><a href="#2-SOCKS-协议简介" class="headerlink" title="2. SOCKS 协议简介"></a>2. SOCKS 协议简介</h2><p><strong>SOCKS (Socket Secure)</strong> 是一种通用的代理协议，不依赖特定的应用层协议。</p><ul><li><p><strong>SOCKS5</strong> 是该协议的第 5 版，支持更多功能：</p><ul><li>TCP 与 UDP 转发</li><li>用户认证（无认证、用户名&#x2F;密码等）</li><li>IPv4 &#x2F; IPv6 &#x2F; 域名解析</li></ul></li></ul><p>👉 与 HTTP 代理相比，SOCKS5 并不解析上层应用协议，只做数据字节的透明转发，因此适用范围更广。</p><hr><h2 id="3-SOCKS5-的工作流程"><a href="#3-SOCKS5-的工作流程" class="headerlink" title="3. SOCKS5 的工作流程"></a>3. SOCKS5 的工作流程</h2><p>假设客户端配置了一个 SOCKS5 代理，整个交互过程如下：</p><h3 id="1）客户端与代理握手"><a href="#1）客户端与代理握手" class="headerlink" title="1）客户端与代理握手"></a>1）客户端与代理握手</h3><ul><li>客户端告知代理：“我支持哪些认证方式（无认证 &#x2F; 用户名密码 &#x2F; …）”</li><li>代理回应：“我要求用某种认证方式”</li><li>若需认证，客户端提交凭证，通过后进入下一阶段</li></ul><h3 id="2）客户端请求目标地址"><a href="#2）客户端请求目标地址" class="headerlink" title="2）客户端请求目标地址"></a>2）客户端请求目标地址</h3><ul><li>客户端通过代理的 TCP 连接，发送目标地址和端口，例如：<code>example.com:80</code></li><li>代理尝试与目标服务器建立连接</li></ul><h3 id="3）代理回应结果"><a href="#3）代理回应结果" class="headerlink" title="3）代理回应结果"></a>3）代理回应结果</h3><ul><li>连接成功：返回成功报文，允许数据传输</li><li>连接失败：返回错误码（如目标不可达、连接被拒绝等）</li></ul><h3 id="4）数据转发"><a href="#4）数据转发" class="headerlink" title="4）数据转发"></a>4）数据转发</h3><ul><li>客户端与目标服务器的所有数据均通过代理中转</li><li>代理只做字节转发，不理解应用层协议内容</li><li>这使得 SOCKS5 成为一种非常通用的代理机制</li></ul><hr><h2 id="4-TCP-与-UDP-的支持"><a href="#4-TCP-与-UDP-的支持" class="headerlink" title="4. TCP 与 UDP 的支持"></a>4. TCP 与 UDP 的支持</h2><p>SOCKS5 协议既能代理 <strong>TCP</strong>，也能代理 <strong>UDP</strong>：</p><ul><li><p><strong>TCP CONNECT</strong></p><ul><li>客户端请求代理建立到目标服务器的 TCP 连接</li><li>数据传输过程中，代理双向转发 TCP 流量</li><li>应用场景：网页浏览、SSH、邮件收发等</li></ul></li><li><p><strong>UDP ASSOCIATE</strong></p><ul><li>客户端先通过 TCP 控制通道告诉代理要进行 UDP 转发</li><li>代理返回一个专用的 UDP 端口</li><li>客户端将 UDP 数据包（带 SOCKS5 UDP 头）发送到该端口，代理再转发到目标服务器</li><li>应用场景：DNS 查询、在线游戏、视频流</li></ul></li></ul><hr><h2 id="5-TCP-与-UDP-的关系"><a href="#5-TCP-与-UDP-的关系" class="headerlink" title="5. TCP 与 UDP 的关系"></a>5. TCP 与 UDP 的关系</h2><p>需要特别注意：</p><ol><li><p><strong>控制信道：必然是 TCP</strong></p><ul><li>无论最终转发 TCP 还是 UDP，客户端和代理之间都要先建立一条 TCP 连接</li><li>握手、认证、UDP 转发上下文都依赖该 TCP 控制信道</li></ul></li><li><p><strong>数据通道：因请求而异</strong></p><ul><li><strong>CONNECT 命令</strong> → 代理 TCP 流量</li><li><strong>UDP ASSOCIATE 命令</strong> → 代理 UDP 数据包</li></ul></li></ol><p>👉 简单比喻：</p><ul><li>TCP 就像一条“电话线”，你先打电话告诉代理你要去哪</li><li>如果是 TCP 业务，代理帮你中继对话</li><li>如果是 UDP 业务，代理给你一个“邮局地址”，你把信件（UDP 包）寄过去，它帮你转发</li></ul><hr><h2 id="6-为什么-SOCKS5-常用"><a href="#6-为什么-SOCKS5-常用" class="headerlink" title="6. 为什么 SOCKS5 常用"></a>6. 为什么 SOCKS5 常用</h2><p>SOCKS5 在现代网络应用中被广泛使用，原因在于：</p><ul><li><strong>协议层次低</strong>：位于 TCP&#x2F;UDP 之上，应用层之下，对上层协议透明</li><li><strong>适用性广</strong>：能代理任意应用层协议，不仅限于 HTTP</li><li><strong>支持 UDP 转发</strong>：满足实时性要求高的业务场景</li><li><strong>支持身份认证与 IPv6</strong>：更安全，适应新网络环境</li><li><strong>比 HTTP 代理更灵活</strong>：不做解析，只做转发</li></ul><hr><h2 id="7-总结"><a href="#7-总结" class="headerlink" title="7. 总结"></a>7. 总结</h2><p>一句话概括：<br><strong>SOCKS5 正向代理的原理是——客户端和代理建立 TCP 会话，告诉代理要访问的目标地址，代理再代表客户端发起连接，并负责转发所有 TCP&#x2F;UDP 数据。代理本身不理解应用层协议，只是透明转发。</strong></p><hr><p>⚡关键点回顾：</p><ul><li>SOCKS5 协议本身基于 TCP</li><li>可代理 TCP 与 UDP 流量</li><li>UDP 转发依赖 TCP 控制信道维持会话</li><li>对应用层协议透明，通用性极强</li></ul>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;以下内容由AI生成，本人审阅&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;在网络代理领域，&lt;strong&gt;SOCKS5&lt;/strong&gt; 是一种常用的正向代理协议。它不同于传统的 HTTP 代理，</summary>
+      
+    
+    
+    
+    
+    <category term="正向代理" scheme="http://yoursite.com/tags/%E6%AD%A3%E5%90%91%E4%BB%A3%E7%90%86/"/>
+    
+    <category term="SOCKS5" scheme="http://yoursite.com/tags/SOCKS5/"/>
+    
+  </entry>
   
   <entry>
     <title>深入理解正向代理与反向代理：HTTP 报文与 TCP 连接的区别</title>
@@ -525,95 +612,6 @@
     <category term="LLM" scheme="http://yoursite.com/tags/LLM/"/>
     
     <category term="大语言模型" scheme="http://yoursite.com/tags/%E5%A4%A7%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>算法在实际业务场景中并非完全无用</title>
-    <link href="http://yoursite.com/2025/01/08/20250108-suan-fa-zai-shi-ji-ye-wu-chang-jing-zhong-bing-fei-wan-quan-wu-yong/"/>
-    <id>http://yoursite.com/2025/01/08/20250108-suan-fa-zai-shi-ji-ye-wu-chang-jing-zhong-bing-fei-wan-quan-wu-yong/</id>
-    <published>2025-01-08T05:33:24.000Z</published>
-    <updated>2025-01-08T06:30:12.792Z</updated>
-    
-    <content type="html"><![CDATA[<blockquote><blockquote><p>从事业务开发的同学经常会抱怨经常面试要刷算法，实际上平常的开发99%以上的事情都不会用到。<br>实际情况确实是这样。平常在写业务逻辑代码时，几乎完全不需要。<br>当然有些技术原理在背八股文的时候，懂一点算法能帮助你更好的理解。<br>而有些特殊业务场景，懂一些算法，确实能帮助你很好的解决问题。<br>下面举两个业务中产品提出的需求作为例子，简单描述如何利用算法有效解决。</p></blockquote></blockquote><h2 id="一、从题库（50道题）中随机抽出10道题-且不能重复"><a href="#一、从题库（50道题）中随机抽出10道题-且不能重复" class="headerlink" title="一、从题库（50道题）中随机抽出10道题,且不能重复"></a>一、从题库（50道题）中随机抽出10道题,且不能重复</h2><ul><li><p>最简单的思路：</p><ul><li>循环10次，每次取50以内的随机数</li><li>创建一个hashmap，判断生成的随机数是否在map存在，存在则重新生成</li><li>这个方法的缺点时，极端情况下，会多次生成重复的随机数导致要不断重新生成</li></ul></li><li><p>经过一番思考，我设计了一下从m个数中取n个数的算法(m&gt;n), 保证算法只会循环n次 </p></li><li><p>那时我还是使用Java进行开发</p></li></ul><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="type">int</span>[] randomArr(<span class="type">int</span> m, <span class="type">int</span> n) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (m &lt; n) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">int</span>[]&#123;&#125;;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">int</span>[] result = <span class="keyword">new</span> <span class="title class_">int</span>[n];</span><br><span class="line">    <span class="type">int</span>[] data = <span class="keyword">new</span> <span class="title class_">int</span>[m];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; m; i++) &#123;</span><br><span class="line">        data[i] = i;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> <span class="variable">end</span> <span class="operator">=</span> m;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">0</span>; j &lt; n; j++) &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">y</span> <span class="operator">=</span> ThreadLocalRandom.current().nextInt(end);</span><br><span class="line">        result[j] = data[y];</span><br><span class="line">        data[y] = data[end - <span class="number">1</span>];</span><br><span class="line">        data[end - <span class="number">1</span>] = result[j];</span><br><span class="line">        end--;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><ul><li>后面我才发现原来这个算法叫 洗牌算法（Shuffle Algorithm），或者叫随机乱置算法。</li></ul><h2 id="通过搜索关键字匹配对应的标签id"><a href="#通过搜索关键字匹配对应的标签id" class="headerlink" title="通过搜索关键字匹配对应的标签id"></a>通过搜索关键字匹配对应的标签id</h2><ul><li><p>产品提供了400个标签名称以及对应的标签id，希望能通过搜索的方式找到最相似的标签id，希望能支持模糊匹配</p></li><li><p>一般思路：</p><ul><li>方案1: <ol><li>将400条数据一次性加载的程序内存</li><li>遍历数据400条使用字符串的contains方法，找到第一条匹配数据就跳出，否则继续</li></ol></li><li>方案2:<ol><li>直接将数据导入到ES搜索引擎，利用ES自带的分词等搜索功能</li><li>通过调ES，搜索得到标签id</li></ol></li></ul></li><li><p>简单分析方案：</p><ul><li>方案1，性能太差，极端情况需要遍历所有数据</li><li>方案2，需要新搭建ES集群，实现代价比较高</li></ul></li><li><p>经过一番思考，以及从产品本身实际需求上出发，我涉及出以下的方案</p><ol><li>将数据的标签名字使用中文分词库<a href="https://github.com/go-ego/gse">gse</a>进行分词</li><li>将分词和对应的标签数据，构建前缀匹配树</li><li>当搜索时，使用提前构建好的前缀匹配树，即可快速找到对应的标签id</li></ol></li><li><p>这时我已经转使用Go来开发了</p></li></ul><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">type</span> TrieNode <span class="keyword">struct</span> &#123;</span><br><span class="line">children <span class="keyword">map</span>[<span class="type">rune</span>]*TrieNode</span><br><span class="line">isEnd    <span class="type">bool</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">NewTrieNode</span><span class="params">()</span></span> *TrieNode &#123;</span><br><span class="line"><span class="keyword">return</span> &amp;TrieNode&#123;</span><br><span class="line">children: <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="type">rune</span>]*TrieNode),</span><br><span class="line">isEnd:    <span class="literal">false</span>,</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Trie <span class="keyword">struct</span> &#123;</span><br><span class="line">root *TrieNode</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">NewTrie</span><span class="params">()</span></span> *Trie &#123;</span><br><span class="line"><span class="keyword">return</span> &amp;Trie&#123;</span><br><span class="line">root: NewTrieNode(),</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(t *Trie)</span></span> Insert(word <span class="type">string</span>) &#123;</span><br><span class="line">node := t.root</span><br><span class="line"><span class="keyword">for</span> _, char := <span class="keyword">range</span> word &#123;</span><br><span class="line"><span class="keyword">if</span> _, ok := node.children[char]; !ok &#123;</span><br><span class="line">node.children[char] = NewTrieNode()</span><br><span class="line">&#125;</span><br><span class="line">node = node.children[char]</span><br><span class="line">&#125;</span><br><span class="line">node.isEnd = <span class="literal">true</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(t *Trie)</span></span> Search(word <span class="type">string</span>) <span class="type">bool</span> &#123;</span><br><span class="line">node := t.root</span><br><span class="line"><span class="keyword">for</span> _, char := <span class="keyword">range</span> word &#123;</span><br><span class="line"><span class="keyword">if</span> _, ok := node.children[char]; !ok &#123;</span><br><span class="line"><span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">&#125;</span><br><span class="line">node = node.children[char]</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> node.isEnd</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(t *Trie)</span></span> FuzzySearch(prefix <span class="type">string</span>) []<span class="type">string</span> &#123;</span><br><span class="line"><span class="keyword">var</span> result []<span class="type">string</span></span><br><span class="line">node := t.root</span><br><span class="line"><span class="keyword">for</span> _, char := <span class="keyword">range</span> prefix &#123;</span><br><span class="line"><span class="keyword">if</span> _, ok := node.children[char]; !ok &#123;</span><br><span class="line"><span class="keyword">return</span> result</span><br><span class="line">&#125;</span><br><span class="line">node = node.children[char]</span><br><span class="line">&#125;</span><br><span class="line">t.collectWords(node, prefix, &amp;result)</span><br><span class="line"><span class="keyword">return</span> result</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(t *Trie)</span></span> collectWords(node *TrieNode, prefix <span class="type">string</span>, result *[]<span class="type">string</span>) &#123;</span><br><span class="line"><span class="keyword">if</span> node.isEnd &#123;</span><br><span class="line">*result = <span class="built_in">append</span>(*result, prefix)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> char, child := <span class="keyword">range</span> node.children &#123;</span><br><span class="line">t.collectWords(child, prefix+<span class="type">string</span>(char), result)</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><ul><li>这个算法就是经典的Trie字典树（前缀树），如果我之前没了解过这些算法，可能一时间没那么快能想到用这个方式高效完成这个需求。</li></ul><h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><ul><li>了解一些算法，在实际业务开发，有时候也能运用到。</li><li>另外，现在处于AI时代，即时不了解算法，善于组织语言和上下文，向AI提问，基本它也能引导你找到合适的解决方案。</li></ul>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;blockquote&gt;
-&lt;blockquote&gt;
-&lt;p&gt;从事业务开发的同学经常会抱怨经常面试要刷算法，实际上平常的开发99%以上的事情都不会用到。&lt;br&gt;实际情况确实是这样。平常在写业务逻辑代码时，几乎完全不需要。&lt;br&gt;当然有些技术原理在背八股文的时候，懂一点算法能帮助你更好</summary>
-      
-    
-    
-    
-    
-    <category term="业务方案" scheme="http://yoursite.com/tags/%E4%B8%9A%E5%8A%A1%E6%96%B9%E6%A1%88/"/>
-    
-    <category term="algorithm" scheme="http://yoursite.com/tags/algorithm/"/>
-    
-    <category term="算法" scheme="http://yoursite.com/tags/%E7%AE%97%E6%B3%95/"/>
-    
-    <category term="前缀树" scheme="http://yoursite.com/tags/%E5%89%8D%E7%BC%80%E6%A0%91/"/>
-    
-    <category term="分词" scheme="http://yoursite.com/tags/%E5%88%86%E8%AF%8D/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>简单研究一下人工智能和数学</title>
-    <link href="http://yoursite.com/2025/01/06/20250106-jian-dan-yan-jiu-yi-xia-ren-gong-zhi-neng-he-shu-xue/"/>
-    <id>http://yoursite.com/2025/01/06/20250106-jian-dan-yan-jiu-yi-xia-ren-gong-zhi-neng-he-shu-xue/</id>
-    <published>2025-01-06T10:02:28.000Z</published>
-    <updated>2025-01-06T13:51:35.434Z</updated>
-    
-    <content type="html"><![CDATA[<blockquote><blockquote><p>简单记录，未完善<br>内容基本来源书籍</p></blockquote></blockquote><p><img src="/2025/01/06/20250106-jian-dan-yan-jiu-yi-xia-ren-gong-zhi-neng-he-shu-xue/%E6%95%B0%E5%AD%A6.png"></p><p>&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</p><h1 id="初等数学"><a href="#初等数学" class="headerlink" title="初等数学"></a>初等数学</h1><h2 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h2><ul><li>函数的表示方法主要有三种：解析法（公式法）、图像法和表格法。在微积分中讨论的函数几乎都是用解析法表示的。</li></ul><h2 id="二项式定理"><a href="#二项式定理" class="headerlink" title="二项式定理"></a>二项式定理</h2><ul><li>二项式定理又称为牛顿二项式定理，它可将两个数之和的整数次幂展开为相应项之和。</li></ul><p>&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</p><h1 id="高等数学"><a href="#高等数学" class="headerlink" title="高等数学"></a>高等数学</h1><h2 id="微积分"><a href="#微积分" class="headerlink" title="微积分"></a>微积分</h2><p>&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</p><h1 id="人工智能数学"><a href="#人工智能数学" class="headerlink" title="人工智能数学"></a>人工智能数学</h1><ul><li><p>从发展历程来看，人工智能先后经历了推理机、专家系统及机器学习三个阶段。</p></li><li><p>当前的人工智能系统多为学习型。为了减小误差，其用数据去训练假设模型，也就是进行所谓的学习，当误差降到最小时，就把这个假设模型用于其他现实问题。</p></li><li><p>人工智能实际上是一个将数学、算法理论和工程实践紧密结合的领域。人工智能从本质上来看就是算法，是概率论、统计学等各种数学理论的体现。数学作为表达与刻画人工智能模型的工具，是深入理解人工智能算法原理必备的基础知识。人工智能与数学高度相关，可以说人工智能的核心是数学，计算机只是实现人工智能模型的工具。</p></li><li><p>函数逼近：随着大数据和人工智能技术的发展，机器学习和深度学习在大数据挖掘、模式识别和智能分析越来越受重视。机器学习是一种基于数据的学习方法，其从观测数据所包含的有限信息中构造一个模型，利用该模型对未知数据或无法观测的数据进行尽可能准确的预测，这种模型称为学习机器。对数据科学而言，所有的数据都是以数字形式表示的，通过定义损失函数，选择合适的核函数或激活函数，反复学习后可达到一种最佳逼近状态，因此，机器学习问题实际上是函数估计问题或函数逼近问题。</p></li></ul><h2 id="微积分-1"><a href="#微积分-1" class="headerlink" title="微积分"></a>微积分</h2><ul><li>求导是微积分的基本概念之一，也是很多理工科领域的基础运算。导数是变化率的极限，是用来找到“线性近似”的数学工具，是一种线性变换，体现了无穷、极限、分割的数学思想，主要用来解决极值问题。人工智能算法的最终目标是得到最优化模型，其最后都可转化为求极大值或极小值的问题。</li><li>比如，梯度下降法和牛顿法是人工智能的基础算法，现在主流的求解代价函数最优解的方法都是基于这两种算法改造的，如随机梯度法和拟牛顿法，其底层运算就是基础的导数运算。</li><li>级数也是微积分中非常重要的概念，常见的级数有泰勒级数、傅里叶级数等，它们在人工智能算法中也有非常重要的地位。</li><li>泰勒级数体现了用多项式近似和逼近函数的思想。</li><li>泰勒级数在人工智能算法的底层起到了非常重要的作用，泰勒级数对理解很多基础算法的原理很有帮助。例如，梯度下降法的数学原理涉及代价函数的一阶泰勒近似，而牛顿法的推导过程应用了目标函数的二阶泰勒近似。</li><li>凸函数也是微积分中的重要概念，人工智能算法中涉及的优化问题要求函数模型必须是凸函数，否则优化问题没有最优解。</li><li>微积分中还有许多概念，如方向导数、梯度、伽马函数等，它们都在人工智能中有广泛的应用</li></ul><h2 id="线性代数"><a href="#线性代数" class="headerlink" title="线性代数"></a>线性代数</h2><ul><li>线性代数的基本原理在人工智能算法中处于核心地位，在人工智能的语义分析、推荐系统、卷积神经网络等方面有大量应用，是目前最前沿的深度学习算法原理的基础。</li></ul><h2 id="概率论"><a href="#概率论" class="headerlink" title="概率论"></a>概率论</h2><ul><li>很多机器学习算法是以概率统计的理论为基础支撑推导出来的，比如代价函数的最小二乘形式、逻辑回归算法都基于对模型的最大似然估计。</li><li>概率论中的高斯函数及中心极限定理被广泛用于人工智能算法。独立同分布的不同随机变量之和会随变量数的增加而趋于高斯分布，因此，很多模型假设都采用高斯函数进行建模。</li></ul><h2 id="数理统计"><a href="#数理统计" class="headerlink" title="数理统计"></a>数理统计</h2><ul><li>概率论作用的前提是随机变量的分布已知，其根据已知的分布来分析随机变量的特征与规律；数理统计的研究对象则是分布未知的随机变量，其研究方法是对随机变量进行独立重复的观察，根据得到的观察结果对原始分布做出推断，数理统计可以看作逆向的概率论。</li><li>若检验是通过随机抽取的样本来对一个总体的判断结果进行认可或否定，则可以将其用于估计机器学习模型的泛化能力。</li></ul><h2 id="最优化理论"><a href="#最优化理论" class="headerlink" title="最优化理论"></a>最优化理论</h2><ul><li>人工智能的目标就是最优化，就是在复杂环境与多体交互中做出最优决策。几乎所有的人工智能问题最后都会归结为一个优化问题的求解，因此，最优化理论同样是学习、研究人工智能必备的基础知识。<br>最优化理论研究的问题是判定给定目标函数是否存在最大值或最小值，并找到令目标函数取最大值或最小值的数值。如果把给定的目标函数看成连绵的山脉，最优化的过程就是找到顶峰（谷底）且到达顶峰（谷底）的过程。</li><li>最优化理论的研究内容主要包括线性规划、（不）精确搜索、梯度下降法、牛顿法、共轭梯度法、拟牛顿法、（非）线性最小二乘法、约束优化最优性条件、二次规划、罚函数法和信赖域法等。</li><li>要实现最小化或最大化的函数称为目标函数，大多数最优化问题都可以通过使目标函数￼最小化解决，最大化问题也可以通过最小化￼来解决。最优化方法找到的可能是目标函数的全局最小值，也可能是局部极小值，两者的区别在于全局最小值比定义域内所有其他点的函数值都小，而局部极小值只比所有邻近点的函数值小。</li><li>当目标函数的输入参数较多、解空间较大时，大多数实用的最优化方法都不能满足全局搜索对计算复杂度的要求，因而只能求出局部极小值。但是，在人工智能和深度学习的应用场景中，只要目标函数的取值足够小，就可以把这个值当作全局最小值使用，以此作为对性能和复杂度的折中。</li></ul><p>&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</p><blockquote><blockquote><p>程序员的数学</p></blockquote></blockquote><h2 id="迈向机器学习的第一步"><a href="#迈向机器学习的第一步" class="headerlink" title="迈向机器学习的第一步"></a>迈向机器学习的第一步</h2><ul><li><p>由输入和目标组成的数据称为训练数据。机器学习中所谓的学习，就是为了通过给定的输入得到和目标尽可能接近的输出，使用训练数据对参数进行调整的过程。使用训练数据对参数进行过调整的模型称为训练好的模型。对于训练好的模型，需要用测试数据对其进行测试，从而评价训练的效果。</p></li><li><p>在机器学习中对参数进行调整的过程，不是由程序员完成的，而是由计算机通过训练数据自动完成的，这正是机器学习的一大特征。</p></li><li><p>这里先做个总结吧。我们面对预测问题，首先要有好的模型加上大量的训练数然后，我们需要的是“能根据输人向量，得到和目标向量尽量接近的输出向量”这样一个训练好的模型。</p></li><li><p>解决分类问题的过程，也可以说是从大量数据中总结规律和规则，从而发现模式的过程。机器学习并不会要求程序员提前研究手写字符的各种形态再去设计程序，而是由计算机根据训练数据来调整参数，从而得到分类模型，这才是它的特征所在。</p></li></ul><p><img src="/2025/01/06/20250106-jian-dan-yan-jiu-yi-xia-ren-gong-zhi-neng-he-shu-xue/%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0.png"><br><img src="/2025/01/06/20250106-jian-dan-yan-jiu-yi-xia-ren-gong-zhi-neng-he-shu-xue/%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B02.png"></p><ul><li><p>如果机器对训练数据能给出完美的输出，对测试数据给出的结果却不尽如人意，很有可能是发生了过拟合（overfitting）。用学生来说，就好比是课堂上做过的训练题都能解得很好，但考试成绩却不怎么理想。</p></li><li><p>在学习的过程中，需要比较输出和正确的值。拿这个简单的例子来说，要比较的对象就是由输入x1，x2通过给定模型得到的输出y和目标t。如果y和的值一致，那当然好，但一般并不会这么理想。对学习结果（输出）的评价不是单纯的“好与不好”，而是要知道它与训练数据中给出的目标相比“到底有多不好”。为了实现这种评价，需要引入损失函数。<br>在具体的机器学习问题中，如何选取恰当的损失函数是个重要且有难度的问题。比如使用平方和误差函数。</p></li><li><p>要通过调整模型中的权重参数，使得损失函数值尽可能接近于0。</p></li><li><p>梯度下降法<br><img src="/2025/01/06/20250106-jian-dan-yan-jiu-yi-xia-ren-gong-zhi-neng-he-shu-xue/%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D%E6%B3%95.png"></p></li><li><p>作为程序员要做些什么</p><ul><li>在构建模型这个阶段，程序员是要参与的，但是参数的自动调整过程，程序员不会参与。也就是说，程序员不去直接指定参数的具体数值，而是通过模型、损失函数、训练数据，间接地让参数的选取向着更优的方向变化，从而得到需要的参数。即使模型、损失函数都相同，只要训练数据不同，学习后得到的模型也会截然不同。</li><li>机器学习是基于数据让机器去学习，程序员并不直接参与其中。这就像硬件配置完全同的计算机，如果软件系统不一样，整个运行模式也会不一样。把软件换掉，同一套硬件系统也会根据不同的指令做出不一样的事情。道理类似，就算模型一样，只要训练数据不同，最后模型的运行模式也会不一样。</li></ul></li><li><p>神经网络是指，把像感知器一样有输入和输出的节点排列起来形成的带有层次的结构。神经网络（neural network）这个词来源于生物的信息传递方式。在感知器中，输出是二元的，取值只有0或1两种情况，而神经网络中的节点输出的就不是二元，而是可以进行微分运算的连续值。</p></li></ul><p><img src="/2025/01/06/20250106-jian-dan-yan-jiu-yi-xia-ren-gong-zhi-neng-he-shu-xue/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C.png"></p><ul><li><p>深度学习是在神经网络的基础上，通过增加层数得到的更加“深化”的模型。增加层数是为了更加精确地拟合复杂函数，就算涉及的参数个数不做大的变动，也能得到更好的模型。至于如何“深化”在理论上更为有效，依然是现在研究的热点之一。</p></li><li><p>强化学习是在“无监督”的条件下进行的“学习”。也就是说，在学习过程中没有标准答案可供参考。强化学习通过试错来寻找最优输出，对每个输出，系统都会提供反馈（奖励），模型的参数可以根据得到的反馈来调整。</p></li><li><p>做出决策</p><ul><li>机器学习会根据输人的数据预测未来。这种意义下的预测，是基于先前的经验进行的，得到的是未来最有可能发生的情况（数值）。但是，得到预测值之后“应该做些什么”，机器是无法决定的。也就是说，它们无法进行决策。</li><li>通过机器学习这个方法，机器可以告诉我们在未来什么样的行动会导致事情如何发展。</li><li>但是，做决策这件事本身，并不能让机器来做。</li><li>顺着这个话题继续讲下去，就不是技术问题，而是伦理问题了。比如，在减轻痛苦和延续生命之中二选一的问题等，只能由个人的意志来决定，不可能委托给机器学习。</li></ul></li></ul><p>&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</p><h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><ul><li>《人工智能数学基础》</li><li>《程序员的数学》</li></ul>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;blockquote&gt;
-&lt;blockquote&gt;
-&lt;p&gt;简单记录，未完善&lt;br&gt;内容基本来源书籍&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;&lt;img src=&quot;/2025/01/06/20250106-jian-dan-yan-jiu-yi-xia-</summary>
-      
-    
-    
-    
-    
-    <category term="AI" scheme="http://yoursite.com/tags/AI/"/>
-    
-    <category term="Math" scheme="http://yoursite.com/tags/Math/"/>
-    
-    <category term="数学" scheme="http://yoursite.com/tags/%E6%95%B0%E5%AD%A6/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>使用AI总结了这个网站的内容</title>
-    <link href="http://yoursite.com/2025/01/01/20250101-shi-yong-ai-zong-jie-liao-zhe-ge-wang-zhan-de-nei-rong/"/>
-    <id>http://yoursite.com/2025/01/01/20250101-shi-yong-ai-zong-jie-liao-zhe-ge-wang-zhan-de-nei-rong/</id>
-    <published>2024-12-31T16:29:21.000Z</published>
-    <updated>2024-12-31T16:32:25.486Z</updated>
-    
-    <content type="html"><![CDATA[<blockquote><blockquote><p>使用google的notebooklm总结目前该网站的所有文章内容<br><a href="https://notebooklm.google.com/">https://notebooklm.google.com/</a><br>问题：全面阐述和总结一下这个博客网站的内容，涉及领域，博主风格等</p></blockquote></blockquote><hr><p>该博客网站的内容主要涵盖了<strong>个人成长和职业发展</strong>两个方面，涉及领域包括：</p><ul><li><strong>自我营销</strong>:  如何打造个人品牌，提升影响力。</li><li><strong>时间管理</strong>: 如何提高工作效率，克服拖延。</li><li><strong>学习方法</strong>: 如何快速学习，进行深度学习，构建个人知识体系。</li><li><strong>心理素质</strong>: 如何拥有积极心态，提升情绪力。</li><li><strong>职业发展</strong>: 如何成为一名专业的软件开发人员，进行有效的薪酬谈判。</li><li><strong>创业</strong>: 如何打造成功的产品，制定切实可行的创业计划。</li><li><strong>健身</strong>: 如何利用科技产品实现健身目标。</li><li><strong>人际关系</strong>: 如何与他人相处，建立良好的人际关系。</li><li><strong>精神</strong>: 如何利用心灵的力量，克服天性，实现个人成长。</li><li><strong>金融</strong>: 如何理解金融危机，以及金融政策的作用。</li><li><strong>公司文化</strong>: 如何打造面向未来的新型组织文化，以网飞为例。</li><li><strong>历史</strong>: 如何理解人类社会的发展，以文字和政治组织为例。</li></ul><p>博主风格：</p><ul><li><strong>注重实用性</strong>: 博主的内容以解决实际问题为导向，提供具体可行的建议和方法。</li><li><strong>结合个人经验</strong>: 博主经常结合自身经历和感悟，使得内容更具说服力。</li><li><strong>善于运用类比</strong>: 博主擅长用通俗易懂的类比来解释复杂的概念，使读者更容易理解。</li><li><strong>强调深度思考</strong>: 博主鼓励读者进行深度思考，并将知识与自身实际相结合。</li><li><strong>注重科学依据</strong>: 博主经常引用科学研究和理论来支持自己的观点，增强内容的可信度。</li></ul><p>总而言之，该博客网站的内容丰富实用，风格清晰易懂，对于想要提升个人能力和实现职业成功的读者来说，具有很高的参考价值。</p><hr><h2 id="排除掉笔记类文章后"><a href="#排除掉笔记类文章后" class="headerlink" title="排除掉笔记类文章后"></a>排除掉笔记类文章后</h2><p>这个博客网站的内容主要涉及<strong>软件开发和技术管理</strong>领域，涵盖了<strong>业务方案、架构设计、技术实践、团队管理和个人成长</strong>等方面。博主的写作风格<strong>简洁、实用、注重经验总结和思考</strong>，文章内容多来自实际工作中的问题和解决方案，并结合个人思考和学习心得进行阐述。</p><p>以下是该博客网站内容的详细分析：</p><p><strong>一、内容领域：</strong></p><ul><li><strong>业务方案：</strong>涵盖了分页、兼容性、事务、前置校验、幂等、错误码处理、接口安全、容灾降级、货币体系设计、榜单实现等常见业务场景的解决方案和实践经验总结。</li><li><strong>架构设计：</strong>探讨了微服务架构、服务间一致性、数据库高可用方案、容灾架构、聚合层设计等架构设计理念和实践经验。</li><li><strong>技术实践：</strong>分享了RPC调用、事务处理、数据库同步、Redis应用、单元测试、配置中心、序列化协议等技术点的实践经验和工具技巧。</li><li><strong>团队管理：</strong>总结了个人管理经验、小团队管理要点、项目管理技巧、团队协作、沟通技巧等团队管理方面的经验和思考。</li><li><strong>个人成长：</strong>记录了博主从PHP、C++、Lua到Java、Go、Rust等不同编程语言的学习和实践经历，以及对技术发展趋势的思考和个人职业发展的感悟。</li></ul><p><strong>二、博主风格:</strong></p><ul><li><strong>简洁实用：</strong>文章语言简洁明了，直击问题核心，注重实用性，避免过多理论和概念的堆砌。</li><li><strong>经验总结：</strong>文章内容多来自博主实际工作中遇到的问题和解决方案，并进行总结提炼，形成可供参考的经验。</li><li><strong>思考深入：</strong>博主不局限于问题本身，而是深入思考问题背后的原因和本质，并提出自己的见解和解决方案。</li><li><strong>持续学习：</strong>博主不断学习新的技术和知识，并将其应用到实际工作中，乐于分享自己的学习心得和体会。</li></ul><p><strong>三、其他特点:</strong></p><ul><li><strong>注重代码质量：</strong>博主强调单元测试、代码规范、代码扫描工具等提升代码质量的方法。</li><li><strong>关注团队协作：</strong>博主重视团队沟通、信息透明、知识分享等，提倡高效的团队协作方式。</li><li><strong>追求技术进步：</strong>博主积极探索新的技术和架构，并思考技术发展趋势对个人和团队的影响。</li></ul><p><strong>总结:</strong></p><p>该博客网站内容丰富，涵盖了软件开发和技术管理的多个方面，体现了博主丰富的实践经验和深入的思考。博主的写作风格简洁实用，注重经验总结和思考，对于从事相关领域工作的读者具有较高的参考价值。</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;blockquote&gt;
-&lt;blockquote&gt;
-&lt;p&gt;使用google的notebooklm总结目前该网站的所有文章内容&lt;br&gt;&lt;a href=&quot;https://notebooklm.google.com/&quot;&gt;https://notebooklm.google.com/&lt;/a</summary>
-      
-    
-    
-    
-    
-    <category term="AI" scheme="http://yoursite.com/tags/AI/"/>
-    
-    <category term="总结" scheme="http://yoursite.com/tags/%E6%80%BB%E7%BB%93/"/>
     
   </entry>
   

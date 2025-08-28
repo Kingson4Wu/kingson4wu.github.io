@@ -22564,4 +22564,35 @@ AI这个名字其实并不准确
         <tag>linux</tag>
       </tags>
   </entry>
+  <entry>
+    <title>用 tmux + 内网穿透，让出门也能指导编程任务</title>
+    <url>/2025/08/28/20250828-yong-tmux-nei-wang-chuan-tou-rang-chu-men-ye-neng-zhi-dao-bian-cheng-ren-wu/</url>
+    <content><![CDATA[<p>以前写代码是个挺“重”的事情：开一堆 IDE、文档、调试窗口，在桌面环境里来回切换。要是人在外面，就算能远程登录，也常常因为手机输入不方便、网络不稳定而放弃。</p>
+<p>但现在情况不一样了。很多时候，你并不需要全套开发环境。只要能接上家里的机器，就能让零碎时间发挥点价值：不管是写点脚手架代码，跑几个命令，还是做些前期准备工作，都可以在外面先处理掉。等回到电脑前，再做深度开发和调试，就顺畅很多。</p>
+<h2 id="实际效果"><a href="#实际效果" class="headerlink" title="实际效果"></a>实际效果</h2><p><img src="/2025/08/28/20250828-yong-tmux-nei-wang-chuan-tou-rang-chu-men-ye-neng-zhi-dao-bian-cheng-ren-wu/Chrome_Remote_Desktop.PNG"></p>
+<p><img src="/2025/08/28/20250828-yong-tmux-nei-wang-chuan-tou-rang-chu-men-ye-neng-zhi-dao-bian-cheng-ren-wu/tmux.PNG"></p>
+<hr>
+<h2 id="思路很简单"><a href="#思路很简单" class="headerlink" title="思路很简单"></a>思路很简单</h2><p>其实只要搞定两件事，就能让“人在外面也能继续编程”变得靠谱：</p>
+<h3 id="1-远程连上家里的环境"><a href="#1-远程连上家里的环境" class="headerlink" title="1. 远程连上家里的环境"></a>1. 远程连上家里的环境</h3><p>最简单的方式是用 <strong>Chrome Remote Desktop</strong> 直接把桌面搬到手机上。<br>但如果你更喜欢命令行的简洁，可以在 Mac 上开好 <strong>SSH + tmux</strong>，再配合 <strong>内网穿透工具</strong>（比如 Cloudflare Tunnel、frp、zerotier），这样就能在手机终端里直连家里的 tmux 会话。</p>
+<h3 id="2-保持会话不中断"><a href="#2-保持会话不中断" class="headerlink" title="2. 保持会话不中断"></a>2. 保持会话不中断</h3><p>这里的关键是 <code>tmux</code>：</p>
+<ul>
+<li>它能把会话挂在后台，不会因为你断开 SSH 就消失。</li>
+<li>下次连上去，只要 <code>tmux attach</code> 就能回到之前的窗口，继续干活，丝毫不影响节奏。</li>
+</ul>
+<hr>
+<h2 id="这种方式的好处"><a href="#这种方式的好处" class="headerlink" title="这种方式的好处"></a>这种方式的好处</h2><ul>
+<li><strong>轻量</strong>：不用开完整远程桌面，命令行就够了。</li>
+<li><strong>连续性强</strong>：断线没关系，tmux 会帮你“记住现场”。</li>
+<li><strong>利用碎片时间</strong>：比如地铁上、咖啡店里，掏出手机就能跑些小任务。</li>
+</ul>
+<hr>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>tmux + 内网穿透，说白了就是给自己搭了条随时可用的远程工作通道。<br>出门在外，你可以用手机连上去，把一些零碎的准备工作先做掉；回到家，再用大屏幕和 IDE 把任务完善。</p>
+]]></content>
+      <tags>
+        <tag>tmux</tag>
+        <tag>内网穿透</tag>
+        <tag>AI编程</tag>
+        <tag>Chrome Remote Desktop</tag>
+      </tags>
+  </entry>
 </search>

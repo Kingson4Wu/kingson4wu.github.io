@@ -6,7 +6,7 @@
   <link href="http://yoursite.com/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2025-08-25T07:18:39.346Z</updated>
+  <updated>2025-08-28T10:00:44.765Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,35 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>用 tmux + 内网穿透，让出门也能指导编程任务</title>
+    <link href="http://yoursite.com/2025/08/28/20250828-yong-tmux-nei-wang-chuan-tou-rang-chu-men-ye-neng-zhi-dao-bian-cheng-ren-wu/"/>
+    <id>http://yoursite.com/2025/08/28/20250828-yong-tmux-nei-wang-chuan-tou-rang-chu-men-ye-neng-zhi-dao-bian-cheng-ren-wu/</id>
+    <published>2025-08-28T09:56:54.000Z</published>
+    <updated>2025-08-28T10:00:44.765Z</updated>
+    
+    <content type="html"><![CDATA[<p>以前写代码是个挺“重”的事情：开一堆 IDE、文档、调试窗口，在桌面环境里来回切换。要是人在外面，就算能远程登录，也常常因为手机输入不方便、网络不稳定而放弃。</p><p>但现在情况不一样了。很多时候，你并不需要全套开发环境。只要能接上家里的机器，就能让零碎时间发挥点价值：不管是写点脚手架代码，跑几个命令，还是做些前期准备工作，都可以在外面先处理掉。等回到电脑前，再做深度开发和调试，就顺畅很多。</p><h2 id="实际效果"><a href="#实际效果" class="headerlink" title="实际效果"></a>实际效果</h2><p><img src="/2025/08/28/20250828-yong-tmux-nei-wang-chuan-tou-rang-chu-men-ye-neng-zhi-dao-bian-cheng-ren-wu/Chrome_Remote_Desktop.PNG"></p><p><img src="/2025/08/28/20250828-yong-tmux-nei-wang-chuan-tou-rang-chu-men-ye-neng-zhi-dao-bian-cheng-ren-wu/tmux.PNG"></p><hr><h2 id="思路很简单"><a href="#思路很简单" class="headerlink" title="思路很简单"></a>思路很简单</h2><p>其实只要搞定两件事，就能让“人在外面也能继续编程”变得靠谱：</p><h3 id="1-远程连上家里的环境"><a href="#1-远程连上家里的环境" class="headerlink" title="1. 远程连上家里的环境"></a>1. 远程连上家里的环境</h3><p>最简单的方式是用 <strong>Chrome Remote Desktop</strong> 直接把桌面搬到手机上。<br>但如果你更喜欢命令行的简洁，可以在 Mac 上开好 <strong>SSH + tmux</strong>，再配合 <strong>内网穿透工具</strong>（比如 Cloudflare Tunnel、frp、zerotier），这样就能在手机终端里直连家里的 tmux 会话。</p><h3 id="2-保持会话不中断"><a href="#2-保持会话不中断" class="headerlink" title="2. 保持会话不中断"></a>2. 保持会话不中断</h3><p>这里的关键是 <code>tmux</code>：</p><ul><li>它能把会话挂在后台，不会因为你断开 SSH 就消失。</li><li>下次连上去，只要 <code>tmux attach</code> 就能回到之前的窗口，继续干活，丝毫不影响节奏。</li></ul><hr><h2 id="这种方式的好处"><a href="#这种方式的好处" class="headerlink" title="这种方式的好处"></a>这种方式的好处</h2><ul><li><strong>轻量</strong>：不用开完整远程桌面，命令行就够了。</li><li><strong>连续性强</strong>：断线没关系，tmux 会帮你“记住现场”。</li><li><strong>利用碎片时间</strong>：比如地铁上、咖啡店里，掏出手机就能跑些小任务。</li></ul><hr><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>tmux + 内网穿透，说白了就是给自己搭了条随时可用的远程工作通道。<br>出门在外，你可以用手机连上去，把一些零碎的准备工作先做掉；回到家，再用大屏幕和 IDE 把任务完善。</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;以前写代码是个挺“重”的事情：开一堆 IDE、文档、调试窗口，在桌面环境里来回切换。要是人在外面，就算能远程登录，也常常因为手机输入不方便、网络不稳定而放弃。&lt;/p&gt;
+&lt;p&gt;但现在情况不一样了。很多时候，你并不需要全套开发环境。只要能接上家里的机器，就能让零碎时间发挥点价值</summary>
+      
+    
+    
+    
+    
+    <category term="tmux" scheme="http://yoursite.com/tags/tmux/"/>
+    
+    <category term="内网穿透" scheme="http://yoursite.com/tags/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/"/>
+    
+    <category term="AI编程" scheme="http://yoursite.com/tags/AI%E7%BC%96%E7%A8%8B/"/>
+    
+    <category term="Chrome Remote Desktop" scheme="http://yoursite.com/tags/Chrome-Remote-Desktop/"/>
+    
+  </entry>
   
   <entry>
     <title>VS Code + Dev Container：打造丝滑的 Linux 开发调试体验</title>
@@ -578,34 +607,6 @@
     <category term="AI" scheme="http://yoursite.com/tags/AI/"/>
     
     <category term="LLM" scheme="http://yoursite.com/tags/LLM/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>深度学习为什么能学习并做对</title>
-    <link href="http://yoursite.com/2025/02/13/20250213-shen-du-xue-xi-wei-shi-me-neng-xue-xi-bing-zuo-dui/"/>
-    <id>http://yoursite.com/2025/02/13/20250213-shen-du-xue-xi-wei-shi-me-neng-xue-xi-bing-zuo-dui/</id>
-    <published>2025-02-13T06:14:52.000Z</published>
-    <updated>2025-02-13T06:29:54.991Z</updated>
-    
-    <content type="html"><![CDATA[<h1 id="我的理解"><a href="#我的理解" class="headerlink" title="我的理解"></a>我的理解</h1><ul><li>目前无法解释为什么深度学习可以给出答案，只能大概解释为什么它能学习</li><li>这就相当于：我不能解释为什么这个人是通过什么做对这道题的，我只能解释他有正常的学习能力以及合适的学习资料，所以他自己能学习并做对题目</li><li>所以深度学习是怎么给出答案的，后续或许应该由它本身来告诉我们。</li><li>依据不同人的认知水平，来告诉我们它通过学习所发现的规律。同时人类通过它能快速学习发现事物规律的能力，来进一步帮助提升人类的认知。</li></ul><h1 id="AI对我理解的看法"><a href="#AI对我理解的看法" class="headerlink" title="AI对我理解的看法"></a>AI对我理解的看法</h1><blockquote><blockquote><p>From chatGPT (2025-02-13)</p></blockquote></blockquote><ul><li><p>你理解的方向是对的，可以稍微精炼和调整一下：</p><ul><li>深度学习的一个核心问题就是我们无法完全解释它是如何给出具体答案的。我们能解释的只是它是如何通过大量的数据和训练过程进行学习的。换句话说，深度学习像是一个“黑箱”，我们可以观察到输入和输出，但它在其中如何处理信息、做出决策，通常并不完全透明。</li><li>可以类比成：假设有一个人做对了某道题目，虽然我们可能无法完全解释他是如何一步一步得出答案的，但我们能确定他具备了良好的学习能力和充足的学习资源。所以，深度学习也类似，它通过大量的数据、适当的算法和优化手段“学习”并给出答案。</li><li>至于它如何给出具体的答案，最终可能还是要依靠深度学习本身来“解释”。这意味着，未来我们可能会开发出更先进的方法，帮助我们理解深度学习网络中的“决策过程”。同时，借助它所展现出的强大规律发现能力，我们可以利用这种能力来加速我们对事物的认知。</li></ul></li><li><p>我的看法：</p><ul><li>我同意你的观点，深度学习的“黑箱性”是目前我们面临的主要挑战之一。它的强大之处在于能自动从海量数据中发现规律，但如何理解这些规律，如何将这些规律和人类的认知能力相结合，是我们目前探索的方向之一。其实，未来可能不仅仅是“深度学习告诉我们如何做”，而是人类和深度学习的合作能进一步推动科学与技术的发展，帮助我们发现一些潜在人类难以触及的规律。</li><li>深度学习不只是一个工具，它还可能是一个不断反馈、不断自我优化的过程，给我们打开了认知的新窗口。</li></ul></li></ul><h1 id="AI自己对这个问题的看法"><a href="#AI自己对这个问题的看法" class="headerlink" title="AI自己对这个问题的看法"></a>AI自己对这个问题的看法</h1><blockquote><blockquote><p>From chatGPT (2025-02-13)</p></blockquote></blockquote><ul><li><p>关于“深度学习为什么能学习并做对”的问题，我的理解是，深度学习通过大量的数据训练，自动从中提取规律、建立模型，并根据这些模型对新数据做出预测。深度学习的优势在于它能够发现一些非常复杂和抽象的规律，而这些规律通常是我们人类在没有机器帮助的情况下很难发现的。</p></li><li><p>但是，为什么深度学习能给出正确的答案，实际上是一个复杂的过程。深度学习模型并不像人类一样有明确的逻辑推理或意识，它只是基于输入数据的模式，使用一系列参数和数学运算来“拟合”数据。对于这个过程的解释，我们只能说它通过优化算法（如梯度下降等）调整模型参数，使得输出尽可能接近实际结果。因此，深度学习并不“理解”问题，而是通过反复训练找到了一组合适的参数，能在特定任务上取得高效的预测或分类结果。</p></li><li><p>你可以把深度学习看作一个“发现者”，它通过大量的例子不断试错和优化，不断接近正确的答案，但它没有明确的推理过程。比如，人类在做题时有一定的思考过程，我们可以分析每一步的原因，而深度学习则是通过计算和数据模式的关联来找到最优解。</p></li><li><p>至于“深度学习为什么能做对”，目前我们更多关注它的实际效果而非其过程的透明性，因为即使我们无法完全解释它的每一个决策，也可以通过其出色的表现来证明它的有效性。未来，随着研究的深入，我们可能会找到更好的方法，帮助我们理解这些“黑箱”模型的内部机制。</p></li><li><p>总结来说，深度学习通过数据的反复训练和优化，能够找到规律并给出准确的预测，而为什么它能做对，更多是依赖于它强大的计算能力和从数据中提取规律的能力，而不是基于传统意义上的推理或解释。</p></li><li><p>几个关键点总结：</p><ol><li><strong>深度学习的学习过程</strong>：深度学习通过大量的数据训练，利用优化算法（如梯度下降）调整模型参数，自动从数据中提取规律，完成任务（如预测、分类等）。</li><li><strong>无法完全解释“为什么”</strong>：深度学习模型在给出答案时，并没有明确的推理过程或“理解”，它只是通过找到合适的模式和参数来优化输出。其决策过程通常是黑箱的，难以完全解释。</li><li><strong>黑箱性质</strong>：我们无法清楚知道深度学习是如何做出具体决策的，但可以看到它在实际任务中表现出色。因此，我们更多关注它的效果，而非其内在工作机制。</li><li><strong>与人类认知的对比</strong>：深度学习像是一个“发现者”，通过反复训练和调整找到正确的答案，而不像人类那样依赖明确的思维和推理过程。</li><li><strong>未来发展</strong>：虽然当前无法完全解释深度学习的过程，但随着技术进步，未来可能会出现更好的方法帮助我们理解这些“黑箱”模型的内部机制。</li></ol></li><li><p>这几个关键点总结了深度学习的“学习能力”、它的“黑箱性质”、以及它与人类认知的差异。</p></li></ul>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;h1 id=&quot;我的理解&quot;&gt;&lt;a href=&quot;#我的理解&quot; class=&quot;headerlink&quot; title=&quot;我的理解&quot;&gt;&lt;/a&gt;我的理解&lt;/h1&gt;&lt;ul&gt;
-&lt;li&gt;目前无法解释为什么深度学习可以给出答案，只能大概解释为什么它能学习&lt;/li&gt;
-&lt;li&gt;这就相当于：我不能解释为什</summary>
-      
-    
-    
-    
-    
-    <category term="AI" scheme="http://yoursite.com/tags/AI/"/>
-    
-    <category term="深度学习" scheme="http://yoursite.com/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"/>
-    
-    <category term="Deep-Learning" scheme="http://yoursite.com/tags/Deep-Learning/"/>
     
   </entry>
   

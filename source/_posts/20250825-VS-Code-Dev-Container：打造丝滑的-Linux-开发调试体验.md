@@ -1,7 +1,7 @@
 ---
 title: VS Code + Dev Container：打造丝滑的 Linux 开发调试体验
 date: 2025-08-25 15:12:09
-tags: [vscode, DevContainer, linux]
+tags: [vscode, DevContainer, linux, CPP]
 ---
 
 最近在重新学习 Linux C++ 的过程中，发现了一种优雅的方式：借助 **Docker + VS Code Dev Container** 在任何系统上轻松获得一致的 Linux 开发调试环境。作为长期在 macOS 和 Windows 上开发的人，这种体验让我感受到前所未有的丝滑，真有点“相逢恨晚”。
@@ -79,3 +79,8 @@ tags: [vscode, DevContainer, linux]
 
 这样一套方案，让跨平台、跨语言、跨架构的开发调试都像在本地一样丝滑高效。
 
+
+---
+
+## 参考例子
++ https://github.com/Kingson4Wu/cpp-linux-playground

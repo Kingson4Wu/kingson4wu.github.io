@@ -287,6 +287,159 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/08/31/20200831-shi-yong-redis-shi-xian-bang-dan/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/08/31/20200831-shi-yong-redis-shi-xian-bang-dan/" itemprop="url">使用Redis实现榜单</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-08-31T21:14:24+08:00">
+                2020-08-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h3><ol>
+<li>使用redis实现</li>
+<li>基于直播间业务场景</li>
+<li>不阐述详细实现细节</li>
+</ol>
+<h3 id="二、相关Redis数据结构和命令"><a href="#二、相关Redis数据结构和命令" class="headerlink" title="二、相关Redis数据结构和命令"></a>二、相关Redis数据结构和命令</h3><h4 id="Redis-集合-Set"><a href="#Redis-集合-Set" class="headerlink" title="Redis 集合(Set)"></a>Redis 集合(Set)</h4><ol>
+<li>Sismember 命令判断成员元素是否是集合的成员。</li>
+</ol>
+<h4 id="Redis-有序集合-sorted-set"><a href="#Redis-有序集合-sorted-set" class="headerlink" title="Redis 有序集合(sorted set)"></a>Redis 有序集合(sorted set)</h4><ol>
+<li>Zrevrank 命令返回有序集中成员的排名。其中有序集成员按分数值递减(从大到小)排序。</li>
+<li>Zincrby 命令对有序集合中指定成员的分数加上增量 increment</li>
+<li>Zrevrangebyscore 返回有序集中指定分数区间内的所有的成员。有序集成员按分数值递减(从大到小)的次序排列</li>
+<li>Zremrangebyrank 命令用于移除有序集中，指定排名(rank)区间内的所有成员。</li>
+</ol>
+<h4 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h4><ol>
+<li>查找特定前缀key：scan命令</li>
+</ol>
+<h3 id="三、如何实现"><a href="#三、如何实现" class="headerlink" title="三、如何实现"></a>三、如何实现</h3><h4 id="榜单保存"><a href="#榜单保存" class="headerlink" title="榜单保存"></a>榜单保存</h4><ol>
+<li>使用 Redis 有序集合(sorted set)保存榜单数据</li>
+<li>如果是按时间排序的榜单，把时间戳存到score字段；如果是按礼物数量排序，把数量存到score；其他排序场景同理</li>
+</ol>
+<h4 id="榜单添加数据操作幂等"><a href="#榜单添加数据操作幂等" class="headerlink" title="榜单添加数据操作幂等"></a>榜单添加数据操作幂等</h4><ol>
+<li>使用数据库日志表（唯一索引） （最严格可靠）</li>
+<li>使用一个set保存所有的消息ID，并使用sismember防止重复处理（并发场景可能不幂等）</li>
+</ol>
+<h4 id="数据清理"><a href="#数据清理" class="headerlink" title="数据清理"></a>数据清理</h4><ol>
+<li>使用一个set保存现有所有在线的房间榜单；定时任务检查房间是否在播，不在线的进行清理（同时可以监听房间下播时间）</li>
+<li>保存一定数量的redis榜单：Zremrangebyrank 命令用于移除有序集中，指定排名(rank)区间内的所有成员</li>
+<li>使用scan命令 查找特定前缀key的榜单，同1或2操作进行清理</li>
+</ol>
+<h3 id="四、扩展"><a href="#四、扩展" class="headerlink" title="四、扩展"></a>四、扩展</h3><ol>
+<li>房间榜单的标识是房间id有时可能不够，因为通过榜单有时是和本场开播挂钩的，同一个房间多次开播，可能导致不同场次的数据导致榜单错误。<br>增加房间开播id标识可以解决。</li>
+<li>老生常谈的哲学问题:二八定理。花费大量时间来得到较低的收益，实现时要从业务看是否值得。但不代表在做设计方案时不去考虑，这是严谨性的问题。<br>按极端的方式考虑，实际实现按业务需要进行选择折中。</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/08/20/20200820-guan-yu-cdn-huan-cun/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2194,204 +2347,6 @@ Robert C.Martin
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/14/20200714-ru-he-jie-shou-yi-ge-jiu-xiang-mu/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/07/14/20200714-ru-he-jie-shou-yi-ge-jiu-xiang-mu/" itemprop="url">如何接手一个旧项目</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-14T21:57:47+08:00">
-                2020-07-14
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote>
-<blockquote>
-<p>改变心态，以前会抱怨业务乱，但是业务在发展过程中乱是很正常的，也要有人来主动整理，同时也在考验和锻炼整理人的能力。</p>
-</blockquote>
-</blockquote>
-<ol>
-<li>梳理现有业务文档，进行归类(如果有的话？)</li>
-<li>拉代码，服务本地跑起来，并跑通单元测试</li>
-<li>梳理服务现有的所有监控平台和数据</li>
-<li>梳理服务的依赖关系和超时时间</li>
-<li>梳理服务的依赖组件（MQ，Redis，DB等）和部署情况</li>
-<li>数据库表梳理</li>
-<li>了解服务的部署和灾备架构（机器数，机房，流量入口）</li>
-<li>代码核心逻辑阅读（核心流量接口）</li>
-<li>了解服务的监控情况，常用配置和开关，相关告警配置通知人</li>
-<li>待优化任务和遗留问题接手</li>
-</ol>
-<h2 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/lJAbzU43RJU-YLFMfiM__w">软件泥潭真体验</a><ul>
-<li>“定时炸弹”</li>
-</ul>
-</li>
-</ul>
-<pre>
-附录1: 交接列表示例（设计与开发）
-
-## 项目管理
-    - 项目日程 
-    - 会议记录
-    - 体制图 
-## 项目要件
-    - 业务功能清单 
-    - 业务流程图 
-    - 需求变更记录 
-    - 操作说明书/用户手册 
-    - 常见问题一览 
-## 界面设计
-    - UE设计稿
-    - 高保真画面设计稿
-    - 需求变更一览
-## 系统设计
-    - 系统架构设计图
-    - 部署架构图DB关联图（ER图）和DB详细设计
-    - 系统间集成关系图
-    - 对接系统一览表和对接系统接口清单
-## 开发制作
-    - 源代码
-    - 代码运行说明
-## 测试
-    - 系统测试用例与系统测试报告书
-    - 性能测试用例与性能测试报告书
-    - 用户测试用例
-    - 用户测试签字
-
-附录2: 交接列表示例（运维相关）
-
-## 上线相关
-    - 上线判定表
-    - 上线操作记录
-    - 历次上线版本说明
-    - 临时对应体制
-## 基础设施
-    - 硬件资源一览
-    - 软件资源一览
-    - 服务器/系统账号权限
-    - 系统工具 - 付费/免费软件
-## 运维体制
-    - 运维工作一览表
-    - 近半年运维工作应对流程
-    - 运维体制
-    - 故障对应流程
-    - SLA（服务水平协议）
-## DEVOPS（开发运维一体化）
-    - CI/CD工具与使用
-    - 监控工具
-    - 备份管理
-    - 代码库与分支管理
-    - 数据库相关配置与策略
-
-</pre>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2449,7 +2404,7 @@ Robert C.Martin
 <a href="/archives/">                
 <!--<a href="/archives/%7C%7C%20archive">-->
               
-                  <span class="site-state-item-count">165</span>
+                  <span class="site-state-item-count">166</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2462,7 +2417,7 @@ Robert C.Martin
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">187</span>
+                  <span class="site-state-item-count">191</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

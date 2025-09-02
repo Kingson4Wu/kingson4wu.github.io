@@ -287,6 +287,228 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2024/05/28/20240528-ye-tan-tan-feed-liu-de-she-ji/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2024/05/28/20240528-ye-tan-tan-feed-liu-de-she-ji/" itemprop="url">也谈谈feed流的设计</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2024-05-28T13:56:23+08:00">
+                2024-05-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<blockquote>
+<p>几年前也做过feed流相关的服务，虽然网上相关的文章很多，这里也做个人的简要记录和总结<br>方案并非原创，当时是参考其他业务团队的设计</p>
+</blockquote>
+</blockquote>
+<ul>
+<li>需求背景：做一个用户动态模块，可以发动态，可以关注别人动态，有推荐列表，有消息提醒（其实就是微博的基本功能）</li>
+</ul>
+<h1 id="实现逻辑流程"><a href="#实现逻辑流程" class="headerlink" title="实现逻辑流程"></a>实现逻辑流程</h1><ul>
+<li><p>整个feed流设计都是强依赖Redis来实现的，以下列出key设计和对应的功能模块</p>
+<ul>
+<li>粉丝的feed流 - 【feed_list_$userId】<ul>
+<li>member-$id_$userId_$type （score-addtime）</li>
+</ul>
+</li>
+<li>粉丝的feed流为空标志 - 【【feed_list_empty_$userId】】- 防止每次请求都穿透到DB</li>
+<li>用户的活跃粉丝列表 - 【active_fans_list_$userId】</li>
+<li>用户的活跃属性 - 【active_user_status_${userId}】</li>
+<li>动态详情 - 【cache.user.dynamic_${dynamicId}】 - MGet获取</li>
+</ul>
+</li>
+<li><p>数据库分表设计</p>
+<ul>
+<li>用户动态表 - 按用户id分库</li>
+<li>评论表 - 按动态id分库（根据业务，一般都是单个动态的所有评论）</li>
+<li>点赞表 - 按用户id分库（根据业务，一般都是动态列表中展示当前用户的点赞状态）</li>
+</ul>
+</li>
+<li><p>feed流使用sortset，score是addtime</p>
+</li>
+<li><p>推模式，通过维护用户的活跃粉丝列表（有数量限制），推到粉丝的feed流</p>
+</li>
+<li><p>拉模式，通过请求第一页或其他接口进行预加载，查询粉丝的关注人和对应动态（有数量限制），构建粉丝自己feed流</p>
+</li>
+</ul>
+<h2 id="01-feed流-构建-整体流程"><a href="#01-feed流-构建-整体流程" class="headerlink" title="01.feed流 构建 整体流程"></a>01.feed流 构建 整体流程</h2><p><img src="/2024/05/28/20240528-ye-tan-tan-feed-liu-de-she-ji/01.feed%E6%B5%81%E6%9E%84%E5%BB%BA.drawio.png"></p>
+<ul>
+<li>用户发动态、删动态、关注和取关事件，都会对feed流有相应操作</li>
+<li>通过发布事件的设计进行业务逻辑解耦</li>
+</ul>
+<h3 id="用户发动态（推模式）"><a href="#用户发动态（推模式）" class="headerlink" title="用户发动态（推模式）"></a>用户发动态（推模式）</h3><ol>
+<li>用户发布动态（写入DB）</li>
+<li>查询用户的活跃粉丝列表（Redis）</li>
+<li>写入粉丝的Feed流（Redis）</li>
+<li>写入消息表</li>
+</ol>
+<h3 id="粉丝拉关注列表（拉模式）（请求第一页或其他接口，预加载）"><a href="#粉丝拉关注列表（拉模式）（请求第一页或其他接口，预加载）" class="headerlink" title="粉丝拉关注列表（拉模式）（请求第一页或其他接口，预加载）"></a>粉丝拉关注列表（拉模式）（请求第一页或其他接口，预加载）</h3><ol>
+<li>获取feed流（Redis）</li>
+<li>获取关注用户列表（RPC）（限制2000个粉丝）</li>
+<li>获取关注人的动态数据（DB）（限制没人100条动态）</li>
+<li>写入个人的Feed流（Redis）</li>
+<li>成为活跃用户（Redis）</li>
+</ol>
+<h2 id="02-动态消息交互"><a href="#02-动态消息交互" class="headerlink" title="02.动态消息交互"></a>02.动态消息交互</h2><p><img src="/2024/05/28/20240528-ye-tan-tan-feed-liu-de-she-ji/02.%E5%8A%A8%E6%80%81%E6%B6%88%E6%81%AF%E4%BA%A4%E4%BA%92.drawio.png"></p>
+<ul>
+<li>消息表 和 消息读取时间表（用于控制用户红点提示和读取消息列表的范围）</li>
+<li>消息表保存7天定时清除</li>
+</ul>
+<h2 id="03-feed流预加载策略（pull模式）"><a href="#03-feed流预加载策略（pull模式）" class="headerlink" title="03.feed流预加载策略（pull模式）"></a>03.feed流预加载策略（pull模式）</h2><p><img src="/2024/05/28/20240528-ye-tan-tan-feed-liu-de-she-ji/03.feed%E6%B5%81%E9%A2%84%E5%8A%A0%E8%BD%BD%E7%AD%96%E7%95%A5%EF%BC%88pull%E6%A8%A1%E5%BC%8F%EF%BC%89.drawio.png"></p>
+<ul>
+<li>。。。。</li>
+<li>将用户加入为活跃粉丝</li>
+</ul>
+<h2 id="04-动态新增、删除（push模式），活跃粉丝处理"><a href="#04-动态新增、删除（push模式），活跃粉丝处理" class="headerlink" title="04.动态新增、删除（push模式），活跃粉丝处理"></a>04.动态新增、删除（push模式），活跃粉丝处理</h2><p><img src="/2024/05/28/20240528-ye-tan-tan-feed-liu-de-she-ji/04.%E5%8A%A8%E6%80%81%E6%96%B0%E5%A2%9E%E3%80%81%E5%88%A0%E9%99%A4%EF%BC%88push%E6%A8%A1%E5%BC%8F%EF%BC%89%EF%BC%8C%E6%B4%BB%E8%B7%83%E7%B2%89%E4%B8%9D%E5%A4%84%E7%90%86.drawio.png"></p>
+<ul>
+<li>用户的活跃粉丝列表逻辑<ol>
+<li>拉取过feed流或发布过动态等操作的用户，都会设置成有活跃粉丝属性的用户</li>
+<li>RPC获取用户的粉丝列表，过滤掉非活跃用户，保存到用户的活跃粉丝列表</li>
+<li>关注和取关事件，也更新活跃粉丝列表</li>
+</ol>
+</li>
+</ul>
+<h2 id="05-关注、取关-事件-对feed流的处理"><a href="#05-关注、取关-事件-对feed流的处理" class="headerlink" title="05.关注、取关 事件 对feed流的处理"></a>05.关注、取关 事件 对feed流的处理</h2><p><img src="/2024/05/28/20240528-ye-tan-tan-feed-liu-de-she-ji/05.%E5%85%B3%E6%B3%A8%E3%80%81%E5%8F%96%E5%85%B3%E4%BA%8B%E4%BB%B6%E5%AF%B9feed%E6%B5%81%E7%9A%84%E5%A4%84%E7%90%86.drawio.png"></p>
+<h2 id="06-获取feed流"><a href="#06-获取feed流" class="headerlink" title="06.获取feed流"></a>06.获取feed流</h2><p><img src="/2024/05/28/20240528-ye-tan-tan-feed-liu-de-she-ji/06.%E8%8E%B7%E5%8F%96feed%E6%B5%81.drawio.png"></p>
+<ul>
+<li>有了前面的推拉模式，用户直接从redis获取feed流即可</li>
+</ul>
+<h2 id="07-动态类型版本设计"><a href="#07-动态类型版本设计" class="headerlink" title="07.动态类型版本设计"></a>07.动态类型版本设计</h2><p><img src="/2024/05/28/20240528-ye-tan-tan-feed-liu-de-she-ji/07.%E5%8A%A8%E6%80%81%E7%B1%BB%E5%9E%8B%E7%89%88%E6%9C%AC%E8%AE%BE%E8%AE%A1.drawio.png"></p>
+<ul>
+<li><p>随着动态类型的新增，客户端旧版本不支持新类型动态，需要过滤；</p>
+</li>
+<li><p>目前feed流是存在redis的，直接过滤可能会导致旧版本数据为空，可以通过多版本动态来区分</p>
+</li>
+<li><p>实现描述</p>
+<ol>
+<li>用户获取feed流，根据客户端的版本号等信息，判断出客户端支持的feed版本，并构建对应的feed流</li>
+<li>用户发布动态，构建用户存在的活跃动态版本的feed流（为了用户的新旧版本都兼容）</li>
+</ol>
+</li>
+</ul>
+<h1 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h1><ul>
+<li>很久之前做的一次实验<ul>
+<li>取消了微信黑名单，没看到之前的人的朋友圈。说明微信朋友圈也是feed持久化的方式实现</li>
+<li>微博也是这样，之前关注过，取关后再恢复，内容也能恢复，说明feed表只是逻辑删（应该是存数据库表了）</li>
+</ul>
+</li>
+<li>微博feed实现（猜测）<ol>
+<li>为每个用户保存他所有关注的用户的feed表数据</li>
+<li>假如取关，则重写关注能恢复数据（逻辑删除）</li>
+<li>但如果之前没关注的用户，则他之前的动态不会出现在feed表中</li>
+</ol>
+</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2024/05/09/20240509-liao-liao-pei-zhi-zhong-xin/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1628,148 +1850,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2024/04/01/20240401-tob-ye-wu-sui-bian-jiang-jiang/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2024/04/01/20240401-tob-ye-wu-sui-bian-jiang-jiang/" itemprop="url">ToB业务随便讲讲</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2024-04-01T16:16:48+08:00">
-                2024-04-01
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote>
-<blockquote>
-<p>以下内容格局比较小，仅做个人记录</p>
-</blockquote>
-</blockquote>
-<ul>
-<li><p>从我个人接触过的ToB和ToC业务讲，有以下特点（当然肯定不是一定对的，毕竟业务形态实在太多，我没真正接触过的，就不提了）：</p>
-<ul>
-<li>ToC的业务团队，一般只做若干个业务模块；不同的业务有不同的团队</li>
-<li>ToB的业务团队，需要对接几乎所有业务，进而对外提供平台能力</li>
-</ul>
-</li>
-<li><p>关于ToB业务的规范</p>
-<ul>
-<li>ToB的业务，出于通用性，会制定各种规范由客户进行对接</li>
-<li>当然，所谓的规范，有时候是看哪方处于强势</li>
-<li>弱势方即使作为平台也要给客户做定制化</li>
-<li>比如一个简单的回调规范，客户不配合，需要平台这边按照他们的规范适配</li>
-<li>但同样支付宝和微信作为平台，难道要支付宝和微信去适配每个接入方？无非是谁更强势的问题。</li>
-<li>从这方面看，可以一定判断出这个公司目前的状况</li>
-</ul>
-</li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1827,7 +1907,7 @@
 <a href="/archives/">                
 <!--<a href="/archives/%7C%7C%20archive">-->
               
-                  <span class="site-state-item-count">165</span>
+                  <span class="site-state-item-count">166</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1840,7 +1920,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">187</span>
+                  <span class="site-state-item-count">191</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

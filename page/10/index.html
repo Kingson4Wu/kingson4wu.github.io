@@ -287,6 +287,143 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/03/22/20220322-qing-liang-ji-wei-fu-wu-gong-gong-ku-she-ji/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2022/03/22/20220322-qing-liang-ji-wei-fu-wu-gong-gong-ku-she-ji/" itemprop="url">轻量级微服务公共库设计</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-03-22T16:58:14+08:00">
+                2022-03-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h2><ul>
+<li><p>减少拷贝代码，抽象公共业务组件和复用，快速支持产品需求</p>
+</li>
+<li><p>提升开发效率，增强排查能力</p>
+</li>
+<li><p>统一维护，提升代码质量，减少重复错误，提高服务可控性</p>
+</li>
+<li><p>公共嵌入式的sdk，其实有点类似一个轻量级的网关，sidecar，localproxy</p>
+</li>
+</ul>
+<p><img src="/2022/03/22/20220322-qing-liang-ji-wei-fu-wu-gong-gong-ku-she-ji/common.png"></p>
+<ul>
+<li>为什么不使用API网关？<ol>
+<li>有一定的机器和维护成本</li>
+<li>跟组织架构有一定关系</li>
+</ol>
+</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/03/12/20220312-guan-yu-qing-liang-ji-fen-bu-shi-shi-jian-tong-zhi-de-si-kao/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2044,333 +2181,6 @@ We obviously did not consider Windows as a serious platform so far, and that's w
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/10/12/20211012-fen-bu-shi-li-lun-xiang-guan-zheng-li/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2021/10/12/20211012-fen-bu-shi-li-lun-xiang-guan-zheng-li/" itemprop="url">分布式理论相关整理</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-10-12T17:46:33+08:00">
-                2021-10-12
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><ul>
-<li>分布式存储系统通常通过维护多个副本来进行容错，提高系统的可用性。要实现此目标，就必须要解决分布式存储系统的最核心问题：维护多个副本的一致性。</li>
-<li>一致性（consensus）,它是构建具有容错性（fault-tolerant）的分布式系统的基础。 在一个具有一致性的性质的集群里面，同一时刻所有的结点对存储在其中的某个值都有相同的结果，即对其共享的存储保持一致。集群具有自动恢复的性质，当少数结点失效的时候不影响集群的正常工作，当大多数集群中的结点失效的时候，集群则会停止服务（不会返回一个错误的结果）。</li>
-<li>一致性协议就是用来保证即使在部分(确切地说是小部分)副本宕机的情况下，系统仍然能正常对外提供服务。一致性协议通常基于replicated state machines，即所有结点都从同一个state出发，都经过同样的一些操作序列（log），最后到达同样的state。</li>
-</ul>
-<h3 id="分布式架构"><a href="#分布式架构" class="headerlink" title="分布式架构"></a>分布式架构</h3><ul>
-<li>[分布式架构的套路](&lt;<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/vJJWpIZ-bTzVl9E3wPLlEw">https://mp.weixin.qq.com/s/vJJWpIZ-bTzVl9E3wPLlEw</a>)<ul>
-<li>1、纯负载均衡形式。<br>硬件层面的 F5、软件层面的 nginx</li>
-<li>2、领导选举型<br>整个集群的消息都会转发到集群的领导这里，是一种 master-slavers，区别只是这个 master 是被临时选举出来的，一旦 master 宕机，集群会立刻选举出一个新的领导，继续对外提供服务。<br>ElasticSearch，zookeeper、Raft</li>
-<li>3、区块链型<br>整个集群的每一个节点都可以进行记录，但是记录的内容要得到整个集群 N 个机器的认可才是合法的。典型的应用有 Bit Coin，以及 Hyperledger。</li>
-<li>4、master-slaver型<br>整个集群以某台 master 为中枢，进行集群的调度。交互是这样，一般会把所有的管理类型的数据放到 master 上，而把具体的数据放到 slaver 上，实际进行调用的时候，client 先调用 master 获取数据所存放的 server 的 信息，再自行跟 slave 进行交互。典型的系统有 Hadoop。集群，HBase 集群，Redis 集群等。</li>
-<li>5、规则型一致性Hash<br>这种架构类型一般出现在数据库分库分表的设计中。按照规则进行分库分表，在查询之前使用规则引擎进行库和表的确认，再对具体的应用进行访问。为什么要用一致性 Hash ？其实用什么都可以，只是对于这类应用来说一致性 Hash 比较常见而已。</li>
-</ul>
-</li>
-</ul>
-<h3 id="副本一致性"><a href="#副本一致性" class="headerlink" title="副本一致性"></a>副本一致性</h3><ol>
-<li>强一致性(strong consistency)</li>
-<li>单调一致性(monotonic consistency):任何时刻,任何用户一旦读到某个数据在某次更新后的值, 这个用户不会再读到比这个值更旧的值。</li>
-<li>会话一致性(session consistency)：在同一个会话内，系统保证读己所写的一致性。</li>
-<li>最终一致性(eventual consistency):如果没有更新，最终系统会返回最后更新的值。换句话说，如果系统在持续更新，则永远无法达到一致性。</li>
-<li>弱一致性(week consistency)：系统并不保证后续读操作获得更新值的时间点;弱一致性系统 一般很难在实际中使用,使用弱一致性系统需要应用方做更多的工作从而使得系统可用。</li>
-<li>因果一致性：和写进程具有因果关系的进程将会读取到更新的数据，写进程保证取代上次更更新。</li>
-<li>读己所写一致性：进程永远读取自己上次更新写入的最新值，而不可能读取到任何历史数据。这是传统操作系统默认的一致性行为。</li>
-</ol>
-<h3 id="分布式系统中的一致性模型"><a href="#分布式系统中的一致性模型" class="headerlink" title="分布式系统中的一致性模型"></a>分布式系统中的一致性模型</h3><ul>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/_yJqXUIQ7ka8f46j3VCbuQ">分布式系统中的一致性模型</a></li>
-<li>一致性模型是所有被允许的操作记录的集合。当我们运行一个程序，经过一系列集合中允许的操作，特定的执行结果总是一致的。如果程序意外地执行了非集合中的操作，我们就称执行记录是非一致的。如果任意可能的执行操作都在这个被允许的操作集合内，那么系统就满足一致性模型。</li>
-<li>现实往往没有那么理想化：在几乎每个实际的系统中，进程之间都有一定的距离。一个没有被缓存的值（指没有被CPU的local cache缓存），通常在距离CPU30厘米的DIMM内存条上。光需要整整一个纳秒来传播这么长的距离，实际的内存访问会比光速慢得多。位于不同数据中心某台计算机上的值可以相距几千公里——意味着需要几百毫秒的传播时间。我们没有更快传播数据的方法，否则就违反了物理定律。（物理定律都违反了，就更别谈什么现代计算机体系了。）</li>
-<li>这意味着我们的操作不再是瞬时的。某些操作也许快到可以被近乎认为是瞬时的，但是通常来说，操作是耗时的。我们调用对一个变量的写操作；写操作传播到内存，或其他计算机，或月球；内存改变状态；一个确认信息回传；这样我们才知道这个操作真实的发生了。</li>
-<li>在分布式系统中，操作的耗时被放大了，我们必须使一致性模型更宽松：允许这些有歧义的顺序发生。</li>
-<li>我们该如何确定宽松的程度？我们必须允许所有可能的顺序吗？或许我们还是应该强加一些合理性约束？</li>
-</ul>
-<ol>
-<li>线性一致性（Linearizability）<ul>
-<li>线性一致性模型提供了这样的保证：1.对于观察者来说，所有的读和写都在一个单调递增的时间线上串行地向前推进。2.所有的读总能返回最近的写操作的值。</li>
-</ul>
-</li>
-<li>顺序一致性（Sequential consistency）<ul>
-<li>如果我们允许进程在时间维度发生偏移，从而它们的操作可能会在调用之前或是完成之后生效，但仍然保证一个约束——任意进程中的操作必须按照进程中定义的顺序（即编程的定义的逻辑顺序）发生。这样我们就得到了一个稍弱的一致性模型：顺序一致性。</li>
-<li>顺序一致性放松了对一致性的要求：1. 不要求操作按照真实的时间序发生。2. 不同进程间的操作执行先后顺序也没有强制要求，但必须是原子的。3. 单个进程内的操作顺序必须和编码时的顺序一致。</li>
-<li>如果我在Twitter上写了一条推文，或是在Facebook发布了一篇帖子，都会耗费一定的时间渗透进一层层的缓存系统。不同的用户将在不同的时间看到我的信息，但每个用户都以同一个顺序看到我的操作。一旦看到，这篇帖子便不会消失。如果我写了多条评论，其他人也会按顺序的看见，而非乱序。</li>
-</ul>
-</li>
-<li>因果一致性（Casual consistency）<ul>
-<li>我们不必对一个进程中的每个操作都施加顺序约束。只有因果相关的操作必须按顺序发生。同样拿帖子举例子：一篇帖子下的所有评论必须以同样的顺序展示给所有人，并且只有帖子可见后，帖子下的回复才可见（也就是说帖子和帖子下的评论有因果关系）。如果我们将这些因果关系编码成类似“我依赖于操作X”的形式，作为每个操作明确的一部分，数据库就可以将这些操作延迟直到它们的依赖都就绪后才可见。</li>
-<li>因果一致性比同一进程下对每个操作严格排序的一致性（即顺序一致性）来的更宽松——属于同一进程但不同因果关系链的操作能以相对的顺序执行（也就是说按因果关系隔离，无因果关系的操作可以并发执行），这能防止许多不直观的行为发生。</li>
-</ul>
-</li>
-<li>串行一致性（Serializable consistency）<ul>
-<li>如果我们说操作记录的发生等效于某些单一的原子序，但和调用时间与完成时间无关，那么我们就得到了名为串行一致性的一致性模型。这一模型比你想象的更强大同时也更脆弱。</li>
-<li>因为串行一致性允许对操作顺序执行任意的重排（只要操作顺序是原子序的）， 它在实际的场景中并不是十分有用。大多数宣称提供了串行一致性的数据库实际上提供的是强串行一致性，它有着和线性一致性一样的时间边界。让事情更复杂的是，大多数SQL数据库宣称的串行一致性等级比实际的更弱，比如可重复读，游标稳定性，或是快照隔离性。</li>
-<li>关于线性一致性和串行一致性，看似十分相似，其实不然。串行一致性是数据库领域的概念，是针对事务而言的，描述对一组事务的执行效果等同于某种串行的执行，没有ordering的概念，而线性一致性来自并行计算领域，描述了针对某种数据结构的操作所表现出的顺序特征。串行一致性是对多操作，多对象的保证，对总体的操作顺序无要求；线性一致性是对单操作，单对象的保证，所有操作遵循真实时间序</li>
-</ul>
-</li>
-<li>FIFO 一致性（FIFO consistency, 又称 PRAM consistency, pipelined RAM consistency）。<ul>
-<li>FIFO 一致性不会考虑多个进程之间的操作排序。对任意一个进程的写操作 1 与写操作 2，若写操作 1 先于写操作 2 完成，那么任何进程不可以先读到写操作 2 的值，再读到写操作 1 的值。</li>
-</ul>
-</li>
-</ol>
-<ul>
-<li>强一致（strict consistency），通常是指线性一致性或顺序一致性。线性一致性与顺序一致性之间的区别，也可以被理解为系统模型的区别，即系统中是否存在绝对时间。弱于顺序一致性的一致性级别都可被称为弱一致，而最终一致性是弱一致性的一种形式。</li>
-</ul>
-<h3 id="衡量分布式系统的指标"><a href="#衡量分布式系统的指标" class="headerlink" title="衡量分布式系统的指标"></a>衡量分布式系统的指标</h3><ul>
-<li>性能</li>
-<li>可用性</li>
-<li>可扩展性</li>
-<li>一致性</li>
-</ul>
-<h3 id="基本副本协议"><a href="#基本副本协议" class="headerlink" title="基本副本协议"></a>基本副本协议</h3><ul>
-<li>副本控制协议分为两大类:“中心化(centralized)副本控制协议”和“去中心化(decentralized) 副本控制协议”。</li>
-</ul>
-<ol>
-<li>中心化副本控制协议<ul>
-<li>primary-secondary 协议</li>
-</ul>
-</li>
-<li>去中心化副本控制协议(去中心化协议没有因为中心化节点异常而带来的停服务等问题。)</li>
-</ol>
-<h3 id="NWR-机制"><a href="#NWR-机制" class="headerlink" title="NWR 机制"></a>NWR 机制</h3><ul>
-<li>首先看看这三个字母在分布式系统中的含义：<ul>
-<li>N：有多少份数据副本；</li>
-<li>W：一次成功的写操作至少有w份数据写入成功；</li>
-<li>R：一次成功的读操作至少有R份数据读取成功。</li>
-</ul>
-</li>
-<li>NWR值的不同组合会产生不同的一致性效果，当W+R&gt;N的时候，读取操作和写入操作成功的数据一定会有交集，这样就可以保证一定能够读取到最新版本的更新数据，数据的强一致性得到了保证，如果R+W&lt;&#x3D;N，则无法保证数据的强一致性，因为成功写和成功读集合可能不存在交集，这样读操作无法读取到最新的更新数值，也就无法保证数据的强一致性。</li>
-<li>版本的新旧需要版本控制算法来判别，比如向量时钟。</li>
-<li>当然R或者W不能太大，因为越大需要操作的副本越多，耗时越长。</li>
-</ul>
-<h3 id="Quorum-机制"><a href="#Quorum-机制" class="headerlink" title="Quorum 机制"></a>Quorum 机制</h3><ul>
-<li>Quorum机制其实就是NWR机制。</li>
-</ul>
-<ol>
-<li>Write-all-read-one(简称 WARO).<ul>
-<li>WARO 读服务的可用性较高,但更新服务的可用性不高,甚至虽然使用了 副本,但更新服务的可用性等效于没有副本。WARO 牺牲了更新服务的可用性,最大程度的增强读服务的可用性。</li>
-</ul>
-</li>
-<li>Quorum 机制</li>
-</ol>
-<ul>
-<li>将 WARO 的条件进行松弛,从而使得可以在读写服务可用性之间做折中,得出 Quorum 机制。</li>
-<li>在 Quorum 机制下,当某次更新操作 wi 一旦在所有 N 个副本中的 W 个副本上都成功,则就称 该更新操作为“成功提交的更新操作”,称对应的数据为“成功提交的数据”。</li>
-<li>仅仅依赖 quorum 机制是无法保证强一致性的。因为仅有 quorum 机制时无法确 定最新已成功提交的版本号,除非将最新已提交的版本号作为元数据由特定的元数据服务器或元数 据集群管理,否则很难确定最新成功提交的版本号。</li>
-<li>Quorum 机制的三个系统参数 N、W、R 控制了系统的可用性,也是系统对用户的服务承诺:数 据最多有 N 个副本,但数据更新成功 W 个副本即返回用户成功。对于一致性要求较高的 Quorum 系 统,系统还应该承诺任何时候不读取未成功提交的数据,即读取到的数据都是曾经在 W 个副本上成 功的数据。</li>
-</ul>
-<hr>
-<ul>
-<li><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/hapjin/p/5626889.html">分布式系统理论之Quorum机制</a></p>
-</li>
-<li><p>在分布式系统中有个CAP理论，对于P（分区容忍性）而言，是实际存在 从而无法避免的。因为，分布系统中的处理不是在本机，而是网络中的许多机器相互通信，故网络分区、网络通信故障问题无法避免。<br>因此，只能尽量地在C 和 A 之间寻求平衡。对于数据存储而言，为了提高可用性（Availability），采用了副本备份，比如对于HDFS，默认每块数据存三份。某数据块所在的机器宕机了，就去该数据块副本所在的机器上读取（从这可以看出，数据分布方式是按“数据块”为单位分布的）</p>
-</li>
-<li><p>但是，问题来了，当需要修改数据时，就需要更新所有的副本数据，这样才能保证数据的一致性（Consistency）。因此，就需要在 C(Consistency) 和 A(Availability) 之间权衡。</p>
-</li>
-<li><p>Quorum机制，就是这样的一种权衡机制，一种将“读写转化”的模型。在介绍Quorum之前，先看一个极端的情况：WARO机制。<br>WARO(Write All Read one)是一种简单的副本控制协议，当Client请求向某副本写数据时(更新数据)，只有当所有的副本都更新成功之后，这次写操作才算成功，否则视为失败。</p>
-<ul>
-<li>①写操作很脆弱，因为只要有一个副本更新失败，此次写操作就视为失败了。②读操作很简单，因为，所有的副本更新成功，才视为更新成功，从而保证所有的副本一致。<br>  这样，只需要读任何一个副本上的数据即可。假设有N个副本，N-1个都宕机了，剩下的那个副本仍能提供读服务；但是只要有一个副本宕机了，写服务就不会成功。</li>
-<li>WARO牺牲了更新服务的可用性，最大程度地增强了读服务的可用性。而Quorum就是更新服务和读服务之间进行一个折衷。</li>
-<li>Quorum机制是“抽屉原理”的一个应用。定义如下：假设有N个副本，更新操作wi 在W个副本中更新成功之后，才认为此次更新操作wi 成功。称成功提交的更新操作对应的数据为：“成功提交的数据”。对于读操作而言，至少需要读R个副本才能读到此次更新的数据。其中，W+R&gt;N ，即W和R有重叠。一般，W+R&#x3D;N+1</li>
-<li>5(3+3,5+1);7(4+4,5+3,7+1);9(5+5,7+3,9+1)</li>
-</ul>
-</li>
-<li><p>1）如何读取最新的数据？—在已经知道最近成功提交的数据版本号的前提下，最多读R个副本就可以读到最新的数据了。<br>2）如何确定 最高版本号 的数据是一个成功提交的数据？—继续读其他的副本，直到读到的 最高版本号副本 出现了W次。</p>
-</li>
-<li><p>一般一个Quorum的节点数目不大于9个，故无法简单地将一致性系统节点直接部署在多个地域，系统需要能持续地水平拓展，来满足服务、资源的拓展需求</p>
-</li>
-</ul>
-<h3 id="CAP-理论"><a href="#CAP-理论" class="headerlink" title="CAP 理论"></a>CAP 理论</h3><ul>
-<li>Consistency (一致性):CAP 理论中的副本一致性特指强一致性(1.3.4 );</li>
-<li>Availiablity(可用性):指系统在出现异常时已经可以提供服务;</li>
-<li>Tolerance to the partition of network (分区容忍):指系统可以对网络分区(1.1.4.2 )这种异常情 况进行容错处理;</li>
-<li>协议分析<br>1. Lease 机制牺牲了部分异常情况下的 A,从而获得了完全的 C 与很好的 P。<br>2. Quorum 机制,在 CAP 三大因素中都各做了折中,有一定的 C,有较好 的 A,也有较好的 P,是一种较为平衡的分布式协议。<br>3. 两阶段提交系统具有完全的 C,很糟糕的 A,很糟糕的 P。<br>4. Paxos 协议 ,在 CAP 三方面较之两阶段提交协议要优秀得多。Paxos 协议具有 完全的 C,较好的 A,较好的 P。Paxos 的 A 与 P 的属性与 Quorum 机制类似,因为 Paxos 的协议本 身就具有 Quorum 机制的因素。</li>
-<li>CAP中的三个因素并不对等，P是基础，CA之间需要tradeoff。系统设计不是三选二的取舍。</li>
-<li>延迟作为可用性的指标和体现，系统设计通常需要在C和延迟之间tradeoff。</li>
-<li>总结：P是一个自然的事实，CA是强需求。三者并不对等。</li>
-<li>在数据库领域，CAP也正是ACID和BASE长期博弈(tradeoff)的结果。</li>
-<li>ACID伴随数据库的诞生定义了系统基本设计思路，所谓先入为主。2000年左右，随着互联网的发展，高可用的话题被摆上桌面，所以提出了BASE。从此C和A的取舍消长此起彼伏，其结晶就是CAP理论。</li>
-<li>从ACID和BASE来说，ACID是为了保证一致性而诞生，因而侧重一致性；BASE是为了高可用系统的设计而诞生，因而侧重可用性。在分解C和A的情况时，肯定要涉及P，所以CAP理论统一了这一切。如果非要说酸碱，或者说酸碱平衡，那就是平衡于CAP理论。</li>
-<li>CAP并不与ACID中的A（原子性）冲突，值得讨论的是ACID中的C（一致性）和I（隔离性）。ACID的C指的是事务不能破坏任何数据库规则，如键的唯一性。与之相比，CAP的C仅指单一副本这个意义上的一致性，因此只是ACID一致性约束的一个严格的子集。如果系统要求ACID中的I（隔离性），那么它在分区期间最多可以在分区一侧维持操作。事务的可串行性（serializability）要求全局的通信，因此在分区的情况下不能成立。</li>
-<li>CA系统才是真正的难点。宣称是CA系统的，目前有两家：一家是Google的Spanner，一家是Alibaba的OceanBase。</li>
-<li>对P的分解需要从网络开始。网络包含了基础设施，光速限制以及软件配置与升级等。Google通过建设自己广域网获得高可靠的基础设施支撑，对于Google Spanner的CA系统，CAP之父曾总结说网络才是根本。</li>
-<li>CAP理论：一致性与性能之间的trade-off</li>
-</ul>
-<h3 id="Consistency"><a href="#Consistency" class="headerlink" title="Consistency"></a>Consistency</h3><ul>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/V1sJcSjff1wbAoQVpLgUMA">请不要再称数据库是CP或者AP</a></li>
-<li>一致性（Consistency）在CAP中是可线性化的意思（linearizability）。而这个是非常特殊（而且非常强）的一致性。尤其是虽然ACID中的C也是一致性（Consistency），但是和这里的一致性没有任何关系。</li>
-<li>Alice还有Bob，他们在同一个房间，都在看他们的手机查2014年世界杯的决赛结果。就在最终结果刚发布之后，Alice刷新了页面，看到了宣布冠军，而且很兴奋地告诉了Bob。Bob马上也重新加载了他手机上的页面，但是他的请求被送到了一个数据库的拷贝，还没有拿到最新的数据，结果他的手机上显示决赛还正在进行。</li>
-<li>如果Alice和Bob同时刷新，拿到了不一样的结果，并不会太让人意外。因为他们不知道具体服务器到底是先处理了他们中哪一个请求。但是Bob知道他刷新页面是在Alice告诉了他最终结果_之后_的。所以他预期他查询的结果一定比Alice的更新。事实是，他却拿到了旧的结果。这就违反了可线性化。</li>
-<li>ZooKeeper默认设置既不是一致的（CP）也不是可用的（AP），只是“P”。但是你有选择通过用sync命令来让它成为CP。并且在正确的设置下，读操作（不包括写）其实是CAP可用的。</li>
-</ul>
-<h3 id="Lease-机制"><a href="#Lease-机制" class="headerlink" title="Lease 机制"></a>Lease 机制</h3><ul>
-<li>Lease 是由颁发者授予的在某一有效期内的承诺。颁发者一旦发 出 lease,则无论接受方是否收到,也无论后续接收方处于何种状态,只要 lease 不过期,颁发者一 定严守承诺;另一方面,接收方在 lease 的有效期内可以使用颁发者的承诺,但一旦 lease 过期,接 收方一定不能继续使用颁发者的承诺。</li>
-<li>Lease 机制依赖于有效期,这就要求颁发者和接收者的时钟是同步的。对于这种时钟不同步,实践中的通常做法是 将颁发者的有效期设置得比接收者的略大,只需大过时钟误差就可以避免对 lease 的有效性的影响。</li>
-</ul>
-<hr>
-<ul>
-<li>master给各个slave分配不同的数据，每个节点的数据都具有有效时间比如1小时，在lease时间内，客户端可以直接向slave请求数据，如果超过时间客户端就去master请求数据。一般而言，slave可以定时主动向master要求续租并更新数据，master在数据发生变化时也可以主动通知slave，不同方式的选择也在于可用性与一致性之间进行权衡。</li>
-<li>租约机制也可以解决主备之间网络不通导致的双主脑裂问题，亦即：主备之间本来心跳连线的，但是突然之间网络不通或者暂停又恢复了或者太繁忙无法回复，这时备机开始接管服务，但是主机依然存活能对外服务，这是就发生争夺与分区，但是引入lease的话，老主机颁发给具体server的lease必然较旧，请求就失效了，老主机自动退出对外服务，备机完全接管服务。</li>
-</ul>
-<h3 id="Split-Brain"><a href="#Split-Brain" class="headerlink" title="Split Brain"></a>Split Brain</h3><ul>
-<li>如何避免“Split Brain”(脑裂)问题？<ul>
-<li>Split Brain 是指在同一时刻有两个认为自己处于 Active 状态的 NameNode。</li>
-</ul>
-</li>
-<li>Raft是一种一致性算法， gossip是广播协议</li>
-<li>为 Raft 引入 leader lease 机制解决集群脑裂时的 stale read 问题：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/072380e12657">https://www.jianshu.com/p/072380e12657</a><ul>
-<li>这种方法牺牲了一定的可用性（在脑裂时部分客户端的可用性）换取了一致性的保证。</li>
-<li>多数派的网络分区挂了，岂不是直接不可写？</li>
-</ul>
-</li>
-</ul>
-<h3 id="拜占庭将军问题"><a href="#拜占庭将军问题" class="headerlink" title="拜占庭将军问题"></a>拜占庭将军问题</h3><ul>
-<li>拜占庭将军问题提供了对分布式共识问题的一种情景化描述，是分布式系统领域最复杂的模型。此外, 它也为我们理解和分类现有的众多分布式一致性协议和算法提供了框架。现有的分布式一致性协议和算法主要可分为两类：<br>  1. 一类是故障容错算法(Crash Fault Tolerance, CFT)， 即非拜占庭容错算法，解决的是分布式系统中存在故障，但不存在恶意攻击的场景下的共识问题。也就是说，在该场景下可能存在消息丢失，消息重复，但不存在消息被篡改或伪造的场景。一般用于局域网场景下的分布式系统，如分布式数据库。属于此类的常见算法有Paxos算法、Raft算法、ZAB协议等。<br>  2. 一类是拜占庭容错算法，可以解决分布式系统中既存在故障，又存在恶意攻击场景下的共识问题。一般用于互联网场景下的分布式系统，如在数字货币的区块链技术中。属于此类的常见算法有PBFT算法、PoW算法。</li>
-</ul>
-<h3 id="CAP软件分类"><a href="#CAP软件分类" class="headerlink" title="CAP软件分类"></a>CAP软件分类</h3><ul>
-<li>CP: MongoDB、HBase、Zookeeper; (paxos、raft、zab、2PC协议)</li>
-<li>AP: Eureka、Couch DB、Cassandra、Amazon Dynamo</li>
-<li>Raft (etcd)、ZAB(Zookeeper)</li>
-</ul>
-<h3 id="故障处理如何做？有以下模型可以考虑"><a href="#故障处理如何做？有以下模型可以考虑" class="headerlink" title="故障处理如何做？有以下模型可以考虑"></a>故障处理如何做？有以下模型可以考虑</h3><ul>
-<li><p>Fail-Fast：从字面含义看就是“快速失败”，尽可能的发现系统中的错误，使系统能够按照事先设定好的错误的流程执行，对应的方式是“fault-tolerant（容错）”。只发起一次调用，失败立即报错,通常用于非幂等性的写操作。 如果有机器正在重启，可能会出现调用失败 。</p>
-</li>
-<li><p>Fail-Over：含义为“失效转移”，是一种备份操作模式，当主要组件异常时，其功能转移到备份组件。其要点在于有主有备，且主故障时备可启用，并设置为主。如Mysql的双Master模式，当正在使用的Master出现故障时，可以拿备Master做主使用。阿里同学认为这里可以指失败自动切换。当出现失败，重试其它服务器，通常用于读操作（推荐使用）。 重试会带来更长延迟。</p>
-</li>
-<li><p>Fail-Safe：含义为“失效安全”，即使在故障的情况下也不会造成伤害或者尽量减少伤害。维基百科上一个形象的例子是红绿灯的“冲突监测模块”当监测到错误或者冲突的信号时会将十字路口的红绿灯变为闪烁错误模式，而不是全部显示为绿灯。有时候来指代“自动功能降级” (Auto-Degrade)。阿里的同学认为失败安全，出现异常时，直接忽略，通常用于写入审计日志等操作。调用信息丢失 可用于生产环境Monitor。</p>
-</li>
-<li><p>Fail-Back：Fail-over之后的自动恢复，在簇网络系统（有两台或多台服务器互联的网络）中，由于要某台服务器进行维修，需要网络资源和服务暂时重定向到备用系统。在此之后将网络资源和服务器恢复为由原始主机提供的过程，称为自动恢复。阿里的同学认为失败自动恢复，后台记录失败请求，定时重发。通常用于消息通知操作 不可靠，重启丢失。可用于生产环境 Registry。</p>
-</li>
-<li><p>Forking  并行调用多个服务器，只要一个成功即返回，通常用于实时性要求较高的读操作。 需要浪费更多服务资源 。</p>
-</li>
-<li><p>Broadcast广播调用，所有提供逐个调用，任意一台报错则报错。通常用于更新提供方本地状态速度慢，任意一台报错则报错。</p>
-</li>
-<li><p>上述故障模型是从系统设计的角度出发的，根据不同的需要设计不同故障处理方案。现在看来，系统的外延已经扩大。系统的容错性，或者分区容错能力，不能仅仅使用事先和事中的方案解决，系统的容错性还包括事后处理。</p>
-</li>
-<li><p>分布式系统(Distributed System)资料:<a target="_blank" rel="noopener" href="https://github.com/ty4z2008/Qix/blob/master/ds.md">https://github.com/ty4z2008/Qix/blob/master/ds.md</a></p>
-</li>
-</ul>
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/foreach-break/p/notes_about_distributed_system_and_The_log.html">学习笔记：The Log（我所读过的最好的一篇分布式技术文章）</a></li>
-<li>《分布式系统原理介绍刘杰》</li>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/hapjin/p/5626889.html">分布式系统理论之Quorum机制</a></li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MjM5MjAwODM4MA==&mid=2650738983&idx=4&sn=6d59ee01f70f2bff3df373dd9381e31f&chksm=bea760f489d0e9e">一文读懂拜占庭将军问题</a></li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/UfbMFXxJqRhLDXUntKVE8A">详解分布式一致性机制</a></li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/90RAmLZcTshlm-MBjTlP0A">CAP理论与分布式系统设计</a></li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/IbBC38rhhQ-mEfw3yf9AVA">深度介绍分布式系统原理与设计</a>!!</li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/05-ko4KyeHOTkrAbl8dQwQ">跨地域场景下，如何解决分布式系统的一致性？</a></li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/KbNNU246BAeJmLoWbKie6g">左耳朵耗子：分布式系统架构经典资料</a></li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/L7Zjbbub2D6pWto0TZ2qug">如何系统性的学习分布式系统？</a></li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2428,7 +2238,7 @@ We obviously did not consider Windows as a serious platform so far, and that's w
 <a href="/archives/">                
 <!--<a href="/archives/%7C%7C%20archive">-->
               
-                  <span class="site-state-item-count">165</span>
+                  <span class="site-state-item-count">166</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2441,7 +2251,7 @@ We obviously did not consider Windows as a serious platform so far, and that's w
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">187</span>
+                  <span class="site-state-item-count">191</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

@@ -6,7 +6,7 @@
   <link href="http://yoursite.com/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2025-08-28T10:00:44.765Z</updated>
+  <updated>2025-09-02T13:48:46.139Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,37 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>用脚本+AI CLI半自动写代码：实践经验分享</title>
+    <link href="http://yoursite.com/2025/09/02/20250902-yong-jiao-ben-ai-cli-ban-zi-dong-xie-dai-ma-shi-jian-jing-yan-fen-xiang/"/>
+    <id>http://yoursite.com/2025/09/02/20250902-yong-jiao-ben-ai-cli-ban-zi-dong-xie-dai-ma-shi-jian-jing-yan-fen-xiang/</id>
+    <published>2025-09-02T13:44:21.000Z</published>
+    <updated>2025-09-02T13:48:46.139Z</updated>
+    
+    <content type="html"><![CDATA[<p>最近在折腾一个“半自动编程”项目，目标是让 AI 工具在一个相对可控的框架下持续编码，帮我实现一个个明确的开发任务。这里分享整个过程、思路和实践套路，算是一次探索性的工程笔记。</p><h2 id="为什么要搞半自动"><a href="#为什么要搞半自动" class="headerlink" title="为什么要搞半自动"></a>为什么要搞半自动</h2><p>市面上的 AI 编程工具越来越多，比如：Claude Code、Gemini CLI、QWEN CODE 以及其他支持 CLI 模式的 AI 工具。<br>它们都能帮我们提高开发效率，但如果只是一次次手动问问题，效率还是不够高。我的想法是：</p><ol><li>用脚本封装和调度这些 AI 工具；</li><li>利用 <code>tmux</code> 维持 AI CLI 的会话状态；</li><li>自动给 AI 下发任务、收集结果，让 AI 一直“干活”，直到任务完成。</li></ol><p>这就像有个“虚拟小弟”24小时帮你写代码，而你更多做架构和技术方案的管理。</p><hr><h2 id="总体套路"><a href="#总体套路" class="headerlink" title="总体套路"></a>总体套路</h2><p>我总结下来整个流程可以分成四步，每一步都强调<strong>人工 review</strong>，避免“AI乱写”导致项目失控。</p><h3 id="1-初始化项目：立规范、搭框架"><a href="#1-初始化项目：立规范、搭框架" class="headerlink" title="1. 初始化项目：立规范、搭框架"></a>1. 初始化项目：立规范、搭框架</h3><p>项目开始前先搞定<strong>规范和架构</strong>，这是整个半自动化的基础。</p><ul><li><p>新建 GitHub 仓库，初始化代码框架：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> git@github.com:Kingson4Wu/ts-playground.git</span><br></pre></td></tr></table></figure></li><li><p>参考已有项目文档，比如我用的 <a href="https://github.com/Kingson4Wu/cpp-linux-playground/blob/main/PROJECT.md">cpp-linux-playground</a>，根据 TypeScript 项目的需求，改写成自己的 <code>PROJECT.md</code>。</p></li><li><p>规划好：</p><ul><li>技术栈（语言、工具链、标准）</li><li>测试和任务验收标准</li><li>静态分析工具</li><li>项目目录结构</li><li>Git 提交规范</li></ul></li></ul><blockquote><p>小建议：把 <code>docs/</code> 改成更专门的目录名（比如 <code>specifications/</code>），避免混乱。</p></blockquote><p>这一阶段主要是人工定规则、搭骨架，AI可以辅助起草文档，但最终必须你拍板。</p><hr><h3 id="2-细化任务实现方案"><a href="#2-细化任务实现方案" class="headerlink" title="2. 细化任务实现方案"></a>2. 细化任务实现方案</h3><p>所有任务先出详细的实现和测试方案，放在 <code>@specifications/task_specs/</code> 下。<br>原则：</p><ul><li><p><strong>不直接写代码</strong>，先写详细设计；</p></li><li><p>每个任务的设计经过人工审查和修改；</p></li><li><p>任务设计文件需要明确：</p><ul><li>功能描述</li><li>实现逻辑</li><li>输入输出</li><li>单元测试方案</li><li>潜在问题或风险点</li></ul></li></ul><p>这样做的好处是：AI有明确的执行指南，写出的代码更可控，后续修改成本也低。</p><hr><h3 id="3-半自动化驱动编码"><a href="#3-半自动化驱动编码" class="headerlink" title="3. 半自动化驱动编码"></a>3. 半自动化驱动编码</h3><p>有了规范和任务设计，就可以开始半自动写代码了。<br>我的方案是：</p><ul><li><p>用 Python 脚本驱动 AI CLI 工具；</p></li><li><p>通过 <code>tmux</code> 维持 AI 会话，避免中断；</p></li><li><p>每个任务循环：</p><ol><li>给 AI 发实现方案；</li><li>要求它按方案写代码，但<strong>不要自动提交代码</strong>；</li><li>人工检查后再提交到 Git。</li></ol></li></ul><p>脚本和逻辑可以参考 <a href="https://github.com/Kingson4Wu/ForgeFlow">ForgeFlow</a>，里面有完整的交互逻辑示例。</p><blockquote><p>小技巧：</p><ul><li>每个 Prompt 末尾强调“不要自动提交代码”；</li><li>如果任务超时超过1小时，自动触发检查机制；</li><li>项目进度同步到 <code>TODO.md</code>，并在 <code>PROJECT.md</code> 中引用。</li></ul></blockquote><hr><h3 id="4-定义“完成”的标准"><a href="#4-定义“完成”的标准" class="headerlink" title="4. 定义“完成”的标准"></a>4. 定义“完成”的标准</h3><p>一个任务完成的定义：</p><ol><li>按实现方案完成代码；</li><li>单元测试全部通过；</li><li>脚本和 Prompt 更新到位；</li><li>构建和测试无异常；</li><li>Git 提交所有改动；</li><li>进入下一个任务。</li></ol><p>最终目标是：</p><blockquote><p>输出所有方案 -&gt; 自动实现 -&gt; 所有项目任务完成后，AI只返回“完成”两个字。</p></blockquote><hr><h2 id="实战项目参考"><a href="#实战项目参考" class="headerlink" title="实战项目参考"></a>实战项目参考</h2><p>示例项目：<a href="https://github.com/Kingson4Wu/ts-playground">ts-playground</a><br>这是我搭的一个 TypeScript 学习和实验环境：</p><ul><li>CI&#x2F;CD 流程完整；</li><li>用于系统掌握 TypeScript 类型系统；</li><li>可以复用于后端服务、CLI 工具开发。</li></ul><p>这个项目就是通过“人机协作+半自动化”方式落地的。</p><hr><h2 id="半自动-vs-全自动"><a href="#半自动-vs-全自动" class="headerlink" title="半自动 vs 全自动"></a>半自动 vs 全自动</h2><p>目前这种方案是“半自动”，而不是“全自动”。原因：</p><ul><li><strong>设计和规范必须人工介入</strong>：AI生成的规范往往不够完善；</li><li><strong>脚本和Prompt需要不断打磨</strong>：无法覆盖所有场景；</li><li><strong>代码质量还需人工检查</strong>：AI的水平不总是稳定。</li></ul><p>换句话说，这是一个低成本、可控、复用性强的探索阶段方案。<br>全自动化？有点远，尤其是多Agent复杂度太高，难以管理上下文和控制风险。</p><hr><h2 id="上下文管理的核心"><a href="#上下文管理的核心" class="headerlink" title="上下文管理的核心"></a>上下文管理的核心</h2><p>要想让AI持续有效地工作，项目上下文必须有序管理：</p><ol><li>规范文件分类清晰，按模块分目录；</li><li>方案文档结构化，方便AI快速索引；</li><li>自动化脚本根据任务调度上下文，让AI“看得懂项目”。</li></ol><p>这才是真正的“AI编程助手”关键所在。</p><hr><h2 id="一点哲学思考"><a href="#一点哲学思考" class="headerlink" title="一点哲学思考"></a>一点哲学思考</h2><p>这套方案的本质是把开发人员角色分层：</p><ul><li>AI是“码农+助理”，帮你实现具体功能；</li><li>你是“开发经理”，负责设计、审查、控制质量；</li><li>团队协作依旧重要，人类仍然是决策核心。</li></ul><p>AI工具不是真正的替代，而是推动开发人员往更高的抽象层次发展。<br>从这个角度看，AI是个强大的加速器，而不是终点。</p><hr><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>整个实践路线：</p><ol><li>项目初始化，搭规范和骨架；</li><li>细化任务方案，人工Review；</li><li>用脚本驱动AI半自动写代码；</li><li>明确完成标准，逐步推进。</li></ol><p>这是目前我能找到的最可控、最实用的“AI编程”方式。<br>它既降低了成本，又不至于乱套，非常适合小团队或者个人工程师快速起项目。</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;最近在折腾一个“半自动编程”项目，目标是让 AI 工具在一个相对可控的框架下持续编码，帮我实现一个个明确的开发任务。这里分享整个过程、思路和实践套路，算是一次探索性的工程笔记。&lt;/p&gt;
+&lt;h2 id=&quot;为什么要搞半自动&quot;&gt;&lt;a href=&quot;#为什么要搞半自动&quot; class=</summary>
+      
+    
+    
+    
+    
+    <category term="tmux" scheme="http://yoursite.com/tags/tmux/"/>
+    
+    <category term="AI编程" scheme="http://yoursite.com/tags/AI%E7%BC%96%E7%A8%8B/"/>
+    
+    <category term="自动化开发" scheme="http://yoursite.com/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E5%BC%80%E5%8F%91/"/>
+    
+    <category term="Prompt工程" scheme="http://yoursite.com/tags/Prompt%E5%B7%A5%E7%A8%8B/"/>
+    
+    <category term="Python" scheme="http://yoursite.com/tags/Python/"/>
+    
+  </entry>
   
   <entry>
     <title>用 tmux + 内网穿透，让出门也能指导编程任务</title>
@@ -50,9 +81,9 @@
     <link href="http://yoursite.com/2025/08/25/20250825-vs-code-dev-container-da-zao-si-hua-de-linux-kai-fa-diao-shi-ti-yan/"/>
     <id>http://yoursite.com/2025/08/25/20250825-vs-code-dev-container-da-zao-si-hua-de-linux-kai-fa-diao-shi-ti-yan/</id>
     <published>2025-08-25T07:12:09.000Z</published>
-    <updated>2025-08-25T07:18:39.346Z</updated>
+    <updated>2025-09-02T09:43:44.967Z</updated>
     
-    <content type="html"><![CDATA[<p>最近在重新学习 Linux C++ 的过程中，发现了一种优雅的方式：借助 <strong>Docker + VS Code Dev Container</strong> 在任何系统上轻松获得一致的 Linux 开发调试环境。作为长期在 macOS 和 Windows 上开发的人，这种体验让我感受到前所未有的丝滑，真有点“相逢恨晚”。</p><p>从此，无论是 C++、Python、Go，还是其他需要 Linux 环境的项目，都可以通过 Dev Container 轻松构建一致的开发调试环境。以下是相关的整理和总结。</p><hr><h2 id="1-Dev-Container-的核心优势"><a href="#1-Dev-Container-的核心优势" class="headerlink" title="1. Dev Container 的核心优势"></a>1. Dev Container 的核心优势</h2><ul><li><strong>统一环境</strong>：项目环境配置集中管理，避免“环境配置地狱”。</li><li><strong>真实 Linux 环境</strong>：Mac&#x2F;Windows 上可获得接近原生 Linux 的开发体验。</li><li><strong>环境隔离</strong>：每个项目独立运行，避免宿主机污染。</li><li><strong>一键上手</strong>：新人无需安装复杂依赖，直接启动容器即用。</li><li><strong>跨平台一致性</strong>：团队成员无论使用何种操作系统，都能保持开发环境完全一致。</li></ul><hr><h2 id="2-调试工作原理"><a href="#2-调试工作原理" class="headerlink" title="2. 调试工作原理"></a>2. 调试工作原理</h2><ul><li><strong>VS Code 前端</strong>：仅负责界面展示和用户交互。</li><li><strong>容器内调试器后端</strong>：断点、变量跟踪等逻辑均在容器中执行。</li><li><strong>Docker 通信</strong>：通过端口映射或内置通道实现容器与宿主机的连接。</li><li><strong>DAP 协议</strong>：调试适配器协议（Debug Adapter Protocol）统一了调试接口，支持多语言插件。</li><li><strong>无缝体验</strong>：Dev Container 自动部署 VS Code Server，调试如同本地运行。</li></ul><hr><h2 id="3-跨架构开发（Mac-ARM-跑-x86-容器）"><a href="#3-跨架构开发（Mac-ARM-跑-x86-容器）" class="headerlink" title="3. 跨架构开发（Mac ARM 跑 x86 容器）"></a>3. 跨架构开发（Mac ARM 跑 x86 容器）</h2><ul><li><strong>QEMU 仿真</strong>：通过指令翻译运行 x86 ELF 程序。</li><li><strong>binfmt_misc</strong>：自动识别并调度不同架构的可执行文件。</li><li><strong>优势</strong>：可兼容仅支持 x86 的旧软件或镜像。</li><li><strong>不足</strong>：性能有损耗，不适合重度计算任务或长期运行。</li></ul><hr><h2 id="4-微服务项目的容器化策略"><a href="#4-微服务项目的容器化策略" class="headerlink" title="4. 微服务项目的容器化策略"></a>4. 微服务项目的容器化策略</h2><ol><li><p><strong>共享开发环境容器</strong><br>单一容器作为开发机，挂载多个项目，减少容器启动和切换成本。</p></li><li><p><strong>多服务合一容器</strong><br>借助 <code>supervisord</code> 管理多个进程，将多个微服务打包到同一个容器中运行。</p></li><li><p><strong>docker-compose 管理公共依赖</strong><br>数据库、缓存等共享服务通过 <code>docker-compose</code> 集中管理，避免重复维护。</p></li><li><p><strong>多项目 Dev Container 配置</strong></p><ul><li>利用 <code>workspaceMount</code> 挂载多个项目目录；</li><li><code>.devcontainer/</code> 建议放在仓库或 monorepo 顶层，便于团队协作。</li></ul></li></ol><h4 id="方法1-vs-方法4-对比表"><a href="#方法1-vs-方法4-对比表" class="headerlink" title="方法1 vs 方法4 对比表"></a>方法1 vs 方法4 对比表</h4><table><thead><tr><th>特性</th><th>方法1：单容器开发机</th><th>方法4：多项目 Dev Container</th></tr></thead><tbody><tr><td>容器构建</td><td>手动构建镜像</td><td>自动构建</td></tr><tr><td>配置文件位置</td><td>可选，不依赖 <code>.devcontainer</code></td><td>必须在仓库最外层目录</td></tr><tr><td>多项目管理</td><td>手动挂载路径</td><td>自动 <code>workspaceMount</code></td></tr><tr><td>团队协作</td><td>偏向个人开发</td><td>团队友好</td></tr><tr><td>启动方式</td><td>手动 Attach</td><td>一键 <code>Reopen in Container</code></td></tr></tbody></table><blockquote><p>对于大型项目或多团队协作，可以考虑 Kubernetes 或云端 Codespaces 来简化开发环境管理。</p></blockquote><hr><h2 id="5-总结与趋势"><a href="#5-总结与趋势" class="headerlink" title="5. 总结与趋势"></a>5. 总结与趋势</h2><ul><li><strong>容器化开发环境已成趋势</strong>：开发环境可以像代码一样被版本化、迁移、复刻。</li><li><strong>适用场景广泛</strong>：不仅适合现代项目，对老旧技术栈（如 PHP 项目）同样友好。</li><li><strong>开发体验升级</strong>：只需一次配置，团队成员无需手动搭建环境，即可专注业务开发。</li></ul><hr><p>这样一套方案，让跨平台、跨语言、跨架构的开发调试都像在本地一样丝滑高效。</p>]]></content>
+    <content type="html"><![CDATA[<p>最近在重新学习 Linux C++ 的过程中，发现了一种优雅的方式：借助 <strong>Docker + VS Code Dev Container</strong> 在任何系统上轻松获得一致的 Linux 开发调试环境。作为长期在 macOS 和 Windows 上开发的人，这种体验让我感受到前所未有的丝滑，真有点“相逢恨晚”。</p><p>从此，无论是 C++、Python、Go，还是其他需要 Linux 环境的项目，都可以通过 Dev Container 轻松构建一致的开发调试环境。以下是相关的整理和总结。</p><hr><h2 id="1-Dev-Container-的核心优势"><a href="#1-Dev-Container-的核心优势" class="headerlink" title="1. Dev Container 的核心优势"></a>1. Dev Container 的核心优势</h2><ul><li><strong>统一环境</strong>：项目环境配置集中管理，避免“环境配置地狱”。</li><li><strong>真实 Linux 环境</strong>：Mac&#x2F;Windows 上可获得接近原生 Linux 的开发体验。</li><li><strong>环境隔离</strong>：每个项目独立运行，避免宿主机污染。</li><li><strong>一键上手</strong>：新人无需安装复杂依赖，直接启动容器即用。</li><li><strong>跨平台一致性</strong>：团队成员无论使用何种操作系统，都能保持开发环境完全一致。</li></ul><hr><h2 id="2-调试工作原理"><a href="#2-调试工作原理" class="headerlink" title="2. 调试工作原理"></a>2. 调试工作原理</h2><ul><li><strong>VS Code 前端</strong>：仅负责界面展示和用户交互。</li><li><strong>容器内调试器后端</strong>：断点、变量跟踪等逻辑均在容器中执行。</li><li><strong>Docker 通信</strong>：通过端口映射或内置通道实现容器与宿主机的连接。</li><li><strong>DAP 协议</strong>：调试适配器协议（Debug Adapter Protocol）统一了调试接口，支持多语言插件。</li><li><strong>无缝体验</strong>：Dev Container 自动部署 VS Code Server，调试如同本地运行。</li></ul><hr><h2 id="3-跨架构开发（Mac-ARM-跑-x86-容器）"><a href="#3-跨架构开发（Mac-ARM-跑-x86-容器）" class="headerlink" title="3. 跨架构开发（Mac ARM 跑 x86 容器）"></a>3. 跨架构开发（Mac ARM 跑 x86 容器）</h2><ul><li><strong>QEMU 仿真</strong>：通过指令翻译运行 x86 ELF 程序。</li><li><strong>binfmt_misc</strong>：自动识别并调度不同架构的可执行文件。</li><li><strong>优势</strong>：可兼容仅支持 x86 的旧软件或镜像。</li><li><strong>不足</strong>：性能有损耗，不适合重度计算任务或长期运行。</li></ul><hr><h2 id="4-微服务项目的容器化策略"><a href="#4-微服务项目的容器化策略" class="headerlink" title="4. 微服务项目的容器化策略"></a>4. 微服务项目的容器化策略</h2><ol><li><p><strong>共享开发环境容器</strong><br>单一容器作为开发机，挂载多个项目，减少容器启动和切换成本。</p></li><li><p><strong>多服务合一容器</strong><br>借助 <code>supervisord</code> 管理多个进程，将多个微服务打包到同一个容器中运行。</p></li><li><p><strong>docker-compose 管理公共依赖</strong><br>数据库、缓存等共享服务通过 <code>docker-compose</code> 集中管理，避免重复维护。</p></li><li><p><strong>多项目 Dev Container 配置</strong></p><ul><li>利用 <code>workspaceMount</code> 挂载多个项目目录；</li><li><code>.devcontainer/</code> 建议放在仓库或 monorepo 顶层，便于团队协作。</li></ul></li></ol><h4 id="方法1-vs-方法4-对比表"><a href="#方法1-vs-方法4-对比表" class="headerlink" title="方法1 vs 方法4 对比表"></a>方法1 vs 方法4 对比表</h4><table><thead><tr><th>特性</th><th>方法1：单容器开发机</th><th>方法4：多项目 Dev Container</th></tr></thead><tbody><tr><td>容器构建</td><td>手动构建镜像</td><td>自动构建</td></tr><tr><td>配置文件位置</td><td>可选，不依赖 <code>.devcontainer</code></td><td>必须在仓库最外层目录</td></tr><tr><td>多项目管理</td><td>手动挂载路径</td><td>自动 <code>workspaceMount</code></td></tr><tr><td>团队协作</td><td>偏向个人开发</td><td>团队友好</td></tr><tr><td>启动方式</td><td>手动 Attach</td><td>一键 <code>Reopen in Container</code></td></tr></tbody></table><blockquote><p>对于大型项目或多团队协作，可以考虑 Kubernetes 或云端 Codespaces 来简化开发环境管理。</p></blockquote><hr><h2 id="5-总结与趋势"><a href="#5-总结与趋势" class="headerlink" title="5. 总结与趋势"></a>5. 总结与趋势</h2><ul><li><strong>容器化开发环境已成趋势</strong>：开发环境可以像代码一样被版本化、迁移、复刻。</li><li><strong>适用场景广泛</strong>：不仅适合现代项目，对老旧技术栈（如 PHP 项目）同样友好。</li><li><strong>开发体验升级</strong>：只需一次配置，团队成员无需手动搭建环境，即可专注业务开发。</li></ul><hr><p>这样一套方案，让跨平台、跨语言、跨架构的开发调试都像在本地一样丝滑高效。</p><hr><h2 id="参考例子"><a href="#参考例子" class="headerlink" title="参考例子"></a>参考例子</h2><ul><li><a href="https://github.com/Kingson4Wu/cpp-linux-playground">https://github.com/Kingson4Wu/cpp-linux-playground</a></li></ul>]]></content>
     
     
       
@@ -68,6 +99,8 @@
     <category term="DevContainer" scheme="http://yoursite.com/tags/DevContainer/"/>
     
     <category term="linux" scheme="http://yoursite.com/tags/linux/"/>
+    
+    <category term="CPP" scheme="http://yoursite.com/tags/CPP/"/>
     
   </entry>
   
@@ -582,31 +615,6 @@
     <category term="深度学习" scheme="http://yoursite.com/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"/>
     
     <category term="Deep-Learning" scheme="http://yoursite.com/tags/Deep-Learning/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>关于AI大语言模型替代人类工作的问题</title>
-    <link href="http://yoursite.com/2025/02/13/20250213-guan-yu-ai-ti-dai-ren-lei-gong-zuo-de-wen-ti/"/>
-    <id>http://yoursite.com/2025/02/13/20250213-guan-yu-ai-ti-dai-ren-lei-gong-zuo-de-wen-ti/</id>
-    <published>2025-02-13T07:05:23.000Z</published>
-    <updated>2025-02-13T09:53:03.723Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="AI的局限性或缺点"><a href="#AI的局限性或缺点" class="headerlink" title="AI的局限性或缺点"></a>AI的局限性或缺点</h2><ul><li><strong>难以预测与控制</strong>：AI的运行机制像黑箱，难以准确预知其行为，尤其在关键场景下可能会犯致命错误。</li><li><strong>无法背锅</strong>：AI犯错时，责任归属难以明确，导致无法追究错误的责任，缺乏人类信誉体系的约束。</li><li><strong>逻辑推理不严谨</strong>：AI的推理基于概率预测，不是绝对严谨的逻辑推理。训练数据如果有误，AI可能无法辨别。</li><li><strong>无法创新</strong>：AI不具备创造全新概念的能力，更多的是基于历史数据进行知识复述与组合，无法像人类一样发明新技术或理念。</li><li><strong>对超出训练数据的场景应对差</strong>：AI在面对未曾训练过的数据时，表现较差，容易出错。</li></ul><h2 id="AI的好处"><a href="#AI的好处" class="headerlink" title="AI的好处"></a>AI的好处</h2><ul><li><strong>提高效率</strong>：AI在许多领域极大提升了效率，尤其在数据处理、搜索和重复性任务上。对于程序员来说，它是一个强大的辅助工具，帮助快速解决技术问题。</li><li><strong>降低门槛</strong>：AI减少了对低级重复性任务的需求，拉近了人们在某些知识领域的差距。</li><li><strong>支持决策和监督</strong>：AI辅助决策，尤其是在复杂任务中，能提供数据支持，减少人为错误。</li></ul><h2 id="AI工具下需要的人才"><a href="#AI工具下需要的人才" class="headerlink" title="AI工具下需要的人才"></a><strong>AI工具下需要的人才</strong></h2><ul><li><strong>清晰表述与提问能力</strong>：能够清晰提出问题和有效沟通是与AI协同工作的关键，好的表述能力有助于提高工作效率。</li><li><strong>整理与分析能力</strong>：能够有效梳理信息、分解任务，并向AI提出清晰问题的人，会更善于利用AI工具。</li><li><strong>与产品交互能力</strong>：AI可以编写代码，但仍需要人类与产品经理沟通，理解需求并做出相应调整。</li></ul><h2 id="程序员的利好与不可替代的能力"><a href="#程序员的利好与不可替代的能力" class="headerlink" title="程序员的利好与不可替代的能力"></a><strong>程序员的利好与不可替代的能力</strong></h2><ul><li><strong>AI对程序员的利好</strong>：<ul><li>AI大幅提升了开发效率，尤其在编程辅助、技术搜索、业务方案思考等方面。</li><li>某些低级任务减少了人力需求，使得程序员能更多专注于创造性和复杂问题的解决。</li></ul></li><li><strong>程序员不可替代的地方</strong>：<ul><li><strong>清晰的提问和判断能力</strong>：程序员的核心能力在于能理解问题，并准确表达需求，AI只能作为工具辅助工作。</li><li><strong>与产品沟通</strong>：AI生成的代码和解决方案需要程序员与产品团队对接，确保最终结果符合需求。</li><li><strong>决策和经验判断</strong>：AI的能力有限，尤其在面对复杂决策时，仍需依赖经验丰富的程序员来进行判断和修正。</li></ul></li></ul><h2 id="个人观点"><a href="#个人观点" class="headerlink" title="个人观点"></a><strong>个人观点</strong></h2><ul><li>AI目前主要是利用历史数据和记忆进行信息处理，不能进行创新（如无法创造出类似K8S的技术）。</li><li>尽管AI能提高程序员的工作效率，但目前它更多是辅助工具，而不是替代品。</li><li>对普通程序员来说，理解大模型技术的基本原理和概念非常重要，未来将需要在“AI操作系统”上来构建应用。</li></ul><h2 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h2><blockquote><blockquote><p>来自claude.ai的评价<br>2025-02-13</p></blockquote></blockquote><p>我来分析一下这些观点，指出其中可能存在的错误或需要讨论的地方：</p><ol><li>关于”无法创新”的说法需要更谨慎：</li></ol><ul><li>虽然AI确实主要基于已有数据进行组合和推理，但说它”不具备创造全新概念的能力”可能过于绝对</li><li>AI已经展示出一定的创新能力，比如在围棋、蛋白质折叠等领域提出了人类之前没有想到的解决方案</li><li>更准确的说法是AI的创新能力与人类不同，它通过大规模数据分析和模式识别来实现创新</li></ul><ol start="2"><li>“逻辑推理不严谨”的表述不够准确：</li></ol><ul><li>现代AI系统（尤其是形式化验证系统）可以进行严格的逻辑推理</li><li>大语言模型确实存在基于概率的推理特点，但这不等同于所有AI系统都如此</li><li>人类的推理同样也常常基于经验和概率判断，而不总是严格的逻辑推导</li></ul><ol start="3"><li>关于”难以预测与控制”：</li></ol><ul><li>这个观点部分正确，但需要注意现代AI系统已经有了很多可解释性的工具和方法</li><li>某些领域的AI系统（如用于医疗诊断的AI）已经实现了相当程度的可解释性</li><li>“像黑箱”这种说法可能过于简化了问题</li></ul><ol start="4"><li>“无法背锅”的说法不够准确：</li></ol><ul><li>实际上已经有了相关的法律和责任框架在建立</li><li>AI系统的责任可以追溯到开发者、部署者和使用者</li><li>这更多是一个治理和监管的问题，而不是技术本身的限制</li></ul><ol start="5"><li>“个人观点”部分关于K8S的例子不够恰当：</li></ol><ul><li>K8S本质上是一个系统架构和设计方案，而不是完全创新的技术</li><li>AI实际上可以通过分析已有系统设计模式，提出类似的架构方案</li><li>更准确的说法是AI在某些创新领域的能力仍有限制，而不是完全无法创新</li></ul><ol start="6"><li>好处部分基本准确，但可以补充：</li></ol><ul><li>AI不仅提高效率，还能发现人类容易忽视的模式和关联</li><li>在某些领域（如图像识别、语音处理）已经超越了人类性能</li><li>AI能够24&#x2F;7工作，这个优势没有被提到</li></ul><ol start="7"><li>关于程序员不可替代性的分析基本合理，但可以补充：</li></ol><ul><li>程序员在系统架构设计、安全性考虑等方面的经验特别重要</li><li>处理边界条件和异常情况的能力仍然需要人类经验</li><li>对业务场景的深入理解和商业价值判断也是关键能力</li></ul><ol start="8"><li>“AI操作系统”的说法需要澄清：</li></ol><ul><li>这个比喻可能会造成误解，更准确的说法是”AI基础设施”或”AI平台”</li><li>程序员需要理解的不仅是技术原理，还包括AI的应用场景和限制</li></ul><p>总的来说，这些观点大体上是合理的，但部分表述过于绝对或简化。AI的能力和局限性是一个复杂的话题，需要更细致和平衡的讨论。理解AI的真实能力和限制，对于更好地利用AI工具至关重要。</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;h2 id=&quot;AI的局限性或缺点&quot;&gt;&lt;a href=&quot;#AI的局限性或缺点&quot; class=&quot;headerlink&quot; title=&quot;AI的局限性或缺点&quot;&gt;&lt;/a&gt;AI的局限性或缺点&lt;/h2&gt;&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;难以预测与控制&lt;/strong&gt;：AI的运行机制像黑箱，</summary>
-      
-    
-    
-    
-    
-    <category term="AI" scheme="http://yoursite.com/tags/AI/"/>
-    
-    <category term="LLM" scheme="http://yoursite.com/tags/LLM/"/>
     
   </entry>
   

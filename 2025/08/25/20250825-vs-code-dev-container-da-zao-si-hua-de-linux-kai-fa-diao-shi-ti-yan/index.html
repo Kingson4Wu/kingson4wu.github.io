@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="vscode,DevContainer,linux," />
+  <meta name="keywords" content="vscode,DevContainer,linux,CPP," />
 
 
 
@@ -89,11 +89,12 @@
 <meta property="og:description" content="最近在重新学习 Linux C++ 的过程中，发现了一种优雅的方式：借助 Docker + VS Code Dev Container 在任何系统上轻松获得一致的 Linux 开发调试环境。作为长期在 macOS 和 Windows 上开发的人，这种体验让我感受到前所未有的丝滑，真有点“相逢恨晚”。 从此，无论是 C++、Python、Go，还是其他需要 Linux 环境的项目，都可以通过 Dev">
 <meta property="og:locale">
 <meta property="article:published_time" content="2025-08-25T07:12:09.000Z">
-<meta property="article:modified_time" content="2025-08-25T07:18:39.346Z">
+<meta property="article:modified_time" content="2025-09-02T09:43:44.967Z">
 <meta property="article:author" content="Kingson Wu">
 <meta property="article:tag" content="vscode">
 <meta property="article:tag" content="DevContainer">
 <meta property="article:tag" content="linux">
+<meta property="article:tag" content="CPP">
 <meta name="twitter:card" content="summary">
 
 
@@ -443,6 +444,10 @@
 </ul>
 <hr>
 <p>这样一套方案，让跨平台、跨语言、跨架构的开发调试都像在本地一样丝滑高效。</p>
+<hr>
+<h2 id="参考例子"><a href="#参考例子" class="headerlink" title="参考例子"></a>参考例子</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/Kingson4Wu/cpp-linux-playground">https://github.com/Kingson4Wu/cpp-linux-playground</a></li>
+</ul>
 
       
     </div>
@@ -465,6 +470,8 @@
             <a href="/tags/DevContainer/" rel="tag"># DevContainer</a>
           
             <a href="/tags/linux/" rel="tag"># linux</a>
+          
+            <a href="/tags/CPP/" rel="tag"># CPP</a>
           
         </div>
       
@@ -573,7 +580,7 @@
 <a href="/archives/">                
 <!--<a href="/archives/%7C%7C%20archive">-->
               
-                  <span class="site-state-item-count">165</span>
+                  <span class="site-state-item-count">166</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -586,7 +593,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">187</span>
+                  <span class="site-state-item-count">191</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -626,7 +633,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Dev-Container-%E7%9A%84%E6%A0%B8%E5%BF%83%E4%BC%98%E5%8A%BF"><span class="nav-number">1.</span> <span class="nav-text">1. Dev Container 的核心优势</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E8%B0%83%E8%AF%95%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="nav-number">2.</span> <span class="nav-text">2. 调试工作原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E8%B7%A8%E6%9E%B6%E6%9E%84%E5%BC%80%E5%8F%91%EF%BC%88Mac-ARM-%E8%B7%91-x86-%E5%AE%B9%E5%99%A8%EF%BC%89"><span class="nav-number">3.</span> <span class="nav-text">3. 跨架构开发（Mac ARM 跑 x86 容器）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E5%BE%AE%E6%9C%8D%E5%8A%A1%E9%A1%B9%E7%9B%AE%E7%9A%84%E5%AE%B9%E5%99%A8%E5%8C%96%E7%AD%96%E7%95%A5"><span class="nav-number">4.</span> <span class="nav-text">4. 微服务项目的容器化策略</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%951-vs-%E6%96%B9%E6%B3%954-%E5%AF%B9%E6%AF%94%E8%A1%A8"><span class="nav-number">4.0.1.</span> <span class="nav-text">方法1 vs 方法4 对比表</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E6%80%BB%E7%BB%93%E4%B8%8E%E8%B6%8B%E5%8A%BF"><span class="nav-number">5.</span> <span class="nav-text">5. 总结与趋势</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Dev-Container-%E7%9A%84%E6%A0%B8%E5%BF%83%E4%BC%98%E5%8A%BF"><span class="nav-number">1.</span> <span class="nav-text">1. Dev Container 的核心优势</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E8%B0%83%E8%AF%95%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="nav-number">2.</span> <span class="nav-text">2. 调试工作原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E8%B7%A8%E6%9E%B6%E6%9E%84%E5%BC%80%E5%8F%91%EF%BC%88Mac-ARM-%E8%B7%91-x86-%E5%AE%B9%E5%99%A8%EF%BC%89"><span class="nav-number">3.</span> <span class="nav-text">3. 跨架构开发（Mac ARM 跑 x86 容器）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E5%BE%AE%E6%9C%8D%E5%8A%A1%E9%A1%B9%E7%9B%AE%E7%9A%84%E5%AE%B9%E5%99%A8%E5%8C%96%E7%AD%96%E7%95%A5"><span class="nav-number">4.</span> <span class="nav-text">4. 微服务项目的容器化策略</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%951-vs-%E6%96%B9%E6%B3%954-%E5%AF%B9%E6%AF%94%E8%A1%A8"><span class="nav-number">4.0.1.</span> <span class="nav-text">方法1 vs 方法4 对比表</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E6%80%BB%E7%BB%93%E4%B8%8E%E8%B6%8B%E5%8A%BF"><span class="nav-number">5.</span> <span class="nav-text">5. 总结与趋势</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E4%BE%8B%E5%AD%90"><span class="nav-number">6.</span> <span class="nav-text">参考例子</span></a></li></ol></div>
             
 
           </div>

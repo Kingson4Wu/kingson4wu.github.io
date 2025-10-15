@@ -287,6 +287,158 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/06/20200706-shi-yong-threadcontext-huan-cun-rpc-jie-guo/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/07/06/20200706-shi-yong-threadcontext-huan-cun-rpc-jie-guo/" itemprop="url">使用ThreadContext缓存RPC结果</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-06T19:44:20+08:00">
+                2020-07-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><img src="/2020/07/06/20200706-shi-yong-threadcontext-huan-cun-rpc-jie-guo/Gerrard.jpeg"></p>
+<p>在业务开发中，经常会使用RPC请求获取数据。有时候在同一条逻辑链路中，会多次使用RPC返回的数据。</p>
+<h3 id="业务场景"><a href="#业务场景" class="headerlink" title="业务场景"></a>业务场景</h3><pre>
+请求----------> 服务A
+             [1.methodA]----获取用户数据--->服务B(用户服务)
+             [2.mehtodB]----获取用户数据--->服务B(用户服务)
+</pre>
+<p>上图中，服务A中同一个逻辑链路中包含methodA和mehtodB，两个都会使用到用户数据，因此会导致重复的RPC调用。</p>
+<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><ol>
+<li>将数据实体作为methodB的参数传入<ul>
+<li>这种方式可以避免调用多次重复的RPC，但是也有缺点：<br>  a. 如果有mehtodC，methodD等，每个方法都加个参数，不是很优雅<br>  b. 如果除了获取用户信息，还要获取商品信息等，那么方法形参将越来越多，影响阅读</li>
+</ul>
+</li>
+</ol>
+<pre>
+请求----------> 服务A
+             [1.methodA]----获取用户数据--->服务B(用户服务)
+             [2.mehtodB(param1: userInfo)]----获取用户数据--->服务B(用户服务)
+             [3.mehtodC(param1: userInfo)]----获取用户数据--->服务B(用户服务)
+</pre>		
+<ol start="2">
+<li>使用	ThreadContext 缓存RPC结果<ul>
+<li>可以使用拦截器统一处理服务的所有ThreadContext(因为使用完之后需要remove)</li>
+<li>将RPC结果保存到ThreadContext和从ThreadContext获取RPC结果的逻辑，封装在RPC调用方法中<pre>
+请求----------> 服务A
+       [1.methodA]----获取用户数据--->服务B(用户服务)
+       ->> 将RPC结果保存在ThreadContext
+       [2.mehtodB]----获取用户数据--->从ThreadContext获取
+       [3.mehtodC]----获取用户数据--->从ThreadContext获取</pre></li>
+</ul>
+</li>
+</ol>
+<p>	</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/05/20200705-guan-yu-fu-wu-jian-yi-zhi-xing-he-qian-zhi-xiao-yan-de-si-kao/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1711,7 +1863,7 @@
 <a href="/archives/">                
 <!--<a href="/archives/%7C%7C%20archive">-->
               
-                  <span class="site-state-item-count">169</span>
+                  <span class="site-state-item-count">170</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

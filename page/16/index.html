@@ -287,6 +287,296 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/11/20200711-fen-bu-shi-suo-jian-dan-zong-jie/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/07/11/20200711-fen-bu-shi-suo-jian-dan-zong-jie/" itemprop="url">分布式锁简单总结</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-11T11:48:22+08:00">
+                2020-07-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="实现方式"><a href="#实现方式" class="headerlink" title="实现方式"></a>实现方式</h3><ol>
+<li>数据库的行级排它锁（如select * from x for update）；</li>
+<li>基于zookeeper的瞬间顺序节点；<ul>
+<li>最小节点获得锁</li>
+</ul>
+</li>
+<li>基于 Redis 的 SETNX 命令。<ul>
+<li>使用lua脚本保证原子性 （Redisson 有封装实现 ）</li>
+<li>RedLock <ul>
+<li>红锁并非是一个工具，而是Redis官方提出的一种分布式锁的算法。</li>
+<li>RedLock作者指出，之所以要用独立的，是避免了redis异步复制造成的锁丢失，比如：主节点没来的及把刚刚set进来这条数据给从节点，就挂了。</li>
+<li>红锁算法认为，只要(N&#x2F;2) + 1个节点加锁成功，那么就认为获取了锁， 解锁时将所有实例解锁。</li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/6bE5WmDubFCcSIMFuEqxEQ">细说Redis分布式锁</a></li>
+<li>Redisson 有封装实现</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<p>本文要讲的是第3种方式。</p>
+<h3 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h3><ol>
+<li><p>使用setnx创建一个key，如果key不存在，则创建成功返回1，否则返回0。根据是否获得锁决定是否执行业务逻辑，执行完后删除key来实现释放锁。</p>
+<ul>
+<li><code>SET resource_name my_random_value NX PX 30000</code></li>
+</ul>
+</li>
+<li><p>为了避免客户端挂了导致其他客户端无法获得锁的情况，为lock_key设置一个过期时间lock timeout</p>
+<ul>
+<li>一旦业务逻辑执行时间过长，租约到期，就会引发并发问题。</li>
+<li>lock timeout 设置合适的时间，一般情况10s内</li>
+<li>相对而言，ZooKeeper版本的分布式锁没有这个问题<ul>
+<li>锁的占用时间限制：redis就有占用时间限制，而ZooKeeper则没有，最主要的原因是redis目前没有办法知道已经获取锁的客户端的状态，是已经挂了呢还是正在执行耗时较长的业务逻辑。而ZooKeeper通过临时节点就能清晰知道，如果临时节点存在说明还在执行业务逻辑，如果临时节点不存在说明已经执行完毕释放锁或者是挂了。</li>
+<li>使用ZooKeeper可以主动通知客户端释放锁，Redis则不行</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>设置一个随机字符串my_random_value是很有必要的，它保证了一个客户端释放的锁必须是自己持有的那个锁。</p>
+<ul>
+<li>释放锁lua脚本 <figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> redis.call(<span class="string">&quot;get&quot;</span>,KEYS[<span class="number">1</span>]) == ARGV[<span class="number">1</span>] <span class="keyword">then</span></span><br><span class="line">    <span class="keyword">return</span> redis.call(<span class="string">&quot;del&quot;</span>,KEYS[<span class="number">1</span>])</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>可重入锁</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://juejin.cn/post/6961380552519712798">https://juejin.cn/post/6961380552519712798</a></li>
+<li>lua 脚本，需要存储 锁名称lockName、获得该锁的线程id和对应线程的进入次数count</li>
+<li>加锁 lock.lua <figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">   <span class="comment">-- 不存在该key时</span></span><br><span class="line"><span class="keyword">if</span> (redis.call(<span class="string">&#x27;exists&#x27;</span>, KEYS[<span class="number">1</span>]) == <span class="number">0</span>) <span class="keyword">then</span> </span><br><span class="line">	<span class="comment">-- 新增该锁并且hash中该线程id对应的count置1</span></span><br><span class="line">	redis.call(<span class="string">&#x27;hincrby&#x27;</span>, KEYS[<span class="number">1</span>], ARGV[<span class="number">2</span>], <span class="number">1</span>); </span><br><span class="line">	<span class="comment">-- 设置过期时间</span></span><br><span class="line">	redis.call(<span class="string">&#x27;pexpire&#x27;</span>, KEYS[<span class="number">1</span>], ARGV[<span class="number">1</span>]); </span><br><span class="line">	<span class="keyword">return</span> <span class="literal">nil</span>; </span><br><span class="line"><span class="keyword">end</span>; </span><br><span class="line"></span><br><span class="line"><span class="comment">-- 存在该key 并且 hash中线程id的key也存在</span></span><br><span class="line"><span class="keyword">if</span> (redis.call(<span class="string">&#x27;hexists&#x27;</span>, KEYS[<span class="number">1</span>], ARGV[<span class="number">2</span>]) == <span class="number">1</span>) <span class="keyword">then</span> </span><br><span class="line">	<span class="comment">-- 线程重入次数++</span></span><br><span class="line">	redis.call(<span class="string">&#x27;hincrby&#x27;</span>, KEYS[<span class="number">1</span>], ARGV[<span class="number">2</span>], <span class="number">1</span>); </span><br><span class="line">	redis.call(<span class="string">&#x27;pexpire&#x27;</span>, KEYS[<span class="number">1</span>], ARGV[<span class="number">1</span>]); </span><br><span class="line">	<span class="keyword">return</span> <span class="literal">nil</span>; </span><br><span class="line"><span class="keyword">end</span>; </span><br><span class="line"><span class="keyword">return</span> redis.call(<span class="string">&#x27;pttl&#x27;</span>, KEYS[<span class="number">1</span>]);</span><br></pre></td></tr></table></figure></li>
+<li>解锁 unlock.lua <figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">   <span class="comment">-- 不存在key</span></span><br><span class="line"><span class="keyword">if</span> (redis.call(<span class="string">&#x27;hexists&#x27;</span>, KEYS[<span class="number">1</span>], ARGV[<span class="number">3</span>]) == <span class="number">0</span>) <span class="keyword">then</span> </span><br><span class="line">	<span class="keyword">return</span> <span class="literal">nil</span>;</span><br><span class="line"><span class="keyword">end</span>;</span><br><span class="line"><span class="comment">-- 计数器 -1</span></span><br><span class="line"><span class="keyword">local</span> counter = redis.call(<span class="string">&#x27;hincrby&#x27;</span>, KEYS[<span class="number">1</span>], ARGV[<span class="number">3</span>], <span class="number">-1</span>); </span><br><span class="line"><span class="keyword">if</span> (counter &gt; <span class="number">0</span>) <span class="keyword">then</span> </span><br><span class="line">	<span class="comment">-- 过期时间重设</span></span><br><span class="line">	redis.call(<span class="string">&#x27;pexpire&#x27;</span>, KEYS[<span class="number">1</span>], ARGV[<span class="number">2</span>]); </span><br><span class="line"><span class="keyword">return</span> <span class="number">0</span>; </span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">	<span class="comment">-- 删除并发布解锁消息</span></span><br><span class="line">	redis.call(<span class="string">&#x27;del&#x27;</span>, KEYS[<span class="number">1</span>]); </span><br><span class="line">	redis.call(<span class="string">&#x27;publish&#x27;</span>, KEYS[<span class="number">2</span>], ARGV[<span class="number">1</span>]); </span><br><span class="line">	<span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line"><span class="keyword">end</span>; </span><br><span class="line"><span class="keyword">return</span> <span class="literal">nil</span>;</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>锁续约	</p>
+<ul>
+<li>延长锁的releaseTime延迟释放锁来直到完成业务期望结果，这种不断延长锁过期时间来保证业务执行完成的操作就是锁续约。</li>
+</ul>
+</li>
+<li><p>基于单Redis节点的分布式锁无法解决的安全问题。</p>
+<ul>
+<li>假如Redis节点宕机了，那么所有客户端就都无法获得锁了，服务变得不可用。为了提高可用性，我们可以给这个Redis节点挂一个Slave，当Master节点不可用的时候，系统自动切到Slave上（failover）。但由于Redis的主从复制（replication）是异步的，这可能导致在failover过程中丧失锁的安全性。</li>
+<li>Redlock算法</li>
+</ul>
+</li>
+<li><p>使用Redisson可以满足以上所有需求。</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/135864820">Redisson 实现分布式锁原理分析</a></li>
+<li>Redisson没有设置一个随机值，也可以解决解锁误删的问题。因为Redisson在解决可重入时，已经定义了threadId进行重入计数，通过threadId就可以判断是否是自己之前加的锁。</li>
+<li>锁续期：leaseTime 必须是 -1 才会开启 Watch Dog 机制，也就是如果你想开启 Watch Dog 机制必须使用默认的加锁时间为 30s。如果你自己自定义时间，超过这个时间，锁就会自定释放，并不会延长。</li>
+<li>锁等待：当锁正在被占用时，等待获取锁的进程并不是通过一个 while(true) 死循环去获取锁，而是利用了 Redis 的发布订阅机制,通过 await 方法阻塞等待锁的进程，有效的解决了无效的锁申请浪费资源的问题。</li>
+<li>缺点：Redis Cluster 或者说是 Redis Master-Slave 架构的主从异步复制导致的 Redis 分布式锁的最大缺陷（在 Redis Master 实例宕机的时候，可能导致多个客户端同时完成加锁）</li>
+<li>用法：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/cde0700f0128">使用Redisson实现分布式锁</a></li>
+</ul>
+</li>
+</ol>
+<ul>
+<li>个人看法： 分布式锁并不是绝对可靠，只能尽量保证大多数时候可靠，业务应该自行保证一旦锁失效时的逻辑正确性。</li>
+</ul>
+<h3 id="Zookeeper和Redis分布式锁的比较"><a href="#Zookeeper和Redis分布式锁的比较" class="headerlink" title="Zookeeper和Redis分布式锁的比较"></a>Zookeeper和Redis分布式锁的比较</h3><ol>
+<li>添加和删除，Reids性能较高</li>
+<li>Zookeeper有等待锁队列，大大提升抢锁效率；Redis需要考虑超时，原子性，误删等场景，客户端需要自旋等锁。</li>
+<li>使用 Redis 实现分布式锁在很多企业中非常常见，而且大部分情况下都不会遇到所谓的“极端复杂场景”。所以使用 Redis 作为分布式锁也不失为一种好的方案，最重要的一点是 Redis 的性能很高，可以支撑高并发的获取、释放锁操作。</li>
+<li>ZK 天生设计定位就是分布式协调，强一致性。锁的模型健壮、简单易用、适合做分布式锁。<br>如果获取不到锁，只需要添加一个监听器就可以了，不用一直轮询，性能消耗较小。<br>但是 ZK 也有其缺点：如果有较多的客户端频繁的申请加锁、释放锁，对于 ZK 集群的压力会比较大。</li>
+</ol>
+<h3 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h3><ul>
+<li><p>可以尝试使用Redisson实现分布式锁</p>
+</li>
+<li><p>Redis的作者antirez给出了一个更好的实现，称为Redlock，算是Redis官方对于实现分布式锁的指导规范。Redlock的算法描述就放在Redis的官网上：<br><a target="_blank" rel="noopener" href="https://redis.io/topics/distlock">https://redis.io/topics/distlock</a></p>
+</li>
+<li><p>举个场景的例子来详细说明：一提到分布式锁问题，大多数人想到的方案是基于Redis的Master-Slave模式来实现。这个实现方案行不行？分布式锁本质是一个CP需求，基于Redis的实现是一个AP需求，乍一看基于Redis的实现是无法满足的。脱离业务场景来谈架构都是耍流氓。<br>从技术战略的需求层面来看，如果分布式锁在极端情况下获取锁的不一致，社交业务场景能够接受，那么基于Redis的实现是完全可行的。如果业务是交易场景，分布式锁在极端情况下获取锁的不一致性无法接受，那么基于Redis的实现方案是不可行的。在锁强一致性的场景下，需要采取基于CP模型的etcd等方案来实现。</p>
+</li>
+<li><p>redis-cli提供了EVAL与EVALSHA命令执行Lua脚本:</p>
+<ol>
+<li>EVAL<ul>
+<li>EVAL script numkeys key [key …] arg [arg …]</li>
+<li>key和arg两类参数用于向脚本传递数据, 他们的值可在脚本中使用KEYS和ARGV两个table访问: KEYS表示要操作的键名, ARGV表示非键名参数(并非强制).</li>
+</ul>
+</li>
+<li>EVALSHA</li>
+</ol>
+<pre><code>- EVALSHA命令允许通过脚本的SHA1来执行(节省带宽), Redis在执行EVAL/SCRIPT LOAD后会计算脚本SHA1缓存, EVALSHA根据SHA1取出缓存脚本执行.
+</code></pre>
+</li>
+<li><p>redis一般都是单机房部署，如果要控制多个机房只有一个锁，考虑使用Consul来实现分布式锁。 </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/TEWnB_VqAW12nVrQlNmgNg">Redis 分布式锁的 10 个坑</a></p>
+<ol>
+<li>非原子操作（setnx + expire）<ul>
+<li>如果刚要执行完setnx加锁，正要执行expire设置过期时间时，进程crash或者要重启维护了，那么这个锁就“长生不老”了，别的线程永远获取不到锁了</li>
+</ul>
+</li>
+<li>被别的客户端请求覆盖（ setnx + value为过期时间）<ul>
+<li>Getset 命令用于设置指定 key 的值，并返回 key 的旧值。</li>
+</ul>
+</li>
+<li>忘记设置过期时间</li>
+<li>业务处理完，忘记释放锁</li>
+<li>B的锁被A给释放了<br>- 假设在这样的并发场景下：A、B两个线程来尝试给Redis的keylockKey加锁，A线程先拿到锁（假如锁超时时间是3秒后过期）。如果线程A执行的业务逻辑很耗时，超过了3秒还是没有执行完。这时候，Redis会自动释放lockKey锁。刚好这时，线程B过来了，它就能抢到锁了，开始执行它的业务逻辑，恰好这时，线程A执行完逻辑，去释放锁的时候，它就把B的锁给释放掉了。<br>- 正确的方式应该是，在用set扩展参数加锁时，放多一个这个线程请求的唯一标记，比如requestId，然后释放锁的时候，判断一下是不是刚刚的请求。</li>
+<li>释放锁时，不是原子性<ul>
+<li>因为判断是不是当前线程加的锁和释放锁不是一个原子操作。如果调用unlock(lockKey)释放锁的时候，锁已经过期，所以这把锁已经可能已经不属于当前客户端，会解除他人加的锁。</li>
+<li>判断和删除是两个操作，不是原子的，有一致性问题。释放锁必须保证原子性，可以使用Redis+Lua脚本来完成</li>
+</ul>
+</li>
+<li>锁过期释放，业务没执行完<ul>
+<li>是否可以给获得锁的线程，开启一个定时守护线程，每隔一段时间检查锁是否还存在，存在则对锁的过期时间延长，防止锁过期提前释放。</li>
+<li>当前开源框架Redisson解决了这个问题: 只要线程一加锁成功，就会启动一个watch dog看门狗，它是一个后台线程，会每隔10秒检查一下，如果线程一还持有锁，那么就会不断的延长锁key的生存时间。</li>
+</ul>
+</li>
+<li>Redis分布式锁和@transactional一起使用失效<ul>
+<li>正确的实现方法,可以在updateDB方法之前就上锁，即还没有开事务之前就加锁，那么就可以保证线程的安全性.</li>
+</ul>
+</li>
+<li>锁可重入<ul>
+<li>前面讨论的Redis分布式锁，都是不可重入的。</li>
+<li>不可重入的分布式锁的话，是可以满足绝大多数的业务场景。但是有时候一些业务场景，我们还是需要可重入的分布式锁</li>
+<li>Redis只要解决这两个问题，就能实现重入锁了：<ul>
+<li>怎么保存当前持有的线程</li>
+<li>怎么维护加锁次数（即重入了多少次）</li>
+</ul>
+</li>
+<li>实现一个可重入的分布式锁，我们可以参考JDK的ReentrantLock的设计思想。实际上，可以直接使用Redisson框架，它是支持可重入锁的。</li>
+</ul>
+</li>
+<li>Redis主从复制导致的坑<ul>
+<li>如果线程一在Redis的master节点上拿到了锁，但是加锁的key还没同步到slave节点。恰好这时，master节点发生故障，一个slave节点就会升级为master节点。线程二就可以获取同个key的锁啦，但线程一也已经拿到锁了，锁的安全性就没了。</li>
+<li>为了解决这个问题，Redis作者 antirez提出一种高级的分布式锁算法：Redlock。Redlock核心思想是这样的：<ul>
+<li>搞多个Redis master部署，以保证它们不会同时宕掉。并且这些master节点是完全相互独立的，相互之间不存在数据同步。同时，需要确保在这多个master实例上，是与在Redis单实例，使用相同方法来获取和释放锁。</li>
+<li>简化下步骤就是：<ol>
+<li>按顺序向5个master节点请求加锁</li>
+<li>根据设置的超时时间来判断，是不是要跳过该master节点。</li>
+<li>如果大于等于3个节点加锁成功，并且使用的时间小于锁的有效期，即可认定加锁成功啦。</li>
+<li>如果获取锁失败，解锁！</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>个人意见:一般情况下(绝大多数),业务不要强依赖于redis做互斥逻辑</li>
+</ol>
+</li>
+</ul>
+<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><ol>
+<li><a target="_blank" rel="noopener" href="https://yq.aliyun.com/articles/60663">分布式锁的实现</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/gxyandwmm/p/9588383.html">使用Redis作为分布式锁的一些注意点</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzUzMjkwMjg3Mg==&mid=2247484843&amp;idx=1&amp;sn=549ed30972eea76d5e7a0a9e1cfaf321&source=41#wech">如何实现靠谱的分布式锁？</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MjM5ODI5Njc2MA==&mid=2655825455&idx=1&sn=53e7043d76c0a39cf1b0d3be7a384ade&chksm=bd74e3f88a036aee104a1ec6001379d2238db2fde913b889b42138316e84ce9ed5e1ec271a10&mpshare=1&scene=1&srcid=0715ZMUAKOiQLNOSllsVZVKW%23rd">分布式锁用Redis还是Zookeeper？</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzA4NTg1MjM0Mg==&mid=2657261514&idx=1&sn=47b1a63f065347943341910dddbb785d&chksm=84479e13b3301705ea29c86f457ad74010eba8a8a5c12a7f54bcf264a4a8c9d6adecbe32ad0b&scene=21#wechat_redirect">基于Redis的分布式锁到底安全吗（上）？</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzUzMTA2NTU2Ng==&mid=2247487106&idx=1&sn=dd5f327c46d4274ba643a31cd0f0a77e&chksm=fa497133cd3ef82">80% 人不知道的 Redis 分布式锁的正确实现方式（Java 版）</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/On55CQezQ5sOw1E-YUpVUw">Redis结合Lua脚本实现高并发原子性操作</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/6bE5WmDubFCcSIMFuEqxEQ">细说Redis分布式锁</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/1TsBsaItcZ6fOg-bo2tGww">分布式锁用 Redis 好，还是 ZooKeeper 好？</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/452803310/answer/1931377239">使用Redis实现分布式锁和ZK实现分布式锁有什么区别，分别有哪些场景?</a></li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/10/20200710-huan-cun-ce-lue-jian-dan-zong-jie/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1721,158 +2011,6 @@ proxy_upstream_tries 5;
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/06/20200706-shi-yong-threadcontext-huan-cun-rpc-jie-guo/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/07/06/20200706-shi-yong-threadcontext-huan-cun-rpc-jie-guo/" itemprop="url">使用ThreadContext缓存RPC结果</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-06T19:44:20+08:00">
-                2020-07-06
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><img src="/2020/07/06/20200706-shi-yong-threadcontext-huan-cun-rpc-jie-guo/Gerrard.jpeg"></p>
-<p>在业务开发中，经常会使用RPC请求获取数据。有时候在同一条逻辑链路中，会多次使用RPC返回的数据。</p>
-<h3 id="业务场景"><a href="#业务场景" class="headerlink" title="业务场景"></a>业务场景</h3><pre>
-请求----------> 服务A
-             [1.methodA]----获取用户数据--->服务B(用户服务)
-             [2.mehtodB]----获取用户数据--->服务B(用户服务)
-</pre>
-<p>上图中，服务A中同一个逻辑链路中包含methodA和mehtodB，两个都会使用到用户数据，因此会导致重复的RPC调用。</p>
-<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><ol>
-<li>将数据实体作为methodB的参数传入<ul>
-<li>这种方式可以避免调用多次重复的RPC，但是也有缺点：<br>  a. 如果有mehtodC，methodD等，每个方法都加个参数，不是很优雅<br>  b. 如果除了获取用户信息，还要获取商品信息等，那么方法形参将越来越多，影响阅读</li>
-</ul>
-</li>
-</ol>
-<pre>
-请求----------> 服务A
-             [1.methodA]----获取用户数据--->服务B(用户服务)
-             [2.mehtodB(param1: userInfo)]----获取用户数据--->服务B(用户服务)
-             [3.mehtodC(param1: userInfo)]----获取用户数据--->服务B(用户服务)
-</pre>		
-<ol start="2">
-<li>使用	ThreadContext 缓存RPC结果<ul>
-<li>可以使用拦截器统一处理服务的所有ThreadContext(因为使用完之后需要remove)</li>
-<li>将RPC结果保存到ThreadContext和从ThreadContext获取RPC结果的逻辑，封装在RPC调用方法中<pre>
-请求----------> 服务A
-       [1.methodA]----获取用户数据--->服务B(用户服务)
-       ->> 将RPC结果保存在ThreadContext
-       [2.mehtodB]----获取用户数据--->从ThreadContext获取
-       [3.mehtodC]----获取用户数据--->从ThreadContext获取</pre></li>
-</ul>
-</li>
-</ol>
-<p>	</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1930,7 +2068,7 @@ proxy_upstream_tries 5;
 <a href="/archives/">                
 <!--<a href="/archives/%7C%7C%20archive">-->
               
-                  <span class="site-state-item-count">169</span>
+                  <span class="site-state-item-count">170</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

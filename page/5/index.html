@@ -287,6 +287,373 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2024/10/23/20241023-jin-qian-ye-wu-shu-ju-ku-shi-wu-xiang-guan-yao-dian-ji-lu/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2024/10/23/20241023-jin-qian-ye-wu-shu-ju-ku-shi-wu-xiang-guan-yao-dian-ji-lu/" itemprop="url">金钱业务数据库事务相关要点记录</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2024-10-23T15:59:48+08:00">
+                2024-10-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="表结构"><a href="#表结构" class="headerlink" title="表结构"></a>表结构</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> `user_balance` (</span><br><span class="line">`user_id` <span class="type">varchar</span>(<span class="number">128</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;&#x27;</span> COMMENT <span class="string">&#x27;用户ID&#x27;</span>,</span><br><span class="line">`coin` <span class="type">bigint</span>(<span class="number">20</span>) unsigned <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;0&#x27;</span> COMMENT <span class="string">&#x27;余额&#x27;</span>,</span><br><span class="line">`create_time` datetime <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;创建时间&#x27;</span>,</span><br><span class="line">`update_time` datetime <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;更新时间&#x27;</span>,</span><br><span class="line"><span class="keyword">PRIMARY</span> KEY (`user_id`),</span><br><span class="line">KEY `idx_updatetime` (`update_time`)</span><br><span class="line">) ENGINE<span class="operator">=</span>InnoDB <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>utf8mb4 COMMENT<span class="operator">=</span><span class="string">&#x27;账户余额表&#x27;</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> `user_balance_log` (</span><br><span class="line">`log_id` <span class="type">bigint</span>(<span class="number">20</span>) unsigned <span class="keyword">NOT</span> <span class="keyword">NULL</span> AUTO_INCREMENT COMMENT <span class="string">&#x27;流水id&#x27;</span>,</span><br><span class="line">`order_id` <span class="type">varchar</span>(<span class="number">128</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;&#x27;</span> COMMENT <span class="string">&#x27;业务订单ID&#x27;</span>,</span><br><span class="line">`user_id` <span class="type">varchar</span>(<span class="number">128</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;&#x27;</span> COMMENT <span class="string">&#x27;用户ID&#x27;</span>,</span><br><span class="line">`type` tinyint(<span class="number">4</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;0&#x27;</span> COMMENT <span class="string">&#x27;1：加，2：减&#x27;</span>,</span><br><span class="line">`coin` <span class="type">bigint</span>(<span class="number">20</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;0&#x27;</span> COMMENT <span class="string">&#x27;变更金额&#x27;</span>,</span><br><span class="line">`coin_after` <span class="type">bigint</span>(<span class="number">20</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;0&#x27;</span> COMMENT <span class="string">&#x27;变更后的金额&#x27;</span>,</span><br><span class="line">`create_time` datetime <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;创建时间&#x27;</span>,</span><br><span class="line"><span class="keyword">PRIMARY</span> KEY (`log_id`),</span><br><span class="line">KEY `idx_createtime` (`create_time`)</span><br><span class="line">) ENGINE<span class="operator">=</span>InnoDB <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>utf8mb4 COMMENT<span class="operator">=</span><span class="string">&#x27;账户余额表流水表&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> `user_balance`(`user_id`, `coin`, `create_time`, `update_time`) <span class="keyword">VALUES</span> (<span class="string">&#x27;kxw&#x27;</span>, <span class="number">20000000</span>, <span class="string">&#x27;2024-10-23 00:00:00&#x27;</span>, <span class="string">&#x27;2024-10-23 00:00:00&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">UPDATE</span> `user_balance` <span class="keyword">SET</span> `coin`<span class="operator">=</span> `coin` <span class="operator">-</span> <span class="number">1000</span> <span class="keyword">WHERE</span> `user_id` <span class="operator">=</span> <span class="string">&#x27;kxw&#x27;</span> <span class="keyword">AND</span> `coin` <span class="operator">&gt;=</span> <span class="number">1000</span>;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<h2 id="操作用户余额时注意"><a href="#操作用户余额时注意" class="headerlink" title="操作用户余额时注意"></a>操作用户余额时注意</h2><ol>
+<li>可重复读（记录扣费后余额快照）(select <code>coin</code> 后记录到user_balance_log表的<code>coin_after</code>)</li>
+<li>乐观锁（扣费冲突）（set <code>coin</code> - 1000 where <code>coin</code> &gt;&#x3D; 1000）</li>
+<li>业务幂等（不同业务使用相应的订单表）</li>
+<li>事务（用户余额表<code>user_balance</code>、日志流水表<code>user_balance_log</code>、业务订单表绑定）</li>
+<li>canal 监听 binlog 识别业务异常 (对比 binlog监听的<code>user_balance</code>表<code>coin</code>变化量 和 <code>user_balance_log</code>的 <code>coin</code>记录总量 是否一致)</li>
+</ol>
+<h2 id="流水表只需要记录coin-after"><a href="#流水表只需要记录coin-after" class="headerlink" title="流水表只需要记录coin_after"></a>流水表只需要记录coin_after</h2><h3 id="事务过程"><a href="#事务过程" class="headerlink" title="事务过程"></a>事务过程</h3><table>
+<thead>
+<tr>
+<th>事务1</th>
+<th>事务2</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>BEGIN;</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>BEGIN;</td>
+</tr>
+<tr>
+<td>SELECT * FROM <code>user_balance</code> WHERE <code>user_id</code> &#x3D; ‘kxw’; (coin&#x3D;20000000)</td>
+<td></td>
+</tr>
+<tr>
+<td>UPDATE <code>user_balance</code> SET <code>coin</code>&#x3D; <code>coin</code> - 1000 WHERE <code>user_id</code> &#x3D; ‘kxw’ AND <code>coin</code> &gt;&#x3D; 1000;</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>SELECT * FROM <code>user_balance</code> WHERE <code>user_id</code> &#x3D; ‘kxw’; (coin&#x3D;20000000)</td>
+</tr>
+<tr>
+<td></td>
+<td>UPDATE <code>user_balance</code> SET <code>coin</code>&#x3D; <code>coin</code> - 1000 WHERE <code>user_id</code> &#x3D; ‘kxw’ AND <code>coin</code> &gt;&#x3D; 1000;</td>
+</tr>
+<tr>
+<td>SELECT * FROM <code>user_balance</code> WHERE <code>user_id</code> &#x3D; ‘kxw’; (coin&#x3D;19999000)</td>
+<td></td>
+</tr>
+<tr>
+<td>COMMIT;</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>SELECT * FROM <code>user_balance</code> WHERE <code>user_id</code> &#x3D; ‘kxw’; (coin&#x3D;19998000)</td>
+</tr>
+<tr>
+<td></td>
+<td>COMMIT;</td>
+</tr>
+</tbody></table>
+<ul>
+<li>流水表只需要记录<code>coin_after</code>（变更后的余额）即可，因为变更前的余额，可能因为并发导致不准确，除非开启事务后，使用<code>select for update</code>来查询，而不是用普通的快照读</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2024/10/22/20241022-jian-dan-ji-lu-wo-zai-ji-jia-gong-si-de-jing-li/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2024/10/22/20241022-jian-dan-ji-lu-wo-zai-ji-jia-gong-si-de-jing-li/" itemprop="url">简单记录我在几家公司的经历</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2024-10-22T14:36:03+08:00">
+                2024-10-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <ul>
+<li><p>经历了一次大家普遍觉得“没考好”的高考后，我补录进入了广州一家末流的一本学校。出身于广东四五线城市的普通家庭，在高考前我并没有认真研究自己想要选择的专业。经过简单的网上搜索就业率后，我选择了网络工程这个专业。当时我并不认为这个专业与编程有什么关联，甚至可以说我对编程一无所知。</p>
+</li>
+<li><p>进入大学后，习惯于自学的我感到如同置身地狱（初中和高中时期我都是习惯自己看书、解题，几乎很少主动向老师请教）。现在回想起来，这种极端的习惯可能是我未能进一步提升，或走了一些弯路的原因。之所以称之为“地狱难度”，是因为我真的一无所知，只知道努力却无法抓住重点。在大学里，没有明确的方向，学习的内容繁多而杂乱。</p>
+</li>
+<li><p>另一方面，我也得为自己辩解一下。中国的大学（我没有见识过其他国家的情况）计算机专业的教育在一定程度上与社会脱节。缺乏引路人或足够的主动性和渴望，很难在未来的就业中具备足够的竞争力。当然，那时的网络没有现在这么发达，优质的教程较为匮乏。因此，我始终相信年轻人会越来越聪明，只要愿意学习，网络上有很多免费的优质资源，能够帮助我们少走很多弯路。毕竟，站在巨人的肩膀上学习，可以大大提高效率，节约时间。</p>
+</li>
+</ul>
+<h2 id="毕业进入第一家公司-V"><a href="#毕业进入第一家公司-V" class="headerlink" title="毕业进入第一家公司 V"></a>毕业进入第一家公司 V</h2><blockquote>
+<blockquote>
+<p>时长：两年<br>社会经验尚浅，没有好好体会和感受就离开了。<br>个人成长：业务和技术启蒙，基本开发技术和业务流程的熟悉与掌握，大公司职场的适应。</p>
+</blockquote>
+</blockquote>
+<ul>
+<li><p>我首先要感谢三个人：飞哥、龙哥和强哥。</p>
+</li>
+<li><p>飞哥是我关系最好的同事，我们在工作中配合默契，工作之外也相处得非常融洽。他曾告诉我：“我不是来工作的，我是来交朋友的。”随着年龄的增长，我越来越认同，对于绝大多数人来说，人脉确实非常重要。</p>
+</li>
+<li><p>龙哥回想起来应该是我当时工作中的业务小组长。由于刚参加工作，我对这个角色并没有太多概念，我们平常就像普通同事那样相处。龙哥像大哥一样指导我解决工作中的问题，也会和我讨论业务和技术，推荐阅读技术书籍，鼓励我相信自己的学习能力，多读英文书，获取一手资料。工作之外，我们也常常开玩笑，偶尔一起出去吃下午茶。</p>
+</li>
+<li><p>强哥是我遇到的技术能力最强的同事，思维敏捷、动手能力出众。我现在的许多工作习惯都是向他学习的。强哥当时负责组内的基础建设，算是技术含量最高的小组。我后来主动去学习，并自然地加入了这个小组。虽然强哥有时显得严肃，但可能是对某些事情无法忍受。聪明的人有时会觉得与不太聪明的人共事很困难，因此难免会有些暴躁，现在我偶尔也能体会到这种感觉。与强哥的故事并未结束，后来我还跟着他一起创业了一段时间。</p>
+</li>
+<li><p>在这里，我交到了最多的朋友，大家都非常友好。</p>
+</li>
+</ul>
+<h2 id="第二家公司-U"><a href="#第二家公司-U" class="headerlink" title="第二家公司 U"></a>第二家公司 U</h2><blockquote>
+<blockquote>
+<p>时长：一年三个月<br>技术基础较好的公司，但气氛却比较压抑，难以适应。<br>个人成长：学习能力和方法，技术基础原理的积累。</p>
+</blockquote>
+</blockquote>
+<ul>
+<li><p>在这里，我遇到了两个不错的同事，阿舜和阿君。总体来说，我与某些同事相处得较好，但总感觉有些同事特别冷漠，虽然不是故意的，似乎普遍存在社交恐惧，平常默默去食堂吃饭也不打招呼。可能是性格、职业属性、职场压力和公司文化等多方面原因，我个人的感受比较压抑。</p>
+</li>
+<li><p>作为国内前几的大公司，里面确实汇聚了很多人才和技术沉淀，光是在内网的论坛上就能学到不少知识。</p>
+</li>
+<li><p>此外，我在这家公司体验到了大公司内部创业的团队模式，以及组织架构调整和人员变动的经历。</p>
+</li>
+</ul>
+<h2 id="第三家公司-D"><a href="#第三家公司-D" class="headerlink" title="第三家公司 D"></a>第三家公司 D</h2><blockquote>
+<blockquote>
+<p>时长：三个月<br>一家创业公司，最累但也是最开心的时光，同事相处融洽。<br>个人成长：技术管理者全局思考能力的培养，技术规划等经验。</p>
+</blockquote>
+</blockquote>
+<ul>
+<li><p>加入这家公司是前一家公司的强哥邀请的，他是团队的创始人之一，后来他也辞去了前公司的职务，全职加入。</p>
+</li>
+<li><p>团队规模较小，大约十三人，其中开发人员七个，没有专门的测试人员。虽然我只在这里待了三个月就宣布解散，但还是体验到了创业公司的开放与忙碌，当然也有混乱和无奈等。团队的技术人员经验虽然较浅，但各有优点和潜力。其中阿韬是我邀请到下家公司一起共事的。</p>
+</li>
+</ul>
+<h2 id="第四家公司-K"><a href="#第四家公司-K" class="headerlink" title="第四家公司 K"></a>第四家公司 K</h2><blockquote>
+<blockquote>
+<p>时长：六年<br>收入最多，但在大公司光环下却是一个相对奇葩的小作坊。在这里，我的个人能力得到了充分发挥。<br>个人成长：各方面能力的积累与提升，职场经验和事务处理的积累。</p>
+</blockquote>
+</blockquote>
+<ul>
+<li><p>不确定是什么原因，前期技术和业务能力的积累、个人职业能力的成熟、对职场规则的理解，还是这里人才密度不足的影响。在这里，我的职业发展如鱼得水。在六年中经历了多次组织调整和三四次换领导，我也开始带领小规模的技术团队。在这段时间，我得到了同事们不同程度的认可，六年来每年的绩效都是优秀或以上。</p>
+</li>
+<li><p>我认为有几个因素促成了这一点：遇到优秀的领导、扎实的个人技术能力、良好的透明沟通等。最核心的窍门在于，在正确的职场价值观前提下，常常换位思考，这样基本能做出合理的选择。当然，有时在某些原则下可能会产生冲突和不愉快，或许有更好的处理方式，但我个人尚未掌握，某些方面也不想耗费额外时间，显得比较直接。另外，我的行事风格也在增加自己的“可替代性”。</p>
+</li>
+<li><p>在这里，我结识了许多关系良好的同事，毕竟待了很多年。其中，特别提到阿拳、阿杰和阿韬。</p>
+</li>
+<li><p>阿拳是我偶然发现的校友，比我小一届。有些人天然有种默契，眼神一对，自然而然就成了好朋友。他是一个喜欢技术挑战，渴望提升自己能力的人，但似乎在职场上的投入和专注不足，始终未能如愿。经历了换团队后，他也没有改观，最终离开了，加入了其他公司。现在看到他职业发展越来越好，生活也越来越丰富，我意识到，合适的环境和机遇对我们来说确实很重要。</p>
+</li>
+<li><p>阿杰是我刚加入公司时的同事，后来换团队后的领导。他与之前的领导不同，比较平易近人，尽量将公司的各种政策和职场潜规则向我们说明白。尽管身处职场，他总能从一个打工人的角度保持良心。大多数情况下，我们的相处就像朋友一样。</p>
+</li>
+<li><p>阿韬是前公司 D 的同事，他给我留下的印象最深刻的就是人际关系很好，从未见他与任何人发生冲突，平常开朗，喜欢群体活动。加入公司后，除了工作，我们私下相处的时间也最多，成为了我最好的朋友。在公司，他的评价一直很好，大家有心事都会找他倾诉，我常戏称他为“中央空调”。在这里，虽然技术能力是基础，但大多数情况下，沟通能力更为重要。</p>
+</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2024/07/24/20240724-tan-tan-jie-kou-diao-yong-zhong-de-xu-lie-hua-xie-yi/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1663,342 +2030,11 @@ what? 不仅一天全开会了，还没有任何有用的结论？
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2024/04/07/20240407-cong-java-zhuan-go-de-ge-ren-ti-hui/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2024/04/07/20240407-cong-java-zhuan-go-de-ge-ren-ti-hui/" itemprop="url">从Java转Go的个人体会</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2024-04-07T09:22:08+08:00">
-                2024-04-07
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote>
-<blockquote>
-<p>这里仅从一个业务开发的角度谈谈体会，格局较低，仅做个人记录<br>编程语言是程序员接触和使用最多的工具<br>后端技术基础的深度是快速学习和适应新语言的关键</p>
-</blockquote>
-</blockquote>
-<ul>
-<li><p>基于<a target="_blank" rel="noopener" href="https://kingson4wu.github.io/2023/07/02/20230702-dui-gong-zuo-zhong-jie-hong-guo-de-ji-chong-bian-cheng-yu-yan-ji-qi-bu-shu-jia-gou-de-kan-fa/">对工作中接触过的几种编程语言及其部署架构的看法</a>继续聊。</p>
-</li>
-<li><p>截至目前，职业生涯五分之四的时间都是在使用Java。出于个人意愿和兴趣，以及行业的发展形势，也系统的自学了Go语言，并在个人的小项目实践。在一次意外的组织变动中，我转岗到了新团队，并开始使用Go，由于之前自己的自学基础，基本是无缝切换到新语言。可能是由于团队人员大部分是从Lua或PHP开始转Go的，在那里甚至感觉自己稍稍领先。</p>
-</li>
-<li><p>Go抽象业务比Java麻烦，代码不美观，但是它原生高并发，而且微服务下很多时候就一个后端服务，业务足够小，不需要复杂的设计模式等，并不需要像以前写大型Java应用这样做非常多的抽象，还能打二进制包，甚至还能保证一个团队所有人代码都是相同风格</p>
-</li>
-<li><p>以下讲一些个人看法，比较乱甚至不正确，仅做个人记录</p>
-<ol>
-<li>小型项目省内存</li>
-<li>写命令行程序方便简单</li>
-<li>现在绝大部分功能都有相应的官方库和开源库</li>
-<li>运行无需环境依赖，直接打包成二进制可执行程序（Java现在也可以了，可能大部分业务场景下体积还较大）</li>
-<li>支持交叉编译，不要特定平台</li>
-<li>打包体积小（根据代码实际使用情况打包-这点是我一直苦苦寻找的）<ul>
-<li>Go语言中有未用代码消除和可执行文件瘦身机制。只有在程序执行路径上被调用的函数才会进入最终的可执行文件，未被调用的函数会被消除</li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/s60J4eA_d0hqrXj-XMPpXA">Go未用代码消除与可执行文件瘦身</a></li>
-</ul>
-</li>
-</ol>
-</li>
-<li><p>为什么现在大多数人都会认为Java启动慢占内存呢？</p>
-<ul>
-<li>首先不是Java自身的原因，而是跟实际使用场景有关</li>
-<li>使用Java大多数用来做业务开发，也习惯引入很多依赖库，首当其冲就是SpringBoot等框架</li>
-<li>多数都是spring相关类、proxy&#x2F;cglib，以及各种bean配置</li>
-<li>而且很多类都是在启动的时候初始化的</li>
-</ul>
-</li>
-<li><p>微服务下的编程语言</p>
-<ul>
-<li>在K8S流行之前，Java通常是使用SpringCloud</li>
-<li>其实微服务相关技术，在K8S已经实现了</li>
-<li>无论是使用Go还是Java，目前都应该向K8S靠近</li>
-<li>还有一点，K8S本身就是用Go实现的</li>
-</ul>
-</li>
-</ul>
-<h2 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h2><ul>
-<li><p><a target="_blank" rel="noopener" href="https://github.com/Kingson4Wu/graalvm_demo">体验Graalvm+SpringBoot+Java21构建原生程序</a></p>
-</li>
-<li><p>在内存利用效率上，Go语言确实比Java做得更好，在4个不同的角度来总结</p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/-N4eqdXb9a93uvOWfE4ScQ">Golang与Java全方位对比总结</a></li>
-</ul>
-<ol>
-<li>Java的JIT策略比Golang的AOT策略<ul>
-<li>Java在运行时相比Golang多占用了一些内存。原因在于：<ul>
-<li>Java运行态中包含了一个完整的解释器、一个JIT编译期以及一个垃圾回收器，这会显著地增加内存。</li>
-<li>Golang语言直接编译到机器码，运行态只包含机器码和一个垃圾回收器。</li>
-</ul>
-</li>
-<li>因此Golang的运行态相对消耗内存较少。</li>
-</ul>
-</li>
-<li>内存分配和垃圾回收器<ul>
-<li>Java确实在起步占用上偏多，毕竟jvm需要更多内存做jit，默认的gc算法对内存要求偏高，但这不能代表后续占用仍然线性增长。如果目标是启动成百上千个内存需求较少的进程，那Java确实不擅长。</li>
-</ul>
-</li>
-<li>并发<ul>
-<li>协程模型比线程模型更加节省内存。</li>
-</ul>
-</li>
-<li>反射<ul>
-<li>Golang的反射更加简单，导致框架的内存消耗Golang程序比Java程序优秀。主要是因为： Java的框架实现中大量使用反射，并使用hashmap缓存信息，这2个都是极度消耗内存的行为。 Golang的框架中也使用reflect、map。但是Golang是面向interface和值类型的，这导致Golang的反射模型要比Java的反射模型简单非常多，反射过程要产生的对象数量也少非常多。</li>
-</ul>
-</li>
-</ol>
-</li>
-<li><p>为什么一些已经选择 Java 的公司，现在又开始考虑使用 Go？</p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/ZKL-M54IBx9CSkYKoLdsUA">为什么要用Go重写Dubbo？</a></li>
-<li>相较于 Java，Go 在启动速度、编译速度、内存使用和高并发（如协程）方面都有明显优势。所以，那些已经采用 Java 的公司现在也在考虑引入 Go。但要注意的是，目前这样的公司仍然是少数。另外，一些公司并没有严格规定技术栈的选择，因此新成立的部门或新业务团队可以自由选择，而他们可能更倾向于选择 Go 作为开发语言。</li>
-<li>小结: 总的来说，无论是选择 Java 还是 Go，都是有其合理性的。一家公司同时选择这两种语言也同样合理。尽管这样的公司占比不大，但 Java 与 Go 之间的交流需求仍然存在。</li>
-</ul>
-</li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2024/04/06/20240406-ji-lu-xian-mian-ye-wu-de-jing-yan/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2024/04/06/20240406-ji-lu-xian-mian-ye-wu-de-jing-yan/" itemprop="url">记录限免业务的经验</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2024-04-06T22:16:35+08:00">
-                2024-04-06
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <ul>
-<li><p>由于业务需要，比如歌曲，我们需要对部分歌曲开放限免的功能，而且需要限制开放限免的场景。比如这首歌在场景A免费，在场景B收费。</p>
-</li>
-<li><p>先说正确的做法，下发另外一个字段比如free_token，通过这个字段判断业务来源，和判断是否可以免费。free_token是随着对应的场景查询时下发的，是变化的。即同一个歌曲的free_token不是唯一的。</p>
-</li>
-<li><p>现在有另外一种情况，想对现有的业务做限免（前端业务是不认free_token的）。这时可以把歌曲id使用free_token的值来下发，后续通过歌曲id来判断是否符合限免。</p>
-<ul>
-<li>这样做有个前提，就是前端业务没有使用歌曲id来做唯一性的业务（因为这是歌曲id是变化的），比如收藏。所以使用这个方案，要充分测试，而且可能还有其他不兼容的场景。</li>
-</ul>
-</li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/4/">&lt;</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/17/">17</a><a class="extend next" rel="next" href="/page/6/">&gt;</a>
+    <a class="extend prev" rel="prev" href="/page/4/">&lt;</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/18/">18</a><a class="extend next" rel="next" href="/page/6/">&gt;</a>
   </nav>
 
 
@@ -2051,7 +2087,7 @@ what? 不仅一天全开会了，还没有任何有用的结论？
 <a href="/archives/">                
 <!--<a href="/archives/%7C%7C%20archive">-->
               
-                  <span class="site-state-item-count">170</span>
+                  <span class="site-state-item-count">172</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2064,7 +2100,7 @@ what? 不仅一天全开会了，还没有任何有用的结论？
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">197</span>
+                  <span class="site-state-item-count">199</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

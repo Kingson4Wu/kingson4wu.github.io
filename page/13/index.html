@@ -287,6 +287,152 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/12/23/20201223-kai-fa-jie-duan-checklist/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/12/23/20201223-kai-fa-jie-duan-checklist/" itemprop="url">开发阶段checklist</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-12-23T22:10:16+08:00">
+                2020-12-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <ul>
+<li>方案补全</li>
+<li>索引复查； 主库从库查询检查；事务检查；写语句死锁风险检查<br>(更新语句要注意index_merge问题，避免死锁)</li>
+<li>缓存策略</li>
+<li>降级检查</li>
+<li>异常捕捉处理</li>
+<li>使用代码扫描工具</li>
+<li>错误码整理</li>
+<li>灰度策略；是否可回滚；是否可监控</li>
+<li>日志补全</li>
+<li>考虑异步操作</li>
+<li>监控数据状态，比如某些任务表，监控失败率及时发现异常</li>
+<li>git仓库包含多模块项目，要注意是否都发版了或注意改动范围，否则会导致代码已经合并到主干了，其他的项目却没上线，没能及时发现问题</li>
+<li>测试用例<ul>
+<li>注意实体转换的关键字段也需要覆盖用例，不然漏设置都无法察觉</li>
+</ul>
+</li>
+<li>不能迷信单元测试，需要整条链路断点走一遍<ul>
+<li>有时可能因为少传一个参数，参数是下一个方法用到的，局部的单元测试很难发现</li>
+</ul>
+</li>
+<li>复查测试环境和生产环境的表结构是否一致<ul>
+<li>有时为了方便快速在测试执行变更语句，而忘记同步到线上的变更SQL中</li>
+</ul>
+</li>
+<li>上线申请事项记录</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/12/19/20201219-qiang-pao-bing-jun-yu-gang-tie-ren-lei-she-hui-de-ming-yun-bi-ji/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2802,158 +2948,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/09/26/20200926-guan-yu-close-wait-he-httpclient-de-shi-yong/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/09/26/20200926-guan-yu-close-wait-he-httpclient-de-shi-yong/" itemprop="url">关于CLOSE_WAIT和HttpClient的使用</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-09-26T13:58:25+08:00">
-                2020-09-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><img src="/2020/09/26/20200926-guan-yu-close-wait-he-httpclient-de-shi-yong/TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B.png"><br><img src="/2020/09/26/20200926-guan-yu-close-wait-he-httpclient-de-shi-yong/tcp_normal_close.png"></p>
-<p>ESTABLISHED 表示正在进行网络连接的数量<br>TIME_WAIT 表示表示等待系统主动关闭网络连接的数量<br>CLOSE_WAIT 表示被动等待程序关闭的网络连接数量</p>
-<ol start="0">
-<li>查看系统TCP状态的命令：<code>netstat -n | awk &#39;/^tcp/ &#123;++S[$NF]&#125; END &#123;for(a in S) print a, S[a]&#125;&#39;</code></li>
-<li>CLOSE_WAIT 是被动关闭产生的一种状态，当用户程序正常close之后将变成LAST_ACK状态。</li>
-<li>TIME_WAIT状态可以通过优化服务器参数得到解决(当然也有可能是程序处理不当产生太多连接)。而CLOSE_WAIT数目过大一般是由于程序被动关闭连接处理不当导致的。</li>
-<li>以HttpClient为例<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="type">String</span> <span class="variable">resp</span> <span class="operator">=</span> <span class="string">&quot;&quot;</span>;</span><br><span class="line">    <span class="type">HttpResponse</span> <span class="variable">response</span> <span class="operator">=</span> client.execute(get);</span><br><span class="line">    <span class="keyword">if</span> (response.getStatusLine().getStatusCode() != <span class="number">200</span>) &#123;</span><br><span class="line">        get.abort();</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">HttpEntity</span> <span class="variable">entity</span> <span class="operator">=</span> response.getEntity();</span><br><span class="line">    <span class="keyword">if</span> (entity != <span class="literal">null</span>) &#123;</span><br><span class="line">        in = entity.getContent();</span><br><span class="line">        resp = in.xxx;</span><br><span class="line">        <span class="comment">//xxx</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> resp;</span><br><span class="line">&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">    get.abort();</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;&quot;</span>;</span><br><span class="line">&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (in != <span class="literal">null</span>) &#123;</span><br><span class="line">        in.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-在异常时显示调用abort，直接中止本次连接，避免in未赋值导致连接未关闭的问题。</li>
-<li>HttpClient连接关闭。一种是主动，一种是被动。在代码API的使用上没进行区分。主动关闭时当调用Close()，发出FIN包由ESTABLISHED进入FIN_WAIT_1 状态；被动关闭时当调用Close()，发出FIN包由CLOSE_WAIT进入LAST_ACK状态。</li>
-<li>使用PoolingClientConnectionManager？</li>
-</ol>
-<h2 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h2><h3 id="httpclient-的timeout参数"><a href="#httpclient-的timeout参数" class="headerlink" title="httpclient 的timeout参数"></a>httpclient 的timeout参数</h3><ul>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/btlas/article/details/53710854">httpclient SocketTimeout ConnectTimeout ConnectionRequestTimeout</a></li>
-<li>ConnectionRequestTimeout<ul>
-<li>httpclient使用连接池来管理连接，这个时间就是从连接池获取连接的超时时间，可以想象下数据库连接池；</li>
-</ul>
-</li>
-<li>ConnectTimeout<ul>
-<li>连接建立时间，三次握手完成时间；</li>
-</ul>
-</li>
-<li>SocketTimeout<ul>
-<li>关于readimeout的含义: Defines a timeout for reading a response from the proxied server. The timeout is set only between two successive read operations, not for the transmission of the whole response. If the proxied server does not transmit anything within this time, the connection is closed.</li>
-<li>数据传输过程中数据包之间间隔的最大时间；</li>
-<li>SocketTimeout的值表示的是“a”、”b”、”c”这三个报文，每两个相邻的报文的间隔时间不能超过SocketTimeout</li>
-<li>虽然报文(“abc”)返回总共用了6秒，如果SocketTimeout设置成4秒，实际程序执行的时候是不会抛出java.net.SocketTimeoutException: Read timed out异常的</li>
-</ul>
-</li>
-</ul>
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/sunxucool/p/3449068.html">服务器TIME_WAIT和CLOSE_WAIT详解和解决办法</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/shootyou/article/details/6615051">HttpClient连接池抛出大量ConnectionPoolTimeoutException: Timeout waiting for connection异常排查</a></li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -3011,7 +3005,7 @@
 <a href="/archives/">                
 <!--<a href="/archives/%7C%7C%20archive">-->
               
-                  <span class="site-state-item-count">172</span>
+                  <span class="site-state-item-count">173</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -3024,7 +3018,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">199</span>
+                  <span class="site-state-item-count">203</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

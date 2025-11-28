@@ -287,6 +287,189 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2025/03/23/20250323-shi-yong-java-diao-yong-rust-gou-jian-de-dong-tai-ku/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2025/03/23/20250323-shi-yong-java-diao-yong-rust-gou-jian-de-dong-tai-ku/" itemprop="url">使用Java调用Rust构建的动态库</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2025-03-23T14:41:37+08:00">
+                2025-03-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<blockquote>
+<p>近期帮朋友做一个需求，需要将某个Rust项目的一部分功能移植到Java中，使Java应用能使用</p>
+</blockquote>
+</blockquote>
+<h2 id="方案1-直接将Rust翻译成Java代码"><a href="#方案1-直接将Rust翻译成Java代码" class="headerlink" title="方案1: 直接将Rust翻译成Java代码"></a>方案1: 直接将Rust翻译成Java代码</h2><blockquote>
+<blockquote>
+<p>前置准备：将Rust项目跑通，方便通过debug对照执行细节，从而一步步翻译成Java代码<br>希望借助AI的力量帮忙完成</p>
+</blockquote>
+</blockquote>
+<ul>
+<li>借助AI的方案如下：<ul>
+<li>首先，我已经跑通了需要抽取的功能的相关测试用例</li>
+<li>然后，让AI帮忙将涉及这些功能相关的代码抽取成单独的Rust项目（结果还是很乱七八糟）</li>
+<li>大概是因为上下文内容太多的关系，AI执行任务的效果很差</li>
+<li>没办法，于是自己拆分代码，让AI软件帮忙根据代码块逐个进行转化，结果效果是好了很多，能帮助不少，不过这样效率太低，而且AI有时候也经常出错，需要自己慢慢调整</li>
+<li>看来AI目前在一次性的转化大量代码的效率和准确性还是不够</li>
+<li>本次程序员该懒就懒的宗旨，我决定另辟蹊径，采用方案2</li>
+</ul>
+</li>
+</ul>
+<h2 id="方案2-直接将相关功能的Rust功能编译成动态库，由Java直接调用"><a href="#方案2-直接将相关功能的Rust功能编译成动态库，由Java直接调用" class="headerlink" title="方案2: 直接将相关功能的Rust功能编译成动态库，由Java直接调用"></a>方案2: 直接将相关功能的Rust功能编译成动态库，由Java直接调用</h2><blockquote>
+<blockquote>
+<p>省去翻译代码的重复工作<br>需要构建不同平台的动态库<br>Java代码在加载前需要判断环境加载相应的动态库<br>使用Github Action来构建各种平台的动态库<br>Java端充分测试，Java8应用测试，Java9以上模块化系统是否可用测试，Windows等其他平台测试</p>
+</blockquote>
+</blockquote>
+<hr>
+<blockquote>
+<blockquote>
+<p>以下由AI（ChatGPT）帮我完成的文章</p>
+</blockquote>
+</blockquote>
+<h1 id="使用Java调用Rust构建的动态库"><a href="#使用Java调用Rust构建的动态库" class="headerlink" title="使用Java调用Rust构建的动态库"></a>使用Java调用Rust构建的动态库</h1><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>在最近的一个项目中，我需要将一个Rust项目中的部分功能迁移到Java应用中，供Java系统调用。为了简化过程，我决定绕过将Rust代码完全转化为Java的复杂任务，而是直接通过Rust构建动态库，再通过Java来调用。这种方法不仅减少了代码转换的工作量，还利用了Rust的高性能特点，提高了Java应用的效率。</p>
+<h2 id="方案1-直接将Rust翻译成Java代码-1"><a href="#方案1-直接将Rust翻译成Java代码-1" class="headerlink" title="方案1: 直接将Rust翻译成Java代码"></a>方案1: 直接将Rust翻译成Java代码</h2><h3 id="前置准备"><a href="#前置准备" class="headerlink" title="前置准备"></a>前置准备</h3><p>为了开始这个过程，我首先确保了Rust项目能够成功运行，并且通过调试工具逐步分析每个功能的执行细节。这是为了确保我可以一步步将Rust的实现逻辑转化为Java代码。</p>
+<h3 id="使用AI进行代码转换"><a href="#使用AI进行代码转换" class="headerlink" title="使用AI进行代码转换"></a>使用AI进行代码转换</h3><p>最初，我尝试借助AI工具自动化地将Rust代码转换为Java代码。以下是我使用AI进行代码转换的过程：</p>
+<ul>
+<li>我首先跑通了相关的测试用例，确保所有需要移植的功能都能正常工作。</li>
+<li>然后，我让AI帮助抽取与这些功能相关的Rust代码，并转化成单独的Rust项目。但由于上下文过多，AI的效果并不理想，生成的代码混乱且不完整。</li>
+<li>之后，我将代码拆分成更小的部分，让AI逐一处理，虽然效果有所改善，但这种方式依旧效率低下，且AI经常会出错，导致我不得不花大量时间修正。</li>
+</ul>
+<p>这一过程中，我意识到AI在一次性大规模转化代码时的准确性和效率仍然有待提升。最终，我决定放弃这条路，转而尝试另一种更直接的方案——方案2。</p>
+<h2 id="方案2-直接将Rust功能编译成动态库，由Java调用"><a href="#方案2-直接将Rust功能编译成动态库，由Java调用" class="headerlink" title="方案2: 直接将Rust功能编译成动态库，由Java调用"></a>方案2: 直接将Rust功能编译成动态库，由Java调用</h2><h3 id="思路与优势"><a href="#思路与优势" class="headerlink" title="思路与优势"></a>思路与优势</h3><p>与其将Rust代码翻译成Java代码，我决定直接将Rust的功能编译成动态库（.dll 或 .so），然后在Java中通过JNI（Java Native Interface）调用这些动态库。这样可以避免代码翻译过程中的麻烦，并且能够充分利用Rust在性能上的优势。</p>
+<h3 id="构建Rust动态库"><a href="#构建Rust动态库" class="headerlink" title="构建Rust动态库"></a>构建Rust动态库</h3><p>在实现这一方案时，我需要做以下几个步骤：</p>
+<ol>
+<li><p><strong>编译Rust代码为动态库</strong>：通过Rust的<code>cargo</code>工具，将Rust代码编译成适用于不同平台的动态库。这需要为每个平台生成相应的二进制文件，如Windows下的<code>.dll</code>，Linux下的<code>.so</code>，以及MacOS下的<code>.dylib</code>。</p>
+</li>
+<li><p><strong>使用Github Actions自动化构建</strong>：为了支持多平台的动态库构建，我使用了Github Actions来自动化构建过程。这样，无论是Windows、Linux还是MacOS，都会根据需要自动生成对应的动态库，极大地简化了跨平台的构建工作。</p>
+</li>
+<li><p><strong>Java端加载动态库</strong>：Java通过JNI加载Rust编译出的动态库，并调用其中的函数。在加载时，Java代码会先检测当前运行环境，根据操作系统加载相应的库文件。</p>
+</li>
+<li><p><strong>平台兼容性测试</strong>：为了确保Java能够顺利调用Rust动态库，我在多个平台上进行了充分的测试。这包括：</p>
+<ul>
+<li>在Java 8环境下进行功能测试。</li>
+<li>验证在Java 9及以上版本的模块化系统下，Java与Rust动态库的兼容性。</li>
+<li>测试在Windows、Linux和MacOS等不同平台下的表现。</li>
+</ul>
+</li>
+</ol>
+<h3 id="方案优势"><a href="#方案优势" class="headerlink" title="方案优势"></a>方案优势</h3><ul>
+<li><strong>减少工作量</strong>：不需要将Rust代码完全翻译为Java代码，避免了翻译过程中的复杂性和错误。</li>
+<li><strong>高效的性能</strong>：Rust的性能优势得以保留，Java通过调用Rust动态库，可以在性能上得到显著提升。</li>
+<li><strong>跨平台支持</strong>：通过自动化构建不同平台的动态库，Java应用能够轻松支持Windows、Linux、MacOS等多种操作系统。</li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>通过将Rust功能编译成动态库并在Java中调用，我成功地绕过了将Rust代码完全转化为Java的复杂过程，同时还能够充分利用Rust的性能优势。虽然在构建过程中涉及到平台适配和自动化构建，但这一方案的灵活性和高效性使其成为解决问题的最佳选择。对于有类似需求的开发者来说，这无疑是一个值得尝试的方案。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2025/02/26/20250226-kai-yuan-zhi-shi-ku-xi-tong-shi-yong/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2503,190 +2686,6 @@ Chatbot:"""
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2025/01/08/20250108-suan-fa-zai-shi-ji-ye-wu-chang-jing-zhong-bing-fei-wan-quan-wu-yong/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2025/01/08/20250108-suan-fa-zai-shi-ji-ye-wu-chang-jing-zhong-bing-fei-wan-quan-wu-yong/" itemprop="url">算法在实际业务场景中并非完全无用</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2025-01-08T13:33:24+08:00">
-                2025-01-08
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote>
-<blockquote>
-<p>从事业务开发的同学经常会抱怨经常面试要刷算法，实际上平常的开发99%以上的事情都不会用到。<br>实际情况确实是这样。平常在写业务逻辑代码时，几乎完全不需要。<br>当然有些技术原理在背八股文的时候，懂一点算法能帮助你更好的理解。<br>而有些特殊业务场景，懂一些算法，确实能帮助你很好的解决问题。<br>下面举两个业务中产品提出的需求作为例子，简单描述如何利用算法有效解决。</p>
-</blockquote>
-</blockquote>
-<h2 id="一、从题库（50道题）中随机抽出10道题-且不能重复"><a href="#一、从题库（50道题）中随机抽出10道题-且不能重复" class="headerlink" title="一、从题库（50道题）中随机抽出10道题,且不能重复"></a>一、从题库（50道题）中随机抽出10道题,且不能重复</h2><ul>
-<li><p>最简单的思路：</p>
-<ul>
-<li>循环10次，每次取50以内的随机数</li>
-<li>创建一个hashmap，判断生成的随机数是否在map存在，存在则重新生成</li>
-<li>这个方法的缺点时，极端情况下，会多次生成重复的随机数导致要不断重新生成</li>
-</ul>
-</li>
-<li><p>经过一番思考，我设计了一下从m个数中取n个数的算法(m&gt;n), 保证算法只会循环n次 </p>
-</li>
-<li><p>那时我还是使用Java进行开发</p>
-</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="type">int</span>[] randomArr(<span class="type">int</span> m, <span class="type">int</span> n) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (m &lt; n) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">int</span>[]&#123;&#125;;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">int</span>[] result = <span class="keyword">new</span> <span class="title class_">int</span>[n];</span><br><span class="line">    <span class="type">int</span>[] data = <span class="keyword">new</span> <span class="title class_">int</span>[m];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; m; i++) &#123;</span><br><span class="line">        data[i] = i;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> <span class="variable">end</span> <span class="operator">=</span> m;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">0</span>; j &lt; n; j++) &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">y</span> <span class="operator">=</span> ThreadLocalRandom.current().nextInt(end);</span><br><span class="line">        result[j] = data[y];</span><br><span class="line">        data[y] = data[end - <span class="number">1</span>];</span><br><span class="line">        data[end - <span class="number">1</span>] = result[j];</span><br><span class="line">        end--;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>后面我才发现原来这个算法叫 洗牌算法（Shuffle Algorithm），或者叫随机乱置算法。</li>
-</ul>
-<h2 id="通过搜索关键字匹配对应的标签id"><a href="#通过搜索关键字匹配对应的标签id" class="headerlink" title="通过搜索关键字匹配对应的标签id"></a>通过搜索关键字匹配对应的标签id</h2><ul>
-<li><p>产品提供了400个标签名称以及对应的标签id，希望能通过搜索的方式找到最相似的标签id，希望能支持模糊匹配</p>
-</li>
-<li><p>一般思路：</p>
-<ul>
-<li>方案1: <ol>
-<li>将400条数据一次性加载的程序内存</li>
-<li>遍历数据400条使用字符串的contains方法，找到第一条匹配数据就跳出，否则继续</li>
-</ol>
-</li>
-<li>方案2:<ol>
-<li>直接将数据导入到ES搜索引擎，利用ES自带的分词等搜索功能</li>
-<li>通过调ES，搜索得到标签id</li>
-</ol>
-</li>
-</ul>
-</li>
-<li><p>简单分析方案：</p>
-<ul>
-<li>方案1，性能太差，极端情况需要遍历所有数据</li>
-<li>方案2，需要新搭建ES集群，实现代价比较高</li>
-</ul>
-</li>
-<li><p>经过一番思考，以及从产品本身实际需求上出发，我涉及出以下的方案</p>
-<ol>
-<li>将数据的标签名字使用中文分词库<a target="_blank" rel="noopener" href="https://github.com/go-ego/gse">gse</a>进行分词</li>
-<li>将分词和对应的标签数据，构建前缀匹配树</li>
-<li>当搜索时，使用提前构建好的前缀匹配树，即可快速找到对应的标签id</li>
-</ol>
-</li>
-<li><p>这时我已经转使用Go来开发了</p>
-</li>
-</ul>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">type</span> TrieNode <span class="keyword">struct</span> &#123;</span><br><span class="line">	children <span class="keyword">map</span>[<span class="type">rune</span>]*TrieNode</span><br><span class="line">	isEnd    <span class="type">bool</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">NewTrieNode</span><span class="params">()</span></span> *TrieNode &#123;</span><br><span class="line">	<span class="keyword">return</span> &amp;TrieNode&#123;</span><br><span class="line">		children: <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="type">rune</span>]*TrieNode),</span><br><span class="line">		isEnd:    <span class="literal">false</span>,</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Trie <span class="keyword">struct</span> &#123;</span><br><span class="line">	root *TrieNode</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">NewTrie</span><span class="params">()</span></span> *Trie &#123;</span><br><span class="line">	<span class="keyword">return</span> &amp;Trie&#123;</span><br><span class="line">		root: NewTrieNode(),</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(t *Trie)</span></span> Insert(word <span class="type">string</span>) &#123;</span><br><span class="line">	node := t.root</span><br><span class="line">	<span class="keyword">for</span> _, char := <span class="keyword">range</span> word &#123;</span><br><span class="line">		<span class="keyword">if</span> _, ok := node.children[char]; !ok &#123;</span><br><span class="line">			node.children[char] = NewTrieNode()</span><br><span class="line">		&#125;</span><br><span class="line">		node = node.children[char]</span><br><span class="line">	&#125;</span><br><span class="line">	node.isEnd = <span class="literal">true</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(t *Trie)</span></span> Search(word <span class="type">string</span>) <span class="type">bool</span> &#123;</span><br><span class="line">	node := t.root</span><br><span class="line">	<span class="keyword">for</span> _, char := <span class="keyword">range</span> word &#123;</span><br><span class="line">		<span class="keyword">if</span> _, ok := node.children[char]; !ok &#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">		&#125;</span><br><span class="line">		node = node.children[char]</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> node.isEnd</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(t *Trie)</span></span> FuzzySearch(prefix <span class="type">string</span>) []<span class="type">string</span> &#123;</span><br><span class="line">	<span class="keyword">var</span> result []<span class="type">string</span></span><br><span class="line">	node := t.root</span><br><span class="line">	<span class="keyword">for</span> _, char := <span class="keyword">range</span> prefix &#123;</span><br><span class="line">		<span class="keyword">if</span> _, ok := node.children[char]; !ok &#123;</span><br><span class="line">			<span class="keyword">return</span> result</span><br><span class="line">		&#125;</span><br><span class="line">		node = node.children[char]</span><br><span class="line">	&#125;</span><br><span class="line">	t.collectWords(node, prefix, &amp;result)</span><br><span class="line">	<span class="keyword">return</span> result</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(t *Trie)</span></span> collectWords(node *TrieNode, prefix <span class="type">string</span>, result *[]<span class="type">string</span>) &#123;</span><br><span class="line">	<span class="keyword">if</span> node.isEnd &#123;</span><br><span class="line">		*result = <span class="built_in">append</span>(*result, prefix)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> char, child := <span class="keyword">range</span> node.children &#123;</span><br><span class="line">		t.collectWords(child, prefix+<span class="type">string</span>(char), result)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>这个算法就是经典的Trie字典树（前缀树），如果我之前没了解过这些算法，可能一时间没那么快能想到用这个方式高效完成这个需求。</li>
-</ul>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><ul>
-<li>了解一些算法，在实际业务开发，有时候也能运用到。</li>
-<li>另外，现在处于AI时代，即时不了解算法，善于组织语言和上下文，向AI提问，基本它也能引导你找到合适的解决方案。</li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2744,7 +2743,7 @@ Chatbot:"""
 <a href="/archives/">                
 <!--<a href="/archives/%7C%7C%20archive">-->
               
-                  <span class="site-state-item-count">172</span>
+                  <span class="site-state-item-count">173</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2757,7 +2756,7 @@ Chatbot:"""
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">199</span>
+                  <span class="site-state-item-count">203</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

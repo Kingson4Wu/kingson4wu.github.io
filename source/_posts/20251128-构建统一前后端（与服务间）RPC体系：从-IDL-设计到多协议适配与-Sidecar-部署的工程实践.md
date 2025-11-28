@@ -320,6 +320,83 @@ buf generate --template buf.gen.swagger.yaml
 
 它既适用于前后端一体化开发，也适用于大型微服务的跨语言通信场景。
 
+---
+
+## 扩展 gRPC-Web 与 gRPC-Gateway 的协议转换原理
+
+在统一 IDL + 多端 RPC 的体系中，gRPC-Web 与 gRPC-Gateway 是两个常用的“协议转换组件”，本质上都在解决 **非 gRPC 客户端如何调用 gRPC 服务** 的问题，但路径与侧重点不同。
+
+### **1. gRPC-Web：把浏览器请求“翻译”为 gRPC（Envoy 或 grpcwebproxy 完成）**
+
+浏览器无法直接发 HTTP/2 + Protobuf（gRPC）请求，它天然受限于：
+
+* 无法自定义 HTTP/2 帧
+* 无法使用 trailer
+* 不能发送 binary stream 的 gRPC 原生格式
+
+因此 gRPC-Web 采用“兼容 HTTP/1.1 的包装格式”：
+
+#### **转换逻辑：**
+
+1. **浏览器 → gRPC-Web（HTTP1/JSON 或 Protobuf 包装）**
+   前端通过 gRPC-Web 客户端库发起普通 HTTP 请求（XHR/Fetch）。
+2. **Envoy / grpcwebproxy → 转换为真实 gRPC**
+
+   * 拆掉 gRPC-Web 的 wrapper
+   * 恢复 Protobuf 的请求 frame
+   * 转为 HTTP/2 的 gRPC 调用
+3. **服务端按真正的 gRPC 处理**
+
+Stream 方面支持：
+
+* **Unary**：完全支持
+* **Server streaming**：通过 chunked response 实现
+* **Bidirectional streaming**：不支持（浏览器无法实现双向 HTTP/2 frame）
+
+> **核心思想：让浏览器“看起来像在发 gRPC”**，实际由代理在后台完成真实的 gRPC 协议转换。
+
+### **2. gRPC-Gateway：REST ↔ gRPC 的全量协议翻译（Go 插件生成）**
+
+gRPC-Gateway 是服务端以 Go 插件方式运行的 HTTP Server，它与业务服务共享 Protobuf IDL，通过代码生成实现自动映射。
+
+#### **转换逻辑：**
+
+1. 客户端发送 **传统 HTTP/JSON** 请求
+2. gRPC-Gateway 解析 HTTP 路由、Query/Body、Header
+3. 自动把 JSON 反序列化为 Protobuf
+4. 以 gRPC 客户端身份调用后端真实服务
+5. 收到 gRPC 响应后再转成 JSON 返回
+
+Stream 能力：
+
+* **Unary**：完全支持
+* **Server streaming**：理论支持，但官方实现不完整，常见版本需要手动拓展
+* **Bidirectional streaming**：无法支持（HTTP/JSON 无法表达双向 Stream）
+
+> **核心思想：让无需 gRPC 的客户端（比如浏览器、IoT、老系统）也能直接走 REST/JSON，而后端继续走高性能 gRPC。**
+
+---
+
+## 📌 二者对比总结
+
+| 项目               | gRPC-Web                | gRPC-Gateway               |
+| ---------------- | ----------------------- | -------------------------- |
+| 目标               | 浏览器使用 gRPC              | 让 REST 客户端访问 gRPC          |
+| 输入协议             | HTTP1.1 + gRPC-Web      | HTTP1.1 + JSON             |
+| 输出协议             | 真实 gRPC（HTTP/2）         | 真实 gRPC（HTTP/2）            |
+| 实现方式             | Envoy / grpcwebproxy 转换 | 代码生成 + Go HTTP server      |
+| 双向 Streaming     | ❌ 不支持                   | ❌ 不支持                      |
+| Server Streaming | ✔️ 支持                   | ⚠️ 理论支持，常见实现不完善            |
+| 适用场景             | 前端项目 / Web 客户端          | 老系统、curl、脚本、API Gateway 模式 |
+
+---
+
+## 📌 核心一句话总结
+
+> **gRPC-Web 用“代理转换”让浏览器间接使用 gRPC；
+> gRPC-Gateway 用“HTTP/JSON ↔ Protobuf 映射”让非 gRPC 客户端也能访问 gRPC。**
+
+
 ===
 
 # 来自Claude对该方案的评价

@@ -287,6 +287,338 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/02/28/20220228-jing-dian-pai-xu-suan-fa/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2022/02/28/20220228-jing-dian-pai-xu-suan-fa/" itemprop="url">经典排序算法</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-02-28T14:56:23+08:00">
+                2022-02-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <ul>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/onepixel/articles/7674659.html">十大经典排序算法（动图演示）</a></li>
+</ul>
+<h2 id="排序算法分类"><a href="#排序算法分类" class="headerlink" title="排序算法分类"></a>排序算法分类</h2><h3 id="一"><a href="#一" class="headerlink" title="(一)"></a>(一)</h3><ul>
+<li>内部排序和外部排序</li>
+</ul>
+<h3 id="（二）"><a href="#（二）" class="headerlink" title="（二）"></a>（二）</h3><ol>
+<li>比较类排序：通过比较来决定元素间的相对次序，由于其时间复杂度不能突破O(nlogn)，因此也称为非线性时间比较类排序。(非线性时间)</li>
+<li>非比较类排序：不通过比较来决定元素间的相对次序，它可以突破基于比较排序的时间下界，以线性时间运行，因此也称为线性时间非比较类排序。 (线性时间)</li>
+</ol>
+<h3 id="（三）"><a href="#（三）" class="headerlink" title="（三）"></a>（三）</h3><ol>
+<li>非线性时间比较类排序：通过比较来决定元素间的相对次序，由于其时间复杂度不能突破O(nlogn)，因此称为非线性时间比较类排序。如：快速排序、归并排序、堆排序、冒泡排序等。在排序的最终结果里，元素之间的次序依赖于它们之间的比较。每个数都必须和其他数进行比较，才能确定自己的位置。</li>
+<li>线性时间非比较类排序：不通过比较来决定元素间的相对次序，它可以突破基于比较排序的时间下界，以线性时间运行，因此称为线性时间非比较类排序。如：计数排序、基数排序、桶排序。非比较排序是通过确定每个元素之前，应该有多少个元素来排序。针对数组arr，计算arr之前有多少个元素，则唯一确定了arr在排序后数组中的位置。</li>
+</ol>
+<h3 id="（四）"><a href="#（四）" class="headerlink" title="（四）"></a>（四）</h3><ol>
+<li>比较类排序<ul>
+<li>交换排序 (swap)<ul>
+<li>冒泡排序 (bubble Sort) - 双重遍历，相邻元素两两比较交换</li>
+<li>快速排序 (quick Sort) - 较复杂</li>
+</ul>
+</li>
+<li>插入排序 (insertion)<ul>
+<li>简单插入排序 (insertion sort) - 分左右两批，遍历有序列表，将无序的元素插入有序的列表</li>
+<li>希尔排序 (shell sort) (缩小增量排序) - 较复杂</li>
+</ul>
+</li>
+<li>选择排序 (selection)<ul>
+<li>简单选择排序 (selection) - 双重遍历，每次找到最小的元素，最后和该趟遍历的第一个元素进行交换</li>
+<li>堆排序 (heap sort)</li>
+</ul>
+</li>
+<li>归并排序 (merge sort) - 即先使每个子序列有序，再使子序列段间有序。若将两个有序表合并成一个有序表，称为2-路归并。 （递归）<ul>
+<li>二路归并排序</li>
+<li>多路归并排序</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>非比较类排序<ul>
+<li>计数排序 (counting sort)</li>
+<li>桶排序 (bucket sort)</li>
+<li>基数排序 (radix sort)(分配排序)</li>
+</ul>
+</li>
+</ol>
+<h3 id="（五）"><a href="#（五）" class="headerlink" title="（五）"></a>（五）</h3><ul>
+<li>算法复杂度</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>排序方法</th>
+<th>时间复杂度（平均）</th>
+<th>时间复杂度（最坏）</th>
+<th>时间复杂度（最好）</th>
+<th>空间复杂度</th>
+<th>稳定性</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>冒泡排序</td>
+<td>O(n^2)</td>
+<td>O(n^2)</td>
+<td>O(n)</td>
+<td>O(1)</td>
+<td>稳定</td>
+</tr>
+<tr>
+<td>快速排序</td>
+<td>O(nlog<sub>2</sub>n)</td>
+<td>O(n^2)</td>
+<td>O(nlog<sub>2</sub>n)</td>
+<td>O(nlog<sub>2</sub>n)</td>
+<td>不稳定</td>
+</tr>
+<tr>
+<td>简单插入排序</td>
+<td>O(n^2)</td>
+<td>O(n^2)</td>
+<td>O(n)</td>
+<td>O(1)</td>
+<td>稳定</td>
+</tr>
+<tr>
+<td>希尔排序</td>
+<td>O(n<sup>1.3</sup>)</td>
+<td>O(n^2)</td>
+<td>O(n)</td>
+<td>O(1)</td>
+<td>不稳定</td>
+</tr>
+<tr>
+<td>简单选择排序</td>
+<td>O(n^2)</td>
+<td>O(n^2)</td>
+<td>O(n^2)</td>
+<td>O(1)</td>
+<td>不稳定</td>
+</tr>
+<tr>
+<td>堆排序</td>
+<td>O(nlog<sub>2</sub>n)</td>
+<td>O(nlog<sub>2</sub>n)</td>
+<td>O(nlog<sub>2</sub>n)</td>
+<td>O(1)</td>
+<td>不稳定</td>
+</tr>
+<tr>
+<td>归并排序</td>
+<td>O(nlog<sub>2</sub>n)</td>
+<td>O(nlog<sub>2</sub>n)</td>
+<td>O(nlog<sub>2</sub>n)</td>
+<td>O(n)</td>
+<td>稳定</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>计数排序</td>
+<td>O(n+k)</td>
+<td>O(n+k)</td>
+<td>O(n+k)</td>
+<td>O(n+k)</td>
+<td>稳定</td>
+</tr>
+<tr>
+<td>桶排序</td>
+<td>O(n+k)</td>
+<td>O(n^2)</td>
+<td>O(n)</td>
+<td>O(n+k)</td>
+<td>稳定</td>
+</tr>
+<tr>
+<td>基数排序</td>
+<td>O(n*k)</td>
+<td>O(n*k)</td>
+<td>O(n*k)</td>
+<td>O(n+k)</td>
+<td>稳定</td>
+</tr>
+</tbody></table>
+<ul>
+<li>相关概念：</li>
+</ul>
+<h4 id="1、时间复杂度"><a href="#1、时间复杂度" class="headerlink" title="1、时间复杂度"></a>1、时间复杂度</h4><ul>
+<li>时间复杂度可以认为是对排序数据的总的操作次数。反映当n变化时，操作次数呈现什么规律。</li>
+<li>常见的时间复杂度有：常数阶O(1),对数阶O(log2n),线性阶O(n), 线性对数阶O(nlog2n),平方阶O(n2)</li>
+<li>时间复杂度O(1)：算法中语句执行次数为一个常数，则时间复杂度为O(1),</li>
+</ul>
+<h4 id="2、空间复杂度"><a href="#2、空间复杂度" class="headerlink" title="2、空间复杂度"></a>2、空间复杂度</h4><ul>
+<li>空间复杂度是指算法在计算机内执行时所需存储空间的度量，它也是问题规模n的函数</li>
+<li>空间复杂度O(1)：当一个算法的空间复杂度为一个常量，即不随被处理数据量n的大小而改变时，可表示为O(1)</li>
+<li>空间复杂度O(log2N)：当一个算法的空间复杂度与以2为底的n的对数成正比时，可表示为O(log2n)， ax&#x3D;N，则x&#x3D;logaN，</li>
+<li>空间复杂度O(n)：当一个算法的空间复杂度与n成线性比例关系时，可表示为0(n).</li>
+</ul>
+<h4 id="复杂度分析"><a href="#复杂度分析" class="headerlink" title="复杂度分析"></a>复杂度分析</h4><ul>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_42907443/article/details/118329160">常见排序算法分类（排序算法，是算法的基石，你掌握多少？）</a></li>
+<li>大O时间复杂度表示法：表示代码执行时间随数据规模增长的变化趋势，又称渐进时间复杂度</li>
+<li>大O空间复杂度表示法：表示代码执行所占的内存空间随数据规模增长的变化趋势，又称渐进空间复杂度</li>
+<li>复杂度分析法则<ul>
+<li>单段代码，看循环的次数。</li>
+<li>多段代码，看代码循环量级。</li>
+<li>嵌套代码求乘积，比如递归和多重循环。</li>
+<li>多个规模求加法，方法中并行的两个循环。</li>
+</ul>
+</li>
+<li>常用的复杂度级别<ul>
+<li>多项式阶：随着数据规模的增长，算法的执行时间和空间占用，按照多项式的比例增长，包括，O(1)(常数阶)、O(logn)(对数阶)、O(n)(线性阶)、O(nlogn)(线性对数阶)、O(n2)(平方阶)、O(n3)(立方阶)。</li>
+<li>非多项式阶：随着数据规模的增长，算法的执行时间和空间占用暴增，这列算法性能极差。包括，O(2^n)(指数阶)、O(n!)(阶乘阶)</li>
+</ul>
+</li>
+</ul>
+<h3 id="（六）"><a href="#（六）" class="headerlink" title="（六）"></a>（六）</h3><ul>
+<li>稳定性</li>
+<li>假定在待排序的记录序列中，存在多个具有相同的关键字的记录，若经过排序，这些记录的相对次序保持不变，即在原序列中，A1&#x3D;A2，且A1在A2之前，而在排序后的序列中，A1仍在A2之前，则称这种排序算法是稳定的；否则称为不稳定的。</li>
+<li>稳定也可以理解为一切皆在掌握中,元素的位置处在你在控制中.而不稳定算法有时就有点碰运气,随机的成分.当两元素相等时它们的位置在排序后可能仍然相同.但也可能不同.是未可知的.</li>
+<li>不稳定排序算法<ul>
+<li>快选希堆（快速排序，选择排序，希尔排序，堆排序）</li>
+</ul>
+</li>
+</ul>
+<h3 id="（七）"><a href="#（七）" class="headerlink" title="（七）"></a>（七）</h3><ul>
+<li>算法总结</li>
+<li>所需辅助空间最多：归并排序；<br>所需辅助空间最少：堆排序；<br>平均速度最快：快速排序；<br>不稳定：快速排序，希尔排序，堆排序。</li>
+</ul>
+<h4 id="冒泡排序"><a href="#冒泡排序" class="headerlink" title="冒泡排序"></a>冒泡排序</h4><ul>
+<li>1、冒泡排序是一种用时间换空间的排序方法，n小时好</li>
+<li>2、最坏情况是把顺序的排列变成逆序，或者把逆序的数列变成顺序，最差时间复杂度O(N^2)只是表示其操作次数的数量级</li>
+<li>3、最好的情况是数据本来就有序，复杂度为O(n)</li>
+</ul>
+<h4 id="快速排序"><a href="#快速排序" class="headerlink" title="快速排序"></a>快速排序</h4><ul>
+<li>1、n大时好，快速排序比较占用内存，内存随n的增大而增大，但却是效率高不稳定的排序算法。</li>
+<li>2、划分之后一边是一个，一边是n-1个，<br>这种极端情况的时间复杂度就是O(N^2)</li>
+<li>3、最好的情况是每次都能均匀的划分序列，O(N*log2N)</li>
+</ul>
+<h4 id="归并排序"><a href="#归并排序" class="headerlink" title="归并排序"></a>归并排序</h4><ul>
+<li>1、n大时好，归并比较占用内存，内存随n的增大而增大，但却是效率高且稳定的排序算法。</li>
+</ul>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/onepixel/articles/7674659.html">十大经典排序算法（动图演示）</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/guidao13/article/details/86430483">Go语言经典排序算法实现</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/42586566">[算法总结] 十大排序算法</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/116046849">排序算法的稳定性</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/xiaochun126/p/5086037.html">各种排序算法时间复杂度</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_42907443/article/details/118329160">常见排序算法分类（排序算法，是算法的基石，你掌握多少？）</a> !!!</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/02/23/20220223-li-jie-zhuang-tai-ji-yuan-li-ji-shi-jian/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2134,146 +2466,6 @@ We obviously did not consider Windows as a serious platform so far, and that's w
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/09/17/20210917-duo-idc-xia-wei-fu-wu-shu-ju-ru-he-tong-bu/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2021/09/17/20210917-duo-idc-xia-wei-fu-wu-shu-ju-ru-he-tong-bu/" itemprop="url">多IDC下微服务数据如何同步</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-09-17T14:51:20+08:00">
-                2021-09-17
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <ul>
-<li>最近公司出现跨机房调用redis超时导致的故障，借此简单记录一下微服务依赖的相关组件使用规范。</li>
-</ul>
-<h3 id="Redis"><a href="#Redis" class="headerlink" title="Redis"></a>Redis</h3><ol>
-<li>每个服务的每个IDC对应一套Redis集群，原则上：<ul>
-<li>不同服务不共用一套redis：避免业务相互影响，key定义冲突等问题；</li>
-<li>不跨机房读写redis：避免不必要的时延等</li>
-</ul>
-</li>
-<li>同个服务不同IDC的redis数据怎么同步？<ul>
-<li>通过消息队列异地通知</li>
-<li>如果一定要双写，异地IDC的同步尽量异步</li>
-<li>如果一定要跨IDC读Redis，要控制好超时时间和降级</li>
-</ul>
-</li>
-</ol>
-<h3 id="MySQL"><a href="#MySQL" class="headerlink" title="MySQL"></a>MySQL</h3><ul>
-<li>看具体业务选择合适的部署方式</li>
-<li>数据不要求强一致，可覆盖的业务（比如用户基础信息），可以采用双活架构，MySQL使用双主架构，通过otter 同步数据</li>
-<li>要求强一致，不可覆盖的业务（比如用户资产），可以采用主备架构，MySQL跨IDC搭建主从。</li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2331,7 +2523,7 @@ We obviously did not consider Windows as a serious platform so far, and that's w
 <a href="/archives/">                
 <!--<a href="/archives/%7C%7C%20archive">-->
               
-                  <span class="site-state-item-count">173</span>
+                  <span class="site-state-item-count">174</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2344,7 +2536,7 @@ We obviously did not consider Windows as a serious platform so far, and that's w
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">203</span>
+                  <span class="site-state-item-count">205</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

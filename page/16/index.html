@@ -287,6 +287,189 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/14/20200714-ye-wu-chong-gou-shi-jian-zong-jie/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/07/14/20200714-ye-wu-chong-gou-shi-jian-zong-jie/" itemprop="url">业务重构实践总结</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-14T20:14:58+08:00">
+                2020-07-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<blockquote>
+<p>业务重构似乎是必然且合理的过程。一个项目刚开始为了快速上线和试错，总会或多或少出现不合理的地方。当项目活下来了，为了寻求下一步的发展，服务的稳定和扩展性提升了优先级，自然就需要有人来重构了，这也是项目历史遗留的技术债务。</p>
+</blockquote>
+</blockquote>
+<h3 id="项目背景"><a href="#项目背景" class="headerlink" title="项目背景"></a>项目背景</h3><ul>
+<li>公司原有的业务几乎都是PHP编写的，并且处于一个很大的项目里维护和运行，可以说是大杂烩。随着业务发展和用户量的提升，渐渐得暴露了很多问题：<ol>
+<li>PHP运行效率较低，业务未进行隔离，出问题时相互影响；</li>
+<li>PHP 过于灵活的语言特性，导致后期较高的后期维护成本；</li>
+<li>基础框架和服务对PHP支持不足；</li>
+<li>实现灾备比较困难。</li>
+</ol>
+</li>
+</ul>
+<h3 id="重构语言选择"><a href="#重构语言选择" class="headerlink" title="重构语言选择"></a>重构语言选择</h3><ul>
+<li>我们选择Java作为开发语言进行重构<ol>
+<li>静态类型，多人协作开发和维护更加安全可靠；</li>
+<li>内部基础组件的 Java 版生态比较完善；</li>
+<li>学习成本低，且开发效率较 PHP 没有明显降低。</li>
+</ol>
+</li>
+</ul>
+<h3 id="重构的工作是什么？"><a href="#重构的工作是什么？" class="headerlink" title="重构的工作是什么？"></a>重构的工作是什么？</h3><ol>
+<li>最简单直接的主要工作：就是充当PHP到Java语言的翻译，将PHP代码转化成Java代码，并保持逻辑不变，对上层业务是无感知的；</li>
+<li>除此之外，对业务逻辑进行优化和简化，提高后续的可维护性和开发效率；对服务架构进行优化，提升服务的稳定性和可靠性。这是重构的主要意义；</li>
+<li>重构完成之后，制定完善的验证和上线方案。</li>
+</ol>
+<h3 id="实施过程"><a href="#实施过程" class="headerlink" title="实施过程"></a>实施过程</h3><ul>
+<li>Step 1. 用 Java 重构逻辑<ul>
+<li>对外暴露的协议（HTTP 、RPC 接口定义和返回数据）与之前保持一致（保持协议一致很重要，之后迁移依赖方会更方便）</li>
+<li>尽量翻译而不是重构优化（至少第一版重构采取这样的策略）</li>
+</ul>
+</li>
+<li>Step 2. 验证新逻辑正确性<ul>
+<li>当代码重构完成后，在将流量切换到新逻辑之前，我们会先验证新服务的正确性。</li>
+<li>考验对业务的熟悉程度和翻译的准确度（代码太久远，最熟悉的可能只有你自己）</li>
+<li>单元测试保证</li>
+</ul>
+</li>
+<li>Step 3. 灰度放量<ul>
+<li>当一切验证通过之后，我们会开始按照百分比转发流量。</li>
+<li>PHP入口对接底层新逻辑（验证逻辑正确性；之所以不直接从流量入口切换，是为了保证稳定性，在出现问题时可以迅速回滚。）</li>
+<li>外网代理切到新接口（保持协议一致，无需前端修改，切换彻底）</li>
+</ul>
+</li>
+</ul>
+<h3 id="经验总结"><a href="#经验总结" class="headerlink" title="经验总结"></a>经验总结</h3><ol>
+<li>PHP代码太复杂，项目又不容易跑起来怎么办？<ul>
+<li>默默睁大眼睛翻译还能怎样。。。</li>
+<li>如何验证是否翻译正确？</li>
+<li>找个在线PHP执行平台把复杂的代码片断跑起来，按照执行结果编写测试用例</li>
+</ul>
+</li>
+<li>PHP代码太狗血太久远，万一翻译到半死发现这段逻辑根本已经没用了怎么办？<ul>
+<li>把你的服务当nginx用，参数不符合条件的转发到旧服务，记录入参和返回结果，打日志和监控观察流量</li>
+</ul>
+</li>
+</ol>
+<h3 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h3><ol>
+<li>不能相信自己</li>
+<li>不能相信别人</li>
+<li>只能相信自己</li>
+<li>乖乖覆盖测试用例</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/13/20200713-you-zai-bei-gong-zuo-zhong-yin-fa-de-dui-bi-li-de-si-kao/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1919,190 +2102,6 @@ proxy_upstream_tries 5;
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/08/20200708-wai-wang-qing-qiu-ru-he-bao-zheng-mi-deng/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/07/08/20200708-wai-wang-qing-qiu-ru-he-bao-zheng-mi-deng/" itemprop="url">外网请求如何保证幂等</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-08T00:24:29+08:00">
-                2020-07-08
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>常见的外网请求，通常来自网页或app。一个不幂等的接口，可能会导致用户只点击一次，却产生多次点击的效果。</p>
-<ol>
-<li>如果用户的请求只是修改昵称，那么基本没影响</li>
-<li>但如果用户的请求是扣费，比如送礼，那就会产生多扣费的资金问题。</li>
-</ol>
-<h3 id="问题的原因"><a href="#问题的原因" class="headerlink" title="问题的原因"></a>问题的原因</h3><p>在互联网上，无论是内网还是外网，网络经常会有不稳定的情况。为应对这些网络问题，通常会有各种重试策略。</p>
-<ol>
-<li>内网不稳定的情况，通常会在代理上(如nginx)配置一些超时重试，或50x重试策略</li>
-<li>外网不稳定的情况，客户端会在超时时进行重试或切域名重试等</li>
-</ol>
-<p>这些重试策略，导致了用户端只发出一次请求，实际服务端收到多次请求的情况。</p>
-<p>总结：“重试”是产生问题的源头</p>
-<h3 id="解决问题的关键"><a href="#解决问题的关键" class="headerlink" title="解决问题的关键"></a>解决问题的关键</h3><p>解决问题的关键其实很简单，就是要让服务端能识别接收到的“多个”请求是否是“同个”请求，从而确保业务只执行一次。</p>
-<h4 id="如何标识请求的唯一性"><a href="#如何标识请求的唯一性" class="headerlink" title="如何标识请求的唯一性"></a>如何标识请求的唯一性</h4><p>本质上是请求的参数中，包含由一个或多个参数组合而成的，唯一且不变的标识。</p>
-<ol>
-<li>像修改用户昵称的请求，业务本身就幂等，因为用户id是唯一且不变的</li>
-<li>像用户的扣费请求，那么通常的做法是使用唯一的订单号，以及相应的唯一ID生成策略</li>
-</ol>
-<h4 id="唯一ID算法需要考虑哪些"><a href="#唯一ID算法需要考虑哪些" class="headerlink" title="唯一ID算法需要考虑哪些"></a>唯一ID算法需要考虑哪些</h4><ol>
-<li>有序<ul>
-<li>唯一ID作为数据的索引，保持有序有助于数据库性能提升</li>
-</ul>
-</li>
-<li>数据库类型<ul>
-<li>以MySQL为例，选择bigint(20)还是varchar，前者只有64位，像”2017072809364399365840049582“这种订单号只能用varchar存储</li>
-</ul>
-</li>
-<li>基因<ul>
-<li>分库需求，详见：<a target="_blank" rel="noopener" href="https://kingson4wu.github.io/2020/07/07/20200707-%E5%94%AF%E4%B8%80ID%E7%9A%84%E5%9F%BA%E5%9B%A0/">唯一ID的基因</a></li>
-</ul>
-</li>
-<li>性能</li>
-</ol>
-<h4 id="前端唯一ID生成方案"><a href="#前端唯一ID生成方案" class="headerlink" title="前端唯一ID生成方案"></a>前端唯一ID生成方案</h4><ol>
-<li>使用UUID (缺点：无序)</li>
-<li>通过后端接口获取唯一ID(缺点：多一次外网的网络请求)</li>
-<li>按一定的业务规则生成，如：timestamp+ 用户ID（10-11位）+ 随机3位数字（或递增）(优点：有序且基本保证唯一)</li>
-</ol>
-<h4 id="后端唯一ID生成方案"><a href="#后端唯一ID生成方案" class="headerlink" title="后端唯一ID生成方案"></a>后端唯一ID生成方案</h4><ol>
-<li>使用snowflake算法实现的唯一ID服务</li>
-<li>其他业界方案</li>
-</ol>
-<h4 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h4><ol>
-<li>前端唯一ID使用方案3<ul>
-<li>后端服务对前端生成的ID进行规则校验，防止恶意伪造不规范的唯一ID</li>
-</ul>
-</li>
-<li>后端唯一ID</li>
-<li>直接使用前端传入的唯一ID</li>
-<li>从唯一ID服务获取(和前端唯一ID进行映射)</li>
-</ol>
-<h3 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h3><h4 id="不同业务唯一ID冲突问题"><a href="#不同业务唯一ID冲突问题" class="headerlink" title="不同业务唯一ID冲突问题"></a>不同业务唯一ID冲突问题</h4><ul>
-<li>若后端作为一个基础服务，对接上层业务，每个业务使用的唯一ID规则不一样。那么如何避免业务之间唯一ID冲突？<ol>
-<li>使用业务ID＋业务唯一ID进行订单唯一性区分</li>
-<li>统一唯一ID的生成规则(统一从基础服务获取或由该服务提供订单ID申请接口)</li>
-</ol>
-</li>
-</ul>
-<h4 id="跨机房的服务幂等问题"><a href="#跨机房的服务幂等问题" class="headerlink" title="跨机房的服务幂等问题"></a>跨机房的服务幂等问题</h4><ul>
-<li>若服务部署多个机房（通常每个机房有对应的数据库），如何保证幂等，因为外网请求重试，不一定会到达同一个机房。<ol>
-<li>把用户按机房分区</li>
-<li>不考虑跨机房幂等问题(主备架构下同个请求落在不同机房概率不高，收益低)</li>
-</ol>
-</li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2160,7 +2159,7 @@ proxy_upstream_tries 5;
 <a href="/archives/">                
 <!--<a href="/archives/%7C%7C%20archive">-->
               
-                  <span class="site-state-item-count">173</span>
+                  <span class="site-state-item-count">174</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2173,7 +2172,7 @@ proxy_upstream_tries 5;
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">203</span>
+                  <span class="site-state-item-count">205</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

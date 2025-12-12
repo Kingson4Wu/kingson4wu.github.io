@@ -287,6 +287,150 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/08/30/20220830-chrome-xia-zai-wen-jian-shi-zan-ting-he-ji-xu-shi-shi-me-yuan-li/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2022/08/30/20220830-chrome-xia-zai-wen-jian-shi-zan-ting-he-ji-xu-shi-shi-me-yuan-li/" itemprop="url">Chrome下载文件时暂停和继续是什么原理？</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-08-30T12:02:05+08:00">
+                2022-08-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <ul>
+<li>这个问题很久前就研究过了，觉得挺有意思，这里总结记录一下</li>
+<li>所有的文字整理来源于: <a target="_blank" rel="noopener" href="https://bbs.csdn.net/topics/392163074">https://bbs.csdn.net/topics/392163074</a>,感谢wjyiooo的耐心解答</li>
+</ul>
+<h2 id="Range"><a href="#Range" class="headerlink" title="Range"></a>Range</h2><ul>
+<li>Range，是在 HTTP&#x2F;1.1（<a target="_blank" rel="noopener" href="http://www.w3.org/Protocols/rfc2616/rfc2616.html%EF%BC%89%E9%87%8C%E6%96%B0%E5%A2%9E%E7%9A%84%E4%B8%80%E4%B8%AA">http://www.w3.org/Protocols/rfc2616/rfc2616.html）里新增的一个</a> header field，也是现在众多号称多线程下载工具（如 FlashGet、迅雷等）实现多线程下载的核心所在。</li>
+</ul>
+<h2 id="chrome-版本58"><a href="#chrome-版本58" class="headerlink" title="chrome 版本58"></a>chrome 版本58</h2><ol>
+<li>抓包确认，chrome点击暂停的时候会发送一系列窗口变动应答，将窗口降到5，并且不再应答ACK包。 当点击恢复的时候只是重新发送ACK给服务器，同时将窗口重新设置为256。</li>
+<li>以上可以确认它的“续传”只是利用TCP滑动窗口的特性，跟断不断网没关系，也不属于真正意义的断点续传功能（一般用range头部实现）。当然如果你中断网络超过了服务器的TCP连接超时时间那么就不能续传了，而且如果关闭浏览器即使网络非常正常也不能续传（也是因为TCP连接断了）。</li>
+<li>在等待足够长时间让TCP连接关掉后，chrome就可以断点续传了，原理也是头部带range。</li>
+</ol>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ol>
+<li>本地有临时下载文件</li>
+<li>短时间内点继续，利用的是TCP滑动窗口的特性（与服务器未断开）</li>
+<li>长时间之后点继续，再次发请求，带range头，继续下载剩余部分（与服务器断开）</li>
+</ol>
+<h2 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h2><h3 id="使用Range进行多线程下载"><a href="#使用Range进行多线程下载" class="headerlink" title="使用Range进行多线程下载"></a>使用Range进行多线程下载</h3><ul>
+<li>Http 请求头 Range:<a target="_blank" rel="noopener" href="https://www.cnblogs.com/1995hxt/p/5692050.html">https://www.cnblogs.com/1995hxt/p/5692050.html</a></li>
+</ul>
+<ol>
+<li>curl -H “Range: bytes&#x3D;0-1551” <a target="_blank" rel="noopener" href="http://127.0.0.1:8180/bg-upper.png">http://127.0.0.1:8180/bg-upper.png</a> -v -o 0-1151.png</li>
+<li>curl -H “Range: bytes&#x3D;1552-3103” <a target="_blank" rel="noopener" href="http://127.0.0.1:8180/bg-upper.png">http://127.0.0.1:8180/bg-upper.png</a> -v -o 1552-end.png</li>
+<li>合并 cat 0-1151.png 1552-end.png &gt; filename.png</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/08/05/20220805-tui-song-ji-zhu-zong-jie/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1953,199 +2097,6 @@ DDoS 攻击流量集中在一个 IP 上，影响巨大。
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/05/05/20220505-zhi-bo-xie-yi-bi-ji/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2022/05/05/20220505-zhi-bo-xie-yi-bi-ji/" itemprop="url">直播流媒体协议——笔记</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-05-05T16:36:21+08:00">
-                2022-05-05
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <ul>
-<li>RTMP 协议:<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/d511d59b185c">https://www.jianshu.com/p/d511d59b185c</a></li>
-<li>RTMP、RTSP、HTTP视频协议详解（附：直播流地址、播放软件）:<a target="_blank" rel="noopener" href="https://www.hangge.com/blog/cache/detail_1325.html">https://www.hangge.com/blog/cache/detail_1325.html</a></li>
-<li>RTMP、HTTP-FLV、HLS，你了解常见的三大直播协议吗：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/48100533">https://zhuanlan.zhihu.com/p/48100533</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/stringarray/p/13027230.html">网络协议-流媒体协议 </a></li>
-</ul>
-<hr>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/stringarray/p/13027230.html">https://www.cnblogs.com/stringarray/p/13027230.html</a></li>
-</ul>
-<hr>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://cloud.tencent.com/document/product/267/7968">https://cloud.tencent.com/document/product/267/7968</a></li>
-</ul>
-<h2 id="推流协议"><a href="#推流协议" class="headerlink" title="推流协议"></a>推流协议</h2><ul>
-<li>虽然 RTMP 在直播领域不是特别流行，但是在推流服务，也就是“主播”到“服务器”这个方向上 RTMP 居于主导地位，目前国内的视频云服务都是以 RTMP 为主要推流协议（由于直播 SDK 第一个功能模块就是主播推流，所以也被称为是 RTMP SDK）。</li>
-</ul>
-<h2 id="播放协议"><a href="#播放协议" class="headerlink" title="播放协议"></a>播放协议</h2><ul>
-<li><p>目前常见的直播协议包括：RTMP、 FLV、HLS 和 WebRTC。</p>
-</li>
-<li><p>RTMP：RTMP 协议比较全能，既可以用来推送又可以用来直播，其核心理念是将大块的视频帧和音频帧拆分，然后以小数据包的形式在互联网上进行传输，而且支持加密，因此隐私性相对比较理想，但拆包组包的过程比较复杂，所以在海量并发时也容易出现一些不可预期的稳定性问题。</p>
-</li>
-<li><p>FLV：FLV 协议由 Adobe 公司主推，格式极其简单，只是在大块的视频帧和音视频头部加入一些标记头信息，由于这种简洁，在延迟表现和大规模并发方面都很成熟，唯一的不足就是在手机浏览器上的支持非常有限，但是用作手机端 App 直播协议却异常合适。</p>
-</li>
-<li><p>HLS：苹果推出的解决方案，将视频分成5秒 - 10秒的视频小分片，然后用 m3u8 索引表进行管理，由于客户端下载到的视频都是5秒 - 10秒的完整数据，故视频的流畅性很好，但也同样引入了很大的延迟（HLS 的一般延迟在10秒 - 30秒左右）。相比于 FLV， HLS 在 iPhone 和大部分 Android 手机浏览器上的支持非常给力，所以常用于 QQ 和微信朋友圈的 URL 分享。</p>
-</li>
-<li><p>WebRTC：名称源自网页即时通信（Web Real-Time Communication）的缩写，是一个支持网页浏览器进行实时语音对话或视频对话的API。它于2011年06月01日开源并在 Google、Mozilla、Opera 支持下被纳入万维网联盟的 W3C 推荐标准。快直播正是用的 WebRTC 协议，它是标准直播在超低延迟播放场景下的延伸，比传统直播协议延迟更低，为观众提供毫秒级的极致直播观看体验。 能够满足一些对延迟性能要求更高的特定场景需求，例如在线教育、体育赛事直播、在线答题等。</p>
-</li>
-</ul>
-<hr>
-<h1 id="RTC技术（WebRTC）"><a href="#RTC技术（WebRTC）" class="headerlink" title="RTC技术（WebRTC）"></a>RTC技术（WebRTC）</h1><ul>
-<li><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/377100294">https://zhuanlan.zhihu.com/p/377100294</a></p>
-</li>
-<li><p>RTC（Real time communication）实时通信，是实时音视频的一个简称，我们常说的RTC技术一般指的是WebRTC技术，已经被 W3C 和 IETF 发布为正式标准。</p>
-</li>
-<li><p>解决什么问题</p>
-<ul>
-<li>直播中我们关心的几个点：延迟、质量、成本等。 传统rtmp直播痛点：TCP，延迟高、拥塞导致卡顿问题较多（质量问题）。 互联网网络复杂、延时敏感、实时音视频流畅度及清晰度较低以和运营成本较高等。 没有一项技术能兼顾并解决直播中的所有问题，RTC是时延、流畅、质量、成本等的平衡，成为技术选型落地的模型。</li>
-</ul>
-</li>
-</ul>
-<h2 id="RTC-VS-RTMP"><a href="#RTC-VS-RTMP" class="headerlink" title="RTC VS RTMP"></a>RTC VS RTMP</h2><ul>
-<li><p>RTC (UDP) VS RTMP (TCP)</p>
-</li>
-<li><p>RTMP只是TCP上的一个标准协议，所以接入是一个标准体系，推流端可以是OBS这种直播软件工具，也可自开发rtmp推流工具，播放端可以是Flash播放器（Adobe 2020 12月份已经弃用）、服务端有技术成熟的CDN技术和设施进行分发、Native的播放器或者flv.js&#x2F;hls.js这种开源播放器组件，遵循rtmp、flv、hls标准即可，接入成本比较低。而一个完善的RTC服务应用，需要从推流端、服务端、到拉流端，一整套完整的全链路闭环技术。</p>
-</li>
-<li><p>RTC+RTMP</p>
-<ul>
-<li>互动连麦+服务端转推rtmp至CDN，CDN分发给观众。</li>
-</ul>
-</li>
-</ul>
-<h2 id="RTC的应用场景"><a href="#RTC的应用场景" class="headerlink" title="RTC的应用场景"></a>RTC的应用场景</h2><ul>
-<li>视频会议、在线教育小班课、大班课、1v1视频连麦、多人视频连麦互动、语音聊天室、在线面试、在线医疗、云游戏、智能家居、在线签约、在线K歌等，遍地开花。 比如Zoom、腾讯会议、钉钉会议、微信音视频聊天</li>
-</ul>
-<h2 id="RTC服务提供商"><a href="#RTC服务提供商" class="headerlink" title="RTC服务提供商"></a>RTC服务提供商</h2><ul>
-<li>声网、腾讯云音视频、即构、阿里云RTC、华为云RTC、微吼VRTC、网易云信RTC、Ucloud RTC、融云RTC、拍乐云等。</li>
-</ul>
-<hr>
-<h2 id="腾讯云音视频"><a href="#腾讯云音视频" class="headerlink" title="腾讯云音视频"></a>腾讯云音视频</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://cloud.tencent.com/document/product/267/70440">https://cloud.tencent.com/document/product/267/70440</a></li>
-<li>在开播端，基于实时音视频 TRTC 来实现，通过 TRTC 协议完成主播推流。仅需1个TRTC应用 + 1个推流域名，即可把主播的直播流推流至云端。在观众端，默认情况下，使用 CDN 方式进行拉流观看， CDN 观看费用较低。如果主播端有 PK 需求，直接互相播放对方的流即可。</li>
-</ul>
-<h2 id="即构"><a href="#即构" class="headerlink" title="即构"></a>即构</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://doc-zh.zego.im/article/5416">https://doc-zh.zego.im/article/5416</a></li>
-<li>语聊房:<a target="_blank" rel="noopener" href="https://doc-zh.zego.im/article/4903">https://doc-zh.zego.im/article/4903</a><ul>
-<li>麦上用户可以发起混流，即把多路音频流混合成单流。推流后混流，麦下用户在拉流时只需要拉一路流即可收听所上麦上用户的互动音频，降低开发实现上的复杂性以及对设备的性能要求。</li>
-</ul>
-</li>
-<li>秀场直播:<a target="_blank" rel="noopener" href="https://doc-zh.zego.im/article/11202">https://doc-zh.zego.im/article/11202</a></li>
-</ul>
-<h2 id="声网"><a href="#声网" class="headerlink" title="声网"></a>声网</h2><ul>
-<li>互动直播：<a target="_blank" rel="noopener" href="https://www.agora.io/cn/interactive-live-streaming-premium">https://www.agora.io/cn/interactive-live-streaming-premium</a></li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2203,7 +2154,7 @@ DDoS 攻击流量集中在一个 IP 上，影响巨大。
 <a href="/archives/">                
 <!--<a href="/archives/%7C%7C%20archive">-->
               
-                  <span class="site-state-item-count">174</span>
+                  <span class="site-state-item-count">175</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2216,7 +2167,7 @@ DDoS 攻击流量集中在一个 IP 上，影响巨大。
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">205</span>
+                  <span class="site-state-item-count">209</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

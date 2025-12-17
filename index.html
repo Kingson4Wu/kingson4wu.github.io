@@ -358,7 +358,12 @@
       
         
           
-            <h2 id="问题的提出"><a href="#问题的提出" class="headerlink" title="问题的提出"></a>问题的提出</h2><p>为什么大模型在设置 <code>temperature=0</code> 时，同样的输入仍然会产生不同的输出？这个看似违反直觉的现象，揭示了现代推理引擎在追求极致性能时做出的工程权衡。</p>
+            <blockquote>
+<blockquote>
+<p>以下文章由Claude.ai辅助生成</p>
+</blockquote>
+</blockquote>
+<h2 id="问题的提出"><a href="#问题的提出" class="headerlink" title="问题的提出"></a>问题的提出</h2><p>为什么大模型在设置 <code>temperature=0</code> 时，同样的输入仍然会产生不同的输出？这个看似违反直觉的现象，揭示了现代推理引擎在追求极致性能时做出的工程权衡。</p>
 <h2 id="问题的本质"><a href="#问题的本质" class="headerlink" title="问题的本质"></a>问题的本质</h2><h3 id="浮点运算的不结合性"><a href="#浮点运算的不结合性" class="headerlink" title="浮点运算的不结合性"></a>浮点运算的不结合性</h3><p>计算机中的浮点运算不满足结合律。在数学上，<code>(a + b) + c = a + (b + c)</code> 永远成立，但在有限精度的浮点运算中，由于舍入误差的存在，这个等式可能不成立。</p>
 <p><strong>具体例子</strong>：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">数字: x=10000000, y=1, z=-10000000</span><br><span class="line"></span><br><span class="line">顺序1: (x + y) + z</span><br><span class="line">     = 10000001 + z     // 精度丢失，变成10000000</span><br><span class="line">     = 0</span><br><span class="line"></span><br><span class="line">顺序2: x + (y + z)  </span><br><span class="line">     = x + (-9999999)</span><br><span class="line">     = 1</span><br></pre></td></tr></table></figure>

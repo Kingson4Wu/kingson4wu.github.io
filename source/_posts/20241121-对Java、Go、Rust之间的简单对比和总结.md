@@ -159,6 +159,7 @@ tags: [Java, Go, Rust]
 + 并发线程，Rust为了减少运行时，默认使用线程模型的并发。
 + Go是绿色线程（协程）。
 + Java一般也是线程模型，当然也有一些协程库（其他 JVM 语言比如 kotlin 就自带协程）
+    - Java 21 开始，日常用的虚拟线程已经是 Project Loom 正式交付的成果
 
 ### 主线程结束进程是否停止
 
@@ -208,4 +209,6 @@ Java则是即使主线程结束，其他线程不结束，进程就不会退出�
 ## Reference
 + [Gopher的Rust第一课：Rust的依赖管理](https://mp.weixin.qq.com/s/UG-6UuqDiLX15dEZrGGrRA)
 
+## 扩展阅读
++ [Project Loom能否撼动Go和Rust的地位？深入分析三种并发模型](https://mp.weixin.qq.com/s/cJrQJelrFHVzES2iUm76HQ)
 

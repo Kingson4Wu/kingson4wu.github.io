@@ -89,7 +89,7 @@
 <meta property="og:description" content="工作中接触过多种编程语言，主要是 Java 和 Go，最近因个人兴趣简单学习了 Rust，在这里简单记录总结一下   编程语言的GC问题 一般来说，程序需要管理好运行中使用的内存空间，比如传统的C和C++则要求开发者手动管理内存，但这往往导致内存泄漏和安全隐患；而垃圾回收（GC）语言，比如Java和Go在运行时自动回收内存，但存在”停顿”（STW）问题；而Rust则采用独特的所有权系统，通过编">
 <meta property="og:locale">
 <meta property="article:published_time" content="2024-11-21T08:42:35.000Z">
-<meta property="article:modified_time" content="2024-11-21T14:50:27.463Z">
+<meta property="article:modified_time" content="2025-12-12T10:25:12.833Z">
 <meta property="article:author" content="Kingson Wu">
 <meta property="article:tag" content="Java">
 <meta property="article:tag" content="Go">
@@ -525,7 +525,10 @@
 <h2 id="并发和多线程"><a href="#并发和多线程" class="headerlink" title="并发和多线程"></a>并发和多线程</h2><ul>
 <li>并发线程，Rust为了减少运行时，默认使用线程模型的并发。</li>
 <li>Go是绿色线程（协程）。</li>
-<li>Java一般也是线程模型，当然也有一些协程库（其他 JVM 语言比如 kotlin 就自带协程）</li>
+<li>Java一般也是线程模型，当然也有一些协程库（其他 JVM 语言比如 kotlin 就自带协程）<ul>
+<li>Java 21 开始，日常用的虚拟线程已经是 Project Loom 正式交付的成果</li>
+</ul>
+</li>
 </ul>
 <h3 id="主线程结束进程是否停止"><a href="#主线程结束进程是否停止" class="headerlink" title="主线程结束进程是否停止"></a>主线程结束进程是否停止</h3><ul>
 <li>主线程退出：主线程结束，不管其他线程是否结束，进程都会结束，这点Rust和Go一样（go是协程）.<br>Java则是即使主线程结束，其他线程不结束，进程就不会退出。</li>
@@ -579,6 +582,9 @@
 </ul>
 <h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
 <li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/UG-6UuqDiLX15dEZrGGrRA">Gopher的Rust第一课：Rust的依赖管理</a></li>
+</ul>
+<h2 id="扩展阅读"><a href="#扩展阅读" class="headerlink" title="扩展阅读"></a>扩展阅读</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/cJrQJelrFHVzES2iUm76HQ">Project Loom能否撼动Go和Rust的地位？深入分析三种并发模型</a></li>
 </ul>
 
       
@@ -710,7 +716,7 @@
 <a href="/archives/">                
 <!--<a href="/archives/%7C%7C%20archive">-->
               
-                  <span class="site-state-item-count">175</span>
+                  <span class="site-state-item-count">176</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -723,7 +729,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">209</span>
+                  <span class="site-state-item-count">213</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -763,7 +769,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80%E7%9A%84GC%E9%97%AE%E9%A2%98"><span class="nav-number">1.</span> <span class="nav-text">编程语言的GC问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BE%E8%AE%A1%E5%93%B2%E5%AD%A6"><span class="nav-number">2.</span> <span class="nav-text">设计哲学</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91"><span class="nav-number">3.</span> <span class="nav-text">交叉编译</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B7%A5%E5%85%B7%E9%93%BE"><span class="nav-number">4.</span> <span class="nav-text">工具链</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%83%AD%E5%8A%A0%E8%BD%BD"><span class="nav-number">5.</span> <span class="nav-text">热加载</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9C%E7%A8%8BDebug"><span class="nav-number">6.</span> <span class="nav-text">远程Debug</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BE%9D%E8%B5%96%E7%AE%A1%E7%90%86-%E4%BB%A5%E5%8F%8A-%E5%86%B2%E7%AA%81%E8%A7%A3%E5%86%B3"><span class="nav-number">7.</span> <span class="nav-text">依赖管理 以及 冲突解决</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Java"><span class="nav-number">7.1.</span> <span class="nav-text">Java</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E4%BA%8EJava%E7%9A%84%E7%B1%BB%E9%87%8D%E5%A4%8D%E9%97%AE%E9%A2%98"><span class="nav-number">7.2.</span> <span class="nav-text">关于Java的类重复问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Go-VS-Rust-%E5%BA%93%E5%86%B2%E7%AA%81"><span class="nav-number">7.3.</span> <span class="nav-text">Go VS Rust 库冲突</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">7.4.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%81%E8%A3%85%E7%A7%81%E6%9C%89%E6%80%A7"><span class="nav-number">8.</span> <span class="nav-text">封装私有性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B9%B6%E5%8F%91%E5%92%8C%E5%A4%9A%E7%BA%BF%E7%A8%8B"><span class="nav-number">9.</span> <span class="nav-text">并发和多线程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E7%BA%BF%E7%A8%8B%E7%BB%93%E6%9D%9F%E8%BF%9B%E7%A8%8B%E6%98%AF%E5%90%A6%E5%81%9C%E6%AD%A2"><span class="nav-number">9.1.</span> <span class="nav-text">主线程结束进程是否停止</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9D%9E%E4%B8%BB%E7%BA%BF%E7%A8%8B%E5%BC%82%E5%B8%B8%E8%BF%9B%E7%A8%8B%E6%98%AF%E5%90%A6%E5%81%9C%E6%AD%A2"><span class="nav-number">9.2.</span> <span class="nav-text">非主线程异常进程是否停止</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%BC%96%E7%A8%8B"><span class="nav-number">10.</span> <span class="nav-text">面向对象编程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8E%A5%E5%8F%A3%E8%AE%BE%E8%AE%A1%E5%92%8C%E5%A4%9A%E6%80%81"><span class="nav-number">11.</span> <span class="nav-text">接口设计和多态</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A9%BA%E5%80%BC%E9%97%AE%E9%A2%98"><span class="nav-number">12.</span> <span class="nav-text">空值问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86"><span class="nav-number">13.</span> <span class="nav-text">异常处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%93%BE%E5%BC%8F%E8%B0%83%E7%94%A8"><span class="nav-number">14.</span> <span class="nav-text">链式调用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B6%E4%BB%96"><span class="nav-number">15.</span> <span class="nav-text">其他</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">16.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80%E7%9A%84GC%E9%97%AE%E9%A2%98"><span class="nav-number">1.</span> <span class="nav-text">编程语言的GC问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BE%E8%AE%A1%E5%93%B2%E5%AD%A6"><span class="nav-number">2.</span> <span class="nav-text">设计哲学</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91"><span class="nav-number">3.</span> <span class="nav-text">交叉编译</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B7%A5%E5%85%B7%E9%93%BE"><span class="nav-number">4.</span> <span class="nav-text">工具链</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%83%AD%E5%8A%A0%E8%BD%BD"><span class="nav-number">5.</span> <span class="nav-text">热加载</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9C%E7%A8%8BDebug"><span class="nav-number">6.</span> <span class="nav-text">远程Debug</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BE%9D%E8%B5%96%E7%AE%A1%E7%90%86-%E4%BB%A5%E5%8F%8A-%E5%86%B2%E7%AA%81%E8%A7%A3%E5%86%B3"><span class="nav-number">7.</span> <span class="nav-text">依赖管理 以及 冲突解决</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Java"><span class="nav-number">7.1.</span> <span class="nav-text">Java</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E4%BA%8EJava%E7%9A%84%E7%B1%BB%E9%87%8D%E5%A4%8D%E9%97%AE%E9%A2%98"><span class="nav-number">7.2.</span> <span class="nav-text">关于Java的类重复问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Go-VS-Rust-%E5%BA%93%E5%86%B2%E7%AA%81"><span class="nav-number">7.3.</span> <span class="nav-text">Go VS Rust 库冲突</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">7.4.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%81%E8%A3%85%E7%A7%81%E6%9C%89%E6%80%A7"><span class="nav-number">8.</span> <span class="nav-text">封装私有性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B9%B6%E5%8F%91%E5%92%8C%E5%A4%9A%E7%BA%BF%E7%A8%8B"><span class="nav-number">9.</span> <span class="nav-text">并发和多线程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E7%BA%BF%E7%A8%8B%E7%BB%93%E6%9D%9F%E8%BF%9B%E7%A8%8B%E6%98%AF%E5%90%A6%E5%81%9C%E6%AD%A2"><span class="nav-number">9.1.</span> <span class="nav-text">主线程结束进程是否停止</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9D%9E%E4%B8%BB%E7%BA%BF%E7%A8%8B%E5%BC%82%E5%B8%B8%E8%BF%9B%E7%A8%8B%E6%98%AF%E5%90%A6%E5%81%9C%E6%AD%A2"><span class="nav-number">9.2.</span> <span class="nav-text">非主线程异常进程是否停止</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%BC%96%E7%A8%8B"><span class="nav-number">10.</span> <span class="nav-text">面向对象编程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8E%A5%E5%8F%A3%E8%AE%BE%E8%AE%A1%E5%92%8C%E5%A4%9A%E6%80%81"><span class="nav-number">11.</span> <span class="nav-text">接口设计和多态</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A9%BA%E5%80%BC%E9%97%AE%E9%A2%98"><span class="nav-number">12.</span> <span class="nav-text">空值问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86"><span class="nav-number">13.</span> <span class="nav-text">异常处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%93%BE%E5%BC%8F%E8%B0%83%E7%94%A8"><span class="nav-number">14.</span> <span class="nav-text">链式调用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B6%E4%BB%96"><span class="nav-number">15.</span> <span class="nav-text">其他</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">16.</span> <span class="nav-text">Reference</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%A9%E5%B1%95%E9%98%85%E8%AF%BB"><span class="nav-number">17.</span> <span class="nav-text">扩展阅读</span></a></li></ol></div>
             
 
           </div>

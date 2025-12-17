@@ -3339,10 +3339,13 @@ No cluster leader
 </ul>
 <p><img src="/2022/03/22/20220322-qing-liang-ji-wei-fu-wu-gong-gong-ku-she-ji/common.png"></p>
 <ul>
-<li>为什么不使用API网关？<ol>
+<li><p>为什么不使用API网关？</p>
+<ol>
 <li>有一定的机器和维护成本</li>
 <li>跟组织架构有一定关系</li>
 </ol>
+</li>
+<li><p><a href="https://github.com/Kingson4Wu/embedded_light_gateway">启发式实现样例</a></p>
 </li>
 </ul>
 ]]></content>
@@ -17430,7 +17433,10 @@ what? 不仅一天全开会了，还没有任何有用的结论？
 <h2 id="并发和多线程"><a href="#并发和多线程" class="headerlink" title="并发和多线程"></a>并发和多线程</h2><ul>
 <li>并发线程，Rust为了减少运行时，默认使用线程模型的并发。</li>
 <li>Go是绿色线程（协程）。</li>
-<li>Java一般也是线程模型，当然也有一些协程库（其他 JVM 语言比如 kotlin 就自带协程）</li>
+<li>Java一般也是线程模型，当然也有一些协程库（其他 JVM 语言比如 kotlin 就自带协程）<ul>
+<li>Java 21 开始，日常用的虚拟线程已经是 Project Loom 正式交付的成果</li>
+</ul>
+</li>
 </ul>
 <h3 id="主线程结束进程是否停止"><a href="#主线程结束进程是否停止" class="headerlink" title="主线程结束进程是否停止"></a>主线程结束进程是否停止</h3><ul>
 <li>主线程退出：主线程结束，不管其他线程是否结束，进程都会结束，这点Rust和Go一样（go是协程）.<br>Java则是即使主线程结束，其他线程不结束，进程就不会退出。</li>
@@ -17484,6 +17490,9 @@ what? 不仅一天全开会了，还没有任何有用的结论？
 </ul>
 <h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
 <li><a href="https://mp.weixin.qq.com/s/UG-6UuqDiLX15dEZrGGrRA">Gopher的Rust第一课：Rust的依赖管理</a></li>
+</ul>
+<h2 id="扩展阅读"><a href="#扩展阅读" class="headerlink" title="扩展阅读"></a>扩展阅读</h2><ul>
+<li><a href="https://mp.weixin.qq.com/s/cJrQJelrFHVzES2iUm76HQ">Project Loom能否撼动Go和Rust的地位？深入分析三种并发模型</a></li>
 </ul>
 ]]></content>
       <tags>
@@ -24661,6 +24670,191 @@ AI这个名字其实并不准确
         <tag>提示词工程</tag>
         <tag>工具调用</tag>
         <tag>MCP</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>大模型推理的不确定性：从浮点运算到工程实现</title>
+    <url>/2025/12/17/20251217-da-mo-xing-tui-li-de-bu-que-ding-xing-cong-fu-dian-yun-suan-dao-gong-cheng-shi-xian/</url>
+    <content><![CDATA[<h2 id="问题的提出"><a href="#问题的提出" class="headerlink" title="问题的提出"></a>问题的提出</h2><p>为什么大模型在设置 <code>temperature=0</code> 时，同样的输入仍然会产生不同的输出？这个看似违反直觉的现象，揭示了现代推理引擎在追求极致性能时做出的工程权衡。</p>
+<h2 id="问题的本质"><a href="#问题的本质" class="headerlink" title="问题的本质"></a>问题的本质</h2><h3 id="浮点运算的不结合性"><a href="#浮点运算的不结合性" class="headerlink" title="浮点运算的不结合性"></a>浮点运算的不结合性</h3><p>计算机中的浮点运算不满足结合律。在数学上，<code>(a + b) + c = a + (b + c)</code> 永远成立，但在有限精度的浮点运算中，由于舍入误差的存在，这个等式可能不成立。</p>
+<p><strong>具体例子</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">数字: x=10000000, y=1, z=-10000000</span><br><span class="line"></span><br><span class="line">顺序1: (x + y) + z</span><br><span class="line">     = 10000001 + z     // 精度丢失，变成10000000</span><br><span class="line">     = 0</span><br><span class="line"></span><br><span class="line">顺序2: x + (y + z)  </span><br><span class="line">     = x + (-9999999)</span><br><span class="line">     = 1</span><br></pre></td></tr></table></figure>
+
+<h3 id="并行计算改变了运算顺序"><a href="#并行计算改变了运算顺序" class="headerlink" title="并行计算改变了运算顺序"></a>并行计算改变了运算顺序</h3><p>GPU 并行计算为了提高效率，会将顺序计算拆分成多个并行路径，再将结果合并。不同的并行策略意味着不同的加法树结构，从而导致不同的浮点舍入路径。</p>
+<p><strong>串行计算</strong>：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sum</span> = <span class="number">0</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> data:</span><br><span class="line">    <span class="built_in">sum</span> += i  <span class="comment"># 顺序固定</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>并行计算（2线程）</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">线程1: (((a+b)+c)+d)</span><br><span class="line">线程2: (((e+f)+g)+h)</span><br><span class="line">最后: thread1 + thread2</span><br></pre></td></tr></table></figure>
+
+<p><strong>并行计算（4线程）</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">t1: a+b,  t2: c+d,  t3: e+f,  t4: g+h</span><br><span class="line">然后: (t1+t2) + (t3+t4)</span><br></pre></td></tr></table></figure>
+
+<p>虽然数学上等价，但加法树的拓扑结构完全不同，导致浮点累积误差不同。</p>
+<h2 id="Batch-Variant-问题"><a href="#Batch-Variant-问题" class="headerlink" title="Batch-Variant 问题"></a>Batch-Variant 问题</h2><h3 id="推理引擎的动态优化"><a href="#推理引擎的动态优化" class="headerlink" title="推理引擎的动态优化"></a>推理引擎的动态优化</h3><p>现代推理引擎（如 vLLM、TensorRT）为了达到极致的 GPU 利用率，会根据当前负载动态选择并行策略：</p>
+<table>
+<thead>
+<tr>
+<th>Batch Size</th>
+<th>并行策略</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>小批次</td>
+<td>使用简单 kernel</td>
+</tr>
+<tr>
+<td>大批次</td>
+<td>使用复杂并行 kernel</td>
+</tr>
+<tr>
+<td>混合负载</td>
+<td>动态切换策略</td>
+</tr>
+</tbody></table>
+<p>这意味着<strong>同一个输入在不同负载下，会走不同的计算路径</strong>。</p>
+<h3 id="关键算子的-Batch-Variant-特性"><a href="#关键算子的-Batch-Variant-特性" class="headerlink" title="关键算子的 Batch-Variant 特性"></a>关键算子的 Batch-Variant 特性</h3><p>三个最容易产生不确定性的算子：</p>
+<ol>
+<li><strong>RMSNorm</strong>：需要对隐藏维度做归约（reduction），不同 batch 下归约树结构不同</li>
+<li><strong>MatMul</strong>：大规模矩阵乘法的累加顺序高度敏感</li>
+<li><strong>Attention</strong>：softmax 中的 exp-sum-normalize 链路是数值不稳定的高发区</li>
+</ol>
+<h2 id="argmax：微小误差的放大器"><a href="#argmax：微小误差的放大器" class="headerlink" title="argmax：微小误差的放大器"></a>argmax：微小误差的放大器</h2><h3 id="什么是-argmax"><a href="#什么是-argmax" class="headerlink" title="什么是 argmax"></a>什么是 argmax</h3><p>argmax 返回的不是最大值本身，而是<strong>最大值的位置</strong>。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">logits = [<span class="number">5.000000</span>, <span class="number">4.999999</span>, <span class="number">3.2</span>]</span><br><span class="line">argmax(logits) = <span class="number">0</span>  <span class="comment"># 返回第0个token</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 但如果并行路径变化导致微小误差</span></span><br><span class="line">logits = [<span class="number">4.999998</span>, <span class="number">4.999999</span>, <span class="number">3.2</span>]  </span><br><span class="line">argmax(logits) = <span class="number">1</span>  <span class="comment"># 返回第1个token</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="为什么如此脆弱"><a href="#为什么如此脆弱" class="headerlink" title="为什么如此脆弱"></a>为什么如此脆弱</h3><p>argmax 是一个<strong>从连续到离散的断崖式映射</strong>：</p>
+<ul>
+<li>argmax 之前：数值变化是平滑的</li>
+<li>argmax 之后：结果是非黑即白的</li>
+</ul>
+<p>因此，0.000001 的数值误差可以导致：</p>
+<ul>
+<li>100% 不同的 token 选择</li>
+<li>完全不同的后续生成路径</li>
+<li>整段文本的彻底分叉</li>
+</ul>
+<p>这就是为什么 <code>temperature=0</code> 反而最不稳定——它完全依赖 argmax 这把脆弱的”刀”。</p>
+<h2 id="解决方案：Batch-Invariant-算子"><a href="#解决方案：Batch-Invariant-算子" class="headerlink" title="解决方案：Batch-Invariant 算子"></a>解决方案：Batch-Invariant 算子</h2><h3 id="核心思想"><a href="#核心思想" class="headerlink" title="核心思想"></a>核心思想</h3><p>不是消除并行，而是<strong>让并行的归约结构在任何 batch 下都保持一致</strong>。</p>
+<h3 id="具体做法"><a href="#具体做法" class="headerlink" title="具体做法"></a>具体做法</h3><ol>
+<li><strong>固定 reduction tree</strong>：无论 batch 大小如何变化，都使用同一棵加法树</li>
+<li><strong>禁止 kernel 自动切换</strong>：明确指定计算路径，不让引擎根据负载动态选择</li>
+<li><strong>统一归一化顺序</strong>：在 attention 和 softmax 中强制固定计算顺序</li>
+</ol>
+<h3 id="权衡"><a href="#权衡" class="headerlink" title="权衡"></a>权衡</h3><ul>
+<li>✅ 获得了完全的确定性（bitwise identical）</li>
+<li>❌ 牺牲了部分 GPU 吞吐和动态优化能力</li>
+</ul>
+<h3 id="实验验证"><a href="#实验验证" class="headerlink" title="实验验证"></a>实验验证</h3><p>在 Qwen3-235B 模型上：</p>
+<ul>
+<li><strong>修正前</strong>：同一 prompt 推理 1000 次产生 80 种不同输出</li>
+<li><strong>修正后</strong>：1000 次推理产生完全相同的输出</li>
+</ul>
+<h2 id="强化学习中的致命影响"><a href="#强化学习中的致命影响" class="headerlink" title="强化学习中的致命影响"></a>强化学习中的致命影响</h2><h3 id="On-Policy-vs-Off-Policy"><a href="#On-Policy-vs-Off-Policy" class="headerlink" title="On-Policy vs Off-Policy"></a>On-Policy vs Off-Policy</h3><p>在强化学习中，on-policy 要求：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">采样策略 π_sample = 训练假设策略 π_train</span><br></pre></td></tr></table></figure>
+
+<p>但由于推理不确定性：</p>
+<ul>
+<li>你以为在做 greedy sampling（<code>temperature=0</code>）</li>
+<li>实际上 argmax 边界不断翻转</li>
+<li>导致 <code>π_sample ≠ π_train</code></li>
+<li>变成了 <strong>pseudo off-policy</strong></li>
+</ul>
+<h3 id="KL-散度验证"><a href="#KL-散度验证" class="headerlink" title="KL 散度验证"></a>KL 散度验证</h3><p>在使用 batch-invariant 算子后，训练过程中的 KL 散度始终为 0，证明了采样和训练的完全一致性。这在传统大模型强化学习中几乎不可能实现。</p>
+<h2 id="工程现状与展望"><a href="#工程现状与展望" class="headerlink" title="工程现状与展望"></a>工程现状与展望</h2><h3 id="当前状态"><a href="#当前状态" class="headerlink" title="当前状态"></a>当前状态</h3><ul>
+<li>✅ 已有可运行的研究原型（<a href="https://github.com/thinking-machines-lab/batch_invariant_ops">GitHub 仓库</a>）</li>
+<li>✅ 在 235B 规模模型上验证可行</li>
+<li>❌ 尚未集成到主流推理引擎（vLLM、TensorRT）</li>
+</ul>
+<h3 id="为什么还未普及"><a href="#为什么还未普及" class="headerlink" title="为什么还未普及"></a>为什么还未普及</h3><ol>
+<li><strong>性能代价</strong>：固定计算路径意味着放弃动态优化</li>
+<li><strong>需求优先级</strong>：大多数应用使用 <code>temperature&gt;0</code>，本就允许随机性</li>
+<li><strong>设计哲学冲突</strong>：主流引擎优先考虑吞吐，而非确定性</li>
+</ol>
+<h3 id="理解方案的适用边界"><a href="#理解方案的适用边界" class="headerlink" title="理解方案的适用边界"></a>理解方案的适用边界</h3><p>这套方法容易被误解为”永久可复现性”方案，但实际上它解决的是<strong>局部时间一致性</strong>问题。</p>
+<p><strong>它不保证的</strong>：</p>
+<ul>
+<li>跨版本的可复现（模型权重、tokenizer 会更新）</li>
+<li>跨时间的可复现（推理引擎、CUDA 版本会变化）</li>
+<li>历史归档式的重放（不记录 kernel 版本、reduction tree）</li>
+</ul>
+<p><strong>它真正保证的</strong>：</p>
+<ul>
+<li>在同一模型版本、同一推理系统、同一部署周期内</li>
+<li>推理结果不因负载与调度而漂移</li>
+<li>这是”消除系统噪声”，而非”冻结历史”</li>
+</ul>
+<p>用类比来说，这更像<strong>数据库的事务隔离级别</strong>，而不是永久快照——它保证同一个事务内行为一致，但不保证十年后重放同一事务。</p>
+<p>为什么不记录完整计算路径？因为在 235B 模型上记录每个 kernel、每个 block&#x2F;warp、每个浮点舍入点，在存储、回放、性能上都不可行。文章选择的是通过<strong>结构性约束保证路径等价</strong>，这是唯一工程上可行的路线。</p>
+<h3 id="真正的应用场景"><a href="#真正的应用场景" class="headerlink" title="真正的应用场景"></a>真正的应用场景</h3><p>这个方案的核心价值在于<strong>同一时间窗口内的自洽性</strong>：</p>
+<ol>
+<li><p><strong>强化学习训练</strong>：在一轮训练中，如果采样策略因 batch 变化而漂移，当下这轮训练就已被污染。这不是三个月后能否复现的问题，而是当前训练周期内能否保持 on-policy 的问题。</p>
+</li>
+<li><p><strong>科研实验</strong>：在实验周期内需要 bitwise 级别的可复现性，排除系统噪声对实验结论的干扰。</p>
+</li>
+<li><p><strong>安全审计</strong>：在审计周期内，相同输入必须产生相同输出，以支持行为追溯。</p>
+</li>
+</ol>
+<h3 id="未来形态"><a href="#未来形态" class="headerlink" title="未来形态"></a>未来形态</h3><p>更可能以<strong>可选模式</strong>出现在推理引擎中：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">vllm serve --deterministic</span><br><span class="line">vllm serve --batch-invariant</span><br><span class="line">vllm serve --rl-training-mode</span><br></pre></td></tr></table></figure>
+
+<p>类似于 PyTorch 的 <code>torch.use_deterministic_algorithms(True)</code>，让用户在性能和确定性之间自主选择。</p>
+<h2 id="Temperature-与随机性"><a href="#Temperature-与随机性" class="headerlink" title="Temperature 与随机性"></a>Temperature 与随机性</h2><h3 id="Temperature-的作用"><a href="#Temperature-的作用" class="headerlink" title="Temperature 的作用"></a>Temperature 的作用</h3><p>Temperature 不直接控制”是否随机”，而是<strong>调整概率分布的陡峭程度</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">p_i = exp(z_i / T) / Σ exp(z_j / T)</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>Temperature</th>
+<th>概率分布</th>
+<th>行为特征</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>[1, 0, 0]</td>
+<td>完全确定（argmax）</td>
+</tr>
+<tr>
+<td>1</td>
+<td>[0.5, 0.3, 0.2]</td>
+<td>原始模型分布</td>
+</tr>
+<tr>
+<td>2</td>
+<td>[0.41, 0.32, 0.27]</td>
+<td>更加平滑</td>
+</tr>
+<tr>
+<td>5</td>
+<td>[0.36, 0.33, 0.31]</td>
+<td>接近均匀分布</td>
+</tr>
+</tbody></table>
+<h3 id="关键区分"><a href="#关键区分" class="headerlink" title="关键区分"></a>关键区分</h3><ul>
+<li><strong>Temperature</strong>：改变概率分布</li>
+<li><strong>Sampling</strong>：根据概率分布掷骰子</li>
+</ul>
+<p><code>temperature&gt;0</code> 不等于”会随机”，只有配合采样才真正引入随机性。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>大模型推理的不确定性问题揭示了一个深刻的工程真相：</p>
+<blockquote>
+<p><strong>单次前向推理是确定的，但推理引擎为了性能在不同负载下使用了不同的数值计算路径。</strong></p>
+</blockquote>
+<p>解决方案不是消除并行，而是<strong>冻结并行结构</strong>，让数值路径在任何情况下都保持一致。这是一个明确的工程权衡——用部分性能换取完全确定性。</p>
+<p>这个方案目前最适合对确定性有极端要求的场景，特别是强化学习训练。它代表了一种新的工程视角：有时候，”慢而稳定”比”快而飘忽”更有价值。</p>
+<hr>
+<p><strong>参考资源</strong>：</p>
+<ul>
+<li>文章：<a href="https://thinkingmachines.ai/blog/defeating-nondeterminism-in-llm-inference/">Defeating Nondeterminism in LLM Inference</a></li>
+<li>代码：<a href="https://github.com/thinking-machines-lab/batch_invariant_ops">batch_invariant_ops</a></li>
+</ul>
+]]></content>
+      <tags>
+        <tag>AI</tag>
+        <tag>LLM</tag>
+        <tag>推理引擎</tag>
+        <tag>并行计算</tag>
+        <tag>Batch-Invariant</tag>
+        <tag>浮点运算</tag>
       </tags>
   </entry>
 </search>

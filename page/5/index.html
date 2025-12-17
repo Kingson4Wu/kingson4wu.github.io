@@ -287,6 +287,246 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2024/12/02/20241202-yi-ge-wu-zhong-xin-jie-dian-de-ju-yu-wang-tong-xin-gong-ju/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2024/12/02/20241202-yi-ge-wu-zhong-xin-jie-dian-de-ju-yu-wang-tong-xin-gong-ju/" itemprop="url">一个无中心节点的局域网通信工具</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2024-12-02T14:54:49+08:00">
+                2024-12-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="通信协议"><a href="#通信协议" class="headerlink" title="通信协议"></a>通信协议</h2><ol>
+<li>初始阶段：UDP广播发现</li>
+<li>建立连接后：切换到TCP进行可靠通信（也可以使用 UDP）（增加接收完成确认机制）</li>
+</ol>
+<h2 id="AI生成的需求文档"><a href="#AI生成的需求文档" class="headerlink" title="AI生成的需求文档"></a>AI生成的需求文档</h2><p>&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</p>
+<h2 id="局域网去中心化点对点通信工具-iOS-应用需求文档"><a href="#局域网去中心化点对点通信工具-iOS-应用需求文档" class="headerlink" title="局域网去中心化点对点通信工具 iOS 应用需求文档"></a>局域网去中心化点对点通信工具 iOS 应用需求文档</h2><h3 id="项目概述"><a href="#项目概述" class="headerlink" title="项目概述"></a>项目概述</h3><p>开发一款完全去中心化的局域网点对点即时通信应用，无需中心服务器，通过UDP广播实现设备发现和通信。</p>
+<h3 id="核心设计理念"><a href="#核心设计理念" class="headerlink" title="核心设计理念"></a>核心设计理念</h3><ul>
+<li>完全去中心化</li>
+<li>基于局域网的点对点直接通信</li>
+<li>无需任何中心服务器</li>
+<li>设备间直接建立连接</li>
+</ul>
+<h3 id="网络通信技术架构"><a href="#网络通信技术架构" class="headerlink" title="网络通信技术架构"></a>网络通信技术架构</h3><h4 id="1-设备发现机制"><a href="#1-设备发现机制" class="headerlink" title="1. 设备发现机制"></a>1. 设备发现机制</h4><h5 id="1-1-UDP-广播发现"><a href="#1-1-UDP-广播发现" class="headerlink" title="1.1 UDP 广播发现"></a>1.1 UDP 广播发现</h5><ul>
+<li>使用UDP广播进行设备发现</li>
+<li>广播地址：255.255.255.255</li>
+<li>广播端口：固定端口（如 48689）</li>
+<li>发现报文结构：<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;deviceId&quot;</span><span class="punctuation">:</span> <span class="string">&quot;唯一设备标识&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;nickname&quot;</span><span class="punctuation">:</span> <span class="string">&quot;用户昵称&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;timestamp&quot;</span><span class="punctuation">:</span> <span class="string">&quot;时间戳&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;publicKey&quot;</span><span class="punctuation">:</span> <span class="string">&quot;公钥信息&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;capabilities&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;支持的功能列表&quot;</span><span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="2-连接建立协议"><a href="#2-连接建立协议" class="headerlink" title="2. 连接建立协议"></a>2. 连接建立协议</h4><ul>
+<li>发现阶段：UDP 广播</li>
+<li>连接阶段：切换到 TCP</li>
+<li>通信协议：自定义应用层协议</li>
+<li>连接建立流程：<ol>
+<li>UDP 广播发现</li>
+<li>交换公钥</li>
+<li>建立加密 TCP 通道</li>
+</ol>
+</li>
+</ul>
+<h4 id="3-通信模型"><a href="#3-通信模型" class="headerlink" title="3. 通信模型"></a>3. 通信模型</h4><ul>
+<li>无中心节点</li>
+<li>每个设备既是客户端又是服务端</li>
+<li>直接点对点通信</li>
+<li>消息路由完全去中心化</li>
+</ul>
+<h3 id="功能需求详细描述"><a href="#功能需求详细描述" class="headerlink" title="功能需求详细描述"></a>功能需求详细描述</h3><h4 id="1-网络发现与连接"><a href="#1-网络发现与连接" class="headerlink" title="1. 网络发现与连接"></a>1. 网络发现与连接</h4><ul>
+<li>持续监听 UDP 广播</li>
+<li>自动发现局域网内设备</li>
+<li>支持手动&#x2F;自动添加好友</li>
+<li>好友关系本地持久化</li>
+</ul>
+<h4 id="2-消息通信机制"><a href="#2-消息通信机制" class="headerlink" title="2. 消息通信机制"></a>2. 消息通信机制</h4><ul>
+<li>UDP 广播发现</li>
+<li>TCP 建立稳定通道</li>
+<li>消息队列管理</li>
+<li>离线消息处理</li>
+</ul>
+<h4 id="3-安全性设计"><a href="#3-安全性设计" class="headerlink" title="3. 安全性设计"></a>3. 安全性设计</h4><ul>
+<li>设备间公钥交换</li>
+<li>端到端消息加密</li>
+<li>防重放攻击</li>
+<li>消息签名验证</li>
+</ul>
+<h3 id="技术实现细节"><a href="#技术实现细节" class="headerlink" title="技术实现细节"></a>技术实现细节</h3><h4 id="网络通信协议"><a href="#网络通信协议" class="headerlink" title="网络通信协议"></a>网络通信协议</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">sequenceDiagram</span><br><span class="line">    participant A as 设备A</span><br><span class="line">    participant B as 设备B</span><br><span class="line">    </span><br><span class="line">    A-&gt;&gt;B: UDP广播：发现请求</span><br><span class="line">    B--&gt;&gt;A: UDP广播：发现响应</span><br><span class="line">    A-&gt;&gt;B: TCP建立连接</span><br><span class="line">    A--&gt;&gt;B: 交换公钥</span><br><span class="line">    A-&gt;&gt;B: 加密消息传输</span><br></pre></td></tr></table></figure>
+
+<h4 id="消息队列流程"><a href="#消息队列流程" class="headerlink" title="消息队列流程"></a>消息队列流程</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">stateDiagram-v2</span><br><span class="line">    [*] --&gt; 消息生成</span><br><span class="line">    消息生成 --&gt; 本地队列</span><br><span class="line">    本地队列 --&gt; 检测网络</span><br><span class="line">    检测网络 --&gt; 同一局域网: 直接发送</span><br><span class="line">    检测网络 --&gt; 离线: 保持队列</span><br><span class="line">    同一局域网 --&gt; 消息发送</span><br><span class="line">    消息发送 --&gt; [*]</span><br></pre></td></tr></table></figure>
+
+<h3 id="系统架构图"><a href="#系统架构图" class="headerlink" title="系统架构图"></a>系统架构图</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">graph TD</span><br><span class="line">    A[UDP广播发现] --&gt; B[设备信息交换]</span><br><span class="line">    B --&gt; C[TCP安全通道]</span><br><span class="line">    C --&gt; D[端到端加密通信]</span><br><span class="line">    D --&gt; E[本地消息队列]</span><br><span class="line">    E --&gt; F[离线/在线消息管理]</span><br></pre></td></tr></table></figure>
+
+<h3 id="技术选型"><a href="#技术选型" class="headerlink" title="技术选型"></a>技术选型</h3><ul>
+<li>语言：Swift</li>
+<li>网络框架：Network.framework</li>
+<li>加密：CryptoKit</li>
+<li>存储：CoreData</li>
+<li>UI：SwiftUI</li>
+</ul>
+<h3 id="关键技术挑战"><a href="#关键技术挑战" class="headerlink" title="关键技术挑战"></a>关键技术挑战</h3><ol>
+<li>跨设备一致性</li>
+<li>网络发现可靠性</li>
+<li>安全性保证</li>
+<li>低功耗设计</li>
+</ol>
+<h3 id="性能目标"><a href="#性能目标" class="headerlink" title="性能目标"></a>性能目标</h3><ul>
+<li>设备发现时间 &lt; 3秒</li>
+<li>消息延迟 &lt; 1秒</li>
+<li>电池资源占用 &lt; 5%</li>
+<li>网络资源占用最小化</li>
+</ul>
+<h3 id="安全性要求"><a href="#安全性要求" class="headerlink" title="安全性要求"></a>安全性要求</h3><ul>
+<li>端到端加密</li>
+<li>防重放攻击</li>
+<li>设备指纹验证</li>
+<li>消息签名机制</li>
+</ul>
+<h3 id="隐私保护"><a href="#隐私保护" class="headerlink" title="隐私保护"></a>隐私保护</h3><ul>
+<li>无中心服务器</li>
+<li>本地数据完全加密</li>
+<li>用户完全控制通信</li>
+<li>不依赖任何第三方服务</li>
+</ul>
+<h3 id="开发交付物"><a href="#开发交付物" class="headerlink" title="开发交付物"></a>开发交付物</h3><ol>
+<li>完整 Xcode 工程</li>
+<li>详细技术文档</li>
+<li>安全性测试报告</li>
+<li>性能基准测试结果</li>
+</ol>
+<h3 id="版本迭代计划"><a href="#版本迭代计划" class="headerlink" title="版本迭代计划"></a>版本迭代计划</h3><ul>
+<li>v1.0：基础局域网通信</li>
+<li>v1.1：增强安全性</li>
+<li>v1.2：优化性能</li>
+<li>v2.0：跨平台支持</li>
+</ul>
+<h3 id="开发注意事项"><a href="#开发注意事项" class="headerlink" title="开发注意事项"></a>开发注意事项</h3><ul>
+<li>严格遵循 Apple 安全guidelines</li>
+<li>代码安全审查</li>
+<li>最小权限原则</li>
+<li>用户体验优先</li>
+</ul>
+<p>&#x3D;&#x3D;&#x3D;&#x3D;</p>
+<h3 id="Rust简易版本"><a href="#Rust简易版本" class="headerlink" title="Rust简易版本"></a>Rust简易版本</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/Kingson4Wu/mesh-talk">https://github.com/Kingson4Wu/mesh-talk</a> （使用windsurf生成）</li>
+</ul>
+<p>&#x3D;&#x3D;&#x3D;&#x3D;</p>
+<h2 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h2><blockquote>
+<blockquote>
+<p>发现已经有了相关实现，非常棒！</p>
+</blockquote>
+</blockquote>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/localsend/localsend">https://github.com/localsend/localsend</a> 局域网文件传输，广播发现，可以简易发消息</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2024/11/29/20241129-ai-yi-jing-ru-ci-qiang-da-liao-bang-wo-xie-wan-suo-you-dai-ma/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -661,7 +901,10 @@
 <h2 id="并发和多线程"><a href="#并发和多线程" class="headerlink" title="并发和多线程"></a>并发和多线程</h2><ul>
 <li>并发线程，Rust为了减少运行时，默认使用线程模型的并发。</li>
 <li>Go是绿色线程（协程）。</li>
-<li>Java一般也是线程模型，当然也有一些协程库（其他 JVM 语言比如 kotlin 就自带协程）</li>
+<li>Java一般也是线程模型，当然也有一些协程库（其他 JVM 语言比如 kotlin 就自带协程）<ul>
+<li>Java 21 开始，日常用的虚拟线程已经是 Project Loom 正式交付的成果</li>
+</ul>
+</li>
 </ul>
 <h3 id="主线程结束进程是否停止"><a href="#主线程结束进程是否停止" class="headerlink" title="主线程结束进程是否停止"></a>主线程结束进程是否停止</h3><ul>
 <li>主线程退出：主线程结束，不管其他线程是否结束，进程都会结束，这点Rust和Go一样（go是协程）.<br>Java则是即使主线程结束，其他线程不结束，进程就不会退出。</li>
@@ -715,6 +958,9 @@
 </ul>
 <h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
 <li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/UG-6UuqDiLX15dEZrGGrRA">Gopher的Rust第一课：Rust的依赖管理</a></li>
+</ul>
+<h2 id="扩展阅读"><a href="#扩展阅读" class="headerlink" title="扩展阅读"></a>扩展阅读</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/cJrQJelrFHVzES2iUm76HQ">Project Loom能否撼动Go和Rust的地位？深入分析三种并发模型</a></li>
 </ul>
 
           
@@ -2666,228 +2912,6 @@ what? 不仅一天全开会了，还没有任何有用的结论？
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2024/05/28/20240528-ye-tan-tan-feed-liu-de-she-ji/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2024/05/28/20240528-ye-tan-tan-feed-liu-de-she-ji/" itemprop="url">也谈谈feed流的设计</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2024-05-28T13:56:23+08:00">
-                2024-05-28
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote>
-<blockquote>
-<p>几年前也做过feed流相关的服务，虽然网上相关的文章很多，这里也做个人的简要记录和总结<br>方案并非原创，当时是参考其他业务团队的设计</p>
-</blockquote>
-</blockquote>
-<ul>
-<li>需求背景：做一个用户动态模块，可以发动态，可以关注别人动态，有推荐列表，有消息提醒（其实就是微博的基本功能）</li>
-</ul>
-<h1 id="实现逻辑流程"><a href="#实现逻辑流程" class="headerlink" title="实现逻辑流程"></a>实现逻辑流程</h1><ul>
-<li><p>整个feed流设计都是强依赖Redis来实现的，以下列出key设计和对应的功能模块</p>
-<ul>
-<li>粉丝的feed流 - 【feed_list_$userId】<ul>
-<li>member-$id_$userId_$type （score-addtime）</li>
-</ul>
-</li>
-<li>粉丝的feed流为空标志 - 【【feed_list_empty_$userId】】- 防止每次请求都穿透到DB</li>
-<li>用户的活跃粉丝列表 - 【active_fans_list_$userId】</li>
-<li>用户的活跃属性 - 【active_user_status_${userId}】</li>
-<li>动态详情 - 【cache.user.dynamic_${dynamicId}】 - MGet获取</li>
-</ul>
-</li>
-<li><p>数据库分表设计</p>
-<ul>
-<li>用户动态表 - 按用户id分库</li>
-<li>评论表 - 按动态id分库（根据业务，一般都是单个动态的所有评论）</li>
-<li>点赞表 - 按用户id分库（根据业务，一般都是动态列表中展示当前用户的点赞状态）</li>
-</ul>
-</li>
-<li><p>feed流使用sortset，score是addtime</p>
-</li>
-<li><p>推模式，通过维护用户的活跃粉丝列表（有数量限制），推到粉丝的feed流</p>
-</li>
-<li><p>拉模式，通过请求第一页或其他接口进行预加载，查询粉丝的关注人和对应动态（有数量限制），构建粉丝自己feed流</p>
-</li>
-</ul>
-<h2 id="01-feed流-构建-整体流程"><a href="#01-feed流-构建-整体流程" class="headerlink" title="01.feed流 构建 整体流程"></a>01.feed流 构建 整体流程</h2><p><img src="/2024/05/28/20240528-ye-tan-tan-feed-liu-de-she-ji/01.feed%E6%B5%81%E6%9E%84%E5%BB%BA.drawio.png"></p>
-<ul>
-<li>用户发动态、删动态、关注和取关事件，都会对feed流有相应操作</li>
-<li>通过发布事件的设计进行业务逻辑解耦</li>
-</ul>
-<h3 id="用户发动态（推模式）"><a href="#用户发动态（推模式）" class="headerlink" title="用户发动态（推模式）"></a>用户发动态（推模式）</h3><ol>
-<li>用户发布动态（写入DB）</li>
-<li>查询用户的活跃粉丝列表（Redis）</li>
-<li>写入粉丝的Feed流（Redis）</li>
-<li>写入消息表</li>
-</ol>
-<h3 id="粉丝拉关注列表（拉模式）（请求第一页或其他接口，预加载）"><a href="#粉丝拉关注列表（拉模式）（请求第一页或其他接口，预加载）" class="headerlink" title="粉丝拉关注列表（拉模式）（请求第一页或其他接口，预加载）"></a>粉丝拉关注列表（拉模式）（请求第一页或其他接口，预加载）</h3><ol>
-<li>获取feed流（Redis）</li>
-<li>获取关注用户列表（RPC）（限制2000个粉丝）</li>
-<li>获取关注人的动态数据（DB）（限制没人100条动态）</li>
-<li>写入个人的Feed流（Redis）</li>
-<li>成为活跃用户（Redis）</li>
-</ol>
-<h2 id="02-动态消息交互"><a href="#02-动态消息交互" class="headerlink" title="02.动态消息交互"></a>02.动态消息交互</h2><p><img src="/2024/05/28/20240528-ye-tan-tan-feed-liu-de-she-ji/02.%E5%8A%A8%E6%80%81%E6%B6%88%E6%81%AF%E4%BA%A4%E4%BA%92.drawio.png"></p>
-<ul>
-<li>消息表 和 消息读取时间表（用于控制用户红点提示和读取消息列表的范围）</li>
-<li>消息表保存7天定时清除</li>
-</ul>
-<h2 id="03-feed流预加载策略（pull模式）"><a href="#03-feed流预加载策略（pull模式）" class="headerlink" title="03.feed流预加载策略（pull模式）"></a>03.feed流预加载策略（pull模式）</h2><p><img src="/2024/05/28/20240528-ye-tan-tan-feed-liu-de-she-ji/03.feed%E6%B5%81%E9%A2%84%E5%8A%A0%E8%BD%BD%E7%AD%96%E7%95%A5%EF%BC%88pull%E6%A8%A1%E5%BC%8F%EF%BC%89.drawio.png"></p>
-<ul>
-<li>。。。。</li>
-<li>将用户加入为活跃粉丝</li>
-</ul>
-<h2 id="04-动态新增、删除（push模式），活跃粉丝处理"><a href="#04-动态新增、删除（push模式），活跃粉丝处理" class="headerlink" title="04.动态新增、删除（push模式），活跃粉丝处理"></a>04.动态新增、删除（push模式），活跃粉丝处理</h2><p><img src="/2024/05/28/20240528-ye-tan-tan-feed-liu-de-she-ji/04.%E5%8A%A8%E6%80%81%E6%96%B0%E5%A2%9E%E3%80%81%E5%88%A0%E9%99%A4%EF%BC%88push%E6%A8%A1%E5%BC%8F%EF%BC%89%EF%BC%8C%E6%B4%BB%E8%B7%83%E7%B2%89%E4%B8%9D%E5%A4%84%E7%90%86.drawio.png"></p>
-<ul>
-<li>用户的活跃粉丝列表逻辑<ol>
-<li>拉取过feed流或发布过动态等操作的用户，都会设置成有活跃粉丝属性的用户</li>
-<li>RPC获取用户的粉丝列表，过滤掉非活跃用户，保存到用户的活跃粉丝列表</li>
-<li>关注和取关事件，也更新活跃粉丝列表</li>
-</ol>
-</li>
-</ul>
-<h2 id="05-关注、取关-事件-对feed流的处理"><a href="#05-关注、取关-事件-对feed流的处理" class="headerlink" title="05.关注、取关 事件 对feed流的处理"></a>05.关注、取关 事件 对feed流的处理</h2><p><img src="/2024/05/28/20240528-ye-tan-tan-feed-liu-de-she-ji/05.%E5%85%B3%E6%B3%A8%E3%80%81%E5%8F%96%E5%85%B3%E4%BA%8B%E4%BB%B6%E5%AF%B9feed%E6%B5%81%E7%9A%84%E5%A4%84%E7%90%86.drawio.png"></p>
-<h2 id="06-获取feed流"><a href="#06-获取feed流" class="headerlink" title="06.获取feed流"></a>06.获取feed流</h2><p><img src="/2024/05/28/20240528-ye-tan-tan-feed-liu-de-she-ji/06.%E8%8E%B7%E5%8F%96feed%E6%B5%81.drawio.png"></p>
-<ul>
-<li>有了前面的推拉模式，用户直接从redis获取feed流即可</li>
-</ul>
-<h2 id="07-动态类型版本设计"><a href="#07-动态类型版本设计" class="headerlink" title="07.动态类型版本设计"></a>07.动态类型版本设计</h2><p><img src="/2024/05/28/20240528-ye-tan-tan-feed-liu-de-she-ji/07.%E5%8A%A8%E6%80%81%E7%B1%BB%E5%9E%8B%E7%89%88%E6%9C%AC%E8%AE%BE%E8%AE%A1.drawio.png"></p>
-<ul>
-<li><p>随着动态类型的新增，客户端旧版本不支持新类型动态，需要过滤；</p>
-</li>
-<li><p>目前feed流是存在redis的，直接过滤可能会导致旧版本数据为空，可以通过多版本动态来区分</p>
-</li>
-<li><p>实现描述</p>
-<ol>
-<li>用户获取feed流，根据客户端的版本号等信息，判断出客户端支持的feed版本，并构建对应的feed流</li>
-<li>用户发布动态，构建用户存在的活跃动态版本的feed流（为了用户的新旧版本都兼容）</li>
-</ol>
-</li>
-</ul>
-<h1 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h1><ul>
-<li>很久之前做的一次实验<ul>
-<li>取消了微信黑名单，没看到之前的人的朋友圈。说明微信朋友圈也是feed持久化的方式实现</li>
-<li>微博也是这样，之前关注过，取关后再恢复，内容也能恢复，说明feed表只是逻辑删（应该是存数据库表了）</li>
-</ul>
-</li>
-<li>微博feed实现（猜测）<ol>
-<li>为每个用户保存他所有关注的用户的feed表数据</li>
-<li>假如取关，则重写关注能恢复数据（逻辑删除）</li>
-<li>但如果之前没关注的用户，则他之前的动态不会出现在feed表中</li>
-</ol>
-</li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2945,7 +2969,7 @@ what? 不仅一天全开会了，还没有任何有用的结论？
 <a href="/archives/">                
 <!--<a href="/archives/%7C%7C%20archive">-->
               
-                  <span class="site-state-item-count">175</span>
+                  <span class="site-state-item-count">176</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2958,7 +2982,7 @@ what? 不仅一天全开会了，还没有任何有用的结论？
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">209</span>
+                  <span class="site-state-item-count">213</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

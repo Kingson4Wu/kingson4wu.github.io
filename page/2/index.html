@@ -287,6 +287,256 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2025/09/02/20250902-yong-jiao-ben-ai-cli-ban-zi-dong-xie-dai-ma-shi-jian-jing-yan-fen-xiang/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2025/09/02/20250902-yong-jiao-ben-ai-cli-ban-zi-dong-xie-dai-ma-shi-jian-jing-yan-fen-xiang/" itemprop="url">用脚本+AI CLI半自动写代码：实践经验分享</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2025-09-02T21:44:21+08:00">
+                2025-09-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>最近在折腾一个“半自动编程”项目，目标是让 AI 工具在一个相对可控的框架下持续编码，帮我实现一个个明确的开发任务。这里分享整个过程、思路和实践套路，算是一次探索性的工程笔记。</p>
+<h2 id="为什么要搞半自动"><a href="#为什么要搞半自动" class="headerlink" title="为什么要搞半自动"></a>为什么要搞半自动</h2><p>市面上的 AI 编程工具越来越多，比如：Claude Code、Gemini CLI、QWEN CODE 以及其他支持 CLI 模式的 AI 工具。<br>它们都能帮我们提高开发效率，但如果只是一次次手动问问题，效率还是不够高。我的想法是：</p>
+<ol>
+<li>用脚本封装和调度这些 AI 工具；</li>
+<li>利用 <code>tmux</code> 维持 AI CLI 的会话状态；</li>
+<li>自动给 AI 下发任务、收集结果，让 AI 一直“干活”，直到任务完成。</li>
+</ol>
+<p>这就像有个“虚拟小弟”24小时帮你写代码，而你更多做架构和技术方案的管理。</p>
+<hr>
+<h2 id="总体套路"><a href="#总体套路" class="headerlink" title="总体套路"></a>总体套路</h2><p>我总结下来整个流程可以分成四步，每一步都强调<strong>人工 review</strong>，避免“AI乱写”导致项目失控。</p>
+<h3 id="1-初始化项目：立规范、搭框架"><a href="#1-初始化项目：立规范、搭框架" class="headerlink" title="1. 初始化项目：立规范、搭框架"></a>1. 初始化项目：立规范、搭框架</h3><p>项目开始前先搞定<strong>规范和架构</strong>，这是整个半自动化的基础。</p>
+<ul>
+<li><p>新建 GitHub 仓库，初始化代码框架：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> git@github.com:Kingson4Wu/ts-playground.git</span><br></pre></td></tr></table></figure></li>
+<li><p>参考已有项目文档，比如我用的 <a target="_blank" rel="noopener" href="https://github.com/Kingson4Wu/cpp-linux-playground/blob/main/PROJECT.md">cpp-linux-playground</a>，根据 TypeScript 项目的需求，改写成自己的 <code>PROJECT.md</code>。</p>
+</li>
+<li><p>规划好：</p>
+<ul>
+<li>技术栈（语言、工具链、标准）</li>
+<li>测试和任务验收标准</li>
+<li>静态分析工具</li>
+<li>项目目录结构</li>
+<li>Git 提交规范</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>小建议：把 <code>docs/</code> 改成更专门的目录名（比如 <code>specifications/</code>），避免混乱。</p>
+</blockquote>
+<p>这一阶段主要是人工定规则、搭骨架，AI可以辅助起草文档，但最终必须你拍板。</p>
+<hr>
+<h3 id="2-细化任务实现方案"><a href="#2-细化任务实现方案" class="headerlink" title="2. 细化任务实现方案"></a>2. 细化任务实现方案</h3><p>所有任务先出详细的实现和测试方案，放在 <code>@specifications/task_specs/</code> 下。<br>原则：</p>
+<ul>
+<li><p><strong>不直接写代码</strong>，先写详细设计；</p>
+</li>
+<li><p>每个任务的设计经过人工审查和修改；</p>
+</li>
+<li><p>任务设计文件需要明确：</p>
+<ul>
+<li>功能描述</li>
+<li>实现逻辑</li>
+<li>输入输出</li>
+<li>单元测试方案</li>
+<li>潜在问题或风险点</li>
+</ul>
+</li>
+</ul>
+<p>这样做的好处是：AI有明确的执行指南，写出的代码更可控，后续修改成本也低。</p>
+<hr>
+<h3 id="3-半自动化驱动编码"><a href="#3-半自动化驱动编码" class="headerlink" title="3. 半自动化驱动编码"></a>3. 半自动化驱动编码</h3><p>有了规范和任务设计，就可以开始半自动写代码了。<br>我的方案是：</p>
+<ul>
+<li><p>用 Python 脚本驱动 AI CLI 工具；</p>
+</li>
+<li><p>通过 <code>tmux</code> 维持 AI 会话，避免中断；</p>
+</li>
+<li><p>每个任务循环：</p>
+<ol>
+<li>给 AI 发实现方案；</li>
+<li>要求它按方案写代码，但<strong>不要自动提交代码</strong>；</li>
+<li>人工检查后再提交到 Git。</li>
+</ol>
+</li>
+</ul>
+<p>脚本和逻辑可以参考 <a target="_blank" rel="noopener" href="https://github.com/Kingson4Wu/ForgeFlow">ForgeFlow</a>，里面有完整的交互逻辑示例。</p>
+<blockquote>
+<p>小技巧：</p>
+<ul>
+<li>每个 Prompt 末尾强调“不要自动提交代码”；</li>
+<li>如果任务超时超过1小时，自动触发检查机制；</li>
+<li>项目进度同步到 <code>TODO.md</code>，并在 <code>PROJECT.md</code> 中引用。</li>
+</ul>
+</blockquote>
+<hr>
+<h3 id="4-定义“完成”的标准"><a href="#4-定义“完成”的标准" class="headerlink" title="4. 定义“完成”的标准"></a>4. 定义“完成”的标准</h3><p>一个任务完成的定义：</p>
+<ol>
+<li>按实现方案完成代码；</li>
+<li>单元测试全部通过；</li>
+<li>脚本和 Prompt 更新到位；</li>
+<li>构建和测试无异常；</li>
+<li>Git 提交所有改动；</li>
+<li>进入下一个任务。</li>
+</ol>
+<p>最终目标是：</p>
+<blockquote>
+<p>输出所有方案 -&gt; 自动实现 -&gt; 所有项目任务完成后，AI只返回“完成”两个字。</p>
+</blockquote>
+<hr>
+<h2 id="实战项目参考"><a href="#实战项目参考" class="headerlink" title="实战项目参考"></a>实战项目参考</h2><p>示例项目：<a target="_blank" rel="noopener" href="https://github.com/Kingson4Wu/ts-playground">ts-playground</a><br>这是我搭的一个 TypeScript 学习和实验环境：</p>
+<ul>
+<li>CI&#x2F;CD 流程完整；</li>
+<li>用于系统掌握 TypeScript 类型系统；</li>
+<li>可以复用于后端服务、CLI 工具开发。</li>
+</ul>
+<p>这个项目就是通过“人机协作+半自动化”方式落地的。</p>
+<hr>
+<h2 id="半自动-vs-全自动"><a href="#半自动-vs-全自动" class="headerlink" title="半自动 vs 全自动"></a>半自动 vs 全自动</h2><p>目前这种方案是“半自动”，而不是“全自动”。原因：</p>
+<ul>
+<li><strong>设计和规范必须人工介入</strong>：AI生成的规范往往不够完善；</li>
+<li><strong>脚本和Prompt需要不断打磨</strong>：无法覆盖所有场景；</li>
+<li><strong>代码质量还需人工检查</strong>：AI的水平不总是稳定。</li>
+</ul>
+<p>换句话说，这是一个低成本、可控、复用性强的探索阶段方案。<br>全自动化？有点远，尤其是多Agent复杂度太高，难以管理上下文和控制风险。</p>
+<hr>
+<h2 id="上下文管理的核心"><a href="#上下文管理的核心" class="headerlink" title="上下文管理的核心"></a>上下文管理的核心</h2><p>要想让AI持续有效地工作，项目上下文必须有序管理：</p>
+<ol>
+<li>规范文件分类清晰，按模块分目录；</li>
+<li>方案文档结构化，方便AI快速索引；</li>
+<li>自动化脚本根据任务调度上下文，让AI“看得懂项目”。</li>
+</ol>
+<p>这才是真正的“AI编程助手”关键所在。</p>
+<hr>
+<h2 id="一点哲学思考"><a href="#一点哲学思考" class="headerlink" title="一点哲学思考"></a>一点哲学思考</h2><p>这套方案的本质是把开发人员角色分层：</p>
+<ul>
+<li>AI是“码农+助理”，帮你实现具体功能；</li>
+<li>你是“开发经理”，负责设计、审查、控制质量；</li>
+<li>团队协作依旧重要，人类仍然是决策核心。</li>
+</ul>
+<p>AI工具不是真正的替代，而是推动开发人员往更高的抽象层次发展。<br>从这个角度看，AI是个强大的加速器，而不是终点。</p>
+<hr>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>整个实践路线：</p>
+<ol>
+<li>项目初始化，搭规范和骨架；</li>
+<li>细化任务方案，人工Review；</li>
+<li>用脚本驱动AI半自动写代码；</li>
+<li>明确完成标准，逐步推进。</li>
+</ol>
+<p>这是目前我能找到的最可控、最实用的“AI编程”方式。<br>它既降低了成本，又不至于乱套，非常适合小团队或者个人工程师快速起项目。</p>
+<h2 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://agents.md/">AGENTS.md</a>: Think of AGENTS.md as a README for agents</li>
+<li>细化任务方案，可以参考<a target="_blank" rel="noopener" href="https://github.com/github/spec-kit">spec-kit</a> 或 <a target="_blank" rel="noopener" href="https://github.com/Fission-AI/OpenSpec">OpenSpec</a>的套路</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2025/08/28/20250828-yong-tmux-nei-wang-chuan-tou-rang-chu-men-ye-neng-zhi-dao-bian-cheng-ren-wu/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2465,177 +2715,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2025/07/16/20250716-quickit-gao-xiao-bing-fa-ren-wu-guan-li-gong-ju-ku-xiang-jie/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2025/07/16/20250716-quickit-gao-xiao-bing-fa-ren-wu-guan-li-gong-ju-ku-xiang-jie/" itemprop="url">QuicKit：高效并发任务管理工具库详解</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2025-07-16T22:50:57+08:00">
-                2025-07-16
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>在现代软件开发中，高效的任务管理与并发处理是提升系统性能的关键。<strong>QuicKit</strong> 是一个基于 Java 的工具库，专注于并发任务调度、执行控制、重试机制等通用能力的封装。本文将深入介绍 QuicKit 的核心功能及其实现原理。</p>
-<hr>
-<h2 id="1-延迟任务调度：DelayQueueUtils"><a href="#1-延迟任务调度：DelayQueueUtils" class="headerlink" title="1. 延迟任务调度：DelayQueueUtils"></a>1. 延迟任务调度：<code>DelayQueueUtils</code></h2><p><code>DelayQueueUtils</code> 使用 <strong>HashedWheelTimer</strong> 实现延迟任务的高效调度。</p>
-<h3 id="实现原理："><a href="#实现原理：" class="headerlink" title="实现原理："></a>实现原理：</h3><ul>
-<li><strong>时间轮机制</strong>：将时间划分为多个槽（slots），类似时钟的刻度。</li>
-<li><strong>任务分配</strong>：任务根据设定的延迟时间分配至对应槽中。</li>
-<li><strong>槽激活</strong>：时间轮旋转，当指针指向某个槽时，执行该槽内的所有任务。</li>
-</ul>
-<blockquote>
-<p>✅ 优势：极大减少内存消耗和调度开销，适合高频延迟任务场景。</p>
-</blockquote>
-<hr>
-<h2 id="2-执行频率控制：ExecutionFrequencyUtils"><a href="#2-执行频率控制：ExecutionFrequencyUtils" class="headerlink" title="2. 执行频率控制：ExecutionFrequencyUtils"></a>2. 执行频率控制：<code>ExecutionFrequencyUtils</code></h2><p>用于<strong>控制任务执行频率</strong>，防止系统被大量任务压垮。</p>
-<h3 id="实现原理：-1"><a href="#实现原理：-1" class="headerlink" title="实现原理："></a>实现原理：</h3><ul>
-<li><strong>任务分片</strong>：将任务列表切分为多个子任务，每批任务在一定时间间隔内执行。</li>
-<li><strong>频率限制</strong>：可配置每秒允许执行的任务数量，避免突发任务过载系统。</li>
-</ul>
-<blockquote>
-<p>✅ 应用场景：接口限流、批量处理限速、系统保护。</p>
-</blockquote>
-<hr>
-<h2 id="3-并行任务处理：ParallelTask"><a href="#3-并行任务处理：ParallelTask" class="headerlink" title="3. 并行任务处理：ParallelTask"></a>3. 并行任务处理：<code>ParallelTask</code></h2><p>提供简洁高效的<strong>并行处理能力</strong>，充分利用多核 CPU 性能。</p>
-<h3 id="实现原理：-2"><a href="#实现原理：-2" class="headerlink" title="实现原理："></a>实现原理：</h3><ul>
-<li><strong>并行流</strong>：基于 Java 8 的 <code>parallelStream()</code> 并行处理任务。</li>
-<li><strong>线程池管理</strong>：使用 <code>ExecutorService</code> 管理线程，降低线程创建销毁开销。</li>
-</ul>
-<blockquote>
-<p>✅ 适用场景：批量任务处理、并发计算、数据转换等。</p>
-</blockquote>
-<hr>
-<h2 id="4-重试机制：RetryUtils"><a href="#4-重试机制：RetryUtils" class="headerlink" title="4. 重试机制：RetryUtils"></a>4. 重试机制：<code>RetryUtils</code></h2><p>内置灵活的<strong>重试机制</strong>，应对任务失败后的自动恢复。</p>
-<h3 id="实现原理：-3"><a href="#实现原理：-3" class="headerlink" title="实现原理："></a>实现原理：</h3><ul>
-<li><strong>重试策略配置</strong>：通过 <code>RetryerBuilder</code> 设置重试次数、间隔、终止条件等。</li>
-<li><strong>异常捕获与处理</strong>：根据异常类型与策略自动判断是否重试。</li>
-</ul>
-<blockquote>
-<p>✅ 典型用途：数据库重试、远程服务调用、临时异常容忍。</p>
-</blockquote>
-<hr>
-<h2 id="5-读写锁封装：ReadWriteLockWrapper"><a href="#5-读写锁封装：ReadWriteLockWrapper" class="headerlink" title="5. 读写锁封装：ReadWriteLockWrapper"></a>5. 读写锁封装：<code>ReadWriteLockWrapper</code></h2><p>封装 Java 原生 <code>ReentrantReadWriteLock</code>，简化并发数据访问控制。</p>
-<h3 id="实现原理：-4"><a href="#实现原理：-4" class="headerlink" title="实现原理："></a>实现原理：</h3><ul>
-<li><strong>读写分离</strong>：多个线程可同时读，写需独占。</li>
-<li><strong>锁降级支持</strong>：支持写锁降级为读锁，提升吞吐性能。</li>
-</ul>
-<blockquote>
-<p>✅ 适用场景：缓存读取、配置中心、共享资源管理等。</p>
-</blockquote>
-<hr>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p><strong>QuicKit</strong> 通过提供一系列高性能并发工具，极大简化了任务调度、线程管理与错误恢复的复杂性。无论你在构建分布式系统、服务中间件，还是日常业务逻辑开发，QuicKit 都是一个值得使用的并发基础组件库。</p>
-<hr>
-<p>📦 <strong>项目地址</strong>：<br>👉 <a target="_blank" rel="noopener" href="https://github.com/Kingson4Wu/QuicKit">https://github.com/Kingson4Wu/QuicKit</a></p>
-<p>📚 <strong>文档地址</strong>：<br>👉 <a target="_blank" rel="noopener" href="https://deepwiki.com/Kingson4Wu/QuicKit">https://deepwiki.com/Kingson4Wu/QuicKit</a></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2693,7 +2772,7 @@
 <a href="/archives/">                
 <!--<a href="/archives/%7C%7C%20archive">-->
               
-                  <span class="site-state-item-count">175</span>
+                  <span class="site-state-item-count">176</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2706,7 +2785,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">209</span>
+                  <span class="site-state-item-count">213</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

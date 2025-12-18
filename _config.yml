@@ -4,16 +4,16 @@
 
 # Site
 title: 拉巴力的纸皮箱
-subtitle:
-description: 为啥不吃三文鱼
-keywords:
+subtitle: 技术博客 | 记录学习笔记和思考
+description: Kingson Wu的技术博客，分享编程、架构、AI等技术笔记和个人思考
+keywords: "技术博客,编程,架构,软件开发,AI,人工智能,后端开发,Java,Go,系统设计"
 author: Kingson Wu
 language: zh-Hans
-timezone: 
+timezone:
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: http://yoursite.com
+url: https://kingson4wu.github.io
 root: /
 permalink: :year/:month/:day/:title/
 permalink_defaults:
@@ -75,10 +75,20 @@ pagination_dir: page
 
 # Extensions
 ## Plugins: https://hexo.io/plugins/
-plugins: hexo-generate-feed
+plugins:
+  - hexo-generate-feed
+  - hexo-generator-sitemap
+  - hexo-generator-baidu-sitemap
 
 ## Themes: https://hexo.io/themes/
 theme: next
+
+# Sitemap
+sitemap:
+  path: sitemap.xml
+
+baidusitemap:
+  path: baidusitemap.xml
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html

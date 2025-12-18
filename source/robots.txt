@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://kingson4wu.github.io/sitemap.xml
+
+# Block access to specific directories
+Disallow: /admin/
+Disallow: /cgi-bin/
+Disallow: /wp-admin/

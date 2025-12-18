@@ -2,6 +2,8 @@
 title: 使用ThreadContext缓存RPC结果
 date: 2020-07-06 19:44:20
 tags: [业务方案,ThreadContext,RPC]
+keywords: [ThreadContext, RPC缓存, Java, 性能优化, 微服务]
+description: 详细介绍如何使用ThreadContext缓存RPC结果以避免重复调用，提高系统性能，包含实际业务场景和解决方案分析。
 ---
 
 ![](photo/Gerrard.jpeg)

@@ -212,3 +212,67 @@ Java则是即使主线程结束，其他线程不结束，进程就不会退出�
 ## 扩展阅读
 + [Project Loom能否撼动Go和Rust的地位？深入分析三种并发模型](https://mp.weixin.qq.com/s/cJrQJelrFHVzES2iUm76HQ)
 
+
+===
+
+## 其他扩展
+
+### 从 JPMS 到 GraalVM：为什么 Java 很难做到真正的 Class-Level Dead Code Elimination
++ JDK 9 的 JPMS 只能在模块级别裁剪运行时体积，无法做到 class-level 的未用代码消除，这并非模块系统能力不足，而是 Java 语言与 JVM 长期采用开放世界（open-world）运行模型，允许反射、SPI、动态类加载等行为，导致类的可达性无法在编译期可靠判定。
++ GraalVM 在 native-image 模式下 默认会做 class-level 的 Dead Code Elimination ！
++ GraalVM native-image 通过引入封闭世界（closed-world）假设和全程序分析，技术上具备 class-level dead code elimination 的能力，但这一能力在通用 Java 应用中会被大量动态特性显著削弱，实际效果高度依赖显式配置与框架配合。
++ 以 Spring 为代表的传统 Java 框架，由于高度依赖运行期反射和类路径扫描，原生运行模型与 native-image 天然不兼容；当前所谓的“兼容”是通过 AOT 编译将运行期行为前移到构建期、限制动态能力后实现的，实质上是一种新的、静态化的运行形态。
++ 相比之下，Go 从语言设计阶段即采用封闭世界与静态链接模型，并对反射能力进行严格约束，使编译器能够默认、安全地执行函数级乃至更细粒度的未用代码消除，这也是其可执行文件天然更小、构建模型更简单的根本原因。
+
+### **Spring / Quarkus / Micronaut —— 极简本质对比**
+
+* **Spring**
+  运行期框架，动态性最强、生态最全、容错最高；代价是隐式行为多、可预测性较弱。适合复杂业务与快速交付。
+
+* **Quarkus**
+  构建期框架，在 build 阶段冻结决策，运行期更轻更快；在灵活性与确定性之间做工程折中。适合云原生与规模化部署。
+
+* **Micronaut**
+  编译期框架，几乎不依赖反射，行为在编译期已确定；运行模型最简单、最可预测，但约束最强。适合基础设施与性能敏感服务。
+
+**一句话总结**：
+
+> Spring 重灵活，Quarkus 重构建期确定性，Micronaut 重编译期确定性。
+
+### **Java Native Image 选择简要总结**
+
+* **首选：Quarkus**
+  构建期冻结行为，native-image 一等公民，生态与工具链最成熟，整体成本最低。
+
+* **次选：Micronaut**
+  编译期生成代码、极少反射，native 友好但生态较小，适合轻量服务和工具。
+
+* **不推荐首选：Spring Boot**
+  反射与动态机制重，native 成本高，仅适合已有 Spring 体系强依赖的场景。
+
+**一句话结论：**
+
+> 用 native-image，优先选 **Quarkus**，其次 **Micronaut**，最后才考虑 **Spring**。
+
+### JPMS 与 Go / Rust 的本质差异
+
+**核心结论**
+JPMS 并未改变 Java 以“类名”为核心的链接模型，只是通过更严格的规则提前暴露问题；Go 与 Rust 从语言设计层面就避免了这些问题。
+
+**关键要点**
+
+* **版本冲突**：JPMS 不具备版本感知能力，多版本不兼容仍在运行期以 `NoSuchMethodError` 暴露；模块系统 ≠ 依赖管理系统。
+* **Split Package**：JPMS 完全禁止（无论是否 `exports`），只是编译期与运行期检测时机不同。
+* **同名类选择**：JPMS 不支持“指定模块加载同名类”，只能通过禁止歧义来兜底。
+
+**根因**
+
+* Java 的历史前提：链接单元是 **binary class name**，编译与运行解耦，多版本从未进入语言语义 → 只能靠限制与 fail fast。
+
+**对比**
+
+* **Go**：命名空间是 import path，编译即链接，问题在语义层面被消解；同一 binary 内通常单版本（或靠路径区分）。
+* **Rust**：crate 是最小链接单元，Cargo 允许同一 crate 多版本共存，类型系统层面完全隔离，更严格也更彻底。
+
+**一句话总结**
+Java（JPMS）在修补历史；Go 用路径规避问题；Rust 用类型系统根本解决。

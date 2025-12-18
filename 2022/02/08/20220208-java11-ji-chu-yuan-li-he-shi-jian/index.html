@@ -25,6 +25,8 @@
 
 
 
+  <meta name="google-site-verification" content="google-site-verification=n4yVkaTfu2KtQ8fiQ3Ri60FPAbRF74oxrDOkOXWjhSs" />
+
 
 
 
@@ -84,12 +86,12 @@
 <meta name="description" content="一、为什么选择java11Java 11 是 Java 8 之后的首个 LTS 版本（Long-term support 长期支持版本），所以有不少开发者表示会选择升级至 Java 11。  1、目前相对来说，Java 8 太旧，Java 17 太新，Java11 刚刚好；2、支持以类路径方式运行，适合过渡阶段升级；3、其他原因（下文会说明） 二、模块系统模块系统是Java 9的旗舰功能，使用ja">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Java11基础原理和实践">
-<meta property="og:url" content="http://yoursite.com/2022/02/08/20220208-java11-ji-chu-yuan-li-he-shi-jian/index.html">
+<meta property="og:url" content="https://kingson4wu.github.io/2022/02/08/20220208-java11-ji-chu-yuan-li-he-shi-jian/index.html">
 <meta property="og:site_name" content="拉巴力的纸皮箱">
 <meta property="og:description" content="一、为什么选择java11Java 11 是 Java 8 之后的首个 LTS 版本（Long-term support 长期支持版本），所以有不少开发者表示会选择升级至 Java 11。  1、目前相对来说，Java 8 太旧，Java 17 太新，Java11 刚刚好；2、支持以类路径方式运行，适合过渡阶段升级；3、其他原因（下文会说明） 二、模块系统模块系统是Java 9的旗舰功能，使用ja">
 <meta property="og:locale">
-<meta property="og:image" content="http://yoursite.com/2022/02/08/20220208-java11-ji-chu-yuan-li-he-shi-jian/java11.png">
-<meta property="og:image" content="http://yoursite.com/2022/02/08/20220208-java11-ji-chu-yuan-li-he-shi-jian/java11_classloader.png">
+<meta property="og:image" content="https://kingson4wu.github.io/2022/02/08/20220208-java11-ji-chu-yuan-li-he-shi-jian/java11.png">
+<meta property="og:image" content="https://kingson4wu.github.io/2022/02/08/20220208-java11-ji-chu-yuan-li-he-shi-jian/java11_classloader.png">
 <meta property="article:published_time" content="2022-02-07T16:08:24.000Z">
 <meta property="article:modified_time" content="2023-05-07T14:41:07.767Z">
 <meta property="article:author" content="Kingson Wu">
@@ -97,7 +99,7 @@
 <meta property="article:tag" content="Java11">
 <meta property="article:tag" content="模块系统">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://yoursite.com/2022/02/08/20220208-java11-ji-chu-yuan-li-he-shi-jian/java11.png">
+<meta name="twitter:image" content="https://kingson4wu.github.io/2022/02/08/20220208-java11-ji-chu-yuan-li-he-shi-jian/java11.png">
 
 
 
@@ -127,7 +129,7 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2022/02/08/20220208-java11-ji-chu-yuan-li-he-shi-jian/"/>
+  <link rel="canonical" href="https://kingson4wu.github.io/2022/02/08/20220208-java11-ji-chu-yuan-li-he-shi-jian/"/>
 
 
 
@@ -138,6 +140,15 @@
 
 
 
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'G-4QEGQ2DGGT', 'auto');
+  ga('send', 'pageview');
+</script>
 
 
 
@@ -168,7 +179,7 @@
       </a>
     </div>
       
-        <p class="site-subtitle"></p>
+        <h1 class="site-subtitle" itemprop="description">技术博客 | 记录学习笔记和思考</h1>
       
   </div>
 
@@ -294,7 +305,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/02/08/20220208-java11-ji-chu-yuan-li-he-shi-jian/">
+    <link itemprop="mainEntityOfPage" href="https://kingson4wu.github.io/2022/02/08/20220208-java11-ji-chu-yuan-li-he-shi-jian/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="">
@@ -311,7 +322,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Java11基础原理和实践</h1>
+          <h2 class="post-title" itemprop="name headline">Java11基础原理和实践</h2>
         
 
         <div class="post-meta">
@@ -1264,6 +1275,21 @@
   
 
   
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
 
   
   

@@ -25,6 +25,8 @@
 
 
 
+  <meta name="google-site-verification" content="google-site-verification=n4yVkaTfu2KtQ8fiQ3Ri60FPAbRF74oxrDOkOXWjhSs" />
+
 
 
 
@@ -84,7 +86,7 @@
 <meta name="description" content="本文使用AI优化   在现代应用中，前后端与微服务之间的接口往往涉及多种语言、复杂的文档、重复的代码维护，以及永远难以对齐的接口变更。随着业务演进，系统间的交互方式不断增多：从浏览器到移动端、从 Python 到 Java、从 REST 到 gRPC，各种协议和框架的混用使接口治理逐渐成为开发效率的瓶颈——对接繁琐、体验不佳、重复劳动多、沟通成本高，整体效率显著下降。 为彻底解决这些痛点，尝试">
 <meta property="og:type" content="article">
 <meta property="og:title" content="构建统一前后端（与服务间）RPC体系：从 IDL 设计到多协议适配与 Sidecar 部署的工程实践">
-<meta property="og:url" content="http://yoursite.com/2025/11/28/20251128-gou-jian-tong-yi-qian-hou-duan-yu-fu-wu-jian-rpc-ti-xi-cong-idl-she-ji-dao-duo-xie-yi-gua-pei-yu-sidecar-bu-shu-de-gong-cheng-shi-jian/index.html">
+<meta property="og:url" content="https://kingson4wu.github.io/2025/11/28/20251128-gou-jian-tong-yi-qian-hou-duan-yu-fu-wu-jian-rpc-ti-xi-cong-idl-she-ji-dao-duo-xie-yi-gua-pei-yu-sidecar-bu-shu-de-gong-cheng-shi-jian/index.html">
 <meta property="og:site_name" content="拉巴力的纸皮箱">
 <meta property="og:description" content="本文使用AI优化   在现代应用中，前后端与微服务之间的接口往往涉及多种语言、复杂的文档、重复的代码维护，以及永远难以对齐的接口变更。随着业务演进，系统间的交互方式不断增多：从浏览器到移动端、从 Python 到 Java、从 REST 到 gRPC，各种协议和框架的混用使接口治理逐渐成为开发效率的瓶颈——对接繁琐、体验不佳、重复劳动多、沟通成本高，整体效率显著下降。 为彻底解决这些痛点，尝试">
 <meta property="og:locale">
@@ -127,7 +129,7 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2025/11/28/20251128-gou-jian-tong-yi-qian-hou-duan-yu-fu-wu-jian-rpc-ti-xi-cong-idl-she-ji-dao-duo-xie-yi-gua-pei-yu-sidecar-bu-shu-de-gong-cheng-shi-jian/"/>
+  <link rel="canonical" href="https://kingson4wu.github.io/2025/11/28/20251128-gou-jian-tong-yi-qian-hou-duan-yu-fu-wu-jian-rpc-ti-xi-cong-idl-she-ji-dao-duo-xie-yi-gua-pei-yu-sidecar-bu-shu-de-gong-cheng-shi-jian/"/>
 
 
 
@@ -138,6 +140,15 @@
 
 
 
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'G-4QEGQ2DGGT', 'auto');
+  ga('send', 'pageview');
+</script>
 
 
 
@@ -168,7 +179,7 @@
       </a>
     </div>
       
-        <p class="site-subtitle"></p>
+        <h1 class="site-subtitle" itemprop="description">技术博客 | 记录学习笔记和思考</h1>
       
   </div>
 
@@ -294,7 +305,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2025/11/28/20251128-gou-jian-tong-yi-qian-hou-duan-yu-fu-wu-jian-rpc-ti-xi-cong-idl-she-ji-dao-duo-xie-yi-gua-pei-yu-sidecar-bu-shu-de-gong-cheng-shi-jian/">
+    <link itemprop="mainEntityOfPage" href="https://kingson4wu.github.io/2025/11/28/20251128-gou-jian-tong-yi-qian-hou-duan-yu-fu-wu-jian-rpc-ti-xi-cong-idl-she-ji-dao-duo-xie-yi-gua-pei-yu-sidecar-bu-shu-de-gong-cheng-shi-jian/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="">
@@ -311,7 +322,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">构建统一前后端（与服务间）RPC体系：从 IDL 设计到多协议适配与 Sidecar 部署的工程实践</h1>
+          <h2 class="post-title" itemprop="name headline">构建统一前后端（与服务间）RPC体系：从 IDL 设计到多协议适配与 Sidecar 部署的工程实践</h2>
         
 
         <div class="post-meta">
@@ -1588,6 +1599,21 @@
   
 
   
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
 
   
   

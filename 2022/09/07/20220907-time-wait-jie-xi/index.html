@@ -25,6 +25,8 @@
 
 
 
+  <meta name="google-site-verification" content="google-site-verification=n4yVkaTfu2KtQ8fiQ3Ri60FPAbRF74oxrDOkOXWjhSs" />
+
 
 
 
@@ -84,18 +86,18 @@
 <meta name="description" content="TIME_WAIT 通信双方建立TCP连接后，主动关闭(FIN)连接的一方就会进入TIME_WAIT状态 客户端主动关闭连接时，发送最后一个ack后，会进入TIME_WAIT状态，再停留2个MSL时间，进入CLOSED状态    TIME_WAIT状态存在的理由 可靠地实现TCP全双工连接的终止  TCP协议在关闭连接的四次握手过程中，最终的ACK是由主动关闭连接的一端（后面统称A端）发出的，如">
 <meta property="og:type" content="article">
 <meta property="og:title" content="TIME_WAIT解析">
-<meta property="og:url" content="http://yoursite.com/2022/09/07/20220907-time-wait-jie-xi/index.html">
+<meta property="og:url" content="https://kingson4wu.github.io/2022/09/07/20220907-time-wait-jie-xi/index.html">
 <meta property="og:site_name" content="拉巴力的纸皮箱">
 <meta property="og:description" content="TIME_WAIT 通信双方建立TCP连接后，主动关闭(FIN)连接的一方就会进入TIME_WAIT状态 客户端主动关闭连接时，发送最后一个ack后，会进入TIME_WAIT状态，再停留2个MSL时间，进入CLOSED状态    TIME_WAIT状态存在的理由 可靠地实现TCP全双工连接的终止  TCP协议在关闭连接的四次握手过程中，最终的ACK是由主动关闭连接的一端（后面统称A端）发出的，如">
 <meta property="og:locale">
-<meta property="og:image" content="http://yoursite.com/2022/09/07/20220907-time-wait-jie-xi/%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B.jpeg">
+<meta property="og:image" content="https://kingson4wu.github.io/2022/09/07/20220907-time-wait-jie-xi/%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B.jpeg">
 <meta property="article:published_time" content="2022-09-07T05:30:37.000Z">
 <meta property="article:modified_time" content="2023-05-07T14:41:07.792Z">
 <meta property="article:author" content="Kingson Wu">
 <meta property="article:tag" content="TCP">
 <meta property="article:tag" content="TIME_WAIT">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://yoursite.com/2022/09/07/20220907-time-wait-jie-xi/%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B.jpeg">
+<meta name="twitter:image" content="https://kingson4wu.github.io/2022/09/07/20220907-time-wait-jie-xi/%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B.jpeg">
 
 
 
@@ -125,7 +127,7 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2022/09/07/20220907-time-wait-jie-xi/"/>
+  <link rel="canonical" href="https://kingson4wu.github.io/2022/09/07/20220907-time-wait-jie-xi/"/>
 
 
 
@@ -136,6 +138,15 @@
 
 
 
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'G-4QEGQ2DGGT', 'auto');
+  ga('send', 'pageview');
+</script>
 
 
 
@@ -166,7 +177,7 @@
       </a>
     </div>
       
-        <p class="site-subtitle"></p>
+        <h1 class="site-subtitle" itemprop="description">技术博客 | 记录学习笔记和思考</h1>
       
   </div>
 
@@ -292,7 +303,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/09/07/20220907-time-wait-jie-xi/">
+    <link itemprop="mainEntityOfPage" href="https://kingson4wu.github.io/2022/09/07/20220907-time-wait-jie-xi/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="">
@@ -309,7 +320,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">TIME_WAIT解析</h1>
+          <h2 class="post-title" itemprop="name headline">TIME_WAIT解析</h2>
         
 
         <div class="post-meta">
@@ -1173,6 +1184,21 @@
   
 
   
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
 
   
   

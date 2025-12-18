@@ -25,6 +25,8 @@
 
 
 
+  <meta name="google-site-verification" content="google-site-verification=n4yVkaTfu2KtQ8fiQ3Ri60FPAbRF74oxrDOkOXWjhSs" />
+
 
 
 
@@ -84,20 +86,20 @@
 <meta name="description" content="概述 本文针对金融类(如用户虚拟货币)这类对数据准确性很敏感的业务的容灾架构； 案例中的服务架构为同城主备架构； 内容包括：容灾架构、故障切换、故障恢复、演练方案等； 涉及技术点：MySQL、MHA、Consul等； 本文基于 关于MHA-Consul-MySQL高可用方案的简单总结和思考 如何解决脑裂问题   由于某种原因，某些细节不会描述。 关于系统可用性，收藏了一张网图 MTTF 是 Mea">
 <meta property="og:type" content="article">
 <meta property="og:title" content="金融业务容灾体系简述">
-<meta property="og:url" content="http://yoursite.com/2020/09/08/20200908-jin-rong-ye-wu-rong-zai-ti-xi-jian-shu/index.html">
+<meta property="og:url" content="https://kingson4wu.github.io/2020/09/08/20200908-jin-rong-ye-wu-rong-zai-ti-xi-jian-shu/index.html">
 <meta property="og:site_name" content="拉巴力的纸皮箱">
 <meta property="og:description" content="概述 本文针对金融类(如用户虚拟货币)这类对数据准确性很敏感的业务的容灾架构； 案例中的服务架构为同城主备架构； 内容包括：容灾架构、故障切换、故障恢复、演练方案等； 涉及技术点：MySQL、MHA、Consul等； 本文基于 关于MHA-Consul-MySQL高可用方案的简单总结和思考 如何解决脑裂问题   由于某种原因，某些细节不会描述。 关于系统可用性，收藏了一张网图 MTTF 是 Mea">
 <meta property="og:locale">
-<meta property="og:image" content="http://yoursite.com/2020/09/08/20200908-jin-rong-ye-wu-rong-zai-ti-xi-jian-shu/availability.png">
-<meta property="og:image" content="http://yoursite.com/2020/09/08/20200908-jin-rong-ye-wu-rong-zai-ti-xi-jian-shu/Network_Topology.png">
-<meta property="og:image" content="http://yoursite.com/2020/09/08/20200908-jin-rong-ye-wu-rong-zai-ti-xi-jian-shu/Architecture.png">
+<meta property="og:image" content="https://kingson4wu.github.io/2020/09/08/20200908-jin-rong-ye-wu-rong-zai-ti-xi-jian-shu/availability.png">
+<meta property="og:image" content="https://kingson4wu.github.io/2020/09/08/20200908-jin-rong-ye-wu-rong-zai-ti-xi-jian-shu/Network_Topology.png">
+<meta property="og:image" content="https://kingson4wu.github.io/2020/09/08/20200908-jin-rong-ye-wu-rong-zai-ti-xi-jian-shu/Architecture.png">
 <meta property="article:published_time" content="2020-09-07T16:04:32.000Z">
 <meta property="article:modified_time" content="2024-05-27T06:00:53.941Z">
 <meta property="article:author" content="Kingson Wu">
 <meta property="article:tag" content="金钱相关">
 <meta property="article:tag" content="容灾">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://yoursite.com/2020/09/08/20200908-jin-rong-ye-wu-rong-zai-ti-xi-jian-shu/availability.png">
+<meta name="twitter:image" content="https://kingson4wu.github.io/2020/09/08/20200908-jin-rong-ye-wu-rong-zai-ti-xi-jian-shu/availability.png">
 
 
 
@@ -127,7 +129,7 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2020/09/08/20200908-jin-rong-ye-wu-rong-zai-ti-xi-jian-shu/"/>
+  <link rel="canonical" href="https://kingson4wu.github.io/2020/09/08/20200908-jin-rong-ye-wu-rong-zai-ti-xi-jian-shu/"/>
 
 
 
@@ -138,6 +140,15 @@
 
 
 
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'G-4QEGQ2DGGT', 'auto');
+  ga('send', 'pageview');
+</script>
 
 
 
@@ -168,7 +179,7 @@
       </a>
     </div>
       
-        <p class="site-subtitle"></p>
+        <h1 class="site-subtitle" itemprop="description">技术博客 | 记录学习笔记和思考</h1>
       
   </div>
 
@@ -294,7 +305,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/09/08/20200908-jin-rong-ye-wu-rong-zai-ti-xi-jian-shu/">
+    <link itemprop="mainEntityOfPage" href="https://kingson4wu.github.io/2020/09/08/20200908-jin-rong-ye-wu-rong-zai-ti-xi-jian-shu/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="">
@@ -311,7 +322,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">金融业务容灾体系简述</h1>
+          <h2 class="post-title" itemprop="name headline">金融业务容灾体系简述</h2>
         
 
         <div class="post-meta">
@@ -1220,6 +1231,21 @@
   
 
   
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
 
   
   

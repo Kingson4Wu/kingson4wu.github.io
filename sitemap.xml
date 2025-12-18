@@ -1,0 +1,3117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2020/07/06/20200706-shi-yong-threadcontext-huan-cun-rpc-jie-guo/</loc>
+    
+    <lastmod>2025-12-18</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2025/02/21/20250221-da-mo-xing-ying-yong-kai-fa-ai-agent-yao-dian-ji-lu/</loc>
+    
+    <lastmod>2025-12-18</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2024/11/21/20241121-dui-java-go-rust-zhi-jian-de-jian-dan-dui-bi-he-zong-jie/</loc>
+    
+    <lastmod>2025-12-18</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2025/12/17/20251217-da-mo-xing-tui-li-de-bu-que-ding-xing-cong-fu-dian-yun-suan-dao-gong-cheng-shi-xian/</loc>
+    
+    <lastmod>2025-12-17</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2022/03/22/20220322-qing-liang-ji-wei-fu-wu-gong-gong-ku-she-ji/</loc>
+    
+    <lastmod>2025-12-17</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/about/index.html</loc>
+    
+    <lastmod>2025-12-14</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2025/12/12/20251212-da-mo-xing-zhong-de-function-calling-yu-gong-ju-mo-shi-ji-zhi-qu-bie-yu-ben-zhi/</loc>
+    
+    <lastmod>2025-12-12</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2025/09/02/20250902-yong-jiao-ben-ai-cli-ban-zi-dong-xie-dai-ma-shi-jian-jing-yan-fen-xiang/</loc>
+    
+    <lastmod>2025-12-12</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2025/12/08/20251208-sheng-cheng-shi-ai-jie-ma-yue-shu-yu-duo-mo-tai-jia-gou-xi-tong-hua-yuan-li-jie-xi/</loc>
+    
+    <lastmod>2025-12-08</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2025/08/07/20250807-duo-yu-yan-da-mo-xing-ru-he-chu-li-bu-tong-yu-yan-shi-fan-yi-cheng-ying-yu-hou-zai-tui-li-de-ma/</loc>
+    
+    <lastmod>2025-12-01</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2025/05/31/20250531-ren-gong-zhi-neng-yi-ci-shi-fou-zhun-que-yi-ci-guan-yu-ai-ben-zhi-de-fan-si/</loc>
+    
+    <lastmod>2025-12-01</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2025/11/28/20251128-gou-jian-tong-yi-qian-hou-duan-yu-fu-wu-jian-rpc-ti-xi-cong-idl-she-ji-dao-duo-xie-yi-gua-pei-yu-sidecar-bu-shu-de-gong-cheng-shi-jian/</loc>
+    
+    <lastmod>2025-11-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2025/10/21/20251021-sheng-huo-zhong-de-it-zhe-xue-cong-ji-zhu-jia-gou-kan-ren-sheng-zhi-hui/</loc>
+    
+    <lastmod>2025-10-21</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2021/07/06/20210706-it-zhong-de-sheng-huo-zhe-xue/</loc>
+    
+    <lastmod>2025-10-21</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2021/08/13/20210813-ge-ren-guan-li-jing-yan-zong-jie/</loc>
+    
+    <lastmod>2025-10-21</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2025/10/16/20251016-guan-yu-juan-de-li-xing-fen-xi-yu-fen-lei/</loc>
+    
+    <lastmod>2025-10-16</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2025/10/15/20251015-nei-bu-hui-yi-di-xiao-yu-dui-wai-xuan-jiang-jie-zhi-de-fen-xi/</loc>
+    
+    <lastmod>2025-10-15</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2025/09/17/20250917-seata-yu-fen-bu-shi-shi-wu-de-ben-zhi-jie-xi/</loc>
+    
+    <lastmod>2025-09-17</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2025/09/15/20250915-ip-gui-shu-yu-quan-qiu-lu-you-cong-ipv4-dao-ipv6-de-yuan-li-yu-shi-jian/</loc>
+    
+    <lastmod>2025-09-16</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2022/05/06/20220506-chang-lian-jie-fu-wu-xu-zhu-yi-shi-me/</loc>
+    
+    <lastmod>2025-09-15</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2025/09/15/20250915-shen-ru-li-jie-yu-ming-jie-xi-yu-guan-li-cong-dns-yuan-li-dao-zhu-ce-shang-yu-zhu-ce-ju/</loc>
+    
+    <lastmod>2025-09-15</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2025/08/25/20250825-vs-code-dev-container-da-zao-si-hua-de-linux-kai-fa-diao-shi-ti-yan/</loc>
+    
+    <lastmod>2025-09-02</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2025/08/28/20250828-yong-tmux-nei-wang-chuan-tou-rang-chu-men-ye-neng-zhi-dao-bian-cheng-ren-wu/</loc>
+    
+    <lastmod>2025-08-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2025/08/17/20250817-vpn-yu-zheng-xiang-dai-li-de-yuan-li-yu-chai-yi-fen-xi/</loc>
+    
+    <lastmod>2025-08-17</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2025/08/17/20250817-jia-ting-kuan-dai-zhong-de-gong-wang-yu-nei-wang-ip-fen-pei-ji-zhi-jie-xi/</loc>
+    
+    <lastmod>2025-08-17</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2025/08/17/20250817-shen-ru-li-jie-socks5-zheng-xiang-dai-li-yuan-li/</loc>
+    
+    <lastmod>2025-08-17</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2025/08/17/20250817-shen-ru-li-jie-zheng-xiang-dai-li-yu-fan-xiang-dai-li-http-bao-wen-yu-tcp-lian-jie-de-qu-bie/</loc>
+    
+    <lastmod>2025-08-16</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2025/08/04/20250804-san-chong-xue-xi-fa-he-xin-jing-sui/</loc>
+    
+    <lastmod>2025-08-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2025/07/09/20250709-shua-leetcode-zong-jie-de-suan-fa-ji-chu-he-tao-lu/</loc>
+    
+    <lastmod>2025-07-30</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2025/07/17/20250717-quick-worker-xiang-mu-fen-xi-ji-yu-channel-de-gao-xiao-yi-bu-pi-chu-li-yu-cpu-kong-zhuan-wen-ti-jie-xi/</loc>
+    
+    <lastmod>2025-07-16</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2025/07/16/20250716-quickit-gao-xiao-bing-fa-ren-wu-guan-li-gong-ju-ku-xiang-jie/</loc>
+    
+    <lastmod>2025-07-16</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2025/02/17/20250217-shen-du-xue-xi-ji-chu-ru-men-bei-wang/</loc>
+    
+    <lastmod>2025-05-30</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2025/02/20/20250220-ji-yu-da-mo-xing-de-rag-ying-yong-kai-fa-yao-dian-ji-lu/</loc>
+    
+    <lastmod>2025-05-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2025/02/12/20250212-da-yu-yan-mo-xing-dui-hua-ji-lu-yu-si-kao-bei-wang-lu/</loc>
+    
+    <lastmod>2025-05-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2024/12/02/20241202-yi-ge-wu-zhong-xin-jie-dian-de-ju-yu-wang-tong-xin-gong-ju/</loc>
+    
+    <lastmod>2025-04-24</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2025/03/23/20250323-shi-yong-java-diao-yong-rust-gou-jian-de-dong-tai-ku/</loc>
+    
+    <lastmod>2025-03-23</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2024/12/26/20241226-llm-xiang-guan-ji-zhu-jian-dan-liao-jie/</loc>
+    
+    <lastmod>2025-03-05</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2025/02/26/20250226-kai-yuan-zhi-shi-ku-xi-tong-shi-yong/</loc>
+    
+    <lastmod>2025-02-27</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2025/02/25/20250225-guan-yu-da-mo-xing-de-prompt/</loc>
+    
+    <lastmod>2025-02-26</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2025/02/19/20250219-langchain-yao-dian-ji-lu/</loc>
+    
+    <lastmod>2025-02-25</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2025/02/13/20250213-guan-yu-ai-ti-dai-ren-lei-gong-zuo-de-wen-ti/</loc>
+    
+    <lastmod>2025-02-13</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2025/02/13/20250213-shen-du-xue-xi-wei-shi-me-neng-xue-xi-bing-zuo-dui/</loc>
+    
+    <lastmod>2025-02-13</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2025/01/08/20250108-suan-fa-zai-shi-ji-ye-wu-chang-jing-zhong-bing-fei-wan-quan-wu-yong/</loc>
+    
+    <lastmod>2025-01-08</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2025/01/06/20250106-jian-dan-yan-jiu-yi-xia-ren-gong-zhi-neng-he-shu-xue/</loc>
+    
+    <lastmod>2025-01-06</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2025/01/01/20250101-shi-yong-ai-zong-jie-liao-zhe-ge-wang-zhan-de-nei-rong/</loc>
+    
+    <lastmod>2024-12-31</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2024/12/31/20241231-ai-gong-ye-ge-ming-xia-de-ruo-gan-si-kao/</loc>
+    
+    <lastmod>2024-12-31</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2024/12/03/20241203-ren-gong-zhi-neng-xiang-guan-ji-zhu-jian-yao-zong-jie-ji-lu/</loc>
+    
+    <lastmod>2024-12-31</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2024/03/29/20240329-ti-sheng-zi-ji-zhi-chang-zhong-de-ke-ti-dai-xing/</loc>
+    
+    <lastmod>2024-12-31</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2024/12/30/20241230-web3-xiang-guan-zhi-shi-ji-lu/</loc>
+    
+    <lastmod>2024-12-31</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2024/11/29/20241129-ai-yi-jing-ru-ci-qiang-da-liao-bang-wo-xie-wan-suo-you-dai-ma/</loc>
+    
+    <lastmod>2024-12-01</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2020/07/19/20200719-zhi-chang-sheng-cun-xiao-xiao-zong-jie/</loc>
+    
+    <lastmod>2024-10-29</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2024/10/25/20241025-ren-zhi-jue-xing-bi-ji/</loc>
+    
+    <lastmod>2024-10-29</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2024/10/23/20241023-jin-qian-ye-wu-shu-ju-ku-shi-wu-xiang-guan-yao-dian-ji-lu/</loc>
+    
+    <lastmod>2024-10-23</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2024/10/22/20241022-jian-dan-ji-lu-wo-zai-ji-jia-gong-si-de-jing-li/</loc>
+    
+    <lastmod>2024-10-23</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2021/08/13/20210813-shen-du-gong-zuo-ru-he-you-xiao-shi-yong-mei-yi-dian-nao-li-bi-ji/</loc>
+    
+    <lastmod>2024-09-02</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2021/08/11/20210811-bu-ju-yi-ge-wang-fei-de-zi-you-yu-ze-ren-gong-zuo-fa-bi-ji/</loc>
+    
+    <lastmod>2024-08-27</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2020/11/11/20201111-dan-yuan-ce-shi-shi-yong-zong-jie/</loc>
+    
+    <lastmod>2024-08-27</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2024/03/28/20240328-dui-fu-wu-jia-gou-zhong-de-ju-he-ceng-li-jie/</loc>
+    
+    <lastmod>2024-07-31</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2024/05/07/20240507-ye-wu-kai-fa-zhong-de-zhu-yu-dao/</loc>
+    
+    <lastmod>2024-07-30</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2023/07/30/20230730-ji-yi-ci-socket-xie-lu-wen-ti-pai-cha-ji-lu/</loc>
+    
+    <lastmod>2024-07-24</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2024/07/24/20240724-tan-tan-jie-kou-diao-yong-zhong-de-xu-lie-hua-xie-yi/</loc>
+    
+    <lastmod>2024-07-24</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2021/07/05/20210705-sre-google-yun-wei-jie-mi-bi-ji/</loc>
+    
+    <lastmod>2024-07-24</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2024/07/18/20240718-gao-xiao-hui-yi-de-chong-yao-xing/</loc>
+    
+    <lastmod>2024-07-18</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2024/07/17/20240717-kan-si-li-ke-shi-ze-wen-ke-kan-si-wen-ke-shi-ze-li-ke/</loc>
+    
+    <lastmod>2024-07-17</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2024/05/30/20240530-ji-yu-saturn-ding-shi-ren-wu-de-ke-hu-duan-gong-ju-she-ji/</loc>
+    
+    <lastmod>2024-07-14</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2022/01/17/20220117-nio-zong-jie-bi-ji/</loc>
+    
+    <lastmod>2024-07-14</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2021/08/17/20210817-java-la-ji-hui-shou-zong-jie/</loc>
+    
+    <lastmod>2024-07-11</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2020/10/03/20201003-mysql-bi-ji/</loc>
+    
+    <lastmod>2024-06-30</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2022/04/28/20220408-elasticsearch-xue-xi-ji-lu/</loc>
+    
+    <lastmod>2024-06-25</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2023/07/03/20230703-tan-tan-ding-shi-ren-wu-de-yuan-li-he-ying-yong/</loc>
+    
+    <lastmod>2024-06-14</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2021/10/12/20211012-fen-bu-shi-li-lun-xiang-guan-zheng-li/</loc>
+    
+    <lastmod>2024-06-12</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2020/09/12/20200912-fen-bu-shi-shi-wu-jian-yao-zong-jie/</loc>
+    
+    <lastmod>2024-06-11</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2020/07/11/20200711-fen-bu-shi-xian-liu-jian-dan-zong-jie/</loc>
+    
+    <lastmod>2024-06-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2020/07/07/20200707-ru-he-chu-li-rpc-fan-hui-de-cuo-wu-ma/</loc>
+    
+    <lastmod>2024-06-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2020/07/11/20200711-fen-bu-shi-suo-jian-dan-zong-jie/</loc>
+    
+    <lastmod>2024-06-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2021/07/13/20210713-kubernetes-xue-xi-bi-ji/</loc>
+    
+    <lastmod>2024-06-05</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2022/06/01/20220601-ge-ren-golang-xiang-mu-jian-yao-miao-shu/</loc>
+    
+    <lastmod>2024-06-04</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2024/05/28/20240528-ye-tan-tan-feed-liu-de-she-ji/</loc>
+    
+    <lastmod>2024-05-29</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2021/09/17/20210917-tong-guo-pan-duan-ding-dan-zhuang-tai-shi-fou-ke-yi-bi-mian-bing-fa-dao-zhi-de-wen-ti/</loc>
+    
+    <lastmod>2024-05-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2024/04/07/20240407-cong-java-zhuan-go-de-ge-ren-ti-hui/</loc>
+    
+    <lastmod>2024-05-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2020/07/09/20200709-guan-yu-mi-deng-de-ruo-gan-wen-ti/</loc>
+    
+    <lastmod>2024-05-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2020/09/08/20200908-jin-rong-ye-wu-rong-zai-ti-xi-jian-shu/</loc>
+    
+    <lastmod>2024-05-27</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2020/08/31/20200831-guan-yu-mha-consul-mysql-gao-ke-yong-fang-an-de-jian-dan-zong-jie-he-si-kao/</loc>
+    
+    <lastmod>2024-05-27</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2020/07/14/20200714-ye-wu-chong-gou-shi-jian-zong-jie/</loc>
+    
+    <lastmod>2024-05-16</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2020/07/14/20200714-ru-he-jie-shou-yi-ge-jiu-xiang-mu/</loc>
+    
+    <lastmod>2024-05-16</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2024/04/01/20240401-tob-ye-wu-sui-bian-jiang-jiang/</loc>
+    
+    <lastmod>2024-05-10</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2024/05/09/20240509-liao-liao-pei-zhi-zhong-xin/</loc>
+    
+    <lastmod>2024-05-09</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2024/04/25/20240425-ye-wu-kai-fa-zhong-shi-yong-bi-de-hai-liang-shu-ju-chu-li-neng-li/</loc>
+    
+    <lastmod>2024-04-25</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2023/07/30/20230730-ru-he-zai-da-liang-shu-ju-zhong-pan-duan-gei-ding-de-shi-fou-zai-qi-zhong/</loc>
+    
+    <lastmod>2024-04-25</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2024/03/27/20240327-zhi-chang-zhong-ma-hou-pao-xian-xiang/</loc>
+    
+    <lastmod>2024-04-18</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2024/04/06/20240406-ji-lu-xian-mian-ye-wu-de-jing-yan/</loc>
+    
+    <lastmod>2024-04-06</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2024/04/05/20240405-zhi-chang-zhong-de-shan-yu-gou-tong-he-gao-qing-shang/</loc>
+    
+    <lastmod>2024-04-05</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2024/04/03/20240403-zhe-jian-shi-qing-ni-xu-yao-gen-jin-ma/</loc>
+    
+    <lastmod>2024-04-03</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2020/07/16/20200716-jian-kong-gao-jing-yao-liu-yi-na-xie-dian/</loc>
+    
+    <lastmod>2024-04-02</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2024/04/02/20240402-zai-qian-tan-jie-kou-de-an-quan-xing-he-hui-diao-ji-zhi/</loc>
+    
+    <lastmod>2024-04-02</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2024/04/02/20240402-da-gong-ren-xin-tai-ying-gai-shi-zen-yang-de/</loc>
+    
+    <lastmod>2024-04-02</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2024/03/26/20240326-xiao-tuan-dui-guan-li-jing-yan/</loc>
+    
+    <lastmod>2024-03-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2022/04/03/20220403-index-merge-dao-zhi-si-suo-wen-ti/</loc>
+    
+    <lastmod>2023-10-25</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2023/07/04/20230704-wo-jie-hong-guo-de-ji-chong-fu-wu-fa-xian-he-rpc/</loc>
+    
+    <lastmod>2023-07-06</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2023/07/02/20230702-dui-gong-zuo-zhong-jie-hong-guo-de-ji-chong-bian-cheng-yu-yan-ji-qi-bu-shu-jia-gou-de-kan-fa/</loc>
+    
+    <lastmod>2023-07-04</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2019/07/06/20190706-warriors/</loc>
+    
+    <lastmod>2023-05-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/about/plan.html</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/index.html</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2023/03/02/20230302-ruan-ji-neng-dai-ma-zhi-wai-de-sheng-cun-zhi-nan-notes/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2023/01/28/20230128-n-nian-qian-de-bi-ji-bei-wang-cha-yue/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2023/01/14/20230114-jie-hei-ke-yu-hua-jia-ji-lu-yi-xia-xiang-fa/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2022/11/18/20221118-ji-zhu-xuan-xing-yao-zhu-yi-shi-me/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2022/10/18/20221018-wo-de-chong-gou-fan-yi-jing-li/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2022/09/07/20220907-ni-ji-de-she-zhi-tcp-nodeplay-ma/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2022/09/08/20220908-wo-de-ji-zhang-tcp-yuan-li-xue-xi-shou-hui-tu/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2022/09/07/20220907-time-wait-jie-xi/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2022/07/20/20220720-tan-tan-kua-yu/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2022/08/01/20220801-dns-jie-huo/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2022/08/02/20220802-shuo-shuo-cdn/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2022/08/05/20220805-tui-song-ji-zhu-zong-jie/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2022/08/30/20220830-chrome-xia-zai-wen-jian-shi-zan-ting-he-ji-xu-shi-shi-me-yuan-li/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2022/09/05/20220905-guan-yu-http-xiang-guan-xie-yi-de-yi-xie-zong-jie/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2022/09/06/20220906-you-liao-tcp-de-keepalive-ying-yong-ceng-huan-xu-yao-shi-xian-bao-huo-luo-ji-ma/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2022/09/07/20220907-tcp-lian-jie-zhong-de-ge-chong-zhuang-tai/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2022/07/05/20220705-java-kua-ping-tai-neng-wan-quan-zuo-dao-yi-ci-bian-xie-dao-chu-yun-xing/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2022/05/10/20220510-suan-fa-ji-chu-zong-jie/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2022/05/05/20220505-zhi-bo-xie-yi-bi-ji/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2022/05/07/20220507-gao-xiao-gong-zuo-fang-fa-lun-zong-jie/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2022/05/05/20220505-ffmpeg-bi-ji/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2022/04/29/20220429-hou-duan-ji-zhu-si-wei-dao-tu/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2022/05/04/20220504-zhi-bo-xiang-guan-ji-zhu-shu-li-zong-jie/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2022/04/04/20220404-qu-dong-li-bi-ji/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2022/03/12/20220312-guan-yu-qing-liang-ji-fen-bu-shi-shi-jian-tong-zhi-de-si-kao/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2022/04/02/20220402-scrum-bi-ji/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2022/04/01/20220401-java-dai-ma-duan-cha-yue/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2022/02/20/20220220-nba-xuan-xiu-chou-qian-ju-ti-shi-ru-he-cao-zuo-de/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2022/02/23/20220223-li-jie-zhuang-tai-ji-yuan-li-ji-shi-jian/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2022/02/28/20220228-jing-dian-pai-xu-suan-fa/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2021/09/17/20210917-duo-idc-xia-wei-fu-wu-shu-ju-ru-he-tong-bu/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2021/10/12/20211012-cqrs-bi-ji/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2021/10/27/20211027-raft-xue-xi-bi-ji/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2022/01/14/20220114-ru-he-zuo-shu-ju-ku-qian-yi/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2022/02/08/20220208-java11-ji-chu-yuan-li-he-shi-jian/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2021/08/13/20210813-xiao-gou-qian-qian-bi-ji/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2021/08/09/20210809-fu-pan-wang-fei-bi-ji/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2021/07/30/20210730-fang-an-she-ji-shi-ying-gai-hua-shi-me-tu/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2020/12/23/20201223-kai-fa-jie-duan-checklist/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2020/11/02/20201102-ban-xiao-shi-man-hua-jing-ji-xue-bi-ji/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2020/11/03/20201103-wo-de-di-yi-ben-jin-rong-ru-men-shu-bi-ji/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2020/12/19/20201219-qiang-pao-bing-jun-yu-gang-tie-ren-lei-she-hui-de-ming-yun-bi-ji/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2020/11/01/20201101-chong-gou-gai-shan-ji-you-dai-ma-de-she-ji-zhai-yao/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2020/10/24/20201024-chong-xin-ding-yi-tuan-dui-gu-ge-ru-he-gong-zuo-bi-ji/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2020/10/18/20201018-ji-suan-ji-ke-xue-su-cheng-ke-bi-ji/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2020/10/11/20201011-redis-bi-ji/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2020/09/26/20200926-guan-yu-close-wait-he-httpclient-de-shi-yong/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2020/09/08/20200908-jin-rong-ye-wu-rong-zai-qie-huan-hou-jian-kong-he-xiu-zheng-fang-an/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2020/09/12/20200912-fen-bu-shi-yi-zhi-xing-xie-yi/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2020/09/05/20200905-ru-he-jie-jue-nao-lie-wen-ti/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2020/08/20/20200820-guan-yu-cdn-huan-cun/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2020/08/31/20200831-shi-yong-redis-shi-xian-bang-dan/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2020/08/04/20200804-da-shang-lei-ye-wu-huo-bi-ti-xi-jian-shu/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2020/07/16/20200716-shi-yong-zi-xuan-jiang-di-ye-wu-shi-bai-lu/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2020/07/19/20200719-ru-he-yu-gu-kai-fa-shi-jian/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2020/07/19/20200719-ren-xing-de-ruo-dian-zhai-yao/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2020/07/21/20200721-cheng-xu-yuan-de-zhi-ye-su-yang-zhai-yao/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2020/07/10/20200710-huan-cun-ce-lue-jian-dan-zong-jie/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2020/07/09/20200710-cai-wu-shu-ju-bao-biao-de-kua-tian-zhi-ku/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2020/07/12/20200712-shi-yong-hui-diao-ji-zhi-ti-gao-jie-kou-an-quan-xing/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2020/07/13/20200713-you-zai-bei-gong-zuo-zhong-yin-fa-de-dui-bi-li-de-si-kao/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2020/07/14/20200714-dan-yuan-ce-shi-de-gong-ju-he-ji-qiao/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2020/07/15/20200715-canal-shi-yong-zong-jie/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2020/03/29/20200329-biao-jie-gou-bian-geng-shi-fou-xu-yao-chu-li-li-shi-yue-biao/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2020/07/05/20200705-rpc-ke-yi-he-shi-wu-bang-ding-ma/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2020/07/05/20200705-guan-yu-fu-wu-jian-yi-zhi-xing-he-qian-zhi-xiao-yan-de-si-kao/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2020/07/06/20200706-shang-xian-xu-yao-zuo-na-xie-zhun-bei/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2020/07/07/20200707-wei-yi-id-de-ji-yin/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2020/07/08/20200708-wai-wang-qing-qiu-ru-he-bao-zheng-mi-deng/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2020/07/08/20200708-cheng-xu-yi-chang-shi-neng-fan-hui-50x-ma/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2020/07/09/20200709-yi-zhi-te-li-du-xing-de-zhu-zhai-yao/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2020/03/29/20200329-fa-ban-guo-cheng-de-jian-rong-xing-kao-lu/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2020/01/01/20200101-dian-ying-zhai-yao/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2020/03/26/20200326-yi-dong-duan-xia-yi-chong-zhe-zhong-fen-ye-fang-fa/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2019/12/28/20191228-tian-xia-zu-qiu-qu-mu/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/2014/03/02/20140302-cheng-xu-yuan-de-zhi-ye-su-yang-zhai-yao/</loc>
+    
+    <lastmod>2023-05-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+
+  <url>
+    <loc>https://kingson4wu.github.io/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/LIFE/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E4%B8%9A%E5%8A%A1%E6%96%B9%E6%A1%88/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E5%88%86%E9%A1%B5/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E5%8E%86%E5%8F%B2%E6%9C%88%E8%A1%A8/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/RPC/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E4%BA%8B%E5%8A%A1/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E5%89%8D%E7%BD%AE%E6%A0%A1%E9%AA%8C/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/ThreadContext/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E5%94%AF%E4%B8%80ID/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E9%94%99%E8%AF%AF%E7%A0%81/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E5%B9%82%E7%AD%89/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/BOOK/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E7%BC%93%E5%AD%98/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E9%87%91%E9%92%B1%E7%9B%B8%E5%85%B3/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E9%99%90%E6%B5%81/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E6%8E%A5%E5%8F%A3%E5%9B%9E%E8%B0%83/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E5%AE%B9%E7%81%BE/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E9%99%8D%E7%BA%A7/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E9%87%8D%E6%9E%84/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/canal/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E8%87%AA%E6%97%8B/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E7%9B%91%E6%8E%A7%E5%91%8A%E8%AD%A6/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/JOB/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E8%81%8C%E5%9C%BA/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E8%B4%A7%E5%B8%81%E4%BD%93%E7%B3%BB/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/CDN/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E6%A6%9C%E5%8D%95/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/Redis/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E8%84%91%E8%A3%82/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/Consul/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/Quorum/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/Raft/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/TCP/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/CLOSE-WAIT/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/Computer/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/IT-BOOK/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/Finance/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/unit-test/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/UML/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E6%96%B9%E6%A1%88%E8%AE%BE%E8%AE%A1/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E6%9E%B6%E6%9E%84%E5%9B%BE/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/Java/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/GC/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E6%9E%B6%E6%9E%84/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E5%B9%B6%E5%8F%91/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/CQRS/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/raft/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E6%95%B0%E6%8D%AE%E8%BF%81%E7%A7%BB/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/NBA/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/Go/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E7%8A%B6%E6%80%81%E6%9C%BA/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/FSM/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/algorithm/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E4%BA%8B%E4%BB%B6%E9%80%9A%E7%9F%A5/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E5%85%AC%E5%85%B1%E5%BA%93/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E5%A4%8D%E7%94%A8/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E6%8A%BD%E8%B1%A1/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/Scrum/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/index-merge/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/dead-lock/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/MySQL/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E5%90%8E%E7%AB%AF/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/FFmpeg/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/RTMP/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/HTTP-FLV/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/HLS/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/RTC/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E9%95%BF%E8%BF%9E%E6%8E%A5/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E6%95%88%E7%8E%87/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E7%AE%97%E6%B3%95/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/ngrok/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/wechat/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/mail/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E5%A4%A7%E5%B0%8F%E5%86%99%E6%95%8F%E6%84%9F/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E8%B7%A8%E5%9F%9F/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/DNS/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/PUSH/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/HTTP/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/Range/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E6%96%AD%E7%82%B9%E7%BB%AD%E4%BC%A0/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/HTTP-3/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/HTTP-2/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/HTTPS/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/keepalive/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/TIME-WAIT/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/TCP-NODELAY/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/PHP/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/Lua/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/OpenResty/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/Tomcat/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/Spring-MVC/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/Saturn/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/UDS/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E6%9C%8D%E5%8A%A1%E5%8F%91%E7%8E%B0/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/service-discovery/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/Bloom-Filter/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/Tendis/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/CLOSED/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E5%9B%A2%E9%98%9F%E7%AE%A1%E7%90%86/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E8%81%9A%E5%90%88%E5%B1%82/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/ToB/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E9%99%90%E5%85%8D/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/BI/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E5%BC%80%E5%8F%91%E6%95%88%E7%8E%87/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E9%85%8D%E7%BD%AE%E4%B8%AD%E5%BF%83/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/ZooKeeper/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/Apollo/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/MHA/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/HA/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E5%8D%8A%E5%90%8C%E6%AD%A5%E5%A4%8D%E5%88%B6/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E6%8A%80%E6%9C%AF/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E5%88%86%E5%B8%83%E5%BC%8F/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/NIO/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/Netty/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E7%9B%B4%E6%92%AD/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E6%B5%81%E5%AA%92%E4%BD%93/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/TCC/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/Saga/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/XA/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/Seata/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/Java9/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/Java11/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E6%A8%A1%E5%9D%97%E7%B3%BB%E7%BB%9F/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/elasticsearch/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/SRE/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/Kubernetes/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/feed%E6%B5%81/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/Signal/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E4%BC%9A%E8%AE%AE/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E5%BA%8F%E5%88%97%E5%8C%96/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/Rust/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/AI/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/Windsurf/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/UDP/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/LLM/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/Web3/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E5%8C%BA%E5%9D%97%E9%93%BE/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/blockchain/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/bitcoin/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/NFT/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E5%B7%A5%E4%B8%9A%E9%9D%A9%E5%91%BD/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E6%80%BB%E7%BB%93/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/Math/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E6%95%B0%E5%AD%A6/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E5%89%8D%E7%BC%80%E6%A0%91/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E5%88%86%E8%AF%8D/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E5%A4%A7%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/Deep-Learning/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/LangChain/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/RAG/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/AI-Agent/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/Prompt/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E7%9F%A5%E8%AF%86%E5%BA%93/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/JNI/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/leetcode/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E5%BB%B6%E8%BF%9F%E9%98%9F%E5%88%97/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E9%A2%91%E7%8E%87%E6%8E%A7%E5%88%B6/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E5%A4%B1%E8%B4%A5%E9%87%8D%E8%AF%95/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E8%AF%BB%E5%86%99%E9%94%81/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/CPU/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E6%89%B9%E5%A4%84%E7%90%86%E4%BB%BB%E5%8A%A1/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E5%AD%A6%E4%B9%A0%E6%B3%95/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E5%A4%9A%E8%AF%AD%E8%A8%80/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E6%AD%A3%E5%90%91%E4%BB%A3%E7%90%86/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E5%AE%B6%E5%BA%AD%E7%BD%91%E7%BB%9C/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E5%85%AC%E7%BD%91IP/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/VPN/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/SOCKS5/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/vscode/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/DevContainer/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/linux/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/tmux/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/AI%E7%BC%96%E7%A8%8B/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/Chrome-Remote-Desktop/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/CPP/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E5%BC%80%E5%8F%91/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/Prompt%E5%B7%A5%E7%A8%8B/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/Python/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/IP/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/Anycast/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/IPv6/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E5%9F%9F%E5%90%8D/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E5%9F%9F%E5%90%8D%E6%B3%A8%E5%86%8C%E5%95%86/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E5%9F%9F%E5%90%8D%E6%B3%A8%E5%86%8C%E5%B1%80/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E7%94%9F%E6%B4%BB%E5%93%B2%E5%AD%A6/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E6%8A%80%E6%9C%AF%E6%9E%B6%E6%9E%84/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/gRPC/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/Protobuf/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/Sidecar/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/K8S/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E5%A4%9A%E6%A8%A1%E6%80%81%E6%9E%B6%E6%9E%84/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E8%A7%A3%E7%A0%81%E5%99%A8%E7%BA%A6%E6%9D%9F/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/FunctionCalling/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E6%8F%90%E7%A4%BA%E8%AF%8D%E5%B7%A5%E7%A8%8B/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E5%B7%A5%E5%85%B7%E8%B0%83%E7%94%A8/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/MCP/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E6%8E%A8%E7%90%86%E5%BC%95%E6%93%8E/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E5%B9%B6%E8%A1%8C%E8%AE%A1%E7%AE%97/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/Batch-Invariant/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/%E6%B5%AE%E7%82%B9%E8%BF%90%E7%AE%97/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+
+  
+</urlset>

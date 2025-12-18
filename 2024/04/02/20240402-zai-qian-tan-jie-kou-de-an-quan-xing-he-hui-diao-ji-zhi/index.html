@@ -25,6 +25,8 @@
 
 
 
+  <meta name="google-site-verification" content="google-site-verification=n4yVkaTfu2KtQ8fiQ3Ri60FPAbRF74oxrDOkOXWjhSs" />
+
 
 
 
@@ -84,7 +86,7 @@
 <meta name="description" content="最近的工作原因，涉及到接口充权益的接口安全性问题，这里趁热再说说个人看法    基于之前写的这篇使用回调机制提高接口安全性继续聊。上次扩展中提到是不是可以使用非对称加密，替换回调验证？目前我所负责的业务确实使用这种方式。  业务中要对接多个渠道，渠道需要调业务的接口来加权益，为了安全性，目前的做法是由渠道自己生成RSA私钥，提供RSA公钥到业务这边。渠道使用私钥生成签名，业务这边则使用公钥解密">
 <meta property="og:type" content="article">
 <meta property="og:title" content="再浅谈接口的安全性和回调机制">
-<meta property="og:url" content="http://yoursite.com/2024/04/02/20240402-zai-qian-tan-jie-kou-de-an-quan-xing-he-hui-diao-ji-zhi/index.html">
+<meta property="og:url" content="https://kingson4wu.github.io/2024/04/02/20240402-zai-qian-tan-jie-kou-de-an-quan-xing-he-hui-diao-ji-zhi/index.html">
 <meta property="og:site_name" content="拉巴力的纸皮箱">
 <meta property="og:description" content="最近的工作原因，涉及到接口充权益的接口安全性问题，这里趁热再说说个人看法    基于之前写的这篇使用回调机制提高接口安全性继续聊。上次扩展中提到是不是可以使用非对称加密，替换回调验证？目前我所负责的业务确实使用这种方式。  业务中要对接多个渠道，渠道需要调业务的接口来加权益，为了安全性，目前的做法是由渠道自己生成RSA私钥，提供RSA公钥到业务这边。渠道使用私钥生成签名，业务这边则使用公钥解密">
 <meta property="og:locale">
@@ -124,7 +126,7 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2024/04/02/20240402-zai-qian-tan-jie-kou-de-an-quan-xing-he-hui-diao-ji-zhi/"/>
+  <link rel="canonical" href="https://kingson4wu.github.io/2024/04/02/20240402-zai-qian-tan-jie-kou-de-an-quan-xing-he-hui-diao-ji-zhi/"/>
 
 
 
@@ -135,6 +137,15 @@
 
 
 
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'G-4QEGQ2DGGT', 'auto');
+  ga('send', 'pageview');
+</script>
 
 
 
@@ -165,7 +176,7 @@
       </a>
     </div>
       
-        <p class="site-subtitle"></p>
+        <h1 class="site-subtitle" itemprop="description">技术博客 | 记录学习笔记和思考</h1>
       
   </div>
 
@@ -291,7 +302,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2024/04/02/20240402-zai-qian-tan-jie-kou-de-an-quan-xing-he-hui-diao-ji-zhi/">
+    <link itemprop="mainEntityOfPage" href="https://kingson4wu.github.io/2024/04/02/20240402-zai-qian-tan-jie-kou-de-an-quan-xing-he-hui-diao-ji-zhi/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="">
@@ -308,7 +319,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">再浅谈接口的安全性和回调机制</h1>
+          <h2 class="post-title" itemprop="name headline">再浅谈接口的安全性和回调机制</h2>
         
 
         <div class="post-meta">
@@ -364,7 +375,7 @@
 </blockquote>
 </blockquote>
 <ul>
-<li><p>基于之前写的这篇<a target="_blank" rel="noopener" href="https://kingson4wu.github.io/2020/07/12/20200712-shi-yong-hui-diao-ji-zhi-ti-gao-jie-kou-an-quan-xing/">使用回调机制提高接口安全性</a>继续聊。上次扩展中提到是不是可以使用非对称加密，替换回调验证？目前我所负责的业务确实使用这种方式。</p>
+<li><p>基于之前写的这篇<a href="https://kingson4wu.github.io/2020/07/12/20200712-shi-yong-hui-diao-ji-zhi-ti-gao-jie-kou-an-quan-xing/">使用回调机制提高接口安全性</a>继续聊。上次扩展中提到是不是可以使用非对称加密，替换回调验证？目前我所负责的业务确实使用这种方式。</p>
 </li>
 <li><p>业务中要对接多个渠道，渠道需要调业务的接口来加权益，为了安全性，目前的做法是由渠道自己生成RSA私钥，提供RSA公钥到业务这边。渠道使用私钥生成签名，业务这边则使用公钥解密验证，从而保证请求是合法的。</p>
 </li>
@@ -1102,6 +1113,21 @@
   
 
   
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
 
   
   

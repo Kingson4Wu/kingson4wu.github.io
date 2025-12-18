@@ -2,12 +2,12 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
   <title>拉巴力的纸皮箱</title>
   
+  <subtitle>技术博客 | 记录学习笔记和思考</subtitle>
+  <link href="https://kingson4wu.github.io/atom.xml" rel="self"/>
   
-  <link href="http://yoursite.com/atom.xml" rel="self"/>
-  
-  <link href="http://yoursite.com/"/>
+  <link href="https://kingson4wu.github.io/"/>
   <updated>2025-12-17T10:52:06.348Z</updated>
-  <id>http://yoursite.com/</id>
+  <id>https://kingson4wu.github.io/</id>
   
   <author>
     <name>Kingson Wu</name>
@@ -18,8 +18,8 @@
   
   <entry>
     <title>大模型推理的不确定性：从浮点运算到工程实现</title>
-    <link href="http://yoursite.com/2025/12/17/20251217-da-mo-xing-tui-li-de-bu-que-ding-xing-cong-fu-dian-yun-suan-dao-gong-cheng-shi-xian/"/>
-    <id>http://yoursite.com/2025/12/17/20251217-da-mo-xing-tui-li-de-bu-que-ding-xing-cong-fu-dian-yun-suan-dao-gong-cheng-shi-xian/</id>
+    <link href="https://kingson4wu.github.io/2025/12/17/20251217-da-mo-xing-tui-li-de-bu-que-ding-xing-cong-fu-dian-yun-suan-dao-gong-cheng-shi-xian/"/>
+    <id>https://kingson4wu.github.io/2025/12/17/20251217-da-mo-xing-tui-li-de-bu-que-ding-xing-cong-fu-dian-yun-suan-dao-gong-cheng-shi-xian/</id>
     <published>2025-12-17T10:43:15.000Z</published>
     <updated>2025-12-17T10:52:06.348Z</updated>
     
@@ -39,24 +39,24 @@
     
     
     
-    <category term="AI" scheme="http://yoursite.com/tags/AI/"/>
+    <category term="AI" scheme="https://kingson4wu.github.io/tags/AI/"/>
     
-    <category term="LLM" scheme="http://yoursite.com/tags/LLM/"/>
+    <category term="LLM" scheme="https://kingson4wu.github.io/tags/LLM/"/>
     
-    <category term="推理引擎" scheme="http://yoursite.com/tags/%E6%8E%A8%E7%90%86%E5%BC%95%E6%93%8E/"/>
+    <category term="推理引擎" scheme="https://kingson4wu.github.io/tags/%E6%8E%A8%E7%90%86%E5%BC%95%E6%93%8E/"/>
     
-    <category term="并行计算" scheme="http://yoursite.com/tags/%E5%B9%B6%E8%A1%8C%E8%AE%A1%E7%AE%97/"/>
+    <category term="并行计算" scheme="https://kingson4wu.github.io/tags/%E5%B9%B6%E8%A1%8C%E8%AE%A1%E7%AE%97/"/>
     
-    <category term="Batch-Invariant" scheme="http://yoursite.com/tags/Batch-Invariant/"/>
+    <category term="Batch-Invariant" scheme="https://kingson4wu.github.io/tags/Batch-Invariant/"/>
     
-    <category term="浮点运算" scheme="http://yoursite.com/tags/%E6%B5%AE%E7%82%B9%E8%BF%90%E7%AE%97/"/>
+    <category term="浮点运算" scheme="https://kingson4wu.github.io/tags/%E6%B5%AE%E7%82%B9%E8%BF%90%E7%AE%97/"/>
     
   </entry>
   
   <entry>
     <title>大模型中的 Function Calling 与工具模式:机制、区别与本质</title>
-    <link href="http://yoursite.com/2025/12/12/20251212-da-mo-xing-zhong-de-function-calling-yu-gong-ju-mo-shi-ji-zhi-qu-bie-yu-ben-zhi/"/>
-    <id>http://yoursite.com/2025/12/12/20251212-da-mo-xing-zhong-de-function-calling-yu-gong-ju-mo-shi-ji-zhi-qu-bie-yu-ben-zhi/</id>
+    <link href="https://kingson4wu.github.io/2025/12/12/20251212-da-mo-xing-zhong-de-function-calling-yu-gong-ju-mo-shi-ji-zhi-qu-bie-yu-ben-zhi/"/>
+    <id>https://kingson4wu.github.io/2025/12/12/20251212-da-mo-xing-zhong-de-function-calling-yu-gong-ju-mo-shi-ji-zhi-qu-bie-yu-ben-zhi/</id>
     <published>2025-12-12T04:18:27.000Z</published>
     <updated>2025-12-12T04:34:01.905Z</updated>
     
@@ -76,24 +76,24 @@
     
     
     
-    <category term="AI" scheme="http://yoursite.com/tags/AI/"/>
+    <category term="AI" scheme="https://kingson4wu.github.io/tags/AI/"/>
     
-    <category term="LLM" scheme="http://yoursite.com/tags/LLM/"/>
+    <category term="LLM" scheme="https://kingson4wu.github.io/tags/LLM/"/>
     
-    <category term="FunctionCalling" scheme="http://yoursite.com/tags/FunctionCalling/"/>
+    <category term="FunctionCalling" scheme="https://kingson4wu.github.io/tags/FunctionCalling/"/>
     
-    <category term="提示词工程" scheme="http://yoursite.com/tags/%E6%8F%90%E7%A4%BA%E8%AF%8D%E5%B7%A5%E7%A8%8B/"/>
+    <category term="提示词工程" scheme="https://kingson4wu.github.io/tags/%E6%8F%90%E7%A4%BA%E8%AF%8D%E5%B7%A5%E7%A8%8B/"/>
     
-    <category term="工具调用" scheme="http://yoursite.com/tags/%E5%B7%A5%E5%85%B7%E8%B0%83%E7%94%A8/"/>
+    <category term="工具调用" scheme="https://kingson4wu.github.io/tags/%E5%B7%A5%E5%85%B7%E8%B0%83%E7%94%A8/"/>
     
-    <category term="MCP" scheme="http://yoursite.com/tags/MCP/"/>
+    <category term="MCP" scheme="https://kingson4wu.github.io/tags/MCP/"/>
     
   </entry>
   
   <entry>
     <title>生成式AI、解码约束与多模态架构：系统化原理解析</title>
-    <link href="http://yoursite.com/2025/12/08/20251208-sheng-cheng-shi-ai-jie-ma-yue-shu-yu-duo-mo-tai-jia-gou-xi-tong-hua-yuan-li-jie-xi/"/>
-    <id>http://yoursite.com/2025/12/08/20251208-sheng-cheng-shi-ai-jie-ma-yue-shu-yu-duo-mo-tai-jia-gou-xi-tong-hua-yuan-li-jie-xi/</id>
+    <link href="https://kingson4wu.github.io/2025/12/08/20251208-sheng-cheng-shi-ai-jie-ma-yue-shu-yu-duo-mo-tai-jia-gou-xi-tong-hua-yuan-li-jie-xi/"/>
+    <id>https://kingson4wu.github.io/2025/12/08/20251208-sheng-cheng-shi-ai-jie-ma-yue-shu-yu-duo-mo-tai-jia-gou-xi-tong-hua-yuan-li-jie-xi/</id>
     <published>2025-12-08T02:21:37.000Z</published>
     <updated>2025-12-08T02:23:58.628Z</updated>
     
@@ -113,20 +113,20 @@
     
     
     
-    <category term="AI" scheme="http://yoursite.com/tags/AI/"/>
+    <category term="AI" scheme="https://kingson4wu.github.io/tags/AI/"/>
     
-    <category term="大模型" scheme="http://yoursite.com/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/"/>
+    <category term="大模型" scheme="https://kingson4wu.github.io/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/"/>
     
-    <category term="多模态架构" scheme="http://yoursite.com/tags/%E5%A4%9A%E6%A8%A1%E6%80%81%E6%9E%B6%E6%9E%84/"/>
+    <category term="多模态架构" scheme="https://kingson4wu.github.io/tags/%E5%A4%9A%E6%A8%A1%E6%80%81%E6%9E%B6%E6%9E%84/"/>
     
-    <category term="解码器约束" scheme="http://yoursite.com/tags/%E8%A7%A3%E7%A0%81%E5%99%A8%E7%BA%A6%E6%9D%9F/"/>
+    <category term="解码器约束" scheme="https://kingson4wu.github.io/tags/%E8%A7%A3%E7%A0%81%E5%99%A8%E7%BA%A6%E6%9D%9F/"/>
     
   </entry>
   
   <entry>
     <title>构建统一前后端（与服务间）RPC体系：从 IDL 设计到多协议适配与 Sidecar 部署的工程实践</title>
-    <link href="http://yoursite.com/2025/11/28/20251128-gou-jian-tong-yi-qian-hou-duan-yu-fu-wu-jian-rpc-ti-xi-cong-idl-she-ji-dao-duo-xie-yi-gua-pei-yu-sidecar-bu-shu-de-gong-cheng-shi-jian/"/>
-    <id>http://yoursite.com/2025/11/28/20251128-gou-jian-tong-yi-qian-hou-duan-yu-fu-wu-jian-rpc-ti-xi-cong-idl-she-ji-dao-duo-xie-yi-gua-pei-yu-sidecar-bu-shu-de-gong-cheng-shi-jian/</id>
+    <link href="https://kingson4wu.github.io/2025/11/28/20251128-gou-jian-tong-yi-qian-hou-duan-yu-fu-wu-jian-rpc-ti-xi-cong-idl-she-ji-dao-duo-xie-yi-gua-pei-yu-sidecar-bu-shu-de-gong-cheng-shi-jian/"/>
+    <id>https://kingson4wu.github.io/2025/11/28/20251128-gou-jian-tong-yi-qian-hou-duan-yu-fu-wu-jian-rpc-ti-xi-cong-idl-she-ji-dao-duo-xie-yi-gua-pei-yu-sidecar-bu-shu-de-gong-cheng-shi-jian/</id>
     <published>2025-11-28T07:03:27.000Z</published>
     <updated>2025-11-28T08:59:43.367Z</updated>
     
@@ -146,24 +146,24 @@
     
     
     
-    <category term="RPC" scheme="http://yoursite.com/tags/RPC/"/>
+    <category term="RPC" scheme="https://kingson4wu.github.io/tags/RPC/"/>
     
-    <category term="服务发现" scheme="http://yoursite.com/tags/%E6%9C%8D%E5%8A%A1%E5%8F%91%E7%8E%B0/"/>
+    <category term="服务发现" scheme="https://kingson4wu.github.io/tags/%E6%9C%8D%E5%8A%A1%E5%8F%91%E7%8E%B0/"/>
     
-    <category term="gRPC" scheme="http://yoursite.com/tags/gRPC/"/>
+    <category term="gRPC" scheme="https://kingson4wu.github.io/tags/gRPC/"/>
     
-    <category term="Protobuf" scheme="http://yoursite.com/tags/Protobuf/"/>
+    <category term="Protobuf" scheme="https://kingson4wu.github.io/tags/Protobuf/"/>
     
-    <category term="Sidecar" scheme="http://yoursite.com/tags/Sidecar/"/>
+    <category term="Sidecar" scheme="https://kingson4wu.github.io/tags/Sidecar/"/>
     
-    <category term="K8S" scheme="http://yoursite.com/tags/K8S/"/>
+    <category term="K8S" scheme="https://kingson4wu.github.io/tags/K8S/"/>
     
   </entry>
   
   <entry>
     <title>生活中的 IT 哲学：从技术架构看人生智慧</title>
-    <link href="http://yoursite.com/2025/10/21/20251021-sheng-huo-zhong-de-it-zhe-xue-cong-ji-zhu-jia-gou-kan-ren-sheng-zhi-hui/"/>
-    <id>http://yoursite.com/2025/10/21/20251021-sheng-huo-zhong-de-it-zhe-xue-cong-ji-zhu-jia-gou-kan-ren-sheng-zhi-hui/</id>
+    <link href="https://kingson4wu.github.io/2025/10/21/20251021-sheng-huo-zhong-de-it-zhe-xue-cong-ji-zhu-jia-gou-kan-ren-sheng-zhi-hui/"/>
+    <id>https://kingson4wu.github.io/2025/10/21/20251021-sheng-huo-zhong-de-it-zhe-xue-cong-ji-zhu-jia-gou-kan-ren-sheng-zhi-hui/</id>
     <published>2025-10-21T09:21:18.000Z</published>
     <updated>2025-10-21T09:23:36.377Z</updated>
     
@@ -180,16 +180,16 @@
     
     
     
-    <category term="生活哲学" scheme="http://yoursite.com/tags/%E7%94%9F%E6%B4%BB%E5%93%B2%E5%AD%A6/"/>
+    <category term="生活哲学" scheme="https://kingson4wu.github.io/tags/%E7%94%9F%E6%B4%BB%E5%93%B2%E5%AD%A6/"/>
     
-    <category term="技术架构" scheme="http://yoursite.com/tags/%E6%8A%80%E6%9C%AF%E6%9E%B6%E6%9E%84/"/>
+    <category term="技术架构" scheme="https://kingson4wu.github.io/tags/%E6%8A%80%E6%9C%AF%E6%9E%B6%E6%9E%84/"/>
     
   </entry>
   
   <entry>
     <title>关于“卷”的理性分析与分类</title>
-    <link href="http://yoursite.com/2025/10/16/20251016-guan-yu-juan-de-li-xing-fen-xi-yu-fen-lei/"/>
-    <id>http://yoursite.com/2025/10/16/20251016-guan-yu-juan-de-li-xing-fen-xi-yu-fen-lei/</id>
+    <link href="https://kingson4wu.github.io/2025/10/16/20251016-guan-yu-juan-de-li-xing-fen-xi-yu-fen-lei/"/>
+    <id>https://kingson4wu.github.io/2025/10/16/20251016-guan-yu-juan-de-li-xing-fen-xi-yu-fen-lei/</id>
     <published>2025-10-16T07:18:11.000Z</published>
     <updated>2025-10-16T07:20:57.223Z</updated>
     
@@ -209,14 +209,14 @@
     
     
     
-    <category term="职场" scheme="http://yoursite.com/tags/%E8%81%8C%E5%9C%BA/"/>
+    <category term="职场" scheme="https://kingson4wu.github.io/tags/%E8%81%8C%E5%9C%BA/"/>
     
   </entry>
   
   <entry>
     <title>内部会议低效与对外宣讲价值的分析</title>
-    <link href="http://yoursite.com/2025/10/15/20251015-nei-bu-hui-yi-di-xiao-yu-dui-wai-xuan-jiang-jie-zhi-de-fen-xi/"/>
-    <id>http://yoursite.com/2025/10/15/20251015-nei-bu-hui-yi-di-xiao-yu-dui-wai-xuan-jiang-jie-zhi-de-fen-xi/</id>
+    <link href="https://kingson4wu.github.io/2025/10/15/20251015-nei-bu-hui-yi-di-xiao-yu-dui-wai-xuan-jiang-jie-zhi-de-fen-xi/"/>
+    <id>https://kingson4wu.github.io/2025/10/15/20251015-nei-bu-hui-yi-di-xiao-yu-dui-wai-xuan-jiang-jie-zhi-de-fen-xi/</id>
     <published>2025-10-15T04:54:21.000Z</published>
     <updated>2025-10-15T04:58:27.327Z</updated>
     
@@ -236,16 +236,16 @@
     
     
     
-    <category term="职场" scheme="http://yoursite.com/tags/%E8%81%8C%E5%9C%BA/"/>
+    <category term="职场" scheme="https://kingson4wu.github.io/tags/%E8%81%8C%E5%9C%BA/"/>
     
-    <category term="会议" scheme="http://yoursite.com/tags/%E4%BC%9A%E8%AE%AE/"/>
+    <category term="会议" scheme="https://kingson4wu.github.io/tags/%E4%BC%9A%E8%AE%AE/"/>
     
   </entry>
   
   <entry>
     <title>Seata 与分布式事务的本质解析</title>
-    <link href="http://yoursite.com/2025/09/17/20250917-seata-yu-fen-bu-shi-shi-wu-de-ben-zhi-jie-xi/"/>
-    <id>http://yoursite.com/2025/09/17/20250917-seata-yu-fen-bu-shi-shi-wu-de-ben-zhi-jie-xi/</id>
+    <link href="https://kingson4wu.github.io/2025/09/17/20250917-seata-yu-fen-bu-shi-shi-wu-de-ben-zhi-jie-xi/"/>
+    <id>https://kingson4wu.github.io/2025/09/17/20250917-seata-yu-fen-bu-shi-shi-wu-de-ben-zhi-jie-xi/</id>
     <published>2025-09-17T06:36:20.000Z</published>
     <updated>2025-09-17T06:40:41.634Z</updated>
     
@@ -267,16 +267,16 @@
     
     
     
-    <category term="分布式事务" scheme="http://yoursite.com/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/"/>
+    <category term="分布式事务" scheme="https://kingson4wu.github.io/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/"/>
     
-    <category term="Seata" scheme="http://yoursite.com/tags/Seata/"/>
+    <category term="Seata" scheme="https://kingson4wu.github.io/tags/Seata/"/>
     
   </entry>
   
   <entry>
     <title>IP 归属与全球路由：从 IPv4 到 IPv6 的原理与实践</title>
-    <link href="http://yoursite.com/2025/09/15/20250915-ip-gui-shu-yu-quan-qiu-lu-you-cong-ipv4-dao-ipv6-de-yuan-li-yu-shi-jian/"/>
-    <id>http://yoursite.com/2025/09/15/20250915-ip-gui-shu-yu-quan-qiu-lu-you-cong-ipv4-dao-ipv6-de-yuan-li-yu-shi-jian/</id>
+    <link href="https://kingson4wu.github.io/2025/09/15/20250915-ip-gui-shu-yu-quan-qiu-lu-you-cong-ipv4-dao-ipv6-de-yuan-li-yu-shi-jian/"/>
+    <id>https://kingson4wu.github.io/2025/09/15/20250915-ip-gui-shu-yu-quan-qiu-lu-you-cong-ipv4-dao-ipv6-de-yuan-li-yu-shi-jian/</id>
     <published>2025-09-15T13:53:59.000Z</published>
     <updated>2025-09-16T05:37:54.966Z</updated>
     
@@ -296,18 +296,18 @@
     
     
     
-    <category term="IP" scheme="http://yoursite.com/tags/IP/"/>
+    <category term="IP" scheme="https://kingson4wu.github.io/tags/IP/"/>
     
-    <category term="Anycast" scheme="http://yoursite.com/tags/Anycast/"/>
+    <category term="Anycast" scheme="https://kingson4wu.github.io/tags/Anycast/"/>
     
-    <category term="IPv6" scheme="http://yoursite.com/tags/IPv6/"/>
+    <category term="IPv6" scheme="https://kingson4wu.github.io/tags/IPv6/"/>
     
   </entry>
   
   <entry>
     <title>深入理解域名解析与管理：从 DNS 原理到注册商与注册局</title>
-    <link href="http://yoursite.com/2025/09/15/20250915-shen-ru-li-jie-yu-ming-jie-xi-yu-guan-li-cong-dns-yuan-li-dao-zhu-ce-shang-yu-zhu-ce-ju/"/>
-    <id>http://yoursite.com/2025/09/15/20250915-shen-ru-li-jie-yu-ming-jie-xi-yu-guan-li-cong-dns-yuan-li-dao-zhu-ce-shang-yu-zhu-ce-ju/</id>
+    <link href="https://kingson4wu.github.io/2025/09/15/20250915-shen-ru-li-jie-yu-ming-jie-xi-yu-guan-li-cong-dns-yuan-li-dao-zhu-ce-shang-yu-zhu-ce-ju/"/>
+    <id>https://kingson4wu.github.io/2025/09/15/20250915-shen-ru-li-jie-yu-ming-jie-xi-yu-guan-li-cong-dns-yuan-li-dao-zhu-ce-shang-yu-zhu-ce-ju/</id>
     <published>2025-09-15T13:41:02.000Z</published>
     <updated>2025-09-15T13:43:56.220Z</updated>
     
@@ -327,18 +327,18 @@
     
     
     
-    <category term="域名" scheme="http://yoursite.com/tags/%E5%9F%9F%E5%90%8D/"/>
+    <category term="域名" scheme="https://kingson4wu.github.io/tags/%E5%9F%9F%E5%90%8D/"/>
     
-    <category term="域名注册商" scheme="http://yoursite.com/tags/%E5%9F%9F%E5%90%8D%E6%B3%A8%E5%86%8C%E5%95%86/"/>
+    <category term="域名注册商" scheme="https://kingson4wu.github.io/tags/%E5%9F%9F%E5%90%8D%E6%B3%A8%E5%86%8C%E5%95%86/"/>
     
-    <category term="域名注册局" scheme="http://yoursite.com/tags/%E5%9F%9F%E5%90%8D%E6%B3%A8%E5%86%8C%E5%B1%80/"/>
+    <category term="域名注册局" scheme="https://kingson4wu.github.io/tags/%E5%9F%9F%E5%90%8D%E6%B3%A8%E5%86%8C%E5%B1%80/"/>
     
   </entry>
   
   <entry>
     <title>用脚本+AI CLI半自动写代码：实践经验分享</title>
-    <link href="http://yoursite.com/2025/09/02/20250902-yong-jiao-ben-ai-cli-ban-zi-dong-xie-dai-ma-shi-jian-jing-yan-fen-xiang/"/>
-    <id>http://yoursite.com/2025/09/02/20250902-yong-jiao-ben-ai-cli-ban-zi-dong-xie-dai-ma-shi-jian-jing-yan-fen-xiang/</id>
+    <link href="https://kingson4wu.github.io/2025/09/02/20250902-yong-jiao-ben-ai-cli-ban-zi-dong-xie-dai-ma-shi-jian-jing-yan-fen-xiang/"/>
+    <id>https://kingson4wu.github.io/2025/09/02/20250902-yong-jiao-ben-ai-cli-ban-zi-dong-xie-dai-ma-shi-jian-jing-yan-fen-xiang/</id>
     <published>2025-09-02T13:44:21.000Z</published>
     <updated>2025-12-12T02:40:01.242Z</updated>
     
@@ -354,22 +354,22 @@
     
     
     
-    <category term="tmux" scheme="http://yoursite.com/tags/tmux/"/>
+    <category term="tmux" scheme="https://kingson4wu.github.io/tags/tmux/"/>
     
-    <category term="AI编程" scheme="http://yoursite.com/tags/AI%E7%BC%96%E7%A8%8B/"/>
+    <category term="AI编程" scheme="https://kingson4wu.github.io/tags/AI%E7%BC%96%E7%A8%8B/"/>
     
-    <category term="自动化开发" scheme="http://yoursite.com/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E5%BC%80%E5%8F%91/"/>
+    <category term="自动化开发" scheme="https://kingson4wu.github.io/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E5%BC%80%E5%8F%91/"/>
     
-    <category term="Prompt工程" scheme="http://yoursite.com/tags/Prompt%E5%B7%A5%E7%A8%8B/"/>
+    <category term="Prompt工程" scheme="https://kingson4wu.github.io/tags/Prompt%E5%B7%A5%E7%A8%8B/"/>
     
-    <category term="Python" scheme="http://yoursite.com/tags/Python/"/>
+    <category term="Python" scheme="https://kingson4wu.github.io/tags/Python/"/>
     
   </entry>
   
   <entry>
     <title>用 tmux + 内网穿透，让出门也能指导编程任务</title>
-    <link href="http://yoursite.com/2025/08/28/20250828-yong-tmux-nei-wang-chuan-tou-rang-chu-men-ye-neng-zhi-dao-bian-cheng-ren-wu/"/>
-    <id>http://yoursite.com/2025/08/28/20250828-yong-tmux-nei-wang-chuan-tou-rang-chu-men-ye-neng-zhi-dao-bian-cheng-ren-wu/</id>
+    <link href="https://kingson4wu.github.io/2025/08/28/20250828-yong-tmux-nei-wang-chuan-tou-rang-chu-men-ye-neng-zhi-dao-bian-cheng-ren-wu/"/>
+    <id>https://kingson4wu.github.io/2025/08/28/20250828-yong-tmux-nei-wang-chuan-tou-rang-chu-men-ye-neng-zhi-dao-bian-cheng-ren-wu/</id>
     <published>2025-08-28T09:56:54.000Z</published>
     <updated>2025-08-28T10:00:44.765Z</updated>
     
@@ -385,20 +385,20 @@
     
     
     
-    <category term="tmux" scheme="http://yoursite.com/tags/tmux/"/>
+    <category term="tmux" scheme="https://kingson4wu.github.io/tags/tmux/"/>
     
-    <category term="内网穿透" scheme="http://yoursite.com/tags/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/"/>
+    <category term="内网穿透" scheme="https://kingson4wu.github.io/tags/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/"/>
     
-    <category term="AI编程" scheme="http://yoursite.com/tags/AI%E7%BC%96%E7%A8%8B/"/>
+    <category term="AI编程" scheme="https://kingson4wu.github.io/tags/AI%E7%BC%96%E7%A8%8B/"/>
     
-    <category term="Chrome Remote Desktop" scheme="http://yoursite.com/tags/Chrome-Remote-Desktop/"/>
+    <category term="Chrome Remote Desktop" scheme="https://kingson4wu.github.io/tags/Chrome-Remote-Desktop/"/>
     
   </entry>
   
   <entry>
     <title>VS Code + Dev Container：打造丝滑的 Linux 开发调试体验</title>
-    <link href="http://yoursite.com/2025/08/25/20250825-vs-code-dev-container-da-zao-si-hua-de-linux-kai-fa-diao-shi-ti-yan/"/>
-    <id>http://yoursite.com/2025/08/25/20250825-vs-code-dev-container-da-zao-si-hua-de-linux-kai-fa-diao-shi-ti-yan/</id>
+    <link href="https://kingson4wu.github.io/2025/08/25/20250825-vs-code-dev-container-da-zao-si-hua-de-linux-kai-fa-diao-shi-ti-yan/"/>
+    <id>https://kingson4wu.github.io/2025/08/25/20250825-vs-code-dev-container-da-zao-si-hua-de-linux-kai-fa-diao-shi-ti-yan/</id>
     <published>2025-08-25T07:12:09.000Z</published>
     <updated>2025-09-02T09:43:44.967Z</updated>
     
@@ -413,20 +413,20 @@
     
     
     
-    <category term="vscode" scheme="http://yoursite.com/tags/vscode/"/>
+    <category term="vscode" scheme="https://kingson4wu.github.io/tags/vscode/"/>
     
-    <category term="DevContainer" scheme="http://yoursite.com/tags/DevContainer/"/>
+    <category term="DevContainer" scheme="https://kingson4wu.github.io/tags/DevContainer/"/>
     
-    <category term="linux" scheme="http://yoursite.com/tags/linux/"/>
+    <category term="linux" scheme="https://kingson4wu.github.io/tags/linux/"/>
     
-    <category term="CPP" scheme="http://yoursite.com/tags/CPP/"/>
+    <category term="CPP" scheme="https://kingson4wu.github.io/tags/CPP/"/>
     
   </entry>
   
   <entry>
     <title>家庭宽带中的公网与内网 IP 分配机制解析</title>
-    <link href="http://yoursite.com/2025/08/17/20250817-jia-ting-kuan-dai-zhong-de-gong-wang-yu-nei-wang-ip-fen-pei-ji-zhi-jie-xi/"/>
-    <id>http://yoursite.com/2025/08/17/20250817-jia-ting-kuan-dai-zhong-de-gong-wang-yu-nei-wang-ip-fen-pei-ji-zhi-jie-xi/</id>
+    <link href="https://kingson4wu.github.io/2025/08/17/20250817-jia-ting-kuan-dai-zhong-de-gong-wang-yu-nei-wang-ip-fen-pei-ji-zhi-jie-xi/"/>
+    <id>https://kingson4wu.github.io/2025/08/17/20250817-jia-ting-kuan-dai-zhong-de-gong-wang-yu-nei-wang-ip-fen-pei-ji-zhi-jie-xi/</id>
     <published>2025-08-17T05:10:04.000Z</published>
     <updated>2025-08-17T05:11:11.489Z</updated>
     
@@ -446,16 +446,16 @@
     
     
     
-    <category term="家庭网络" scheme="http://yoursite.com/tags/%E5%AE%B6%E5%BA%AD%E7%BD%91%E7%BB%9C/"/>
+    <category term="家庭网络" scheme="https://kingson4wu.github.io/tags/%E5%AE%B6%E5%BA%AD%E7%BD%91%E7%BB%9C/"/>
     
-    <category term="公网IP" scheme="http://yoursite.com/tags/%E5%85%AC%E7%BD%91IP/"/>
+    <category term="公网IP" scheme="https://kingson4wu.github.io/tags/%E5%85%AC%E7%BD%91IP/"/>
     
   </entry>
   
   <entry>
     <title>VPN 与正向代理的原理与差异分析</title>
-    <link href="http://yoursite.com/2025/08/17/20250817-vpn-yu-zheng-xiang-dai-li-de-yuan-li-yu-chai-yi-fen-xi/"/>
-    <id>http://yoursite.com/2025/08/17/20250817-vpn-yu-zheng-xiang-dai-li-de-yuan-li-yu-chai-yi-fen-xi/</id>
+    <link href="https://kingson4wu.github.io/2025/08/17/20250817-vpn-yu-zheng-xiang-dai-li-de-yuan-li-yu-chai-yi-fen-xi/"/>
+    <id>https://kingson4wu.github.io/2025/08/17/20250817-vpn-yu-zheng-xiang-dai-li-de-yuan-li-yu-chai-yi-fen-xi/</id>
     <published>2025-08-17T04:59:59.000Z</published>
     <updated>2025-08-17T05:12:17.215Z</updated>
     
@@ -475,16 +475,16 @@
     
     
     
-    <category term="正向代理" scheme="http://yoursite.com/tags/%E6%AD%A3%E5%90%91%E4%BB%A3%E7%90%86/"/>
+    <category term="正向代理" scheme="https://kingson4wu.github.io/tags/%E6%AD%A3%E5%90%91%E4%BB%A3%E7%90%86/"/>
     
-    <category term="VPN" scheme="http://yoursite.com/tags/VPN/"/>
+    <category term="VPN" scheme="https://kingson4wu.github.io/tags/VPN/"/>
     
   </entry>
   
   <entry>
     <title>深入理解 SOCKS5 正向代理原理</title>
-    <link href="http://yoursite.com/2025/08/17/20250817-shen-ru-li-jie-socks5-zheng-xiang-dai-li-yuan-li/"/>
-    <id>http://yoursite.com/2025/08/17/20250817-shen-ru-li-jie-socks5-zheng-xiang-dai-li-yuan-li/</id>
+    <link href="https://kingson4wu.github.io/2025/08/17/20250817-shen-ru-li-jie-socks5-zheng-xiang-dai-li-yuan-li/"/>
+    <id>https://kingson4wu.github.io/2025/08/17/20250817-shen-ru-li-jie-socks5-zheng-xiang-dai-li-yuan-li/</id>
     <published>2025-08-17T04:54:40.000Z</published>
     <updated>2025-08-17T04:55:51.683Z</updated>
     
@@ -504,16 +504,16 @@
     
     
     
-    <category term="正向代理" scheme="http://yoursite.com/tags/%E6%AD%A3%E5%90%91%E4%BB%A3%E7%90%86/"/>
+    <category term="正向代理" scheme="https://kingson4wu.github.io/tags/%E6%AD%A3%E5%90%91%E4%BB%A3%E7%90%86/"/>
     
-    <category term="SOCKS5" scheme="http://yoursite.com/tags/SOCKS5/"/>
+    <category term="SOCKS5" scheme="https://kingson4wu.github.io/tags/SOCKS5/"/>
     
   </entry>
   
   <entry>
     <title>深入理解正向代理与反向代理：HTTP 报文与 TCP 连接的区别</title>
-    <link href="http://yoursite.com/2025/08/17/20250817-shen-ru-li-jie-zheng-xiang-dai-li-yu-fan-xiang-dai-li-http-bao-wen-yu-tcp-lian-jie-de-qu-bie/"/>
-    <id>http://yoursite.com/2025/08/17/20250817-shen-ru-li-jie-zheng-xiang-dai-li-yu-fan-xiang-dai-li-http-bao-wen-yu-tcp-lian-jie-de-qu-bie/</id>
+    <link href="https://kingson4wu.github.io/2025/08/17/20250817-shen-ru-li-jie-zheng-xiang-dai-li-yu-fan-xiang-dai-li-http-bao-wen-yu-tcp-lian-jie-de-qu-bie/"/>
+    <id>https://kingson4wu.github.io/2025/08/17/20250817-shen-ru-li-jie-zheng-xiang-dai-li-yu-fan-xiang-dai-li-http-bao-wen-yu-tcp-lian-jie-de-qu-bie/</id>
     <published>2025-08-16T16:41:19.000Z</published>
     <updated>2025-08-16T16:43:06.545Z</updated>
     
@@ -533,20 +533,20 @@
     
     
     
-    <category term="TCP" scheme="http://yoursite.com/tags/TCP/"/>
+    <category term="TCP" scheme="https://kingson4wu.github.io/tags/TCP/"/>
     
-    <category term="HTTP" scheme="http://yoursite.com/tags/HTTP/"/>
+    <category term="HTTP" scheme="https://kingson4wu.github.io/tags/HTTP/"/>
     
-    <category term="正向代理" scheme="http://yoursite.com/tags/%E6%AD%A3%E5%90%91%E4%BB%A3%E7%90%86/"/>
+    <category term="正向代理" scheme="https://kingson4wu.github.io/tags/%E6%AD%A3%E5%90%91%E4%BB%A3%E7%90%86/"/>
     
-    <category term="反向代理" scheme="http://yoursite.com/tags/%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86/"/>
+    <category term="反向代理" scheme="https://kingson4wu.github.io/tags/%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86/"/>
     
   </entry>
   
   <entry>
     <title>多语言大模型如何处理不同语言？是翻译成英语后再推理的吗？</title>
-    <link href="http://yoursite.com/2025/08/07/20250807-duo-yu-yan-da-mo-xing-ru-he-chu-li-bu-tong-yu-yan-shi-fan-yi-cheng-ying-yu-hou-zai-tui-li-de-ma/"/>
-    <id>http://yoursite.com/2025/08/07/20250807-duo-yu-yan-da-mo-xing-ru-he-chu-li-bu-tong-yu-yan-shi-fan-yi-cheng-ying-yu-hou-zai-tui-li-de-ma/</id>
+    <link href="https://kingson4wu.github.io/2025/08/07/20250807-duo-yu-yan-da-mo-xing-ru-he-chu-li-bu-tong-yu-yan-shi-fan-yi-cheng-ying-yu-hou-zai-tui-li-de-ma/"/>
+    <id>https://kingson4wu.github.io/2025/08/07/20250807-duo-yu-yan-da-mo-xing-ru-he-chu-li-bu-tong-yu-yan-shi-fan-yi-cheng-ying-yu-hou-zai-tui-li-de-ma/</id>
     <published>2025-08-07T04:14:48.000Z</published>
     <updated>2025-12-01T09:14:01.670Z</updated>
     
@@ -566,20 +566,20 @@
     
     
     
-    <category term="AI" scheme="http://yoursite.com/tags/AI/"/>
+    <category term="AI" scheme="https://kingson4wu.github.io/tags/AI/"/>
     
-    <category term="LLM" scheme="http://yoursite.com/tags/LLM/"/>
+    <category term="LLM" scheme="https://kingson4wu.github.io/tags/LLM/"/>
     
-    <category term="大模型" scheme="http://yoursite.com/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/"/>
+    <category term="大模型" scheme="https://kingson4wu.github.io/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/"/>
     
-    <category term="多语言" scheme="http://yoursite.com/tags/%E5%A4%9A%E8%AF%AD%E8%A8%80/"/>
+    <category term="多语言" scheme="https://kingson4wu.github.io/tags/%E5%A4%9A%E8%AF%AD%E8%A8%80/"/>
     
   </entry>
   
   <entry>
     <title>三种学习法核心精髓</title>
-    <link href="http://yoursite.com/2025/08/04/20250804-san-chong-xue-xi-fa-he-xin-jing-sui/"/>
-    <id>http://yoursite.com/2025/08/04/20250804-san-chong-xue-xi-fa-he-xin-jing-sui/</id>
+    <link href="https://kingson4wu.github.io/2025/08/04/20250804-san-chong-xue-xi-fa-he-xin-jing-sui/"/>
+    <id>https://kingson4wu.github.io/2025/08/04/20250804-san-chong-xue-xi-fa-he-xin-jing-sui/</id>
     <published>2025-08-04T05:55:52.000Z</published>
     <updated>2025-08-07T04:15:13.711Z</updated>
     
@@ -594,14 +594,14 @@
     
     
     
-    <category term="学习法" scheme="http://yoursite.com/tags/%E5%AD%A6%E4%B9%A0%E6%B3%95/"/>
+    <category term="学习法" scheme="https://kingson4wu.github.io/tags/%E5%AD%A6%E4%B9%A0%E6%B3%95/"/>
     
   </entry>
   
   <entry>
     <title>quick_worker 项目分析：基于 Channel 的高效异步批处理与 CPU 空转问题解析</title>
-    <link href="http://yoursite.com/2025/07/17/20250717-quick-worker-xiang-mu-fen-xi-ji-yu-channel-de-gao-xiao-yi-bu-pi-chu-li-yu-cpu-kong-zhuan-wen-ti-jie-xi/"/>
-    <id>http://yoursite.com/2025/07/17/20250717-quick-worker-xiang-mu-fen-xi-ji-yu-channel-de-gao-xiao-yi-bu-pi-chu-li-yu-cpu-kong-zhuan-wen-ti-jie-xi/</id>
+    <link href="https://kingson4wu.github.io/2025/07/17/20250717-quick-worker-xiang-mu-fen-xi-ji-yu-channel-de-gao-xiao-yi-bu-pi-chu-li-yu-cpu-kong-zhuan-wen-ti-jie-xi/"/>
+    <id>https://kingson4wu.github.io/2025/07/17/20250717-quick-worker-xiang-mu-fen-xi-ji-yu-channel-de-gao-xiao-yi-bu-pi-chu-li-yu-cpu-kong-zhuan-wen-ti-jie-xi/</id>
     <published>2025-07-16T16:20:44.000Z</published>
     <updated>2025-07-16T16:22:06.782Z</updated>
     
@@ -616,11 +616,11 @@
     
     
     
-    <category term="Go" scheme="http://yoursite.com/tags/Go/"/>
+    <category term="Go" scheme="https://kingson4wu.github.io/tags/Go/"/>
     
-    <category term="CPU" scheme="http://yoursite.com/tags/CPU/"/>
+    <category term="CPU" scheme="https://kingson4wu.github.io/tags/CPU/"/>
     
-    <category term="批处理任务" scheme="http://yoursite.com/tags/%E6%89%B9%E5%A4%84%E7%90%86%E4%BB%BB%E5%8A%A1/"/>
+    <category term="批处理任务" scheme="https://kingson4wu.github.io/tags/%E6%89%B9%E5%A4%84%E7%90%86%E4%BB%BB%E5%8A%A1/"/>
     
   </entry>
   

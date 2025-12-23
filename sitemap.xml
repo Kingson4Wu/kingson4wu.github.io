@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://kingson4wu.github.io/2025/12/23/20251223-python-yun-xing-nei-mu-shen-du-jie-xi-di-ceng-zhi-xing-ji-zhi-yu-xian-dai-web-jia-gou/</loc>
+    <loc>https://kingson4wu.github.io/2025/12/23/20251223-python-yi-lai-yu-huan-jing-guan-li-wan-quan-zhi-nan/</loc>
     
     <lastmod>2025-12-23</lastmod>
     
@@ -11,7 +11,7 @@
   </url>
   
   <url>
-    <loc>https://kingson4wu.github.io/2025/12/23/20251223-python-yi-lai-yu-huan-jing-guan-li-wan-quan-zhi-nan/</loc>
+    <loc>https://kingson4wu.github.io/2025/12/23/20251223-python-yun-xing-nei-mu-shen-du-jie-xi-di-ceng-zhi-xing-ji-zhi-yu-xian-dai-web-jia-gou/</loc>
     
     <lastmod>2025-12-23</lastmod>
     
@@ -3199,6 +3199,27 @@
   
   <url>
     <loc>https://kingson4wu.github.io/tags/%E7%8E%AF%E5%A2%83%E7%AE%A1%E7%90%86/</loc>
+    <lastmod>2025-12-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/Python-%E8%BF%90%E8%A1%8C%E5%8E%9F%E7%90%86/</loc>
+    <lastmod>2025-12-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/FastAPI/</loc>
+    <lastmod>2025-12-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://kingson4wu.github.io/tags/uvicorn/</loc>
     <lastmod>2025-12-23</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>

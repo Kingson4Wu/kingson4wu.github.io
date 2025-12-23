@@ -299,6 +299,314 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://kingson4wu.github.io/2022/09/07/20220907-ni-ji-de-she-zhi-tcp-nodeplay-ma/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2022/09/07/20220907-ni-ji-de-she-zhi-tcp-nodeplay-ma/" itemprop="url">你记得设置TCP_NODEPLAY吗？</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-09-07T13:26:22+08:00">
+                2022-09-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <ul>
+<li><p>有接触过TCP服务器实现的同学都会知道，需要注意TCP_NODELAY参数，为什么呢？</p>
+</li>
+<li><p>若没有开启TCP_NODELAY，那么在发送小包的时候，可能会出现这样的现象：<br>通过 TCP socket 分多次发送较少的数据时，比如小于 1460 或者 100 以内，对端可能会很长时间收不到数据，导致本端应用程序认为超时报错。</p>
+</li>
+</ul>
+<h2 id="Nagle算法（Nagle‘s-Algorithm）"><a href="#Nagle算法（Nagle‘s-Algorithm）" class="headerlink" title="Nagle算法（Nagle‘s Algorithm）"></a>Nagle算法（Nagle‘s Algorithm）</h2><ul>
+<li><p>TCP&#x2F;IP协议中，无论发送多少数据，总是要在数据前面加上协议头，同时，对方接收到数据，也需要发送ACK表示确认。为了尽可能的利用网络带宽，TCP总是希望尽可能的发送足够大的数据。（一个连接会设置MSS参数，因此，TCP&#x2F;IP希望每次都能够以MSS尺寸的数据块来发送数据）。</p>
+</li>
+<li><p>Nagle算法就是为了尽可能发送大块数据，避免网络中充斥着许多小数据块。</p>
+</li>
+<li><p>Nagle算法的基本定义是任意时刻，最多只能有一个未被确认的小段。 所谓“小段”，指的是小于MSS尺寸的数据块，所谓“未被确认”，是指一个数据块发送出去后，没有收到对方发送的ACK确认该数据已收到。</p>
+</li>
+<li><p>举个例子，一开始client端调用socket的write操作将一个int型数据(称为A块)写入到网络中，由于此时连接是空闲的（也就是说还没有未被确认的小段），因此这个int型数据会被马上发送到server端，接着，client端又调用write操作写入一个int型数据（简称B块），这个时候，A块的ACK没有返回，所以可以认为已经存在了一个未被确认的小段，所以B块没有立即被发送，一直等待A块的ACK收到（大概40ms之后）(ACK延迟机制的超时时间)，B块才被发送。</p>
+</li>
+<li><p>Nagle算法的改进在于：如果发送端欲多次发送包含少量字符的数据包（一般情况下，后面统一称长度小于MSS的数据包为小包，与此相对，称长度等于MSS的数据包为大包，为了某些对比说明，还有中包，即长度比小包长，但又不足一个MSS的包），则发送端会先将第一个小包发送出去，而将后面到达的少量字符数据都缓存起来而不立即发送，直到收到接收端对前一个数据包报文段的ACK确认、或当前字符属于紧急数据，或者积攒到了一定数量的数据（比如缓存的字符数据已经达到数据包报文段的最大长度）等多种情况才将其组成一个较大的数据包发送出去。<br> TCP在三次握手建立连接过程中，会在SYN报文中使用MSS（Maximum Segment Size）选项功能，协商交互双方能够接收的最大段长MSS值。</p>
+</li>
+</ul>
+<h2 id="ACK延迟机制-TCP-Delayed-Acknoledgement"><a href="#ACK延迟机制-TCP-Delayed-Acknoledgement" class="headerlink" title="ACK延迟机制(TCP Delayed Acknoledgement)"></a>ACK延迟机制(TCP Delayed Acknoledgement)</h2><ul>
+<li>TCP&#x2F;IP中不仅仅有Nagle算法(Nagle‘s Algorithm)，还有一个ACK延迟机制(TCP Delayed Ack) 。当Server端收到数据之后，它并不会马上向client端发送ACK，而是会将ACK的发送延迟一段时间（假设为t），它希望在t时间内server端会向client端发送应答数据，这样ACK就能够和应答数据一起发送，就像是应答数据捎带着ACK过去。</li>
+<li>也就是如果一个 TCP 连接的一端启用了Nagle算法，而另一端启用了ACK延时机制，而发送的数据包又比较小，则可能会出现这样的情况：发送端在等待接收端对上一个packet的Ack才发送当前的packet，而接收端则正好延迟了此Ack的发送，那么这个正要被发送的packet就会同样被延迟。当然Delayed Ack是有个超时机制的，而默认的超时正好就是40ms。</li>
+<li>现代的 TCP&#x2F;IP 协议栈实现，默认几乎都启用了这两个功能，那岂不每次都会触发这个延迟问题？事实不是那样的。仅当协议的交互是发送端连续发送两个packet，然后立刻read的时候才会出现问题。</li>
+</ul>
+<h2 id="总结：问题出现的三个条件"><a href="#总结：问题出现的三个条件" class="headerlink" title="总结：问题出现的三个条件"></a>总结：问题出现的三个条件</h2><ol>
+<li>发送小包（仅当协议的交互是发送端连续发送两个 packet，然后立刻 read 的 时候才会出现问题。）</li>
+<li>发送方启用了Nagle算法（发送方未接收到上一个包的ack，且待发送的是小包，则会等待）</li>
+<li>接收方启用了ACK延时机制 且没及时准备好数据（希望响应ack可以和响应的数据一起发送，等待本端响应数据的准备）</li>
+</ol>
+<h2 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h2><ul>
+<li>开启TCP_NODELAY：禁用Nagle算法，禁止后当然就不会有它引起的一系列问题了。</li>
+<li>优化协议：连续 write 小数据包，然后 read 其实是一个不好的网络编程模式，这样的连续 write 其实应该在应用层合并成一次 write。</li>
+</ul>
+<h2 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h2><h3 id="另一个问题的例子-HTTP服务"><a href="#另一个问题的例子-HTTP服务" class="headerlink" title="另一个问题的例子(HTTP服务)"></a>另一个问题的例子(HTTP服务)</h3><ul>
+<li><p><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1621142">神秘的40毫秒延迟与TCP_NODELAY</a></p>
+</li>
+<li><p>接口响应时间在client端开启keepalive后连续请求时由0ms变成40ms</p>
+</li>
+<li><p>因为设计的一些不足，我没能做到把 短小的 HTTP Body 连同 HTTP Headers 一起发送出去，而是分开成两次调用实 现的，之后进入 epoll_wait 等待下一个 Request 被发送过来（相当于阻塞模 型里直接 read）。正好是 write-write-read 的模式</p>
+</li>
+<li><p>那么 write-read-write-read 会不会出问题呢？维基百科上的解释是不会：</p>
+<ul>
+<li>“The user-level solution is to avoid write-write-read sequences on sockets. write-read-write-read is fine. write-write-write is fine. But write-write-read is a killer. So, if you can, buffer up your little writes to TCP and send them all at once. Using the standard UNIX I&#x2F;O package and flushing write before each read usually works.”</li>
+<li>我的理解是这样的：因为第一个 write 不会被缓冲，会立刻到达接收端，如果是 write-read-write-read 模式，此时接收端应该已经得到所有需要的数据以进行 下一步处理。接收端此时处理完后发送结果，同时也就可以把上一个packet 的 Ack 可以和数据一起发送回去，不需要 delay，从而不会导致任何问题。</li>
+</ul>
+</li>
+</ul>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/majianfei1023/article/details/51558941">TCP_NODELAY和Nagle算法</a></li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://kingson4wu.github.io/2022/09/06/20220906-you-liao-tcp-de-keepalive-ying-yong-ceng-huan-xu-yao-shi-xian-bao-huo-luo-ji-ma/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2022/09/06/20220906-you-liao-tcp-de-keepalive-ying-yong-ceng-huan-xu-yao-shi-xian-bao-huo-luo-ji-ma/" itemprop="url">有了TCP的keepalive，应用层还需要实现保活逻辑吗？</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-09-06T22:02:39+08:00">
+                2022-09-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><ul>
+<li>对于实时性高的业务，基本都需要在应用层自行实现保活逻辑，应用层的心跳协议是必不可少的</li>
+</ul>
+<h2 id="TCP-keepalive-的-问题"><a href="#TCP-keepalive-的-问题" class="headerlink" title="TCP keepalive 的 问题"></a>TCP keepalive 的 问题</h2><ol>
+<li>检测周期长，开启后默认是2h（系统内核参数 tcp_keepalive_time），这就意味着服务端可能维持着一个死连接；</li>
+<li>TCP keepalive 是由操作系统负责探查，即便进程死锁，或阻塞等，操作系统也会收发 TCP keepalive 消息，无法及时感知客户端已经实际已经下线；</li>
+</ol>
+<h2 id="应用层实现心跳的基本做法"><a href="#应用层实现心跳的基本做法" class="headerlink" title="应用层实现心跳的基本做法"></a>应用层实现心跳的基本做法</h2><ol>
+<li>服务端和客户端都开启tcp keepalive</li>
+<li>客户端定时发心跳包到服务端</li>
+<li>服务端根据自定义的规则，在一定时间内收不到心跳包的时，断开客户端的连接。</li>
+</ol>
+<h2 id="应用层实现心跳保活逻辑的好处"><a href="#应用层实现心跳保活逻辑的好处" class="headerlink" title="应用层实现心跳保活逻辑的好处"></a>应用层实现心跳保活逻辑的好处</h2><ol>
+<li>可以在发送心跳包的同时顺带业务或指令数据，这样服务端获得客户端的详细状态，同时可以更好满足业务场景</li>
+<li>可以灵活控制探查客户端的时间和策略，更快下线有异常的连接，减少服务端不必要的负担</li>
+</ol>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
+<li><a target="_blank" rel="noopener" href="http://www.zhihu.com/question/35013918">在以TCP为连接方式的服务器中，为什么在服务端设计当中需要考虑心跳？</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.felix021.com/blog/read.php?2076">闲说HeartBeat心跳包和TCP协议的KeepAlive机制</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.nowamagic.net/academy/detail/23350382">TCP协议的KeepAlive机制与HeartBeat心跳包</a></li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://kingson4wu.github.io/2022/09/05/20220905-guan-yu-http-xiang-guan-xie-yi-de-yi-xie-zong-jie/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1834,390 +2142,6 @@ Jquery 在每次跨域发送请求时都会有callback这个参数，其实这�
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://kingson4wu.github.io/2022/05/10/20220510-suan-fa-ji-chu-zong-jie/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2022/05/10/20220510-suan-fa-ji-chu-zong-jie/" itemprop="url">算法基础总结</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-05-10T22:33:28+08:00">
-                2022-05-10
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <ul>
-<li>O这个符号的意思是“忽略重要项以外的内容”，读音同Order。O（n2）的含义就是“算法的运行时间最长也就是n2的常数倍”，准确的定义请参考相关专业书籍。重点在于，通过这种表示方法，我们可以直观地了解算法的时间复杂度</li>
-<li>当我们知道选择排序的时间复杂度为O（n2）、快速排序的时间复杂度为O（nlogn）时，很快就能判断出快速排序的运算更为高速。二者的运行时间根据输入n产生的变化程度也一目了然。</li>
-</ul>
-<h2 id="一、链表"><a href="#一、链表" class="headerlink" title="一、链表"></a>一、链表</h2><h2 id="二、数组"><a href="#二、数组" class="headerlink" title="二、数组"></a>二、数组</h2><h2 id="三、栈"><a href="#三、栈" class="headerlink" title="三、栈"></a>三、栈</h2><h2 id="四、队列"><a href="#四、队列" class="headerlink" title="四、队列"></a>四、队列</h2><h2 id="五、哈希表"><a href="#五、哈希表" class="headerlink" title="五、哈希表"></a>五、哈希表</h2><h2 id="六、堆"><a href="#六、堆" class="headerlink" title="六、堆"></a>六、堆</h2><ul>
-<li>堆是一种图的树形结构，被用于实现“优先队列”（priority queues）</li>
-<li>优先队列是一种数据结构，可以自由添加数据，但取出数据时要从最小值开始按顺序取出</li>
-<li>如果需要频繁地从管理的数据中取出最小值，那么使用堆来操作会非常方便。</li>
-</ul>
-<h2 id="七、二叉查找树"><a href="#七、二叉查找树" class="headerlink" title="七、二叉查找树"></a>七、二叉查找树</h2><ul>
-<li>二叉查找树（又叫作二叉搜索树或二叉排序树）是一种数据结构，采用了图的树形结构</li>
-<li>二叉查找树有两个性质。第一个是每个结点的值均大于其左子树上任意一个结点的值。</li>
-<li>有很多以二叉查找树为基础扩展的数据结构，比如“平衡二叉查找树”。这种数据结构可以修正形状不均衡的树，让其始终保持均衡形态，以提高查找效率。</li>
-<li>种子结点数可以自由设定，并且形状均衡的树便是B树。</li>
-</ul>
-<hr>
-<h1 id="图"><a href="#图" class="headerlink" title="图"></a>图</h1><ul>
-<li>由顶点和连接每对顶点的边所构成的图形就是图。</li>
-<li>这个值叫作边的“权重”或者“权”，加了权的图被称为“加权图”。没有权的边只能表示两个顶点的连接状态，而有权的边就可以表示顶点之间的“连接程度”</li>
-<li>有向图、无向图</li>
-</ul>
-<h2 id="广度优先搜索"><a href="#广度优先搜索" class="headerlink" title="广度优先搜索"></a>广度优先搜索</h2><ul>
-<li>广度优先搜索会优先从离起点近的顶点开始搜索。</li>
-<li>候补顶点是用“先入先出”（FIFO）的方式来管理的，因此可以使用“队列”这个数据结构。</li>
-<li>广度优先搜索的特征为从起点开始，由近及远进行广泛的搜索。因此，目标顶点离起点越近，搜索结束得就越快。</li>
-</ul>
-<h2 id="深度优先搜索"><a href="#深度优先搜索" class="headerlink" title="深度优先搜索"></a>深度优先搜索</h2><ul>
-<li>深度优先搜索会沿着一条路径不断往下搜索直到不能再继续为止，然后再折返，开始搜索下一条候补路径。</li>
-<li>此处，候补顶点是用“后入先出”（LIFO）的方式来管理的，因此可以使用“栈”这个数据结构。</li>
-<li>广度优先搜索选择的是最早成为候补的顶点，因为顶点离起点越近就越早成为候补，所以会从离起点近的地方开始按顺序搜索；而深度优先搜索选择的则是最新成为候补的顶点，所以会一路往下，沿着新发现的路径不断深入搜索。</li>
-</ul>
-<h2 id="贝尔曼-福特算法"><a href="#贝尔曼-福特算法" class="headerlink" title="贝尔曼-福特算法"></a>贝尔曼-福特算法</h2><ul>
-<li>贝尔曼-福特（Bellman-Ford）算法是一种在图中求解最短路径问题的算法。最短路径问题就是在加权图指定了起点和终点的前提下，寻找从起点到终点的路径中权重总和最小的那条路径。</li>
-<li>贝尔曼也因为提出了该算法中的一个重要分类“动态规划”而被世人所熟知。</li>
-</ul>
-<h2 id="狄克斯特拉算法"><a href="#狄克斯特拉算法" class="headerlink" title="狄克斯特拉算法"></a>狄克斯特拉算法</h2><ul>
-<li>狄克斯特拉（Dijkstra）算法也是求解最短路径问题的算法，使用它可以求得从起点到终点的路径中权重总和最小的那条路径路径。</li>
-</ul>
-<h2 id="A-算法"><a href="#A-算法" class="headerlink" title="A*算法"></a>A*算法</h2><ul>
-<li>A<em>（A-Star）算法也是一种在图中求解最短路径问题的算法，由狄克斯特拉算法发展而来。狄克斯特拉算法会从离起点近的顶点开始，按顺序求出起点到各个顶点的最短路径。也就是说，一些离终点较远的顶点的最短路径也会被计算出来，但这部分其实是无用的。与之不同，A</em>就会预先估算一个值，并利用这个值来省去一些无用的计算。</li>
-</ul>
-<hr>
-<h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><ul>
-<li>[我的第一本算法书] - 宫崎修一 石田保辉</li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://kingson4wu.github.io/2022/05/07/20220507-gao-xiao-gong-zuo-fang-fa-lun-zong-jie/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2022/05/07/20220507-gao-xiao-gong-zuo-fang-fa-lun-zong-jie/" itemprop="url">高效工作方法论总结</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-05-07T09:41:15+08:00">
-                2022-05-07
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="思考维度"><a href="#思考维度" class="headerlink" title="思考维度"></a>思考维度</h2><ul>
-<li>事前, 事中, 事后</li>
-<li>从三个维度  预防，及时发现，止损  三个出发</li>
-<li>what when why who how</li>
-<li>5W3H(what、when、why、who、where、how、how much、how feel)</li>
-<li>金字塔思维: 主治：思维混乱，分不清主次重点 - 提高逻辑性和条理性; 总-分-总 过去-现在-将来 第一-第二-第三.</li>
-<li>STAR 法则: 主治：不知道如何表达 - 讲述故事的绝佳手段; 情境(situation)、任务(task)、行动(action)、结果(result)</li>
-<li>SMART 原则: 主治：不知道如何着手做目标管理 - 制定目标的黄金准则; 目标具体(Specific)、可度量(Measurable)、可实现(Attainable)、现实性(Realistic)、时限(Time bound)</li>
-<li>PDCA 循环： 主治：工作计划性差, 自律性弱 - 过程管理: 持续反馈-&gt;持续改进 ；计划（plan）、执行（do）、 检查（check）、调整（Adjust）</li>
-<li>四象限法则: 主治：时间分配不合理- 尽量在做最重要的事情;</li>
-</ul>
-<h2 id="结构化思维"><a href="#结构化思维" class="headerlink" title="结构化思维"></a>结构化思维</h2><ol>
-<li>表达要有逻辑(所有的逻辑关系都在这四种顺序之内)</li>
-</ol>
-<ul>
-<li>演绎（因果）顺序</li>
-<li>时间（步骤）顺序</li>
-<li>空间（结构）顺序</li>
-<li>程度（重要性）顺序</li>
-</ul>
-<ol start="2">
-<li>做事要有套路</li>
-</ol>
-<ul>
-<li>5W2H:Why、Who、When、Where、What、How 和 How much</li>
-</ul>
-<ol start="3">
-<li>建立中心</li>
-</ol>
-<ul>
-<li>定义清楚要解决的问题，要明确目标<ul>
-<li>自上而下:适用于问题比较明确的情况，我们只需要找到问题的核心要素即可，然后进行展开即可。</li>
-<li>自下而上:对于问题不够明确的情况，我们需要对多种杂乱的内容，进行分类、剪枝、归纳汇总成一个中心。</li>
-</ul>
-</li>
-<li>抽象层次越高，要解决的问题域越宽，外延越大</li>
-</ul>
-<ol start="4">
-<li>结构化分解</li>
-</ol>
-<ul>
-<li>分解的策略就是我们上文提到的四种逻辑顺序，即演绎顺序、时间顺序、空间顺序和程度顺序</li>
-<li>在做空间分解的时候，要注意满足 MECE（Mutually Exclusive Collectively Exhaustive，相互独立，完全穷尽）原则</li>
-</ul>
-<h2 id="合理安排自己的时间"><a href="#合理安排自己的时间" class="headerlink" title="合理安排自己的时间"></a>合理安排自己的时间</h2><ol>
-<li>每天提前一小时醒来</li>
-<li>每天提前 15 分钟到公司</li>
-<li>下班前花 15 分钟总结</li>
-<li>减少玩手机的时候</li>
-<li>把时间切割成小块</li>
-<li>碎片化时间利用</li>
-<li>给休息生活留出时间</li>
-</ol>
-<hr>
-<ul>
-<li>抽象思维：帮助我们快速抽取面对问题的关键要素和本质，可以是其他能力的“元能力”</li>
-<li>分层思维：帮助我们拆解问题，分而治之，划清问题和职责边界</li>
-<li>归纳思维：帮助我们从个性问题中抽象出问题的一般规律和得出共同结论</li>
-<li>结构化思维：帮助我们沉淀自己的知识树，逐步系统性的思考问题</li>
-</ul>
-<hr>
-<h2 id="深度工作总结"><a href="#深度工作总结" class="headerlink" title="深度工作总结"></a>深度工作总结</h2><ul>
-<li>如果你无法学习，就无法成功</li>
-<li>无干扰状态下保持专注</li>
-<li>高质量工作产出&#x3D;时间×专注度</li>
-<li>转移工作、注意力残留 -&gt; 专注、深度工作</li>
-<li>深度工作并非是我们的经济中唯一有价值的技能，不培养这种能力也有可能做得很好，但是不需要深度工作的职业会越来越少。</li>
-<li>最小阻力原则</li>
-<li>忙碌代表生产能力（Busyness as Proxy for Productivity）：在工作中，对于生产能力和价值没有明确的指标时，很多知识工作者都会采用工业时代关于生产能力的指标，以可视的方式完成很多事情。</li>
-<li>支持深度工作往往要抵制新的高科技</li>
-<li>当工作中没有明确目标时，围绕浮浅工作的表面忙碌会成为一种本能</li>
-<li>工作其实比休闲时光更容易带来享受？</li>
-<li>意志力是有限的</li>
-<li>培养深度工作的习惯，关键在于越过良好的意图，在工作生活中加入一些特别设计的惯例和固定程序，使得进入并保持高度专注状态消耗的意志力最小化。！！！！！</li>
-<li>选定你的深度哲学（节奏哲学）、并习惯化</li>
-<li>恰当展开协作可以提升你在职业生活中深度工作的质量</li>
-<li>这种隔音办公室与宽阔公共空间的组合，形成了中心辐射型的创新建筑结构，在这里偶遇的意外发现和与世隔绝的深度思考都能实现。</li>
-<li>专注于少量“极端重要的目标”</li>
-<li>引领性指标</li>
-<li>专注于极度重要目标上的深度工作状态时间</li>
-<li>4DX框架下的4种原则 ！！！</li>
-<li>在整个4DX的实验过程中，目标的明晰性，辅以引领性指标计分板提供的简单但却难以回避的反馈，促使我达到了此前从未实现的深度状态。</li>
-<li>定期放松大脑！！工作日结束的时候，在第二天早晨到来之前，屏蔽掉对工作问题的担忧。</li>
-<li>定期休息大脑可以提升深度工作的质量。工作时，努力工作。完成时，就放松下来。</li>
-<li>不要不断分心，而要不断专注</li>
-<li>设定一个几乎不可能的时间期限；深度工作需要专注的强度远远超出了大部分知识工作者的舒适区。</li>
-<li>有成果的冥想</li>
-<li>远离社交媒体</li>
-<li>在晚上或周末到来之前就确定要做的事情是十分重要的。（避免陷入其他无效的诱惑）</li>
-<li>人的智力系统可以进行长时间的高强度活动：它不像人的手脚一样会疲倦。除睡觉以外，它只需要变化，而不是停止。！！！</li>
-<li>如果你想抵御娱乐网站对你时间和精力的诱惑，那么就给大脑找一些高质量的替代活动。这样不仅可以使我们避免分心，保持专注的能力，同时还有可能实现本内特的宏伟目标：体验到何为生活，而不仅仅是生存。</li>
-<li>减少浮浅工作在我们日程中的分量，而不是将其消除</li>
-<li>一天的每一分钟都要做好计划（笔记本）</li>
-<li>深度工作要求你尊重自己的时间。要做到真正尊重时间，下面这一条建议是个很不错的开端：提前决定你一天的每一分钟要做什么工作。</li>
-<li>5点半之前结束工作。固定日程生产力。</li>
-<li>变得不容易联系到；文档化</li>
-</ul>
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/zH9kFjJQ5zE9mKGEiwEYAA">如何提升职业工作效率</a></li>
-<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/500696193">一线技术人的成长思考总结</a></li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2275,7 +2199,7 @@ Jquery 在每次跨域发送请求时都会有callback这个参数，其实这�
 <a href="/archives/">                
 <!--<a href="/archives/%7C%7C%20archive">-->
               
-                  <span class="site-state-item-count">176</span>
+                  <span class="site-state-item-count">178</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2288,7 +2212,7 @@ Jquery 在每次跨域发送请求时都会有callback这个参数，其实这�
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">213</span>
+                  <span class="site-state-item-count">219</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

@@ -91,7 +91,7 @@
 <meta property="og:description" content="近期帮朋友做一个需求，需要将某个Rust项目的一部分功能移植到Java中，使Java应用能使用   方案1: 直接将Rust翻译成Java代码  前置准备：将Rust项目跑通，方便通过debug对照执行细节，从而一步步翻译成Java代码希望借助AI的力量帮忙完成    借助AI的方案如下： 首先，我已经跑通了需要抽取的功能的相关测试用例 然后，让AI帮忙将涉及这些功能相关的代码抽取成单独的Ru">
 <meta property="og:locale">
 <meta property="article:published_time" content="2025-03-23T06:41:37.000Z">
-<meta property="article:modified_time" content="2025-03-23T16:12:12.440Z">
+<meta property="article:modified_time" content="2025-12-18T10:43:32.431Z">
 <meta property="article:author" content="Kingson Wu">
 <meta property="article:tag" content="Java">
 <meta property="article:tag" content="Rust">
@@ -433,6 +433,11 @@
 <li><strong>跨平台支持</strong>：通过自动化构建不同平台的动态库，Java应用能够轻松支持Windows、Linux、MacOS等多种操作系统。</li>
 </ul>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>通过将Rust功能编译成动态库并在Java中调用，我成功地绕过了将Rust代码完全转化为Java的复杂过程，同时还能够充分利用Rust的性能优势。虽然在构建过程中涉及到平台适配和自动化构建，但这一方案的灵活性和高效性使其成为解决问题的最佳选择。对于有类似需求的开发者来说，这无疑是一个值得尝试的方案。</p>
+<h2 id="原理扩展"><a href="#原理扩展" class="headerlink" title="原理扩展"></a>原理扩展</h2><h3 id="JNI-调用的底层执行与性能特征"><a href="#JNI-调用的底层执行与性能特征" class="headerlink" title="JNI 调用的底层执行与性能特征"></a>JNI 调用的底层执行与性能特征</h3><p>Java 通过 JNI 调用 Rust 编译生成的动态库,发生在同一操作系统进程、同一虚拟地址空间内。动态库在加载阶段被映射进进程地址空间,后续的 JNI 调用不涉及<strong>额外的</strong>系统调用,JVM 线程只是执行一次<strong>间接</strong>跳转,直接进入 Rust 生成的机器码执行。</p>
+<p>普通 Java 方法在热点场景下会被 JIT 编译为本地机器码,方法调用同样退化为一次机器码级别的跳转。从”是否执行机器码”这一点看,普通 Java 调用与 JNI 调用并无本质差异。</p>
+<p>两者的性能差异来自执行边界。Java 方法的机器码由 JVM 完全掌控,能够被内联并参与跨方法优化,调用开销在很多场景下可以被消除;JNI 调用形成了一条 JVM 无法穿透的边界,无法被内联,每一次调用都需要付出固定的边界维护成本。这一成本发生在用户态,量级通常在几十纳秒到<strong>几百</strong>纳秒之间,而不是<strong>微秒级</strong>的系统调用开销。</p>
+<p>进入 Rust 函数之后,执行效率不会因为”被 JVM 调用”而下降。Rust 代码运行在同一线程和 CPU 核上,执行的是 Rust 编译器生成的原生机器码,其性能只取决于自身的实现与优化水平,与 JNI 本身无关。性能是否划算,取决于单次 JNI 调用中 Rust 代码执行的工作量是否足以摊平这<strong>一次</strong>固定的边界成本。</p>
+<p>因此,JNI 的性能特征可以概括为:<strong>边界成本固定且不可消除,但 Rust 代码本身不被拖慢</strong>;只要一次调用内完成的工作足够多,JNI 在性能上就是合理甚至有优势的选择。</p>
 
       
     </div>
@@ -563,7 +568,7 @@
 <a href="/archives/">                
 <!--<a href="/archives/%7C%7C%20archive">-->
               
-                  <span class="site-state-item-count">176</span>
+                  <span class="site-state-item-count">178</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -576,7 +581,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">213</span>
+                  <span class="site-state-item-count">219</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -616,7 +621,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E6%A1%881-%E7%9B%B4%E6%8E%A5%E5%B0%86Rust%E7%BF%BB%E8%AF%91%E6%88%90Java%E4%BB%A3%E7%A0%81"><span class="nav-number">1.</span> <span class="nav-text">方案1: 直接将Rust翻译成Java代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E6%A1%882-%E7%9B%B4%E6%8E%A5%E5%B0%86%E7%9B%B8%E5%85%B3%E5%8A%9F%E8%83%BD%E7%9A%84Rust%E5%8A%9F%E8%83%BD%E7%BC%96%E8%AF%91%E6%88%90%E5%8A%A8%E6%80%81%E5%BA%93%EF%BC%8C%E7%94%B1Java%E7%9B%B4%E6%8E%A5%E8%B0%83%E7%94%A8"><span class="nav-number">2.</span> <span class="nav-text">方案2: 直接将相关功能的Rust功能编译成动态库，由Java直接调用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8Java%E8%B0%83%E7%94%A8Rust%E6%9E%84%E5%BB%BA%E7%9A%84%E5%8A%A8%E6%80%81%E5%BA%93"><span class="nav-number"></span> <span class="nav-text">使用Java调用Rust构建的动态库</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%95%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E6%A1%881-%E7%9B%B4%E6%8E%A5%E5%B0%86Rust%E7%BF%BB%E8%AF%91%E6%88%90Java%E4%BB%A3%E7%A0%81-1"><span class="nav-number">2.</span> <span class="nav-text">方案1: 直接将Rust翻译成Java代码</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%89%8D%E7%BD%AE%E5%87%86%E5%A4%87"><span class="nav-number">2.1.</span> <span class="nav-text">前置准备</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8AI%E8%BF%9B%E8%A1%8C%E4%BB%A3%E7%A0%81%E8%BD%AC%E6%8D%A2"><span class="nav-number">2.2.</span> <span class="nav-text">使用AI进行代码转换</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E6%A1%882-%E7%9B%B4%E6%8E%A5%E5%B0%86Rust%E5%8A%9F%E8%83%BD%E7%BC%96%E8%AF%91%E6%88%90%E5%8A%A8%E6%80%81%E5%BA%93%EF%BC%8C%E7%94%B1Java%E8%B0%83%E7%94%A8"><span class="nav-number">3.</span> <span class="nav-text">方案2: 直接将Rust功能编译成动态库，由Java调用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF%E4%B8%8E%E4%BC%98%E5%8A%BF"><span class="nav-number">3.1.</span> <span class="nav-text">思路与优势</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9E%84%E5%BB%BARust%E5%8A%A8%E6%80%81%E5%BA%93"><span class="nav-number">3.2.</span> <span class="nav-text">构建Rust动态库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%A1%88%E4%BC%98%E5%8A%BF"><span class="nav-number">3.3.</span> <span class="nav-text">方案优势</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E6%A1%881-%E7%9B%B4%E6%8E%A5%E5%B0%86Rust%E7%BF%BB%E8%AF%91%E6%88%90Java%E4%BB%A3%E7%A0%81"><span class="nav-number">1.</span> <span class="nav-text">方案1: 直接将Rust翻译成Java代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E6%A1%882-%E7%9B%B4%E6%8E%A5%E5%B0%86%E7%9B%B8%E5%85%B3%E5%8A%9F%E8%83%BD%E7%9A%84Rust%E5%8A%9F%E8%83%BD%E7%BC%96%E8%AF%91%E6%88%90%E5%8A%A8%E6%80%81%E5%BA%93%EF%BC%8C%E7%94%B1Java%E7%9B%B4%E6%8E%A5%E8%B0%83%E7%94%A8"><span class="nav-number">2.</span> <span class="nav-text">方案2: 直接将相关功能的Rust功能编译成动态库，由Java直接调用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8Java%E8%B0%83%E7%94%A8Rust%E6%9E%84%E5%BB%BA%E7%9A%84%E5%8A%A8%E6%80%81%E5%BA%93"><span class="nav-number"></span> <span class="nav-text">使用Java调用Rust构建的动态库</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%95%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E6%A1%881-%E7%9B%B4%E6%8E%A5%E5%B0%86Rust%E7%BF%BB%E8%AF%91%E6%88%90Java%E4%BB%A3%E7%A0%81-1"><span class="nav-number">2.</span> <span class="nav-text">方案1: 直接将Rust翻译成Java代码</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%89%8D%E7%BD%AE%E5%87%86%E5%A4%87"><span class="nav-number">2.1.</span> <span class="nav-text">前置准备</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8AI%E8%BF%9B%E8%A1%8C%E4%BB%A3%E7%A0%81%E8%BD%AC%E6%8D%A2"><span class="nav-number">2.2.</span> <span class="nav-text">使用AI进行代码转换</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E6%A1%882-%E7%9B%B4%E6%8E%A5%E5%B0%86Rust%E5%8A%9F%E8%83%BD%E7%BC%96%E8%AF%91%E6%88%90%E5%8A%A8%E6%80%81%E5%BA%93%EF%BC%8C%E7%94%B1Java%E8%B0%83%E7%94%A8"><span class="nav-number">3.</span> <span class="nav-text">方案2: 直接将Rust功能编译成动态库，由Java调用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%9D%E8%B7%AF%E4%B8%8E%E4%BC%98%E5%8A%BF"><span class="nav-number">3.1.</span> <span class="nav-text">思路与优势</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9E%84%E5%BB%BARust%E5%8A%A8%E6%80%81%E5%BA%93"><span class="nav-number">3.2.</span> <span class="nav-text">构建Rust动态库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E6%A1%88%E4%BC%98%E5%8A%BF"><span class="nav-number">3.3.</span> <span class="nav-text">方案优势</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8E%9F%E7%90%86%E6%89%A9%E5%B1%95"><span class="nav-number">5.</span> <span class="nav-text">原理扩展</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#JNI-%E8%B0%83%E7%94%A8%E7%9A%84%E5%BA%95%E5%B1%82%E6%89%A7%E8%A1%8C%E4%B8%8E%E6%80%A7%E8%83%BD%E7%89%B9%E5%BE%81"><span class="nav-number">5.1.</span> <span class="nav-text">JNI 调用的底层执行与性能特征</span></a></li></ol></li></ol></div>
             
 
           </div>

@@ -299,6 +299,327 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://kingson4wu.github.io/2020/07/09/20200710-cai-wu-shu-ju-bao-biao-de-kua-tian-zhi-ku/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/07/09/20200710-cai-wu-shu-ju-bao-biao-de-kua-tian-zhi-ku/" itemprop="url">财务数据报表的跨天之苦</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-09T23:21:53+08:00">
+                2020-07-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>数据报表，尤其是金钱相关的财务报表，对数据的准确性犹为敏感。而服务系统间的处理时间点的存在差异的客观事实（网络时延，失败重试等原因），导致在以天（或月&#x2F;年）为维度的数据报表中，或对账中，常常出现数据不平的问题。</p>
+<h3 id="业务描述"><a href="#业务描述" class="headerlink" title="业务描述"></a>业务描述</h3><p>以用户充值加金币的业务为例</p>
+<pre>
+充值请求---------------->  充值服务A
+                 (支付成功的时间x：2020-07-08 23:59:59)
+                 ----------------> 金币服务B
+                           (加币成功的时间y：2020-07-09 00:00:01)
+</pre>
+<p>现在，有以下数据报表的需求：输出每一天支付金额以及对应的加金币数目。</p>
+<ul>
+<li>从上图可以看出，时间x和时间y不在同一天，在出数据报表的时候，这条充值记录应该归为7月8日还是7月9日呢？<ol>
+<li>从用户的角度看，充值成功的行为是一个原子操作，用户不关心服务方底层有区分支付时间和加币时间；</li>
+<li>从公司财务的角度看，他们同样不关心1描述的问题，只关心报表是否平帐(支付金币＝加币数目)</li>
+</ol>
+</li>
+</ul>
+<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><p>要解决以上问题：需要统一充值请求的业务时间</p>
+<pre>
+充值请求---------------->  充值服务A
+(生成当前时间addTime并传入)
+                 (支付成功的时间x：2020-07-08 23:59:59)
+                 (接收addTime参数)
+                 ----------------> 金币服务B
+                           (加币成功的时间y：2020-07-09 00:00:01)
+                           (接收addTime参数)
+</pre>
+
+<ul>
+<li>充值请求在发起时就会生成一个当前时间addTime，并一直透传到底层服务，那么统一以addTime作为充值的时间点，就不会出现跨天差异导致的数据不平问题。</li>
+</ul>
+<h3 id="注意事项和监控重跑"><a href="#注意事项和监控重跑" class="headerlink" title="注意事项和监控重跑"></a>注意事项和监控重跑</h3><ul>
+<li>上述的方案有一个问题需要解决：addTime 时间的合法性<ol>
+<li>传入的addTime大于当前时间</li>
+<li>传入的addTime远远小于当前时间</li>
+</ol>
+</li>
+</ul>
+<h4 id="问题分析"><a href="#问题分析" class="headerlink" title="问题分析"></a>问题分析</h4><ul>
+<li>问题1显然是错误的，是不合法的请求，但由于系统间可能存在微小差异，可以在逻辑上拒绝addTime大于当前时间超1分钟的请求</li>
+<li>问题2是客观存在的。<ol>
+<li>addTime是一开始生成的时间，当传到每个服务之后，理论上服务的当前时间必然大于addTime</li>
+<li>由于网络超时，重试等原因，相差的时间可能达到分钟级；而由于链路上下层服务因为故障等原因暂时无法处理，那么相差的时间可能到小时级以上。</li>
+<li>一般情况下，一个充值请求正常情况下，一分钟之内就能完成。所以有一个定时任务会在凌晨生成昨天的报表，以供财务人员第二天查看。<br>  如果报表已经生成之后，addTime是昨天的充值记录才重试成功，那么将导致该条数据没被统计到！</li>
+</ol>
+</li>
+</ul>
+<h4 id="解决方案-1"><a href="#解决方案-1" class="headerlink" title="解决方案"></a>解决方案</h4><p>针对上述问题2导致的数据报表错误</p>
+<ol>
+<li>（程序阻断）当数据报表已经生成之后，拒绝addTime&lt;&#x3D;昨天的请求，避免充值数据和数据报表不一致。同时增加告警，支持解除限制和重跑报表。</li>
+<li>（告警重跑）当数据报表已经生成之后，接收到addTime&lt;&#x3D;昨天的请求，且执行成功时告警，通知相关人员重跑报表。</li>
+</ol>
+<h3 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h3><p>有人可能会问，上述的解决方案始终依赖告警和人工补偿。有没有更加自动化的手段？</p>
+<ol>
+<li>二八法则：避免将资金、精力和时间花在琐碎的多数问题上。上述的方案其实已经解决了大多数场景的问题，如果要完美的解决，必然需要花费更大的精力(可能花费时间比实现原功能更多)。<br>当然可以想办法解决，如果确实有必要的话。</li>
+<li>针对一些不常发生的异常问题：增加限制、增加告警、增加人工补偿，是安全快捷、高效成本低的手段。</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://kingson4wu.github.io/2020/07/09/20200709-yi-zhi-te-li-du-xing-de-zhu-zhai-yao/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/07/09/20200709-yi-zhi-te-li-du-xing-de-zhu-zhai-yao/" itemprop="url">《一只特里独行的猪》摘要</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-09T22:47:40+08:00">
+                2020-07-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><img src="/2020/07/09/20200709-yi-zhi-te-li-du-xing-de-zhu-zhai-yao/Shanghai_Beach.png"></p>
+<ul>
+<li><p>我的看法也许不值得别人重视，但对自己却很重要。这说明我有自己的好恶、爱憎等等。假如没有这些，做人也没什么味道。</p>
+</li>
+<li><p>我已经四十岁了，除了这只猪，还没见过谁敢于如此无视对生活的设置。相反，我倒见过很多想要设置别人生活的人，还有对被设置的生活安之若素的人。因为这个缘故，我一直怀念这只特立独行的猪。</p>
+</li>
+<li><p>真正有出息的人是对名人感兴趣的东西感兴趣，并且在那上面做出成就，而不是仅仅对名人感兴趣。</p>
+</li>
+<li><p>奇怪的是：错得越厉害就越有人信——这都是因为它让人振奋。</p>
+</li>
+<li><p>整个人类是一个物种，科学是全人类的事业，它的成就不能为民族所专有，所以它是全人类的光荣；这样就能有一些平常心。有了平常心，也就不容易被人骗。</p>
+</li>
+<li><p>如罗素所言，科学在“不计利害地追求客观真理”。请扪心自问，你所称的科学，是否如此淳朴和善良。尤瑟纳尔女士说：“当我计算或写作时，就超越了性别，甚至超越了人类。”请扪心自问，你所称的科学，是否是如此崇高的事业。</p>
+</li>
+<li><p>当年文化知识不能成为饭碗，也不能夸耀于人，但有一些青年对它还是有兴趣，这说明学习本身就可成为一种生活方式。学习文史知识目的在于“温故”，有文史修养的人生活在从过去到现代一个漫长的时间段里。学习科学知识目的在于“知新”，有科学知识的人可以预见将来，他生活在从现在到广阔无垠的未来。假如你什么都不学习，那就只能生活在现时现世的一个小圈子里，狭窄得很</p>
+</li>
+<li><p>人的存在是一种自然现象，而不是某种意志的产物。这种现象的内容就包括：人和人是不一样的，有性别之分、贤愚之分，还有同性恋和异性恋之分，这都是自然的现象。把属于自然的现象叫做“丑恶”，不是一种郑重的态度。这段话的意思说白了就是这样的：有些事原本就是某个样子，不以人的意志为转移。</p>
+</li>
+<li><p>据我所知，学化学的研究生也未必能学到李先生的理论；他们还有个罪名是“追星族”，鬼迷心窍，连杨振宁、李政道、李四光是谁都不知道。据我所知，这三位先生的学问实在高深，中学生根本不该懂，不知道学问，死记些名字，有何必要？更何况记下这些名字之后屈指一算，多一半都入了美国籍，这是给孩子灌输些什么</p>
+</li>
+<li><p>那些与命运斗争的人，那些做接近自己限度的斗争的人，却天生地接近这种失败。</p>
+<p>一个常常在进行着接近自己限度的斗争的人总是会常常失败的，一个想探索自然奥秘的人也常常会失败，一个想改革社会的人更是会常常失败。只有那些安于自己限度之内的生活的人才总是“胜利”，这种“胜利者”之所以常胜不败，只是因为他的对手是早已降伏的，或者说，他根本没有投入斗争。</p>
+<p>在人生的道路上，“失败”这个词还有另外的含义，即是指人失去了继续斗争的信心，放下了手中的武器。人类向限度屈服，这才是真正的失败。而没有放下手中武器，还在继续斗争，继续向限度挑战的人并没有失败。如此看来，老人没有失败。老人从未放下武器，只不过是丧失了武器。老人没有失去信心，因此不应当说他是“失败了的英雄”。</p>
+<p>那些永远不肯或不能越出自己限度的人是平庸的人。</p>
+</li>
+</ul>
+<p><img src="/2020/07/09/20200709-yi-zhi-te-li-du-xing-de-zhu-zhai-yao/MSN.jpg"></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://kingson4wu.github.io/2020/07/09/20200709-guan-yu-mi-deng-de-ruo-gan-wen-ti/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1454,343 +1775,6 @@ proxy_upstream_tries 5;
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://kingson4wu.github.io/2020/07/05/20200705-rpc-ke-yi-he-shi-wu-bang-ding-ma/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/07/05/20200705-rpc-ke-yi-he-shi-wu-bang-ding-ma/" itemprop="url">RPC可以和事务绑定吗？</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-05T17:27:32+08:00">
-                2020-07-05
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><img src="/2020/07/05/20200705-rpc-ke-yi-he-shi-wu-bang-ding-ma/MSN.jpg"></p>
-<p>在平常编码的时候，经常会看到很多人喜欢把一次RPC调用和数据库事务绑定在一起，RPC调用成功则提交事务，RPC调用失败或超时，则回滚事务。那么这样做是对的吗？</p>
-<h3 id="业务场景描述"><a href="#业务场景描述" class="headerlink" title="业务场景描述"></a>业务场景描述</h3><p>考虑以下一种业务场景：用户加入群聊需要花费200金币。<br>服务架构：服务A(群服务)，服务B(消费服务)，操作都是幂等的。</p>
-<pre>
-加群请求----------> 服务A
-             [1.新增事务]
-             [2.RPC进行扣费]------------>服务B
-             [3.执行加群操作(DB操作)]
-             [4.提交事务]
-</pre>
-
-<h3 id="业务场景分析"><a href="#业务场景分析" class="headerlink" title="业务场景分析"></a>业务场景分析</h3><ol>
-<li>服务B返回成功，业务无异常</li>
-<li>服务B返回失败，事务回滚，业务无异常</li>
-<li>服务B超时，或服务A RPC调用之后重启等场景，业务异常！</li>
-</ol>
-<p>业务异常表现为：用户已经扣费，但是没加群成功(即服务A和服务B数据不一致)</p>
-<h3 id="如何解决"><a href="#如何解决" class="headerlink" title="如何解决"></a>如何解决</h3><ul>
-<li><p>服务A通过本地事务表解决。</p>
-<ol>
-<li>服务A在进行RPC调用之前，需先保存一条订单，订单状态为“待扣费”，扣费成功后，更新订单状态为“已扣费”。</li>
-<li>启动定时任务，查询过去某时间范围内（如30分钟前至当前时间1分钟前）的“待扣费”的订单是否已扣费。若已扣费进行加群操作，并更新订单状态；否则，将订单置为无效状态。</li>
-<li>订单状态：[1待扣费，2已扣费，3已加群，4无效]</li>
-</ol>
-</li>
-<li><p>加群流程图</p>
-<pre>
-加群请求----------> 服务A
-           [1.新增“待扣费”订单(DB操作)]
-           [2.RPC进行扣费]------------>服务B
-           [3.更新订单状态为“已扣费”(DB操作)]
-           [4.执行加群操作(DB操作)]
-           [5.更新订单状态为“已加群”(DB操作)]</pre></li>
-</ul>
-<p><br>上图的每个操作都是单独的，其中某一步异常都会导致后续中断，因此需要两个定时任务，分别检查“待扣费”和“已扣费”的订单。</p>
-<ul>
-<li>定时任务1<pre>
-定时任务1---------> 服务A
-           [1.查询“待扣费”订单]
-           [2.RPC查询是否已扣费]------------>服务B
-           |(1)已扣费                         |(2)未扣费
-           |                                         |</pre></li>
-</ul>
-<p>[3.更新订单状态为“已扣费”(DB操作)]           [3.更新订单状态为“无效”(DB操作)]<br>[4.执行加群操作(DB操作)]<br>[5.更新订单状态为“已加群”(DB操作)]<br></p>
-<ul>
-<li>定时任务2<pre>
-定时任务2---------> 服务A
-           [1.查询“已扣费”订单]    
-           [2.执行加群操作(DB操作)]
-           [3.更新订单状态为“已加群”(DB操作)]</pre></li>
-</ul>
-<p><br>当然定时任务1和2可以放在同一个定时任务执行</p>
-<ul>
-<li>解决了问题之后，我们再回头看看一开始的问题：“RPC调用和数据库事务不能绑定吗？”<ul>
-<li>答案是看具体业务情况而定</li>
-<li>比如上述的业务场景。操作1显然是不能绑事务的</li>
-<li>但是2,3,4,5操作其实是可以绑事务的，因为定时任务可以进行补偿，而且可以因此减少定时任务2</li>
-<li>总结：rpc操作后续可补偿重试或查询，那么就是可以绑事务的，因为服务不会“失忆”；相反数据未落地之前，是不能进行绑事务了，因为一旦异常，数据就会回滚而“丢失”。</li>
-</ul>
-</li>
-</ul>
-<h3 id="其他解决方式"><a href="#其他解决方式" class="headerlink" title="其他解决方式"></a>其他解决方式</h3><ol>
-<li>业务对账，补偿机制。即接入第三方服务进行业务流水对账，发现不一致，进行修正；具体修正方式需根据具体业务场景，是退币，还是使加群成功。</li>
-<li>使用其他分布式事务解决方案(tcc，seata等)</li>
-</ol>
-<h3 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h3><ul>
-<li>重试是 “写”还是“读”？比如上述扣费操作，超时情况下，服务A重试是查询还是重新执行扣费？<ul>
-<li>其实还是取决于业务场景</li>
-<li>一般情况下，超时情况下，返回用户是失败，所以使用查询比较合适，不系统自动为用户扣费，这时候应该是“读”</li>
-<li>如果需要使用rpc调用进行加群，用户扣费了就必须要加群成功，那么加群RPC重试应该是“写”</li>
-<li>对于金钱业务来说，一般情况下，加币操作(充值，活动赠币)是“写”，扣币操作(送礼，用户触发)是“读”；入仓是“写”，出仓是“读”</li>
-</ul>
-</li>
-<li>补偿操作是“正向”还是“逆向”？比如上述扣费操作，超时情况下，服务A重试查询到用户已经扣费成功，这是是应该给用户退币，还是加群成功？<ul>
-<li>一样还是取决于业务场景</li>
-<li>如果用户只是想加群，那么只需要正向操作就好了，不影响用户利益，只是加群操作有些延迟，这时候应该是“正向”</li>
-<li>如果用户扣费之后，可以进行抽奖等，相当于用户的权益是具备实时性的，因为扣费超时(实际成功)导致无法抽奖，那么应该是退币才对的，即“逆向”</li>
-</ul>
-</li>
-<li>“无效”状态的订单应该支持重试，因为无效是因为未扣费，若作为一个基础服务，上次服务可能会使用同一个订单号进行重试，那么不能告诉业务方，操作失败等，应该作为一个全新的请求处理。可以通过增加订单的流水日志解决数据覆盖问题。</li>
-<li>上述的处理方式中，余额不足的扣费，会导致比较多的无效订单，因此在扣费之前，可以增加一次RPC查询，判断是余额是否足够</li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://kingson4wu.github.io/2020/03/29/20200329-fa-ban-guo-cheng-de-jian-rong-xing-kao-lu/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/03/29/20200329-fa-ban-guo-cheng-de-jian-rong-xing-kao-lu/" itemprop="url">发版过程的兼容性考虑</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-29T13:35:18+08:00">
-                2020-03-29
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><img src="/2020/03/29/20200329-fa-ban-guo-cheng-de-jian-rong-xing-kao-lu/Torres.jpg"></p>
-<ul>
-<li>一般情况下，服务一般不是仅有一台服务器提供服务的，因此服务上线的过程中其实会经历一个灰度过程</li>
-</ul>
-<p><img src="/2020/03/29/20200329-fa-ban-guo-cheng-de-jian-rong-xing-kao-lu/mermaid-diagram-20200329140016.png"></p>
-<p>如上所示，服务器A是新代码，走的是新逻辑，服务器B和C未发版，走的旧逻辑。</p>
-<ul>
-<li>如果新上线的变更只涉及读逻辑的，那么这样的灰度上线是没问题的。</li>
-<li>但如果上线的内容涉及写逻辑的变更，甚至还关联到异步处理的变更。那么这样的上线方式可能是不兼容的，会导致处理异常。</li>
-<li>在服务全量发版之后，新的流量可能正常，但发版过程中导致一定的脏数据。</li>
-</ul>
-<p>(图不画了，自行想象)</p>
-<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><ul>
-<li>开关！用配置中心开关控制，走新逻辑还是旧逻辑。默认旧逻辑。</li>
-<li>代码需要保留两套，通过开关控制走哪个分支。</li>
-<li>全量发版之后，此时线上全是新代码了，通过开关灰度(此时是业务灰度而不是机器灰度了)</li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1848,7 +1832,7 @@ proxy_upstream_tries 5;
 <a href="/archives/">                
 <!--<a href="/archives/%7C%7C%20archive">-->
               
-                  <span class="site-state-item-count">176</span>
+                  <span class="site-state-item-count">178</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1861,7 +1845,7 @@ proxy_upstream_tries 5;
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">213</span>
+                  <span class="site-state-item-count">219</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

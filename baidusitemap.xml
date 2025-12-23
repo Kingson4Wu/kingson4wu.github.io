@@ -1,15 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://kingson4wu.github.io/2025/12/23/20251223-rust-wei-shi-me-xu-yao-xian-shi-sheng-ming-zhou-qi-biao-zhu-cong-diao-yong-fang-qi-yue-dao-she-ji-ben-zhi/</loc>
+    <lastmod>2025-12-23</lastmod>
+  </url>
+  <url>
+    <loc>https://kingson4wu.github.io/2024/11/21/20241121-dui-java-go-rust-zhi-jian-de-jian-dan-dui-bi-he-zong-jie/</loc>
+    <lastmod>2025-12-22</lastmod>
+  </url>
+  <url>
+    <loc>https://kingson4wu.github.io/2025/12/19/20251219-yun-yuan-sheng-shu-ju-ku-huan-jing-xia-de-zi-jin-yi-zhi-xing-wen-ti-fen-xi/</loc>
+    <lastmod>2025-12-19</lastmod>
+  </url>
+  <url>
+    <loc>https://kingson4wu.github.io/2025/03/23/20250323-shi-yong-java-diao-yong-rust-gou-jian-de-dong-tai-ku/</loc>
+    <lastmod>2025-12-18</lastmod>
+  </url>
+  <url>
     <loc>https://kingson4wu.github.io/2020/07/06/20200706-shi-yong-threadcontext-huan-cun-rpc-jie-guo/</loc>
     <lastmod>2025-12-18</lastmod>
   </url>
   <url>
     <loc>https://kingson4wu.github.io/2025/02/21/20250221-da-mo-xing-ying-yong-kai-fa-ai-agent-yao-dian-ji-lu/</loc>
-    <lastmod>2025-12-18</lastmod>
-  </url>
-  <url>
-    <loc>https://kingson4wu.github.io/2024/11/21/20241121-dui-java-go-rust-zhi-jian-de-jian-dan-dui-bi-he-zong-jie/</loc>
     <lastmod>2025-12-18</lastmod>
   </url>
   <url>
@@ -135,10 +147,6 @@
   <url>
     <loc>https://kingson4wu.github.io/2024/12/02/20241202-yi-ge-wu-zhong-xin-jie-dian-de-ju-yu-wang-tong-xin-gong-ju/</loc>
     <lastmod>2025-04-24</lastmod>
-  </url>
-  <url>
-    <loc>https://kingson4wu.github.io/2025/03/23/20250323-shi-yong-java-diao-yong-rust-gou-jian-de-dong-tai-ku/</loc>
-    <lastmod>2025-03-23</lastmod>
   </url>
   <url>
     <loc>https://kingson4wu.github.io/2024/12/26/20241226-llm-xiang-guan-ji-zhu-jian-dan-liao-jie/</loc>

@@ -29,7 +29,7 @@ tags: [Java, Go, Rust]
 + 相关工具链完善问题，比如Java性能依赖外部开发，比如arthas，asyncProfiler等；而Go自带pprof，单元测试工具等（Rust 也有一些相应的配套工具）；Java历史包袱重，不够现代化 
 
 ## 热加载
-+ Java支持热加载（基于 Instrumentation 技术），但也有一定的限制，比如不能新增/删除方法、类等，主要通过字节码替换和类加载器重载实现，一般多在开发阶段使用。实际应用中，JRebel 等商业工具通过更复杂的字节码重写技术，部分突破了这些限制，而Spring DevTools 提供了更轻量的重启机制。
++ Java的标准HotSwap机制（基于Instrumentation）有限制，不能新增/删除方法和类，只能修改方法体；但JRebel等商业工具通过更复杂的字节码重写技术突破了这些限制，而Spring DevTools 提供了更轻量的重启机制。
 + Go官方不直接支持热加载；第三方工具如 gin-reload、air 实现热重载（通过监控文件变化，重新编译和启动进程，相对简单直接，但不是语言级特性）
 + Rust同样没有官方直接的热加载机制；比如cargo-watch 可以监听文件变化并重新编译（由于所有权系统，热加载实现相对复杂）
 
@@ -69,7 +69,7 @@ tags: [Java, Go, Rust]
     2. 通过maven-enforcer插件解决类冲突
         - 本质上就是解压所有依赖的 jar 包，判断是否存在重复的类文件，性能较低
 + JVM中Jar包的加载顺序
-    + 由classpath参数指定的顺序决定
+    + 由classpath参数指定的顺序决定。这种加载机制可能导致'类版本地狱'问题——不同jar包中的同名类，最终使用哪个版本取决于加载顺序，这在复杂项目中很难追踪和调试。
     + 如果classpath未明确指明，则由文件系统决定的（readdir函数）
         - readdir并不保证读取后的文件顺序，在不同的操作系统上可能有不同的顺序。
     + 如何找出重复类
@@ -92,7 +92,7 @@ tags: [Java, Go, Rust]
         └── pkg v1.2.3
     </pre>
     + Go 会：
-        - 自动选择最高兼容版本（v1.2.3）
+        - 自动选择最低满足要求的版本（v1.2.3）
         - 所有代码路径都使用这个版本
         - 使用 MVS (Minimal Version Selection) 算法
         - 在 go.mod 中记录最终版本
@@ -163,14 +163,17 @@ tags: [Java, Go, Rust]
 
 ### 主线程结束进程是否停止
 
-+ 主线程退出：主线程结束，不管其他线程是否结束，进程都会结束，这点Rust和Go一样（go是协程）.
-Java则是即使主线程结束，其他线程不结束，进程就不会退出。
++ 主线程退出：Java中，主线程结束后，如果还有非守护线程在运行，进程不会退出；而Rust和Go中主线程结束即意味着进程结束，不管其他线程/协程状态。
 
 ### 非主线程异常进程是否停止
-+ 默认情况下，非主线程的 panic 不会导致整个进程退出，这点 Rust 和 Java 一样。
-    - Java 中未捕获的异常会导致线程终止，但不影响其他线程
-    - Rust 的设计更灵活，允许开发者根据需求自行控制（比如使用 std::panic::set_hook() 设置了自定义 panic 处理，可以捕获控制）
-+ 而 Go 中 goroutine panic 会导致整个程序崩溃（除非被 recover）
++ Rust 中子线程 panic 的行为与 Java 和 Go 都不同：
+    - **Java**: 子线程未捕获异常会导致该线程终止，但不影响其他线程和进程
+    - **Rust**: 子线程 panic 后，当主线程尝试 join 该线程时会收到 panic。如果不处理（unwrap或?），会导致主线程也panic，进而导致进程退出。Rust提供了灵活的处理机制：
+        - 使用 `handle.join()` 的 Result 来捕获子线程的 panic
+        - 使用 `std::panic::catch_unwind()` 在子线程内部捕获 panic
+        - 使用 `std::panic::set_hook()` 自定义全局 panic 处理
+    - **Go**: goroutine panic 会立即导致整个程序崩溃（除非被 recover 捕获）
++ 总结：Go 最严格（默认崩溃），Java 最宽松（只影响当前线程），Rust 居中（通过 join 传播，但可灵活控制），Rust显式错误处理：强制你意识到子线程可能出错
 
 ## 面向对象编程
 + 类定义：java Python js 只有class的概念 go 只有struct概念 c++都有 区别是struct可以在栈中定义

@@ -299,6 +299,464 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://kingson4wu.github.io/2025/02/21/20250221-da-mo-xing-ying-yong-kai-fa-ai-agent-yao-dian-ji-lu/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2025/02/21/20250221-da-mo-xing-ying-yong-kai-fa-ai-agent-yao-dian-ji-lu/" itemprop="url">大模型应用开发AI Agent要点记录</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2025-02-21T17:28:05+08:00">
+                2025-02-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          本文总结了大模型应用开发中AI Agent的关键要点，包括其层级、核心技术及实现方法，帮助开发者更好地理解和应用AI Agent技术。
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2025/02/21/20250221-da-mo-xing-ying-yong-kai-fa-ai-agent-yao-dian-ji-lu/">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://kingson4wu.github.io/2025/02/20/20250220-ji-yu-da-mo-xing-de-rag-ying-yong-kai-fa-yao-dian-ji-lu/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2025/02/20/20250220-ji-yu-da-mo-xing-de-rag-ying-yong-kai-fa-yao-dian-ji-lu/" itemprop="url">基于大模型的RAG应用开发要点记录</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2025-02-20T21:12:52+08:00">
+                2025-02-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<blockquote>
+<p>基于书籍简单记录要点</p>
+</blockquote>
+</blockquote>
+<p><img src="/2025/02/20/20250220-ji-yu-da-mo-xing-de-rag-ying-yong-kai-fa-yao-dian-ji-lu/RAG.png"></p>
+<hr>
+<ul>
+<li><p>一种借助“外挂”的提示工程</p>
+</li>
+<li><p>最核心的思想：给大模型补充外部知识以提高生成质量</p>
+</li>
+<li><p>大模型的 RAG 应用中，最常见的检索方式是借助基于向量的语义检索来获得相关的数据块，并根据其相似度排序，最后输出最相关的前 K 个数据块（简称top_K）</p>
+</li>
+<li><p>自然语言处理中用于把各种形式的信息转换成向量表示的模型叫嵌入模型</p>
+</li>
+<li><p>基于向量的语义检索就是通过计算查询词与已有信息向量的相似度（如余弦相似度），找出与查询词在语义上最接近的信息。</p>
+</li>
+<li><p>如果大模型是一个优秀学生，正在参加一门考试，那么 RAG 和微调的区别如下。</p>
+<ul>
+<li>RAG：在考试时给他提供某个领域的参考书，要求他现学现用，并给出答案。</li>
+<li>微调：在考试前一天对他进行辅导，使他成为某个领域的专家，然后让他参加考试。</li>
+</ul>
+</li>
+<li><p>大模型与 Prompt 并不只在最后生成结果时才需要，在 RAG 应用流程的很多阶段都需要用到它们，比如在生成摘要、查询转换、查询路由、智能体推理、响应评估等很多阶段，都需要利用设计的Prompt 来让大模型完成任务。</p>
+</li>
+<li><p>与查询引擎相关的几个关键组件如下。</p>
+<ul>
+<li>（1）VectorIndexRetriever：向量索引检索器。用于完成相关知识的检索，基于索引来完成，输出多个相关 Node。</li>
+<li>（2）Synthesizer：响应生成器。借助大模型来完成 Prompt 组装，并根据响应生成模式的要求来生成响应结果。</li>
+<li>（3）NodePostProcessor：节点后处理器。通常用于在检索完成之后，对检索器输出的 Node 列表做补充处理，比如重排序。</li>
+</ul>
+</li>
+<li><p>Agent 就是通过 AI 模型驱动，能够自主地理解、规划、执行，并最终完成任务的 AI 程序。Agent 与大模型的区别类似于人与大脑的区别：大脑指挥人的行动，但是只有人才是执行任务的完整体。    </p>
+</li>
+<li><p>Agent 就是在大模型作为智慧大脑的基础上实现记忆（Memory）、自我规划（Planning）、使用工具（Tool）等能力，从而开发一个具有自主认知与行动能力的完全“智能体”。</p>
+</li>
+<li><p>与 RAG 应用相比，Data Agent 具备以下能力。</p>
+<ul>
+<li>（1）兼具 RAG 应用的数据检索与查询生成能力。</li>
+<li>（2）通过观察环境与任务目标推理出完成下一个数据任务的步骤。</li>
+<li>（3）通过调用外部服务工具（API）完成复杂任务，并返回执行结果。</li>
+<li>（4）具备长期记忆能力（如使用向量库）与短期记忆（一次任务中的交互历史等）能力。</li>
+</ul>
+</li>
+<li><p>与 RAG 应用相比，Data Agent 的主要增强之处如下。</p>
+<ul>
+<li>（1）规划与推理出完成任务的步骤的能力。</li>
+<li>（2）定义与使用工具的能力。</li>
+</ul>
+</li>
+</ul>
+<h1 id="LlamaIndex-框架整体结构"><a href="#LlamaIndex-框架整体结构" class="headerlink" title="LlamaIndex 框架整体结构"></a>LlamaIndex 框架整体结构</h1><ul>
+<li>(1)Core Framework:这是 LlamaIndex 的核心框架，实现了 LlamaIndex 框 架中大量可扩展的基础组件与工具组件。</li>
+<li>(2)Integrations:这是在 Core Framework 基础上由官方或者第三方提供的 大量扩展组件。这些组件大大扩充了 LlamaIndex 框架的兼容能力与应用场景， 包括各种类型的数据加载器、大语言模型与嵌入模型、向量库、Agent 工具等。</li>
+<li>(3)Templates:这是官方或者第三方提供的更上层的应用模板。开发者可 以基于这些模板来修改和开发自己的应用。</li>
+<li>(4)Eval Datasets:评估数据集。这是一些用于测试评估的现成数据集。 一个数据集通常包含两个部分:一部分是用于开发 RAG 应用的原始知识数据 集;另一部分是用于评估 RAG 应用的测试数据集。</li>
+</ul>
+<hr>
+<h1 id="LlamaIndex-的向量存储索引和传统数据库（如-MySQL）的索引的区别"><a href="#LlamaIndex-的向量存储索引和传统数据库（如-MySQL）的索引的区别" class="headerlink" title="LlamaIndex 的向量存储索引和传统数据库（如 MySQL）的索引的区别"></a>LlamaIndex 的向量存储索引和传统数据库（如 MySQL）的索引的区别</h1><ul>
+<li>From Grok3 (2025-02-24)</li>
+</ul>
+<h2 id="传统数据库索引（如-MySQL）-vs-向量存储索引"><a href="#传统数据库索引（如-MySQL）-vs-向量存储索引" class="headerlink" title="传统数据库索引（如 MySQL） vs 向量存储索引"></a>传统数据库索引（如 MySQL） vs 向量存储索引</h2><h3 id="1-传统数据库索引（B-树、哈希索引等）"><a href="#1-传统数据库索引（B-树、哈希索引等）" class="headerlink" title="1. 传统数据库索引（B-树、哈希索引等）"></a>1. 传统数据库索引（B-树、哈希索引等）</h3><ul>
+<li><strong>目的</strong>：加速精确匹配或范围查询，比如在 <code>WHERE id = 5</code> 或 <code>WHERE age &gt; 30</code> 时快速定位数据。</li>
+<li><strong>数据结构</strong>：通常基于 B-树、B+树 或哈希表，存储的是原始数据（如整数、字符串）的某种排序或映射。</li>
+<li><strong>存储内容</strong>：索引本身不保存完整数据，而是指向数据库中实际数据的引用（行指针）。</li>
+<li><strong>使用场景</strong>：结构化数据的高效检索。</li>
+</ul>
+<h3 id="2-LlamaIndex-的向量存储索引"><a href="#2-LlamaIndex-的向量存储索引" class="headerlink" title="2. LlamaIndex 的向量存储索引"></a>2. LlamaIndex 的向量存储索引</h3><ul>
+<li><strong>目的</strong>：支持语义相似性搜索，比如找到与“人工智能是什么”语义最接近的文档。</li>
+<li><strong>数据结构</strong>：基于向量空间的高效搜索结构（如 FAISS、HNSW、Annoy），存储的是文本的嵌入向量（高维浮点数数组）。</li>
+<li><strong>存储内容</strong>：索引里直接保存的是嵌入向量（通常还会关联原始文本或其引用），而不仅仅是指针。这种嵌入向量本身就是数据的某种“表示”。</li>
+<li><strong>使用场景</strong>：非结构化数据（如文本、图像）的语义搜索。</li>
+</ul>
+<p>所以你说得对，向量存储索引和 MySQL 的索引在设计目标和实现上完全不同。传统索引是为了快速定位具体值，而向量存储索引是为了快速找到“最相似”的内容。</p>
+<h2 id="为什么叫“向量存储索引”而不是“向量存储数据”？"><a href="#为什么叫“向量存储索引”而不是“向量存储数据”？" class="headerlink" title="为什么叫“向量存储索引”而不是“向量存储数据”？"></a>为什么叫“向量存储索引”而不是“向量存储数据”？</h2><ul>
+<li><p><strong>“索引”在这里的含义</strong>：</p>
+<ul>
+<li>在向量搜索领域，“索引”指的是一个经过优化的数据结构，用于加速向量之间的相似性计算和检索。它不只是存数据，而是以某种方式组织数据（比如 FAISS 用聚类或倒排索引），让查询效率更高。</li>
+<li>比如 FAISS 可能会把向量分桶（clustering），HNSW 用图结构连接向量，这些都是“索引”的体现。</li>
+</ul>
+</li>
+<li><p><strong>为什么不叫“向量存储数据”</strong>：</p>
+<ul>
+<li>“数据”听起来像是原始的、未经组织的存储，比如直接把向量一股脑扔进数据库。而“索引”强调的是结构化和查询优化。</li>
+<li>LlamaIndex 的向量存储索引不仅存了向量，还为快速检索做了预处理（比如降维、构建树或图）。它是个功能性工具，而不仅是数据的容器。</li>
+</ul>
+</li>
+<li><p><strong>命名习惯</strong>：</p>
+<ul>
+<li>在向量搜索和机器学习领域，像 FAISS、Annoy、HNSW 这些工具都叫“索引”（index），因为它们的核心是构建一个可搜索的结构。LlamaIndex 沿用了这种惯例。</li>
+</ul>
+</li>
+</ul>
+<h2 id="举个类比"><a href="#举个类比" class="headerlink" title="举个类比"></a>举个类比</h2><ul>
+<li>MySQL 的 B-树索引就像图书馆的卡片目录，按书名首字母排序，帮你快速找到某本书。</li>
+<li>LlamaIndex 的向量存储索引更像是推荐系统，根据你喜欢的书，找到内容相似的其他书，靠的是“向量空间的距离”而不是精确匹配。</li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>LlamaIndex 的向量存储索引确实和 MySQL 的索引差别很大，它更像是一个专门为高维向量设计的“搜索加速器”。叫“索引”是因为它不仅存向量，还组织向量以提升查询效率，而不是简单的数据存储。</p>
+<hr>
+<h1 id="关于RAG的优化：个人结合深度强化学习的思考"><a href="#关于RAG的优化：个人结合深度强化学习的思考" class="headerlink" title="关于RAG的优化：个人结合深度强化学习的思考"></a>关于RAG的优化：个人结合深度强化学习的思考</h1><ul>
+<li><p>对于RAG应用，优化方法有很多。我的想法是，把这些优化方法想象成一堆‘工具’，然后用强化学习这个‘聪明助手’来挑出最好用的组合。</p>
+</li>
+<li><p>“优化策略”变成了“工具”，“强化学习”变成了“聪明助手”，“奖励函数”简化为“任务需求”</p>
+</li>
+<li><p>From ChatGPT</p>
+</li>
+<li><p>你表达的意思可以理解为：你试图用一个类比来形象地说明深度强化学习在RAG（Retrieval-Augmented Generation）系统优化中的角色与价值。</p>
+</li>
+<li><p>具体地说：</p>
+<ul>
+<li><strong>RAG优化方法</strong>很多，比如检索器选择、reranker排序、embedding优化、prompt设计等，这些在你眼中就像一堆**“工具”**。</li>
+<li>这些工具的使用方式组合非常多，所以你不想手动去调优，而是引入一个“聪明助手”——也就是<strong>强化学习智能体</strong>，来<strong>自动地组合和选择最合适的优化策略</strong>。</li>
+<li><strong>任务需求</strong>（比如更高的准确率、更好的用户体验）就变成了强化学习中的<strong>奖励函数</strong>，引导智能体不断试错、学习，找到最优解法。</li>
+</ul>
+</li>
+<li><p>所以你的思路是用深度强化学习作为一种<strong>元优化方法</strong>，来学习在不同场景下该怎么调配RAG的各类优化手段，从而达到最好的表现。</p>
+</li>
+<li><p>这是一个很有潜力的方向，本质上是将强化学习用作策略搜索或控制器，帮助系统自动适配复杂环境下的参数和策略组合。你可以进一步细化这个设想，比如：</p>
+<ul>
+<li>工具组合的action space怎么定义？</li>
+<li>每种任务需求下的reward如何设计？</li>
+<li>环境如何模拟或构建，才能训练出泛化能力强的“助手”？</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h1><h2 id="如果嵌入模型知道“你好”和“再见”的向量，它可以将“你好再见”转化为一个向量吗？"><a href="#如果嵌入模型知道“你好”和“再见”的向量，它可以将“你好再见”转化为一个向量吗？" class="headerlink" title="如果嵌入模型知道“你好”和“再见”的向量，它可以将“你好再见”转化为一个向量吗？"></a>如果嵌入模型知道“你好”和“再见”的向量，它可以将“你好再见”转化为一个向量吗？</h2><ul>
+<li>From Grok3 （2025-02-25）</li>
+<li>嵌入模型可以将“你好再见”转化为向量。</li>
+<li>对于词嵌入模型（如 Word2Vec 或 GloVe），通常通过平均或相加“你好”和“再见”的向量来生成短语向量。</li>
+<li>对于句嵌入模型（如 BERT 或 Ada-002），模型可以直接处理“你好再见”序列，生成反映上下文关系的向量。</li>
+</ul>
+<h2 id="RAG的相关原理"><a href="#RAG的相关原理" class="headerlink" title="RAG的相关原理"></a>RAG的相关原理</h2><ul>
+<li><p>From Grok3 （2025-02-25）– 基于自身理解由Grok优化</p>
+</li>
+<li><p>文本向量化：在RAG中，知识库中的文档会被分割成适当的文本片段（例如句子或段落），然后使用预训练模型对这些片段整体进行向量化，生成语义丰富的稠密向量。这一过程不同于传统的单词嵌入，目的是捕捉整个片段的语义信息。</p>
+</li>
+<li><p>向量检索：当用户提出问题时，系统会将问题同样向量化，并在向量数据库中查询与问题语义最相似的文本片段。这些检索结果是原始文档中的真实内容，而不是由模型生成的文本。</p>
+</li>
+<li><p>上下文整合与生成：检索到的文本片段会以纯文本形式插入到一个提示模板中，作为上下文连同用户的问题一起输入到生成模型中。生成模型（如大语言模型）基于这些上下文生成最终的回答。</p>
+</li>
+</ul>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><ul>
+<li><p><a target="_blank" rel="noopener" href="https://developer.aliyun.com/article/1628030">精通RAG架构：从0到1，基于LLM+RAG构建生产级企业知识库</a></p>
+<ul>
+<li>向量数据库对比</li>
+<li>如何选择嵌入模型：<a target="_blank" rel="noopener" href="https://huggingface.co/spaces/mteb/leaderboard">https://huggingface.co/spaces/mteb/leaderboard</a></li>
+</ul>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/gEtTrdOut5Cr2tdrq_yPIQ">微软推出CoRAG：通过迭代推理提升AI检索能力</a></p>
+<ul>
+<li>CoRAG 的核心创新在于其动态查询重构机制。该模型不再依赖单次检索，而是根据中间推理状态迭代优化查询。这一过程确保了每个阶段检索到的信息都与上下文相关，进而逐步构建出更完整的最终答案。</li>
+</ul>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/ZfClcpOGbnZxmBxN8rGQpQ">用 LLM 快速构建实用知识图谱</a></p>
+<ul>
+<li>如果你用图数据库来检索信息，那么这种方式被称为 GraphRAG，它是知识图谱在 RAG 中的具体应用</li>
+<li>向量相似性检索依赖于知识库中的明确提及，只有明确提到的信息才会被检索出来。而知识图谱则能通过整体数据来推理出更多信息</li>
+<li>使用 Langchain 的实验功能 LLMGraphTransformer，如果是 LlamaIndex，可以尝试它的 KnowledgeGraphIndex。</li>
+<li>LLM 可以从纯文本中提取图谱信息，并将其存储到像 Neo4J 这样的数据库</li>
+</ul>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/Za26pIabmREPn6u2bEkBUw">“无”中生有：基于知识增强的RAG优化实践</a></p>
+<ul>
+<li>感觉做这个东西就是在不停找各种优化方法反复尝试看效果，而且目前还处于很乱的早起阶段</li>
+</ul>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/Q7nAold78HRuNhUiHSVUxA">微软推出的 LazyGraphRAG</a>   </p>
+<ul>
+<li>传统方法（如基于向量的 RAG）在处理局部化任务时表现良好，例如从特定文本片段中检索直接答案。然而，当涉及需要全面理解数据集的全局性查询时，这些方法往往难以胜任。</li>
+<li>相比之下，图支持的 RAG 系统通过利用数据结构中的关系，可以更好地解决此类更广泛的问题。然而，与图 RAG 系统相关的高索引成本，使其难以被成本敏感的场景所接受。因此，在可扩展性、经济性和质量之间实现平衡，仍然是现有技术的关键瓶颈。</li>
+<li>相比之下，图支持的 RAG 系统通过利用数据结构中的关系，可以更好地解决此类更广泛的问题。然而，与图 RAG 系统相关的高索引成本，使其难以被成本敏感的场景所接受。因此，在可扩展性、经济性和质量之间实现平衡，仍然是现有技术的关键瓶颈。</li>
+<li>LazyGraphRAG 将 VectorRAG 与 GraphRAG 相结合，“同时克服了二者的各自局限性”。</li>
+</ul>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/N-oPDmkb3EKqB2IM_reO1A">DeepSearcher深度解读：Agentic RAG的出现，传统RAG的黄昏</a></p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/zilliztech/deep-searcher">https://github.com/zilliztech/deep-searcher</a></li>
+<li>所谓Agentic RAG，是一种融合智能代理（Agent）能力的RAG架构。通过动态规划、多步骤推理和自主决策机制，Agentic RAG可以在复杂任务中实现闭环的检索-加工-验证-优化</li>
+<li>Agentic RAG相比传统RAG有着三大优势：<ul>
+<li>（1）被动响应变为主动响应；</li>
+<li>（2）单次的关键词检索，升级为多轮的动态调整检索，并拥有自我修正能力；</li>
+<li>（3）适用场景，从最基础的简单事实问答，升级为复杂推理、复杂报告生成等开放域任务。</li>
+</ul>
+</li>
+<li>长期来看，Agentic RAG必定会取代传统RAG。一方面，传统RAG对需求的响应还停留在非常基础的阶段，另一方面，现实中，我们大部分的需求表达背后，都是有隐含逻辑的，并不能被一步检索到位，必须通过推理-反思-迭代-优化来对其进行拆解与反馈。</li>
+<li>VS Graph RAG<ul>
+<li>Graph RAG主要聚焦于对存在连接关系的文档展开查询，在处理多跳类问题上表现出色。</li>
+<li>例如，当导入一部长篇小说时，它能够精准抽取各个人物之间错综复杂的关系。其运作方式是在文档导入环节，就对实体间关系进行抽取。因此，这一过程会大量消耗大模型的token资源 。</li>
+<li>而在查询阶段，不论是否是查询图中某些节点的信息，都会进行图结构的搜索，这使得这一框架不太灵活。</li>
+<li>反观Agentic RAG，它的资源消耗模式与Graph RAG恰好相反。在数据导入阶段，Agentic RAG无需执行额外特殊操作，而在回答用户提问时，才会产生较多大模型的token消耗。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/VZq2zsuJGsGaYTx6POqUzg">高阶RAG技巧：探索提升RAG系统性能的不同技巧</a></p>
+<ul>
+<li>索引优化技术（如数据预处理和分块）专注于格式化外部数据以提高其效率和可搜索性。</li>
+<li>预检索技术旨在通过重写、重新格式化或将查询路由到专用流水线来优化用户查询本身。</li>
+<li>检索优化策略通常侧重于在检索阶段优化搜索结果。 </li>
+<li>检索后优化策略旨在通过各种技术提高生成结果的准确性，包括对检索结果进行重新排序、增强或压缩（检索）上下文以及操纵提示或生成模型 (LLM)。</li>
+</ul>
+</li>
+<li><p>KBLAM 是在 RAG（Retrieval-Augmented Generation） 和 知识图谱增强推理 的基础上发展而来。它的关键点是：</p>
+<ul>
+<li>利用结构化知识（如三元组：subject–predicate–object）进行多跳推理</li>
+<li>结合语言模型对自然语言的理解能力，实现可控的知识推理流程</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><ul>
+<li>《基于大模型的RAG应用开发与优化——构建企业级LLM应用》</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://kingson4wu.github.io/2025/02/19/20250219-langchain-yao-dian-ji-lu/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2195,478 +2653,6 @@ Chatbot:"""
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://kingson4wu.github.io/2024/12/31/20241231-ai-gong-ye-ge-ming-xia-de-ruo-gan-si-kao/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2024/12/31/20241231-ai-gong-ye-ge-ming-xia-de-ruo-gan-si-kao/" itemprop="url">AI工业革命下的若干思考</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2024-12-31T15:24:38+08:00">
-                2024-12-31
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote>
-<blockquote>
-<p>随着AI工具变得日益智能，人们对自身可能被取代的担忧也在增加。<br>回顾以往工业革命带来的社会变迁，或许能从中推测出未来发展的趋势。<br>以下内容由ChatGPT辅助生成。</p>
-</blockquote>
-</blockquote>
-<h1 id="AI对就业的双重影响"><a href="#AI对就业的双重影响" class="headerlink" title="AI对就业的双重影响"></a>AI对就业的双重影响</h1><ul>
-<li>AI技术对就业市场带来了创造效应和破坏效应：<ul>
-<li>创造效应：AI的普及将催生了许多潜在的新兴职业。这些新兴岗位对熟练掌握AI工具的专业人才需求旺盛。</li>
-<li>破坏效应：AI替代了许多重复性、规则性较强的岗位。某些中等技能的岗位如流水线操作、传统文秘工作可能面临消失的风险。</li>
-</ul>
-</li>
-</ul>
-<h1 id="历史视角：被替代的人何去何从"><a href="#历史视角：被替代的人何去何从" class="headerlink" title="历史视角：被替代的人何去何从"></a>历史视角：被替代的人何去何从</h1><ul>
-<li><p>随着AI技术的发展，未来许多人的工作将不可避免地被替代，这其中包括一部分程序员，但相较而言，更多非程序员的工作可能会首当其冲。然而，那些更擅长使用并深刻理解AI工具的人将更有可能保住自己的职位。</p>
-</li>
-<li><p>回顾工业革命，技术进步曾一度导致大批劳动者失业，许多人因无法适应新变化而成为时代的“牺牲品”，收入锐减。</p>
-</li>
-<li><p>短期内，某些群体的失业可能难以避免，但历史也表明，技术变革往往伴随着新机会的诞生。</p>
-</li>
-<li><p>所以，个人需要做好准备：</p>
-<ul>
-<li>提升自身技能，特别是AI工具的使用和相关领域的知识储备。</li>
-<li>即便不能马上参与高端AI开发，也可以从简单的AI相关工作入手，逐步积累经验。</li>
-<li>有一定资产的群体，应学会投资，通过多样化方式应对收入变化。</li>
-</ul>
-</li>
-</ul>
-<h1 id="正面效应"><a href="#正面效应" class="headerlink" title="正面效应"></a>正面效应</h1><ul>
-<li>催生新型岗位：AI技术完善后，将需要大量擅长操作和优化AI工具的人才。</li>
-<li>解放低级劳动：AI让人类摆脱低级脑力劳动，从而获得更高工资和更有意义的工作体验。</li>
-<li>效率提升与“去内卷”：生产效率的提升可能减少“内卷”现象，并通过政策调整减轻劳动者的工作压力。</li>
-<li>关于工作和财富再分配问题：如果AI真的让生产效率大幅提升，我们可以期待未来的福利制度更加完善，比如减少工作时间、增加带薪假期，甚至实现“无工作”状态也未必是幻想。</li>
-</ul>
-<h1 id="社会与政策层面"><a href="#社会与政策层面" class="headerlink" title="社会与政策层面"></a>社会与政策层面</h1><ul>
-<li>加强教育培训：推动技能提升和再教育计划，使劳动者适应AI时代的工作需求。</li>
-<li>优化产业结构：加速产业转型升级，为社会创造更多高附加值就业机会。</li>
-<li>完善社会保障：建立健全失业保障制度，帮助因AI技术变革失业的劳动者渡过难关。</li>
-<li>政策引导：通过政策规范AI技术的合理应用，避免过度自动化对就业的过度冲击。</li>
-</ul>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><ul>
-<li>AI技术的快速发展是一把双刃剑，它既对传统就业模式提出了挑战，也为社会提供了提高效率、优化劳动分工的契机。从社会视角看，技术进步不可逆，但我们可以通过政策调整和个人适应来尽量减小负面影响。面对不可避免的变革，积极调整心态、提升能力，是每个人应对未来的重要策略。同时，历史告诉我们，每一次技术浪潮都会带来新的机遇，只要抓住变化的窗口期，未来依然充满希望。</li>
-</ul>
-<h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><ul>
-<li><a target="_blank" rel="noopener" href="http://www.xml-data.cn/KXYSH/html/93be89d5-c2ef-491d-9398-ebe61dcdc56b.htm">从工业革命史看技术变迁如何影响工人命运——《技术陷阱：自动化时代的资本、劳动力和权力》评介</a></li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://kingson4wu.github.io/2024/12/30/20241230-web3-xiang-guan-zhi-shi-ji-lu/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2024/12/30/20241230-web3-xiang-guan-zhi-shi-ji-lu/" itemprop="url">Web3相关知识记录</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2024-12-30T21:31:14+08:00">
-                2024-12-30
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote>
-<blockquote>
-<p>以下内容都来源于书籍</p>
-</blockquote>
-</blockquote>
-<p><img src="/2024/12/30/20241230-web3-xiang-guan-zhi-shi-ji-lu/Web3.png"></p>
-<h2 id="Web进化史"><a href="#Web进化史" class="headerlink" title="Web进化史"></a>Web进化史</h2><ul>
-<li><p>Web 1.0时代。Web 1.0时代的特点是重信息轻身份，多浏览少输出，因此也被人称为“只读网络”</p>
-</li>
-<li><p>相较于Web 1.0时代的内容创作者占少数，内容消费者占绝大多数的生态格局，Web 2.0更加以每个用户为中心，注重由用户生成内容(User Generated Content, UGC)，强调交互性。因此有人将Web 2.0称为“交互网络”。</p>
-</li>
-<li><p>O2O本质是连接，如果说Web 1.0开启了人与信息的连接，Web 2.0则增进了人与人的连接，电商模式拉近了人与商品的连接，O2O则连接了消费者与服务者。</p>
-</li>
-<li><p>Web 3.0：数据所有权革命</p>
-</li>
-<li><p>描述了Web 3.0应该具备的几个组成部分：</p>
-<ul>
-<li>一个加密的，去中心化的信息发布系统</li>
-<li>一个基于身份的，但又是匿名的底层通信系统</li>
-<li>一个用于取代中心节点信息验证功能的共识引擎</li>
-<li>一个将上述三点结合在一起的用户交互系统</li>
-</ul>
-</li>
-<li><p>目前更多的人在正式场合采用Web 3.0的表述方式，但是我们应该知道Web 3.0表述具有技术流派风格，而Web3表述则具有用户社区风格。</p>
-</li>
-<li><p>在Web 2.0系统中，个体只是网络中无数节点之一，必须依赖中心节点。中心节点制定规则，决定了其他节点的行为和生存。Web 3.0系统中，个体还是网络中无数节点之一，但每个节点都高度自治，且拥有自己的决策过程。</p>
-</li>
-</ul>
-<h2 id="区块链"><a href="#区块链" class="headerlink" title="区块链"></a>区块链</h2><ul>
-<li><p>区块链是一种去中心化的计算机网络，也是实现Web 3.0世界的诸多技术基础中最重要的一个。</p>
-</li>
-<li><p>通证(tokens)是Web 3.0能够更公平、更有效率的一个关键因素。通证的概念范围非常广</p>
-</li>
-<li><p>加密资产是通证的其中一类，通证并不一定加密，但在Web 3.0的语境里，通常都是指带有去中心化特性（即无法被中心化机构通过在发放通证后部署的代码篡改）的加密通证。</p>
-</li>
-<li><p>加密资产并不一定是加密货币，比如NFT与数字藏品</p>
-</li>
-<li><p>Web 3.0的底层网络架构是基于区块链的，而区块链的第一个应用是比特币。</p>
-</li>
-<li><p>用以下五个指标来评估一个Web 3.0项目的去中心化程度：</p>
-<ul>
-<li>(1)项目钱包的透明性　一个项目的钱包越是透明，越能让大家了解这个项目的参与者构成。如果无法公开透明地了解一个项目的参与者构成，就无法进行更深度地评估。</li>
-<li>(2)初始钱包的通证占比　初始钱包通常是项目方和核心投资者的地址，如果持有过多的通证，就说明他们对项目的影响力极大，这种项目是极其中心化的。</li>
-<li>(3)相关生态的去中心化　在Web 3.0的错综复杂的生态中，大部分项目都并非独立存在而是依附或者嵌套于其他项目的。这时哪怕一个项目在开发层面是去中心化的，其价值和功能也会很大程度上被其他项目影响。而后者若是一个中心化的项目，那前者本质上也依旧是一个中心化的项目。</li>
-<li>(4)项目方的影响力　一部分项目方本身并没持有大比例的通证，但由于他们的声音对项目的开发社群有着极大的影响力。这种情况下这也是一个偏中心化的项目，但中心化程度要比少数人持有大比例通证的项目要低。</li>
-<li>(5)流动性　哪怕比特币作为一个完全独立的项目，并且没有和任何其他项目有嵌套关系，在早期流动性较低的阶段依旧可以轻易受到几个重要参与者深度影响，甚至有可能因为在链上的节点过少或者大部分节点被垄断，导致被篡改项目数据。也就是说，在那些流动性较差的项目上，被大算力主体篡改资产所有权的可能都要大于流动性高的项目。</li>
-</ul>
-</li>
-<li><p>首次代币发行(Initial Coin Offering, ICO)，对应着首次公开募股(Initial Public Offering, IPO)应运而生。</p>
-</li>
-<li><p>以太坊的逻辑就是把现实中的合同去中心化形成智能合约。举个最简单的例子，你去自动售货机买可乐，你付钱后可乐出来，这就是一种智能合约。作为一个自动化的、程序化的机器，你付了钱，它给了货。</p>
-</li>
-<li><p>智能合约的本质就是通过代码程序的方式执行现实社会中的一些底层的制度或者合同。只要条件达到了要求，程序就会执行，解决了谁先出钱，谁先给货的问题。同时，通过区块链的技术，能够让整个交易的过程、结果、代码执行的情况在全网进行记录，且不可篡改。</p>
-</li>
-<li><p>以太坊(Ethereum)就是区块链版的操作系统，是一个为去中心化应用(DApps)而生的全球开源平台。</p>
-</li>
-<li><p>从2013年发布白皮书至今，以太坊在智能合约领域一直处于领先地位。它是当前全球最知名、应用最广泛的区块链智能合约底层平台。以太坊建立了一个可编程的、图灵完备的区块链，在这个区块链上，可以通过简单的程序实现各类加密资产的生成，也可以通过编写程序对以太坊上流通的资产状态进行精确控制。至今全球已经有数千种基于以太坊的去中心化应用程序和加密资产。</p>
-</li>
-<li><p>目前，以太坊上的项目已经划分出众多赛道，针对不同类型的项目大致可以分为：去中心化金融(DeFi)、去中心化交易所(DEX)、游戏、NFT、基础设施等。这些项目会在后文详细介绍。</p>
-</li>
-<li><p>区块链性能的不可能三角：即去中心化、安全性与可扩展性必须舍弃其一</p>
-</li>
-<li><p>Ripple和EOS舍弃了去中心化，IOTA和NANO舍弃了安全性，而比特币和以太坊舍弃了可扩展性。因此，以太坊就不得不消耗大量用于相互验证的算力和能源。</p>
-</li>
-<li><p>区块链可扩展性的提升大致可以分为以下三种：Layer 0（L0跨链交互），Layer 1（L1链上扩容，对主链本身进行改造），Layer 2（L2链下扩容，将主链上部分工作转移至主链以外）。</p>
-</li>
-<li><p>对于以太坊来说，直接对公链本身进行改造对已有的用户等利益相关方影响较大，因此以太坊社区主要关注的是L2，而对于链上扩容方案则采取缓慢过渡的模式。而对于后发的新公链来说，探索直接建立更高可扩展性的公链模型，成为首选。</p>
-</li>
-<li><p>L2，主要是指在主链之外建立一个二层的交易处理平台，负责具体交易的处理。主链只负责存取结算及验证链下上传信息的有效性。L2的扩容方式主要有状态通道(State Channels)、等离子体(Plasma)和卷叠(Rollup)三种方式。</p>
-</li>
-<li><p>随着区块链的发展，在目前，已经进入了一个多链并存的市场架构，并逐渐形成了以以太坊为核心，其他公链众星拱月的局面。从2021年4月开始，以太坊的跨链活动急剧增加。</p>
-</li>
-<li><p>跨链桥是一种链与链连接的桥梁工具，允许将加密资产从一条链转移到另一条链。两条链可以有不同的协议、规则和治理模型，而桥提供了一种相互通信和兼容的方式来安全地在双方进行互操作。用户可以使用跨链桥，快速轻松地实现加密资产交易。</p>
-</li>
-</ul>
-<h2 id="元宇宙"><a href="#元宇宙" class="headerlink" title="元宇宙"></a>元宇宙</h2><ul>
-<li><p>Web 3.0、区块链、元宇宙这三个概念经常交织出现，让人们产生了一定的疑惑。<br>这三个概念中，区块链是最早出现的。2008年区块链正式诞生，它的出现比现在公认出现于2005年的Web 2.0没有晚太多。区块链是为了解决中心化服务器存在的问题而诞生的。</p>
-</li>
-<li><p>Web 2.0这十多年的发展一直沿用的是将用户抓过来、养肥了、再割韭菜的AARRR（Acquisition获客，Activation激活，Retention留存，Referral转推荐，Revenue变现）互联网平台运营模式。在这种模式下，用户就像是动物一样，从始至终都是以S-R（Stimulus刺激，React反应）的行为模式被对待。用户是平台的资产，而不是平台的主人。因此，Web 2.0的用户被称为流量。</p>
-</li>
-<li><p>区块链的到来为Web 2.0带来了新的生机，将Web 2.0升级成为Web 3.0。<br>对Web 2.0时代的企业而言，IPO是最终归宿，在IPO那荣光时刻来临之际，企业必须已经达到一个非常大的量级，成为行业龙头。所谓盈亏同源，Web 2.0的企业盈利与用户无关，IPO或中途并购、退出都是VC的战场，亏损当然也与用户无关。</p>
-</li>
-<li><p>Web 2.0企业的模式是管理团队做，用户用。Web 3.0时代的企业替代物——DAO的所有者是社区，社区成员的每一个人都是DAO的既得利益者。由于Web 3.0的IEO(Initial Exchange Offering)门槛比IPO低，不需要中心化审核，IEO在真正意义上完成了IPO最初想要达成的任务——获取更大的流动性。之所以叫作Initial Exchange Offering而非Initial Public Offering，是因为Web 3.0社区的通证在没有上交易所之前，就是公开的、去中心化的、通常也有广泛的持有人基础，而且也是可以通过区块链交易的。</p>
-</li>
-<li><p>Web 3.0概念的进化线索是从用户与互联网之间的关系去归纳的，从Web 1.0单向接受互联网，到Web 2.0可以与互联网交互读写，再到Web 3.0可以拥有互联网。</p>
-</li>
-<li><p>真正的元宇宙远不只是体验的升级。元宇宙是一个宏大的概念，要构建这样一个数字世界，只提升体验是不够的。如果只是将VR&#x2F;AR设备装在头上，这样的元宇宙不过是个大型游戏，还远不能成为“宇宙”。从深层次出发，用“有关联”来描述Web 3.0和元宇宙之间的关系，显然还不够，它们之间是相辅相成的。从技术角度来看，元宇宙是前端、展示层，Web 3.0是中后端、技术层，只有技术条件满足Web 3.0所需的去中心化的数据库，即分布式数据库，以及配套的加密技术和协议，才有可能实现元宇宙这样宏大的设想。</p>
-</li>
-<li><p>NFT——NFT可以将现实世界与元宇宙的每一个物品一一对应。</p>
-</li>
-<li><p>DAO——元宇宙既是一场技术革命，也是一场社会革命，而DAO作为社区的操作系统，将是元宇宙的关键。DAO提供了一个技术层，提供个人之间的全球性和去中心化的协作，而无须信任第三方或少数代表。</p>
-</li>
-<li><p>之所以字节跳动等大厂和互联网知名人士都认为元宇宙是一个超前的概念，主要是因为其本身就建立在多重计算机技术与网络服务之上，是一套极其复杂的生态技术系统，在短时间内并不可能实现，而目前最接近元宇宙的则是Web 3.0。</p>
-</li>
-<li><p>区块链是支撑Web 3.0发展的底层技术，而Web 3.0的去中心化和确权特性是元宇宙的基础建设。Web 3.0的实现必然早于真正元宇宙的实现，这是元宇宙之所以能成为宇宙的前提条件。</p>
-</li>
-</ul>
-<h2 id="DApps"><a href="#DApps" class="headerlink" title="DApps"></a>DApps</h2><ul>
-<li><p>DApps是建立在区块链上的应用，全称Decentralized Applications。区块链有五层架构（也有一种划分方式，将协议层从应用层中独立出来，分为六层架构），DApps属于其中的最上层——应用层</p>
-</li>
-<li><p>Web 3.0是构建在区块链上的数字世界，而DApps就是用来构建这个世界中我们看得见摸得着的那部分的“砖瓦”。</p>
-</li>
-<li><p>要成为去中心化应用，需要满足以下标准：</p>
-<ul>
-<li>(1)必须完全开源，自动运行，且没有一个实体控制着它的大多数通证。它的数据和记录必须加密后存储在一个公链上。</li>
-<li>(2)必须依据一个标准化算法或一系列准则来生产通证，并且应该在开始运营的时候就将它的部分或全部通证发放给使用者。这个应用必须依赖该通证来运行，而且使用者所作出的贡献应该以该通证作为奖励。</li>
-<li>(3)可以因时制宜地更改它的运行法则，但是这些改变应该被大多数用户所认可，而不是将最终解释权归于某个实体。</li>
-</ul>
-</li>
-<li><p>区块链的基础架构可以分为五层，包括硬件层，数据层、网络层、共识层、应用层（有些说法还会从应用层中拆分出协议层）。    </p>
-</li>
-<li><p>DApps大多数属于应用层。作为一类相对特殊的DApps，基础设施类DApps的作用是为DApps世界与其他四层的交互建立连接。因此基础设施类的DApps通常以“协议”的形式存在</p>
-</li>
-<li><p>◆ 区块链是由一个点对点(Peer-to-Peer)的计算机网络共同进行运算，验证和记录交易的。硬件层(Hardware Layer)就是这些计算机。<br>● 数据层(Data Layer)我们可以理解成数据库，主要可实现两大功能：数据存储、账户和交易的安全。<br>● 网络层(Network Layer)实现三大功能：节点间组网，数据传播，数据验证。<br>● 共识层(Consensus Layer)主要通过共识算法和共识机制实现一个重要功能：节点间的计算达成共识。由于区块链是分布式网络，每个节点均可计算，所以需要共识层做个统筹，让所有节点针对区块数据的有效性达成共识。<br>● 应用层(Application Layer)是最上面一层，有些说法还会在其中将协议层(Protocol Layer)单独分为一层。原因是DApps有“胖协议，瘦应用”的说法。这是相对于Web 2.0 Apps的“瘦协议，胖应用”提出的。所谓“胖协议”，举个例子，在Web 2.0中，数据的安全依靠数据安全公司、杀毒软件、防火墙等应用实现，协议层只负责数据传输；而在Web 3.0中，传输协议本身就保障了数据安全，因此各种数据安全应用、杀毒软件、防火墙应用没有了独立存在的空间。智能合约就是这样的一种协议。</p>
-</li>
-<li><p>交易所<br>针对加密资产的交易所既有中心化的也有去中心化的。中心化交易所目前依然占据着绝对的市场地位，因为他们发展较早，对从Web 2.0过渡进入Web 3.0的用户而言使用体验也比较好。在交易所中交易的加密资产主要为加密货币和NFT。去中心化加密货币交易所我们放在第六章详细介绍，NFT交易所我们放在第七章详细介绍。</p>
-</li>
-</ul>
-<h2 id="DAO"><a href="#DAO" class="headerlink" title="DAO"></a>DAO</h2><ul>
-<li><p>DAO是一种共同管理加密资产以达成共同目标的组织方式。我们可以将DAO视作由成员集体所有和共同管理的Web 3.0版本的新型企业。</p>
-</li>
-<li><p>DAO的实现基于智能合约。因此，在某些语境下，DAO也可以指代支撑DAO运行的智能合约本身。合约界定了组织的规则，管理组织的资金。以太坊是第一个使人们能够建立DAO的区块链。大多数DAO都在以太坊上，但也有其他网络能建立DAO，如Polkadot、Cosmos、EOS和Cardano。</p>
-</li>
-<li><p>DID和传统ID的差异在于，DID基于区块链，而链上数据是公开透明可查并难以篡改的。因此当你在Web 3.0亮出DID，人们并不需要借助某个权威机构，就可以核验这个DID的真伪以及能否准入。</p>
-</li>
-<li><p>Uniswap是一个以协议形式存在的去中心化交易所，而它的治理是以DAO的形式运作的。</p>
-</li>
-<li><p>教你建立一个DAO<br>了解了这么多关于DAO的概念，是不是也想自己动动手？参与或自己建立一个DAO是亲身体验Web 3.0的门槛最低的方式。建立一个DAO几乎和建立一个微信群一样简单。这一节笔者将借助一个名为Aragon的工具，手把手教读者建立一个DAO。<br>第一步：打开<a target="_blank" rel="noopener" href="https://aragon.org/">https://aragon.org/</a></p>
-</li>
-</ul>
-<h2 id="DeFi"><a href="#DeFi" class="headerlink" title="DeFi"></a>DeFi</h2><ul>
-<li>DeFi，全称Decentralized Finance，去中心化金融。</li>
-<li>去中心化交易所是一类基于区块链的交易所，它不需要将用户资金和个人数据转入交易所内，而只是作为一种基础设施来匹配希望买卖加密资产的买家和卖家。在匹配引擎的帮助下，这种交易直接发生在参与者之间。<br>中心化交易所(CEX)，是集传统交易所、券商和投资银行的功能为一体的平台，以币安、Coinbase、FTX交易所为代表，CEX聚集了庞大的用户量和交易量，也带来了足够的交易深度，提供了充分的资产流动性。</li>
-<li>交易所的核心环节一般包括充提、下单、订单撮合、资金结算和提现。CEX均由交易平台本身撮合完成；DEX则是把上述所有环节都置于链上，由智能合约执行全部操作，这样用户的交易过程就无须任何第三方。</li>
-</ul>
-<h2 id="NFT"><a href="#NFT" class="headerlink" title="NFT"></a>NFT</h2><ul>
-<li><p>现实世界与数字世界的差异在于，现实世界不存在完全相同的两个物品，即使是同一个工厂同一批次的商品也会有可能出现不同。而数字世界则可以完全复制同一物品。</p>
-</li>
-<li><p>我们如果要实现元宇宙的最终目标，就需要把现实世界物品的这个特点也搬到数字世界里。区块链能帮我们做到这一点，这就是非同质化通证(Non-Fungible Token, NFT)。</p>
-</li>
-<li><p>同质化通证(Fungible Token, FT)和非同质化通证之间的区别</p>
-</li>
-<li><p>BTC、ETH等加密资产多数是同质化通证。顾名思义，同质化通证是可以与同一事物的另一个单位互换的。例如，一单位BTC等于另一单位BTC，就像一张100美元的价值等于另一张100美元。美元可以进行简单互换，即使序号不同也不影响，对持有者来说没有区别。同质化通证是一种能够互换、具有统一性的通证。而且由于它以数字的形式存在，还可以拆分成近乎无穷小的许多份，每一份也都可以代表相应的价值。<br>与同质化物品不同，非同质化物品或通证彼此之间是不能互换的，它们具有独特的属性。即使看起来相似，但彼此之间也有根本的不同。<br>非同质化通证包含了记录在其智能合约中的识别信息。这些信息使每个通证具有唯一性，因此不能被另一种通证直接替代，没有两个NFT是相同的。此外，绝大多数非同质化通证也不可分割。</p>
-</li>
-<li><p>每个NFT都有区别于其他NFT的数字哈希值。因此，NFT可以作为出处证明。就像现实世界中的证书一样，它不仅能证明原创艺术品和游戏通证等知识产权的所有权和真实性，还能代表股票、房地产等实际资产。现实世界中，真实资产拥有所有权证书。同样，在区块链世界中，NFT也可以作为所有权记录和真实性证明。在艺术品领域，NFT也被称为数字藏品。</p>
-</li>
-<li><p>NFT不仅存在于数字世界，它们也可以代表任何类型的物理资产。NFT可以与物理世界中存在的任何东西相连接，形成一种“数字孪生”，并在数字世界的市场上实现实物资产的所有权交易。</p>
-</li>
-<li><p>NFT目前最为人推崇的应用场景是创作者经济。</p>
-</li>
-<li><p>NFT的3种存储方式是区块链存储、IPFS分布式存储节点存储、中心化服务器存储，安全性依次降低。安全性越高则越符合不可篡改的特性，也越有独特性。</p>
-</li>
-<li><p>万物皆可NFT。这里的NFT指的不仅是艺术品。这个理念不是说万物都可以成为艺术收藏品，而是有着更远大的目标。我们可以将世间万物以数字孪生的方式在数字世界重建一遍。所有的一切都可能以NFT的形式存在，也可以以NFT的产生方式创造出来。</p>
-</li>
-</ul>
-<h2 id="通证经济学"><a href="#通证经济学" class="headerlink" title="通证经济学"></a>通证经济学</h2><ul>
-<li>通证是Web 3.0的核心，身份是通证，NFT是通证，交易媒介也是通证。通证是激励用户参与的奖励，是驱动Web 3.0运行的燃油，也是连接Web 3.0世界各个岛屿的桥梁。通证的发放、分配与流通使用机制是一个Web 3.0项目能否成功的关键因素。</li>
-<li>通证经济（Token Economics，也称Tokenomics）。就像一个普通的经济体系，通证经济逃不过供给和需求的掌控，供不应求则价格上涨，供过于求则价格下跌。</li>
-</ul>
-<h2 id="Web-3-0现存的问题"><a href="#Web-3-0现存的问题" class="headerlink" title="Web 3.0现存的问题"></a>Web 3.0现存的问题</h2><ul>
-<li><p>在失去中心化监管的环境下，加密与匿名也暴露了许多问题。通过加密匿名算法获取的财富，也会被加密匿名地剥夺</p>
-</li>
-<li><p>人类的共识是一个很有意思的东西，它可以如磐石般固执，也可以如鲁珀特之泪的尾巴一样脆弱。当形成共识的那个关键点破灭，建立在共识之上的摩天大楼，就会瞬间崩塌。</p>
-</li>
-<li><p>创作者经济还是炒作者经济</p>
-</li>
-<li><p>Web 3.0的底层是去中心化网络，数据存储和运算是由各个分散的节点完成。那么很自然的，不考虑中心化作业情况下的网络其他参与者在不能达成一致而导致扯皮的情况，对于同样一件事情的处理，协同作业的速度就是比中心化作业要慢、效率更低、消耗能源更多。</p>
-</li>
-<li><p>比特币交易为了替换掉中心化权威而采用了耗能极大的工作证明，让人们消费了能源计算出一个不产生任何价值的问题，这是对权威不信任的代价。具体而言，每一笔比特币交易要消耗2188千瓦时的电量，而Visa是每10万笔交易消耗148千瓦时电量，这代价就是效率下降150万倍。以太坊的耗电量是比特币的1&#x2F;10，相对Visa也有15万倍的差距。Web 3.0的底层架构要想达到Web 2.0的用户体验，只有两条路可以走，其一是降低运算的耗能，其二是调整共识机制。</p>
-</li>
-<li><p>互联网不是法外之地，Web 3.0也不是。网络无国界，但法律是有国界的。目前各国针对Web 3.0的监管法规还在逐步出台中，而Web 3.0未来的发展必然是需要在各国的法律框架下运行的。</p>
-</li>
-<li><p>在Web 2.0时代，监管主体是服务提供商，监管属地是服务器所在地。而在Web 3.0时代，服务代码存放在网络的各个服务器上，也没有一个具体的服务提供商。Web 3.0的互联网活动趋于分布式，这给监管主体和监管属地的确定带来了一定的挑战。<br>另外，由于Web 3.0应用和钱包的匿名性和去中心化，一旦资产丢失，将无法找回。</p>
-</li>
-<li><p>Web 3.0项目的代码一经上线，即无法改动。这就使得在上线前对于代码的审计显得尤为重要。但凡是代码，或多或少都是有漏洞的。上线无法改动的代码犹如一辆在公路上狂奔而没有方向盘的汽车，行驶越久危险系数越高。</p>
-</li>
-<li><p>政府监管和主导从来都是一柄双刃剑，会对技术发展和应用创新造成一定阻碍，但从稳定社会经济、维护金融秩序角度看，合规是一个新兴市场的生存基础。</p>
-</li>
-<li><p>Web 3.0已经被赋予了太多神秘色彩，人们对它寄予了太多不切实际的希望。而只有当我们意识到，区块链发明者的“去中心化”理想主义，注定会被纷至沓来的投机者瓦解得支离破碎的时候，我们才可以平心静气地接受一个基于现实主义的Web 3.0的未来——在一个由核心节点掌握的“中心化”区块链网络上，用“去中心化”的分布式账本和加密散列，保障不同的经济主体之间的数字产权和商业价值不受侵犯，并形成它们互相的契约关系——这也理应是我国的政府、企业和社会组织在Web 3.0浪潮中扮演的角色。！！！！</p>
-</li>
-<li><p>腾讯、阿里巴巴（蚂蚁集团）、百度和京东等都构建了自己的联盟链，从内容版权、股权、保险、债券、供应链金融、税务、司法、商品防伪溯源、物流运输和生态保护等方面提供了“上链”服务。BSN与长安链等国有企业、智库和政府机构成立的联盟链也陆续建立，除了用于商业和政务场景，还致力解决区块链底层公用基础设施和知识产权的自主可控问题。</p>
-</li>
-</ul>
-<h2 id="名词"><a href="#名词" class="headerlink" title="名词"></a>名词</h2><ul>
-<li>DApps（Decentralized Applications，去中心化应用程序）</li>
-</ul>
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
-<li>《Web3.0漫游指南》</li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2724,7 +2710,7 @@ Chatbot:"""
 <a href="/archives/">                
 <!--<a href="/archives/%7C%7C%20archive">-->
               
-                  <span class="site-state-item-count">178</span>
+                  <span class="site-state-item-count">180</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2737,7 +2723,7 @@ Chatbot:"""
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">219</span>
+                  <span class="site-state-item-count">221</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

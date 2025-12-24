@@ -3,6 +3,7 @@ title: Python 运行内幕-深度解析底层执行机制与现代 Web 架构
 date: 2025-12-23 13:50:20
 tags: [Python, Python 运行原理, FastAPI, uvicorn]
 ---
+>> 以下内容有ChatGPT和Claude.ai辅助生成
 
 > 本文系统阐述 Python 的运行原理，从底层执行机制到高性能 Web 架构，重点关注"为什么"而非"怎么做"。
 

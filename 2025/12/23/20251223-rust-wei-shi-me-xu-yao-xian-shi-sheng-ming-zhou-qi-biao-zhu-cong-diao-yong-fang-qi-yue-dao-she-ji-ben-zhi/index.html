@@ -83,15 +83,15 @@
 
 
 
-<meta name="description" content="在学习 Rust 生命周期（lifetime）时，一个常见且合理的疑问是：  编译器既然能在生命周期标注错误时发现问题，为什么不能直接自动推导出正确的生命周期声明？  如果仅从”语法规则”或”编译器能力”层面回答这个问题，很容易得出”Rust 设计复杂””生命周期是人为负担”这样的结论。但这实际上是从结果反推原因，忽略了生命周期系统真正要解决的问题。 要理解 Rust 的选择，必须回到函数签名的角">
+<meta name="description" content="以下内容有ChatGPT和Claude.ai辅助生成   在学习 Rust 生命周期（lifetime）时，一个常见且合理的疑问是：  编译器既然能在生命周期标注错误时发现问题，为什么不能直接自动推导出正确的生命周期声明？  如果仅从”语法规则”或”编译器能力”层面回答这个问题，很容易得出”Rust 设计复杂””生命周期是人为负担”这样的结论。但这实际上是从结果反推原因，忽略了生命周期系统真正">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Rust 为什么需要显式生命周期标注：从调用方契约到设计本质">
 <meta property="og:url" content="https://kingson4wu.github.io/2025/12/23/20251223-rust-wei-shi-me-xu-yao-xian-shi-sheng-ming-zhou-qi-biao-zhu-cong-diao-yong-fang-qi-yue-dao-she-ji-ben-zhi/index.html">
 <meta property="og:site_name" content="拉巴力的纸皮箱">
-<meta property="og:description" content="在学习 Rust 生命周期（lifetime）时，一个常见且合理的疑问是：  编译器既然能在生命周期标注错误时发现问题，为什么不能直接自动推导出正确的生命周期声明？  如果仅从”语法规则”或”编译器能力”层面回答这个问题，很容易得出”Rust 设计复杂””生命周期是人为负担”这样的结论。但这实际上是从结果反推原因，忽略了生命周期系统真正要解决的问题。 要理解 Rust 的选择，必须回到函数签名的角">
+<meta property="og:description" content="以下内容有ChatGPT和Claude.ai辅助生成   在学习 Rust 生命周期（lifetime）时，一个常见且合理的疑问是：  编译器既然能在生命周期标注错误时发现问题，为什么不能直接自动推导出正确的生命周期声明？  如果仅从”语法规则”或”编译器能力”层面回答这个问题，很容易得出”Rust 设计复杂””生命周期是人为负担”这样的结论。但这实际上是从结果反推原因，忽略了生命周期系统真正">
 <meta property="og:locale">
 <meta property="article:published_time" content="2025-12-23T03:23:02.000Z">
-<meta property="article:modified_time" content="2025-12-23T03:25:17.577Z">
+<meta property="article:modified_time" content="2025-12-24T08:13:02.984Z">
 <meta property="article:author" content="Kingson Wu">
 <meta property="article:tag" content="Rust">
 <meta property="article:tag" content="Lifetime">
@@ -369,7 +369,12 @@
       
 
       
-        <p>在学习 Rust 生命周期（lifetime）时，一个常见且合理的疑问是：</p>
+        <blockquote>
+<blockquote>
+<p>以下内容有ChatGPT和Claude.ai辅助生成</p>
+</blockquote>
+</blockquote>
+<p>在学习 Rust 生命周期（lifetime）时，一个常见且合理的疑问是：</p>
 <blockquote>
 <p>编译器既然能在生命周期标注错误时发现问题，<br>为什么不能直接自动推导出正确的生命周期声明？</p>
 </blockquote>
@@ -650,7 +655,7 @@
 <a href="/archives/">                
 <!--<a href="/archives/%7C%7C%20archive">-->
               
-                  <span class="site-state-item-count">180</span>
+                  <span class="site-state-item-count">181</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -663,7 +668,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">224</span>
+                  <span class="site-state-item-count">225</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

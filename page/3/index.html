@@ -299,6 +299,231 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://kingson4wu.github.io/2025/08/17/20250817-shen-ru-li-jie-socks5-zheng-xiang-dai-li-yuan-li/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2025/08/17/20250817-shen-ru-li-jie-socks5-zheng-xiang-dai-li-yuan-li/" itemprop="url">深入理解 SOCKS5 正向代理原理</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2025-08-17T12:54:40+08:00">
+                2025-08-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<blockquote>
+<p>以下内容由AI生成，本人审阅</p>
+</blockquote>
+</blockquote>
+<p>在网络代理领域，<strong>SOCKS5</strong> 是一种常用的正向代理协议。它不同于传统的 HTTP 代理，能够为各种应用层协议提供通用的转发支持。本文将从概念、协议机制、工作流程和应用场景几个层次，系统梳理 SOCKS5 的技术原理。</p>
+<hr>
+<h2 id="1-正向代理的基本概念"><a href="#1-正向代理的基本概念" class="headerlink" title="1. 正向代理的基本概念"></a>1. 正向代理的基本概念</h2><p><strong>正向代理</strong>是指客户端主动使用代理服务器，把请求先发给代理，再由代理去访问目标服务器，并把结果返回客户端。</p>
+<p><strong>主要作用</strong>：</p>
+<ul>
+<li>隐藏客户端真实 IP</li>
+<li>绕过访问限制（如内网封锁、跨境访问）</li>
+<li>统一出口流量，便于管理和审计</li>
+</ul>
+<hr>
+<h2 id="2-SOCKS-协议简介"><a href="#2-SOCKS-协议简介" class="headerlink" title="2. SOCKS 协议简介"></a>2. SOCKS 协议简介</h2><p><strong>SOCKS (Socket Secure)</strong> 是一种通用的代理协议，不依赖特定的应用层协议。</p>
+<ul>
+<li><p><strong>SOCKS5</strong> 是该协议的第 5 版，支持更多功能：</p>
+<ul>
+<li>TCP 与 UDP 转发</li>
+<li>用户认证（无认证、用户名&#x2F;密码等）</li>
+<li>IPv4 &#x2F; IPv6 &#x2F; 域名解析</li>
+</ul>
+</li>
+</ul>
+<p>👉 与 HTTP 代理相比，SOCKS5 并不解析上层应用协议，只做数据字节的透明转发，因此适用范围更广。</p>
+<hr>
+<h2 id="3-SOCKS5-的工作流程"><a href="#3-SOCKS5-的工作流程" class="headerlink" title="3. SOCKS5 的工作流程"></a>3. SOCKS5 的工作流程</h2><p>假设客户端配置了一个 SOCKS5 代理，整个交互过程如下：</p>
+<h3 id="1）客户端与代理握手"><a href="#1）客户端与代理握手" class="headerlink" title="1）客户端与代理握手"></a>1）客户端与代理握手</h3><ul>
+<li>客户端告知代理：“我支持哪些认证方式（无认证 &#x2F; 用户名密码 &#x2F; …）”</li>
+<li>代理回应：“我要求用某种认证方式”</li>
+<li>若需认证，客户端提交凭证，通过后进入下一阶段</li>
+</ul>
+<h3 id="2）客户端请求目标地址"><a href="#2）客户端请求目标地址" class="headerlink" title="2）客户端请求目标地址"></a>2）客户端请求目标地址</h3><ul>
+<li>客户端通过代理的 TCP 连接，发送目标地址和端口，例如：<code>example.com:80</code></li>
+<li>代理尝试与目标服务器建立连接</li>
+</ul>
+<h3 id="3）代理回应结果"><a href="#3）代理回应结果" class="headerlink" title="3）代理回应结果"></a>3）代理回应结果</h3><ul>
+<li>连接成功：返回成功报文，允许数据传输</li>
+<li>连接失败：返回错误码（如目标不可达、连接被拒绝等）</li>
+</ul>
+<h3 id="4）数据转发"><a href="#4）数据转发" class="headerlink" title="4）数据转发"></a>4）数据转发</h3><ul>
+<li>客户端与目标服务器的所有数据均通过代理中转</li>
+<li>代理只做字节转发，不理解应用层协议内容</li>
+<li>这使得 SOCKS5 成为一种非常通用的代理机制</li>
+</ul>
+<hr>
+<h2 id="4-TCP-与-UDP-的支持"><a href="#4-TCP-与-UDP-的支持" class="headerlink" title="4. TCP 与 UDP 的支持"></a>4. TCP 与 UDP 的支持</h2><p>SOCKS5 协议既能代理 <strong>TCP</strong>，也能代理 <strong>UDP</strong>：</p>
+<ul>
+<li><p><strong>TCP CONNECT</strong></p>
+<ul>
+<li>客户端请求代理建立到目标服务器的 TCP 连接</li>
+<li>数据传输过程中，代理双向转发 TCP 流量</li>
+<li>应用场景：网页浏览、SSH、邮件收发等</li>
+</ul>
+</li>
+<li><p><strong>UDP ASSOCIATE</strong></p>
+<ul>
+<li>客户端先通过 TCP 控制通道告诉代理要进行 UDP 转发</li>
+<li>代理返回一个专用的 UDP 端口</li>
+<li>客户端将 UDP 数据包（带 SOCKS5 UDP 头）发送到该端口，代理再转发到目标服务器</li>
+<li>应用场景：DNS 查询、在线游戏、视频流</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="5-TCP-与-UDP-的关系"><a href="#5-TCP-与-UDP-的关系" class="headerlink" title="5. TCP 与 UDP 的关系"></a>5. TCP 与 UDP 的关系</h2><p>需要特别注意：</p>
+<ol>
+<li><p><strong>控制信道：必然是 TCP</strong></p>
+<ul>
+<li>无论最终转发 TCP 还是 UDP，客户端和代理之间都要先建立一条 TCP 连接</li>
+<li>握手、认证、UDP 转发上下文都依赖该 TCP 控制信道</li>
+</ul>
+</li>
+<li><p><strong>数据通道：因请求而异</strong></p>
+<ul>
+<li><strong>CONNECT 命令</strong> → 代理 TCP 流量</li>
+<li><strong>UDP ASSOCIATE 命令</strong> → 代理 UDP 数据包</li>
+</ul>
+</li>
+</ol>
+<p>👉 简单比喻：</p>
+<ul>
+<li>TCP 就像一条“电话线”，你先打电话告诉代理你要去哪</li>
+<li>如果是 TCP 业务，代理帮你中继对话</li>
+<li>如果是 UDP 业务，代理给你一个“邮局地址”，你把信件（UDP 包）寄过去，它帮你转发</li>
+</ul>
+<hr>
+<h2 id="6-为什么-SOCKS5-常用"><a href="#6-为什么-SOCKS5-常用" class="headerlink" title="6. 为什么 SOCKS5 常用"></a>6. 为什么 SOCKS5 常用</h2><p>SOCKS5 在现代网络应用中被广泛使用，原因在于：</p>
+<ul>
+<li><strong>协议层次低</strong>：位于 TCP&#x2F;UDP 之上，应用层之下，对上层协议透明</li>
+<li><strong>适用性广</strong>：能代理任意应用层协议，不仅限于 HTTP</li>
+<li><strong>支持 UDP 转发</strong>：满足实时性要求高的业务场景</li>
+<li><strong>支持身份认证与 IPv6</strong>：更安全，适应新网络环境</li>
+<li><strong>比 HTTP 代理更灵活</strong>：不做解析，只做转发</li>
+</ul>
+<hr>
+<h2 id="7-总结"><a href="#7-总结" class="headerlink" title="7. 总结"></a>7. 总结</h2><p>一句话概括：<br><strong>SOCKS5 正向代理的原理是——客户端和代理建立 TCP 会话，告诉代理要访问的目标地址，代理再代表客户端发起连接，并负责转发所有 TCP&#x2F;UDP 数据。代理本身不理解应用层协议，只是透明转发。</strong></p>
+<hr>
+<p>⚡关键点回顾：</p>
+<ul>
+<li>SOCKS5 协议本身基于 TCP</li>
+<li>可代理 TCP 与 UDP 流量</li>
+<li>UDP 转发依赖 TCP 控制信道维持会话</li>
+<li>对应用层协议透明，通用性极强</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://kingson4wu.github.io/2025/08/17/20250817-shen-ru-li-jie-zheng-xiang-dai-li-yu-fan-xiang-dai-li-http-bao-wen-yu-tcp-lian-jie-de-qu-bie/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -3488,304 +3713,11 @@ AI这个名字其实并不准确
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://kingson4wu.github.io/2025/02/25/20250225-guan-yu-da-mo-xing-de-prompt/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2025/02/25/20250225-guan-yu-da-mo-xing-de-prompt/" itemprop="url">关于大模型的Prompt</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2025-02-25T21:48:37+08:00">
-                2025-02-25
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote>
-<blockquote>
-<p>网上资料摘要<br>一些个人理解</p>
-</blockquote>
-</blockquote>
-<h1 id="大模型交互的核心：提示词工程"><a href="#大模型交互的核心：提示词工程" class="headerlink" title="大模型交互的核心：提示词工程"></a>大模型交互的核心：提示词工程</h1><blockquote>
-<blockquote>
-<p>以下基于个人理解，并通过claude优化（2025-02-26）</p>
-</blockquote>
-</blockquote>
-<ul>
-<li>提示词（Prompt）是大模型的输入，也是调用大模型能力的接口，用以激发或引导大模型生成特定类型的回答。</li>
-<li>提示词工程的目的是尽量把任务说清楚，让大模型能充分理解我们的意图，以按照正确的方向回答问题。  </li>
-<li>在不微调大模型的情况下，外部与大模型交互的唯一途径就是提示工程。即便是已经微调过的大模型，后续与其沟通的唯一途径仍是通过提供提示词，尽管微调可能改变模型对提示词的响应方式。</li>
-<li>所谓的RAG、短期记忆（对话历史）、长期记忆等功能，都是基于提示工程这一与大模型交互的路径作为切入点，建立的其他优化策略和架构。</li>
-</ul>
-<h1 id="ICIO框架（Prompt包含的要素）"><a href="#ICIO框架（Prompt包含的要素）" class="headerlink" title="ICIO框架（Prompt包含的要素）"></a>ICIO框架（Prompt包含的要素）</h1><ul>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/xYC6saH3PU6nJc9mzV5alw">从原理出发 - 提示词如何影响大模型的输出</a></li>
-<li>核心思想，是通过明确定义任务的各个方面，来提高AI响应时的效率和准确性。</li>
-<li>在ICIO的框架的设计中，Prompt可能包含四要素：<ul>
-<li>Instruction（指令）：这是最重要的部分，它直接告诉模型需要执行的具体任务。</li>
-<li>Context（上下文&#x2F;背景）：上下文提供了任务执行所需的背景信息，帮助模型理解任务的情景和环境。</li>
-<li>Input Data（输入数据）：输入数据是模型需要处理的具体信息。</li>
-<li>Output Indicator（输出指示器）：输出指示器告诉模型用户期望的输出类型或格式。</li>
-</ul>
-</li>
-<li>其中除了指令以外，其他要素都是可选的，说明指令对于大模型来说是最重要的，其他要素都是对指令的补充。</li>
-<li>优质的Prompt，可以清晰地传达用户的意图</li>
-</ul>
-<h1 id="Prompt五大框架"><a href="#Prompt五大框架" class="headerlink" title="Prompt五大框架"></a>Prompt五大框架</h1><ul>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/u-79q3R0l01oO-7WWUNF2A">大模型Prompt技巧全解析</a>    </li>
-<li>RTF框架 <ul>
-<li>R-Role(角色)、R-Role(角色)、F-Format(格式)</li>
-</ul>
-</li>
-<li>思考链模式 <ul>
-<li>适合一些复杂的任务处理</li>
-<li>要使用这种模式，只需要在末尾添加”让我们逐步思考”即可</li>
-</ul>
-</li>
-<li>RISEN框架<ul>
-<li>R-Role:大模型扮演的角色</li>
-<li>I-Instructions: 指示命令，和Task-任务差不多</li>
-<li>S-Steps: 步骤</li>
-<li>E-End Goal: 最终目标</li>
-<li>N-Narrowing(Constraints): 缩小范围(约束条件)，和RTF框架中的Format有异曲同工之妙</li>
-<li>该框架主要适合<ul>
-<li>撰写具有特定约束的任务(例如博客文章)</li>
-<li>有明确指导方针的任务（例如商业计划）</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>RODES框架<ul>
-<li>R-Role: 角色、O - Objective: 目标、D - Details: 详细的细节、E - Examples: 示例、S - Sense Check: 感官检查</li>
-</ul>
-</li>
-<li>密度链模式<ul>
-<li>使用递归来创建越来越好的输出的提示，与普通提示生成的 GPT-4 摘要相比，它生成的摘要更加密集且更适合人们理解</li>
-<li>适合：总结、改进您最喜欢的提示、通过递归生成可用的长格式内容</li>
-</ul>
-</li>
-</ul>
-<h1 id="打造高效Prompt的两大核心原则"><a href="#打造高效Prompt的两大核心原则" class="headerlink" title="打造高效Prompt的两大核心原则"></a>打造高效Prompt的两大核心原则</h1><ul>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/u-79q3R0l01oO-7WWUNF2A">大模型Prompt技巧全解析</a> </li>
-<li>原则一：编写明确和具体的指令<ul>
-<li>策略1：使用分隔符清晰界定输入部分</li>
-<li>策略2：要求结构化输出</li>
-<li>策略3：要求模型检查条件是否满足</li>
-<li>策略4：Few-shot prompting（少样本提示）</li>
-</ul>
-</li>
-<li>原则二：给予模型充足的思考时间<ul>
-<li>策略1：明确完成任务所需的步骤</li>
-<li>策略2：引导模型在得出结论前充分思考方案</li>
-</ul>
-</li>
-</ul>
-<h1 id="Prompt技术剖析与应用"><a href="#Prompt技术剖析与应用" class="headerlink" title="Prompt技术剖析与应用"></a>Prompt技术剖析与应用</h1><ul>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/u-79q3R0l01oO-7WWUNF2A">大模型Prompt技巧全解析</a> </li>
-<li>一、零样本提示（Zero-Shot Prompting）</li>
-<li>二、少样本提示（Few-Shot Prompting）<ul>
-<li>在零样本提示效果不佳时发挥作用</li>
-</ul>
-</li>
-<li>三、思维链提示（Chain-of-Thought Prompting）<ul>
-<li>与少样本提示结合，增强效果，尤其适用于算术、常识推理等任务，帮助模型更有条理地处理问题</li>
-</ul>
-</li>
-<li>四、自我一致性（Self-Consistency）   <ul>
-<li>主要用于优化思维链提示中的推理路径选择</li>
-<li>核心思想是通过提供多个少样本推理示例，让模型从多样的推理结果中筛选出最一致的答案，增强模型在算术和常识推理任务中的可靠性</li>
-</ul>
-</li>
-<li>五、生成知识提示（Generated Knowledge Prompting）<ul>
-<li>主要用于解决模型在处理需要额外知识的任务时出现的局限性   </li>
-<li>个人理解：一种特殊的RAG罢了</li>
-</ul>
-</li>
-<li>六、链式提示（Prompt Chaining）<ul>
-<li>将复杂任务拆解为多个子任务，通过逐个子任务生成提示并传递结果的方式来实现复杂任务的有序处理</li>
-</ul>
-</li>
-<li>七、思维树（ToT）<ul>
-<li>为了帮助模型应对复杂的探索性任务而设计</li>
-<li>通过维护一棵思维树，让模型在解决问题时能够生成和评估中间思维步骤，并结合搜索算法进行系统性探索</li>
-</ul>
-</li>
-<li>八、检索增强生成（RAG）<ul>
-<li>将信息检索与文本生成相结合，专门用于处理知识密集型任务</li>
-<li>通过检索相关文档来为模型提供额外的知识支持，从而缓解模型的“幻觉”问题</li>
-</ul>
-</li>
-<li>九、自动推理并使用工具（ART）<ul>
-<li>使模型能够自动生成包含推理步骤的程序，并在需要时调用外部工具</li>
-</ul>
-</li>
-<li>十、自动提示工程师（APE）<ul>
-<li>自动生成和筛选任务指令</li>
-<li>利用大型语言模型生成指令候选项，再依据评估分数选择最佳指令，从而提升提示生成的效率与效果</li>
-</ul>
-</li>
-<li>十一、Active-Prompt<ul>
-<li>用于解决思维链示例有效性的问题</li>
-<li>通过先查询模型生成多个答案，计算不确定度后挑选最不确定的问题由人类注释示例，再用新示例推断其他问题，从而优化模型对不同任务的适应性</li>
-</ul>
-</li>
-<li>十二、方向性刺激提示（Directional Stimulus Prompting）<ul>
-<li>通过训练策略 LM 生成引导提示，增强对模型生成结果的掌控力。例如文本摘要任务</li>
-</ul>
-</li>
-<li>十三、PAL（程序辅助语言模型）<ul>
-<li>让模型生成程序来解决问题，借助编程运行时提升解决复杂问题的能力</li>
-</ul>
-</li>
-<li>十四、ReAct 框架<ul>
-<li>ReAct 框架使模型交错生成推理轨迹和操作，提升答案的可靠性与可解释性</li>
-</ul>
-</li>
-<li>十五、自我反思（Reflexion）<ul>
-<li>包含参与者、评估者和自我反思三个模型，旨在帮助模型从错误中学习并提升性能</li>
-</ul>
-</li>
-</ul>
-<h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><ul>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/xYC6saH3PU6nJc9mzV5alw">从原理出发 - 提示词如何影响大模型的输出</a><ul>
-<li>大模型如何理解Prompt<ul>
-<li>基于Transformer的解码器的大模型</li>
-<li>最核心的两层<ul>
-<li>掩码多头自注意力层（Masked Multi Self Attention Layers，对应Transformer的Masked Multi-Head Attention，简称MHA）</li>
-<li>前置反馈网络层（Feed Forward Networks Layers，简称FFN）</li>
-</ul>
-</li>
-<li>Prompt会影响自注意力层对上下文信息的捕捉</li>
-<li>自注意力机制<ul>
-<li>它的核心思想是模仿人类的注意力，即在处理大量信息时，能够聚焦于当前任务最相关的部分，而忽略其他不太重要的信息</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/u-79q3R0l01oO-7WWUNF2A">大模型Prompt技巧全解析</a>            </li>
-<li><a href="https://kingson4wu.github.io/2024/12/26/20241226-llm-xiang-guan-ji-zhu-jian-dan-liao-jie/">LLM相关技术简单了解</a></li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/q2iMW0t5456btmIPS1ba6Q">大型语言模型的提示注入</a><ul>
-<li>三种防范此类漏洞的方法<ul>
-<li>可以在提示中添加指令</li>
-<li>使用对抗性探测器添加第二层保护</li>
-<li>对模型进行微调，使其更符合用户需求，同时提供最高级别的保护，防止提示注入和窃取</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/2/">&lt;</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/18/">18</a><a class="extend next" rel="next" href="/page/4/">&gt;</a>
+    <a class="extend prev" rel="prev" href="/page/2/">&lt;</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/19/">19</a><a class="extend next" rel="next" href="/page/4/">&gt;</a>
   </nav>
 
 
@@ -3838,7 +3770,7 @@ AI这个名字其实并不准确
 <a href="/archives/">                
 <!--<a href="/archives/%7C%7C%20archive">-->
               
-                  <span class="site-state-item-count">180</span>
+                  <span class="site-state-item-count">181</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -3851,7 +3783,7 @@ AI这个名字其实并不准确
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">224</span>
+                  <span class="site-state-item-count">225</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

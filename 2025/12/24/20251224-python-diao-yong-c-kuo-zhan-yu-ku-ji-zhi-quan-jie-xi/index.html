@@ -1,0 +1,1368 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="google-site-verification" content="google-site-verification=n4yVkaTfu2KtQ8fiQ3Ri60FPAbRF74oxrDOkOXWjhSs" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/uploads/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Python,动态库," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="拉巴力的纸皮箱" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="以下内容有ChatGPT和Claude.ai辅助生成   系统梳理 Python C 扩展、动态库、ABI、多语言互操作及第三方库加载机制。  1️⃣ Python C 扩展基础完整示例1234567891011121314151617181920#include &lt;Python.h&gt;static PyObject* py_add(PyObject* self, PyObject*">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python 调用 C 扩展与库机制全解析">
+<meta property="og:url" content="https://kingson4wu.github.io/2025/12/24/20251224-python-diao-yong-c-kuo-zhan-yu-ku-ji-zhi-quan-jie-xi/index.html">
+<meta property="og:site_name" content="拉巴力的纸皮箱">
+<meta property="og:description" content="以下内容有ChatGPT和Claude.ai辅助生成   系统梳理 Python C 扩展、动态库、ABI、多语言互操作及第三方库加载机制。  1️⃣ Python C 扩展基础完整示例1234567891011121314151617181920#include &lt;Python.h&gt;static PyObject* py_add(PyObject* self, PyObject*">
+<meta property="og:locale">
+<meta property="article:published_time" content="2025-12-24T08:08:43.000Z">
+<meta property="article:modified_time" content="2025-12-24T08:13:06.814Z">
+<meta property="article:author" content="Kingson Wu">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="动态库">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://kingson4wu.github.io/2025/12/24/20251224-python-diao-yong-c-kuo-zhan-yu-ku-ji-zhi-quan-jie-xi/"/>
+
+
+
+
+
+  <title>Python 调用 C 扩展与库机制全解析 | 拉巴力的纸皮箱</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'G-4QEGQ2DGGT', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">拉巴力的纸皮箱</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">技术博客 | 记录学习笔记和思考</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://kingson4wu.github.io/2025/12/24/20251224-python-diao-yong-c-kuo-zhan-yu-ku-ji-zhi-quan-jie-xi/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">Python 调用 C 扩展与库机制全解析</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2025-12-24T16:08:43+08:00">
+                2025-12-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<blockquote>
+<p>以下内容有ChatGPT和Claude.ai辅助生成</p>
+</blockquote>
+</blockquote>
+<p>系统梳理 Python C 扩展、动态库、ABI、多语言互操作及第三方库加载机制。</p>
+<hr>
+<h2 id="1️⃣-Python-C-扩展基础"><a href="#1️⃣-Python-C-扩展基础" class="headerlink" title="1️⃣ Python C 扩展基础"></a>1️⃣ Python C 扩展基础</h2><h3 id="完整示例"><a href="#完整示例" class="headerlink" title="完整示例"></a>完整示例</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;Python.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">static</span> PyObject* <span class="title function_">py_add</span><span class="params">(PyObject* self, PyObject* args)</span> &#123;</span><br><span class="line">    <span class="type">int</span> a, b;</span><br><span class="line">    <span class="keyword">if</span> (!PyArg_ParseTuple(args, <span class="string">&quot;ii&quot;</span>, &amp;a, &amp;b)) <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">    <span class="keyword">return</span> PyLong_FromLong(a + b);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">static</span> PyMethodDef methods[] = &#123;</span><br><span class="line">    &#123;<span class="string">&quot;add&quot;</span>, py_add, METH_VARARGS, <span class="string">&quot;Add two integers&quot;</span>&#125;,</span><br><span class="line">    &#123;<span class="literal">NULL</span>, <span class="literal">NULL</span>, <span class="number">0</span>, <span class="literal">NULL</span>&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="type">static</span> <span class="class"><span class="keyword">struct</span> <span class="title">PyModuleDef</span> <span class="title">module</span> =</span> &#123;</span><br><span class="line">    PyModuleDef_HEAD_INIT, <span class="string">&quot;my_module&quot;</span>, <span class="literal">NULL</span>, <span class="number">-1</span>, methods</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">PyMODINIT_FUNC <span class="title function_">PyInit_my_module</span><span class="params">(<span class="type">void</span>)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> PyModule_Create(&amp;module);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>编译（setup.py）：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> setuptools <span class="keyword">import</span> setup, Extension</span><br><span class="line">setup(ext_modules=[Extension(<span class="string">&#x27;my_module&#x27;</span>, sources=[<span class="string">&#x27;my_module.c&#x27;</span>])])</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python setup.py build_ext --inplace</span><br></pre></td></tr></table></figure>
+
+<p><strong>使用：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> my_module</span><br><span class="line">result = my_module.add(<span class="number">3</span>, <span class="number">5</span>)  <span class="comment"># 返回 8</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="执行原理"><a href="#执行原理" class="headerlink" title="执行原理"></a>执行原理</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">import my_module</span><br><span class="line">    ↓</span><br><span class="line">dlopen() 加载 .so 到进程内存</span><br><span class="line">    ↓</span><br><span class="line">查找并调用 PyInit_my_module</span><br><span class="line">    ↓</span><br><span class="line">注册函数到 sys.modules</span><br><span class="line"></span><br><span class="line">调用 my_module.add(3, 5)</span><br><span class="line">    ↓</span><br><span class="line">PyArg_ParseTuple：Python object → C int</span><br><span class="line">    ↓</span><br><span class="line">C 函数执行（CPU 直接执行机器码）</span><br><span class="line">    ↓</span><br><span class="line">PyLong_FromLong：C int → Python object</span><br><span class="line">    ↓</span><br><span class="line">返回结果</span><br></pre></td></tr></table></figure>
+
+<p><strong>性能特征：</strong></p>
+<ul>
+<li>动态库加载到 Python 进程内存，同进程内执行</li>
+<li>主要开销在类型转换（Python object ↔ C types）</li>
+<li>C 函数本身接近原生性能，无虚拟机开销</li>
+<li>需手动管理 Python 对象引用计数（<code>Py_INCREF</code>&#x2F;<code>Py_DECREF</code>）</li>
+<li>默认持有 GIL，多线程场景需显式释放</li>
+</ul>
+<hr>
+<h2 id="2️⃣-Python-调用-C-的多种方式"><a href="#2️⃣-Python-调用-C-的多种方式" class="headerlink" title="2️⃣ Python 调用 C 的多种方式"></a>2️⃣ Python 调用 C 的多种方式</h2><table>
+<thead>
+<tr>
+<th>方式</th>
+<th>适用场景</th>
+<th>优点</th>
+<th>缺点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>C API</strong></td>
+<td>高性能扩展、底层控制</td>
+<td>性能最优、完全控制</td>
+<td>代码复杂、手动管理引用</td>
+</tr>
+<tr>
+<td><strong>ctypes</strong></td>
+<td>调用现有 C 库</td>
+<td>无需编译、纯 Python</td>
+<td>性能较低、类型不安全</td>
+</tr>
+<tr>
+<td><strong>CFFI</strong></td>
+<td>C 库绑定</td>
+<td>代码简洁、支持 ABI&#x2F;API 模式</td>
+<td>需额外依赖</td>
+</tr>
+<tr>
+<td><strong>Cython</strong></td>
+<td>Python 代码加速</td>
+<td>语法接近 Python、渐进优化</td>
+<td>需编译步骤</td>
+</tr>
+<tr>
+<td><strong>pybind11</strong></td>
+<td>C++ 库绑定</td>
+<td>现代 C++、自动类型转换</td>
+<td>仅支持 C++</td>
+</tr>
+</tbody></table>
+<p><strong>ctypes 示例：</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> ctypes</span><br><span class="line">libc = ctypes.CDLL(<span class="string">&#x27;libc.so.6&#x27;</span>)  <span class="comment"># Linux</span></span><br><span class="line">strlen = libc.strlen</span><br><span class="line">strlen.argtypes = [ctypes.c_char_p]</span><br><span class="line">strlen.restype = ctypes.c_int</span><br><span class="line">result = strlen(<span class="string">b&quot;Hello&quot;</span>)  <span class="comment"># 返回 5</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="3️⃣-动态库-vs-静态库"><a href="#3️⃣-动态库-vs-静态库" class="headerlink" title="3️⃣ 动态库 vs 静态库"></a>3️⃣ 动态库 vs 静态库</h2><table>
+<thead>
+<tr>
+<th>特性</th>
+<th>静态库 (.a&#x2F;.lib)</th>
+<th>动态库 (.so&#x2F;.dll&#x2F;.dylib)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>链接时机</td>
+<td>编译时</td>
+<td>运行时</td>
+</tr>
+<tr>
+<td>包含方式</td>
+<td>代码拷贝进可执行文件</td>
+<td>独立文件</td>
+</tr>
+<tr>
+<td>内存使用</td>
+<td>每进程独立副本</td>
+<td>代码段多进程共享</td>
+</tr>
+<tr>
+<td>更新方式</td>
+<td>需重新编译链接</td>
+<td>直接替换库文件</td>
+</tr>
+<tr>
+<td>Python 使用</td>
+<td>不可直接 import</td>
+<td>可直接 import</td>
+</tr>
+</tbody></table>
+<h3 id="动态库加载流程"><a href="#动态库加载流程" class="headerlink" title="动态库加载流程"></a>动态库加载流程</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">dlopen(&quot;lib.so&quot;)</span><br><span class="line">    ↓</span><br><span class="line">查找库文件（LD_LIBRARY_PATH、/lib、/usr/lib）</span><br><span class="line">    ↓</span><br><span class="line">mmap 映射到内存</span><br><span class="line">  ├─ 代码段：只读、可共享</span><br><span class="line">  ├─ 数据段：可读写、进程独立</span><br><span class="line">  └─ BSS 段：未初始化数据</span><br><span class="line">    ↓</span><br><span class="line">重定位（修正代码中的地址引用）</span><br><span class="line">    ↓</span><br><span class="line">符号绑定（延迟绑定 BIND_LAZY / 立即绑定 BIND_NOW）</span><br><span class="line">    ↓</span><br><span class="line">执行初始化函数（C++: 全局对象构造）</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="4️⃣-ABI（应用二进制接口）"><a href="#4️⃣-ABI（应用二进制接口）" class="headerlink" title="4️⃣ ABI（应用二进制接口）"></a>4️⃣ ABI（应用二进制接口）</h2><h3 id="定义与组成"><a href="#定义与组成" class="headerlink" title="定义与组成"></a>定义与组成</h3><p>ABI 规定二进制层面的调用规范，确保不同编译器&#x2F;语言生成的代码能互操作。</p>
+<p><strong>核心要素：</strong></p>
+<ol>
+<li><strong>调用约定</strong>：参数传递方式（寄存器&#x2F;栈）、返回值、栈清理责任</li>
+<li><strong>数据布局</strong>：类型大小、结构体对齐、字节序</li>
+<li><strong>符号规则</strong>：C 直接导出，C++ 名称修饰（需 <code>extern &quot;C&quot;</code>）</li>
+<li><strong>异常处理</strong>：栈展开机制</li>
+</ol>
+<h3 id="常见调用约定"><a href="#常见调用约定" class="headerlink" title="常见调用约定"></a>常见调用约定</h3><table>
+<thead>
+<tr>
+<th>约定</th>
+<th>参数传递</th>
+<th>清栈</th>
+<th>平台</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>cdecl</td>
+<td>栈（右→左）</td>
+<td>调用者</td>
+<td>Linux&#x2F;Windows C 默认</td>
+</tr>
+<tr>
+<td>System V x64</td>
+<td>寄存器（rdi,rsi,rdx,rcx,r8,r9）</td>
+<td>-</td>
+<td>Linux x64</td>
+</tr>
+<tr>
+<td>MS x64</td>
+<td>寄存器（rcx,rdx,r8,r9）</td>
+<td>-</td>
+<td>Windows x64</td>
+</tr>
+</tbody></table>
+<h3 id="API-vs-ABI"><a href="#API-vs-ABI" class="headerlink" title="API vs ABI"></a>API vs ABI</h3><table>
+<thead>
+<tr>
+<th>维度</th>
+<th>API</th>
+<th>ABI</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>层级</td>
+<td>源码</td>
+<td>二进制&#x2F;机器码</td>
+</tr>
+<tr>
+<td>内容</td>
+<td>函数声明、类型定义</td>
+<td>调用约定、内存布局、寄存器使用</td>
+</tr>
+<tr>
+<td>兼容性</td>
+<td>源码兼容</td>
+<td>二进制兼容</td>
+</tr>
+<tr>
+<td>示例</td>
+<td><code>int add(int, int)</code></td>
+<td>参数通过 rdi, rsi 传递</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="5️⃣-多语言动态库对比"><a href="#5️⃣-多语言动态库对比" class="headerlink" title="5️⃣ 多语言动态库对比"></a>5️⃣ 多语言动态库对比</h2><h3 id="运行时特征"><a href="#运行时特征" class="headerlink" title="运行时特征"></a>运行时特征</h3><table>
+<thead>
+<tr>
+<th>语言</th>
+<th>运行时组成</th>
+<th>库体积</th>
+<th>导出限制</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>C</strong></td>
+<td>无&#x2F;最小 CRT</td>
+<td>最小</td>
+<td>无</td>
+</tr>
+<tr>
+<td><strong>C++</strong></td>
+<td>CRT + libstdc++ + 异常处理 + RTTI</td>
+<td>中等</td>
+<td>需 <code>extern &quot;C&quot;</code></td>
+</tr>
+<tr>
+<td><strong>Rust</strong></td>
+<td>panic 处理 + allocator</td>
+<td>小</td>
+<td>需 <code>#[no_mangle]</code></td>
+</tr>
+<tr>
+<td><strong>Go</strong></td>
+<td>goroutine 调度器 + GC + 内存管理</td>
+<td>大（数 MB）</td>
+<td>仅基本类型和指针</td>
+</tr>
+</tbody></table>
+<h3 id="代码示例"><a href="#代码示例" class="headerlink" title="代码示例"></a>代码示例</h3><p><strong>Rust：</strong></p>
+<figure class="highlight rust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#[no_mangle]</span></span><br><span class="line"><span class="keyword">pub</span> <span class="keyword">extern</span> <span class="string">&quot;C&quot;</span> <span class="keyword">fn</span> <span class="title function_">rust_add</span>(a: <span class="type">i32</span>, b: <span class="type">i32</span>) <span class="punctuation">-&gt;</span> <span class="type">i32</span> &#123; a + b &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cargo build --release --crate-type cdylib</span><br></pre></td></tr></table></figure>
+
+<p><strong>Go：</strong></p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="string">&quot;C&quot;</span></span><br><span class="line"><span class="comment">//export GoAdd</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">GoAdd</span><span class="params">(a, b C.<span class="type">int</span>)</span></span> C.<span class="type">int</span> &#123; <span class="keyword">return</span> a + b &#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go build -buildmode=c-shared -o libgo.so</span><br></pre></td></tr></table></figure>
+
+<p><strong>C++：</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">extern</span> <span class="string">&quot;C&quot;</span> &#123;</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">cpp_add</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b)</span> </span>&#123; <span class="keyword">return</span> a + b; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>适用场景：</strong></p>
+<ul>
+<li>C&#x2F;Rust：轻量高性能库，适合纯计算、数据处理</li>
+<li>C++：复杂系统，需注意不同编译器 ABI 兼容性</li>
+<li>Go：包含完整 runtime，适合独立服务，不适合作为轻量库</li>
+</ul>
+<hr>
+<h2 id="6️⃣-Python-第三方库机制"><a href="#6️⃣-Python-第三方库机制" class="headerlink" title="6️⃣ Python 第三方库机制"></a>6️⃣ Python 第三方库机制</h2><h3 id="安装流程（以-NumPy-为例）"><a href="#安装流程（以-NumPy-为例）" class="headerlink" title="安装流程（以 NumPy 为例）"></a>安装流程（以 NumPy 为例）</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">pip install numpy</span><br><span class="line">    ↓</span><br><span class="line">查询 PyPI，下载 wheel 文件</span><br><span class="line">numpy-1.24.0-cp311-cp311-manylinux_x86_64.whl</span><br><span class="line">  ├─ Python 代码（__init__.py 等）</span><br><span class="line">  └─ 编译好的 C 扩展（.so）</span><br><span class="line">    ↓</span><br><span class="line">解压到 site-packages/numpy/</span><br></pre></td></tr></table></figure>
+
+<h3 id="导入与加载"><a href="#导入与加载" class="headerlink" title="导入与加载"></a>导入与加载</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br></pre></td></tr></table></figure>
+
+<p><strong>执行步骤：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">检查 sys.modules 缓存</span><br><span class="line">    ↓</span><br><span class="line">搜索 sys.path 查找 numpy/</span><br><span class="line">    ↓</span><br><span class="line">执行 __init__.py（导入 C 扩展）</span><br><span class="line">    ↓</span><br><span class="line">dlopen() 加载 _multiarray_umath.so</span><br><span class="line">    ↓</span><br><span class="line">调用 PyInit_* 初始化函数</span><br><span class="line">    ↓</span><br><span class="line">注册到 sys.modules（后续直接从缓存返回）</span><br></pre></td></tr></table></figure>
+
+<h3 id="内存管理"><a href="#内存管理" class="headerlink" title="内存管理"></a>内存管理</h3><ul>
+<li><strong>Python 对象</strong>：由 GC 管理（引用计数 + 循环检测）</li>
+<li><strong>动态库代码段</strong>：常驻内存直到进程退出</li>
+<li><strong>卸载限制</strong>：<code>del sys.modules[&#39;numpy&#39;]</code> 仅删除引用，<code>.so</code> 不会真正卸载</li>
+</ul>
+<hr>
+<h2 id="7️⃣-核心总结"><a href="#7️⃣-核心总结" class="headerlink" title="7️⃣ 核心总结"></a>7️⃣ 核心总结</h2><ol>
+<li><strong>执行机制</strong>：C 扩展是编译后的机器码，在 Python 进程内直接执行</li>
+<li><strong>性能瓶颈</strong>：主要在 Python ↔ C 类型转换，而非函数调用本身</li>
+<li><strong>动态库</strong>：运行时加载、代码段共享、常驻内存直到进程退出</li>
+<li><strong>ABI</strong>：二进制接口规范，确保不同语言&#x2F;编译器的代码能互操作</li>
+<li><strong>多语言库</strong>：Rust 轻量、Go 自带完整 runtime、C++ 需注意 ABI 兼容性</li>
+<li><strong>第三方库</strong>：通过 wheel 分发，包含 Python 代码和编译好的 C 扩展</li>
+</ol>
+<hr>
+<p><strong>参考资源：</strong></p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://docs.python.org/3/c-api/">Python C API 文档</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.sco.com/developers/gabi/">System V ABI 规范</a></li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Python/" rel="tag"># Python</a>
+          
+            <a href="/tags/%E5%8A%A8%E6%80%81%E5%BA%93/" rel="tag"># 动态库</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2025/12/23/20251223-python-yun-xing-nei-mu-shen-du-jie-xi-di-ceng-zhi-xing-ji-zhi-yu-xian-dai-web-jia-gou/" rel="next" title="Python 运行内幕-深度解析底层执行机制与现代 Web 架构">
+                <i class="fa fa-chevron-left"></i> Python 运行内幕-深度解析底层执行机制与现代 Web 架构
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div id="gitalk-container"></div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.png"
+                alt="" />
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+<a href="/archives/">                
+<!--<a href="/archives/%7C%7C%20archive">-->
+              
+                  <span class="site-state-item-count">181</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">225</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1%EF%B8%8F%E2%83%A3-Python-C-%E6%89%A9%E5%B1%95%E5%9F%BA%E7%A1%80"><span class="nav-number">1.</span> <span class="nav-text">1️⃣ Python C 扩展基础</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%8C%E6%95%B4%E7%A4%BA%E4%BE%8B"><span class="nav-number">1.1.</span> <span class="nav-text">完整示例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%A7%E8%A1%8C%E5%8E%9F%E7%90%86"><span class="nav-number">1.2.</span> <span class="nav-text">执行原理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2%EF%B8%8F%E2%83%A3-Python-%E8%B0%83%E7%94%A8-C-%E7%9A%84%E5%A4%9A%E7%A7%8D%E6%96%B9%E5%BC%8F"><span class="nav-number">2.</span> <span class="nav-text">2️⃣ Python 调用 C 的多种方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3%EF%B8%8F%E2%83%A3-%E5%8A%A8%E6%80%81%E5%BA%93-vs-%E9%9D%99%E6%80%81%E5%BA%93"><span class="nav-number">3.</span> <span class="nav-text">3️⃣ 动态库 vs 静态库</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E5%BA%93%E5%8A%A0%E8%BD%BD%E6%B5%81%E7%A8%8B"><span class="nav-number">3.1.</span> <span class="nav-text">动态库加载流程</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4%EF%B8%8F%E2%83%A3-ABI%EF%BC%88%E5%BA%94%E7%94%A8%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%8E%A5%E5%8F%A3%EF%BC%89"><span class="nav-number">4.</span> <span class="nav-text">4️⃣ ABI（应用二进制接口）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89%E4%B8%8E%E7%BB%84%E6%88%90"><span class="nav-number">4.1.</span> <span class="nav-text">定义与组成</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E8%B0%83%E7%94%A8%E7%BA%A6%E5%AE%9A"><span class="nav-number">4.2.</span> <span class="nav-text">常见调用约定</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#API-vs-ABI"><span class="nav-number">4.3.</span> <span class="nav-text">API vs ABI</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5%EF%B8%8F%E2%83%A3-%E5%A4%9A%E8%AF%AD%E8%A8%80%E5%8A%A8%E6%80%81%E5%BA%93%E5%AF%B9%E6%AF%94"><span class="nav-number">5.</span> <span class="nav-text">5️⃣ 多语言动态库对比</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C%E6%97%B6%E7%89%B9%E5%BE%81"><span class="nav-number">5.1.</span> <span class="nav-text">运行时特征</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B"><span class="nav-number">5.2.</span> <span class="nav-text">代码示例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6%EF%B8%8F%E2%83%A3-Python-%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93%E6%9C%BA%E5%88%B6"><span class="nav-number">6.</span> <span class="nav-text">6️⃣ Python 第三方库机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E6%B5%81%E7%A8%8B%EF%BC%88%E4%BB%A5-NumPy-%E4%B8%BA%E4%BE%8B%EF%BC%89"><span class="nav-number">6.1.</span> <span class="nav-text">安装流程（以 NumPy 为例）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%BC%E5%85%A5%E4%B8%8E%E5%8A%A0%E8%BD%BD"><span class="nav-number">6.2.</span> <span class="nav-text">导入与加载</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86"><span class="nav-number">6.3.</span> <span class="nav-text">内存管理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7%EF%B8%8F%E2%83%A3-%E6%A0%B8%E5%BF%83%E6%80%BB%E7%BB%93"><span class="nav-number">7.</span> <span class="nav-text">7️⃣ 核心总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kingson Wu</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+  <script src="/js/src/md5.min.js"></script>
+
+   <script type="text/javascript">
+        var gitalk = new Gitalk({
+          clientID: '3416434437f9f4e049bd',
+          clientSecret: 'a52d69bf90cb77f81a26d135e03dd0f4869fbf84',
+          repo: 'kingson4wu.github.io',
+          owner: 'kingson4wu',
+          admin: ['kingson4wu'],
+
+          id: md5(location.pathname),
+
+          distractionFreeMode: 'true'
+        })
+        gitalk.render('gitalk-container')
+    </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

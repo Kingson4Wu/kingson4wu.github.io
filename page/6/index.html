@@ -299,6 +299,186 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://kingson4wu.github.io/2024/10/23/20241023-jin-qian-ye-wu-shu-ju-ku-shi-wu-xiang-guan-yao-dian-ji-lu/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2024/10/23/20241023-jin-qian-ye-wu-shu-ju-ku-shi-wu-xiang-guan-yao-dian-ji-lu/" itemprop="url">金钱业务数据库事务相关要点记录</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2024-10-23T15:59:48+08:00">
+                2024-10-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="表结构"><a href="#表结构" class="headerlink" title="表结构"></a>表结构</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> `user_balance` (</span><br><span class="line">`user_id` <span class="type">varchar</span>(<span class="number">128</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;&#x27;</span> COMMENT <span class="string">&#x27;用户ID&#x27;</span>,</span><br><span class="line">`coin` <span class="type">bigint</span>(<span class="number">20</span>) unsigned <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;0&#x27;</span> COMMENT <span class="string">&#x27;余额&#x27;</span>,</span><br><span class="line">`create_time` datetime <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;创建时间&#x27;</span>,</span><br><span class="line">`update_time` datetime <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;更新时间&#x27;</span>,</span><br><span class="line"><span class="keyword">PRIMARY</span> KEY (`user_id`),</span><br><span class="line">KEY `idx_updatetime` (`update_time`)</span><br><span class="line">) ENGINE<span class="operator">=</span>InnoDB <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>utf8mb4 COMMENT<span class="operator">=</span><span class="string">&#x27;账户余额表&#x27;</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> `user_balance_log` (</span><br><span class="line">`log_id` <span class="type">bigint</span>(<span class="number">20</span>) unsigned <span class="keyword">NOT</span> <span class="keyword">NULL</span> AUTO_INCREMENT COMMENT <span class="string">&#x27;流水id&#x27;</span>,</span><br><span class="line">`order_id` <span class="type">varchar</span>(<span class="number">128</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;&#x27;</span> COMMENT <span class="string">&#x27;业务订单ID&#x27;</span>,</span><br><span class="line">`user_id` <span class="type">varchar</span>(<span class="number">128</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;&#x27;</span> COMMENT <span class="string">&#x27;用户ID&#x27;</span>,</span><br><span class="line">`type` tinyint(<span class="number">4</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;0&#x27;</span> COMMENT <span class="string">&#x27;1：加，2：减&#x27;</span>,</span><br><span class="line">`coin` <span class="type">bigint</span>(<span class="number">20</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;0&#x27;</span> COMMENT <span class="string">&#x27;变更金额&#x27;</span>,</span><br><span class="line">`coin_after` <span class="type">bigint</span>(<span class="number">20</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;0&#x27;</span> COMMENT <span class="string">&#x27;变更后的金额&#x27;</span>,</span><br><span class="line">`create_time` datetime <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span> COMMENT <span class="string">&#x27;创建时间&#x27;</span>,</span><br><span class="line"><span class="keyword">PRIMARY</span> KEY (`log_id`),</span><br><span class="line">KEY `idx_createtime` (`create_time`)</span><br><span class="line">) ENGINE<span class="operator">=</span>InnoDB <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>utf8mb4 COMMENT<span class="operator">=</span><span class="string">&#x27;账户余额表流水表&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> `user_balance`(`user_id`, `coin`, `create_time`, `update_time`) <span class="keyword">VALUES</span> (<span class="string">&#x27;kxw&#x27;</span>, <span class="number">20000000</span>, <span class="string">&#x27;2024-10-23 00:00:00&#x27;</span>, <span class="string">&#x27;2024-10-23 00:00:00&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">UPDATE</span> `user_balance` <span class="keyword">SET</span> `coin`<span class="operator">=</span> `coin` <span class="operator">-</span> <span class="number">1000</span> <span class="keyword">WHERE</span> `user_id` <span class="operator">=</span> <span class="string">&#x27;kxw&#x27;</span> <span class="keyword">AND</span> `coin` <span class="operator">&gt;=</span> <span class="number">1000</span>;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<h2 id="操作用户余额时注意"><a href="#操作用户余额时注意" class="headerlink" title="操作用户余额时注意"></a>操作用户余额时注意</h2><ol>
+<li>可重复读（记录扣费后余额快照）(select <code>coin</code> 后记录到user_balance_log表的<code>coin_after</code>)</li>
+<li>乐观锁（扣费冲突）（set <code>coin</code> - 1000 where <code>coin</code> &gt;&#x3D; 1000）</li>
+<li>业务幂等（不同业务使用相应的订单表）</li>
+<li>事务（用户余额表<code>user_balance</code>、日志流水表<code>user_balance_log</code>、业务订单表绑定）</li>
+<li>canal 监听 binlog 识别业务异常 (对比 binlog监听的<code>user_balance</code>表<code>coin</code>变化量 和 <code>user_balance_log</code>的 <code>coin</code>记录总量 是否一致)</li>
+</ol>
+<h2 id="流水表只需要记录coin-after"><a href="#流水表只需要记录coin-after" class="headerlink" title="流水表只需要记录coin_after"></a>流水表只需要记录coin_after</h2><h3 id="事务过程"><a href="#事务过程" class="headerlink" title="事务过程"></a>事务过程</h3><table>
+<thead>
+<tr>
+<th>事务1</th>
+<th>事务2</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>BEGIN;</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>BEGIN;</td>
+</tr>
+<tr>
+<td>SELECT * FROM <code>user_balance</code> WHERE <code>user_id</code> &#x3D; ‘kxw’; (coin&#x3D;20000000)</td>
+<td></td>
+</tr>
+<tr>
+<td>UPDATE <code>user_balance</code> SET <code>coin</code>&#x3D; <code>coin</code> - 1000 WHERE <code>user_id</code> &#x3D; ‘kxw’ AND <code>coin</code> &gt;&#x3D; 1000;</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>SELECT * FROM <code>user_balance</code> WHERE <code>user_id</code> &#x3D; ‘kxw’; (coin&#x3D;20000000)</td>
+</tr>
+<tr>
+<td></td>
+<td>UPDATE <code>user_balance</code> SET <code>coin</code>&#x3D; <code>coin</code> - 1000 WHERE <code>user_id</code> &#x3D; ‘kxw’ AND <code>coin</code> &gt;&#x3D; 1000;</td>
+</tr>
+<tr>
+<td>SELECT * FROM <code>user_balance</code> WHERE <code>user_id</code> &#x3D; ‘kxw’; (coin&#x3D;19999000)</td>
+<td></td>
+</tr>
+<tr>
+<td>COMMIT;</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>SELECT * FROM <code>user_balance</code> WHERE <code>user_id</code> &#x3D; ‘kxw’; (coin&#x3D;19998000)</td>
+</tr>
+<tr>
+<td></td>
+<td>COMMIT;</td>
+</tr>
+</tbody></table>
+<ul>
+<li>流水表只需要记录<code>coin_after</code>（变更后的余额）即可，因为变更前的余额，可能因为并发导致不准确，除非开启事务后，使用<code>select for update</code>来查询，而不是用普通的快照读</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://kingson4wu.github.io/2024/10/22/20241022-jian-dan-ji-lu-wo-zai-ji-jia-gong-si-de-jing-li/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1862,207 +2042,6 @@ what? 不仅一天全开会了，还没有任何有用的结论？
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://kingson4wu.github.io/2024/04/07/20240407-cong-java-zhuan-go-de-ge-ren-ti-hui/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2024/04/07/20240407-cong-java-zhuan-go-de-ge-ren-ti-hui/" itemprop="url">从Java转Go的个人体会</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2024-04-07T09:22:08+08:00">
-                2024-04-07
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote>
-<blockquote>
-<p>这里仅从一个业务开发的角度谈谈体会，格局较低，仅做个人记录<br>编程语言是程序员接触和使用最多的工具<br>后端技术基础的深度是快速学习和适应新语言的关键</p>
-</blockquote>
-</blockquote>
-<ul>
-<li><p>基于<a href="https://kingson4wu.github.io/2023/07/02/20230702-dui-gong-zuo-zhong-jie-hong-guo-de-ji-chong-bian-cheng-yu-yan-ji-qi-bu-shu-jia-gou-de-kan-fa/">对工作中接触过的几种编程语言及其部署架构的看法</a>继续聊。</p>
-</li>
-<li><p>截至目前，职业生涯五分之四的时间都是在使用Java。出于个人意愿和兴趣，以及行业的发展形势，也系统的自学了Go语言，并在个人的小项目实践。在一次意外的组织变动中，我转岗到了新团队，并开始使用Go，由于之前自己的自学基础，基本是无缝切换到新语言。可能是由于团队人员大部分是从Lua或PHP开始转Go的，在那里甚至感觉自己稍稍领先。</p>
-</li>
-<li><p>Go抽象业务比Java麻烦，代码不美观，但是它原生高并发，而且微服务下很多时候就一个后端服务，业务足够小，不需要复杂的设计模式等，并不需要像以前写大型Java应用这样做非常多的抽象，还能打二进制包，甚至还能保证一个团队所有人代码都是相同风格</p>
-</li>
-<li><p>以下讲一些个人看法，比较乱甚至不正确，仅做个人记录</p>
-<ol>
-<li>小型项目省内存</li>
-<li>写命令行程序方便简单</li>
-<li>现在绝大部分功能都有相应的官方库和开源库</li>
-<li>运行无需环境依赖，直接打包成二进制可执行程序（Java现在也可以了，可能大部分业务场景下体积还较大）</li>
-<li>支持交叉编译，不要特定平台</li>
-<li>打包体积小（根据代码实际使用情况打包-这点是我一直苦苦寻找的）<ul>
-<li>Go语言中有未用代码消除和可执行文件瘦身机制。只有在程序执行路径上被调用的函数才会进入最终的可执行文件，未被调用的函数会被消除</li>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/s60J4eA_d0hqrXj-XMPpXA">Go未用代码消除与可执行文件瘦身</a></li>
-</ul>
-</li>
-</ol>
-</li>
-<li><p>为什么现在大多数人都会认为Java启动慢占内存呢？</p>
-<ul>
-<li>首先不是Java自身的原因，而是跟实际使用场景有关</li>
-<li>使用Java大多数用来做业务开发，也习惯引入很多依赖库，首当其冲就是SpringBoot等框架</li>
-<li>多数都是spring相关类、proxy&#x2F;cglib，以及各种bean配置</li>
-<li>而且很多类都是在启动的时候初始化的</li>
-</ul>
-</li>
-<li><p>微服务下的编程语言</p>
-<ul>
-<li>在K8S流行之前，Java通常是使用SpringCloud</li>
-<li>其实微服务相关技术，在K8S已经实现了</li>
-<li>无论是使用Go还是Java，目前都应该向K8S靠近</li>
-<li>还有一点，K8S本身就是用Go实现的</li>
-</ul>
-</li>
-</ul>
-<h2 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h2><ul>
-<li><p><a target="_blank" rel="noopener" href="https://github.com/Kingson4Wu/graalvm_demo">体验Graalvm+SpringBoot+Java21构建原生程序</a></p>
-</li>
-<li><p>在内存利用效率上，Go语言确实比Java做得更好，在4个不同的角度来总结</p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/-N4eqdXb9a93uvOWfE4ScQ">Golang与Java全方位对比总结</a></li>
-</ul>
-<ol>
-<li>Java的JIT策略比Golang的AOT策略<ul>
-<li>Java在运行时相比Golang多占用了一些内存。原因在于：<ul>
-<li>Java运行态中包含了一个完整的解释器、一个JIT编译期以及一个垃圾回收器，这会显著地增加内存。</li>
-<li>Golang语言直接编译到机器码，运行态只包含机器码和一个垃圾回收器。</li>
-</ul>
-</li>
-<li>因此Golang的运行态相对消耗内存较少。</li>
-</ul>
-</li>
-<li>内存分配和垃圾回收器<ul>
-<li>Java确实在起步占用上偏多，毕竟jvm需要更多内存做jit，默认的gc算法对内存要求偏高，但这不能代表后续占用仍然线性增长。如果目标是启动成百上千个内存需求较少的进程，那Java确实不擅长。</li>
-</ul>
-</li>
-<li>并发<ul>
-<li>协程模型比线程模型更加节省内存。</li>
-</ul>
-</li>
-<li>反射<ul>
-<li>Golang的反射更加简单，导致框架的内存消耗Golang程序比Java程序优秀。主要是因为： Java的框架实现中大量使用反射，并使用hashmap缓存信息，这2个都是极度消耗内存的行为。 Golang的框架中也使用reflect、map。但是Golang是面向interface和值类型的，这导致Golang的反射模型要比Java的反射模型简单非常多，反射过程要产生的对象数量也少非常多。</li>
-</ul>
-</li>
-</ol>
-</li>
-<li><p>为什么一些已经选择 Java 的公司，现在又开始考虑使用 Go？</p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/ZKL-M54IBx9CSkYKoLdsUA">为什么要用Go重写Dubbo？</a></li>
-<li>相较于 Java，Go 在启动速度、编译速度、内存使用和高并发（如协程）方面都有明显优势。所以，那些已经采用 Java 的公司现在也在考虑引入 Go。但要注意的是，目前这样的公司仍然是少数。另外，一些公司并没有严格规定技术栈的选择，因此新成立的部门或新业务团队可以自由选择，而他们可能更倾向于选择 Go 作为开发语言。</li>
-<li>小结: 总的来说，无论是选择 Java 还是 Go，都是有其合理性的。一家公司同时选择这两种语言也同样合理。尽管这样的公司占比不大，但 Java 与 Go 之间的交流需求仍然存在。</li>
-</ul>
-</li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2120,7 +2099,7 @@ what? 不仅一天全开会了，还没有任何有用的结论？
 <a href="/archives/">                
 <!--<a href="/archives/%7C%7C%20archive">-->
               
-                  <span class="site-state-item-count">181</span>
+                  <span class="site-state-item-count">182</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2133,7 +2112,7 @@ what? 不仅一天全开会了，还没有任何有用的结论？
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">225</span>
+                  <span class="site-state-item-count">226</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

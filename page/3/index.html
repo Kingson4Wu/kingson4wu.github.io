@@ -299,6 +299,229 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://kingson4wu.github.io/2025/08/17/20250817-vpn-yu-zheng-xiang-dai-li-de-yuan-li-yu-chai-yi-fen-xi/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2025/08/17/20250817-vpn-yu-zheng-xiang-dai-li-de-yuan-li-yu-chai-yi-fen-xi/" itemprop="url">VPN 与正向代理的原理与差异分析</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2025-08-17T12:59:59+08:00">
+                2025-08-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<blockquote>
+<p>以下内容由AI生成，本人审阅</p>
+</blockquote>
+</blockquote>
+<h2 id="一、VPN-的基本原理"><a href="#一、VPN-的基本原理" class="headerlink" title="一、VPN 的基本原理"></a>一、VPN 的基本原理</h2><p>**VPN（Virtual Private Network，虚拟专用网络）**的核心思想是在 <strong>公网上（Internet）</strong> 建立一条 <strong>加密隧道</strong>，使用户的数据能够像在同一局域网中一样安全传输。其关键机制包括：</p>
+<ol>
+<li><p><strong>隧道封装（Tunneling）</strong></p>
+<ul>
+<li>将原始 IP 包或 TCP&#x2F;UDP 流量再次封装后发送至 VPN 服务器。</li>
+<li>VPN 服务器解封装后再转发至目标网站或服务。</li>
+<li>常见协议包括 PPTP、L2TP、IPSec、OpenVPN（基于 TLS&#x2F;SSL）、WireGuard 等。</li>
+</ul>
+</li>
+<li><p><strong>数据加密（Encryption）</strong></p>
+<ul>
+<li>VPN 的核心能力之一就是加密，例如 AES、ChaCha20。</li>
+<li>运营商或中间路由器看到的只是加密数据流，而无法识别内容。</li>
+</ul>
+</li>
+<li><p><strong>虚拟网卡（Virtual NIC）</strong></p>
+<ul>
+<li>客户端安装 VPN 时会创建虚拟网卡。</li>
+<li>系统将原始流量交给虚拟网卡，由 VPN 客户端进行加密与封装，再传输至服务器。</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 id="二、正向代理的基本原理"><a href="#二、正向代理的基本原理" class="headerlink" title="二、正向代理的基本原理"></a>二、正向代理的基本原理</h2><p><strong>正向代理（Forward Proxy）</strong> 是一种由客户端主动指定的代理模式：</p>
+<ul>
+<li>客户端 → <strong>代理服务器</strong> → 目标网站</li>
+<li>代理服务器替代客户端访问网站。</li>
+</ul>
+<p>常见类型包括：</p>
+<ul>
+<li><strong>HTTP Proxy</strong>：仅代理网页流量。</li>
+<li><strong>SOCKS5 Proxy</strong>：支持 TCP&#x2F;UDP，更通用。</li>
+</ul>
+<p>👉 如果在正向代理的基础上增加加密，就得到 <strong>加密正向代理</strong>，例如：</p>
+<ul>
+<li><strong>Shadowsocks</strong>（基于 SOCKS5 + 加密）</li>
+<li><strong>V2Ray、Trojan</strong>（自定义协议 + 加密）</li>
+</ul>
+<hr>
+<h2 id="三、VPN-与正向代理的关系"><a href="#三、VPN-与正向代理的关系" class="headerlink" title="三、VPN 与正向代理的关系"></a>三、VPN 与正向代理的关系</h2><ol>
+<li><p><strong>共性</strong></p>
+<ul>
+<li>都是正向代理的广义形式，用户请求最终都由中间服务器转发。</li>
+<li>都可以实现数据加密、突破访问限制、保护隐私。</li>
+</ul>
+</li>
+<li><p><strong>差异</strong></p>
+<ul>
+<li><strong>VPN</strong>：工作在 <strong>网络层</strong>，接管整个系统的所有流量，不需要应用单独配置。</li>
+<li><strong>加密代理（Shadowsocks&#x2F;V2Ray&#x2F;Trojan 等）</strong>：工作在 <strong>传输层&#x2F;应用层</strong>，更灵活，可以选择性分流。</li>
+</ul>
+</li>
+</ol>
+<p>✅ 准确的表述是：</p>
+<blockquote>
+<p><strong>VPN 是一种在网络层实现的“全流量加密隧道代理”；而机场协议（如 Shadowsocks&#x2F;V2Ray&#x2F;Trojan）是工作在传输层或应用层的“加密正向代理”。</strong></p>
+</blockquote>
+<hr>
+<h2 id="四、为什么“机场代理”常被叫做-VPN"><a href="#四、为什么“机场代理”常被叫做-VPN" class="headerlink" title="四、为什么“机场代理”常被叫做 VPN"></a>四、为什么“机场代理”常被叫做 VPN</h2><ul>
+<li>手机或电脑端的 Shadowsocks&#x2F;V2Ray 客户端通常会申请系统的 <strong>VPN 权限（VPNService）</strong>，创建虚拟网卡，将流量导入代理。</li>
+<li>在用户体验上，表现为“一键开启，所有流量都出国”，与 VPN 相似。</li>
+<li>但协议层面，它们并非传统 VPN，而是 <strong>加密正向代理 + VPN 伪装</strong> 的结合体。</li>
+</ul>
+<hr>
+<h2 id="五、效果、效率与使用体验差异"><a href="#五、效果、效率与使用体验差异" class="headerlink" title="五、效果、效率与使用体验差异"></a>五、效果、效率与使用体验差异</h2><h3 id="1-效果层面"><a href="#1-效果层面" class="headerlink" title="1. 效果层面"></a>1. 效果层面</h3><ul>
+<li><strong>VPN</strong>：全流量隧道，统一加密转发。</li>
+<li><strong>机场代理</strong>：通过加密代理转发流量，用户体验上几乎无差别。</li>
+</ul>
+<h3 id="2-效率与性能"><a href="#2-效率与性能" class="headerlink" title="2. 效率与性能"></a>2. 效率与性能</h3><ul>
+<li><strong>VPN</strong>：底层封装，效率较高（WireGuard 延迟小、速度快）。</li>
+<li><strong>代理</strong>：协议转换可能增加开销，但现代实现已高度优化。</li>
+</ul>
+<h3 id="3-使用体验"><a href="#3-使用体验" class="headerlink" title="3. 使用体验"></a>3. 使用体验</h3><ul>
+<li><strong>VPN</strong>：系统级全局接管，适合企业远程办公、统一管控。</li>
+<li><strong>机场代理</strong>：支持灵活分流（国际流量走代理、国内直连），更适合个人日常使用。</li>
+</ul>
+<hr>
+<h2 id="六、典型场景对比"><a href="#六、典型场景对比" class="headerlink" title="六、典型场景对比"></a>六、典型场景对比</h2><ol>
+<li><p><strong>公司 VPN</strong></p>
+<ul>
+<li>常见模式是 <strong>全隧道（Full Tunnel）</strong>，所有流量经由公司出口，安全统一但效率偏低。</li>
+<li>有些公司支持 <strong>分隧道（Split Tunnel）</strong>，仅内网走 VPN，外网直连，但安全性存在隐患。</li>
+</ul>
+</li>
+<li><p><strong>机场代理</strong></p>
+<ul>
+<li>可选择 <strong>全局代理</strong>，模拟 VPN 效果。</li>
+<li>或使用 <strong>规则分流</strong>（PAC 模式），国际流量走代理，国内直连，更高效。</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 id="七、总结"><a href="#七、总结" class="headerlink" title="七、总结"></a>七、总结</h2><ul>
+<li><strong>VPN</strong>：本质是 <strong>网络层的加密隧道代理</strong>，接管系统所有流量。</li>
+<li><strong>机场协议（Shadowsocks、V2Ray、Trojan）</strong>：本质是 <strong>传输层&#x2F;应用层的加密正向代理</strong>，通过虚拟网卡实现“伪装成 VPN”的体验。</li>
+<li><strong>共同点</strong>：都加密、都代理、都能突破限制。</li>
+<li><strong>差异点</strong>：VPN 更底层、统一接管；机场代理更灵活、支持分流。</li>
+</ul>
+<p>👉 一句话概括：<br><strong>VPN 与机场协议都是“加密正向代理”，区别只在于工作层级和使用方式。</strong></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://kingson4wu.github.io/2025/08/17/20250817-shen-ru-li-jie-socks5-zheng-xiang-dai-li-yuan-li/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -3572,147 +3795,6 @@ AI这个名字其实并不准确
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://kingson4wu.github.io/2025/02/26/20250226-kai-yuan-zhi-shi-ku-xi-tong-shi-yong/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="拉巴力的纸皮箱">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2025/02/26/20250226-kai-yuan-zhi-shi-ku-xi-tong-shi-yong/" itemprop="url">开源知识库系统试用</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2025-02-26T22:22:04+08:00">
-                2025-02-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote>
-<blockquote>
-<p>帮助朋友的公司搭建内部知识库的原型<br>简单记录一下相关技术</p>
-</blockquote>
-</blockquote>
-<p><img src="/2025/02/26/20250226-kai-yuan-zhi-shi-ku-xi-tong-shi-yong/dify.drawio.png"></p>
-<ul>
-<li><p>目前看权限管理都很不精细，只在固定角色上进行控制，用于内部团队管理仍不是很方便</p>
-</li>
-<li><p>文档嵌入效果一般，可能要研究里面一些复杂的选项用法，或者寻求其他方案</p>
-</li>
-<li><p>除了dify，还有很多其他开源的知识库系统，比如 Cherry Studio、MaxKB、FastGPT、AnythingLLM、Ragflow等</p>
-</li>
-<li><p>dify功能很多，anythingllm功能较少，Cherry Studio 就是个人知识库</p>
-</li>
-<li><p>所谓的各种助手其实就是提示词模版</p>
-</li>
-</ul>
-<h1 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h1><ul>
-<li>传统RAG通常依赖单次检索，这可能不足以处理需要逐步构建上下文的复杂查询</li>
-<li>向量相似性检索依赖知识库中明确提及的信息，可能无法捕捉隐含或关系信息。相比之下，知识图谱（如GraphRAG）通过利用数据结构中的关系，能更好地处理需要全面理解数据集的全局查询</li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -3770,7 +3852,7 @@ AI这个名字其实并不准确
 <a href="/archives/">                
 <!--<a href="/archives/%7C%7C%20archive">-->
               
-                  <span class="site-state-item-count">181</span>
+                  <span class="site-state-item-count">182</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -3783,7 +3865,7 @@ AI这个名字其实并不准确
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">225</span>
+                  <span class="site-state-item-count">226</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

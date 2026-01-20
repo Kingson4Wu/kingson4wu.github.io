@@ -12,6 +12,9 @@ tags: [RPC, 服务发现, gRPC, Protobuf, Sidecar, K8S]
 
 本文将从架构理念、工具选型、测试体系、部署方式到文档管理，全面展示如何落地一套实战可用的 RPC 体系。
 
+>> 参考实现
++ [rpc_tutorial](https://github.com/Kingson4Wu/rpc_tutorial)
+
 ---
 
 # 一、设计目标：为什么要构建统一的 RPC 体系？

@@ -1,15 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://kingson4wu.github.io/2025/02/17/20250217-shen-du-xue-xi-ji-chu-ru-men-bei-wang/</loc>
+    <lastmod>2026-01-20</lastmod>
+  </url>
+  <url>
+    <loc>https://kingson4wu.github.io/2026/01/20/ai-shu-xue-jing-yao/</loc>
+    <lastmod>2026-01-20</lastmod>
+  </url>
+  <url>
+    <loc>https://kingson4wu.github.io/2025/01/06/20250106-jian-dan-yan-jiu-yi-xia-ren-gong-zhi-neng-he-shu-xue/</loc>
+    <lastmod>2026-01-20</lastmod>
+  </url>
+  <url>
+    <loc>https://kingson4wu.github.io/2025/11/28/20251128-gou-jian-tong-yi-qian-hou-duan-yu-fu-wu-jian-rpc-ti-xi-cong-idl-she-ji-dao-duo-xie-yi-gua-pei-yu-sidecar-bu-shu-de-gong-cheng-shi-jian/</loc>
+    <lastmod>2026-01-16</lastmod>
+  </url>
+  <url>
+    <loc>https://kingson4wu.github.io/2025/12/17/20251217-da-mo-xing-tui-li-de-bu-que-ding-xing-cong-fu-dian-yun-suan-dao-gong-cheng-shi-xian/</loc>
+    <lastmod>2026-01-07</lastmod>
+  </url>
+  <url>
+    <loc>https://kingson4wu.github.io/2025/12/23/20251223-rust-wei-shi-me-xu-yao-xian-shi-sheng-ming-zhou-qi-biao-zhu-cong-diao-yong-fang-qi-yue-dao-she-ji-ben-zhi/</loc>
+    <lastmod>2025-12-25</lastmod>
+  </url>
+  <url>
     <loc>https://kingson4wu.github.io/2025/12/24/20251224-cong-ling-kai-shi-li-jie-dian-ji-wei-shi-me-neng-fan-ying-xiang-liang-jia-jiao/</loc>
     <lastmod>2025-12-24</lastmod>
   </url>
   <url>
     <loc>https://kingson4wu.github.io/2025/12/24/20251224-python-diao-yong-c-kuo-zhan-yu-ku-ji-zhi-quan-jie-xi/</loc>
-    <lastmod>2025-12-24</lastmod>
-  </url>
-  <url>
-    <loc>https://kingson4wu.github.io/2025/12/23/20251223-rust-wei-shi-me-xu-yao-xian-shi-sheng-ming-zhou-qi-biao-zhu-cong-diao-yong-fang-qi-yue-dao-she-ji-ben-zhi/</loc>
     <lastmod>2025-12-24</lastmod>
   </url>
   <url>
@@ -41,10 +61,6 @@
     <lastmod>2025-12-18</lastmod>
   </url>
   <url>
-    <loc>https://kingson4wu.github.io/2025/12/17/20251217-da-mo-xing-tui-li-de-bu-que-ding-xing-cong-fu-dian-yun-suan-dao-gong-cheng-shi-xian/</loc>
-    <lastmod>2025-12-17</lastmod>
-  </url>
-  <url>
     <loc>https://kingson4wu.github.io/2022/03/22/20220322-qing-liang-ji-wei-fu-wu-gong-gong-ku-she-ji/</loc>
     <lastmod>2025-12-17</lastmod>
   </url>
@@ -67,10 +83,6 @@
   <url>
     <loc>https://kingson4wu.github.io/2025/05/31/20250531-ren-gong-zhi-neng-yi-ci-shi-fou-zhun-que-yi-ci-guan-yu-ai-ben-zhi-de-fan-si/</loc>
     <lastmod>2025-12-01</lastmod>
-  </url>
-  <url>
-    <loc>https://kingson4wu.github.io/2025/11/28/20251128-gou-jian-tong-yi-qian-hou-duan-yu-fu-wu-jian-rpc-ti-xi-cong-idl-she-ji-dao-duo-xie-yi-gua-pei-yu-sidecar-bu-shu-de-gong-cheng-shi-jian/</loc>
-    <lastmod>2025-11-28</lastmod>
   </url>
   <url>
     <loc>https://kingson4wu.github.io/2025/10/21/20251021-sheng-huo-zhong-de-it-zhe-xue-cong-ji-zhu-jia-gou-kan-ren-sheng-zhi-hui/</loc>
@@ -149,10 +161,6 @@
     <lastmod>2025-07-16</lastmod>
   </url>
   <url>
-    <loc>https://kingson4wu.github.io/2025/02/17/20250217-shen-du-xue-xi-ji-chu-ru-men-bei-wang/</loc>
-    <lastmod>2025-05-30</lastmod>
-  </url>
-  <url>
     <loc>https://kingson4wu.github.io/2025/02/20/20250220-ji-yu-da-mo-xing-de-rag-ying-yong-kai-fa-yao-dian-ji-lu/</loc>
     <lastmod>2025-05-28</lastmod>
   </url>
@@ -191,10 +199,6 @@
   <url>
     <loc>https://kingson4wu.github.io/2025/01/08/20250108-suan-fa-zai-shi-ji-ye-wu-chang-jing-zhong-bing-fei-wan-quan-wu-yong/</loc>
     <lastmod>2025-01-08</lastmod>
-  </url>
-  <url>
-    <loc>https://kingson4wu.github.io/2025/01/06/20250106-jian-dan-yan-jiu-yi-xia-ren-gong-zhi-neng-he-shu-xue/</loc>
-    <lastmod>2025-01-06</lastmod>
   </url>
   <url>
     <loc>https://kingson4wu.github.io/2025/01/01/20250101-shi-yong-ai-zong-jie-liao-zhe-ge-wang-zhan-de-nei-rong/</loc>

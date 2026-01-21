@@ -91,7 +91,7 @@
 <meta property="og:description" content="本文使用AI优化   在现代应用中，前后端与微服务之间的接口往往涉及多种语言、复杂的文档、重复的代码维护，以及永远难以对齐的接口变更。随着业务演进，系统间的交互方式不断增多：从浏览器到移动端、从 Python 到 Java、从 REST 到 gRPC，各种协议和框架的混用使接口治理逐渐成为开发效率的瓶颈——对接繁琐、体验不佳、重复劳动多、沟通成本高，整体效率显著下降。 为彻底解决这些痛点，尝试">
 <meta property="og:locale">
 <meta property="article:published_time" content="2025-11-28T07:03:27.000Z">
-<meta property="article:modified_time" content="2025-11-28T08:59:43.367Z">
+<meta property="article:modified_time" content="2026-01-16T13:48:05.200Z">
 <meta property="article:author" content="Kingson Wu">
 <meta property="article:tag" content="RPC">
 <meta property="article:tag" content="服务发现">
@@ -380,6 +380,14 @@
 <p>在现代应用中，前后端与微服务之间的接口往往涉及多种语言、复杂的文档、重复的代码维护，以及永远难以对齐的接口变更。随着业务演进，系统间的交互方式不断增多：从浏览器到移动端、从 Python 到 Java、从 REST 到 gRPC，各种协议和框架的混用使接口治理逐渐成为开发效率的瓶颈——对接繁琐、体验不佳、重复劳动多、沟通成本高，整体效率显著下降。</p>
 <p>为彻底解决这些痛点，尝试构建了一套基于 <strong>统一 IDL（Interface Definition Language）+ 自动代码生成 + 多协议适配（gRPC &#x2F; gRPC-Web &#x2F; REST）+ Sidecar 部署模式</strong> 的 RPC 体系。这套体系能够显著提升团队开发效率、降低沟通与维护成本、提升跨语言一致性，同时兼容现代前端与传统客户端。</p>
 <p>本文将从架构理念、工具选型、测试体系、部署方式到文档管理，全面展示如何落地一套实战可用的 RPC 体系。</p>
+<blockquote>
+<blockquote>
+<p>参考实现</p>
+</blockquote>
+</blockquote>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/Kingson4Wu/rpc_tutorial">rpc_tutorial</a></li>
+</ul>
 <hr>
 <h1 id="一、设计目标：为什么要构建统一的-RPC-体系？"><a href="#一、设计目标：为什么要构建统一的-RPC-体系？" class="headerlink" title="一、设计目标：为什么要构建统一的 RPC 体系？"></a>一、设计目标：为什么要构建统一的 RPC 体系？</h1><p>构建这一体系的核心动机来自以下工程现实。</p>
 <h2 id="🎯-1-接口一致性成为提升效率的关键"><a href="#🎯-1-接口一致性成为提升效率的关键" class="headerlink" title="🎯 1. 接口一致性成为提升效率的关键"></a>🎯 1. 接口一致性成为提升效率的关键</h2><p>接口文档、后端实现、前端调用长期无法保持一致。通过统一 IDL（例如 <code>.proto</code>），可以构建 <strong>唯一可信源（SSOT）</strong> 来实现：</p>
@@ -1005,7 +1013,7 @@
 <a href="/archives/">                
 <!--<a href="/archives/%7C%7C%20archive">-->
               
-                  <span class="site-state-item-count">182</span>
+                  <span class="site-state-item-count">183</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1078,7 +1086,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2025</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2026</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>

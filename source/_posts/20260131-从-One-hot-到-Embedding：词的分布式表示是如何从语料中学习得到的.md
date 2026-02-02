@@ -1,7 +1,7 @@
 ---
 title: 从 One-hot 到 Embedding：词的分布式表示是如何从语料中学习得到的
 date: 2026-01-31 15:15:27
-tags: [LLM, Math, 数学, AI, 深度学习基础, Embedding, 分布式表示]
+tags: [LLM, AI, 深度学习基础, Embedding, 分布式表示]
 mathjax: true
 ---
 

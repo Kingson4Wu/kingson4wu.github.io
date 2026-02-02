@@ -1,7 +1,7 @@
 ---
 title: 从 RNN 到 Transformer:序列建模的结构性转变
 date: 2026-01-31 16:55:08
-tags: [LLM, Math, 数学, AI, 深度学习基础, Transformer, RNN, LSTM, CNN]
+tags: [LLM, AI, 深度学习基础, Transformer, RNN, LSTM, CNN]
 mathjax: true
 ---
 

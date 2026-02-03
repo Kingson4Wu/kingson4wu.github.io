@@ -372,18 +372,18 @@ POST _reindex
 <pre>
 POST /_reindex?wait_for_completion=false
 	{
-	    "source": {
-	        "index": "blog"
+	    “source”: {
+	        “index”: “blog”
 	    },
-	    "dest": {
-	        "index": "blog_lastest"
+	    “dest”: {
+	        “index”: “blog_lastest”
 	    }
 	}
 	
 	返回：
 	
 	{
-	  "task" : "dpBihNSMQfSlboMGlTgCBA:4728038"
+	  “task” : “dpBihNSMQfSlboMGlTgCBA:4728038”
 	}
 </pre>
 
@@ -531,7 +531,7 @@ GET /_search
 ## 1、数据索引
 
 + 数据的mapping一般只执行一次，不使用代码方式创建，使用curl即可
-关掉自动映射：即"dynamic":"false"， 未预先定义的字段不自动保存
+关掉自动映射：即“dynamic”:“false”， 未预先定义的字段不自动保存
 ```
 $ curl -X PUT 'localhost:9200/accounts' -d '
 {

@@ -16,9 +16,7 @@ updated: 2026-02-04 10:00:00
 ### Other Interests
 - [Douban Profile](https://www.douban.com/people/labali)
 
-## Featured Projects
-
-### ForgeFlow
-[ForgeFlow](https://kingson4wu.github.io/ForgeFlow/)
+### Featured Projects
++ [ForgeFlow](https://kingson4wu.github.io/ForgeFlow/)
 
 

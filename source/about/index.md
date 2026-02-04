@@ -1,20 +1,24 @@
 ---
-title: about
+title: About Me
 date: 2019-07-06 01:29:35
+updated: 2026-02-04 10:00:00
 ---
 
-![](word_cloud.png)
+![Word Cloud](word_cloud.png)
 
-+ tech blog 
- - <http://blog.csdn.net/kingson_wu>
- - <https://segmentfault.com/u/kingson_wu>
- - <https://stackoverflow.com/users/5069228/kingson-wu>
- - <https://kingson4wu.github.io/>
- - <https://www.jianshu.com/u/69e6f7b82ac5>
- - <https://juejin.cn/user/2999902178919432>
+### Tech Blogs
+- [CSDN Blog](http://blog.csdn.net/kingson_wu)
+- [SegmentFault](https://segmentfault.com/u/kingson_wu)
+- [Jianshu](https://www.jianshu.com/u/69e6f7b82ac5)
+- [Juejin](https://juejin.cn/user/2999902178919432)
+- [Zhihu](https://www.zhihu.com/people/Kingson_Wu)
 
-+ <https://www.douban.com/people/labali>
-+ Medium
+### Other Interests
+- [Douban Profile](https://www.douban.com/people/labali)
 
-## Project
-+ [ForgeFlow](https://kingson4wu.github.io/ForgeFlow/)
+## Featured Projects
+
+### ForgeFlow
+[ForgeFlow](https://kingson4wu.github.io/ForgeFlow/)
+
+

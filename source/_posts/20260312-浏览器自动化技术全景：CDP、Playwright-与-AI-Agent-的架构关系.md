@@ -63,13 +63,11 @@ await page.fill("#input", "text")
 
 框架内部再将操作转换为浏览器协议指令。
 
-需要特别说明的是，**Playwright 并不固定使用 CDP**，它根据浏览器类型选择不同协议：
+需要特别说明的是，**Playwright 并不等同于“CDP 封装”**。从官方公开 API 看：
 
-| 浏览器      | 底层协议                      |
-| -------- | ------------------------- |
-| Chromium | CDP                       |
-| Firefox  | Firefox Remote Protocol   |
-| WebKit   | WebKit Inspector Protocol |
+- Playwright 提供自己的高层控制协议与运行时抽象
+- 在 Chromium 场景下，可以显式通过 `connectOverCDP` 连接到现有浏览器实例
+- 但对于 Firefox 和 WebKit，官方文档并没有把其底层实现简单定义成一张固定的“协议对照表”
 
 因此更准确的描述是：
 
@@ -81,7 +79,7 @@ browser-specific protocol
 browser
 ```
 
-只有在控制 Chromium 时才使用 CDP。此外，Playwright 还提供显式 CDP 连接模式 `connectOverCDP`，用于接管已有浏览器实例。
+只有在特定 Chromium 接管场景下，官方明确暴露了 `connectOverCDP` 这类 CDP 能力。此外，Playwright 还有 `connect()` 等基于自身协议的连接方式。
 
 ---
 

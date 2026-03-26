@@ -1,0 +1,38 @@
+name: Deploy Hexo to Main
+
+on:
+  push:
+    branches:
+      - hexo
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout hexo branch
+        uses: actions/checkout@v4
+        with:
+          ref: hexo
+          submodules: recursive
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Deploy to main branch
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Override deploy repo to use HTTPS with token for CI
+          sed -i "s|git@github.com:Kingson4Wu/kingson4wu.github.io.git|https://x-access-token:${GITHUB_TOKEN}@github.com/Kingson4Wu/kingson4wu.github.io.git|g" _config.yml
+          npx hexo clean
+          npx hexo deploy --generate

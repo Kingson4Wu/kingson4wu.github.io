@@ -6,9 +6,15 @@ Current behavior:
 
 - `/` redirects to `/zh/`
 
+Configuration:
+
+- Change `redirect-config.js` to switch the default landing path
+
 Content repositories:
 
 - Chinese blog source: `Kingson4Wu/zh`
 - English blog source: `Kingson4Wu/en`
 
-To change the default landing path later, update `index.html` in this repository.
+Maintenance guide:
+
+- See `MAINTENANCE.md`

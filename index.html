@@ -2,15 +2,47 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta http-equiv="refresh" content="0; url=/zh/" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Kingson Wu Blog</title>
-    <link rel="canonical" href="https://kingson4wu.github.io/zh/" />
+    <meta id="redirect-meta" http-equiv="refresh" content="0; url=/zh/" />
+    <link id="redirect-canonical" rel="canonical" href="https://kingson4wu.github.io/zh/" />
+    <script src="/redirect-config.js"></script>
     <script>
-      window.location.replace('/zh/');
+      (function () {
+        var target = window.ROOT_REDIRECT_TARGET || '/zh/';
+        if (typeof target !== 'string' || target.charAt(0) !== '/') {
+          target = '/zh/';
+        }
+
+        var meta = document.getElementById('redirect-meta');
+        if (meta) {
+          meta.setAttribute('content', '0; url=' + target);
+        }
+
+        var canonical = document.getElementById('redirect-canonical');
+        if (canonical) {
+          canonical.setAttribute('href', new URL(target, window.location.origin).href);
+        }
+
+        window.location.replace(target);
+      })();
     </script>
   </head>
   <body>
-    <p>Redirecting to <a href="/zh/">/zh/</a>...</p>
+    <p>Redirecting to <a id="redirect-link" href="/zh/">/zh/</a>...</p>
+    <script>
+      (function () {
+        var target = window.ROOT_REDIRECT_TARGET || '/zh/';
+        if (typeof target !== 'string' || target.charAt(0) !== '/') {
+          target = '/zh/';
+        }
+
+        var link = document.getElementById('redirect-link');
+        if (link) {
+          link.setAttribute('href', target);
+          link.textContent = target;
+        }
+      })();
+    </script>
   </body>
 </html>

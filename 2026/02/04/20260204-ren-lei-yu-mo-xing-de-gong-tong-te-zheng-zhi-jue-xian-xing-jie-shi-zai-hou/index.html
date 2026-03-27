@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="google-site-verification" content="google-site-verification=n4yVkaTfu2KtQ8fiQ3Ri60FPAbRF74oxrDOkOXWjhSs" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/uploads/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="AI,LLM,AI哲学,深度学习," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="拉巴力的纸皮箱" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="以下为个人观点，并由AI辅助整理   一、问题背景：为什么“解释”总是靠不住无论是人类还是当前的大模型，都存在一个共同现象：  可以给出结果 可以在结果之后补充一套看似合理的“推理过程” 但无法保证这套解释真实反映了内部是如何得出结果的  模型生成的所谓推理链，本质上是在答案已经高度确定之后，额外生成的一段语言说明。它更像是一种说明文档，而不是运行日志。 人类也是类似的：  判断往往在很短时间">
+<meta property="og:type" content="article">
+<meta property="og:title" content="人类与模型的共同特征：直觉先行，解释在后">
+<meta property="og:url" content="https://kingson4wu.github.io/2026/02/04/20260204-ren-lei-yu-mo-xing-de-gong-tong-te-zheng-zhi-jue-xian-xing-jie-shi-zai-hou/index.html">
+<meta property="og:site_name" content="拉巴力的纸皮箱">
+<meta property="og:description" content="以下为个人观点，并由AI辅助整理   一、问题背景：为什么“解释”总是靠不住无论是人类还是当前的大模型，都存在一个共同现象：  可以给出结果 可以在结果之后补充一套看似合理的“推理过程” 但无法保证这套解释真实反映了内部是如何得出结果的  模型生成的所谓推理链，本质上是在答案已经高度确定之后，额外生成的一段语言说明。它更像是一种说明文档，而不是运行日志。 人类也是类似的：  判断往往在很短时间">
+<meta property="og:locale">
+<meta property="article:published_time" content="2026-02-04T13:38:34.000Z">
+<meta property="article:modified_time" content="2026-03-27T05:59:22.515Z">
+<meta property="article:author" content="Kingson Wu">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="LLM">
+<meta property="article:tag" content="AI哲学">
+<meta property="article:tag" content="深度学习">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://kingson4wu.github.io/2026/02/04/20260204-ren-lei-yu-mo-xing-de-gong-tong-te-zheng-zhi-jue-xian-xing-jie-shi-zai-hou/"/>
+
+
+
+
+
+  <title>人类与模型的共同特征：直觉先行，解释在后 | 拉巴力的纸皮箱</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'G-4QEGQ2DGGT', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">拉巴力的纸皮箱</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">技术博客 | 记录学习笔记和思考</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://kingson4wu.github.io/2026/02/04/20260204-ren-lei-yu-mo-xing-de-gong-tong-te-zheng-zhi-jue-xian-xing-jie-shi-zai-hou/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">人类与模型的共同特征：直觉先行，解释在后</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2026-02-04T13:38:34+00:00">
+                2026-02-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<blockquote>
+<p>以下为个人观点，并由AI辅助整理</p>
+</blockquote>
+</blockquote>
+<h2 id="一、问题背景：为什么“解释”总是靠不住"><a href="#一、问题背景：为什么“解释”总是靠不住" class="headerlink" title="一、问题背景：为什么“解释”总是靠不住"></a>一、问题背景：为什么“解释”总是靠不住</h2><p>无论是人类还是当前的大模型，都存在一个共同现象：</p>
+<ul>
+<li>可以给出结果</li>
+<li>可以在结果之后补充一套看似合理的“推理过程”</li>
+<li>但<strong>无法保证这套解释真实反映了内部是如何得出结果的</strong></li>
+</ul>
+<p>模型生成的所谓推理链，本质上是<strong>在答案已经高度确定之后，额外生成的一段语言说明</strong>。它更像是一种说明文档，而不是运行日志。</p>
+<p>人类也是类似的：</p>
+<ul>
+<li>判断往往在很短时间内完成</li>
+<li>真实的心理与神经过程高度并行、不可访问</li>
+<li>语言层面的理由，大多是事后整理出来的</li>
+</ul>
+<p>这并不是说解释完全无价值——事后的解释可能确实捕捉到了某些真实模式，但它通常是<strong>不完整、不精确的</strong>，更重要的是，它无法完整还原那个瞬间真正发生的内部过程。</p>
+<p>因此，“能否解释清楚”并不能作为是否真正理解或是否真的推理过的可靠标准。</p>
+<hr>
+<h2 id="二、直觉先行，解释随后"><a href="#二、直觉先行，解释随后" class="headerlink" title="二、直觉先行，解释随后"></a>二、直觉先行，解释随后</h2><p>很多真实的认知活动都遵循同一个顺序：</p>
+<ol>
+<li>先产生判断或反应</li>
+<li>再尝试为这个反应寻找理由</li>
+</ol>
+<p>不论是棋手的“这步不对”，程序员的“这里有问题”，还是模型的下一个 token 预测，本质上都是：</p>
+<ul>
+<li>大量历史经验</li>
+<li>在高维空间中</li>
+<li>压缩成一种快速、稳定的反应模式</li>
+</ul>
+<p>解释并不是决策的来源，而是<strong>对结果的一种语言化整理</strong>。</p>
+<p>所以更准确的说法是：</p>
+<blockquote>
+<p>判断依赖结构和经验，解释只是随后附加的说明层。</p>
+</blockquote>
+<hr>
+<h2 id="三、重新理解“理解”"><a href="#三、重新理解“理解”" class="headerlink" title="三、重新理解“理解”"></a>三、重新理解“理解”</h2><p>当我们承认解释具有明显的事后性，就必须重新看待“理解”这个概念。</p>
+<p>与其把理解看成：</p>
+<ul>
+<li>能清楚复述规则</li>
+<li>能完整说明因果链</li>
+</ul>
+<p>不如把它看成一种更实际的能力：</p>
+<blockquote>
+<p><strong>在不同情境、不同表述下，仍然能持续给出合理反应的能力。</strong></p>
+</blockquote>
+<p>也就是说，理解并不体现在“你说了什么理由”，而体现在：</p>
+<ul>
+<li>条件变了，你还能不能做对</li>
+<li>表面规则失效了，你还能不能调整</li>
+</ul>
+<p>从这个角度看，理解更接近于一种<strong>被经验塑形过的内部结构</strong>。但这个结构本身——由于其复杂性、高维性、分布式特征——往往难以被线性的语言完整描述。即使我们承认理解是结构性的，也不意味着这个结构就能被转化为清晰、可言说的规则。</p>
+<hr>
+<h2 id="四、深度模型的基础设计：本质是在做“表达假设”"><a href="#四、深度模型的基础设计：本质是在做“表达假设”" class="headerlink" title="四、深度模型的基础设计：本质是在做“表达假设”"></a>四、深度模型的基础设计：本质是在做“表达假设”</h2><p>在这个框架下，再回头看深度学习中的一些基础做法，就会更清楚它们的意义。</p>
+<p>离散化、归一化、激活函数、注意力机制、正则化、网络结构，往往被描述为工程技巧，但更本质地看，它们是在回答同一个问题：</p>
+<blockquote>
+<p><strong>怎样的表示方式，更适合让模型从现实数据中学习到稳定、可泛化的模式？</strong></p>
+</blockquote>
+<p>例如：</p>
+<ul>
+<li><strong>离散化</strong>：把连续世界切分成可组合的单元，便于模式复用</li>
+<li><strong>归一化</strong>：弱化绝对尺度，让特征在同一标准下竞争</li>
+<li><strong>激活函数</strong>：让表示空间出现分区，而不是一块平坦的线性空间</li>
+<li><strong>注意力机制</strong>：假设有效学习需要选择性关注</li>
+<li><strong>正则化</strong>：假设简单模式优于复杂拟合</li>
+<li><strong>层级结构</strong>：假设现实问题本身具有分层生成特征</li>
+</ul>
+<p>这些设计并不是中性的，而是隐含了我们对现实问题在统计与结构层面如何生成的判断。</p>
+<hr>
+<h2 id="五、模型结构与人类方法论的相似之处"><a href="#五、模型结构与人类方法论的相似之处" class="headerlink" title="五、模型结构与人类方法论的相似之处"></a>五、模型结构与人类方法论的相似之处</h2><p>从更高一层看，模型中的激活函数、优化方法、网络结构，与人类长期通过经验总结出来的各种技巧、方法论、学习方法，处在<strong>同一个抽象层级</strong>。</p>
+<p>两者的共同点在于：</p>
+<ul>
+<li><p><strong>都无法解释单次成功的内部机制</strong></p>
+<ul>
+<li>人类通常无法解释某个人为什么在某一瞬间就“想明白了”</li>
+<li>模型同样无法说清某个具体输出是如何在那一轮前向传播中被精确推理出来的</li>
+</ul>
+</li>
+<li><p><strong>但都掌握了提高成功率的经验性方法</strong></p>
+<ul>
+<li>人类相信：遵循长期经验中总结出来的方法——比如刻意练习、间隔重复、费曼学习法、从具体到抽象的认知路径——大概率就能学会新东西</li>
+<li>深度学习同样相信：通过离散化、归一化、注意力机制、正则化、优化算法等方法的组合，模型就具备学习新任务、新模式的能力</li>
+</ul>
+</li>
+</ul>
+<p>也就是说，人类并不掌握“成功推理的内部机制”，而是掌握了一套<strong>关于如何更容易产生成功推理的经验性方法论</strong>。深度学习的情况高度类似。</p>
+<p>因此，这些方法并不是在替代推理本身，而是在<strong>提高产生有效推理结果的概率</strong>。它们关注的不是“一次推理如何发生”，而是“在什么条件下，推理更可能成功”。</p>
+<p>这意味着，理解大模型不能沿用传统规则编程的思维。传统编程是通过明确的指令和逻辑控制让程序执行特定行为，但大模型更像是一个人——<strong>你无法通过编写规则让它做某件事，而只能通过各种学习方法，促使它按预期的倾向去行动</strong>。这种倾向性是在训练过程中逐步形成的，而不是被显式编程进去的。</p>
+<hr>
+<h2 id="六、反思的作用：不是还原过程，而是强化直觉"><a href="#六、反思的作用：不是还原过程，而是强化直觉" class="headerlink" title="六、反思的作用：不是还原过程，而是强化直觉"></a>六、反思的作用：不是还原过程，而是强化直觉</h2><p>无论是人类的自省，还是模型中的反思、再生成机制，它们的主要作用都不是“回看真实内部过程”，而是：</p>
+<ul>
+<li>调整行为结果</li>
+<li>稳定有用的反应模式</li>
+<li>在下一次遇到类似问题时表现得更好</li>
+</ul>
+<p>不过，人类与当前模型在这一点上存在一定差异：</p>
+<ul>
+<li><strong>人类具有主动的元认知能力</strong>：可以在任务进行中实时监控、调整策略，甚至质疑自己的判断方式</li>
+<li><strong>模型的反思更接近被动的再训练</strong>：通过额外的生成步骤或微调来改进输出，但缺乏真正的自我监控机制</li>
+</ul>
+<p>尽管如此，两者在功能上仍然相似：反思更像是一种<strong>二次训练或优化</strong>，而不是对原始推理路径的精确还原。</p>
+<hr>
+<h2 id="七、结论：理解是结构化经验的持续响应能力"><a href="#七、结论：理解是结构化经验的持续响应能力" class="headerlink" title="七、结论：理解是结构化经验的持续响应能力"></a>七、结论：理解是结构化经验的持续响应能力</h2><p>这些观察共同指向一个更深层的认识：<strong>认知的本质不在于可表述性，而在于适应性。</strong></p>
+<p>具体来说：</p>
+<ul>
+<li><p><strong>解释的事后性</strong>：大模型可以给出结果，但无法直接说明真实的内部路径；即便给出“推理过程”，也更接近事后生成的解释。人类在这一点上高度一致。解释虽有价值，但通常不完整、不精确。</p>
+</li>
+<li><p><strong>直觉先于解释</strong>：无论是人类还是模型，很多关键判断都在瞬间完成，真正发生的是结构化经验的快速响应；解释只是随后附加的说明。</p>
+</li>
+<li><p><strong>理解的实质</strong>：理解并不等同于“说清楚原因”，而更接近于<strong>在复杂、不确定的环境中，持续做出合适反应的能力</strong>。这种能力基于内部结构，而这个结构由于其复杂性和高维性，往往难以被完整地语言化。</p>
+</li>
+<li><p><strong>方法论的同构性</strong>：激活函数、优化方法、网络结构，本质上类似人类事后总结的方法论。它们并不替代思考，而是为学习提供合适的结构和约束。人类学习新事物，也是通过不断组合经验与方法，逐步形成稳定的判断直觉；模型训练在结构上并无本质差别。</p>
+</li>
+<li><p><strong>引导而非控制</strong>：这种相似性提醒我们，与大模型交互的方式应该更接近教育而非编程——不是通过精确的规则指令，而是通过示例、反馈、环境塑造，引导模型形成期望的行为倾向。</p>
+</li>
+<li><p><strong>反思的功能</strong>：通过反复训练与反思，这种直觉可以被不断强化，但它本身并不依赖于可被清晰表述的推理链。人类在元认知层面具有一定优势，但反思的基本功能——强化而非还原——在两者中是共通的。</p>
+</li>
+</ul>
+<p>从这个角度看，无论是人类的认知还是深度模型的学习，本质都是：<strong>在经验与结构的相互作用中，形成稳定、可泛化的反应模式</strong>。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/AI/" rel="tag"># AI</a>
+          
+            <a href="/tags/LLM/" rel="tag"># LLM</a>
+          
+            <a href="/tags/AI%E5%93%B2%E5%AD%A6/" rel="tag"># AI哲学</a>
+          
+            <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag"># 深度学习</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2026/02/03/20260203-wei-diao-yu-zheng-liu-de-ben-zhi-han-shu-bi-jin-shi-jiao-xia-de-ji-zhi-jie-xi/" rel="next" title="微调与蒸馏的本质：函数逼近视角下的机制解析">
+                <i class="fa fa-chevron-left"></i> 微调与蒸馏的本质：函数逼近视角下的机制解析
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2026/02/04/20260204-cong-prompt-dao-tan-ji-agentic-rag-ai-shi-dai-de-ren-lei-ren-zhi-wai-hua/" rel="prev" title="从 Prompt 到碳基 Agentic RAG：AI 时代的人类认知外化">
+                从 Prompt 到碳基 Agentic RAG：AI 时代的人类认知外化 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div id="gitalk-container"></div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.png"
+                alt="" />
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+<a href="/archives/">                
+<!--<a href="/archives/%7C%7C%20archive">-->
+              
+                  <span class="site-state-item-count">208</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">267</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E9%97%AE%E9%A2%98%E8%83%8C%E6%99%AF%EF%BC%9A%E4%B8%BA%E4%BB%80%E4%B9%88%E2%80%9C%E8%A7%A3%E9%87%8A%E2%80%9D%E6%80%BB%E6%98%AF%E9%9D%A0%E4%B8%8D%E4%BD%8F"><span class="nav-number">1.</span> <span class="nav-text">一、问题背景：为什么“解释”总是靠不住</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E7%9B%B4%E8%A7%89%E5%85%88%E8%A1%8C%EF%BC%8C%E8%A7%A3%E9%87%8A%E9%9A%8F%E5%90%8E"><span class="nav-number">2.</span> <span class="nav-text">二、直觉先行，解释随后</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E9%87%8D%E6%96%B0%E7%90%86%E8%A7%A3%E2%80%9C%E7%90%86%E8%A7%A3%E2%80%9D"><span class="nav-number">3.</span> <span class="nav-text">三、重新理解“理解”</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E6%B7%B1%E5%BA%A6%E6%A8%A1%E5%9E%8B%E7%9A%84%E5%9F%BA%E7%A1%80%E8%AE%BE%E8%AE%A1%EF%BC%9A%E6%9C%AC%E8%B4%A8%E6%98%AF%E5%9C%A8%E5%81%9A%E2%80%9C%E8%A1%A8%E8%BE%BE%E5%81%87%E8%AE%BE%E2%80%9D"><span class="nav-number">4.</span> <span class="nav-text">四、深度模型的基础设计：本质是在做“表达假设”</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E6%A8%A1%E5%9E%8B%E7%BB%93%E6%9E%84%E4%B8%8E%E4%BA%BA%E7%B1%BB%E6%96%B9%E6%B3%95%E8%AE%BA%E7%9A%84%E7%9B%B8%E4%BC%BC%E4%B9%8B%E5%A4%84"><span class="nav-number">5.</span> <span class="nav-text">五、模型结构与人类方法论的相似之处</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E5%8F%8D%E6%80%9D%E7%9A%84%E4%BD%9C%E7%94%A8%EF%BC%9A%E4%B8%8D%E6%98%AF%E8%BF%98%E5%8E%9F%E8%BF%87%E7%A8%8B%EF%BC%8C%E8%80%8C%E6%98%AF%E5%BC%BA%E5%8C%96%E7%9B%B4%E8%A7%89"><span class="nav-number">6.</span> <span class="nav-text">六、反思的作用：不是还原过程，而是强化直觉</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E7%BB%93%E8%AE%BA%EF%BC%9A%E7%90%86%E8%A7%A3%E6%98%AF%E7%BB%93%E6%9E%84%E5%8C%96%E7%BB%8F%E9%AA%8C%E7%9A%84%E6%8C%81%E7%BB%AD%E5%93%8D%E5%BA%94%E8%83%BD%E5%8A%9B"><span class="nav-number">7.</span> <span class="nav-text">七、结论：理解是结构化经验的持续响应能力</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kingson Wu</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+  <script src="/js/src/md5.min.js"></script>
+
+   <script type="text/javascript">
+        var gitalk = new Gitalk({
+          clientID: '3416434437f9f4e049bd',
+          clientSecret: 'a52d69bf90cb77f81a26d135e03dd0f4869fbf84',
+          repo: 'kingson4wu.github.io',
+          owner: 'kingson4wu',
+          admin: ['kingson4wu'],
+
+          id: md5(location.pathname),
+
+          distractionFreeMode: 'true'
+        })
+        gitalk.render('gitalk-container')
+    </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

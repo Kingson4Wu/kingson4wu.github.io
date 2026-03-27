@@ -1,0 +1,25 @@
+<mxfile host="Electron" modified="2023-05-22T06:10:13.703Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/21.2.1 Chrome/112.0.5615.87 Electron/24.1.2 Safari/537.36" etag="OBoHodsZeyG-671xR5vA" version="21.2.1" type="device">
+  <diagram name="第 1 页" id="1yjjqfhhYM3eo_SSomgb">
+    <mxGraphModel dx="901" dy="674" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="dF69NKPpcGaOC6fjH79P-2" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="100" y="380" width="360" height="240" as="geometry" />
+        </mxCell>
+        <mxCell id="dF69NKPpcGaOC6fjH79P-4" value="Machine" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;gradientColor=#b3b3b3;strokeColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="110" y="390" width="90" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="dF69NKPpcGaOC6fjH79P-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="235" y="460" as="sourcePoint" />
+            <mxPoint x="235" y="460" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="dF69NKPpcGaOC6fjH79P-12" value="Go Binary Executable File" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="220" y="490" width="150" height="60" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

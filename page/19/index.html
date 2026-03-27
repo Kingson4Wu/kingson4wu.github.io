@@ -1,0 +1,2859 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="google-site-verification" content="google-site-verification=n4yVkaTfu2KtQ8fiQ3Ri60FPAbRF74oxrDOkOXWjhSs" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/uploads/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="拉巴力的纸皮箱" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="Kingson Wu的技术博客，分享编程、架构、AI等技术笔记和个人思考">
+<meta property="og:type" content="website">
+<meta property="og:title" content="拉巴力的纸皮箱">
+<meta property="og:url" content="https://kingson4wu.github.io/page/19/index.html">
+<meta property="og:site_name" content="拉巴力的纸皮箱">
+<meta property="og:description" content="Kingson Wu的技术博客，分享编程、架构、AI等技术笔记和个人思考">
+<meta property="og:locale">
+<meta property="article:author" content="Kingson Wu">
+<meta property="article:tag" content="技术博客,编程,架构,软件开发,AI,人工智能,后端开发,Java,Go,系统设计">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://kingson4wu.github.io/page/19/"/>
+
+
+
+
+
+  <title>拉巴力的纸皮箱 - 技术博客 | 记录学习笔记和思考</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'G-4QEGQ2DGGT', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left 
+  page-home">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">拉巴力的纸皮箱</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">技术博客 | 记录学习笔记和思考</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+  <section id="posts" class="posts-expand">
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://kingson4wu.github.io/2020/07/16/20200716-shi-yong-zi-xuan-jiang-di-ye-wu-shi-bai-lu/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/07/16/20200716-shi-yong-zi-xuan-jiang-di-ye-wu-shi-bai-lu/" itemprop="url">使用“自旋”降低业务失败率</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-16T22:57:09+00:00">
+                2020-07-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="业务场景描述"><a href="#业务场景描述" class="headerlink" title="业务场景描述"></a>业务场景描述</h3><p>不说废话，直接描述以下两个业务场景</p>
+<ol>
+<li>使用分布式锁控制并发<pre>
+请求----------> 服务A
+       [1.尝试获取锁]
+       [2.获取锁失败]
+       [3.返回失败(提示操作太快)]</pre></li>
+</ol>
+<p><br>2. 强依赖服务超时或“请求处理中”</p>
+<pre>
+请求----------> 服务A
+          [1.强依赖请求]----------> 服务B
+                           [2.执行慢(网络抖动等原因)]
+          [3.请求服务B超时]   
+          [4.返回失败(提示服务繁忙)]
+</pre>
+
+<h3 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h3><ol>
+<li>场景1在获取锁失败时直接返回业务失败，可以考虑二次尝试；</li>
+<li>场景2因为服务B执行慢，直接返回上层失败。<ul>
+<li>服务A重试请求服务B时，可能请求已经执行完，很快就返回成功；或者服务B仍在执行该请求，返回“执行中”错误码。</li>
+</ul>
+</li>
+</ol>
+<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><ol>
+<li>场景1可以使用“自旋”减少失败率：在抢锁失败时，当前线程“自旋”100m以内的随机数，再二次获取锁；</li>
+<li>场景2同样可以使用“自旋”减少失败率：服务A在请求超时或收到“执行中”错误码时，同样自旋后再次重试，较大概率得到成功结果。</li>
+</ol>
+<h3 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h3><ul>
+<li>自旋同样需要考虑“比例”问题，不然大量自旋会影响服务的吞吐量，具体可参考:<a href="https://kingson4wu.github.io/2020/07/13/20200713-%E7%94%B1%E7%81%BE%E5%A4%87%E5%B7%A5%E4%BD%9C%E4%B8%AD%E5%BC%95%E5%8F%91%E7%9A%84%E5%AF%B9%E2%80%9C%E6%AF%94%E4%BE%8B%E2%80%9D%E7%9A%84%E6%80%9D%E8%80%83/">由灾备工作中引发的对“比例”的思考</a></li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://kingson4wu.github.io/2020/07/15/20200715-canal-shi-yong-zong-jie/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/07/15/20200715-canal-shi-yong-zong-jie/" itemprop="url">canal使用总结</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-15T23:07:33+00:00">
+                2020-07-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>本文只讲自己在使用canal之后的一些总结，关于canal的基础用法和介绍，不在这里赘述。</p>
+<h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><ul>
+<li><p>canal的原理是基于mysql binlog技术，所以这里一定需要开启mysql的binlog写入功能，建议配置binlog模式为row</p>
+</li>
+<li><p>原文：<a target="_blank" rel="noopener" href="https://blog.csdn.net/liupeifeng3514/article/details/79687130">https://blog.csdn.net/liupeifeng3514/article/details/79687130</a> </p>
+</li>
+<li><p>mysql的自带复制技术可分成三步：</p>
+<ol>
+<li>master将改变记录到二进制日志(binary log)中（这些记录叫做二进制日志事件，binary log events，可以通过show binlog events进行查看）；</li>
+<li>slave将master的binary log events拷贝到它的中继日志(relay log)，这里是I&#x2F;O thread线程；</li>
+<li>slave重做中继日志中的事件，将改变反映它自己的数据，这里是SQL thread线程。</li>
+</ol>
+</li>
+<li><p>基于canal&amp;otter的复制技术和mysql复制类似，具有类比性：</p>
+<ol>
+<li>Canal对应于I&#x2F;O thread，接收Master Binary Log；</li>
+<li>Otter对应于SQL thread，通过Canal获取Binary Log数据，执行同步插入数据库；</li>
+</ol>
+</li>
+<li><p>两者的区别在于：</p>
+<ol>
+<li>otter目前嵌入式依赖canal，部署为同一个jvm，目前设计为不产生Relay Log，数据不落地；</li>
+<li>otter目前允许自定义同步逻辑，解决各类需求；<br>  a. ETL转化. 比如Slave上目标表的表名，字段名，字段类型不同，字段个数不同等.<br>  b. 异构数据库. 比如Slave可以是oracle或者其他类型的存储,nosql等.<br>  c. M-M部署，解决数据一致性问题<br>  d. 基于manager部署，方便监控同步状态和管理同步任务.</li>
+</ol>
+</li>
+<li><p>canal的工作原理：</p>
+<ul>
+<li>canal模拟mysql slave的交互协议，伪装自己为mysql slave，向mysql master发送dump协议</li>
+<li>mysql master收到dump请求，开始推送binary log给slave(也就是canal)</li>
+<li>canal解析binary log对象(原始为byte流)</li>
+</ul>
+</li>
+</ul>
+<h3 id="使用简述"><a href="#使用简述" class="headerlink" title="使用简述"></a>使用简述</h3><ol>
+<li>对MySQL给canal-server授权<ul>
+<li><code>CREATE USER &#39;canal_server&#39; IDENTIFIED BY &#39;canal_server&#39;;</code></li>
+<li><code>GRANT SELECT, REPLICATION SLAVE, REPLICATION CLIENT ON *.* TO &#39;canal_server&#39;;</code></li>
+</ul>
+</li>
+<li>canal使用ZK来做HA，因为涉及多个client时，消费计算的业务较为复杂的问题，所以目前在使用上只是单点部署，基本能满足需求。</li>
+</ol>
+<h3 id="使用总结"><a href="#使用总结" class="headerlink" title="使用总结"></a>使用总结</h3><ol>
+<li>可以通过指定binlog文件和position来重放binlog数据：</li>
+<li>如何查看MySQL位点：<a target="_blank" rel="noopener" href="https://blog.csdn.net/c1052981766/article/details/80604083">https://blog.csdn.net/c1052981766/article/details/80604083</a><ul>
+<li><code>show master status</code></li>
+<li><code>show binary logs</code></li>
+<li><code>show binlog events in &#39;binlog.000368&#39; limit 10;</code> &#x2F;&#x2F;pos 就是位点, 重启 canal</li>
+<li>如何查到旧记录的位点？<ol>
+<li>由canal-server中meta.dat记录</li>
+<li>通过 mysqlbinlog 命令分析 mysql-bin.xxx 文件内容，确定增量恢复到的时间点（运维协助）。</li>
+</ol>
+</li>
+</ul>
+</li>
+<li>除了用pos点的办法进行恢复，也可以通过指定时间区间进行恢复，按时间恢复需要用mysqlbinlog命令读取binlog日志内容，找时间节点。<ul>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/zyz511919766/article/details/38089393">使用mysqlbinlog工具进行基于位置或时间点的数据恢复</a></li>
+</ul>
+</li>
+<li>重跑。修改instance.properties文件设置重跑起始位点，删除meta.dat文件并重启。注意回放数据时视业务情况，可能要忽略第一个位点对应的数据。</li>
+<li>重启之后batchId会变，所以不能使用batchId来做幂等处理</li>
+<li>使用mysql主从同步和使用canal同步的区别? 同步数据为什么不直接用主从同步机制？<ol>
+<li>mysql版本不一致，不支持主从同步</li>
+<li>并不是自己的库，只需要同步几张表，运维不会做这种定制化</li>
+<li>完成同步目标后，可方便拆卸和控制</li>
+</ol>
+</li>
+<li>client重启如何对应原来的位点<ul>
+<li>canal client和server交互之间的身份标识，目前clientId写死为1001. (目前canal server上的一个instance只能有一个client消费，clientId的设计是为1个instance多client消费模式而预留的，暂时不需要理会)</li>
+</ul>
+</li>
+</ol>
+<h3 id="canal和MySQL相关资料"><a href="#canal和MySQL相关资料" class="headerlink" title="canal和MySQL相关资料"></a>canal和MySQL相关资料</h3><ol>
+<li>下载：<a target="_blank" rel="noopener" href="https://github.com/alibaba/canal/releases/download/canal-1.1.4/canal.deployer-1.1.4.tar.gz">https://github.com/alibaba/canal/releases/download/canal-1.1.4/canal.deployer-1.1.4.tar.gz</a></li>
+<li><code>canal.instance.gtidon</code>   是否启用mysql gtid的订阅模式 <ul>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/wmq880204/article/details/53160078">Mysql GTID 模式详解</a></li>
+</ul>
+</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/alibaba/canal/wiki/QuickStart">https://github.com/alibaba/canal/wiki/QuickStart</a><br><a target="_blank" rel="noopener" href="https://github.com/alibaba/canal/wiki/AdminGuide">https://github.com/alibaba/canal/wiki/AdminGuide</a><br><a target="_blank" rel="noopener" href="https://github.com/alibaba/canal/wiki/ClientExample">https://github.com/alibaba/canal/wiki/ClientExample</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/sunss/archive/2010/10/05/1844204.html">MySQL数据库的授权原则</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/0f580647905c">canal 高可用介绍</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/f-zhao/p/7681960.html">canal和otter的高可靠性分析</a></li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://kingson4wu.github.io/2020/07/14/20200714-ru-he-jie-shou-yi-ge-jiu-xiang-mu/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/07/14/20200714-ru-he-jie-shou-yi-ge-jiu-xiang-mu/" itemprop="url">如何接手一个旧项目</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-14T21:57:47+00:00">
+                2020-07-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<blockquote>
+<p>改变心态，以前会抱怨业务乱，但是业务在发展过程中乱是很正常的，也要有人来主动整理，同时也在考验和锻炼整理人的能力。</p>
+</blockquote>
+</blockquote>
+<ol>
+<li>梳理现有业务文档，进行归类(如果有的话？)</li>
+<li>拉代码，服务本地跑起来，并跑通单元测试</li>
+<li>梳理服务现有的所有监控平台和数据</li>
+<li>梳理服务的依赖关系和超时时间</li>
+<li>梳理服务的依赖组件（MQ，Redis，DB等）和部署情况</li>
+<li>数据库表梳理</li>
+<li>了解服务的部署和灾备架构（机器数，机房，流量入口）</li>
+<li>代码核心逻辑阅读（核心流量接口）</li>
+<li>了解服务的监控情况，常用配置和开关，相关告警配置通知人</li>
+<li>待优化任务和遗留问题接手</li>
+</ol>
+<h2 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/lJAbzU43RJU-YLFMfiM__w">软件泥潭真体验</a><ul>
+<li>“定时炸弹”</li>
+</ul>
+</li>
+</ul>
+<pre>
+附录1: 交接列表示例（设计与开发）
+
+## 项目管理
+    - 项目日程 
+    - 会议记录
+    - 体制图 
+## 项目要件
+    - 业务功能清单 
+    - 业务流程图 
+    - 需求变更记录 
+    - 操作说明书/用户手册 
+    - 常见问题一览 
+## 界面设计
+    - UE设计稿
+    - 高保真画面设计稿
+    - 需求变更一览
+## 系统设计
+    - 系统架构设计图
+    - 部署架构图DB关联图（ER图）和DB详细设计
+    - 系统间集成关系图
+    - 对接系统一览表和对接系统接口清单
+## 开发制作
+    - 源代码
+    - 代码运行说明
+## 测试
+    - 系统测试用例与系统测试报告书
+    - 性能测试用例与性能测试报告书
+    - 用户测试用例
+    - 用户测试签字
+
+附录2: 交接列表示例（运维相关）
+
+## 上线相关
+    - 上线判定表
+    - 上线操作记录
+    - 历次上线版本说明
+    - 临时对应体制
+## 基础设施
+    - 硬件资源一览
+    - 软件资源一览
+    - 服务器/系统账号权限
+    - 系统工具 - 付费/免费软件
+## 运维体制
+    - 运维工作一览表
+    - 近半年运维工作应对流程
+    - 运维体制
+    - 故障对应流程
+    - SLA（服务水平协议）
+## DEVOPS（开发运维一体化）
+    - CI/CD工具与使用
+    - 监控工具
+    - 备份管理
+    - 代码库与分支管理
+    - 数据库相关配置与策略
+
+</pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://kingson4wu.github.io/2020/07/14/20200714-dan-yuan-ce-shi-de-gong-ju-he-ji-qiao/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/07/14/20200714-dan-yuan-ce-shi-de-gong-ju-he-ji-qiao/" itemprop="url">单元测试的工具和技巧</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-14T21:42:41+00:00">
+                2020-07-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="提高单元测试覆盖率"><a href="#提高单元测试覆盖率" class="headerlink" title="提高单元测试覆盖率"></a>提高单元测试覆盖率</h3><ul>
+<li><p>提高bean类的覆盖率</p>
+<ol>
+<li>pojo-tester</li>
+<li>lombok [lɒmˈbɒk]</li>
+<li>kotlin</li>
+</ol>
+</li>
+<li><p>定义一些过滤规则</p>
+</li>
+</ul>
+<h3 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h3><ul>
+<li>mock神器：mockito</li>
+<li>sql模拟测试：h2</li>
+<li>对测试进行参数化: JUnitParams</li>
+<li>Awaitility: 一个小型的Java领域专用语言（DSL），用于对异步的操作进行同步。<br><a target="_blank" rel="noopener" href="https://www.ctolib.com/topics-109441.html">https://www.ctolib.com/topics-109441.html</a></li>
+<li>WireMock: 用于模拟HTTP服务的工具 （对外部服务打桩） </li>
+<li>Selenium：编写UI驱动的端到端测试</li>
+</ul>
+<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><ul>
+<li><p>使用 集成测试 覆盖若干个完整的核心流程</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/2tBrkzjeufAP-CNrNcJb9A">测试金字塔（深度好文）</a></p>
+</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://kingson4wu.github.io/2020/07/14/20200714-ye-wu-chong-gou-shi-jian-zong-jie/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/07/14/20200714-ye-wu-chong-gou-shi-jian-zong-jie/" itemprop="url">业务重构实践总结</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-14T20:14:58+00:00">
+                2020-07-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<blockquote>
+<p>业务重构似乎是必然且合理的过程。一个项目刚开始为了快速上线和试错，总会或多或少出现不合理的地方。当项目活下来了，为了寻求下一步的发展，服务的稳定和扩展性提升了优先级，自然就需要有人来重构了，这也是项目历史遗留的技术债务。</p>
+</blockquote>
+</blockquote>
+<h3 id="项目背景"><a href="#项目背景" class="headerlink" title="项目背景"></a>项目背景</h3><ul>
+<li>公司原有的业务几乎都是PHP编写的，并且处于一个很大的项目里维护和运行，可以说是大杂烩。随着业务发展和用户量的提升，渐渐得暴露了很多问题：<ol>
+<li>PHP运行效率较低，业务未进行隔离，出问题时相互影响；</li>
+<li>PHP 过于灵活的语言特性，导致后期较高的后期维护成本；</li>
+<li>基础框架和服务对PHP支持不足；</li>
+<li>实现灾备比较困难。</li>
+</ol>
+</li>
+</ul>
+<h3 id="重构语言选择"><a href="#重构语言选择" class="headerlink" title="重构语言选择"></a>重构语言选择</h3><ul>
+<li>我们选择Java作为开发语言进行重构<ol>
+<li>静态类型，多人协作开发和维护更加安全可靠；</li>
+<li>内部基础组件的 Java 版生态比较完善；</li>
+<li>学习成本低，且开发效率较 PHP 没有明显降低。</li>
+</ol>
+</li>
+</ul>
+<h3 id="重构的工作是什么？"><a href="#重构的工作是什么？" class="headerlink" title="重构的工作是什么？"></a>重构的工作是什么？</h3><ol>
+<li>最简单直接的主要工作：就是充当PHP到Java语言的翻译，将PHP代码转化成Java代码，并保持逻辑不变，对上层业务是无感知的；</li>
+<li>除此之外，对业务逻辑进行优化和简化，提高后续的可维护性和开发效率；对服务架构进行优化，提升服务的稳定性和可靠性。这是重构的主要意义；</li>
+<li>重构完成之后，制定完善的验证和上线方案。</li>
+</ol>
+<h3 id="实施过程"><a href="#实施过程" class="headerlink" title="实施过程"></a>实施过程</h3><ul>
+<li>Step 1. 用 Java 重构逻辑<ul>
+<li>对外暴露的协议（HTTP 、RPC 接口定义和返回数据）与之前保持一致（保持协议一致很重要，之后迁移依赖方会更方便）</li>
+<li>尽量翻译而不是重构优化（至少第一版重构采取这样的策略）</li>
+</ul>
+</li>
+<li>Step 2. 验证新逻辑正确性<ul>
+<li>当代码重构完成后，在将流量切换到新逻辑之前，我们会先验证新服务的正确性。</li>
+<li>考验对业务的熟悉程度和翻译的准确度（代码太久远，最熟悉的可能只有你自己）</li>
+<li>单元测试保证</li>
+</ul>
+</li>
+<li>Step 3. 灰度放量<ul>
+<li>当一切验证通过之后，我们会开始按照百分比转发流量。</li>
+<li>PHP入口对接底层新逻辑（验证逻辑正确性；之所以不直接从流量入口切换，是为了保证稳定性，在出现问题时可以迅速回滚。）</li>
+<li>外网代理切到新接口（保持协议一致，无需前端修改，切换彻底）</li>
+</ul>
+</li>
+</ul>
+<h3 id="经验总结"><a href="#经验总结" class="headerlink" title="经验总结"></a>经验总结</h3><ol>
+<li>PHP代码太复杂，项目又不容易跑起来怎么办？<ul>
+<li>默默睁大眼睛翻译还能怎样。。。</li>
+<li>如何验证是否翻译正确？</li>
+<li>找个在线PHP执行平台把复杂的代码片断跑起来，按照执行结果编写测试用例</li>
+</ul>
+</li>
+<li>PHP代码太狗血太久远，万一翻译到半死发现这段逻辑根本已经没用了怎么办？<ul>
+<li>把你的服务当nginx用，参数不符合条件的转发到旧服务，记录入参和返回结果，打日志和监控观察流量</li>
+</ul>
+</li>
+</ol>
+<h3 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h3><ol>
+<li>不能相信自己</li>
+<li>不能相信别人</li>
+<li>只能相信自己</li>
+<li>乖乖覆盖测试用例</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://kingson4wu.github.io/2020/07/13/20200713-you-zai-bei-gong-zuo-zhong-yin-fa-de-dui-bi-li-de-si-kao/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/07/13/20200713-you-zai-bei-gong-zuo-zhong-yin-fa-de-dui-bi-li-de-si-kao/" itemprop="url">由灾备工作中引发的对“比例”的思考</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-13T23:31:30+00:00">
+                2020-07-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><ul>
+<li>关于文章的题目我想了很久，暂时没想到合适的题目，姑且先这样吧</li>
+<li>之前在做灾备工作的时候，经常涉及服务的强弱依赖，超时时间，降级，以及业务折中方面的思考，下面将通过一些例子简要进行描述</li>
+</ul>
+<h3 id="场景描述"><a href="#场景描述" class="headerlink" title="场景描述"></a>场景描述</h3><ul>
+<li><p>从服务所依赖的重要程度上来区分有“强依赖”和“弱依赖”。</p>
+<ol>
+<li>通常上，针对“弱依赖”我们会设置较小的超时时间(比如100ms以内)，并且在失败率较高是进行降级；</li>
+<li>而针对“强依赖”我们会设置一个较大的超时时间，当接口失败时返回“服务繁忙“，表示暂不可用(当然可以产品层面进行合适的引导)</li>
+</ol>
+</li>
+<li><p>我们在灾备演练中，通过停其中一个机房，触发以下的问题</p>
+<ol>
+<li>强依赖超时问题（停机房瞬间）</li>
+<li>弱依赖多变长的问题（停机房期间）</li>
+</ol>
+</li>
+<li><p>从而导致停机房瞬间接口失败率高，停机房期间接口时延上涨严重。由此引发我对“比例“问题的思考。</p>
+<ol>
+<li>强依赖超时时间设长，可以减少失败率，但也有可能导致服务worker线程池被占满而拒绝请求。</li>
+<li>弱依赖虽然每个都设置100ms以内，但是当依赖的服务超过10个时(真实业务真的有)，可能导致总时长超过一秒(弱依赖慢但都没熔断，所以没降级；可异步并发的弱依赖的另说)</li>
+</ol>
+</li>
+</ul>
+<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><ol>
+<li>对强依赖，可设置超时时间的比例（比如只有20%的请求可以超过1s，其他的控制在100ms以内），解决停机房瞬间，线程池占满拒绝请求的问题</li>
+<li>对弱依赖，可控制多个弱依赖的总超时时间，解决停机房期间跨机房调用导致时延一直上涨的问题<ul>
+<li>单个调用超时时间可分级设置比例；多个调用（可熔断）可聚合在一起设置总超时时间比例</li>
+<li>降级优先级排序，控制总时间。熔断线程池，控制比例超时。允许一定的时间超时。流量控制。物理隔离。</li>
+</ul>
+</li>
+</ol>
+<h3 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h3><ol>
+<li>针对<a href="https://kingson4wu.github.io/2020/07/12/20200712-%E4%BD%BF%E7%94%A8%E5%9B%9E%E8%B0%83%E6%9C%BA%E5%88%B6%E6%8F%90%E9%AB%98%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%80%A7/">使用回调机制提高接口安全性</a>所讲的，某些网络场景可以考虑针对大金额的请求才回调，减少RPC次数，这其实也是一个“比例”问题。</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://kingson4wu.github.io/2020/07/12/20200712-shi-yong-hui-diao-ji-zhi-ti-gao-jie-kou-an-quan-xing/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/07/12/20200712-shi-yong-hui-diao-ji-zhi-ti-gao-jie-kou-an-quan-xing/" itemprop="url">使用回调机制提高接口安全性</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-12T23:29:36+00:00">
+                2020-07-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><ul>
+<li>接口回调在平常的业务开发中并不罕见。做过渠道推广业务，对接过广告平台接口的同学应该比较熟悉。</li>
+<li>在业务的作用主要是两个<ol>
+<li>异步通知</li>
+<li>业务查询</li>
+</ol>
+</li>
+</ul>
+<p>本文主要讲的第二种，并通过一个业务例子来展开描述</p>
+<h3 id="业务描述"><a href="#业务描述" class="headerlink" title="业务描述"></a>业务描述</h3><p>有以下业务场景，用户通过充值加金币：</p>
+<pre>
+充值请求----------> 服务A（充值服务）
+             [1.验证用户已经支付成功]
+             [2.发起加金币请求]------------>服务B（金币服务）
+</pre>
+
+<ul>
+<li><p>服务B如何验证加金币操作的请求是合法，从而保证资金安全呢？</p>
+<ul>
+<li>有一种方法是通过分配业务对应的秘钥和服务端签名对比，验证请求的合法性</li>
+</ul>
+</li>
+<li><p>通过秘钥和验签的方式无法避免以下问题</p>
+<ol>
+<li>其他业务方误用秘钥</li>
+<li>因误操作而发加币请求</li>
+<li>业务方有bug一次充值多次加币</li>
+</ol>
+</li>
+</ul>
+<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><ul>
+<li>其实以上描述的业务有一个特点：每一次操作都有对应的前置操作，比如<ol>
+<li>充值加金币的前置操作是：充值支付成功</li>
+<li>活动类加金币的前置操作是：用户达到活动要求</li>
+</ol>
+</li>
+</ul>
+<p>那么作为底层的金币服务，可以使用定义一种同样的回查机制，由各业务方实现查询逻辑，金币服务通过回查来检验请求的合法性，从而提高安全性。</p>
+<ul>
+<li>基础服务（金币服务）接收回调链接地址有两种方式：</li>
+</ul>
+<ol>
+<li>通过后台配置，每个业务配置对应回调链接和相应的参数 （相比可能比较安全可控，但不灵活）</li>
+<li>通过参数获取，如callback参数（灵活，但是要设计完善的校验机制保证安全）<ul>
+<li>可结合公司的基础服务实现，如可以通过服务发现获取服务对应的地址，只需传uri即可</li>
+</ul>
+</li>
+</ol>
+<pre>
+充值请求----------> 服务A（充值服务）
+             [1.验证用户已经支付成功]
+             [2.发起加金币请求]------------>服务B（金币服务）
+                                <----------[3.回调验证] [4.加金币] < pre>
+
+<ul>
+<li>统一回调接口返回格式</li>
+</ul>
+<pre>
+回调接口返回格式
+{
+    “code”: 0,
+    “message”: “success”
+}
+0 代表成功；其他：失败
+
+回调用于查询业务订单是否存在，检验是否非法订单
+一般实现逻辑建议业务方直接查主库
+</pre>
+
+<ul>
+<li>回调无法绝对解决以上提出的问题，只能说一定程度上提升接口的安全性级别。</li>
+</ul>
+<h2 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h2><ul>
+<li>使用非对称加密，是不是可以替换回调验证？（客户端使用公钥解密，服务端使用私钥加密，前提是私钥不泄漏）</li>
+</ul>
+</----------[3.回调验证]></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://kingson4wu.github.io/2020/07/11/20200711-fen-bu-shi-xian-liu-jian-dan-zong-jie/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/07/11/20200711-fen-bu-shi-xian-liu-jian-dan-zong-jie/" itemprop="url">分布式限流简单总结</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-11T23:01:37+00:00">
+                2020-07-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="基本描述"><a href="#基本描述" class="headerlink" title="基本描述"></a>基本描述</h3><ul>
+<li><p>限流分类</p>
+<ol>
+<li>单机限流</li>
+<li>分布式限流</li>
+</ol>
+</li>
+<li><p>限流的指标</p>
+<ul>
+<li>每秒处理的事务数 (TPS)，每秒请求数 (hits per second)</li>
+<li>使用 hits per second 作为限流指标</li>
+</ul>
+</li>
+<li><p>限流规则包含三个部分：时间粒度，接口粒度，最大限流值。</p>
+</li>
+<li><p>选择单机限流还是分布式限流</p>
+<ol>
+<li>单机限流一般针对服务负载，防止突发流量压垮服务器</li>
+<li>分布式限流一般针对在业务侧做细粒度限流</li>
+</ol>
+</li>
+</ul>
+<h3 id="限流算法"><a href="#限流算法" class="headerlink" title="限流算法"></a>限流算法</h3><ol>
+<li>固定时间窗口<ul>
+<li>首先需要选定一个时间起点，之后每次接口请求到来都累加计数器，如果在当前时间窗口内，根据限流规则（比如每秒钟最大允许 100 次接口请求），累加访问次数超过限流值，则限流熔断拒绝接口请求。当进入下一个时间窗口之后，计数器清零重新计数。</li>
+<li>限流策略过于粗略，无法应对两个时间窗口临界时间内的突发流量。</li>
+</ul>
+</li>
+<li>滑动时间窗口<ul>
+<li>滑动时间窗口限流算法可以保证任意时间窗口内接口请求次数都不会超过最大限流值，但是仍然不能防止在细时间粒度上面访问过于集中的问题</li>
+</ul>
+</li>
+<li>令牌桶算法(Token Bucket)<ul>
+<li>接口限制 t 秒内最大访问次数为 n，则每隔 t&#x2F;n 秒会放一个 token 到桶中；桶中最多可以存放 b 个 token</li>
+<li>令牌桶大小为 b，所以是可以应对突发流量的</li>
+<li>没有提前预热的令牌桶，如果做否决式限流，会导致误杀很多请求</li>
+</ul>
+</li>
+<li>漏桶算法(Leaky Bucket)<ul>
+<li>漏桶算法稍微不同与令牌桶算法的一点是：对于取令牌的频率也有限制，要按照 t&#x2F;n 固定的速度来取令牌，所以可以看出漏桶算法对流量的整形效果更加好，流量更加平滑，任何突发流量都会被限流。</li>
+</ul>
+</li>
+</ol>
+<h3 id="分布式限流"><a href="#分布式限流" class="headerlink" title="分布式限流"></a>分布式限流</h3><ol>
+<li>采用redis+lua的方案做分布式限流 (参考业界实现方案即可，需注意原子性)</li>
+<li>由于使用中心存储计数的方式性能较差，在业务允许的情况下可以考虑将限制的数量分摊到每个服务(服务数通过服务发现接口获取)，间接使用单机限流提升性能。</li>
+</ol>
+<h3 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h3><ol>
+<li>Google的Guava包中的RateLimiter<ul>
+<li>令牌桶算法的解决方案，假设1S需要限流5次；也就是1S会往桶里面方5个Token;如果在这1S内桶满了则不再加请求，如果空了则表示达到限制的上线了，会阻塞，直到有数据加入再次处理。</li>
+</ul>
+</li>
+<li>[ratelimiter4j] (<a target="_blank" rel="noopener" href="https://github.com/wangzheng0822/ratelimiter4j">https://github.com/wangzheng0822/ratelimiter4j</a>)<ul>
+<li>分布式限流算法的性能瓶颈主要在中心计数器 Redis，从我们开源的 ratelimiter4j 压测数据来看，在没有做 Redis sharding 的情况下，基于单实例 Redis 的分布式限流算法的性能要远远低于基于内存的单机限流算法，基于我们的压测环境，单机限流算法可以达到 200 万 TPS，而分布式限流算法只能做到 5 万 TPS。所以，在应用分布式限流算法时，一定要考量限流算法的性能是否满足应用场景，如果微服务接口的 TPS 已经超过了限流框架本身的 TPS，则限流功能会成为性能瓶颈影响接口本身的性能。</li>
+</ul>
+</li>
+</ol>
+<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><ol>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/k9tm-4lBwm69nxnYp9octA">微服务接口限流的设计与思考</a></li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://kingson4wu.github.io/2020/07/11/20200711-fen-bu-shi-suo-jian-dan-zong-jie/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/07/11/20200711-fen-bu-shi-suo-jian-dan-zong-jie/" itemprop="url">分布式锁简单总结</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-11T11:48:22+00:00">
+                2020-07-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="实现方式"><a href="#实现方式" class="headerlink" title="实现方式"></a>实现方式</h3><ol>
+<li>数据库的行级排它锁（如select * from x for update）；</li>
+<li>基于zookeeper的瞬间顺序节点；<ul>
+<li>最小节点获得锁</li>
+</ul>
+</li>
+<li>基于 Redis 的 SETNX 命令。<ul>
+<li>使用lua脚本保证原子性 （Redisson 有封装实现 ）</li>
+<li>RedLock <ul>
+<li>红锁并非是一个工具，而是Redis官方提出的一种分布式锁的算法。</li>
+<li>RedLock作者指出，之所以要用独立的，是避免了redis异步复制造成的锁丢失，比如：主节点没来的及把刚刚set进来这条数据给从节点，就挂了。</li>
+<li>红锁算法认为，只要(N&#x2F;2) + 1个节点加锁成功，那么就认为获取了锁， 解锁时将所有实例解锁。</li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/6bE5WmDubFCcSIMFuEqxEQ">细说Redis分布式锁</a></li>
+<li>Redisson 有封装实现</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<p>本文要讲的是第3种方式。</p>
+<h3 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a>实现原理</h3><ol>
+<li><p>使用setnx创建一个key，如果key不存在，则创建成功返回1，否则返回0。根据是否获得锁决定是否执行业务逻辑，执行完后删除key来实现释放锁。</p>
+<ul>
+<li><code>SET resource_name my_random_value NX PX 30000</code></li>
+</ul>
+</li>
+<li><p>为了避免客户端挂了导致其他客户端无法获得锁的情况，为lock_key设置一个过期时间lock timeout</p>
+<ul>
+<li>一旦业务逻辑执行时间过长，租约到期，就会引发并发问题。</li>
+<li>lock timeout 设置合适的时间，一般情况10s内</li>
+<li>相对而言，ZooKeeper版本的分布式锁没有这个问题<ul>
+<li>锁的占用时间限制：redis就有占用时间限制，而ZooKeeper则没有，最主要的原因是redis目前没有办法知道已经获取锁的客户端的状态，是已经挂了呢还是正在执行耗时较长的业务逻辑。而ZooKeeper通过临时节点就能清晰知道，如果临时节点存在说明还在执行业务逻辑，如果临时节点不存在说明已经执行完毕释放锁或者是挂了。</li>
+<li>使用ZooKeeper可以主动通知客户端释放锁，Redis则不行</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>设置一个随机字符串my_random_value是很有必要的，它保证了一个客户端释放的锁必须是自己持有的那个锁。</p>
+<ul>
+<li>释放锁lua脚本 <figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> redis.call(<span class="string">&quot;get&quot;</span>,KEYS[<span class="number">1</span>]) == ARGV[<span class="number">1</span>] <span class="keyword">then</span></span><br><span class="line">    <span class="keyword">return</span> redis.call(<span class="string">&quot;del&quot;</span>,KEYS[<span class="number">1</span>])</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>可重入锁</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://juejin.cn/post/6961380552519712798">https://juejin.cn/post/6961380552519712798</a></li>
+<li>lua 脚本，需要存储 锁名称lockName、获得该锁的线程id和对应线程的进入次数count</li>
+<li>加锁 lock.lua <figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">   <span class="comment">-- 不存在该key时</span></span><br><span class="line"><span class="keyword">if</span> (redis.call(<span class="string">&#x27;exists&#x27;</span>, KEYS[<span class="number">1</span>]) == <span class="number">0</span>) <span class="keyword">then</span> </span><br><span class="line">	<span class="comment">-- 新增该锁并且hash中该线程id对应的count置1</span></span><br><span class="line">	redis.call(<span class="string">&#x27;hincrby&#x27;</span>, KEYS[<span class="number">1</span>], ARGV[<span class="number">2</span>], <span class="number">1</span>); </span><br><span class="line">	<span class="comment">-- 设置过期时间</span></span><br><span class="line">	redis.call(<span class="string">&#x27;pexpire&#x27;</span>, KEYS[<span class="number">1</span>], ARGV[<span class="number">1</span>]); </span><br><span class="line">	<span class="keyword">return</span> <span class="literal">nil</span>; </span><br><span class="line"><span class="keyword">end</span>; </span><br><span class="line"></span><br><span class="line"><span class="comment">-- 存在该key 并且 hash中线程id的key也存在</span></span><br><span class="line"><span class="keyword">if</span> (redis.call(<span class="string">&#x27;hexists&#x27;</span>, KEYS[<span class="number">1</span>], ARGV[<span class="number">2</span>]) == <span class="number">1</span>) <span class="keyword">then</span> </span><br><span class="line">	<span class="comment">-- 线程重入次数++</span></span><br><span class="line">	redis.call(<span class="string">&#x27;hincrby&#x27;</span>, KEYS[<span class="number">1</span>], ARGV[<span class="number">2</span>], <span class="number">1</span>); </span><br><span class="line">	redis.call(<span class="string">&#x27;pexpire&#x27;</span>, KEYS[<span class="number">1</span>], ARGV[<span class="number">1</span>]); </span><br><span class="line">	<span class="keyword">return</span> <span class="literal">nil</span>; </span><br><span class="line"><span class="keyword">end</span>; </span><br><span class="line"><span class="keyword">return</span> redis.call(<span class="string">&#x27;pttl&#x27;</span>, KEYS[<span class="number">1</span>]);</span><br></pre></td></tr></table></figure></li>
+<li>解锁 unlock.lua <figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">   <span class="comment">-- 不存在key</span></span><br><span class="line"><span class="keyword">if</span> (redis.call(<span class="string">&#x27;hexists&#x27;</span>, KEYS[<span class="number">1</span>], ARGV[<span class="number">3</span>]) == <span class="number">0</span>) <span class="keyword">then</span> </span><br><span class="line">	<span class="keyword">return</span> <span class="literal">nil</span>;</span><br><span class="line"><span class="keyword">end</span>;</span><br><span class="line"><span class="comment">-- 计数器 -1</span></span><br><span class="line"><span class="keyword">local</span> counter = redis.call(<span class="string">&#x27;hincrby&#x27;</span>, KEYS[<span class="number">1</span>], ARGV[<span class="number">3</span>], <span class="number">-1</span>); </span><br><span class="line"><span class="keyword">if</span> (counter &gt; <span class="number">0</span>) <span class="keyword">then</span> </span><br><span class="line">	<span class="comment">-- 过期时间重设</span></span><br><span class="line">	redis.call(<span class="string">&#x27;pexpire&#x27;</span>, KEYS[<span class="number">1</span>], ARGV[<span class="number">2</span>]); </span><br><span class="line"><span class="keyword">return</span> <span class="number">0</span>; </span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">	<span class="comment">-- 删除并发布解锁消息</span></span><br><span class="line">	redis.call(<span class="string">&#x27;del&#x27;</span>, KEYS[<span class="number">1</span>]); </span><br><span class="line">	redis.call(<span class="string">&#x27;publish&#x27;</span>, KEYS[<span class="number">2</span>], ARGV[<span class="number">1</span>]); </span><br><span class="line">	<span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line"><span class="keyword">end</span>; </span><br><span class="line"><span class="keyword">return</span> <span class="literal">nil</span>;</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>锁续约	</p>
+<ul>
+<li>延长锁的releaseTime延迟释放锁来直到完成业务期望结果，这种不断延长锁过期时间来保证业务执行完成的操作就是锁续约。</li>
+</ul>
+</li>
+<li><p>基于单Redis节点的分布式锁无法解决的安全问题。</p>
+<ul>
+<li>假如Redis节点宕机了，那么所有客户端就都无法获得锁了，服务变得不可用。为了提高可用性，我们可以给这个Redis节点挂一个Slave，当Master节点不可用的时候，系统自动切到Slave上（failover）。但由于Redis的主从复制（replication）是异步的，这可能导致在failover过程中丧失锁的安全性。</li>
+<li>Redlock算法</li>
+</ul>
+</li>
+<li><p>使用Redisson可以满足以上所有需求。</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/135864820">Redisson 实现分布式锁原理分析</a></li>
+<li>Redisson没有设置一个随机值，也可以解决解锁误删的问题。因为Redisson在解决可重入时，已经定义了threadId进行重入计数，通过threadId就可以判断是否是自己之前加的锁。</li>
+<li>锁续期：leaseTime 必须是 -1 才会开启 Watch Dog 机制，也就是如果你想开启 Watch Dog 机制必须使用默认的加锁时间为 30s。如果你自己自定义时间，超过这个时间，锁就会自定释放，并不会延长。</li>
+<li>锁等待：当锁正在被占用时，等待获取锁的进程并不是通过一个 while(true) 死循环去获取锁，而是利用了 Redis 的发布订阅机制,通过 await 方法阻塞等待锁的进程，有效的解决了无效的锁申请浪费资源的问题。</li>
+<li>缺点：Redis Cluster 或者说是 Redis Master-Slave 架构的主从异步复制导致的 Redis 分布式锁的最大缺陷（在 Redis Master 实例宕机的时候，可能导致多个客户端同时完成加锁）</li>
+<li>用法：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/cde0700f0128">使用Redisson实现分布式锁</a></li>
+</ul>
+</li>
+</ol>
+<ul>
+<li>个人看法： 分布式锁并不是绝对可靠，只能尽量保证大多数时候可靠，业务应该自行保证一旦锁失效时的逻辑正确性。</li>
+</ul>
+<h3 id="Zookeeper和Redis分布式锁的比较"><a href="#Zookeeper和Redis分布式锁的比较" class="headerlink" title="Zookeeper和Redis分布式锁的比较"></a>Zookeeper和Redis分布式锁的比较</h3><ol>
+<li>添加和删除，Reids性能较高</li>
+<li>Zookeeper有等待锁队列，大大提升抢锁效率；Redis需要考虑超时，原子性，误删等场景，客户端需要自旋等锁。</li>
+<li>使用 Redis 实现分布式锁在很多企业中非常常见，而且大部分情况下都不会遇到所谓的“极端复杂场景”。所以使用 Redis 作为分布式锁也不失为一种好的方案，最重要的一点是 Redis 的性能很高，可以支撑高并发的获取、释放锁操作。</li>
+<li>ZK 天生设计定位就是分布式协调，强一致性。锁的模型健壮、简单易用、适合做分布式锁。<br>如果获取不到锁，只需要添加一个监听器就可以了，不用一直轮询，性能消耗较小。<br>但是 ZK 也有其缺点：如果有较多的客户端频繁的申请加锁、释放锁，对于 ZK 集群的压力会比较大。</li>
+</ol>
+<h3 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h3><ul>
+<li><p>可以尝试使用Redisson实现分布式锁</p>
+</li>
+<li><p>Redis的作者antirez给出了一个更好的实现，称为Redlock，算是Redis官方对于实现分布式锁的指导规范。Redlock的算法描述就放在Redis的官网上：<br><a target="_blank" rel="noopener" href="https://redis.io/topics/distlock">https://redis.io/topics/distlock</a></p>
+</li>
+<li><p>举个场景的例子来详细说明：一提到分布式锁问题，大多数人想到的方案是基于Redis的Master-Slave模式来实现。这个实现方案行不行？分布式锁本质是一个CP需求，基于Redis的实现是一个AP需求，乍一看基于Redis的实现是无法满足的。脱离业务场景来谈架构都是耍流氓。<br>从技术战略的需求层面来看，如果分布式锁在极端情况下获取锁的不一致，社交业务场景能够接受，那么基于Redis的实现是完全可行的。如果业务是交易场景，分布式锁在极端情况下获取锁的不一致性无法接受，那么基于Redis的实现方案是不可行的。在锁强一致性的场景下，需要采取基于CP模型的etcd等方案来实现。</p>
+</li>
+<li><p>redis-cli提供了EVAL与EVALSHA命令执行Lua脚本:</p>
+<ol>
+<li>EVAL<ul>
+<li>EVAL script numkeys key [key …] arg [arg …]</li>
+<li>key和arg两类参数用于向脚本传递数据, 他们的值可在脚本中使用KEYS和ARGV两个table访问: KEYS表示要操作的键名, ARGV表示非键名参数(并非强制).</li>
+</ul>
+</li>
+<li>EVALSHA</li>
+</ol>
+<pre><code>- EVALSHA命令允许通过脚本的SHA1来执行(节省带宽), Redis在执行EVAL/SCRIPT LOAD后会计算脚本SHA1缓存, EVALSHA根据SHA1取出缓存脚本执行.
+</code></pre>
+</li>
+<li><p>redis一般都是单机房部署，如果要控制多个机房只有一个锁，考虑使用Consul来实现分布式锁。 </p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/TEWnB_VqAW12nVrQlNmgNg">Redis 分布式锁的 10 个坑</a></p>
+<ol>
+<li>非原子操作（setnx + expire）<ul>
+<li>如果刚要执行完setnx加锁，正要执行expire设置过期时间时，进程crash或者要重启维护了，那么这个锁就“长生不老”了，别的线程永远获取不到锁了</li>
+</ul>
+</li>
+<li>被别的客户端请求覆盖（ setnx + value为过期时间）<ul>
+<li>Getset 命令用于设置指定 key 的值，并返回 key 的旧值。</li>
+</ul>
+</li>
+<li>忘记设置过期时间</li>
+<li>业务处理完，忘记释放锁</li>
+<li>B的锁被A给释放了<br>- 假设在这样的并发场景下：A、B两个线程来尝试给Redis的keylockKey加锁，A线程先拿到锁（假如锁超时时间是3秒后过期）。如果线程A执行的业务逻辑很耗时，超过了3秒还是没有执行完。这时候，Redis会自动释放lockKey锁。刚好这时，线程B过来了，它就能抢到锁了，开始执行它的业务逻辑，恰好这时，线程A执行完逻辑，去释放锁的时候，它就把B的锁给释放掉了。<br>- 正确的方式应该是，在用set扩展参数加锁时，放多一个这个线程请求的唯一标记，比如requestId，然后释放锁的时候，判断一下是不是刚刚的请求。</li>
+<li>释放锁时，不是原子性<ul>
+<li>因为判断是不是当前线程加的锁和释放锁不是一个原子操作。如果调用unlock(lockKey)释放锁的时候，锁已经过期，所以这把锁已经可能已经不属于当前客户端，会解除他人加的锁。</li>
+<li>判断和删除是两个操作，不是原子的，有一致性问题。释放锁必须保证原子性，可以使用Redis+Lua脚本来完成</li>
+</ul>
+</li>
+<li>锁过期释放，业务没执行完<ul>
+<li>是否可以给获得锁的线程，开启一个定时守护线程，每隔一段时间检查锁是否还存在，存在则对锁的过期时间延长，防止锁过期提前释放。</li>
+<li>当前开源框架Redisson解决了这个问题: 只要线程一加锁成功，就会启动一个watch dog看门狗，它是一个后台线程，会每隔10秒检查一下，如果线程一还持有锁，那么就会不断的延长锁key的生存时间。</li>
+</ul>
+</li>
+<li>Redis分布式锁和@transactional一起使用失效<ul>
+<li>正确的实现方法,可以在updateDB方法之前就上锁，即还没有开事务之前就加锁，那么就可以保证线程的安全性.</li>
+</ul>
+</li>
+<li>锁可重入<ul>
+<li>前面讨论的Redis分布式锁，都是不可重入的。</li>
+<li>不可重入的分布式锁的话，是可以满足绝大多数的业务场景。但是有时候一些业务场景，我们还是需要可重入的分布式锁</li>
+<li>Redis只要解决这两个问题，就能实现重入锁了：<ul>
+<li>怎么保存当前持有的线程</li>
+<li>怎么维护加锁次数（即重入了多少次）</li>
+</ul>
+</li>
+<li>实现一个可重入的分布式锁，我们可以参考JDK的ReentrantLock的设计思想。实际上，可以直接使用Redisson框架，它是支持可重入锁的。</li>
+</ul>
+</li>
+<li>Redis主从复制导致的坑<ul>
+<li>如果线程一在Redis的master节点上拿到了锁，但是加锁的key还没同步到slave节点。恰好这时，master节点发生故障，一个slave节点就会升级为master节点。线程二就可以获取同个key的锁啦，但线程一也已经拿到锁了，锁的安全性就没了。</li>
+<li>为了解决这个问题，Redis作者 antirez提出一种高级的分布式锁算法：Redlock。Redlock核心思想是这样的：<ul>
+<li>搞多个Redis master部署，以保证它们不会同时宕掉。并且这些master节点是完全相互独立的，相互之间不存在数据同步。同时，需要确保在这多个master实例上，是与在Redis单实例，使用相同方法来获取和释放锁。</li>
+<li>简化下步骤就是：<ol>
+<li>按顺序向5个master节点请求加锁</li>
+<li>根据设置的超时时间来判断，是不是要跳过该master节点。</li>
+<li>如果大于等于3个节点加锁成功，并且使用的时间小于锁的有效期，即可认定加锁成功啦。</li>
+<li>如果获取锁失败，解锁！</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>个人意见:一般情况下(绝大多数),业务不要强依赖于redis做互斥逻辑</li>
+</ol>
+</li>
+</ul>
+<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><ol>
+<li><a target="_blank" rel="noopener" href="https://yq.aliyun.com/articles/60663">分布式锁的实现</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/gxyandwmm/p/9588383.html">使用Redis作为分布式锁的一些注意点</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzUzMjkwMjg3Mg==&mid=2247484843&amp;idx=1&amp;sn=549ed30972eea76d5e7a0a9e1cfaf321&source=41#wech">如何实现靠谱的分布式锁？</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MjM5ODI5Njc2MA==&mid=2655825455&idx=1&sn=53e7043d76c0a39cf1b0d3be7a384ade&chksm=bd74e3f88a036aee104a1ec6001379d2238db2fde913b889b42138316e84ce9ed5e1ec271a10&mpshare=1&scene=1&srcid=0715ZMUAKOiQLNOSllsVZVKW%23rd">分布式锁用Redis还是Zookeeper？</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzA4NTg1MjM0Mg==&mid=2657261514&idx=1&sn=47b1a63f065347943341910dddbb785d&chksm=84479e13b3301705ea29c86f457ad74010eba8a8a5c12a7f54bcf264a4a8c9d6adecbe32ad0b&scene=21#wechat_redirect">基于Redis的分布式锁到底安全吗（上）？</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzUzMTA2NTU2Ng==&mid=2247487106&idx=1&sn=dd5f327c46d4274ba643a31cd0f0a77e&chksm=fa497133cd3ef82">80% 人不知道的 Redis 分布式锁的正确实现方式（Java 版）</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/On55CQezQ5sOw1E-YUpVUw">Redis结合Lua脚本实现高并发原子性操作</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/6bE5WmDubFCcSIMFuEqxEQ">细说Redis分布式锁</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/1TsBsaItcZ6fOg-bo2tGww">分布式锁用 Redis 好，还是 ZooKeeper 好？</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/452803310/answer/1931377239">使用Redis实现分布式锁和ZK实现分布式锁有什么区别，分别有哪些场景?</a></li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://kingson4wu.github.io/2020/07/10/20200710-huan-cun-ce-lue-jian-dan-zong-jie/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/07/10/20200710-huan-cun-ce-lue-jian-dan-zong-jie/" itemprop="url">缓存策略简单总结</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-10T22:24:44+00:00">
+                2020-07-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="缓存的三座大山"><a href="#缓存的三座大山" class="headerlink" title="缓存的三座大山"></a>缓存的三座大山</h3><p>以下内容摘自：<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/ziJ8OFiLA1it3sQvycN7Mg">翻越缓存的三座大山</a></p>
+<ol>
+<li>缓存一致性<ul>
+<li>缓存一致性是指业务在引入分布式缓存系统后，业务对数据的更新除了要更新存储以外还需要同时更新缓存，对两个系统进行数据更新就要先解决分布式系统中的隔离性和原子性难题。</li>
+</ul>
+</li>
+<li>缓存击穿<ul>
+<li>缓存击穿是指查询请求没有在缓存层命中而将查询透传到存储 DB 的问题，当大量的请求发生缓存击穿时，将给存储 DB 带来极大的访问压力，甚至导致 DB 过载拒绝服务。</li>
+<li>通过以下方式防止缓存击穿：<ol>
+<li>通过 bloomfilter 记录 key 是否存在，从而避免无效 Key 的查询；</li>
+<li>在 Redis 缓存不存在的 Key，从而避免无效 Key 的查询；</li>
+</ol>
+</li>
+</ul>
+</li>
+<li>缓存雪崩	<ul>
+<li>缓存雪崩是指由于大量的热数据设置了相同或接近的过期时间，导致缓存在某一时刻密集失效，大量请求全部转发到 DB，或者是某个冷数据瞬间涌入大量访问，这些查询在缓存 MISS 后，并发的将请求透传到 DB，DB 瞬时压力过载从而拒绝服务。目前常见的预防缓存雪崩的解决方案，主要是通过对 key 的 TTL 时间加随机数，打散 key 的淘汰时间来尽量规避，但是不能彻底规避。</li>
+</ul>
+</li>
+</ol>
+<p>本文主要讲的是第一个问题：缓存一致性</p>
+<h3 id="基本要点"><a href="#基本要点" class="headerlink" title="基本要点"></a>基本要点</h3><ol>
+<li>缓存替换方式<ul>
+<li>更新缓存VS淘汰缓存</li>
+</ul>
+</li>
+<li>缓存替换和写库顺序<ul>
+<li>先替换缓存后写数据库vs先写数据库后替换</li>
+</ul>
+</li>
+<li>更新缓存数据源是主还是从<ul>
+<li>主从数据库下（主从延迟），是从还是主读取数据进行缓存替换</li>
+</ul>
+</li>
+<li>从理论上来说，给缓存设置过期时间，是保证最终一致性的解决方案</li>
+</ol>
+<h4 id="Cache-Aside-pattern"><a href="#Cache-Aside-pattern" class="headerlink" title="Cache-Aside pattern"></a>Cache-Aside pattern</h4><p>最经典的缓存+数据库读写的模式，就是 Cache Aside Pattern。</p>
+<ol>
+<li>失效：应用程序先从cache取数据，没有得到，则从数据库中取数据，成功后，放到缓存中。</li>
+<li>命中：应用程序从cache中取数据，取到后返回。</li>
+<li>更新：先把数据存到数据库中，成功后，再让缓存失效。</li>
+</ol>
+<p>大多数业务，使用这样的更新套路即可</p>
+<h3 id="解决思路"><a href="#解决思路" class="headerlink" title="解决思路"></a>解决思路</h3><ol>
+<li><p>以下摘自：<a target="_blank" rel="noopener" href="https://blog.csdn.net/ZLHZHJ/article/details/80176988">高并发下缓存和数据库一致性问题</a></p>
+<ul>
+<li>主从一致性，即修改完立马就要读取到最新的数据（本方案不涉及到缓存的同步，如果涉及可以结合全篇思路去设计） 方案如下：<ol>
+<li>半同步复制，理应数据库原生的功能，等从库同步完才返回结果，缺点吞吐量下降</li>
+<li>强制读主库，部分有一致性要求的，代码中强制读取主库，这个时候一定要结合好缓存，提高读性能</li>
+<li>数据库中间件，一般情况数据库中间件把写路由到主，把读路由到从，此处是记录所以写的key，在500ms内读主库，超过500ms后读从库，能保证绝对的一致性，缺点是成本比较高</li>
+<li>缓存记录写key法，发生写操作，把此key记录在缓存里过期时间500ms，key存在表示刚更新过，还没完成同步，强制路由到主库，没有则路由到从库</li>
+</ol>
+</li>
+<li>关于强一致的需求，现实是不多的，本身就使用cache了还要求强一致，貌似本末倒置，但是不排除特殊情况的存在，主要是思路和大家分享。</li>
+<li>金钱余额业务有这种强一致需求(用户余额表接近6亿，查询QPS晚高峰4~5k )</li>
+</ul>
+</li>
+<li><p>读和写使用分布式锁控制，这样就能保证，先操作（或读或写）数据的先获得结果；写的时候让读流量直接走DB，让更新缓存的操作和写DB的操作串行。</p>
+</li>
+<li><p>延时双删策略 (延时减少读到脏数据的概率, 可以异步延时)</p>
+<pre>
+（1）先淘汰缓存
+（2）再写数据库（这两步和原来一样）
+（3）休眠1秒，再次淘汰缓存
+这么做，可以将1秒内所造成的缓存脏数据，再次删除。
+</pre>
+<p>延迟删只是减少概率</p>
+</li>
+<li><p>只有在读请求比写请求耗时还长的场景下才能产生，实际上这种情况发生的概率会很小</p>
+</li>
+<li><p>在读流量走从库的情况下，也有可能会导致缓存不一致。<br>由于更新完主库后，binlog还没有同步到从库，这时候DB读到的是旧的值，同样会导致缓存不一致的场景</p>
+</li>
+<li><p>缓存更新重试机制：使用MQ或binlog (个人不是很喜欢，除非能很好的抽象成公共组件可以考虑)</p>
+</li>
+<li><p>热点数据查主库(同1中的第4点)  </p>
+<ol>
+<li>写，更新db，设置热点数据标志（30s（可配置））</li>
+</ol>
+</li>
+<li><p>读，判断是否是热点数据。是，直接读主库（主库超过一定qps，读从库），写缓存；否，读缓存</p>
+</li>
+<li><p>根据业务id，实时性高的读主库，实时性低的读从库或者缓存</p>
+</li>
+</ol>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/Y9S89MT0uAobzRKgYVrI9Q">浅谈缓存最终一致性的解决方案</a></li>
+<li>总结: 在解决缓存一致性的过程中，有多种途径可以保证缓存的最终一致性，应该根据场景来设计合适的方案，读多写少的场景下，可以选择采用“ Cache-Aside 结合消费数据库日志做补偿”的方案，写多的场景下，可以选择采用“ Write-Through 结合分布式锁”的方案 ，写多的极端场景下，可以选择采用“ Write-Behind ” 的方案。</li>
+</ul>
+<h3 id="其他个人经验"><a href="#其他个人经验" class="headerlink" title="其他个人经验"></a>其他个人经验</h3><ol>
+<li>设置缓存时为了防止穿透,并且具备更新缓存的能力,需要失败时提供默认值,设置较大的过期时间</li>
+<li>那么需要设置:正常数据更新时间R、失败默认数据过期时间DR、数据过期时间E;</li>
+<li>一般E &gt; R &gt; DR</li>
+<li>并且,当缓存已经有数据时, 重新远程获取数据失败时,不应该更新缓存</li>
+</ol>
+<h3 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/xRVUEtbOhCHZHaBa0YQwTQ">太强了，全面解析缓存应用经典问题</a><ul>
+<li>缓存的主要存储模式<ol>
+<li>Cache Aside（旁路缓存）</li>
+<li>Read&#x2F;Write Through（读写穿透）</li>
+<li>Write Behind Caching（异步缓存写入）</li>
+</ol>
+</li>
+<li>缓存7大经典问题的常用解决方案<ol>
+<li>缓存集中失效</li>
+<li>缓存穿透</li>
+<li>缓存雪崩</li>
+<li>缓存数据不一致</li>
+<li>竞争并发</li>
+<li>热点Key问题</li>
+<li>大Key问题</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><ol>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/ZLHZHJ/article/details/80176988">高并发下缓存和数据库一致性问题（更新淘汰缓存不得不注意的细节）</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/rjzheng/p/9041659.html">分布式之数据库和缓存双写一致性方案解析</a></li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/ziJ8OFiLA1it3sQvycN7Mg">翻越缓存的三座大山</a></li>
+<li><a target="_blank" rel="noopener" href="https://juejin.cn/post/7085530088628256776">解析分布式系统的缓存设计</a></li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+  </section>
+
+  
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/page/18/">&lt;</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/18/">18</a><span class="page-number current">19</span><a class="page-number" href="/page/20/">20</a><a class="page-number" href="/page/21/">21</a><a class="extend next" rel="next" href="/page/20/">&gt;</a>
+  </nav>
+
+
+
+
+
+          </div>
+          
+
+
+          
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.png"
+                alt="" />
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+<a href="/archives/">                
+<!--<a href="/archives/%7C%7C%20archive">-->
+              
+                  <span class="site-state-item-count">208</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">267</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kingson Wu</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="google-site-verification" content="google-site-verification=n4yVkaTfu2KtQ8fiQ3Ri60FPAbRF74oxrDOkOXWjhSs" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/uploads/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="AI,LLM,AI-Agent,MCP,SKILL,Web-Browser,CDP,Playwright," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="拉巴力的纸皮箱" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="随着 AI Agent、自动化运营、数据抓取和自动化测试的发展，浏览器自动化逐渐成为重要的技术基础设施。当前生态中存在多种技术路线，例如：  浏览器调试协议 自动化框架 AI Agent 浏览器接口 浏览器扩展自动化 视觉自动化 操作系统级自动化  这些技术并不是彼此替代关系，而是处于不同的控制层级与抽象层级。本文从系统架构角度，对浏览器自动化技术进行系统分类，说明其能力边界与工程实践选择。  一">
+<meta property="og:type" content="article">
+<meta property="og:title" content="浏览器自动化技术全景：CDP、Playwright 与 AI Agent 的架构关系">
+<meta property="og:url" content="https://kingson4wu.github.io/2026/03/12/20260312-liu-lan-qi-zi-dong-hua-ji-zhu-quan-jing-cdp-playwright-yu-ai-agent-de-jia-gou-guan-xi/index.html">
+<meta property="og:site_name" content="拉巴力的纸皮箱">
+<meta property="og:description" content="随着 AI Agent、自动化运营、数据抓取和自动化测试的发展，浏览器自动化逐渐成为重要的技术基础设施。当前生态中存在多种技术路线，例如：  浏览器调试协议 自动化框架 AI Agent 浏览器接口 浏览器扩展自动化 视觉自动化 操作系统级自动化  这些技术并不是彼此替代关系，而是处于不同的控制层级与抽象层级。本文从系统架构角度，对浏览器自动化技术进行系统分类，说明其能力边界与工程实践选择。  一">
+<meta property="og:locale">
+<meta property="article:published_time" content="2026-03-12T18:44:00.000Z">
+<meta property="article:modified_time" content="2026-03-27T05:59:22.515Z">
+<meta property="article:author" content="Kingson Wu">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="LLM">
+<meta property="article:tag" content="AI-Agent">
+<meta property="article:tag" content="MCP">
+<meta property="article:tag" content="SKILL">
+<meta property="article:tag" content="Web-Browser">
+<meta property="article:tag" content="CDP">
+<meta property="article:tag" content="Playwright">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://kingson4wu.github.io/2026/03/12/20260312-liu-lan-qi-zi-dong-hua-ji-zhu-quan-jing-cdp-playwright-yu-ai-agent-de-jia-gou-guan-xi/"/>
+
+
+
+
+
+  <title>浏览器自动化技术全景：CDP、Playwright 与 AI Agent 的架构关系 | 拉巴力的纸皮箱</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'G-4QEGQ2DGGT', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">拉巴力的纸皮箱</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">技术博客 | 记录学习笔记和思考</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://kingson4wu.github.io/2026/03/12/20260312-liu-lan-qi-zi-dong-hua-ji-zhu-quan-jing-cdp-playwright-yu-ai-agent-de-jia-gou-guan-xi/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">浏览器自动化技术全景：CDP、Playwright 与 AI Agent 的架构关系</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2026-03-12T18:44:00+00:00">
+                2026-03-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>随着 AI Agent、自动化运营、数据抓取和自动化测试的发展，浏览器自动化逐渐成为重要的技术基础设施。当前生态中存在多种技术路线，例如：</p>
+<ul>
+<li>浏览器调试协议</li>
+<li>自动化框架</li>
+<li>AI Agent 浏览器接口</li>
+<li>浏览器扩展自动化</li>
+<li>视觉自动化</li>
+<li>操作系统级自动化</li>
+</ul>
+<p>这些技术并不是彼此替代关系，而是处于不同的<strong>控制层级与抽象层级</strong>。本文从系统架构角度，对浏览器自动化技术进行系统分类，说明其能力边界与工程实践选择。</p>
+<hr>
+<h1 id="一、浏览器调试协议（Browser-Protocol-Layer）"><a href="#一、浏览器调试协议（Browser-Protocol-Layer）" class="headerlink" title="一、浏览器调试协议（Browser Protocol Layer）"></a>一、浏览器调试协议（Browser Protocol Layer）</h1><p>浏览器自动化最底层是浏览器提供的<strong>调试协议</strong>，其中最重要的是 <strong>Chrome DevTools Protocol（CDP）</strong>。</p>
+<p>CDP 是 Chromium 系浏览器的调试接口，主要用于 DevTools、自动化、性能分析和调试，基本通信方式是 WebSocket：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">controller</span><br><span class="line">↓</span><br><span class="line">WebSocket</span><br><span class="line">↓</span><br><span class="line">CDP</span><br><span class="line">↓</span><br><span class="line">browser process</span><br></pre></td></tr></table></figure>
+
+<p>通过发送 JSON 指令即可控制浏览器，例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Page.navigate</span><br><span class="line">Runtime.evaluate</span><br><span class="line">Input.dispatchMouseEvent</span><br><span class="line">Network.enable</span><br></pre></td></tr></table></figure>
+
+<p>需要注意的是，<strong>CDP 只适用于 Chromium 系浏览器</strong>。其他浏览器有各自的调试协议：</p>
+<ul>
+<li>Firefox Remote Protocol</li>
+<li>WebKit Inspector Protocol</li>
+</ul>
+<p>因此，<strong>浏览器自动化并不等同于 CDP</strong>，CDP 只是其中一种浏览器协议实现。</p>
+<hr>
+<h1 id="二、浏览器自动化框架（Automation-Framework-Layer）"><a href="#二、浏览器自动化框架（Automation-Framework-Layer）" class="headerlink" title="二、浏览器自动化框架（Automation Framework Layer）"></a>二、浏览器自动化框架（Automation Framework Layer）</h1><p>为了简化浏览器协议的使用，出现了自动化框架，例如 <strong>Playwright、Puppeteer、Selenium</strong>。这些框架提供更高层 API：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">await</span> page.<span class="title function_">goto</span>(url)</span><br><span class="line"><span class="keyword">await</span> page.<span class="title function_">click</span>(<span class="string">&quot;button&quot;</span>)</span><br><span class="line"><span class="keyword">await</span> page.<span class="title function_">fill</span>(<span class="string">&quot;#input&quot;</span>, <span class="string">&quot;text&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>框架内部再将操作转换为浏览器协议指令。</p>
+<p>需要特别说明的是，<strong>Playwright 并不等同于“CDP 封装”</strong>。从官方公开 API 看：</p>
+<ul>
+<li>Playwright 提供自己的高层控制协议与运行时抽象</li>
+<li>在 Chromium 场景下，可以显式通过 <code>connectOverCDP</code> 连接到现有浏览器实例</li>
+<li>但对于 Firefox 和 WebKit，官方文档并没有把其底层实现简单定义成一张固定的“协议对照表”</li>
+</ul>
+<p>因此更准确的描述是：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Playwright</span><br><span class="line">↓</span><br><span class="line">browser-specific protocol</span><br><span class="line">↓</span><br><span class="line">browser</span><br></pre></td></tr></table></figure>
+
+<p>只有在特定 Chromium 接管场景下，官方明确暴露了 <code>connectOverCDP</code> 这类 CDP 能力。此外，Playwright 还有 <code>connect()</code> 等基于自身协议的连接方式。</p>
+<hr>
+<h1 id="三、AI-Agent-浏览器接口层"><a href="#三、AI-Agent-浏览器接口层" class="headerlink" title="三、AI Agent 浏览器接口层"></a>三、AI Agent 浏览器接口层</h1><p>随着 LLM Agent 的发展，一些工具专门为 AI 提供浏览器操作接口，例如 <strong>agent-browser、browser-use</strong>。这类工具并不是新的浏览器技术，而是 <strong>AI 适配层</strong>，核心思想是：</p>
+<p><strong>把复杂网页结构转换为 AI 可理解的操作表示。</strong></p>
+<p>例如，传统 DOM：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">button</span> <span class="attr">class</span>=<span class="string">&quot;login-btn&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>转换为 AI 友好表示：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">@1 Login button</span><br><span class="line">@2 Email input</span><br><span class="line">@3 Submit button</span><br></pre></td></tr></table></figure>
+
+<p>AI 只需输出 <code>click @1</code> 即可完成操作。其典型架构为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">AI Agent</span><br><span class="line">↓</span><br><span class="line">Agent Browser</span><br><span class="line">↓</span><br><span class="line">Playwright / Puppeteer</span><br><span class="line">↓</span><br><span class="line">Browser protocol</span><br><span class="line">↓</span><br><span class="line">Browser</span><br></pre></td></tr></table></figure>
+
+<p>这类系统的主要价值在于：</p>
+<ul>
+<li>降低 LLM token 消耗</li>
+<li>减少 selector 复杂度</li>
+<li>提高 AI 自动化稳定性</li>
+</ul>
+<hr>
+<h1 id="四、浏览器扩展自动化"><a href="#四、浏览器扩展自动化" class="headerlink" title="四、浏览器扩展自动化"></a>四、浏览器扩展自动化</h1><p>另一类浏览器控制方式是 <strong>浏览器扩展（Chrome Extensions &#x2F; WebExtensions）</strong>。扩展通过 content script 注入页面：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">extension</span><br><span class="line">↓</span><br><span class="line">content script</span><br><span class="line">↓</span><br><span class="line">DOM</span><br></pre></td></tr></table></figure>
+
+<p>优点：</p>
+<ul>
+<li>可访问 DOM、读取 cookies</li>
+<li>可与用户真实浏览器环境结合</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>生命周期受浏览器控制</li>
+<li>background service worker 可能被回收</li>
+<li>页面刷新会导致脚本重新注入</li>
+</ul>
+<p>因此，在长期无人值守自动化中，扩展方案稳定性通常低于浏览器协议方案。</p>
+<hr>
+<h1 id="五、视觉自动化"><a href="#五、视觉自动化" class="headerlink" title="五、视觉自动化"></a>五、视觉自动化</h1><p>视觉自动化不依赖 DOM，而是基于页面截图进行 UI 操作：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">screenshot</span><br><span class="line">↓</span><br><span class="line">vision model</span><br><span class="line">↓</span><br><span class="line">UI element detection</span><br><span class="line">↓</span><br><span class="line">mouse action</span><br></pre></td></tr></table></figure>
+
+<p>相关研究项目包括 <strong>WebVoyager</strong> 等。优点是不依赖页面结构、适用于未知 UI；缺点是成本高、执行速度慢、稳定性较差，因此多用于研究或 AI Agent 实验。</p>
+<hr>
+<h1 id="六、操作系统级自动化"><a href="#六、操作系统级自动化" class="headerlink" title="六、操作系统级自动化"></a>六、操作系统级自动化</h1><p>最底层的自动化方式是 <strong>操作系统 GUI 自动化</strong>，例如 <strong>PyAutoGUI、AutoHotkey</strong>，通过鼠标、键盘、屏幕识别控制界面。</p>
+<p>优点是完全模拟用户行为；缺点是稳定性很差，不适合复杂系统，通常只用于简单自动化任务。</p>
+<hr>
+<h1 id="七、稳定性对比"><a href="#七、稳定性对比" class="headerlink" title="七、稳定性对比"></a>七、稳定性对比</h1><p>从工程经验来看，不同技术路线稳定性大致为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Browser protocol（直接协议控制）</span><br><span class="line">&gt;</span><br><span class="line">Automation framework（框架封装）</span><br><span class="line">&gt;</span><br><span class="line">Browser extension（扩展注入）</span><br><span class="line">&gt;</span><br><span class="line">Vision automation（视觉识别）</span><br><span class="line">&gt;</span><br><span class="line">GUI automation（系统级控制）</span><br></pre></td></tr></table></figure>
+
+<p>越靠近底层，控制粒度越细，稳定性通常越高，但编程复杂度也越高。</p>
+<p>自动化框架构建于浏览器协议之上，稳定性略低于直接协议控制，原因在于框架封装引入了额外的抽象层，选择器匹配、等待策略等高层逻辑都可能成为不稳定因素。</p>
+<p>但对于绝大多数工程场景而言，框架提供的稳定性已经足够。<strong>直接操作协议通常只在高规模或强反爬场景下才有必要。</strong></p>
+<hr>
+<h1 id="八、工程实践中的技术选择"><a href="#八、工程实践中的技术选择" class="headerlink" title="八、工程实践中的技术选择"></a>八、工程实践中的技术选择</h1><h2 id="数据抓取场景"><a href="#数据抓取场景" class="headerlink" title="数据抓取场景"></a>数据抓取场景</h2><p>一般存在三种路线：</p>
+<h3 id="1-直接-API-请求"><a href="#1-直接-API-请求" class="headerlink" title="1. 直接 API 请求"></a>1. 直接 API 请求</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HTTP request → JSON data</span><br></pre></td></tr></table></figure>
+
+<p>性能最高、资源消耗最低，但容易触发风控，需要逆向接口。</p>
+<h3 id="2-浏览器自动化"><a href="#2-浏览器自动化" class="headerlink" title="2. 浏览器自动化"></a>2. 浏览器自动化</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">browser automation</span><br><span class="line">↓</span><br><span class="line">simulate user actions</span><br><span class="line">↓</span><br><span class="line">extract data</span><br></pre></td></tr></table></figure>
+
+<p>行为更接近真实用户，风控风险较低，但性能较低。</p>
+<h3 id="3-混合模式"><a href="#3-混合模式" class="headerlink" title="3. 混合模式"></a>3. 混合模式</h3><p>很多系统采用：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">browser automation</span><br><span class="line">↓</span><br><span class="line">登录 / 获取 token</span><br><span class="line">↓</span><br><span class="line">捕获 network API</span><br><span class="line">↓</span><br><span class="line">后续直接调用 API</span><br></pre></td></tr></table></figure>
+
+<p>这种方式兼顾稳定性与效率，是实践中最常见的选择。</p>
+<hr>
+<h2 id="不同场景的技术组合"><a href="#不同场景的技术组合" class="headerlink" title="不同场景的技术组合"></a>不同场景的技术组合</h2><table>
+<thead>
+<tr>
+<th>场景</th>
+<th>推荐技术组合</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>AI 自动操作网页</td>
+<td>Agent Browser + 自动化框架</td>
+</tr>
+<tr>
+<td>自动化测试或浏览器爬虫</td>
+<td>Playwright &#x2F; Puppeteer</td>
+</tr>
+<tr>
+<td>高规模自动化或复杂反爬</td>
+<td>直接使用 browser protocol</td>
+</tr>
+<tr>
+<td>简单数据抓取</td>
+<td>HTTP API</td>
+</tr>
+</tbody></table>
+<hr>
+<h1 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h1><p>浏览器自动化技术形成了从底层协议到 AI Agent 的完整技术体系，从下到上依次为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">OS automation（操作系统级）</span><br><span class="line">↑</span><br><span class="line">Vision automation（视觉识别）</span><br><span class="line">↑</span><br><span class="line">Browser extension（扩展注入）</span><br><span class="line">↑</span><br><span class="line">Browser protocol（浏览器调试协议）</span><br><span class="line">↑</span><br><span class="line">Automation framework（自动化框架）</span><br><span class="line">↑</span><br><span class="line">AI Agent interface（智能代理接口）</span><br></pre></td></tr></table></figure>
+
+<p>其中：</p>
+<ul>
+<li><strong>浏览器协议是最底层能力</strong>：直接控制浏览器进程</li>
+<li><strong>自动化框架是最常见工程方案</strong>：封装协议细节、提供跨浏览器支持</li>
+<li><strong>AI Agent 接口是新兴抽象层</strong>：面向 LLM 的语义化操作适配</li>
+</ul>
+<p>在实际系统设计中，应根据<strong>稳定性、性能、风控风险与开发复杂度</strong>选择合适的技术组合，而非依赖单一技术方案。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/AI/" rel="tag"># AI</a>
+          
+            <a href="/tags/LLM/" rel="tag"># LLM</a>
+          
+            <a href="/tags/AI-Agent/" rel="tag"># AI-Agent</a>
+          
+            <a href="/tags/MCP/" rel="tag"># MCP</a>
+          
+            <a href="/tags/SKILL/" rel="tag"># SKILL</a>
+          
+            <a href="/tags/Web-Browser/" rel="tag"># Web-Browser</a>
+          
+            <a href="/tags/CDP/" rel="tag"># CDP</a>
+          
+            <a href="/tags/Playwright/" rel="tag"># Playwright</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2026/03/08/20260308-da-mo-xing-shi-dai-zhong-xiao-gong-si-ru-he-xun-zhao-ai-jing-zheng-kong-jian/" rel="next" title="大模型时代，中小公司如何寻找 AI 竞争空间">
+                <i class="fa fa-chevron-left"></i> 大模型时代，中小公司如何寻找 AI 竞争空间
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2026/03/26/20260326-jiang-zhi-xing-lu-jing-gu-hua-wei-zi-chan-cong-yi-ge-spotify-skill-kan-chang-qi-yun-xing-de-ai-zi-dong-hua-xi-tong/" rel="prev" title="将执行路径固化为资产：从一个 Spotify Skill 看长期运行的 AI 自动化系统">
+                将执行路径固化为资产：从一个 Spotify Skill 看长期运行的 AI 自动化系统 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div id="gitalk-container"></div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.png"
+                alt="" />
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+<a href="/archives/">                
+<!--<a href="/archives/%7C%7C%20archive">-->
+              
+                  <span class="site-state-item-count">208</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">267</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E6%B5%8F%E8%A7%88%E5%99%A8%E8%B0%83%E8%AF%95%E5%8D%8F%E8%AE%AE%EF%BC%88Browser-Protocol-Layer%EF%BC%89"><span class="nav-number">1.</span> <span class="nav-text">一、浏览器调试协议（Browser Protocol Layer）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E6%B5%8F%E8%A7%88%E5%99%A8%E8%87%AA%E5%8A%A8%E5%8C%96%E6%A1%86%E6%9E%B6%EF%BC%88Automation-Framework-Layer%EF%BC%89"><span class="nav-number">2.</span> <span class="nav-text">二、浏览器自动化框架（Automation Framework Layer）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%89%E3%80%81AI-Agent-%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8E%A5%E5%8F%A3%E5%B1%82"><span class="nav-number">3.</span> <span class="nav-text">三、AI Agent 浏览器接口层</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E6%B5%8F%E8%A7%88%E5%99%A8%E6%89%A9%E5%B1%95%E8%87%AA%E5%8A%A8%E5%8C%96"><span class="nav-number">4.</span> <span class="nav-text">四、浏览器扩展自动化</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E8%A7%86%E8%A7%89%E8%87%AA%E5%8A%A8%E5%8C%96"><span class="nav-number">5.</span> <span class="nav-text">五、视觉自动化</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%BA%A7%E8%87%AA%E5%8A%A8%E5%8C%96"><span class="nav-number">6.</span> <span class="nav-text">六、操作系统级自动化</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E7%A8%B3%E5%AE%9A%E6%80%A7%E5%AF%B9%E6%AF%94"><span class="nav-number">7.</span> <span class="nav-text">七、稳定性对比</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%AB%E3%80%81%E5%B7%A5%E7%A8%8B%E5%AE%9E%E8%B7%B5%E4%B8%AD%E7%9A%84%E6%8A%80%E6%9C%AF%E9%80%89%E6%8B%A9"><span class="nav-number">8.</span> <span class="nav-text">八、工程实践中的技术选择</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E6%8A%93%E5%8F%96%E5%9C%BA%E6%99%AF"><span class="nav-number">8.1.</span> <span class="nav-text">数据抓取场景</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E7%9B%B4%E6%8E%A5-API-%E8%AF%B7%E6%B1%82"><span class="nav-number">8.1.1.</span> <span class="nav-text">1. 直接 API 请求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E6%B5%8F%E8%A7%88%E5%99%A8%E8%87%AA%E5%8A%A8%E5%8C%96"><span class="nav-number">8.1.2.</span> <span class="nav-text">2. 浏览器自动化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E6%B7%B7%E5%90%88%E6%A8%A1%E5%BC%8F"><span class="nav-number">8.1.3.</span> <span class="nav-text">3. 混合模式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8D%E5%90%8C%E5%9C%BA%E6%99%AF%E7%9A%84%E6%8A%80%E6%9C%AF%E7%BB%84%E5%90%88"><span class="nav-number">8.2.</span> <span class="nav-text">不同场景的技术组合</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%93%E8%AE%BA"><span class="nav-number">9.</span> <span class="nav-text">结论</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kingson Wu</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+  <script src="/js/src/md5.min.js"></script>
+
+   <script type="text/javascript">
+        var gitalk = new Gitalk({
+          clientID: '3416434437f9f4e049bd',
+          clientSecret: 'a52d69bf90cb77f81a26d135e03dd0f4869fbf84',
+          repo: 'kingson4wu.github.io',
+          owner: 'kingson4wu',
+          admin: ['kingson4wu'],
+
+          id: md5(location.pathname),
+
+          distractionFreeMode: 'true'
+        })
+        gitalk.render('gitalk-container')
+    </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

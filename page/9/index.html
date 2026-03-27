@@ -1,0 +1,2497 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="google-site-verification" content="google-site-verification=n4yVkaTfu2KtQ8fiQ3Ri60FPAbRF74oxrDOkOXWjhSs" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/uploads/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="拉巴力的纸皮箱" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="Kingson Wu的技术博客，分享编程、架构、AI等技术笔记和个人思考">
+<meta property="og:type" content="website">
+<meta property="og:title" content="拉巴力的纸皮箱">
+<meta property="og:url" content="https://kingson4wu.github.io/page/9/index.html">
+<meta property="og:site_name" content="拉巴力的纸皮箱">
+<meta property="og:description" content="Kingson Wu的技术博客，分享编程、架构、AI等技术笔记和个人思考">
+<meta property="og:locale">
+<meta property="article:author" content="Kingson Wu">
+<meta property="article:tag" content="技术博客,编程,架构,软件开发,AI,人工智能,后端开发,Java,Go,系统设计">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://kingson4wu.github.io/page/9/"/>
+
+
+
+
+
+  <title>拉巴力的纸皮箱 - 技术博客 | 记录学习笔记和思考</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'G-4QEGQ2DGGT', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left 
+  page-home">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">拉巴力的纸皮箱</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">技术博客 | 记录学习笔记和思考</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+  <section id="posts" class="posts-expand">
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://kingson4wu.github.io/2024/07/17/20240717-kan-si-li-ke-shi-ze-wen-ke-kan-si-wen-ke-shi-ze-li-ke/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2024/07/17/20240717-kan-si-li-ke-shi-ze-wen-ke-kan-si-wen-ke-shi-ze-li-ke/" itemprop="url">看似理科实则文科，看似文科实则理科</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2024-07-17T17:07:49+00:00">
+                2024-07-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <ul>
+<li><p>前段时间在看Rust，所有权部分涉及到很多规则，让我重新反思了传统文科和理科的区别</p>
+</li>
+<li><p>学习一门编程语言，大家普遍会认为这是一门理科</p>
+</li>
+<li><p>但像Rust语言的所有权规则，让我想到了英语中的各种时态规则</p>
+</li>
+<li><p>大家基本会认为英语是文科</p>
+</li>
+<li><p>但我其实认为Rust中的规则和英语中的规则，其实没啥区别，都是逻辑规则，比较烧脑。</p>
+</li>
+<li><p>所以无论是学习文科还是学习理科，有些地方，都是需要良好的逻辑能力。</p>
+</li>
+<li><p>逻辑能力好的人，基本学习文科理科都不会有太大差异。都是聪明的人。</p>
+</li>
+<li><p>当然中理科中偏理的部分，文科中偏文的部分，这些可能有差异则另说。</p>
+</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://kingson4wu.github.io/2024/05/30/20240530-ji-yu-saturn-ding-shi-ren-wu-de-ke-hu-duan-gong-ju-she-ji/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2024/05/30/20240530-ji-yu-saturn-ding-shi-ren-wu-de-ke-hu-duan-gong-ju-she-ji/" itemprop="url">基于Saturn定时任务的客户端工具设计</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2024-05-30T12:15:11+00:00">
+                2024-05-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <ul>
+<li>基于之前写的这篇<a href="https://kingson4wu.github.io/2023/07/03/20230703-tan-tan-ding-shi-ren-wu-de-yuan-li-he-ying-yong/">谈谈定时任务的原理和应用</a>继续聊。</li>
+</ul>
+<p><img src="/2024/05/30/20240530-ji-yu-saturn-ding-shi-ren-wu-de-ke-hu-duan-gong-ju-she-ji/saturn_uds.drawio.png"></p>
+<ul>
+<li><p>由于业务进程不是Java编写的，无法使用Saturn提供的Java定时任务，只能使用Shell定时任务</p>
+</li>
+<li><p>这里选择用UDS实现Shell进程和服务进程之间的通信，实现和使用Java定时任务一样的效果</p>
+</li>
+<li><p>在上次的实现中，只考虑了如何触发定时任务执行，并没有考虑如何停止</p>
+</li>
+</ul>
+<h2 id="实现对执行中的任务进行停止"><a href="#实现对执行中的任务进行停止" class="headerlink" title="实现对执行中的任务进行停止"></a>实现对执行中的任务进行停止</h2><p><img src="/2024/05/30/20240530-ji-yu-saturn-ding-shi-ren-wu-de-ke-hu-duan-gong-ju-she-ji/saturn_signal.drawio.png">    </p>
+<ul>
+<li><p>通过测试可以知道，当在saturn控制台点击终止任务时，会对shell进程发出terminated信号</p>
+</li>
+<li><p>如何不是通过saturn控制台触发，直接终端执行shell命令时，操作Crtl+C时，会对Shell进程发出interrupt信号</p>
+</li>
+<li><p>基于上述研究，提供以下方式停止业务服务的运行中的定时任务</p>
+<ol>
+<li>通过saturn控制台点击终止任务，发terminated信号</li>
+<li>通过操作Crtl+C，发interrupt信号</li>
+<li>通过执行shell命令，指定任务名称和-stop选项，直接发出终止任务请求</li>
+</ol>
+</li>
+<li><p>具体实现参考：<a target="_blank" rel="noopener" href="https://github.com/Kingson4Wu/saturncli">saturncli</a></p>
+</li>
+</ul>
+<h2 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h2><ul>
+<li>经过测试，saturn的调度不会因为设置的频率太快导致并发运行，只会执行完一个任务再执行下一个</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://kingson4wu.github.io/2024/05/28/20240528-ye-tan-tan-feed-liu-de-she-ji/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2024/05/28/20240528-ye-tan-tan-feed-liu-de-she-ji/" itemprop="url">也谈谈feed流的设计</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2024-05-28T13:56:23+00:00">
+                2024-05-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<blockquote>
+<p>几年前也做过feed流相关的服务，虽然网上相关的文章很多，这里也做个人的简要记录和总结<br>方案并非原创，当时是参考其他业务团队的设计</p>
+</blockquote>
+</blockquote>
+<ul>
+<li>需求背景：做一个用户动态模块，可以发动态，可以关注别人动态，有推荐列表，有消息提醒（其实就是微博的基本功能）</li>
+</ul>
+<h1 id="实现逻辑流程"><a href="#实现逻辑流程" class="headerlink" title="实现逻辑流程"></a>实现逻辑流程</h1><ul>
+<li><p>整个feed流设计都是强依赖Redis来实现的，以下列出key设计和对应的功能模块</p>
+<ul>
+<li>粉丝的feed流 - 【feed_list_$userId】<ul>
+<li>member-$id_$userId_$type （score-addtime）</li>
+</ul>
+</li>
+<li>粉丝的feed流为空标志 - 【【feed_list_empty_$userId】】- 防止每次请求都穿透到DB</li>
+<li>用户的活跃粉丝列表 - 【active_fans_list_$userId】</li>
+<li>用户的活跃属性 - 【active_user_status_${userId}】</li>
+<li>动态详情 - 【cache.user.dynamic_${dynamicId}】 - MGet获取</li>
+</ul>
+</li>
+<li><p>数据库分表设计</p>
+<ul>
+<li>用户动态表 - 按用户id分库</li>
+<li>评论表 - 按动态id分库（根据业务，一般都是单个动态的所有评论）</li>
+<li>点赞表 - 按用户id分库（根据业务，一般都是动态列表中展示当前用户的点赞状态）</li>
+</ul>
+</li>
+<li><p>feed流使用sortset，score是addtime</p>
+</li>
+<li><p>推模式，通过维护用户的活跃粉丝列表（有数量限制），推到粉丝的feed流</p>
+</li>
+<li><p>拉模式，通过请求第一页或其他接口进行预加载，查询粉丝的关注人和对应动态（有数量限制），构建粉丝自己feed流</p>
+</li>
+</ul>
+<h2 id="01-feed流-构建-整体流程"><a href="#01-feed流-构建-整体流程" class="headerlink" title="01.feed流 构建 整体流程"></a>01.feed流 构建 整体流程</h2><p><img src="/2024/05/28/20240528-ye-tan-tan-feed-liu-de-she-ji/01.feed%E6%B5%81%E6%9E%84%E5%BB%BA.drawio.png"></p>
+<ul>
+<li>用户发动态、删动态、关注和取关事件，都会对feed流有相应操作</li>
+<li>通过发布事件的设计进行业务逻辑解耦</li>
+</ul>
+<h3 id="用户发动态（推模式）"><a href="#用户发动态（推模式）" class="headerlink" title="用户发动态（推模式）"></a>用户发动态（推模式）</h3><ol>
+<li>用户发布动态（写入DB）</li>
+<li>查询用户的活跃粉丝列表（Redis）</li>
+<li>写入粉丝的Feed流（Redis）</li>
+<li>写入消息表</li>
+</ol>
+<h3 id="粉丝拉关注列表（拉模式）（请求第一页或其他接口，预加载）"><a href="#粉丝拉关注列表（拉模式）（请求第一页或其他接口，预加载）" class="headerlink" title="粉丝拉关注列表（拉模式）（请求第一页或其他接口，预加载）"></a>粉丝拉关注列表（拉模式）（请求第一页或其他接口，预加载）</h3><ol>
+<li>获取feed流（Redis）</li>
+<li>获取关注用户列表（RPC）（限制2000个粉丝）</li>
+<li>获取关注人的动态数据（DB）（限制没人100条动态）</li>
+<li>写入个人的Feed流（Redis）</li>
+<li>成为活跃用户（Redis）</li>
+</ol>
+<h2 id="02-动态消息交互"><a href="#02-动态消息交互" class="headerlink" title="02.动态消息交互"></a>02.动态消息交互</h2><p><img src="/2024/05/28/20240528-ye-tan-tan-feed-liu-de-she-ji/02.%E5%8A%A8%E6%80%81%E6%B6%88%E6%81%AF%E4%BA%A4%E4%BA%92.drawio.png"></p>
+<ul>
+<li>消息表 和 消息读取时间表（用于控制用户红点提示和读取消息列表的范围）</li>
+<li>消息表保存7天定时清除</li>
+</ul>
+<h2 id="03-feed流预加载策略（pull模式）"><a href="#03-feed流预加载策略（pull模式）" class="headerlink" title="03.feed流预加载策略（pull模式）"></a>03.feed流预加载策略（pull模式）</h2><p><img src="/2024/05/28/20240528-ye-tan-tan-feed-liu-de-she-ji/03.feed%E6%B5%81%E9%A2%84%E5%8A%A0%E8%BD%BD%E7%AD%96%E7%95%A5%EF%BC%88pull%E6%A8%A1%E5%BC%8F%EF%BC%89.drawio.png"></p>
+<ul>
+<li>。。。。</li>
+<li>将用户加入为活跃粉丝</li>
+</ul>
+<h2 id="04-动态新增、删除（push模式），活跃粉丝处理"><a href="#04-动态新增、删除（push模式），活跃粉丝处理" class="headerlink" title="04.动态新增、删除（push模式），活跃粉丝处理"></a>04.动态新增、删除（push模式），活跃粉丝处理</h2><p><img src="/2024/05/28/20240528-ye-tan-tan-feed-liu-de-she-ji/04.%E5%8A%A8%E6%80%81%E6%96%B0%E5%A2%9E%E3%80%81%E5%88%A0%E9%99%A4%EF%BC%88push%E6%A8%A1%E5%BC%8F%EF%BC%89%EF%BC%8C%E6%B4%BB%E8%B7%83%E7%B2%89%E4%B8%9D%E5%A4%84%E7%90%86.drawio.png"></p>
+<ul>
+<li>用户的活跃粉丝列表逻辑<ol>
+<li>拉取过feed流或发布过动态等操作的用户，都会设置成有活跃粉丝属性的用户</li>
+<li>RPC获取用户的粉丝列表，过滤掉非活跃用户，保存到用户的活跃粉丝列表</li>
+<li>关注和取关事件，也更新活跃粉丝列表</li>
+</ol>
+</li>
+</ul>
+<h2 id="05-关注、取关-事件-对feed流的处理"><a href="#05-关注、取关-事件-对feed流的处理" class="headerlink" title="05.关注、取关 事件 对feed流的处理"></a>05.关注、取关 事件 对feed流的处理</h2><p><img src="/2024/05/28/20240528-ye-tan-tan-feed-liu-de-she-ji/05.%E5%85%B3%E6%B3%A8%E3%80%81%E5%8F%96%E5%85%B3%E4%BA%8B%E4%BB%B6%E5%AF%B9feed%E6%B5%81%E7%9A%84%E5%A4%84%E7%90%86.drawio.png"></p>
+<h2 id="06-获取feed流"><a href="#06-获取feed流" class="headerlink" title="06.获取feed流"></a>06.获取feed流</h2><p><img src="/2024/05/28/20240528-ye-tan-tan-feed-liu-de-she-ji/06.%E8%8E%B7%E5%8F%96feed%E6%B5%81.drawio.png"></p>
+<ul>
+<li>有了前面的推拉模式，用户直接从redis获取feed流即可</li>
+</ul>
+<h2 id="07-动态类型版本设计"><a href="#07-动态类型版本设计" class="headerlink" title="07.动态类型版本设计"></a>07.动态类型版本设计</h2><p><img src="/2024/05/28/20240528-ye-tan-tan-feed-liu-de-she-ji/07.%E5%8A%A8%E6%80%81%E7%B1%BB%E5%9E%8B%E7%89%88%E6%9C%AC%E8%AE%BE%E8%AE%A1.drawio.png"></p>
+<ul>
+<li><p>随着动态类型的新增，客户端旧版本不支持新类型动态，需要过滤；</p>
+</li>
+<li><p>目前feed流是存在redis的，直接过滤可能会导致旧版本数据为空，可以通过多版本动态来区分</p>
+</li>
+<li><p>实现描述</p>
+<ol>
+<li>用户获取feed流，根据客户端的版本号等信息，判断出客户端支持的feed版本，并构建对应的feed流</li>
+<li>用户发布动态，构建用户存在的活跃动态版本的feed流（为了用户的新旧版本都兼容）</li>
+</ol>
+</li>
+</ul>
+<h1 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h1><ul>
+<li>很久之前做的一次实验<ul>
+<li>取消了微信黑名单，没看到之前的人的朋友圈。说明微信朋友圈也是feed持久化的方式实现</li>
+<li>微博也是这样，之前关注过，取关后再恢复，内容也能恢复，说明feed表只是逻辑删（应该是存数据库表了）</li>
+</ul>
+</li>
+<li>微博feed实现（猜测）<ol>
+<li>为每个用户保存他所有关注的用户的feed表数据</li>
+<li>假如取关，则重写关注能恢复数据（逻辑删除）</li>
+<li>但如果之前没关注的用户，则他之前的动态不会出现在feed表中</li>
+</ol>
+</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://kingson4wu.github.io/2024/05/09/20240509-liao-liao-pei-zhi-zhong-xin/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2024/05/09/20240509-liao-liao-pei-zhi-zhong-xin/" itemprop="url">聊聊配置中心</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2024-05-09T15:28:40+00:00">
+                2024-05-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<blockquote>
+<p>第一次接触配置中心，是快十年前了，那时的配置中心还没像现在那么多成熟的开源项目，很多公司都需要结合自身业务自研。</p>
+</blockquote>
+</blockquote>
+<h2 id="使用配置中心的好处"><a href="#使用配置中心的好处" class="headerlink" title="使用配置中心的好处"></a>使用配置中心的好处</h2><ol>
+<li>快速发布变更配置，实时生效</li>
+<li>对于不复杂的系统或业务配置，可以避免写繁琐的后台，但又具备快速变更的功能</li>
+<li>读取配置性能高，一般配置后，都是以内存变量的方式常驻在服务中，可以说读取配置几乎零成本</li>
+</ol>
+<h2 id="配置中心的核心-推送原理"><a href="#配置中心的核心-推送原理" class="headerlink" title="配置中心的核心-推送原理"></a>配置中心的核心-推送原理</h2><blockquote>
+<blockquote>
+<p>这里主要讲一下个人实际接触的三种原理，其实从宏观本质上看，三种方案原理是一致的</p>
+</blockquote>
+</blockquote>
+<ol>
+<li>第一家公司的配置中心自研方案，借助ZooKeeper的临时节点变更事件，从而实现实时推送</li>
+</ol>
+<p><img src="/2024/05/09/20240509-liao-liao-pei-zhi-zhong-xin/zookeeper_config_center.png"></p>
+<ol start="2">
+<li><p>第二家公司的服务治理中心的实现方案，使用Netty使服务中心和各服务之间建立TCP长链接，从而实现配置推送</p>
+</li>
+<li><p>第三家公司使用Apollo开源项目作为配置中心，原理是使用HTTP的Long polling方案</p>
+</li>
+</ol>
+<ul>
+<li>从原理的本质上看，三者都是通过保持TCP连接不断开，从而复用这个通道进行数据推送</li>
+<li>除了推送的实现很重要之外，后台管理系统的设计和客户端的SDK也很重要。因为光能实时推送是不够的，要让接入配置中心方便，以及能方便管理和发布配置也是很关键的。在这一点上，Apollo这个开源项目是很不错的。</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://kingson4wu.github.io/2024/05/07/20240507-ye-wu-kai-fa-zhong-de-zhu-yu-dao/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2024/05/07/20240507-ye-wu-kai-fa-zhong-de-zhu-yu-dao/" itemprop="url">业务开发中的术与道</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2024-05-07T17:43:26+00:00">
+                2024-05-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<blockquote>
+<p>从事IT行业若干年，有时回首，不禁感叹，很多技术方案和日常生活息息相关，可以相互借鉴。</p>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<p>以下只是草稿，以后有缘再整理</p>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<p>以下每项并不是独立，而是相互重叠的</p>
+</blockquote>
+</blockquote>
+<ul>
+<li>从日常的工作中总结常用的套路，勤记录，提升后续的效率</li>
+<li>多开发一些能提高效率的小工具，逐步优化，并可以给其他同事使用</li>
+<li>抽时间回顾和总结</li>
+<li>对用户的业务数据感兴趣，并思考哪些技术优化值得做</li>
+</ul>
+<h1 id="技术追求"><a href="#技术追求" class="headerlink" title="技术追求"></a>技术追求</h1><ul>
+<li>提升自身和团队的水平、服务架构合理性和性能的考虑、提高开发效率和体验</li>
+</ul>
+<h2 id="定时任务使用UDS作为触发运行的通知方式"><a href="#定时任务使用UDS作为触发运行的通知方式" class="headerlink" title="定时任务使用UDS作为触发运行的通知方式"></a>定时任务使用UDS作为触发运行的通知方式</h2><ul>
+<li>基于架构的完全性考虑：不暴露非本机触发的机会</li>
+<li>基于架构的合理性考虑：复用已有服务的逻辑和资源，无需新开进程</li>
+<li>具体实现看：<a href="https://kingson4wu.github.io/2023/07/03/20230703-tan-tan-ding-shi-ren-wu-de-yuan-li-he-ying-yong/">谈谈定时任务的原理和应用</a> - 使用域信号通知通知服务</li>
+</ul>
+<h1 id="代码质量"><a href="#代码质量" class="headerlink" title="代码质量"></a>代码质量</h1><h2 id="使用代码扫描工具"><a href="#使用代码扫描工具" class="headerlink" title="使用代码扫描工具"></a>使用代码扫描工具</h2><ul>
+<li>比如Java的Sonar、Golang的golint等</li>
+</ul>
+<h2 id="单元测试"><a href="#单元测试" class="headerlink" title="单元测试"></a>单元测试</h2><ul>
+<li>及时发现新代码逻辑问题，以及发现避免误改动等</li>
+<li>提交代码检查并及时阻断</li>
+</ul>
+<h2 id="代码Review"><a href="#代码Review" class="headerlink" title="代码Review"></a>代码Review</h2><ul>
+<li>上面的事项自动化，比如和gitlab pipeline结合，在开发阶段就及时修正；</li>
+<li>后续代码review可以避免审核低级问题，提高效率</li>
+</ul>
+<h1 id="开发效率"><a href="#开发效率" class="headerlink" title="开发效率"></a>开发效率</h1><h2 id="脚本工具"><a href="#脚本工具" class="headerlink" title="脚本工具"></a>脚本工具</h2><ul>
+<li>开发快速生成curl脚本的工具，便于快速定位问题，以及反馈时提供复现实例；</li>
+</ul>
+<h1 id="代码复用"><a href="#代码复用" class="headerlink" title="代码复用"></a>代码复用</h1><h2 id="通用组件抽象"><a href="#通用组件抽象" class="headerlink" title="通用组件抽象"></a>通用组件抽象</h2><ul>
+<li>apollo灰度工具</li>
+<li>bi数据上报组件</li>
+<li>消息通知组件</li>
+</ul>
+<h2 id="业务组件抽象"><a href="#业务组件抽象" class="headerlink" title="业务组件抽象"></a>业务组件抽象</h2><ul>
+<li>目前都流行微服务，但有很多上游的逻辑是可以复用的，可以抽象出来，通过代码库的方式复用</li>
+</ul>
+<h1 id="服务稳定"><a href="#服务稳定" class="headerlink" title="服务稳定"></a>服务稳定</h1><h2 id="灰度工具"><a href="#灰度工具" class="headerlink" title="灰度工具"></a>灰度工具</h2><ul>
+<li>为保证改动一旦出问题，降低影响，开发基于配置中心的灰度工具，可以根据业务属性进行灰度</li>
+</ul>
+<h1 id="性能优化"><a href="#性能优化" class="headerlink" title="性能优化"></a>性能优化</h1><ul>
+<li>使用wrk、pprof等工具分析优化</li>
+</ul>
+<h1 id="文档化"><a href="#文档化" class="headerlink" title="文档化"></a>文档化</h1><h2 id="常规事情文档化"><a href="#常规事情文档化" class="headerlink" title="常规事情文档化"></a>常规事情文档化</h2><h2 id="复杂事情文档化"><a href="#复杂事情文档化" class="headerlink" title="复杂事情文档化"></a>复杂事情文档化</h2>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://kingson4wu.github.io/2024/04/25/20240425-ye-wu-kai-fa-zhong-shi-yong-bi-de-hai-liang-shu-ju-chu-li-neng-li/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2024/04/25/20240425-ye-wu-kai-fa-zhong-shi-yong-bi-de-hai-liang-shu-ju-chu-li-neng-li/" itemprop="url">业务开发中使用BI的海量数据处理能力</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2024-04-25T19:40:27+00:00">
+                2024-04-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <ul>
+<li>BI的数据统计跑数结果一般是T+1生成的</li>
+</ul>
+<ol>
+<li>实时性要求不高的功能，用于推荐等其他业务功能，可用于统计和监控等</li>
+<li>对实时性要求高的功能，做后置的监控，及早发现逻辑错误</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://kingson4wu.github.io/2024/04/07/20240407-cong-java-zhuan-go-de-ge-ren-ti-hui/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2024/04/07/20240407-cong-java-zhuan-go-de-ge-ren-ti-hui/" itemprop="url">从Java转Go的个人体会</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2024-04-07T09:22:08+00:00">
+                2024-04-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<blockquote>
+<p>这里仅从一个业务开发的角度谈谈体会，格局较低，仅做个人记录<br>编程语言是程序员接触和使用最多的工具<br>后端技术基础的深度是快速学习和适应新语言的关键</p>
+</blockquote>
+</blockquote>
+<ul>
+<li><p>基于<a href="https://kingson4wu.github.io/2023/07/02/20230702-dui-gong-zuo-zhong-jie-hong-guo-de-ji-chong-bian-cheng-yu-yan-ji-qi-bu-shu-jia-gou-de-kan-fa/">对工作中接触过的几种编程语言及其部署架构的看法</a>继续聊。</p>
+</li>
+<li><p>截至目前，职业生涯五分之四的时间都是在使用Java。出于个人意愿和兴趣，以及行业的发展形势，也系统的自学了Go语言，并在个人的小项目实践。在一次意外的组织变动中，我转岗到了新团队，并开始使用Go，由于之前自己的自学基础，基本是无缝切换到新语言。可能是由于团队人员大部分是从Lua或PHP开始转Go的，在那里甚至感觉自己稍稍领先。</p>
+</li>
+<li><p>Go抽象业务比Java麻烦，代码不美观，但是它原生高并发，而且微服务下很多时候就一个后端服务，业务足够小，不需要复杂的设计模式等，并不需要像以前写大型Java应用这样做非常多的抽象，还能打二进制包，甚至还能保证一个团队所有人代码都是相同风格</p>
+</li>
+<li><p>以下讲一些个人看法，比较乱甚至不正确，仅做个人记录</p>
+<ol>
+<li>小型项目省内存</li>
+<li>写命令行程序方便简单</li>
+<li>现在绝大部分功能都有相应的官方库和开源库</li>
+<li>运行无需环境依赖，直接打包成二进制可执行程序（Java现在也可以了，可能大部分业务场景下体积还较大）</li>
+<li>支持交叉编译，不要特定平台</li>
+<li>打包体积小（根据代码实际使用情况打包-这点是我一直苦苦寻找的）<ul>
+<li>Go语言中有未用代码消除和可执行文件瘦身机制。只有在程序执行路径上被调用的函数才会进入最终的可执行文件，未被调用的函数会被消除</li>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/s60J4eA_d0hqrXj-XMPpXA">Go未用代码消除与可执行文件瘦身</a></li>
+</ul>
+</li>
+</ol>
+</li>
+<li><p>为什么现在大多数人都会认为Java启动慢占内存呢？</p>
+<ul>
+<li>首先不是Java自身的原因，而是跟实际使用场景有关</li>
+<li>使用Java大多数用来做业务开发，也习惯引入很多依赖库，首当其冲就是SpringBoot等框架</li>
+<li>多数都是spring相关类、proxy&#x2F;cglib，以及各种bean配置</li>
+<li>而且很多类都是在启动的时候初始化的</li>
+</ul>
+</li>
+<li><p>微服务下的编程语言</p>
+<ul>
+<li>在K8S流行之前，Java通常是使用SpringCloud</li>
+<li>其实微服务相关技术，在K8S已经实现了</li>
+<li>无论是使用Go还是Java，目前都应该向K8S靠近</li>
+<li>还有一点，K8S本身就是用Go实现的</li>
+</ul>
+</li>
+</ul>
+<h2 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h2><ul>
+<li><p><a target="_blank" rel="noopener" href="https://github.com/Kingson4Wu/graalvm_demo">体验Graalvm+SpringBoot+Java21构建原生程序</a></p>
+</li>
+<li><p>在内存利用效率上，Go语言确实比Java做得更好，在4个不同的角度来总结</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/-N4eqdXb9a93uvOWfE4ScQ">Golang与Java全方位对比总结</a></li>
+</ul>
+<ol>
+<li>Java的JIT策略比Golang的AOT策略<ul>
+<li>Java在运行时相比Golang多占用了一些内存。原因在于：<ul>
+<li>Java运行态中包含了一个完整的解释器、一个JIT编译期以及一个垃圾回收器，这会显著地增加内存。</li>
+<li>Golang语言直接编译到机器码，运行态只包含机器码和一个垃圾回收器。</li>
+</ul>
+</li>
+<li>因此Golang的运行态相对消耗内存较少。</li>
+</ul>
+</li>
+<li>内存分配和垃圾回收器<ul>
+<li>Java确实在起步占用上偏多，毕竟jvm需要更多内存做jit，默认的gc算法对内存要求偏高，但这不能代表后续占用仍然线性增长。如果目标是启动成百上千个内存需求较少的进程，那Java确实不擅长。</li>
+</ul>
+</li>
+<li>并发<ul>
+<li>协程模型比线程模型更加节省内存。</li>
+</ul>
+</li>
+<li>反射<ul>
+<li>Golang的反射更加简单，导致框架的内存消耗Golang程序比Java程序优秀。主要是因为： Java的框架实现中大量使用反射，并使用hashmap缓存信息，这2个都是极度消耗内存的行为。 Golang的框架中也使用reflect、map。但是Golang是面向interface和值类型的，这导致Golang的反射模型要比Java的反射模型简单非常多，反射过程要产生的对象数量也少非常多。</li>
+</ul>
+</li>
+</ol>
+</li>
+<li><p>为什么一些已经选择 Java 的公司，现在又开始考虑使用 Go？</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/ZKL-M54IBx9CSkYKoLdsUA">为什么要用Go重写Dubbo？</a></li>
+<li>相较于 Java，Go 在启动速度、编译速度、内存使用和高并发（如协程）方面都有明显优势。所以，那些已经采用 Java 的公司现在也在考虑引入 Go。但要注意的是，目前这样的公司仍然是少数。另外，一些公司并没有严格规定技术栈的选择，因此新成立的部门或新业务团队可以自由选择，而他们可能更倾向于选择 Go 作为开发语言。</li>
+<li>小结: 总的来说，无论是选择 Java 还是 Go，都是有其合理性的。一家公司同时选择这两种语言也同样合理。尽管这样的公司占比不大，但 Java 与 Go 之间的交流需求仍然存在。</li>
+</ul>
+</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://kingson4wu.github.io/2024/04/06/20240406-ji-lu-xian-mian-ye-wu-de-jing-yan/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2024/04/06/20240406-ji-lu-xian-mian-ye-wu-de-jing-yan/" itemprop="url">记录限免业务的经验</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2024-04-06T22:16:35+00:00">
+                2024-04-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <ul>
+<li><p>由于业务需要，比如歌曲，我们需要对部分歌曲开放限免的功能，而且需要限制开放限免的场景。比如这首歌在场景A免费，在场景B收费。</p>
+</li>
+<li><p>先说正确的做法，下发另外一个字段比如free_token，通过这个字段判断业务来源，和判断是否可以免费。free_token是随着对应的场景查询时下发的，是变化的。即同一个歌曲的free_token不是唯一的。</p>
+</li>
+<li><p>现在有另外一种情况，想对现有的业务做限免（前端业务是不认free_token的）。这时可以把歌曲id使用free_token的值来下发，后续通过歌曲id来判断是否符合限免。</p>
+<ul>
+<li>这样做有个前提，就是前端业务没有使用歌曲id来做唯一性的业务（因为这是歌曲id是变化的），比如收藏。所以使用这个方案，要充分测试，而且可能还有其他不兼容的场景。</li>
+</ul>
+</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://kingson4wu.github.io/2024/04/05/20240405-zhi-chang-zhong-de-shan-yu-gou-tong-he-gao-qing-shang/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2024/04/05/20240405-zhi-chang-zhong-de-shan-yu-gou-tong-he-gao-qing-shang/" itemprop="url">职场中的“善于沟通”和“高情商”</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2024-04-05T19:02:38+00:00">
+                2024-04-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<blockquote>
+<p>很多人普遍认为，不跟人起冲突，能得到别人满意的评价，那么就一定程度上证明他高情商以及沟通能力好。<br>然而，这种观点真的正确吗？在某些情况下，这样做是否必要呢？</p>
+</blockquote>
+</blockquote>
+<ul>
+<li><p>先说结论，在高人才密度的公司中，基本也应该确实是这样。因为大家能相互理解，目标是做正确的事，简明扼要节约时间提升沟通效率，尊重别人及尊重自己，对有能力的人表示钦佩并愿意向他们学习。</p>
+</li>
+<li><p>相反在低密度人才的公司或者公司领导人不开明等情况下，情况就有所不同。举例来说，如果公司内部人际关系不够平等，或者产品地位高于技术。产品需求缺乏认真性和逻辑性，技术人员只能被动接受，甚至放任不管，那么这种沟通方式就变得有问题了。技术人员默默忍受、妥协，把自己变成产品的需求完善员，即使自己的时间被浪费也不可惜。</p>
+</li>
+<li><p>当金钱和地位给予足够时，技术人员选择妥协也可以理解。否则，那简直就是对自己的不尊重。</p>
+</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://kingson4wu.github.io/2024/04/03/20240403-zhe-jian-shi-qing-ni-xu-yao-gen-jin-ma/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2024/04/03/20240403-zhe-jian-shi-qing-ni-xu-yao-gen-jin-ma/" itemprop="url">这件事情你需要跟进吗？</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2024-04-03T16:04:11+00:00">
+                2024-04-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<blockquote>
+<p>在工作中，大多数情况下，大家都喜欢积极跟进事情的人。但有时候，这事情你真的要跟进吗？</p>
+</blockquote>
+</blockquote>
+<ul>
+<li><p>关于这个问题，其实并不是0或1这么简单。很多时候取决于公司的工作氛围或者分工、以及你对自己的定位等情况。</p>
+</li>
+<li><p>在工作中，在相当长的时间里，我执行力特别强的人。我的原则是事事有结论（不给别人挖坑，不让事情烂尾）。所以我会很积极的跟进事情。</p>
+</li>
+<li><p>但渐渐的，我开始怀疑，有些事情是你需要跟进的吗？</p>
+</li>
+<li><p>以技术人员为例。你需要把自己当项目经理那样跟进事情吗？答案是分情况。</p>
+</li>
+<li><p>有些情况你需要跟到底，而有些情况你只需要尽你责任即可，毕竟你有更重要的事情去做，或者说你的价值不应该在这里虚耗。</p>
+</li>
+</ul>
+<h3 id="以下情况可能需要你跟进"><a href="#以下情况可能需要你跟进" class="headerlink" title="以下情况可能需要你跟进"></a>以下情况可能需要你跟进</h3><ol>
+<li>属于你自己责任范围内的事情</li>
+<li>这个事情是你主导发起的事情，关于你绩效等</li>
+<li>你的公司的范围就是要你做项目经理，而且你也能接受（精神损失费不够另说）</li>
+<li>你个人有意愿通过这种方式发展自己的综合素质或人脉等等</li>
+</ol>
+<h3 id="其他情况不需要跟进到底"><a href="#其他情况不需要跟进到底" class="headerlink" title="其他情况不需要跟进到底"></a>其他情况不需要跟进到底</h3><ol>
+<li>已经当天反馈结果并提供解决问题的方向</li>
+<li>需求方并未声明事情的优先级，自身也未跟进（说明不重要，不要经常给别人做无用功）</li>
+<li>技术侧不应该每件事都跟进那么深入，尽了自己的义务即可，毕竟要合理分工</li>
+<li>关于管理人员：不能以治标不治本的方式解决问题，技术领导应该表明立场，也是以后类似问题的处理立场，而不是一味认怂服从，累死下面的兄弟，而且没啥成长，纯粹苦力活</li>
+<li>关于自身的话语权：作为基层员工，有些事情就是推不动，这个大家都很清楚，做到及时反馈的义务即可</li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+  </section>
+
+  
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/page/8/">&lt;</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><span class="page-number current">9</span><a class="page-number" href="/page/10/">10</a><span class="space">&hellip;</span><a class="page-number" href="/page/21/">21</a><a class="extend next" rel="next" href="/page/10/">&gt;</a>
+  </nav>
+
+
+
+
+
+          </div>
+          
+
+
+          
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.png"
+                alt="" />
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+<a href="/archives/">                
+<!--<a href="/archives/%7C%7C%20archive">-->
+              
+                  <span class="site-state-item-count">208</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">267</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kingson Wu</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

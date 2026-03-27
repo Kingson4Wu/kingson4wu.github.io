@@ -1,0 +1,1324 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="google-site-verification" content="google-site-verification=n4yVkaTfu2KtQ8fiQ3Ri60FPAbRF74oxrDOkOXWjhSs" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/uploads/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="域名,域名注册商,域名注册局," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="拉巴力的纸皮箱" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="个人提供问题和疑惑, 最终AI生成   域名是互联网的入口。我们日常访问网站时，输入的是 example.com 这样的域名，而真正通信依赖的是 IP 地址。域名解析系统（DNS, Domain Name System）正是完成“人类友好名称 → 机器可识别地址”这一过程的基础设施。本文将从域名解析原理、运营商与公共 DNS 的关系、域名管理机制、注册商与注册局的角色，到域名定价和续费规则，全">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入理解域名解析与管理：从 DNS 原理到注册商与注册局">
+<meta property="og:url" content="https://kingson4wu.github.io/2025/09/15/20250915-shen-ru-li-jie-yu-ming-jie-xi-yu-guan-li-cong-dns-yuan-li-dao-zhu-ce-shang-yu-zhu-ce-ju/index.html">
+<meta property="og:site_name" content="拉巴力的纸皮箱">
+<meta property="og:description" content="个人提供问题和疑惑, 最终AI生成   域名是互联网的入口。我们日常访问网站时，输入的是 example.com 这样的域名，而真正通信依赖的是 IP 地址。域名解析系统（DNS, Domain Name System）正是完成“人类友好名称 → 机器可识别地址”这一过程的基础设施。本文将从域名解析原理、运营商与公共 DNS 的关系、域名管理机制、注册商与注册局的角色，到域名定价和续费规则，全">
+<meta property="og:locale">
+<meta property="article:published_time" content="2025-09-15T21:41:02.000Z">
+<meta property="article:modified_time" content="2026-03-27T05:59:22.461Z">
+<meta property="article:author" content="Kingson Wu">
+<meta property="article:tag" content="域名">
+<meta property="article:tag" content="域名注册商">
+<meta property="article:tag" content="域名注册局">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://kingson4wu.github.io/2025/09/15/20250915-shen-ru-li-jie-yu-ming-jie-xi-yu-guan-li-cong-dns-yuan-li-dao-zhu-ce-shang-yu-zhu-ce-ju/"/>
+
+
+
+
+
+  <title>深入理解域名解析与管理：从 DNS 原理到注册商与注册局 | 拉巴力的纸皮箱</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'G-4QEGQ2DGGT', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">拉巴力的纸皮箱</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">技术博客 | 记录学习笔记和思考</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://kingson4wu.github.io/2025/09/15/20250915-shen-ru-li-jie-yu-ming-jie-xi-yu-guan-li-cong-dns-yuan-li-dao-zhu-ce-shang-yu-zhu-ce-ju/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">深入理解域名解析与管理：从 DNS 原理到注册商与注册局</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2025-09-15T21:41:02+00:00">
+                2025-09-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<blockquote>
+<p>个人提供问题和疑惑, 最终AI生成</p>
+</blockquote>
+</blockquote>
+<p>域名是互联网的入口。我们日常访问网站时，输入的是 <code>example.com</code> 这样的域名，而真正通信依赖的是 IP 地址。域名解析系统（DNS, Domain Name System）正是完成“人类友好名称 → 机器可识别地址”这一过程的基础设施。本文将从域名解析原理、运营商与公共 DNS 的关系、域名管理机制、注册商与注册局的角色，到域名定价和续费规则，全面梳理这一体系。</p>
+<hr>
+<h2 id="一、域名解析的基本原理"><a href="#一、域名解析的基本原理" class="headerlink" title="一、域名解析的基本原理"></a>一、域名解析的基本原理</h2><p>域名解析（DNS 解析）的目标是：<strong>把域名解析为 IP 地址</strong>。它依赖一个全球分布式、分层级的系统，通过递归查询来完成。</p>
+<h3 id="解析流程"><a href="#解析流程" class="headerlink" title="解析流程"></a>解析流程</h3><ol>
+<li><strong>本地缓存</strong>：操作系统或浏览器先查缓存。</li>
+<li><strong>递归解析器</strong>：通常由运营商或公共 DNS 提供。</li>
+<li><strong>根服务器</strong>：告诉解析器某个顶级域（如 <code>.com</code>）由哪个 TLD 服务器负责。</li>
+<li><strong>TLD 服务器</strong>：返回该域名的权威 DNS 信息。</li>
+<li><strong>权威 DNS</strong>：存放最终解析记录（如 A 记录指向 IP）。</li>
+<li><strong>返回结果并缓存</strong>：递归解析器返回给用户，并按 TTL（缓存时间）存储。</li>
+</ol>
+<h3 id="运营商的角色"><a href="#运营商的角色" class="headerlink" title="运营商的角色"></a>运营商的角色</h3><ul>
+<li>运营商一般只提供 <strong>递归解析器</strong>。</li>
+<li>在理论上，他们不能决定权威答案，但可以<strong>干预</strong>（例如 DNS 劫持或污染）。</li>
+<li>用户可改用公共 DNS（如 8.8.8.8、1.1.1.1、9.9.9.9）来规避运营商干预。</li>
+</ul>
+<hr>
+<h2 id="二、域名所有者如何修改解析"><a href="#二、域名所有者如何修改解析" class="headerlink" title="二、域名所有者如何修改解析"></a>二、域名所有者如何修改解析</h2><p>如果你是域名所有者，需要修改域名 IP，流程如下：</p>
+<ol>
+<li><strong>登录注册商控制台</strong>（阿里云、腾讯云、GoDaddy、Namecheap 等）。</li>
+<li><strong>修改 DNS 记录</strong>：例如修改 A 记录指向新的 IP。</li>
+<li><strong>注册商更新权威 DNS</strong>：你的修改会同步到托管的权威服务器。</li>
+<li><strong>等待缓存刷新</strong>：全球的递归解析器会在 TTL 过期后重新查询。</li>
+</ol>
+<p>💡 建议：</p>
+<ul>
+<li>在迁移前先降低 TTL（如 300 秒），确保切换快。</li>
+<li>修改完成后再调回较长 TTL。</li>
+<li>无法强制清理他人缓存，但可手动清理本机缓存。</li>
+</ul>
+<hr>
+<h2 id="三、IP-如何传播与信任机制"><a href="#三、IP-如何传播与信任机制" class="headerlink" title="三、IP 如何传播与信任机制"></a>三、IP 如何传播与信任机制</h2><p>很多人以为“IP 变更后会主动推送到全球”，实际上并不是。</p>
+<ul>
+<li><p><strong>传播机制</strong>：不是推送，而是“递归解析器查询后再缓存”；缓存过期再查新值。</p>
+</li>
+<li><p><strong>信任链</strong>：</p>
+<ul>
+<li>注册商验证域名所有者身份 → 更新权威 DNS</li>
+<li>注册局更新该域名的 NS 信息</li>
+<li>全球递归解析器依据 NS 去权威服务器查询</li>
+<li>最终信任权威答案</li>
+</ul>
+</li>
+</ul>
+<p>注册商与注册局之间通过 <strong>EPP 协议</strong>安全同步，根服务器和 TLD 确保查询链条可信。</p>
+<hr>
+<h2 id="四、权威服务器与去中心化架构"><a href="#四、权威服务器与去中心化架构" class="headerlink" title="四、权威服务器与去中心化架构"></a>四、权威服务器与去中心化架构</h2><ul>
+<li>每个域名都可以指定自己的 <strong>权威服务器</strong>（NS 记录）。</li>
+<li>根服务器仅提供“目录”，不会存具体解析。</li>
+<li>这种设计的优势：<strong>去中心化、可扩展、容错强</strong>。</li>
+</ul>
+<h3 id="切换权威-DNS-的流程"><a href="#切换权威-DNS-的流程" class="headerlink" title="切换权威 DNS 的流程"></a>切换权威 DNS 的流程</h3><p>例如从阿里云迁移到腾讯云：</p>
+<ol>
+<li>在新托管商（如腾讯云 DNSPod）添加域名并配置记录。</li>
+<li>在注册商后台修改 NS（如 <code>ns1.dnspod.net</code>、<code>ns2.dnspod.net</code>）。</li>
+<li>注册商将 NS 改动提交注册局。</li>
+<li>全球解析器按新 NS 查询，约 24–48 小时内生效。</li>
+</ol>
+<p>大多数基础 DNS 托管服务（阿里云、腾讯云、Cloudflare）都是免费的。</p>
+<hr>
+<h2 id="五、自建权威服务器的风险与转移"><a href="#五、自建权威服务器的风险与转移" class="headerlink" title="五、自建权威服务器的风险与转移"></a>五、自建权威服务器的风险与转移</h2><p>如果自建权威服务器宕机，解析会失败，但域名不会“废掉”。</p>
+<ul>
+<li>你可以随时登录注册商，把 NS 改到新的托管商。</li>
+<li>修改不依赖旧权威在线，只要新权威已配置好解析记录即可。</li>
+<li>风险主要来自：账号被盗、域名过期、法律下架。</li>
+</ul>
+<p>👉 建议：</p>
+<ul>
+<li>自建时至少两台分布式 NS，并做好备份与监控。</li>
+<li>如果不想长期维护，直接用托管 DNS。</li>
+</ul>
+<hr>
+<h2 id="六、注册商与所有权确认"><a href="#六、注册商与所有权确认" class="headerlink" title="六、注册商与所有权确认"></a>六、注册商与所有权确认</h2><p>注册商怎么知道你是域名所有者？</p>
+<ul>
+<li>依据注册局的官方数据库（注册人信息、状态、注册商绑定）。</li>
+<li>注册商账号体系（用户名 + 2FA）验证操作权限。</li>
+</ul>
+<p>注册商并非固定不变：</p>
+<ul>
+<li>你可以通过 <strong>转移码（EPP&#x2F;Auth Code）</strong> 转到新注册商。</li>
+<li>转移不会改变所有权与解析，只是管理入口变更（通常赠送 1 年续费）。</li>
+</ul>
+<hr>
+<h2 id="七、注册商与注册局的分工"><a href="#七、注册商与注册局的分工" class="headerlink" title="七、注册商与注册局的分工"></a>七、注册商与注册局的分工</h2><ul>
+<li><p><strong>注册商</strong>：面向用户，负责登记、修改、续费、转移。</p>
+</li>
+<li><p><strong>注册局</strong>：维护某个顶级域（TLD）的数据库，不直接零售。</p>
+</li>
+<li><p>例如：</p>
+<ul>
+<li><code>.com</code> &#x2F; <code>.net</code> → Verisign（美国）</li>
+<li><code>.org</code> → PIR（美国非营利）</li>
+<li><code>.app</code> → Google Registry（美国）</li>
+<li><code>.io</code> → ICB&#x2F;Afilias（英国&#x2F;国际）</li>
+<li><code>.cn</code> → CNNIC（中国）</li>
+<li><code>.top</code> → 中国机构</li>
+</ul>
+</li>
+</ul>
+<p>注册商必须绑定注册局，用户不能绕过注册商直接操作。</p>
+<hr>
+<h2 id="八、域名费用与所有权"><a href="#八、域名费用与所有权" class="headerlink" title="八、域名费用与所有权"></a>八、域名费用与所有权</h2><h3 id="费用构成"><a href="#费用构成" class="headerlink" title="费用构成"></a>费用构成</h3><ul>
+<li><p>注册与续费的钱支付给 <strong>注册商</strong>。</p>
+</li>
+<li><p>注册商再向注册局支付批发费。</p>
+</li>
+<li><p>费用包含：</p>
+<ul>
+<li>注册局成本</li>
+<li>注册商的管理服务（更新 NS、转移、防抢注）</li>
+<li>DNS 托管、隐私保护、SSL、邮箱等增值服务</li>
+</ul>
+</li>
+</ul>
+<h3 id="为什么不同注册商价格不同？"><a href="#为什么不同注册商价格不同？" class="headerlink" title="为什么不同注册商价格不同？"></a>为什么不同注册商价格不同？</h3><p>虽然底层注册局批发价是统一的，但实际到用户手里的价格差异很常见，原因包括：</p>
+<ol>
+<li><p><strong>注册局只规定批发价</strong></p>
+<ul>
+<li>例如 <code>.com</code> 的注册局是 Verisign，目前批发价约 $10&#x2F;年。</li>
+<li>各注册商在此基础上加利润与服务费再零售。</li>
+</ul>
+</li>
+<li><p><strong>注册商定价策略不同</strong></p>
+<ul>
+<li>有的走低价策略（如 Cloudflare Registrar、NameSilo），接近批发价。</li>
+<li>有的走高价+捆绑服务（GoDaddy、国内部分厂商），可能送邮箱、主机等。</li>
+<li>有的搞促销：首年极便宜（几块钱甚至 1 元），后续续费回到正常价。</li>
+</ul>
+</li>
+<li><p><strong>地区差异与税收</strong></p>
+<ul>
+<li>国内注册商价格通常含税，国外注册商显示的价格未必含增值税。</li>
+</ul>
+</li>
+</ol>
+<h4 id="示例价格差异"><a href="#示例价格差异" class="headerlink" title="示例价格差异"></a>示例价格差异</h4><table>
+<thead>
+<tr>
+<th>注册商</th>
+<th><code>.com</code> 首年</th>
+<th><code>.com</code> 续费</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Cloudflare Registrar</td>
+<td>$9.15（接近批发价）</td>
+<td>$9.15</td>
+</tr>
+<tr>
+<td>Namecheap</td>
+<td>$6.98（促销）</td>
+<td>$15.98</td>
+</tr>
+<tr>
+<td>阿里云</td>
+<td>¥55 左右</td>
+<td>¥69 左右</td>
+</tr>
+<tr>
+<td>GoDaddy</td>
+<td>$12.99</td>
+<td>$21.99</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>🔑 无论在哪个注册商注册，最终记录都存放在 Verisign 的注册局数据库里。价格差异只是注册商的加价和服务差异。</p>
+</blockquote>
+<h3 id="域名的所有权"><a href="#域名的所有权" class="headerlink" title="域名的所有权"></a>域名的所有权</h3><ul>
+<li>“买域名”并不是买断，而是<strong>按年租用</strong>。</li>
+<li>注册商只是代理，最终归属以注册局数据库为准（WHOIS 可查）。</li>
+<li>若启用隐私保护，对外显示的是代理信息。</li>
+</ul>
+<hr>
+<h2 id="九、价格机制与溢价域名"><a href="#九、价格机制与溢价域名" class="headerlink" title="九、价格机制与溢价域名"></a>九、价格机制与溢价域名</h2><ul>
+<li>域名价格 &#x3D; 注册局批发价 + 注册商定价策略 + 市场供需。</li>
+<li>Premium 域名（短、热门、单词域名）价格更高。</li>
+<li>普通 <code>.com</code> 批发价约 7–10 美元&#x2F;年，零售价 10–15 美元&#x2F;年。</li>
+<li><code>.app</code>、<code>.io</code> 等批发价更高，因此零售价也贵。</li>
+<li>Premium 域名不仅首年贵，续费也可能长期溢价。</li>
+</ul>
+<hr>
+<h2 id="十、为什么要分层治理？"><a href="#十、为什么要分层治理？" class="headerlink" title="十、为什么要分层治理？"></a>十、为什么要分层治理？</h2><p>有人疑惑：注册局和注册商是不是“白赚”？其实不然。</p>
+<ul>
+<li>注册局负责顶级域数据库、根&#x2F;权威运维、安全合规，收取批发费。</li>
+<li>注册商面向用户，提供控制台、账户体系、隐私服务、解析面板。</li>
+<li>分层设计保证了互联网的规模化和稳定性。</li>
+</ul>
+<hr>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
+<li><strong>DNS 是全球分布式系统</strong>，通过递归查询找到权威答案。</li>
+<li><strong>运营商</strong>通常只提供递归解析器，权威答案存放在权威 DNS。</li>
+<li><strong>域名所有者</strong>通过注册商修改 DNS 记录，变更逐级传播。</li>
+<li><strong>注册商</strong>是用户入口，<strong>注册局</strong>是顶级域数据库，二者分工明确。</li>
+<li><strong>费用机制</strong>透明：批发价由注册局定，零售价由注册商定，不同注册商价格差异源于策略与市场。</li>
+<li><strong>安全与稳定</strong>依赖去中心化架构、EPP 协议、分布式 NS 与全球缓存机制。</li>
+</ul>
+<p>域名解析不仅仅是一个“把名字变成 IP”的过程，而是一整套跨国、跨机构的分布式治理体系。理解这套机制，有助于我们更好地管理域名、保障业务稳定。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E5%9F%9F%E5%90%8D/" rel="tag"># 域名</a>
+          
+            <a href="/tags/%E5%9F%9F%E5%90%8D%E6%B3%A8%E5%86%8C%E5%95%86/" rel="tag"># 域名注册商</a>
+          
+            <a href="/tags/%E5%9F%9F%E5%90%8D%E6%B3%A8%E5%86%8C%E5%B1%80/" rel="tag"># 域名注册局</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2025/09/02/20250902-yong-jiao-ben-ai-cli-ban-zi-dong-xie-dai-ma-shi-jian-jing-yan-fen-xiang/" rel="next" title="用脚本+AI CLI半自动写代码：实践经验分享">
+                <i class="fa fa-chevron-left"></i> 用脚本+AI CLI半自动写代码：实践经验分享
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2025/09/15/20250915-ip-gui-shu-yu-quan-qiu-lu-you-cong-ipv4-dao-ipv6-de-yuan-li-yu-shi-jian/" rel="prev" title="IP 归属与全球路由：从 IPv4 到 IPv6 的原理与实践">
+                IP 归属与全球路由：从 IPv4 到 IPv6 的原理与实践 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div id="gitalk-container"></div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.png"
+                alt="" />
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+<a href="/archives/">                
+<!--<a href="/archives/%7C%7C%20archive">-->
+              
+                  <span class="site-state-item-count">208</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">267</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%9F%9F%E5%90%8D%E8%A7%A3%E6%9E%90%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86"><span class="nav-number">1.</span> <span class="nav-text">一、域名解析的基本原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E6%9E%90%E6%B5%81%E7%A8%8B"><span class="nav-number">1.1.</span> <span class="nav-text">解析流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E8%90%A5%E5%95%86%E7%9A%84%E8%A7%92%E8%89%B2"><span class="nav-number">1.2.</span> <span class="nav-text">运营商的角色</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E5%9F%9F%E5%90%8D%E6%89%80%E6%9C%89%E8%80%85%E5%A6%82%E4%BD%95%E4%BF%AE%E6%94%B9%E8%A7%A3%E6%9E%90"><span class="nav-number">2.</span> <span class="nav-text">二、域名所有者如何修改解析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81IP-%E5%A6%82%E4%BD%95%E4%BC%A0%E6%92%AD%E4%B8%8E%E4%BF%A1%E4%BB%BB%E6%9C%BA%E5%88%B6"><span class="nav-number">3.</span> <span class="nav-text">三、IP 如何传播与信任机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E6%9D%83%E5%A8%81%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8E%E5%8E%BB%E4%B8%AD%E5%BF%83%E5%8C%96%E6%9E%B6%E6%9E%84"><span class="nav-number">4.</span> <span class="nav-text">四、权威服务器与去中心化架构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%87%E6%8D%A2%E6%9D%83%E5%A8%81-DNS-%E7%9A%84%E6%B5%81%E7%A8%8B"><span class="nav-number">4.1.</span> <span class="nav-text">切换权威 DNS 的流程</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E8%87%AA%E5%BB%BA%E6%9D%83%E5%A8%81%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E9%A3%8E%E9%99%A9%E4%B8%8E%E8%BD%AC%E7%A7%BB"><span class="nav-number">5.</span> <span class="nav-text">五、自建权威服务器的风险与转移</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E6%B3%A8%E5%86%8C%E5%95%86%E4%B8%8E%E6%89%80%E6%9C%89%E6%9D%83%E7%A1%AE%E8%AE%A4"><span class="nav-number">6.</span> <span class="nav-text">六、注册商与所有权确认</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E6%B3%A8%E5%86%8C%E5%95%86%E4%B8%8E%E6%B3%A8%E5%86%8C%E5%B1%80%E7%9A%84%E5%88%86%E5%B7%A5"><span class="nav-number">7.</span> <span class="nav-text">七、注册商与注册局的分工</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB%E3%80%81%E5%9F%9F%E5%90%8D%E8%B4%B9%E7%94%A8%E4%B8%8E%E6%89%80%E6%9C%89%E6%9D%83"><span class="nav-number">8.</span> <span class="nav-text">八、域名费用与所有权</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B4%B9%E7%94%A8%E6%9E%84%E6%88%90"><span class="nav-number">8.1.</span> <span class="nav-text">费用构成</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E5%90%8C%E6%B3%A8%E5%86%8C%E5%95%86%E4%BB%B7%E6%A0%BC%E4%B8%8D%E5%90%8C%EF%BC%9F"><span class="nav-number">8.2.</span> <span class="nav-text">为什么不同注册商价格不同？</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B%E4%BB%B7%E6%A0%BC%E5%B7%AE%E5%BC%82"><span class="nav-number">8.2.1.</span> <span class="nav-text">示例价格差异</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%9F%E5%90%8D%E7%9A%84%E6%89%80%E6%9C%89%E6%9D%83"><span class="nav-number">8.3.</span> <span class="nav-text">域名的所有权</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%9D%E3%80%81%E4%BB%B7%E6%A0%BC%E6%9C%BA%E5%88%B6%E4%B8%8E%E6%BA%A2%E4%BB%B7%E5%9F%9F%E5%90%8D"><span class="nav-number">9.</span> <span class="nav-text">九、价格机制与溢价域名</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%88%86%E5%B1%82%E6%B2%BB%E7%90%86%EF%BC%9F"><span class="nav-number">10.</span> <span class="nav-text">十、为什么要分层治理？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">11.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kingson Wu</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+  <script src="/js/src/md5.min.js"></script>
+
+   <script type="text/javascript">
+        var gitalk = new Gitalk({
+          clientID: '3416434437f9f4e049bd',
+          clientSecret: 'a52d69bf90cb77f81a26d135e03dd0f4869fbf84',
+          repo: 'kingson4wu.github.io',
+          owner: 'kingson4wu',
+          admin: ['kingson4wu'],
+
+          id: md5(location.pathname),
+
+          distractionFreeMode: 'true'
+        })
+        gitalk.render('gitalk-container')
+    </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

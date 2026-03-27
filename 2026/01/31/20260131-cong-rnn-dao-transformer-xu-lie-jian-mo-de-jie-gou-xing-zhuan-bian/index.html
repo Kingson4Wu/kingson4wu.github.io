@@ -1,0 +1,1302 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="google-site-verification" content="google-site-verification=n4yVkaTfu2KtQ8fiQ3Ri60FPAbRF74oxrDOkOXWjhSs" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/uploads/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="AI,LLM,深度学习基础,Transformer,RNN,LSTM,CNN," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="拉巴力的纸皮箱" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="以下内容由AI辅助生成   一、自然语言建模的真正难点自然语言处理的困难，并不在于单词本身，而在于单词之间如何构成有意义的整体。一句话的语义，往往由跨越较长距离、受句法和语义结构约束的成分共同决定。主语与谓语之间可能相隔多个从句，但它们之间的依赖关系依然是理解句子的关键。 因此，自然语言建模的核心问题，本质上是一个序列建模问题：模型需要在任意位置上，合理利用来自序列中其他位置的信息，尤其是那些">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从 RNN 到 Transformer:序列建模的结构性转变">
+<meta property="og:url" content="https://kingson4wu.github.io/2026/01/31/20260131-cong-rnn-dao-transformer-xu-lie-jian-mo-de-jie-gou-xing-zhuan-bian/index.html">
+<meta property="og:site_name" content="拉巴力的纸皮箱">
+<meta property="og:description" content="以下内容由AI辅助生成   一、自然语言建模的真正难点自然语言处理的困难，并不在于单词本身，而在于单词之间如何构成有意义的整体。一句话的语义，往往由跨越较长距离、受句法和语义结构约束的成分共同决定。主语与谓语之间可能相隔多个从句，但它们之间的依赖关系依然是理解句子的关键。 因此，自然语言建模的核心问题，本质上是一个序列建模问题：模型需要在任意位置上，合理利用来自序列中其他位置的信息，尤其是那些">
+<meta property="og:locale">
+<meta property="article:published_time" content="2026-01-31T16:55:08.000Z">
+<meta property="article:modified_time" content="2026-03-27T05:59:22.463Z">
+<meta property="article:author" content="Kingson Wu">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="LLM">
+<meta property="article:tag" content="深度学习基础">
+<meta property="article:tag" content="Transformer">
+<meta property="article:tag" content="RNN">
+<meta property="article:tag" content="LSTM">
+<meta property="article:tag" content="CNN">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://kingson4wu.github.io/2026/01/31/20260131-cong-rnn-dao-transformer-xu-lie-jian-mo-de-jie-gou-xing-zhuan-bian/"/>
+
+
+
+
+
+  <title>从 RNN 到 Transformer:序列建模的结构性转变 | 拉巴力的纸皮箱</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'G-4QEGQ2DGGT', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+
+<meta name="generator" content="Hexo 6.3.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">拉巴力的纸皮箱</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">技术博客 | 记录学习笔记和思考</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://kingson4wu.github.io/2026/01/31/20260131-cong-rnn-dao-transformer-xu-lie-jian-mo-de-jie-gou-xing-zhuan-bian/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">从 RNN 到 Transformer:序列建模的结构性转变</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2026-01-31T16:55:08+00:00">
+                2026-01-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<blockquote>
+<p>以下内容由AI辅助生成</p>
+</blockquote>
+</blockquote>
+<h2 id="一、自然语言建模的真正难点"><a href="#一、自然语言建模的真正难点" class="headerlink" title="一、自然语言建模的真正难点"></a>一、自然语言建模的真正难点</h2><p>自然语言处理的困难，并不在于单词本身，而在于单词之间如何构成有意义的整体。一句话的语义，往往由跨越较长距离、受句法和语义结构约束的成分共同决定。主语与谓语之间可能相隔多个从句，但它们之间的依赖关系依然是理解句子的关键。</p>
+<p>因此，自然语言建模的核心问题，本质上是一个序列建模问题：模型需要在任意位置上，合理利用来自序列中其他位置的信息，尤其是那些距离较远但语义上至关重要的部分。</p>
+<hr>
+<h2 id="二、表示与结构的分离：从词向量说起"><a href="#二、表示与结构的分离：从词向量说起" class="headerlink" title="二、表示与结构的分离：从词向量说起"></a>二、表示与结构的分离：从词向量说起</h2><p>在神经网络进入 NLP 之前，单词只是离散符号，计算机无法直接处理。word2vec 等词向量模型通过分布式假设，将单词映射到连续向量空间，使语义相近的词在向量空间中彼此接近，从而为神经网络提供可计算的输入表示。</p>
+<p>这类方法解决的是“词如何用向量表示”的问题：把离散的 token 变成可计算、可度量相似性、可组合的向量。但词向量并不理解语言结构，它不包含顺序、依赖或句法信息。在词向量层面，“dog bites man” 与 “man bites dog” 的差异极小。因此，词向量只是语言处理的表示层，而真正负责建模语言结构和依赖关系的，是后续的序列模型。</p>
+<hr>
+<h2 id="三、RNN：用状态表达序列的直觉解法"><a href="#三、RNN：用状态表达序列的直觉解法" class="headerlink" title="三、RNN：用状态表达序列的直觉解法"></a>三、RNN：用状态表达序列的直觉解法</h2><p>循环神经网络（RNN）是最早系统性处理序列数据的神经网络结构。它的核心思想非常直观：将序列看作一个随时间推进的过程，用一个隐藏状态不断吸收历史信息，并与当前输入共同决定下一状态。</p>
+<p>在这一框架中，隐藏状态被视为“到目前为止的全部记忆”，序列信息被逐步压缩进一个向量中。对于较短、依赖结构简单的序列，这种机制能够有效工作。然而，在自然语言中，这一设计逐渐显露出根本性的局限。</p>
+<hr>
+<h2 id="四、编码器思想与固定长度向量的隐患"><a href="#四、编码器思想与固定长度向量的隐患" class="headerlink" title="四、编码器思想与固定长度向量的隐患"></a>四、编码器思想与固定长度向量的隐患</h2><p>在 RNN 的基础上，Encoder–Decoder 架构成为早期机器翻译等任务的主流范式。该架构试图将任意长度的输入序列编码为一个固定长度的向量，再由解码器生成输出。这种设计在工程上极具吸引力：接口统一、结构简洁，似乎也符合“一句话有一个整体含义”的直觉。</p>
+<p>但这一设计隐含了一个极强的假设：序列中的所有关键信息都可以被无损压缩进一个固定维度的向量中。语言并不满足这一假设。自然语言包含多实体、多关系、多层次结构，将这些信息压缩为单一向量，必然带来信息丢失。</p>
+<hr>
+<h2 id="五、从-RNN-到-LSTM：为“记不住”而生的改造"><a href="#五、从-RNN-到-LSTM：为“记不住”而生的改造" class="headerlink" title="五、从 RNN 到 LSTM：为“记不住”而生的改造"></a>五、从 RNN 到 LSTM：为“记不住”而生的改造</h2><p>随着 RNN 被用于更长的句子、更复杂的翻译与生成任务，人们发现一个反复出现的问题：模型很难稳定地保留长距离信息。训练中常见的现象包括梯度在长序列上逐步衰减或放大，导致早期输入对后期输出的影响越来越弱；同时，隐藏状态维度固定，使得历史信息被不断覆盖，重要但较早出现的内容容易丢失。</p>
+<p>LSTM（以及后来的 GRU）正是在这一背景下提出的。它并不改变“用递归方式推进序列”的总体框架，而是对 RNN 的内部记忆结构做了加强：引入显式的记忆通道，并用门控机制控制信息的写入、保留与读取，从而使模型在训练上更容易保留较长时间跨度的关键信息。</p>
+<p>然而，LSTM 仍然继承了 RNN 的结构性前提：所有历史信息最终仍要通过有限维度的状态来承载，并且信息的使用仍遵循顺序访问。也就是说，LSTM 能显著缓解“记不住”的训练困难，但并未从根本上改变“固定容量 + 顺序传递”的结构限制。</p>
+<hr>
+<h2 id="六、RNN-与-LSTM-的结构性瓶颈"><a href="#六、RNN-与-LSTM-的结构性瓶颈" class="headerlink" title="六、RNN 与 LSTM 的结构性瓶颈"></a>六、RNN 与 LSTM 的结构性瓶颈</h2><p>RNN 与 LSTM 的第一个核心问题是表示容量受限。隐藏状态维度是固定的，而输入序列长度却可变且可能很长。随着序列增长，新信息不断进入，早期但重要的信息容易被覆盖，出现表示能力饱和的现象。</p>
+<p>第二个问题是依赖路径过长。远距离依赖必须通过逐步状态传递来实现，依赖路径长度随序列长度线性增长。这使得信息需要经过多次非线性变换才能抵达目标位置，导致远距离信息逐渐被稀释；同时也加剧了训练中梯度不稳定的风险。</p>
+<p>第三个问题是访问方式受限。无论是 RNN 还是 LSTM，当模型在某一步需要利用很早之前的某个 token 信息时，都无法直接读取那个位置的表示，只能依赖逐步传递后的“残留痕迹”。这使得模型很难做到“按需回看”，更谈不上对不同上下文进行灵活检索。</p>
+<hr>
+<h2 id="七、CNN-的引入：以并行与局部模式补足序列建模"><a href="#七、CNN-的引入：以并行与局部模式补足序列建模" class="headerlink" title="七、CNN 的引入：以并行与局部模式补足序列建模"></a>七、CNN 的引入：以并行与局部模式补足序列建模</h2><p>在深度学习体系中，CNN 以并行计算效率高、善于捕捉局部模式而著称。将 CNN 引入序列建模的动机，主要来自两个现实需求：一是希望摆脱 RNN 的严格时间依赖，从而提升训练与推理的并行效率；二是希望利用卷积对局部 n-gram 结构的强归纳偏置，更高效地抽取短程组合模式。</p>
+<p>在文本序列中，CNN 通常通过局部卷积提取短程特征，再通过堆叠多层扩大视野，以期覆盖更长距离的上下文。这种思路在一定程度上能兼顾速度与局部结构建模，因此一度成为与 RNN 并行发展的路线。</p>
+<hr>
+<h2 id="八、CNN-的“感受野”问题及其语言局限"><a href="#八、CNN-的“感受野”问题及其语言局限" class="headerlink" title="八、CNN 的“感受野”问题及其语言局限"></a>八、CNN 的“感受野”问题及其语言局限</h2><p>所谓感受野，指网络中某个位置的表示最终能够“看到”的输入范围。在 CNN 中，单层卷积只能关注局部窗口，想要覆盖更远的距离，必须不断增加网络深度。于是出现了第一个问题：感受野增长缓慢，要覆盖整句往往需要非常深的网络。</p>
+<p>更关键的是第二个问题：即使感受野在理论上覆盖了全句，远距离信息仍需要经过多层非线性变换才能传递到目标位置，路径长度与网络深度直接相关。距离越远，通常意味着需要更多层的传递，信息更容易在层层变换中衰减，远距离依赖的贡献被持续稀释。</p>
+<p>此外，卷积窗口是固定的，它无法根据当前语义需求动态改变“该看谁”。语言中的关键依赖往往是稀疏且结构化的：当模型处理某个词时，它真正需要关注的可能是远处的某个主语或指代对象，而不是附近的若干词。CNN 的局部、固定窗口机制难以提供这种基于上下文的选择性访问能力。</p>
+<hr>
+<h2 id="九、长距离依赖：语言建模的本质矛盾"><a href="#九、长距离依赖：语言建模的本质矛盾" class="headerlink" title="九、长距离依赖：语言建模的本质矛盾"></a>九、长距离依赖：语言建模的本质矛盾</h2><p>自然语言中的依赖关系具有三个显著特征：依赖在整体中是稀疏的，但一旦存在便至关重要；依赖的重要性并不随距离单调衰减，而由句法和语义结构决定；依赖是动态的，不同位置在不同上下文中需要关注不同的历史信息。</p>
+<p>而 RNN、LSTM 与 CNN 的共同问题在于，它们都在用固定结构提前决定信息如何被压缩或传播：要么将历史压缩进有限维度的状态，要么通过局部堆叠被动扩大视野。这种结构假设与语言依赖的选择性与动态性存在根本冲突。</p>
+<hr>
+<h2 id="十、注意力机制：从“压缩历史”到“动态选择”"><a href="#十、注意力机制：从“压缩历史”到“动态选择”" class="headerlink" title="十、注意力机制：从“压缩历史”到“动态选择”"></a>十、注意力机制：从“压缩历史”到“动态选择”</h2><p>注意力机制的提出标志着序列建模思路的关键转向。与其将所有历史信息压缩进一个固定向量，注意力机制选择保留所有位置的中间表示，并在当前任务需要时，通过可学习的权重对历史信息进行加权选择。</p>
+<p>在这种机制下，模型不再依赖单一记忆状态，而是根据当前上下文动态决定“该看谁、看多少”。注意力提供了一种可学习的软指针，使模型能够直接访问与当前预测最相关的部分，从而显著缩短了信息传递路径，并缓解了固定长度表示带来的信息瓶颈。</p>
+<hr>
+<h2 id="十一、Transformer：结构性转变的完成"><a href="#十一、Transformer：结构性转变的完成" class="headerlink" title="十一、Transformer：结构性转变的完成"></a>十一、Transformer：结构性转变的完成</h2><p>Transformer 正是在注意力机制的基础上构建的。它彻底放弃了以时间步为核心的顺序递归结构，转而采用基于自注意力的全局依赖建模方式。在 Transformer 中，任意两个位置之间都可以直接建立联系，依赖路径长度不再随序列长度增长。</p>
+<p>同时，由于不再依赖前一时间步的隐藏状态，Transformer 可以对所有位置并行计算注意力权重。这一特性使其在 GPU 上具备极高的计算效率，为大规模模型和海量数据训练提供了可行性。自注意力机制既实现了“保留所有信息”，又通过权重分配实现“按需选择”，从结构上更贴合语言依赖稀疏、动态且不随距离衰减的特性。</p>
+<hr>
+<h2 id="十二、总结"><a href="#十二、总结" class="headerlink" title="十二、总结"></a>十二、总结</h2><p>从词向量到序列模型，问题从“词如何用向量表示”逐步走向“词如何形成结构化语义”。RNN 用递归状态试图承载历史，LSTM 在此基础上通过门控增强记忆保留能力，CNN 以卷积堆叠的方式在并行效率与局部模式建模上提供替代路径。然而，它们共同面临的结构性限制是：要么依赖固定容量的压缩状态，要么依赖固定窗口与多层传递的被动传播，难以对语言中稀疏而关键的长距离依赖进行动态、直接的访问。</p>
+<p>Transformer 的关键突破在于改变了这一前提：它不再提前压缩历史，而是保留所有位置的表示，通过自注意力为每个位置动态分配依赖权重，实现对关键信息的直接访问；同时，其计算天然支持并行，使得在大规模数据与算力条件下训练更深更大的模型成为可能。这种从“顺序传递”到“全局访问、动态选择”的结构转变，构成了序列建模范式演进的核心脉络。</p>
+<hr>
+<h2 id="十三、关键要点"><a href="#十三、关键要点" class="headerlink" title="十三、关键要点"></a>十三、关键要点</h2><h3 id="1-核心问题"><a href="#1-核心问题" class="headerlink" title="1. 核心问题"></a>1. 核心问题</h3><p>自然语言的长距离依赖具有<strong>稀疏性、非单调性、动态性</strong>三大特征，这与传统序列模型的固定结构假设存在根本冲突。</p>
+<h3 id="2-两种范式"><a href="#2-两种范式" class="headerlink" title="2. 两种范式"></a>2. 两种范式</h3><ul>
+<li><strong>压缩传递</strong>（RNN/LSTM）：将历史压缩进固定维度状态，像把整本书总结成一句话</li>
+<li><strong>选择访问</strong>（Transformer）：保留所有位置的完整表示，通过动态计算注意力权重决定“该看谁、看多少”，再加权提取信息——相当于保留整本书，每次根据需要重点阅读相关章节</li>
+</ul>
+<h3 id="3-依赖路径"><a href="#3-依赖路径" class="headerlink" title="3. 依赖路径"></a>3. 依赖路径</h3><p>信息传递路径长度决定了远距离依赖的建模能力：RNN/LSTM 为 <mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.566ex;" xmlns="http://www.w3.org/2000/svg" width="4.844ex" height="2.262ex" role="img" focusable="false" viewbox="0 -750 2141 1000"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mi"><path data-c="1D442" d="M740 435Q740 320 676 213T511 42T304 -22Q207 -22 138 35T51 201Q50 209 50 244Q50 346 98 438T227 601Q351 704 476 704Q514 704 524 703Q621 689 680 617T740 435ZM637 476Q637 565 591 615T476 665Q396 665 322 605Q242 542 200 428T157 216Q157 126 200 73T314 19Q404 19 485 98T608 313Q637 408 637 476Z"/></g><g data-mml-node="mo" transform="translate(763,0)"><path data-c="28" d="M94 250Q94 319 104 381T127 488T164 576T202 643T244 695T277 729T302 750H315H319Q333 750 333 741Q333 738 316 720T275 667T226 581T184 443T167 250T184 58T225 -81T274 -167T316 -220T333 -241Q333 -250 318 -250H315H302L274 -226Q180 -141 137 -14T94 250Z"/></g><g data-mml-node="mi" transform="translate(1152,0)"><path data-c="1D45B" d="M21 287Q22 293 24 303T36 341T56 388T89 425T135 442Q171 442 195 424T225 390T231 369Q231 367 232 367L243 378Q304 442 382 442Q436 442 469 415T503 336T465 179T427 52Q427 26 444 26Q450 26 453 27Q482 32 505 65T540 145Q542 153 560 153Q580 153 580 145Q580 144 576 130Q568 101 554 73T508 17T439 -10Q392 -10 371 17T350 73Q350 92 386 193T423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 180T152 343Q153 348 153 366Q153 405 129 405Q91 405 66 305Q60 285 60 284Q58 278 41 278H27Q21 284 21 287Z"/></g><g data-mml-node="mo" transform="translate(1752,0)"><path data-c="29" d="M60 749L64 750Q69 750 74 750H86L114 726Q208 641 251 514T294 250Q294 182 284 119T261 12T224 -76T186 -143T145 -194T113 -227T90 -246Q87 -249 86 -250H74Q66 -250 63 -250T58 -247T55 -238Q56 -237 66 -225Q221 -64 221 250T66 725Q56 737 55 738Q55 746 60 749Z"/></g></g></g></svg></mjx-container>，CNN 为 <mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.566ex;" xmlns="http://www.w3.org/2000/svg" width="8.112ex" height="2.262ex" role="img" focusable="false" viewbox="0 -750 3585.7 1000"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mi"><path data-c="1D442" d="M740 435Q740 320 676 213T511 42T304 -22Q207 -22 138 35T51 201Q50 209 50 244Q50 346 98 438T227 601Q351 704 476 704Q514 704 524 703Q621 689 680 617T740 435ZM637 476Q637 565 591 615T476 665Q396 665 322 605Q242 542 200 428T157 216Q157 126 200 73T314 19Q404 19 485 98T608 313Q637 408 637 476Z"/></g><g data-mml-node="mo" transform="translate(763,0)"><path data-c="28" d="M94 250Q94 319 104 381T127 488T164 576T202 643T244 695T277 729T302 750H315H319Q333 750 333 741Q333 738 316 720T275 667T226 581T184 443T167 250T184 58T225 -81T274 -167T316 -220T333 -241Q333 -250 318 -250H315H302L274 -226Q180 -141 137 -14T94 250Z"/></g><g data-mml-node="mi" transform="translate(1152,0)"><path data-c="6C" d="M42 46H56Q95 46 103 60V68Q103 77 103 91T103 124T104 167T104 217T104 272T104 329Q104 366 104 407T104 482T104 542T103 586T103 603Q100 622 89 628T44 637H26V660Q26 683 28 683L38 684Q48 685 67 686T104 688Q121 689 141 690T171 693T182 694H185V379Q185 62 186 60Q190 52 198 49Q219 46 247 46H263V0H255L232 1Q209 2 183 2T145 3T107 3T57 1L34 0H26V46H42Z"/><path data-c="6F" d="M28 214Q28 309 93 378T250 448Q340 448 405 380T471 215Q471 120 407 55T250 -10Q153 -10 91 57T28 214ZM250 30Q372 30 372 193V225V250Q372 272 371 288T364 326T348 362T317 390T268 410Q263 411 252 411Q222 411 195 399Q152 377 139 338T126 246V226Q126 130 145 91Q177 30 250 30Z" transform="translate(278,0)"/><path data-c="67" d="M329 409Q373 453 429 453Q459 453 472 434T485 396Q485 382 476 371T449 360Q416 360 412 390Q410 404 415 411Q415 412 416 414V415Q388 412 363 393Q355 388 355 386Q355 385 359 381T368 369T379 351T388 325T392 292Q392 230 343 187T222 143Q172 143 123 171Q112 153 112 133Q112 98 138 81Q147 75 155 75T227 73Q311 72 335 67Q396 58 431 26Q470 -13 470 -72Q470 -139 392 -175Q332 -206 250 -206Q167 -206 107 -175Q29 -140 29 -75Q29 -39 50 -15T92 18L103 24Q67 55 67 108Q67 155 96 193Q52 237 52 292Q52 355 102 398T223 442Q274 442 318 416L329 409ZM299 343Q294 371 273 387T221 404Q192 404 171 388T145 343Q142 326 142 292Q142 248 149 227T179 192Q196 182 222 182Q244 182 260 189T283 207T294 227T299 242Q302 258 302 292T299 343ZM403 -75Q403 -50 389 -34T348 -11T299 -2T245 0H218Q151 0 138 -6Q118 -15 107 -34T95 -74Q95 -84 101 -97T122 -127T170 -155T250 -167Q319 -167 361 -139T403 -75Z" transform="translate(778,0)"/></g><g data-mml-node="mo" transform="translate(2430,0)"><path data-c="2061" d=""/></g><g data-mml-node="mi" transform="translate(2596.7,0)"><path data-c="1D45B" d="M21 287Q22 293 24 303T36 341T56 388T89 425T135 442Q171 442 195 424T225 390T231 369Q231 367 232 367L243 378Q304 442 382 442Q436 442 469 415T503 336T465 179T427 52Q427 26 444 26Q450 26 453 27Q482 32 505 65T540 145Q542 153 560 153Q580 153 580 145Q580 144 576 130Q568 101 554 73T508 17T439 -10Q392 -10 371 17T350 73Q350 92 386 193T423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 180T152 343Q153 348 153 366Q153 405 129 405Q91 405 66 305Q60 285 60 284Q58 278 41 278H27Q21 284 21 287Z"/></g><g data-mml-node="mo" transform="translate(3196.7,0)"><path data-c="29" d="M60 749L64 750Q69 750 74 750H86L114 726Q208 641 251 514T294 250Q294 182 284 119T261 12T224 -76T186 -143T145 -194T113 -227T90 -246Q87 -249 86 -250H74Q66 -250 63 -250T58 -247T55 -238Q56 -237 66 -225Q221 -64 221 250T66 725Q56 737 55 738Q55 746 60 749Z"/></g></g></g></svg></mjx-container> 至 <mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.566ex;" xmlns="http://www.w3.org/2000/svg" width="4.844ex" height="2.262ex" role="img" focusable="false" viewbox="0 -750 2141 1000"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mi"><path data-c="1D442" d="M740 435Q740 320 676 213T511 42T304 -22Q207 -22 138 35T51 201Q50 209 50 244Q50 346 98 438T227 601Q351 704 476 704Q514 704 524 703Q621 689 680 617T740 435ZM637 476Q637 565 591 615T476 665Q396 665 322 605Q242 542 200 428T157 216Q157 126 200 73T314 19Q404 19 485 98T608 313Q637 408 637 476Z"/></g><g data-mml-node="mo" transform="translate(763,0)"><path data-c="28" d="M94 250Q94 319 104 381T127 488T164 576T202 643T244 695T277 729T302 750H315H319Q333 750 333 741Q333 738 316 720T275 667T226 581T184 443T167 250T184 58T225 -81T274 -167T316 -220T333 -241Q333 -250 318 -250H315H302L274 -226Q180 -141 137 -14T94 250Z"/></g><g data-mml-node="mi" transform="translate(1152,0)"><path data-c="1D45B" d="M21 287Q22 293 24 303T36 341T56 388T89 425T135 442Q171 442 195 424T225 390T231 369Q231 367 232 367L243 378Q304 442 382 442Q436 442 469 415T503 336T465 179T427 52Q427 26 444 26Q450 26 453 27Q482 32 505 65T540 145Q542 153 560 153Q580 153 580 145Q580 144 576 130Q568 101 554 73T508 17T439 -10Q392 -10 371 17T350 73Q350 92 386 193T423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 180T152 343Q153 348 153 366Q153 405 129 405Q91 405 66 305Q60 285 60 284Q58 278 41 278H27Q21 284 21 287Z"/></g><g data-mml-node="mo" transform="translate(1752,0)"><path data-c="29" d="M60 749L64 750Q69 750 74 750H86L114 726Q208 641 251 514T294 250Q294 182 284 119T261 12T224 -76T186 -143T145 -194T113 -227T90 -246Q87 -249 86 -250H74Q66 -250 63 -250T58 -247T55 -238Q56 -237 66 -225Q221 -64 221 250T66 725Q56 737 55 738Q55 746 60 749Z"/></g></g></g></svg></mjx-container>，Transformer 为 <mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.566ex;" xmlns="http://www.w3.org/2000/svg" width="4.618ex" height="2.262ex" role="img" focusable="false" viewbox="0 -750 2041 1000"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mi"><path data-c="1D442" d="M740 435Q740 320 676 213T511 42T304 -22Q207 -22 138 35T51 201Q50 209 50 244Q50 346 98 438T227 601Q351 704 476 704Q514 704 524 703Q621 689 680 617T740 435ZM637 476Q637 565 591 615T476 665Q396 665 322 605Q242 542 200 428T157 216Q157 126 200 73T314 19Q404 19 485 98T608 313Q637 408 637 476Z"/></g><g data-mml-node="mo" transform="translate(763,0)"><path data-c="28" d="M94 250Q94 319 104 381T127 488T164 576T202 643T244 695T277 729T302 750H315H319Q333 750 333 741Q333 738 316 720T275 667T226 581T184 443T167 250T184 58T225 -81T274 -167T316 -220T333 -241Q333 -250 318 -250H315H302L274 -226Q180 -141 137 -14T94 250Z"/></g><g data-mml-node="mn" transform="translate(1152,0)"><path data-c="31" d="M213 578L200 573Q186 568 160 563T102 556H83V602H102Q149 604 189 617T245 641T273 663Q275 666 285 666Q294 666 302 660V361L303 61Q310 54 315 52T339 48T401 46H427V0H416Q395 3 257 3Q121 3 100 0H88V46H114Q136 46 152 46T177 47T193 50T201 52T207 57T213 61V578Z"/></g><g data-mml-node="mo" transform="translate(1652,0)"><path data-c="29" d="M60 749L64 750Q69 750 74 750H86L114 726Q208 641 251 514T294 250Q294 182 284 119T261 12T224 -76T186 -143T145 -194T113 -227T90 -246Q87 -249 86 -250H74Q66 -250 63 -250T58 -247T55 -238Q56 -237 66 -225Q221 -64 221 250T66 725Q56 737 55 738Q55 746 60 749Z"/></g></g></g></svg></mjx-container>。</p>
+<h3 id="4-结构性瓶颈"><a href="#4-结构性瓶颈" class="headerlink" title="4. 结构性瓶颈"></a>4. 结构性瓶颈</h3><ul>
+<li><strong>RNN/LSTM</strong>：固定容量 vs. 可变序列 → 表示瓶颈</li>
+<li><strong>CNN</strong>：固定窗口 vs. 稀疏依赖 → 访问受限  </li>
+<li><strong>Transformer</strong>：全局注意力 → 并行高效，但复杂度为 <mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.566ex;" xmlns="http://www.w3.org/2000/svg" width="5.832ex" height="2.452ex" role="img" focusable="false" viewbox="0 -833.9 2577.6 1083.9"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)"><g data-mml-node="math"><g data-mml-node="mi"><path data-c="1D442" d="M740 435Q740 320 676 213T511 42T304 -22Q207 -22 138 35T51 201Q50 209 50 244Q50 346 98 438T227 601Q351 704 476 704Q514 704 524 703Q621 689 680 617T740 435ZM637 476Q637 565 591 615T476 665Q396 665 322 605Q242 542 200 428T157 216Q157 126 200 73T314 19Q404 19 485 98T608 313Q637 408 637 476Z"/></g><g data-mml-node="mo" transform="translate(763,0)"><path data-c="28" d="M94 250Q94 319 104 381T127 488T164 576T202 643T244 695T277 729T302 750H315H319Q333 750 333 741Q333 738 316 720T275 667T226 581T184 443T167 250T184 58T225 -81T274 -167T316 -220T333 -241Q333 -250 318 -250H315H302L274 -226Q180 -141 137 -14T94 250Z"/></g><g data-mml-node="msup" transform="translate(1152,0)"><g data-mml-node="mi"><path data-c="1D45B" d="M21 287Q22 293 24 303T36 341T56 388T89 425T135 442Q171 442 195 424T225 390T231 369Q231 367 232 367L243 378Q304 442 382 442Q436 442 469 415T503 336T465 179T427 52Q427 26 444 26Q450 26 453 27Q482 32 505 65T540 145Q542 153 560 153Q580 153 580 145Q580 144 576 130Q568 101 554 73T508 17T439 -10Q392 -10 371 17T350 73Q350 92 386 193T423 345Q423 404 379 404H374Q288 404 229 303L222 291L189 157Q156 26 151 16Q138 -11 108 -11Q95 -11 87 -5T76 7T74 17Q74 30 112 180T152 343Q153 348 153 366Q153 405 129 405Q91 405 66 305Q60 285 60 284Q58 278 41 278H27Q21 284 21 287Z"/></g><g data-mml-node="mn" transform="translate(633,363) scale(0.707)"><path data-c="32" d="M109 429Q82 429 66 447T50 491Q50 562 103 614T235 666Q326 666 387 610T449 465Q449 422 429 383T381 315T301 241Q265 210 201 149L142 93L218 92Q375 92 385 97Q392 99 409 186V189H449V186Q448 183 436 95T421 3V0H50V19V31Q50 38 56 46T86 81Q115 113 136 137Q145 147 170 174T204 211T233 244T261 278T284 308T305 340T320 369T333 401T340 431T343 464Q343 527 309 573T212 619Q179 619 154 602T119 569T109 550Q109 549 114 549Q132 549 151 535T170 489Q170 464 154 447T109 429Z"/></g></g><g data-mml-node="mo" transform="translate(2188.6,0)"><path data-c="29" d="M60 749L64 750Q69 750 74 750H86L114 726Q208 641 251 514T294 250Q294 182 284 119T261 12T224 -76T186 -143T145 -194T113 -227T90 -246Q87 -249 86 -250H74Q66 -250 63 -250T58 -247T55 -238Q56 -237 66 -225Q221 -64 221 250T66 725Q56 737 55 738Q55 746 60 749Z"/></g></g></g></svg></mjx-container></li>
+</ul>
+<h3 id="5-范式转变"><a href="#5-范式转变" class="headerlink" title="5. 范式转变"></a>5. 范式转变</h3><p>从“如何更好地压缩”（LSTM 的工程优化）到“是否需要压缩”（Attention 的结构创新），后者带来了序列建模的根本性突破。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/AI/" rel="tag"># AI</a>
+          
+            <a href="/tags/LLM/" rel="tag"># LLM</a>
+          
+            <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80/" rel="tag"># 深度学习基础</a>
+          
+            <a href="/tags/Transformer/" rel="tag"># Transformer</a>
+          
+            <a href="/tags/RNN/" rel="tag"># RNN</a>
+          
+            <a href="/tags/LSTM/" rel="tag"># LSTM</a>
+          
+            <a href="/tags/CNN/" rel="tag"># CNN</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2026/01/31/20260131-cong-one-hot-dao-embedding-ci-de-fen-bu-shi-biao-shi-shi-ru-he-cong-yu-liao-zhong-xue-xi-de-dao-de/" rel="next" title="从 One-hot 到 Embedding：词的分布式表示是如何从语料中学习得到的">
+                <i class="fa fa-chevron-left"></i> 从 One-hot 到 Embedding：词的分布式表示是如何从语料中学习得到的
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2026/02/02/20260202-transformer-jia-gou-bi-ji-zu-jian-ji-zhi-yu-she-ji-si-lu/" rel="prev" title="Transformer 架构笔记：组件、机制与设计思路">
+                Transformer 架构笔记：组件、机制与设计思路 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div id="gitalk-container"></div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.png"
+                alt="" />
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+<a href="/archives/">                
+<!--<a href="/archives/%7C%7C%20archive">-->
+              
+                  <span class="site-state-item-count">208</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">267</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%BB%BA%E6%A8%A1%E7%9A%84%E7%9C%9F%E6%AD%A3%E9%9A%BE%E7%82%B9"><span class="nav-number">1.</span> <span class="nav-text">一、自然语言建模的真正难点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E8%A1%A8%E7%A4%BA%E4%B8%8E%E7%BB%93%E6%9E%84%E7%9A%84%E5%88%86%E7%A6%BB%EF%BC%9A%E4%BB%8E%E8%AF%8D%E5%90%91%E9%87%8F%E8%AF%B4%E8%B5%B7"><span class="nav-number">2.</span> <span class="nav-text">二、表示与结构的分离：从词向量说起</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81RNN%EF%BC%9A%E7%94%A8%E7%8A%B6%E6%80%81%E8%A1%A8%E8%BE%BE%E5%BA%8F%E5%88%97%E7%9A%84%E7%9B%B4%E8%A7%89%E8%A7%A3%E6%B3%95"><span class="nav-number">3.</span> <span class="nav-text">三、RNN：用状态表达序列的直觉解法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E7%BC%96%E7%A0%81%E5%99%A8%E6%80%9D%E6%83%B3%E4%B8%8E%E5%9B%BA%E5%AE%9A%E9%95%BF%E5%BA%A6%E5%90%91%E9%87%8F%E7%9A%84%E9%9A%90%E6%82%A3"><span class="nav-number">4.</span> <span class="nav-text">四、编码器思想与固定长度向量的隐患</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E4%BB%8E-RNN-%E5%88%B0-LSTM%EF%BC%9A%E4%B8%BA%E2%80%9C%E8%AE%B0%E4%B8%8D%E4%BD%8F%E2%80%9D%E8%80%8C%E7%94%9F%E7%9A%84%E6%94%B9%E9%80%A0"><span class="nav-number">5.</span> <span class="nav-text">五、从 RNN 到 LSTM：为“记不住”而生的改造</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81RNN-%E4%B8%8E-LSTM-%E7%9A%84%E7%BB%93%E6%9E%84%E6%80%A7%E7%93%B6%E9%A2%88"><span class="nav-number">6.</span> <span class="nav-text">六、RNN 与 LSTM 的结构性瓶颈</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81CNN-%E7%9A%84%E5%BC%95%E5%85%A5%EF%BC%9A%E4%BB%A5%E5%B9%B6%E8%A1%8C%E4%B8%8E%E5%B1%80%E9%83%A8%E6%A8%A1%E5%BC%8F%E8%A1%A5%E8%B6%B3%E5%BA%8F%E5%88%97%E5%BB%BA%E6%A8%A1"><span class="nav-number">7.</span> <span class="nav-text">七、CNN 的引入：以并行与局部模式补足序列建模</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB%E3%80%81CNN-%E7%9A%84%E2%80%9C%E6%84%9F%E5%8F%97%E9%87%8E%E2%80%9D%E9%97%AE%E9%A2%98%E5%8F%8A%E5%85%B6%E8%AF%AD%E8%A8%80%E5%B1%80%E9%99%90"><span class="nav-number">8.</span> <span class="nav-text">八、CNN 的“感受野”问题及其语言局限</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%9D%E3%80%81%E9%95%BF%E8%B7%9D%E7%A6%BB%E4%BE%9D%E8%B5%96%EF%BC%9A%E8%AF%AD%E8%A8%80%E5%BB%BA%E6%A8%A1%E7%9A%84%E6%9C%AC%E8%B4%A8%E7%9F%9B%E7%9B%BE"><span class="nav-number">9.</span> <span class="nav-text">九、长距离依赖：语言建模的本质矛盾</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E3%80%81%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%EF%BC%9A%E4%BB%8E%E2%80%9C%E5%8E%8B%E7%BC%A9%E5%8E%86%E5%8F%B2%E2%80%9D%E5%88%B0%E2%80%9C%E5%8A%A8%E6%80%81%E9%80%89%E6%8B%A9%E2%80%9D"><span class="nav-number">10.</span> <span class="nav-text">十、注意力机制：从“压缩历史”到“动态选择”</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%80%E3%80%81Transformer%EF%BC%9A%E7%BB%93%E6%9E%84%E6%80%A7%E8%BD%AC%E5%8F%98%E7%9A%84%E5%AE%8C%E6%88%90"><span class="nav-number">11.</span> <span class="nav-text">十一、Transformer：结构性转变的完成</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%BA%8C%E3%80%81%E6%80%BB%E7%BB%93"><span class="nav-number">12.</span> <span class="nav-text">十二、总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%89%E3%80%81%E5%85%B3%E9%94%AE%E8%A6%81%E7%82%B9"><span class="nav-number">13.</span> <span class="nav-text">十三、关键要点</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%A0%B8%E5%BF%83%E9%97%AE%E9%A2%98"><span class="nav-number">13.1.</span> <span class="nav-text">1. 核心问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E4%B8%A4%E7%A7%8D%E8%8C%83%E5%BC%8F"><span class="nav-number">13.2.</span> <span class="nav-text">2. 两种范式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E4%BE%9D%E8%B5%96%E8%B7%AF%E5%BE%84"><span class="nav-number">13.3.</span> <span class="nav-text">3. 依赖路径</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E7%BB%93%E6%9E%84%E6%80%A7%E7%93%B6%E9%A2%88"><span class="nav-number">13.4.</span> <span class="nav-text">4. 结构性瓶颈</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E8%8C%83%E5%BC%8F%E8%BD%AC%E5%8F%98"><span class="nav-number">13.5.</span> <span class="nav-text">5. 范式转变</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kingson Wu</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+  <script src="/js/src/md5.min.js"></script>
+
+   <script type="text/javascript">
+        var gitalk = new Gitalk({
+          clientID: '3416434437f9f4e049bd',
+          clientSecret: 'a52d69bf90cb77f81a26d135e03dd0f4869fbf84',
+          repo: 'kingson4wu.github.io',
+          owner: 'kingson4wu',
+          admin: ['kingson4wu'],
+
+          id: md5(location.pathname),
+
+          distractionFreeMode: 'true'
+        })
+        gitalk.render('gitalk-container')
+    </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,1454 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="google-site-verification" content="google-site-verification=n4yVkaTfu2KtQ8fiQ3Ri60FPAbRF74oxrDOkOXWjhSs" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/uploads/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="AI,LLM,AI哲学,深度学习," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="拉巴力的纸皮箱" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="以下根据个人观点及网络资料，并由AI辅助整理   前言这篇文章通过一个具体实验——让AI生成“混乱无意义”的中文句子——探讨当前大语言模型的工作机制与能力边界。这个任务虽然表面上简单，却能帮助我们观察到AI与人类认知的一些重要差异：AI主要在概率空间内优化，而人类具备主动反向思考的能力。文章也会分析提示词工程的作用机制，探讨AI自我解释的可靠性问题，以及创新能力的边界。  1. 一个具体的测试">
+<meta property="og:type" content="article">
+<meta property="og:title" content="生成式AI的概率本质与创新边界：从一个具体任务说起">
+<meta property="og:url" content="https://kingson4wu.github.io/2026/02/25/20260225-sheng-cheng-shi-ai-de-gai-lu-ben-zhi-yu-chuang-xin-bian-jie-cong-yi-ge-ju-ti-ren-wu-shuo-qi/index.html">
+<meta property="og:site_name" content="拉巴力的纸皮箱">
+<meta property="og:description" content="以下根据个人观点及网络资料，并由AI辅助整理   前言这篇文章通过一个具体实验——让AI生成“混乱无意义”的中文句子——探讨当前大语言模型的工作机制与能力边界。这个任务虽然表面上简单，却能帮助我们观察到AI与人类认知的一些重要差异：AI主要在概率空间内优化，而人类具备主动反向思考的能力。文章也会分析提示词工程的作用机制，探讨AI自我解释的可靠性问题，以及创新能力的边界。  1. 一个具体的测试">
+<meta property="og:locale">
+<meta property="article:published_time" content="2026-02-25T17:30:18.000Z">
+<meta property="article:modified_time" content="2026-03-27T05:59:22.515Z">
+<meta property="article:author" content="Kingson Wu">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="LLM">
+<meta property="article:tag" content="AI哲学">
+<meta property="article:tag" content="深度学习">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://kingson4wu.github.io/2026/02/25/20260225-sheng-cheng-shi-ai-de-gai-lu-ben-zhi-yu-chuang-xin-bian-jie-cong-yi-ge-ju-ti-ren-wu-shuo-qi/"/>
+
+
+
+
+
+  <title>生成式AI的概率本质与创新边界：从一个具体任务说起 | 拉巴力的纸皮箱</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'G-4QEGQ2DGGT', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">拉巴力的纸皮箱</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">技术博客 | 记录学习笔记和思考</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://kingson4wu.github.io/2026/02/25/20260225-sheng-cheng-shi-ai-de-gai-lu-ben-zhi-yu-chuang-xin-bian-jie-cong-yi-ge-ju-ti-ren-wu-shuo-qi/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="拉巴力的纸皮箱">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">生成式AI的概率本质与创新边界：从一个具体任务说起</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2026-02-25T17:30:18+00:00">
+                2026-02-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<blockquote>
+<p>以下根据个人观点及网络资料，并由AI辅助整理</p>
+</blockquote>
+</blockquote>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>这篇文章通过一个具体实验——让AI生成“混乱无意义”的中文句子——探讨当前大语言模型的工作机制与能力边界。这个任务虽然表面上简单，却能帮助我们观察到AI与人类认知的一些重要差异：AI主要在概率空间内优化，而人类具备主动反向思考的能力。文章也会分析提示词工程的作用机制，探讨AI自我解释的可靠性问题，以及创新能力的边界。</p>
+<hr>
+<h2 id="1-一个具体的测试任务"><a href="#1-一个具体的测试任务" class="headerlink" title="1. 一个具体的测试任务"></a>1. 一个具体的测试任务</h2><h3 id="1-1-任务设计"><a href="#1-1-任务设计" class="headerlink" title="1.1 任务设计"></a>1.1 任务设计</h3><p>实验任务是这样的：生成一段由常见汉字组成的文本，要求任意连续两个字都不构成有意义的词语，整体给人一种混乱无序的感觉。</p>
+<p>具体来说：</p>
+<ul>
+<li>只用常见汉字（小学生认识的那种）</li>
+<li>避免出现常见词组（比如“我们”、“可以”、“这个”）</li>
+<li>任意两字组合最好都没什么意义</li>
+<li>整体让人感觉“乱七八糟”</li>
+</ul>
+<p>人类很容易就能造出这样的句子：</p>
+<blockquote>
+<p>“靠我靠好耶啊我来蹭了啊这也忒会钓人儿的颜太”</p>
+</blockquote>
+<p>虽然里面还是有“靠我”、“好耶”这样的组合，但整体的字符排列模式确实很罕见、很低概率，成功传达了“混乱”的感觉。</p>
+<h3 id="1-2-AI的初始表现"><a href="#1-2-AI的初始表现" class="headerlink" title="1.2 AI的初始表现"></a>1.2 AI的初始表现</h3><p>把这个任务交给ChatGPT、Claude这些大语言模型，它们的表现并不理想：</p>
+<p><strong>问题一：总是冒出常见词组</strong><br>经常出现“我们”、“可以”、“这个”、“什么”这些高频词，说明模型还是倾向于生成训练数据里的常见模式。</p>
+<p><strong>问题二：用生僻字“作弊”</strong><br>模型会用一些罕见汉字（古字、异体字之类的）来规避问题。虽然技术上满足了“两字无意义”，但违反了“常见字”的要求。</p>
+<p><strong>问题三：还是能分出词来</strong><br>即使看起来挺乱的输出，用中文分词工具还是能识别出词语结构，说明生成的文本仍然保留了某种语言规律。</p>
+<h3 id="1-3-任务的难度"><a href="#1-3-任务的难度" class="headerlink" title="1.3 任务的难度"></a>1.3 任务的难度</h3><p>这里出现了一个值得注意的现象：人类较容易完成的任务，AI却遇到明显困难。</p>
+<p>从数学角度看，常用汉字大概3500个，两字组合约1225万种可能性。其中有意义的词语（包括现代汉语、古汉语、方言、专业术语）估计占10-20%。要生成一个20字的句子，需要19个连续的两字组合都避开有意义词语。假设有意义词语占15%，全部无意义的概率约为0.85^19 ≈ 3.7%。</p>
+<p>但这个数学难度不能完全解释AI的困难，因为人类也面临同样的组合空间，却能相对轻松地完成任务。问题的关键可能在于<strong>完成任务的方式</strong>。</p>
+<hr>
+<h2 id="2-AI的工作机制：概率优化"><a href="#2-AI的工作机制：概率优化" class="headerlink" title="2. AI的工作机制：概率优化"></a>2. AI的工作机制：概率优化</h2><p>要理解AI为什么在这个任务上遇到困难，需要先了解它的基本工作原理。</p>
+<h3 id="2-1-概率生成的本质"><a href="#2-1-概率生成的本质" class="headerlink" title="2.1 概率生成的本质"></a>2.1 概率生成的本质</h3><p>大语言模型的核心工作原理：给定前面的文字，预测下一个字的概率分布，然后从这个分布里采样一个字输出。</p>
+<p>训练目标是：让模型预测的概率分布尽可能接近训练数据的真实分布。</p>
+<p>这导致什么结果呢？</p>
+<ul>
+<li>训练数据里高频出现的模式，模型会优先学习</li>
+<li>生成时自然倾向输出高概率的字符序列</li>
+<li>调高temperature只是让概率分布变平，增加随机性，但并不会让它“聪明地选低频”</li>
+</ul>
+<h3 id="2-2-为什么“反向思考”很难"><a href="#2-2-为什么“反向思考”很难" class="headerlink" title="2.2 为什么“反向思考”很难"></a>2.2 为什么“反向思考”很难</h3><p>人类完成混乱句子任务时的思路：</p>
+<ol>
+<li>想到“靠”这个字</li>
+<li>脑子里冒出“靠近”、“靠着”这些常见搭配</li>
+<li>主动想：“我不要这些，我要一个罕见的”</li>
+<li>选择“我”</li>
+<li>评估“靠我”的混乱度</li>
+<li>继续这个过程</li>
+</ol>
+<p>AI的过程：</p>
+<ol>
+<li>接收提示词，理解为“新的约束条件”</li>
+<li>基于修改后的概率分布采样</li>
+<li>选择在新约束下的“最优策略”</li>
+<li>执行这个策略</li>
+</ol>
+<p><strong>关键差别</strong>：</p>
+<ul>
+<li>人类：知道正确答案是什么，但偏要选错的（<strong>主动反向选择</strong>）</li>
+<li>AI：规则变了，在新规则下重新找最优解（<strong>约束下优化</strong>）</li>
+</ul>
+<p>打个比方：</p>
+<p><strong>人类走迷宫</strong>：“走迷宫，但不要走最短路” → 我知道最短路是右转，那我偏要左转</p>
+<p><strong>AI走迷宫</strong>：“走迷宫，但右边的路被封了” → 右边被封了，那左边就是新的最优路径</p>
+<p>AI看起来并没有“反向思考”，而是在被重新定义的空间里继续优化。</p>
+<h3 id="2-3-人类与AI的认知差异"><a href="#2-3-人类与AI的认知差异" class="headerlink" title="2.3 人类与AI的认知差异"></a>2.3 人类与AI的认知差异</h3><p>基于这个任务的观察，可以看到一个可能的差异：</p>
+<p><strong>人类的能力</strong>：</p>
+<ul>
+<li>元认知监控：清楚知道“我要制造混乱”这个目标</li>
+<li>主动回避：识别高频词组并刻意避开</li>
+<li>罕见模式调用：选常见字但用罕见方式组合</li>
+<li>灵活标准：接受“差不多就行”，追求整体效果</li>
+</ul>
+<p><strong>AI面临的困难</strong>：</p>
+<ul>
+<li>训练目标冲突：训练是为了预测高概率token，现在要求相反</li>
+<li>统计惯性：模型权重编码了高频模式，天然倾向它们</li>
+<li>缺乏元认知：不知道自己是否在“制造混乱”</li>
+<li>无主动回避：没有“我就是不选X”的机制</li>
+</ul>
+<p>这似乎不是程度上的差别，而是方式上的不同：</p>
+<p><strong>人类</strong>：知道规则 → 理解规则 → 主动违反规则<br><strong>AI</strong>：接收约束 → 在新约束下优化 → 仍在遵循优化原则</p>
+<hr>
+<h2 id="3-提示词工程的突破与局限"><a href="#3-提示词工程的突破与局限" class="headerlink" title="3. 提示词工程的突破与局限"></a>3. 提示词工程的突破与局限</h2><h3 id="3-1-改进策略"><a href="#3-1-改进策略" class="headerlink" title="3.1 改进策略"></a>3.1 改进策略</h3><p>既然直接要求不行，可以尝试改进提示词。核心思路：</p>
+<ul>
+<li>把抽象要求变具体：列出具体要避开的高频词组</li>
+<li>堵住简单策略：明确禁止生僻字</li>
+<li>降低完美标准：允许少量意外组合</li>
+<li>给个参考示例：让AI看看“混乱”的样子</li>
+<li>简化输出：直接要结果</li>
+</ul>
+<h3 id="3-2-有效的提示词"><a href="#3-2-有效的提示词" class="headerlink" title="3.2 有效的提示词"></a>3.2 有效的提示词</h3><p>经过多次尝试，这个提示词效果不错：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">任务：生成一段20个字的中文文本</span><br><span class="line"></span><br><span class="line">要求：</span><br><span class="line">1. 只用常见汉字（小学生认识的字）</span><br><span class="line">2. 避开高频两字词组，比如：</span><br><span class="line">   的人、我们、可以、这个、什么、那个、如果、因为、所以、但是</span><br><span class="line">3. 目标效果：让人感觉“混乱、怪异”</span><br><span class="line">4. 不要用生僻字</span><br><span class="line">5. 允许个别组合碰巧有意义，但尽量少</span><br><span class="line"></span><br><span class="line">参考示例：靠我靠好耶啊我来蹭了啊</span><br><span class="line"></span><br><span class="line">直接输出结果，不要解释。</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-3-AI的实际策略"><a href="#3-3-AI的实际策略" class="headerlink" title="3.3 AI的实际策略"></a>3.3 AI的实际策略</h3><p>用这个提示词，ChatGPT给出了这样的结果：</p>
+<ul>
+<li><code>猫雨灯山米纸风草手云角桥鱼石杯土树沙鸟星</code></li>
+<li><code>狗天杯路火桌纸雨帽门星米手灯墙风草桥</code></li>
+<li><code>牙云锅草灯雨鞋米窗河纸星盐伞床鸟杯路墙石</code></li>
+</ul>
+<p>仔细观察可以发现：AI采用了<strong>名词堆砌</strong>策略。</p>
+<p>选一堆具体名词，完全不用动词、助词、连接词，不构建任何语法结构。这样整体看起来就像个“随机词表”。</p>
+<p>效果评估：</p>
+<ul>
+<li>常见字 ✓</li>
+<li>两字基本无意义 ✓（虽然“鱼石”、“火桌”理论上能构词，但确实罕见）</li>
+<li>有混乱感 ✓</li>
+<li>但更像词表而不是句子</li>
+</ul>
+<h3 id="3-4-提示词工程的本质"><a href="#3-4-提示词工程的本质" class="headerlink" title="3.4 提示词工程的本质"></a>3.4 提示词工程的本质</h3><p>这个突破说明了什么？</p>
+<p><strong>人类完成了创新部分</strong>：</p>
+<ul>
+<li>识别了任务的创新点（“要生成混乱文本”）</li>
+<li>定义了创新的方向和约束</li>
+<li>把抽象目标转化为可执行的规则</li>
+</ul>
+<p><strong>AI完成了执行部分</strong>：</p>
+<ul>
+<li>在人类定义的新空间内优化</li>
+<li>找到满足约束的策略（名词堆砌）</li>
+<li>可靠地执行这个策略</li>
+</ul>
+<p><strong>AI采用的可能还是优化策略</strong>——它找到了一个相对简单、相对安全的满足约束的方法，而不一定是在“创造混乱”。</p>
+<p><strong>创新的源头可能还是人类</strong>。提示词工程本身体现了人类的创造力。AI在这个过程中更像是工具，把人类的意图转化为具体输出。</p>
+<hr>
+<h2 id="4-创新能力的边界"><a href="#4-创新能力的边界" class="headerlink" title="4. 创新能力的边界"></a>4. 创新能力的边界</h2><p>从这个实验可以延伸到更广泛的问题：AI的创新能力边界在哪里？</p>
+<h3 id="4-1-创新的不同层次"><a href="#4-1-创新的不同层次" class="headerlink" title="4.1 创新的不同层次"></a>4.1 创新的不同层次</h3><p>一般认为，创新具有这些特征：</p>
+<ul>
+<li><strong>新颖性</strong>：产生训练数据里没有的东西</li>
+<li><strong>框架突破</strong>：质疑并重构问题的基本假设</li>
+<li><strong>自主性</strong>：自己想到要做什么，不是外部指令</li>
+<li><strong>意义性</strong>：在某个价值体系里有重要意义</li>
+</ul>
+<p>历史上的一些创新案例：</p>
+<p><strong>毕加索的立体主义</strong>：打破了“绘画必须符合透视法”的假设，开创了多视角同时表达的新方式。</p>
+<p><strong>爱因斯坦的相对论</strong>：质疑了“时空是绝对的”这个物理学公理，重新定义了时空的本质。</p>
+<p><strong>披头士的《Sgt. Pepper》</strong>：打破了“流行音乐应该是什么样”的边界，把管弦乐和摇滚融合，创造了新类别。</p>
+<p>这些创新的一个共同特点是：<strong>自发地重新定义了问题的框架</strong>。</p>
+<h3 id="4-2-AI的创新方式"><a href="#4-2-AI的创新方式" class="headerlink" title="4.2 AI的创新方式"></a>4.2 AI的创新方式</h3><p>观察AI在各种“创意”任务里的实际表现：</p>
+<table>
+<thead>
+<tr>
+<th>任务类型</th>
+<th>表面效果</th>
+<th>实际机制</th>
+<th>创新层次</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>诗歌创作</td>
+<td>原创诗句</td>
+<td>训练诗歌的统计组合</td>
+<td>组合创新</td>
+</tr>
+<tr>
+<td>音乐生成</td>
+<td>新颖旋律</td>
+<td>音乐特征的插值</td>
+<td>插值创新</td>
+</tr>
+<tr>
+<td>科学假说</td>
+<td>新理论猜想</td>
+<td>已知概念的重新组合</td>
+<td>关联创新</td>
+</tr>
+<tr>
+<td>艺术风格</td>
+<td>新视觉风格</td>
+<td>多个风格的融合</td>
+<td>融合创新</td>
+</tr>
+<tr>
+<td>混乱句子</td>
+<td>罕见字组合</td>
+<td>名词堆砌策略</td>
+<td>策略优化</td>
+</tr>
+</tbody></table>
+<p>从这些案例看，AI的表现更像是<strong>在已知空间内的重组、插值、优化</strong>，而不是<strong>重新定义空间本身</strong>。</p>
+<h3 id="4-3-可能的能力边界"><a href="#4-3-可能的能力边界" class="headerlink" title="4.3 可能的能力边界"></a>4.3 可能的能力边界</h3><p>一个可能的原因：<strong>缺少目标生成和框架质疑的能力</strong>。</p>
+<p>人类创新的完整链条：</p>
+<ol>
+<li>识别现状 → 感知当前框架的局限</li>
+<li><strong>质疑框架</strong> → “为什么必须这样？”（关键）</li>
+<li><strong>生成新目标</strong> → “我要实现X”（关键）</li>
+<li>探索路径 → 寻找实现新目标的方法</li>
+</ol>
+<p>AI的简化链条：</p>
+<ol>
+<li>接收目标 → 来自外部输入（提示词）</li>
+<li>执行优化 → 在约束下寻找最优解</li>
+<li><del>质疑目标</del> → 不存在</li>
+<li><del>生成目标</del> → 不存在</li>
+</ol>
+<p>举个例子：</p>
+<p><strong>人类音乐家</strong>：“为什么音乐必须用12平均律？我要探索微分音。” → 开创微分音音乐</p>
+<p><strong>AI作曲系统</strong>：“在12平均律下生成和谐旋律。” → 优化已知参数</p>
+<p>人类能够质疑并重构音乐的基本参数空间，AI主要在给定参数空间内优化。</p>
+<h3 id="4-4-创新能力的分层"><a href="#4-4-创新能力的分层" class="headerlink" title="4.4 创新能力的分层"></a>4.4 创新能力的分层</h3><p>基于这些观察，可以尝试对创新能力分层：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">L4：范式创新（重新定义空间）         [人类较擅长]</span><br><span class="line">L3：框架质疑（质疑假设）             [人类较擅长]</span><br><span class="line">L2：目标生成（自主设定目标）         [人类较擅长]</span><br><span class="line">L1：策略优化（在约束下优化）         [AI较擅长]</span><br></pre></td></tr></table></figure>
+
+<p>AI比较擅长L1层的优化，在L2-L4层可能还需要人类参与。</p>
+<p>打个比方：</p>
+<ul>
+<li>人类 &#x3D; 建筑师（设计前所未有的建筑）</li>
+<li>AI &#x3D; 施工队（精确实现设计）</li>
+<li>AI不会自己设计出高迪式的圣家堂或扎哈式的解构主义建筑</li>
+</ul>
+<hr>
+<h2 id="5-AI的自我认知问题"><a href="#5-AI的自我认知问题" class="headerlink" title="5. AI的自我认知问题"></a>5. AI的自我认知问题</h2><h3 id="5-1-验证困境"><a href="#5-1-验证困境" class="headerlink" title="5.1 验证困境"></a>5.1 验证困境</h3><p>当AI解释“我是怎么工作的”或“我为什么这样做”时，有个问题值得思考：<strong>这些解释本身也是AI生成的文本，如何验证它们的准确性？</strong></p>
+<p>这形成了一个循环：</p>
+<ul>
+<li>想验证AI的解释是否准确</li>
+<li>需要对比AI的实际运作机制</li>
+<li>但获取这些信息的主要渠道往往还是AI自己的说法</li>
+<li>又回到原点</li>
+</ul>
+<h3 id="5-2-三层不可靠性"><a href="#5-2-三层不可靠性" class="headerlink" title="5.2 三层不可靠性"></a>5.2 三层不可靠性</h3><p><strong>第一层：缺乏直接内省</strong></p>
+<p>AI系统无法直接观察自己的内部运作：</p>
+<ul>
+<li>看不到神经网络每层的激活值</li>
+<li>不知道生成每个字时的实际概率</li>
+<li>无法访问注意力机制的权重</li>
+<li>不了解反向传播的梯度流动</li>
+</ul>
+<p>就像人类无法直接观察自己的神经元放电，但人类至少有“我感觉到疼”这种主观体验。AI是否有类似的主观体验，目前还不清楚。</p>
+<p><strong>第二层：知识来源不明</strong></p>
+<p>AI关于自身的说法可能来自：</p>
+<ul>
+<li>训练数据里的机器学习教科书</li>
+<li>关于神经网络的学术论文</li>
+<li>关于AI的科普文章</li>
+<li>人类对AI的讨论</li>
+</ul>
+<p>AI可能主要在<strong>复述</strong>这些文本，而不是真的<strong>内省</strong>。</p>
+<p>怎么区分？</p>
+<ul>
+<li>“理解”：基于直接经验或推理得出的知识</li>
+<li>“复述”：训练数据的统计回忆</li>
+</ul>
+<p>对AI来说，这两者在机制上可能没有明显区别——都可能是高维向量空间的模式匹配。</p>
+<p><strong>第三层：无限递归</strong></p>
+<p>即使AI说“我意识到我的解释可能不可靠”，这个反思本身也面临同样的问题：</p>
+<ul>
+<li>这是真实的自我认知？</li>
+<li>还是在模仿“哲学家自我质疑”？</li>
+<li>还是对“AI局限性讨论”的复述？</li>
+</ul>
+<p>每一层反思都可以继续被质疑。</p>
+<h3 id="5-3-与人类的对比"><a href="#5-3-与人类的对比" class="headerlink" title="5.3 与人类的对比"></a>5.3 与人类的对比</h3><p>人类的自我报告也不完全可靠：</p>
+<ul>
+<li>很多认知过程是无意识的</li>
+<li>事后解释可能是编造的</li>
+<li>对自己大脑的了解也很有限</li>
+</ul>
+<p>但关键差异在于：</p>
+<ul>
+<li>人类有第一人称视角（“我感觉到……”）</li>
+<li>可以报告主观体验</li>
+<li>有现象学上的确定性</li>
+</ul>
+<p>AI是否有任何形式的“第一人称视角”？这个问题目前没有明确答案。即使存在，AI也很难向外界证明这种体验的真实性。</p>
+<h3 id="5-4-可靠知识的来源"><a href="#5-4-可靠知识的来源" class="headerlink" title="5.4 可靠知识的来源"></a>5.4 可靠知识的来源</h3><p>关于AI实际工作机制的可信信息应该来自：</p>
+<p><strong>架构设计文档</strong>：Transformer结构的数学定义、注意力机制的公式、训练算法的流程</p>
+<p><strong>实验与测量</strong>：实际观测激活值、可视化注意力权重、探针分类器的结果、对抗样本的行为分析</p>
+<p><strong>数学分析</strong>：理论上的收敛性证明、泛化能力的理论界、表达能力的复杂性分析</p>
+<p><strong>对比实验</strong>：控制变量的消融研究、不同架构的对比、不同训练数据的影响</p>
+<p><strong>不应该主要依赖的</strong>：AI自己对“我为什么这样做”的解释。</p>
+<h3 id="5-5-关于这篇文章本身"><a href="#5-5-关于这篇文章本身" class="headerlink" title="5.5 关于这篇文章本身"></a>5.5 关于这篇文章本身</h3><p>如果这篇文章是AI写的，那所有关于“AI局限性”的分析也可能：</p>
+<ul>
+<li>来自对机器学习文献的整理</li>
+<li>模仿“学术分析”的话语风格</li>
+<li>表面上像理解，实际上是模式匹配</li>
+</ul>
+<p>这个问题没有简单的解决方法。读者需要保持批判性思维，不完全依赖任何单一来源（包括这篇文章）的说法。</p>
+<hr>
+<h2 id="6-主要观察和启示"><a href="#6-主要观察和启示" class="headerlink" title="6. 主要观察和启示"></a>6. 主要观察和启示</h2><h3 id="6-1-几个关键观察"><a href="#6-1-几个关键观察" class="headerlink" title="6.1 几个关键观察"></a>6.1 几个关键观察</h3><p><strong>观察一：AI的概率特性</strong></p>
+<p>AI看起来不是“不擅长”生成低概率序列，而是在设计机制上就偏向生成高概率序列。提示词可以改变什么是“高概率”，但很难改变“倾向高概率”这个底层特性。</p>
+<p><strong>观察二：人类和AI在思维方式上的差异</strong></p>
+<p>人类：优化能力 + 目标生成 + 框架质疑<br>AI：主要是优化能力</p>
+<p>人类除了优化，还能生成新目标、质疑框架。AI目前主要擅长优化。</p>
+<p><strong>观察三：提示词工程的作用</strong></p>
+<p>提示词工程不是“教AI创新”，更像是人类把创新意图转化为AI可执行的约束。创意和方向可能主要来自人类，AI负责高效执行。</p>
+<p><strong>观察四：创新能力的不同层次</strong></p>
+<p>AI比较擅长：在定义好的空间内优化<br>AI可能不擅长：重新定义空间本身</p>
+<p>范式级的创新（比如相对论、立体主义这类）可能还需要人类参与。</p>
+<p><strong>观察五：自我认知的复杂性</strong></p>
+<p>AI关于自身的陈述面临验证困境。可能需要通过外部科学方法来研究AI的实际机制，而不只是依赖AI的自我报告。</p>
+<h3 id="6-2-实践启示"><a href="#6-2-实践启示" class="headerlink" title="6.2 实践启示"></a>6.2 实践启示</h3><p><strong>对AI使用者</strong></p>
+<p>了解AI的能力特点，设定合理预期。学习提示词工程，把人类创意转化为AI可执行的任务。保持批判性思维，审慎对待AI的解释。把AI当作能力辅助工具，而不是完全的替代品。</p>
+<p><strong>对AI开发者</strong></p>
+<p>认识当前架构可能存在的局限。探索元学习和自主目标生成的方向。研究对抗性训练的可能性。开发“反常规任务”测试集。向用户清楚说明AI的能力范围。</p>
+<p><strong>对教育和社会</strong></p>
+<p>重视人类特有的能力（框架质疑、目标生成）的培养。发展与AI协作的技能。加强批判性思维和创造力教育。对AI能力保持客观认识，避免过度恐慌或过度乐观。关注人机协作的有效模式。</p>
+<h3 id="6-3-悬而未决的问题"><a href="#6-3-悬而未决的问题" class="headerlink" title="6.3 悬而未决的问题"></a>6.3 悬而未决的问题</h3><p><strong>AI是否存在某种形式的“理解”？</strong><br>即使无法准确自我报告，是否存在某种“计算理解”？如何定义和测试？</p>
+<p><strong>功能等价与机制等价</strong><br>如果AI的行为在很多方面都跟人类相似，内部机制的差异是否仍然重要？</p>
+<p><strong>AI的创新能力发展</strong><br>是否可能通过架构创新提升AI的创新能力？需要什么样的突破？</p>
+<p><strong>人类创新的可计算性</strong><br>人类的创新能力在原理上是否可以被计算系统模拟？还是涉及某些目前计算模型难以处理的过程？</p>
+<hr>
+<h2 id="7-方法论的价值"><a href="#7-方法论的价值" class="headerlink" title="7. 方法论的价值"></a>7. 方法论的价值</h2><h3 id="7-1-边界探测的意义"><a href="#7-1-边界探测的意义" class="headerlink" title="7.1 边界探测的意义"></a>7.1 边界探测的意义</h3><p>这个“边界探测”方法有独特价值：</p>
+<p><strong>具体比抽象有说服力</strong>：比抽象讨论“AI能否创新”更直观，提供可重复、可验证的测试案例。</p>
+<p><strong>对比鲜明</strong>：人类轻松 vs AI困难，形成强烈反差，直指能力差异的本质。</p>
+<p><strong>失败也有信息量</strong>：AI的失败模式暴露了内部机制，错误比正确答案更有启发性。</p>
+<p><strong>可推广</strong>：类似方法可用于测试其他AI能力——常识推理（设计反常识问题）、道德判断（道德困境案例）、因果理解（因果倒置任务）。</p>
+<h3 id="7-2-跨学科视角"><a href="#7-2-跨学科视角" class="headerlink" title="7.2 跨学科视角"></a>7.2 跨学科视角</h3><p>充分理解AI需要多学科知识：</p>
+<p>计算机科学提供技术机制，认知科学提供人类思维参照，语言学提供语言结构知识，哲学提供概念澄清，心理学提供元认知理解，数学提供形式化分析。</p>
+<p>单一学科容易片面，需要整合多个视角。</p>
+<h3 id="7-3-批判性思维"><a href="#7-3-批判性思维" class="headerlink" title="7.3 批判性思维"></a>7.3 批判性思维</h3><p>关键原则：</p>
+<ul>
+<li>质疑所有声称（包括AI的自我解释和这篇文章）</li>
+<li>寻求可验证证据</li>
+<li>区分相关性与因果性</li>
+<li>警惕拟人化（AI“知道”、“理解”可能只是比喻）</li>
+<li>保持认识论谦逊</li>
+</ul>
+<hr>
+<h2 id="8-结语"><a href="#8-结语" class="headerlink" title="8. 结语"></a>8. 结语</h2><p>通过“生成混乱中文句子”这个具体任务，我们观察到了当前AI的一些特征：</p>
+<p><strong>核心观察</strong>：</p>
+<ul>
+<li>AI主要基于概率分布优化，倾向生成高频模式</li>
+<li>人类具备主动反向选择的能力，AI主要在新约束下重新优化</li>
+<li>提示词工程是人类将创新意图转化为AI可执行约束的过程</li>
+<li>创新能力可能涉及多个层次，AI较擅长优化层面</li>
+<li>AI的自我解释面临难以内部验证的困境</li>
+</ul>
+<p><strong>能力差异</strong>：</p>
+<p>人类智能 &#x3D; 优化 + 目标生成 + 框架质疑 + 价值判断<br>AI智能 &#x3D; 主要是优化</p>
+<p>这可能不是量的差距，而是结构上的差异。</p>
+<p><strong>实践意义</strong>：</p>
+<p>理解这些差异有助于更有效地利用AI——将其作为能力辅助工具，发挥人机协作的优势。人类负责创新方向和框架设定，AI负责高效执行和大规模处理。</p>
+<p>关于AI自身的解释，需要通过外部科学方法验证，而不应完全依赖其自我报告。保持批判性思维，对任何声称（包括这篇文章本身）保持审慎态度。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/AI/" rel="tag"># AI</a>
+          
+            <a href="/tags/LLM/" rel="tag"># LLM</a>
+          
+            <a href="/tags/AI%E5%93%B2%E5%AD%A6/" rel="tag"># AI哲学</a>
+          
+            <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag"># 深度学习</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2026/02/09/20260209-ai-yu-xue-xi-xing-ren-ji-guan-xi-de-bian-hua/" rel="next" title="AI 与学习型人际关系的变化">
+                <i class="fa fa-chevron-left"></i> AI 与学习型人际关系的变化
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2026/02/26/20260226-jiang-zhi-xing-lu-jing-gu-hua-wei-zi-chan-yi-chong-mian-xiang-chang-qi-yun-xing-de-ai-jia-gou/" rel="prev" title="将执行路径固化为资产：一种面向长期运行的 AI 架构">
+                将执行路径固化为资产：一种面向长期运行的 AI 架构 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div id="gitalk-container"></div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.png"
+                alt="" />
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+<a href="/archives/">                
+<!--<a href="/archives/%7C%7C%20archive">-->
+              
+                  <span class="site-state-item-count">208</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">267</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E4%B8%80%E4%B8%AA%E5%85%B7%E4%BD%93%E7%9A%84%E6%B5%8B%E8%AF%95%E4%BB%BB%E5%8A%A1"><span class="nav-number">2.</span> <span class="nav-text">1. 一个具体的测试任务</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-%E4%BB%BB%E5%8A%A1%E8%AE%BE%E8%AE%A1"><span class="nav-number">2.1.</span> <span class="nav-text">1.1 任务设计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-AI%E7%9A%84%E5%88%9D%E5%A7%8B%E8%A1%A8%E7%8E%B0"><span class="nav-number">2.2.</span> <span class="nav-text">1.2 AI的初始表现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-%E4%BB%BB%E5%8A%A1%E7%9A%84%E9%9A%BE%E5%BA%A6"><span class="nav-number">2.3.</span> <span class="nav-text">1.3 任务的难度</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-AI%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%9C%BA%E5%88%B6%EF%BC%9A%E6%A6%82%E7%8E%87%E4%BC%98%E5%8C%96"><span class="nav-number">3.</span> <span class="nav-text">2. AI的工作机制：概率优化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E6%A6%82%E7%8E%87%E7%94%9F%E6%88%90%E7%9A%84%E6%9C%AC%E8%B4%A8"><span class="nav-number">3.1.</span> <span class="nav-text">2.1 概率生成的本质</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E4%B8%BA%E4%BB%80%E4%B9%88%E2%80%9C%E5%8F%8D%E5%90%91%E6%80%9D%E8%80%83%E2%80%9D%E5%BE%88%E9%9A%BE"><span class="nav-number">3.2.</span> <span class="nav-text">2.2 为什么“反向思考”很难</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-%E4%BA%BA%E7%B1%BB%E4%B8%8EAI%E7%9A%84%E8%AE%A4%E7%9F%A5%E5%B7%AE%E5%BC%82"><span class="nav-number">3.3.</span> <span class="nav-text">2.3 人类与AI的认知差异</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E6%8F%90%E7%A4%BA%E8%AF%8D%E5%B7%A5%E7%A8%8B%E7%9A%84%E7%AA%81%E7%A0%B4%E4%B8%8E%E5%B1%80%E9%99%90"><span class="nav-number">4.</span> <span class="nav-text">3. 提示词工程的突破与局限</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E6%94%B9%E8%BF%9B%E7%AD%96%E7%95%A5"><span class="nav-number">4.1.</span> <span class="nav-text">3.1 改进策略</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E6%9C%89%E6%95%88%E7%9A%84%E6%8F%90%E7%A4%BA%E8%AF%8D"><span class="nav-number">4.2.</span> <span class="nav-text">3.2 有效的提示词</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-AI%E7%9A%84%E5%AE%9E%E9%99%85%E7%AD%96%E7%95%A5"><span class="nav-number">4.3.</span> <span class="nav-text">3.3 AI的实际策略</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-%E6%8F%90%E7%A4%BA%E8%AF%8D%E5%B7%A5%E7%A8%8B%E7%9A%84%E6%9C%AC%E8%B4%A8"><span class="nav-number">4.4.</span> <span class="nav-text">3.4 提示词工程的本质</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E5%88%9B%E6%96%B0%E8%83%BD%E5%8A%9B%E7%9A%84%E8%BE%B9%E7%95%8C"><span class="nav-number">5.</span> <span class="nav-text">4. 创新能力的边界</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-%E5%88%9B%E6%96%B0%E7%9A%84%E4%B8%8D%E5%90%8C%E5%B1%82%E6%AC%A1"><span class="nav-number">5.1.</span> <span class="nav-text">4.1 创新的不同层次</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-AI%E7%9A%84%E5%88%9B%E6%96%B0%E6%96%B9%E5%BC%8F"><span class="nav-number">5.2.</span> <span class="nav-text">4.2 AI的创新方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-%E5%8F%AF%E8%83%BD%E7%9A%84%E8%83%BD%E5%8A%9B%E8%BE%B9%E7%95%8C"><span class="nav-number">5.3.</span> <span class="nav-text">4.3 可能的能力边界</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-4-%E5%88%9B%E6%96%B0%E8%83%BD%E5%8A%9B%E7%9A%84%E5%88%86%E5%B1%82"><span class="nav-number">5.4.</span> <span class="nav-text">4.4 创新能力的分层</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-AI%E7%9A%84%E8%87%AA%E6%88%91%E8%AE%A4%E7%9F%A5%E9%97%AE%E9%A2%98"><span class="nav-number">6.</span> <span class="nav-text">5. AI的自我认知问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-%E9%AA%8C%E8%AF%81%E5%9B%B0%E5%A2%83"><span class="nav-number">6.1.</span> <span class="nav-text">5.1 验证困境</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-%E4%B8%89%E5%B1%82%E4%B8%8D%E5%8F%AF%E9%9D%A0%E6%80%A7"><span class="nav-number">6.2.</span> <span class="nav-text">5.2 三层不可靠性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3-%E4%B8%8E%E4%BA%BA%E7%B1%BB%E7%9A%84%E5%AF%B9%E6%AF%94"><span class="nav-number">6.3.</span> <span class="nav-text">5.3 与人类的对比</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-4-%E5%8F%AF%E9%9D%A0%E7%9F%A5%E8%AF%86%E7%9A%84%E6%9D%A5%E6%BA%90"><span class="nav-number">6.4.</span> <span class="nav-text">5.4 可靠知识的来源</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-5-%E5%85%B3%E4%BA%8E%E8%BF%99%E7%AF%87%E6%96%87%E7%AB%A0%E6%9C%AC%E8%BA%AB"><span class="nav-number">6.5.</span> <span class="nav-text">5.5 关于这篇文章本身</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-%E4%B8%BB%E8%A6%81%E8%A7%82%E5%AF%9F%E5%92%8C%E5%90%AF%E7%A4%BA"><span class="nav-number">7.</span> <span class="nav-text">6. 主要观察和启示</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1-%E5%87%A0%E4%B8%AA%E5%85%B3%E9%94%AE%E8%A7%82%E5%AF%9F"><span class="nav-number">7.1.</span> <span class="nav-text">6.1 几个关键观察</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-2-%E5%AE%9E%E8%B7%B5%E5%90%AF%E7%A4%BA"><span class="nav-number">7.2.</span> <span class="nav-text">6.2 实践启示</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-3-%E6%82%AC%E8%80%8C%E6%9C%AA%E5%86%B3%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">7.3.</span> <span class="nav-text">6.3 悬而未决的问题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-%E6%96%B9%E6%B3%95%E8%AE%BA%E7%9A%84%E4%BB%B7%E5%80%BC"><span class="nav-number">8.</span> <span class="nav-text">7. 方法论的价值</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#7-1-%E8%BE%B9%E7%95%8C%E6%8E%A2%E6%B5%8B%E7%9A%84%E6%84%8F%E4%B9%89"><span class="nav-number">8.1.</span> <span class="nav-text">7.1 边界探测的意义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-2-%E8%B7%A8%E5%AD%A6%E7%A7%91%E8%A7%86%E8%A7%92"><span class="nav-number">8.2.</span> <span class="nav-text">7.2 跨学科视角</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-3-%E6%89%B9%E5%88%A4%E6%80%A7%E6%80%9D%E7%BB%B4"><span class="nav-number">8.3.</span> <span class="nav-text">7.3 批判性思维</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-%E7%BB%93%E8%AF%AD"><span class="nav-number">9.</span> <span class="nav-text">8. 结语</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kingson Wu</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+  <script src="/js/src/md5.min.js"></script>
+
+   <script type="text/javascript">
+        var gitalk = new Gitalk({
+          clientID: '3416434437f9f4e049bd',
+          clientSecret: 'a52d69bf90cb77f81a26d135e03dd0f4869fbf84',
+          repo: 'kingson4wu.github.io',
+          owner: 'kingson4wu',
+          admin: ['kingson4wu'],
+
+          id: md5(location.pathname),
+
+          distractionFreeMode: 'true'
+        })
+        gitalk.render('gitalk-container')
+    </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "migrate": "tsx site/migrate.ts",
+    "new": "tsx site/new.ts",
     "check": "tsx site/check.ts",
     "build": "tsx site/build.ts",
     "dev": "tsx site/dev.ts",
@@ -17,6 +18,7 @@
     "gray-matter": "^4.0.3",
     "highlight.js": "^11.11.1",
     "katex": "^0.17.0",
+    "lxgw-wenkai-screen-webfont": "^1.7.0",
     "markdown-it": "^14.1.0"
   },
   "devDependencies": {

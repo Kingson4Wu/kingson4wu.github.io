@@ -33,6 +33,7 @@ export function renderLayout({ lang, title, description, canonicalPath, markdown
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="alternate" type="application/rss+xml" title="${escapeHtml(language.title)}" href="/${escapeHtml(lang)}/feed.xml">
 ${markdownAlternate}  <link rel="stylesheet" href="/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="/vendor/lxgw-wenkai-screen-webfont/lxgwwenkaigbscreen.css">
   <link rel="stylesheet" href="/styles/main.css">
   <script>
     try {

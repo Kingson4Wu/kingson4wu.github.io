@@ -46,6 +46,7 @@ describe('page rendering', () => {
     expect(html).toContain('type="application/rss+xml"');
     expect(html).toContain('/en/feed.xml');
     expect(html).toContain('/vendor/katex/katex.min.css');
+    expect(html).toContain('/vendor/lxgw-wenkai-screen-webfont/lxgwwenkaigbscreen.css');
     expect(html).toContain('class="feed-link"');
     expect(html).toContain('data-reading-return');
     expect(html).toContain('/scripts/reading-tools.js');

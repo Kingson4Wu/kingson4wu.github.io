@@ -24,7 +24,7 @@
   --max-width: 760px;
   --font-ui: ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
   --font-serif: ui-serif, Georgia, 'Times New Roman', 'Songti SC', SimSun, serif;
-  --font-zh-reading: 'LXGW WenKai Screen', 'LXGW WenKai', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  --font-zh-reading: 'LXGW WenKai Screen', 'LXGW WenKai Screen R', 'LXGW WenKai', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace;
 }
 
@@ -64,6 +64,10 @@ html {
   color: var(--text);
   font-family: var(--font-ui);
   line-height: 1.65;
+}
+
+html:lang(zh) {
+  --max-width: 720px;
 }
 
 body {
@@ -268,7 +272,12 @@ html:lang(zh) .post-list h2,
 html:lang(zh) .note-header h2,
 html:lang(zh) .search-result h2 {
   font-family: var(--font-zh-reading);
-  font-weight: 600;
+  font-weight: 400;
+}
+
+html:lang(zh) h1 {
+  font-size: clamp(1.78rem, 5vw, 2.38rem);
+  line-height: 1.28;
 }
 
 html:lang(zh) .prose,
@@ -276,7 +285,53 @@ html:lang(zh) .post-list p,
 html:lang(zh) .page-heading p:last-child,
 html:lang(zh) .search-result p {
   font-family: var(--font-zh-reading);
-  line-height: 1.82;
+  line-height: 1.9;
+}
+
+html:lang(zh) .prose {
+  font-size: 1.045rem;
+  letter-spacing: 0.01em;
+}
+
+html:lang(zh) .prose p {
+  margin-bottom: 1.28rem;
+}
+
+html:lang(zh) .prose li {
+  margin-bottom: 0.42rem;
+}
+
+html:lang(zh) .prose h2,
+html:lang(zh) .prose h3 {
+  font-family: var(--font-ui);
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+html:lang(zh) .prose h2 {
+  font-size: 1.34rem;
+  margin-top: 2.6rem;
+}
+
+html:lang(zh) .prose h3 {
+  font-size: 1.12rem;
+  margin-top: 2rem;
+}
+
+html:lang(zh) .post-list li {
+  gap: 16px;
+  grid-template-columns: 88px minmax(0, 1fr);
+  padding: 20px 0;
+}
+
+html:lang(zh) .post-list h2 {
+  font-size: 1.16rem;
+  line-height: 1.45;
+}
+
+html:lang(zh) .post-list p,
+html:lang(zh) .search-result p {
+  color: color-mix(in srgb, var(--text) 64%, var(--muted));
 }
 
 p {

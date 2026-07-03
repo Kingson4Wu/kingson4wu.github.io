@@ -8,6 +8,25 @@
 - Chinese notes: `content/zh/notes/`
 - Article assets: `content/en/assets/` and `content/zh/assets/`
 
+Use the scaffold command for new writing:
+
+```bash
+npm run new -- --lang zh --type post --title "文章标题" --slug 20260703-topic --tags AI,Agent
+```
+
+Options:
+
+- `--lang`: `zh` or `en`
+- `--type`: `post` or `note`
+- `--title`: required article title
+- `--slug`: optional URL slug; defaults to `YYYYMMDD-title-slug`
+- `--tags`: optional comma-separated tags
+- `--description`: optional summary
+- `--date`: optional ISO date; defaults to current time
+- `--assets`: create the matching asset directory and print the asset URL prefix
+
+The public article URL is derived from the Markdown filename, not the frontmatter `slug` field. Do not rename a published Markdown file unless you also add a legacy redirect.
+
 ## Validate
 
 ```bash

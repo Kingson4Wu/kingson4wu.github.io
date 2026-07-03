@@ -54,6 +54,21 @@ async function main(): Promise<void> {
 
 async function copyStaticFiles(): Promise<void> {
   await fse.copy(path.join(siteConfig.rootDir, 'site', 'static'), siteConfig.distDir);
+  await fse.copy(
+    path.join(siteConfig.rootDir, 'node_modules', 'lxgw-wenkai-screen-webfont'),
+    path.join(siteConfig.distDir, 'vendor', 'lxgw-wenkai-screen-webfont'),
+    {
+      filter: (source) => {
+        const basename = path.basename(source);
+        return basename === 'lxgw-wenkai-screen-webfont'
+          || basename === 'files'
+          || basename === 'lxgwwenkaigbscreen.css'
+          || /^lxgwwenkaigbscreen-subset-\d+\.woff2$/.test(basename)
+          || basename === 'LICENSE'
+          || basename === 'OFL.txt';
+      },
+    },
+  );
   await fse.copy(path.join(siteConfig.rootDir, 'site', 'styles'), path.join(siteConfig.distDir, 'styles'));
   await fse.copy(path.join(siteConfig.rootDir, 'site', 'scripts'), path.join(siteConfig.distDir, 'scripts'));
 

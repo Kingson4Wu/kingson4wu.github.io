@@ -13,6 +13,7 @@ Unified bilingual static blog for `https://kingson4wu.github.io/`.
 ```bash
 npm install
 npm run migrate
+npm run new -- --lang zh --type post --title "文章标题"
 npm run check
 npm run build
 npm run dev

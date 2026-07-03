@@ -1,0 +1,685 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>交叉熵损失与最大似然估计：完全理解指南 | 拉巴力的纸皮箱</title>
+  <meta name="description" content="以下内容由AI辅助生成 一、从最基本的问题开始 1.1 模型如何表达预测？ 假设你在训练一个图像分类模型： 任务：判断这张图是「猫」还是「狗」？ 模型不会直接给出“猫”或“狗”这样的硬答案，而是输出概率分布： “我认为是猫的概率是 0.8，是狗的概率是 0.2” 👉 核心理解：模型输出的是“置信度（概率）”，而不是确...">
+  <link rel="canonical" href="https://kingson4wu.github.io/zh/posts/20260129/">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="alternate" type="application/rss+xml" title="拉巴力的纸皮箱" href="/zh/feed.xml">
+  <link rel="alternate" type="text/markdown" href="/zh/posts/20260129/index.md">
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="/styles/main.css">
+  <script>
+    try {
+      var theme = localStorage.getItem('theme');
+      if (theme) document.documentElement.dataset.theme = theme;
+    } catch (_) {}
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="site-title" href="/zh/" aria-label="拉巴力的纸皮箱">
+      <span class="site-logo" aria-hidden="true">K</span>
+      <span>拉巴力的纸皮箱</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="/zh/posts/">文章</a>
+      <a href="/zh/notes/">笔记</a>
+      <a href="/zh/tags/">标签</a>
+      <a href="/zh/about/">关于</a>
+      <a href="/zh/search/">搜索</a>
+      <a href="/en/" lang="en">English</a>
+      <a class="feed-link" href="/zh/feed.xml" aria-label="订阅更新" title="订阅更新">
+        <svg class="feed-icon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M5 5.5A13.5 13.5 0 0 1 18.5 19"></path>
+          <path d="M5 11A8 8 0 0 1 13 19"></path>
+          <circle cx="6" cy="18" r="1.5"></circle>
+        </svg>
+      </a>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换明暗模式" title="切换明暗模式">
+        <svg class="theme-icon theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M21 14.2A8.5 8.5 0 0 1 9.8 3 7 7 0 1 0 21 14.2Z"></path>
+        </svg>
+        <svg class="theme-icon theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"></path>
+        </svg>
+      </button>
+    </nav>
+  </header>
+  <main class="site-main">
+    <article class="article">
+      <header class="article-header">
+        <h1>交叉熵损失与最大似然估计：完全理解指南</h1>
+        <time datetime="2026-01-29T07:36:54.000Z">2026年1月29日</time>
+<ul class="tag-list" aria-label="Tags">
+    <li><a href="/zh/tags/AI/">AI</a></li>
+    <li><a href="/zh/tags/LLM/">LLM</a></li>
+    <li><a href="/zh/tags/Deep%20Learning/">Deep Learning</a></li>
+    <li><a href="/zh/tags/Math/">Math</a></li>
+  </ul>
+      </header>
+      <div class="prose">
+<blockquote>
+<blockquote>
+<p>以下内容由AI辅助生成</p>
+</blockquote>
+</blockquote>
+<h2 id="section-1" data-heading-text="一、从最基本的问题开始">一、从最基本的问题开始</h2>
+<h3 id="1-1" data-heading-text="1.1 模型如何表达预测？">1.1 模型如何表达预测？</h3>
+<p>假设你在训练一个图像分类模型：</p>
+<p><strong>任务</strong>：判断这张图是「猫」还是「狗」？</p>
+<p>模型不会直接给出“猫”或“狗”这样的硬答案，而是输出<strong>概率分布</strong>：</p>
+<ul>
+<li>“我认为是猫的概率是 0.8，是狗的概率是 0.2”</li>
+</ul>
+<p>👉 <strong>核心理解</strong>：模型输出的是“置信度（概率）”，而不是确定的答案。</p>
+<h3 id="1-2" data-heading-text="1.2 如何评价模型预测的好坏？">1.2 如何评价模型预测的好坏？</h3>
+<p>假设真实答案是「猫」，我们看不同预测的质量：</p>
+<table>
+<thead>
+<tr>
+<th>模型给猫的概率 p</th>
+<th>评价</th>
+<th>期望的损失</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0.99</td>
+<td>非常准确</td>
+<td>应该很小</td>
+</tr>
+<tr>
+<td>0.8</td>
+<td>比较好</td>
+<td>适中</td>
+</tr>
+<tr>
+<td>0.51</td>
+<td>勉强对</td>
+<td>较大</td>
+</tr>
+<tr>
+<td>0.1</td>
+<td>完全错误</td>
+<td>应该很大</td>
+</tr>
+</tbody>
+</table>
+<p>我们需要设计一个<strong>损失函数</strong>，满足：</p>
+<ul>
+<li><strong>正确答案的概率越大 → 损失越小</strong></li>
+<li><strong>正确答案的概率越小 → 损失越大</strong></li>
+</ul>
+<h3 id="1-3" data-heading-text="1.3 为什么选择对数函数？">1.3 为什么选择对数函数？</h3>
+<p>观察函数 <strong>loss = -log(p)</strong> 的行为：</p>
+<table>
+<thead>
+<tr>
+<th>正确类概率 p</th>
+<th>-log(p)</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0.99</td>
+<td>0.01</td>
+<td>几乎完美</td>
+</tr>
+<tr>
+<td>0.9</td>
+<td>0.10</td>
+<td>很好</td>
+</tr>
+<tr>
+<td>0.5</td>
+<td>0.69</td>
+<td>随机猜测水平</td>
+</tr>
+<tr>
+<td>0.1</td>
+<td>2.30</td>
+<td>很差</td>
+</tr>
+<tr>
+<td>0.01</td>
+<td>4.60</td>
+<td>完全错误</td>
+</tr>
+</tbody>
+</table>
+<p><strong>关键特性</strong>：</p>
+<ol>
+<li>p 接近 1 → 损失接近 0（奖励正确预测）</li>
+<li>p 接近 0 → 损失趋向无穷（严厉惩罚错误）</li>
+<li><strong>非线性增长</strong>：从 p=0.9 到 p=0.1，损失增加了 20 倍以上</li>
+</ol>
+<p>为什么对数函数如此合适？这来自<strong>最大似然估计</strong>的数学原理（第四章详解）。</p>
+<h3 id="1-4" data-heading-text="1.4 交叉熵的最简形式">1.4 交叉熵的最简形式</h3>
+<p>对于单次预测：</p>
+<ul>
+<li>真实答案是类别 A</li>
+<li>模型给 A 的概率是 p</li>
+</ul>
+<p><strong>损失函数</strong>：</p>
+<div class="math math-display"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mtext>loss</mtext><mo>=</mo><mo>−</mo><mi>log</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi>p</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\text{loss} = -\log(p)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord text"><span class="mord">loss</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">−</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mopen">(</span><span class="mord mathnormal">p</span><span class="mclose">)</span></span></span></span></span></div>
+<p>这就是交叉熵的核心。</p>
+<hr>
+<h2 id="section-6" data-heading-text="二、为什么叫“交叉熵”？">二、为什么叫“交叉熵”？</h2>
+<h3 id="2-1" data-heading-text="2.1 先理解“熵”">2.1 先理解“熵”</h3>
+<p><strong>熵（Entropy）<strong>是信息论中的核心概念，衡量</strong>不确定性</strong>。</p>
+<h4 id="section-8" data-heading-text="两个例子">两个例子</h4>
+<p><strong>例子 1：完全确定</strong></p>
+<ul>
+<li>明天 100% 会下雨</li>
+<li><strong>熵 = 0</strong>（无不确定性）</li>
+</ul>
+<p><strong>例子 2：完全随机</strong></p>
+<ul>
+<li>抛硬币，正反各 50%</li>
+<li><strong>熵最大</strong>（最大不确定性）</li>
+</ul>
+<h4 id="section-9" data-heading-text="数学定义">数学定义</h4>
+<p>对于概率分布 P：</p>
+<div class="math math-display"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>H</mi><mo stretchy="false">(</mo><mi>P</mi><mo stretchy="false">)</mo><mo>=</mo><mo>−</mo><munder><mo>∑</mo><mi>x</mi></munder><mi>P</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo><mi>log</mi><mo>⁡</mo><mi>P</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">H(P) = -\sum_x P(x)\log P(x)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0813em;">H</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.3em;vertical-align:-1.25em;"></span><span class="mord">−</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.05em;"><span style="top:-1.9em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">x</span></span></span><span style="top:-3.05em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∑</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.25em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">)</span></span></span></span></span></div>
+<p><strong>含义</strong>：平均每次需要多少信息量（比特）来描述发生的事情。</p>
+<h3 id="2-2" data-heading-text="2.2 什么是“交叉”？">2.2 什么是“交叉”？</h3>
+<p>现实中经常出现这种情况：</p>
+<ul>
+<li><strong>真实世界</strong>：按分布 P 在运行</li>
+<li><strong>你的认知</strong>：却认为它是分布 Q</li>
+</ul>
+<p>当你用错误的分布 Q 去理解真实分布 P 时，会产生额外的“信息代价”。</p>
+<h4 id="section-11" data-heading-text="交叉熵的定义">交叉熵的定义</h4>
+<div class="math math-display"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>H</mi><mo stretchy="false">(</mo><mi>P</mi><mo separator="true">,</mo><mi>Q</mi><mo stretchy="false">)</mo><mo>=</mo><mo>−</mo><munder><mo>∑</mo><mi>x</mi></munder><mi>P</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo><mi>log</mi><mo>⁡</mo><mi>Q</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">H(P,Q) = -\sum_x P(x)\log Q(x)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0813em;">H</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">Q</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.3em;vertical-align:-1.25em;"></span><span class="mord">−</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.05em;"><span style="top:-1.9em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">x</span></span></span><span style="top:-3.05em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∑</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.25em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">Q</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">)</span></span></span></span></span></div>
+<h3 id="2-3" data-heading-text="2.3 为什么叫“交叉”？">2.3 为什么叫“交叉”？</h3>
+<p>看公式的结构：</p>
+<table>
+<thead>
+<tr>
+<th>公式部分</th>
+<th>来源</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>P(x)</td>
+<td>真实分布 P</td>
+<td>事件实际发生的频率（权重）</td>
+</tr>
+<tr>
+<td>log Q(x)</td>
+<td>模型分布 Q</td>
+<td>用模型的方式编码</td>
+</tr>
+</tbody>
+</table>
+<p><strong>“交叉”的含义</strong>：两个不同分布的交叉使用</p>
+<ul>
+<li>权重来自 P</li>
+<li>编码来自 Q</li>
+</ul>
+<p><strong>对比</strong>：</p>
+<ul>
+<li><strong>熵 H(P)</strong>：用自己编码自己</li>
+<li><strong>交叉熵 H(P,Q)</strong>：用别人编码自己</li>
+</ul>
+<h3 id="2-4" data-heading-text="2.4 在机器学习中的应用">2.4 在机器学习中的应用</h3>
+<p><strong>真实标签</strong>（one-hot）：<code>P = [0, 0, 1, 0]</code> — 第3类是正确答案</p>
+<p><strong>模型输出</strong>（Softmax）：<code>Q = [0.1, 0.2, 0.6, 0.1]</code></p>
+<p><strong>计算交叉熵</strong>：</p>
+<div class="math math-display"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mtable rowspacing="0.25em" columnalign="right left" columnspacing="0em"><mtr><mtd class ="mtr-glue"></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mi>H</mi><mo stretchy="false">(</mo><mi>P</mi><mo separator="true">,</mo><mi>Q</mi><mo stretchy="false">)</mo></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mo>=</mo><mo>−</mo><munder><mo>∑</mo><mi>y</mi></munder><mi>P</mi><mo stretchy="false">(</mo><mi>y</mi><mo stretchy="false">)</mo><mi>log</mi><mo>⁡</mo><mi>Q</mi><mo stretchy="false">(</mo><mi>y</mi><mo stretchy="false">)</mo></mrow></mstyle></mtd><mtd class ="mtr-glue"></mtd><mtd class ="mml-eqn-num"></mtd></mtr><mtr><mtd class ="mtr-glue"></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mo>=</mo><mo>−</mo><mo stretchy="false">(</mo><mn>0</mn><mo>×</mo><mi>log</mi><mo>⁡</mo><mo stretchy="false">(</mo><mn>0.1</mn><mo stretchy="false">)</mo><mo>+</mo><mn>0</mn><mo>×</mo><mi>log</mi><mo>⁡</mo><mo stretchy="false">(</mo><mn>0.2</mn><mo stretchy="false">)</mo><mo>+</mo><mn>1</mn><mo>×</mo><mi>log</mi><mo>⁡</mo><mo stretchy="false">(</mo><mn>0.6</mn><mo stretchy="false">)</mo><mo>+</mo><mn>0</mn><mo>×</mo><mi>log</mi><mo>⁡</mo><mo stretchy="false">(</mo><mn>0.1</mn><mo stretchy="false">)</mo><mo stretchy="false">)</mo></mrow></mstyle></mtd><mtd class ="mtr-glue"></mtd><mtd class ="mml-eqn-num"></mtd></mtr><mtr><mtd class ="mtr-glue"></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mo>=</mo><mo>−</mo><mi>log</mi><mo>⁡</mo><mo stretchy="false">(</mo><mn>0.6</mn><mo stretchy="false">)</mo></mrow></mstyle></mtd><mtd class ="mtr-glue"></mtd><mtd class ="mml-eqn-num"></mtd></mtr><mtr><mtd class ="mtr-glue"></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="true"><mrow><mrow></mrow><mo>≈</mo><mn>0.51</mn></mrow></mstyle></mtd><mtd class ="mtr-glue"></mtd><mtd class ="mml-eqn-num"></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{align}
+H(P,Q) &amp;= -\sum_y P(y)\log Q(y) \\
+&amp;= -(0 \times \log(0.1) + 0 \times \log(0.2) + 1 \times \log(0.6) + 0 \times \log(0.1)) \\
+&amp;= -\log(0.6) \\
+&amp;\approx 0.51
+\end{align}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:6.9361em;vertical-align:-3.2181em;"></span><span class="mtable"><span class="col-align-r"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:3.7181em;"><span style="top:-5.7181em;"><span class="pstrut" style="height:3.05em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0813em;">H</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">Q</span><span class="mclose">)</span></span></span><span style="top:-3.1919em;"><span class="pstrut" style="height:3.05em;"></span><span class="mord"></span></span><span style="top:-1.6919em;"><span class="pstrut" style="height:3.05em;"></span><span class="mord"></span></span><span style="top:-0.1919em;"><span class="pstrut" style="height:3.05em;"></span><span class="mord"></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:3.2181em;"><span></span></span></span></span></span><span class="col-align-l"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:3.7181em;"><span style="top:-5.7181em;"><span class="pstrut" style="height:3.05em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mord">−</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.05em;"><span style="top:-1.9em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0359em;">y</span></span></span><span style="top:-3.05em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∑</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.3861em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">Q</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="mclose">)</span></span></span><span style="top:-3.1919em;"><span class="pstrut" style="height:3.05em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mord">−</span><span class="mopen">(</span><span class="mord">0</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mopen">(</span><span class="mord">0.1</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">0</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mopen">(</span><span class="mord">0.2</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mopen">(</span><span class="mord">0.6</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">0</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mopen">(</span><span class="mord">0.1</span><span class="mclose">))</span></span></span><span style="top:-1.6919em;"><span class="pstrut" style="height:3.05em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mord">−</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mopen">(</span><span class="mord">0.6</span><span class="mclose">)</span></span></span><span style="top:-0.1919em;"><span class="pstrut" style="height:3.05em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≈</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mord">0.51</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:3.2181em;"><span></span></span></span></span></span></span></span><span class="tag"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:3.7181em;"><span style="top:-5.7181em;"><span class="pstrut" style="height:3.05em;"></span><span class="eqn-num"></span></span><span style="top:-3.1919em;"><span class="pstrut" style="height:3.05em;"></span><span class="eqn-num"></span></span><span style="top:-1.6919em;"><span class="pstrut" style="height:3.05em;"></span><span class="eqn-num"></span></span><span style="top:-0.1919em;"><span class="pstrut" style="height:3.05em;"></span><span class="eqn-num"></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:3.2181em;"><span></span></span></span></span></span></span></span></span></div>
+<h3 id="2-5-log-p" data-heading-text="2.5 为什么简化成了 -log(p)？">2.5 为什么简化成了 -log(p)？</h3>
+<p>在分类任务中，真实标签是 <strong>one-hot</strong>：只有正确类是1，其他是0</p>
+<p>代入交叉熵公式，求和后<strong>只剩下正确类别那一项</strong>：</p>
+<div class="math math-display"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>H</mi><mo stretchy="false">(</mo><mi>P</mi><mo separator="true">,</mo><mi>Q</mi><mo stretchy="false">)</mo><mo>=</mo><mo>−</mo><mi>log</mi><mo>⁡</mo><msub><mi>Q</mi><mtext>正确类</mtext></msub></mrow><annotation encoding="application/x-tex">H(P,Q) = -\log Q_{\text{正确类}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0813em;">H</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">Q</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord">−</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">Q</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord cjk_fallback mtight">正确类</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span></div>
+<p><strong>这就是为什么实际代码中</strong>：</p>
+<div class="code-block" data-language="python"><div class="code-header"><span class="code-language">python</span></div><pre><code class="hljs language-python">loss = -log(Q[y_true])
+</code></pre></div>
+<hr>
+<h2 id="section-15" data-heading-text="三、二分类和多分类的具体形式">三、二分类和多分类的具体形式</h2>
+<h3 id="3-1-binary-cross-entropy" data-heading-text="3.1 二分类交叉熵（Binary Cross Entropy）">3.1 二分类交叉熵（Binary Cross Entropy）</h3>
+<p><strong>设定</strong>：</p>
+<ul>
+<li>模型输出：p = P(y=1|x)，通过 Sigmoid 得到</li>
+<li>真实标签：y ∈ {0, 1}</li>
+</ul>
+<p><strong>损失函数</strong>：</p>
+<div class="math math-display"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>L</mi><mo>=</mo><mo>−</mo><mo stretchy="false">[</mo><mi>y</mi><mo>⋅</mo><mi>log</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi>p</mi><mo stretchy="false">)</mo><mo>+</mo><mo stretchy="false">(</mo><mn>1</mn><mo>−</mo><mi>y</mi><mo stretchy="false">)</mo><mo>⋅</mo><mi>log</mi><mo>⁡</mo><mo stretchy="false">(</mo><mn>1</mn><mo>−</mo><mi>p</mi><mo stretchy="false">)</mo><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">L = -[y \cdot \log(p) + (1-y) \cdot \log(1-p)]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal">L</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">−</span><span class="mopen">[</span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mopen">(</span><span class="mord mathnormal">p</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mopen">(</span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">p</span><span class="mclose">)]</span></span></span></span></span></div>
+<p><strong>理解</strong>：这是分段函数的简洁写法</p>
+<table>
+<thead>
+<tr>
+<th>真实标签 y</th>
+<th>实际计算</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>y = 1</td>
+<td>-log(p)</td>
+</tr>
+<tr>
+<td>y = 0</td>
+<td>-log(1-p)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>具体例子</strong>：</p>
+<div class="code-block"><pre><code class="hljs">真实标签 y = 1, 模型预测 p = 0.9
+损失 = -log(0.9) ≈ 0.105
+
+真实标签 y = 1, 模型预测 p = 0.1
+损失 = -log(0.1) ≈ 2.303
+</code></pre></div>
+<h3 id="3-2-categorical-cross-entropy" data-heading-text="3.2 多分类交叉熵（Categorical Cross Entropy）">3.2 多分类交叉熵（Categorical Cross Entropy）</h3>
+<p><strong>完整流程</strong>：</p>
+<p><strong>步骤1：模型输出 logits</strong></p>
+<div class="code-block"><pre><code class="hljs">z = [2.0, 1.0, 0.1]
+</code></pre></div>
+<p><strong>步骤2：Softmax 归一化</strong></p>
+<div class="math math-display"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>p</mi><mi>i</mi></msub><mo>=</mo><mfrac><msup><mi>e</mi><msub><mi>z</mi><mi>i</mi></msub></msup><mrow><munder><mo>∑</mo><mi>j</mi></munder><msup><mi>e</mi><msub><mi>z</mi><mi>j</mi></msub></msup></mrow></mfrac></mrow><annotation encoding="application/x-tex">p_i = \frac{e^{z_i}}{\sum_j e^{z_j}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.4632em;vertical-align:-1.1218em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3414em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mop"><span class="mop op-symbol small-op" style="position:relative;top:0em;">∑</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.162em;"><span style="top:-2.4003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0572em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.4358em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6065em;"><span style="top:-3.0051em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.044em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3281em;"><span style="top:-2.357em;margin-left:-0.044em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0572em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2819em;"><span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6644em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.044em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3281em;"><span style="top:-2.357em;margin-left:-0.044em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.1218em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></div>
+<p>计算结果：p₁ ≈ 0.659,  p₂ ≈ 0.242,  p₃ ≈ 0.099</p>
+<p><strong>步骤3：计算交叉熵</strong></p>
+<p>真实标签 y = [0, 1, 0]（第2类是正确答案）</p>
+<div class="math math-display"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>L</mi><mo>=</mo><mo>−</mo><munder><mo>∑</mo><mi>i</mi></munder><msub><mi>y</mi><mi>i</mi></msub><mo>⋅</mo><mi>log</mi><mo>⁡</mo><mo stretchy="false">(</mo><msub><mi>p</mi><mi>i</mi></msub><mo stretchy="false">)</mo><mo>=</mo><mo>−</mo><mi>log</mi><mo>⁡</mo><mo stretchy="false">(</mo><mn>0.242</mn><mo stretchy="false">)</mo><mo>≈</mo><mn>1.418</mn></mrow><annotation encoding="application/x-tex">L = -\sum_i y_i \cdot \log(p_i) = -\log(0.242) \approx 1.418</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal">L</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.3277em;vertical-align:-1.2777em;"></span><span class="mord">−</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.05em;"><span style="top:-1.8723em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span><span style="top:-3.05em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∑</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.2777em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">−</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mopen">(</span><span class="mord">0.242</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1.418</span></span></span></span></span></div>
+<p><strong>简化形式</strong>（利用 one-hot）：</p>
+<div class="math math-display"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>L</mi><mo>=</mo><mo>−</mo><mi>log</mi><mo>⁡</mo><mo stretchy="false">(</mo><msub><mi>p</mi><msub><mi>y</mi><mtext>true</mtext></msub></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">L = -\log(p_{y_{\text{true}}})</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal">L</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.0361em;vertical-align:-0.2861em;"></span><span class="mord">−</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.0359em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2963em;"><span style="top:-2.357em;margin-left:-0.0359em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">true</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></span></div>
+<hr>
+<h2 id="section-18" data-heading-text="四、从最大似然估计理解交叉熵">四、从最大似然估计理解交叉熵</h2>
+<h3 id="4-1" data-heading-text="4.1 一个侦探问题">4.1 一个侦探问题</h3>
+<p>你发现了一枚硬币和抛掷记录：</p>
+<div class="code-block"><pre><code class="hljs">结果：正、正、反、正、正
+</code></pre></div>
+<p><strong>任务</strong>：判断硬币正面的概率是多少？</p>
+<p><strong>思考过程</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>假设的概率 θ</th>
+<th>出现这串结果的概率</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>θ = 0.5</td>
+<td>0.5⁴ × 0.5¹ = 0.03125</td>
+</tr>
+<tr>
+<td>θ = 0.8</td>
+<td>0.8⁴ × 0.2¹ ≈ 0.0819</td>
+</tr>
+<tr>
+<td>θ = 0.9</td>
+<td>0.9⁴ × 0.1¹ ≈ 0.0656</td>
+</tr>
+</tbody>
+</table>
+<p><strong>结论</strong>：θ = 0.8 最能解释观测数据！</p>
+<p>这就是**最大似然估计（MLE）**的核心思想。</p>
+<h3 id="4-2-vs" data-heading-text="4.2 概率 vs 似然：关键区别">4.2 概率 vs 似然：关键区别</h3>
+<h4 id="probability" data-heading-text="概率（Probability）">概率（Probability）</h4>
+<ul>
+<li><strong>已知</strong>：参数 θ</li>
+<li><strong>求</strong>：数据出现的概率</li>
+<li><strong>方向</strong>：从原因推结果</li>
+</ul>
+<div class="code-block"><pre><code class="hljs">P(data|θ) = “给定硬币特性，某个结果出现的概率”
+</code></pre></div>
+<h4 id="likelihood" data-heading-text="似然（Likelihood）">似然（Likelihood）</h4>
+<ul>
+<li><strong>已知</strong>：数据（已经发生了）</li>
+<li><strong>求</strong>：哪个参数最可能</li>
+<li><strong>方向</strong>：从结果推原因</li>
+</ul>
+<div class="code-block"><pre><code class="hljs">L(θ|data) = “给定观测结果，哪个参数最合理”
+</code></pre></div>
+<p><strong>数学关系</strong>：<code>L(θ|data) = P(data|θ)</code></p>
+<p>数值相同，但含义完全相反。</p>
+<h3 id="4-3" data-heading-text="4.3 硬币问题的形式化">4.3 硬币问题的形式化</h3>
+<p><strong>Step 1: 建立概率模型</strong></p>
+<div class="code-block"><pre><code class="hljs">P(x=1|θ) = θ      # 正面
+P(x=0|θ) = 1-θ    # 反面
+</code></pre></div>
+<p><strong>Step 2: 计算联合概率</strong></p>
+<p>观测：正、正、反、正、正</p>
+<p>假设独立：</p>
+<div class="math math-display"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><mtext>data</mtext><mi mathvariant="normal">∣</mi><mi>θ</mi><mo stretchy="false">)</mo><mo>=</mo><mi>θ</mi><mo>×</mo><mi>θ</mi><mo>×</mo><mo stretchy="false">(</mo><mn>1</mn><mo>−</mo><mi>θ</mi><mo stretchy="false">)</mo><mo>×</mo><mi>θ</mi><mo>×</mo><mi>θ</mi><mo>=</mo><msup><mi>θ</mi><mn>4</mn></msup><mo stretchy="false">(</mo><mn>1</mn><mo>−</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P(\text{data}|\theta) = \theta \times \theta \times (1-\theta) \times \theta \times \theta = \theta^4(1-\theta)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="mopen">(</span><span class="mord text"><span class="mord">data</span></span><span class="mord">∣</span><span class="mord mathnormal" style="margin-right:0.0278em;">θ</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7778em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">θ</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7778em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">θ</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">θ</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7778em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">θ</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">θ</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.1141em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0278em;">θ</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">4</span></span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">θ</span><span class="mclose">)</span></span></span></span></span></div>
+<p><strong>Step 3: 似然函数</strong></p>
+<div class="math math-display"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>L</mi><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo><mo>=</mo><msup><mi>θ</mi><mn>4</mn></msup><mo stretchy="false">(</mo><mn>1</mn><mo>−</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">L(\theta) = \theta^4(1-\theta)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">L</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0278em;">θ</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.1141em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0278em;">θ</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">4</span></span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">θ</span><span class="mclose">)</span></span></span></span></span></div>
+<p><strong>问题</strong>：θ 取什么值时，L(θ) 最大？</p>
+<h3 id="4-4" data-heading-text="4.4 为什么要取对数？">4.4 为什么要取对数？</h3>
+<p>这是连接 MLE 和交叉熵的<strong>关键步骤</strong>。</p>
+<h4 id="section-25" data-heading-text="原因1：连乘变连加">原因1：连乘变连加</h4>
+<p>对于 N 个样本：<code>L(θ) = ∏ P(xᵢ|θ)</code></p>
+<p>当 N 很大时：</p>
+<ul>
+<li><strong>数值下溢</strong>：太多小于1的数相乘，结果趋近0</li>
+<li><strong>计算困难</strong>：浮点数精度问题</li>
+</ul>
+<p>取对数后：</p>
+<div class="math math-display"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>log</mi><mo>⁡</mo><mi>L</mi><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo><mo>=</mo><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>N</mi></munderover><mi>log</mi><mo>⁡</mo><mi>P</mi><mo stretchy="false">(</mo><msub><mi>x</mi><mi>i</mi></msub><mi mathvariant="normal">∣</mi><mi>θ</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\log L(\theta) = \sum_{i=1}^N \log P(x_i|\theta)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">L</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0278em;">θ</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:3.106em;vertical-align:-1.2777em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.8283em;"><span style="top:-1.8723em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mrel mtight">=</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.05em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∑</span></span></span><span style="top:-4.3em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.109em;">N</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.2777em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord">∣</span><span class="mord mathnormal" style="margin-right:0.0278em;">θ</span><span class="mclose">)</span></span></span></span></span></div>
+<p><strong>连乘变连加，数值稳定！</strong></p>
+<h4 id="section-26" data-heading-text="原因2：不改变最优解">原因2：不改变最优解</h4>
+<p>log 是严格单调递增函数：</p>
+<div class="math math-display"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>arg</mi><mo>⁡</mo><munder><mrow><mi>max</mi><mo>⁡</mo></mrow><mi>θ</mi></munder><mi>L</mi><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo><mo>=</mo><mi>arg</mi><mo>⁡</mo><munder><mrow><mi>max</mi><mo>⁡</mo></mrow><mi>θ</mi></munder><mi>log</mi><mo>⁡</mo><mi>L</mi><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\arg\max_\theta L(\theta) = \arg\max_\theta \log L(\theta)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.5021em;vertical-align:-0.7521em;"></span><span class="mop">ar<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.4306em;"><span style="top:-2.3479em;margin-left:0em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0278em;">θ</span></span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span><span class="mop">max</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.7521em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">L</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0278em;">θ</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.5021em;vertical-align:-0.7521em;"></span><span class="mop">ar<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.4306em;"><span style="top:-2.3479em;margin-left:0em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0278em;">θ</span></span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span><span class="mop">max</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.7521em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">L</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0278em;">θ</span><span class="mclose">)</span></span></span></span></span></div>
+<h4 id="section-27" data-heading-text="原因3：求导更简单">原因3：求导更简单</h4>
+<ul>
+<li><strong>原函数</strong>：L(θ) = θ⁴(1-θ)</li>
+<li><strong>对数函数</strong>：ℓ(θ) = 4log θ + log(1-θ)</li>
+</ul>
+<p>求导：<code>dℓ/dθ = 4/θ - 1/(1-θ) = 0</code></p>
+<p>解得：<strong>θ = 0.8</strong></p>
+<h3 id="4-5-mle" data-heading-text="4.5 MLE 的通用形式">4.5 MLE 的通用形式</h3>
+<p><strong>给定</strong>：</p>
+<ul>
+<li>数据：x₁, x₂, …, xₙ</li>
+<li>参数：θ</li>
+<li>模型：P(x|θ)</li>
+</ul>
+<p><strong>三步曲</strong>：</p>
+<ol>
+<li><strong>似然函数</strong>：<code>L(θ) = ∏ᵢ P(xᵢ|θ)</code></li>
+<li><strong>对数似然</strong>：<code>ℓ(θ) = ∑ᵢ log P(xᵢ|θ)</code></li>
+<li><strong>最大化</strong>：<code>θ̂ = argmax ∑ᵢ log P(xᵢ|θ)</code></li>
+</ol>
+<p><strong>核心思想</strong>：</p>
+<blockquote>
+<p>找一个参数 θ，使得“已发生的数据”在该模型下出现的概率最大。</p>
+</blockquote>
+<h3 id="4-6-mle" data-heading-text="4.6 从 MLE 到机器学习">4.6 从 MLE 到机器学习</h3>
+<p><strong>监督学习中</strong>：</p>
+<ul>
+<li>数据：(x₁,y₁), (x₂,y₂), …, (xₙ,yₙ)</li>
+<li>模型：P_θ(y|x)</li>
+</ul>
+<p><strong>MLE 目标</strong>：</p>
+<div class="math math-display"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mover accent="true"><mi>θ</mi><mo>^</mo></mover><mo>=</mo><mi>arg</mi><mo>⁡</mo><munder><mrow><mi>max</mi><mo>⁡</mo></mrow><mi>θ</mi></munder><munder><mo>∑</mo><mi>i</mi></munder><mi>log</mi><mo>⁡</mo><msub><mi>P</mi><mi>θ</mi></msub><mo stretchy="false">(</mo><msub><mi>y</mi><mi>i</mi></msub><mi mathvariant="normal">∣</mi><msub><mi>x</mi><mi>i</mi></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\hat{\theta} = \arg\max_\theta \sum_i \log P_\theta(y_i|x_i)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9579em;"></span><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.9579em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">θ</span></span><span style="top:-3.2634em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.1667em;"><span class="mord">^</span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.3277em;vertical-align:-1.2777em;"></span><span class="mop">ar<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.4306em;"><span style="top:-2.3479em;margin-left:0em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0278em;">θ</span></span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span><span class="mop">max</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.7521em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.05em;"><span style="top:-1.8723em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span><span style="top:-3.05em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∑</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.2777em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0278em;">θ</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord">∣</span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></span></div>
+<p><strong>从最大化到最小化</strong>：</p>
+<p>深度学习框架做最小化（梯度下降）：</p>
+<div class="math math-display"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><munder><mrow><mi>max</mi><mo>⁡</mo></mrow><mi>θ</mi></munder><munder><mo>∑</mo><mi>i</mi></munder><mi>log</mi><mo>⁡</mo><msub><mi>P</mi><mi>θ</mi></msub><mo stretchy="false">(</mo><msub><mi>y</mi><mi>i</mi></msub><mi mathvariant="normal">∣</mi><msub><mi>x</mi><mi>i</mi></msub><mo stretchy="false">)</mo><mspace width="1em"/><mo>⟺</mo><mspace width="1em"/><munder><mrow><mi>min</mi><mo>⁡</mo></mrow><mi>θ</mi></munder><mrow><mo fence="true">(</mo><mo>−</mo><munder><mo>∑</mo><mi>i</mi></munder><mi>log</mi><mo>⁡</mo><msub><mi>P</mi><mi>θ</mi></msub><mo stretchy="false">(</mo><msub><mi>y</mi><mi>i</mi></msub><mi mathvariant="normal">∣</mi><msub><mi>x</mi><mi>i</mi></msub><mo stretchy="false">)</mo><mo fence="true">)</mo></mrow></mrow><annotation encoding="application/x-tex">\max_\theta \sum_i \log P_\theta(y_i|x_i) \quad \Longleftrightarrow \quad \min_\theta \left(-\sum_i \log P_\theta(y_i|x_i)\right)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:2.3277em;vertical-align:-1.2777em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.4306em;"><span style="top:-2.3479em;margin-left:0em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0278em;">θ</span></span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span><span class="mop">max</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.7521em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.05em;"><span style="top:-1.8723em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span><span style="top:-3.05em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∑</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.2777em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0278em;">θ</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord">∣</span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:1em;"></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">⟺</span><span class="mspace" style="margin-right:1em;"></span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:3.0277em;vertical-align:-1.2777em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.6679em;"><span style="top:-2.3479em;margin-left:0em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0278em;">θ</span></span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span><span class="mop">min</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.7521em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size4">(</span></span><span class="mord">−</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.05em;"><span style="top:-1.8723em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span><span style="top:-3.05em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∑</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.2777em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0278em;">θ</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord">∣</span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size4">)</span></span></span></span></span></span></span></div>
+<p>右边就是<strong>负对数似然（NLL）</strong></p>
+<p>每个样本的损失：</p>
+<div class="math math-display"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><msub><mi>L</mi><mi>i</mi></msub><mo>=</mo><mo>−</mo><mi>log</mi><mo>⁡</mo><msub><mi>P</mi><mi>θ</mi></msub><mo stretchy="false">(</mo><msub><mi>y</mi><mi>i</mi></msub><mi mathvariant="normal">∣</mi><msub><mi>x</mi><mi>i</mi></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">L_i = -\log P_\theta(y_i|x_i)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">L</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">−</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0278em;">θ</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord">∣</span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></span></div>
+<p><strong>这正是交叉熵损失！</strong></p>
+<hr>
+<h2 id="mle-nll" data-heading-text="五、MLE = NLL = 交叉熵">五、MLE = NLL = 交叉熵</h2>
+<h3 id="5-1" data-heading-text="5.1 完整的等价链">5.1 完整的等价链</h3>
+<div class="code-block"><pre><code class="hljs">最大似然估计（MLE）
+    ↓ 取对数
+对数似然（Log-Likelihood）
+    ↓ 变号（max → min）
+负对数似然（NLL）
+    ↓ 用分布语言重写
+交叉熵（Cross Entropy）
+</code></pre></div>
+<h3 id="5-2" data-heading-text="5.2 逐步推导">5.2 逐步推导</h3>
+<p><strong>Step 1: MLE 原始形式</strong></p>
+<div class="math math-display"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><munder><mrow><mi>max</mi><mo>⁡</mo></mrow><mi>θ</mi></munder><munder><mo>∏</mo><mi>i</mi></munder><msub><mi>P</mi><mi>θ</mi></msub><mo stretchy="false">(</mo><msub><mi>y</mi><mi>i</mi></msub><mi mathvariant="normal">∣</mi><msub><mi>x</mi><mi>i</mi></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\max_\theta \prod_i P_\theta(y_i|x_i)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:2.3277em;vertical-align:-1.2777em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.4306em;"><span style="top:-2.3479em;margin-left:0em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0278em;">θ</span></span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span><span class="mop">max</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.7521em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.05em;"><span style="top:-1.8723em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span><span style="top:-3.05em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∏</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.2777em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0278em;">θ</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord">∣</span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></span></div>
+<p><strong>Step 2: 取对数</strong></p>
+<div class="math math-display"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><munder><mrow><mi>max</mi><mo>⁡</mo></mrow><mi>θ</mi></munder><munder><mo>∑</mo><mi>i</mi></munder><mi>log</mi><mo>⁡</mo><msub><mi>P</mi><mi>θ</mi></msub><mo stretchy="false">(</mo><msub><mi>y</mi><mi>i</mi></msub><mi mathvariant="normal">∣</mi><msub><mi>x</mi><mi>i</mi></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\max_\theta \sum_i \log P_\theta(y_i|x_i)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:2.3277em;vertical-align:-1.2777em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.4306em;"><span style="top:-2.3479em;margin-left:0em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0278em;">θ</span></span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span><span class="mop">max</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.7521em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.05em;"><span style="top:-1.8723em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span><span style="top:-3.05em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∑</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.2777em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0278em;">θ</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord">∣</span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></span></div>
+<p>这是<strong>对数似然（Log-Likelihood）</strong></p>
+<p><strong>Step 3: 变号</strong></p>
+<div class="math math-display"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><munder><mrow><mi>min</mi><mo>⁡</mo></mrow><mi>θ</mi></munder><mrow><mo fence="true">(</mo><mo>−</mo><munder><mo>∑</mo><mi>i</mi></munder><mi>log</mi><mo>⁡</mo><msub><mi>P</mi><mi>θ</mi></msub><mo stretchy="false">(</mo><msub><mi>y</mi><mi>i</mi></msub><mi mathvariant="normal">∣</mi><msub><mi>x</mi><mi>i</mi></msub><mo stretchy="false">)</mo><mo fence="true">)</mo></mrow></mrow><annotation encoding="application/x-tex">\min_\theta \left(-\sum_i \log P_\theta(y_i|x_i)\right)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:3.0277em;vertical-align:-1.2777em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.6679em;"><span style="top:-2.3479em;margin-left:0em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0278em;">θ</span></span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span><span class="mop">min</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.7521em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size4">(</span></span><span class="mord">−</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.05em;"><span style="top:-1.8723em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span><span style="top:-3.05em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∑</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.2777em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0278em;">θ</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord">∣</span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size4">)</span></span></span></span></span></span></span></div>
+<p>这是<strong>负对数似然（NLL）</strong></p>
+<p><strong>Step 4: 用分布语言重写</strong></p>
+<p>真实分布 P（one-hot）：P(y|x) = 1 当 y=y_true，否则 = 0</p>
+<p>模型分布：Q_θ(y|x) = P_θ(y|x)</p>
+<p>交叉熵定义：</p>
+<div class="math math-display"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>H</mi><mo stretchy="false">(</mo><mi>P</mi><mo separator="true">,</mo><msub><mi>Q</mi><mi>θ</mi></msub><mo stretchy="false">)</mo><mo>=</mo><mo>−</mo><munder><mo>∑</mo><mi>y</mi></munder><mi>P</mi><mo stretchy="false">(</mo><mi>y</mi><mi mathvariant="normal">∣</mi><mi>x</mi><mo stretchy="false">)</mo><mi>log</mi><mo>⁡</mo><msub><mi>Q</mi><mi>θ</mi></msub><mo stretchy="false">(</mo><mi>y</mi><mi mathvariant="normal">∣</mi><mi>x</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">H(P,Q_\theta) = -\sum_y P(y|x)\log Q_\theta(y|x)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0813em;">H</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">Q</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0278em;">θ</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.4361em;vertical-align:-1.3861em;"></span><span class="mord">−</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.05em;"><span style="top:-1.9em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0359em;">y</span></span></span><span style="top:-3.05em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∑</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.3861em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="mord">∣</span><span class="mord mathnormal">x</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">Q</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0278em;">θ</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="mord">∣</span><span class="mord mathnormal">x</span><span class="mclose">)</span></span></span></span></span></div>
+<p>代入 one-hot：</p>
+<div class="math math-display"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>H</mi><mo stretchy="false">(</mo><mi>P</mi><mo separator="true">,</mo><msub><mi>Q</mi><mi>θ</mi></msub><mo stretchy="false">)</mo><mo>=</mo><mo>−</mo><mi>log</mi><mo>⁡</mo><msub><mi>P</mi><mi>θ</mi></msub><mo stretchy="false">(</mo><msub><mi>y</mi><mtext>true</mtext></msub><mi mathvariant="normal">∣</mi><mi>x</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">H(P,Q_\theta) = -\log P_\theta(y_{\text{true}}|x)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0813em;">H</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">Q</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0278em;">θ</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">−</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0278em;">θ</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">true</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord">∣</span><span class="mord mathnormal">x</span><span class="mclose">)</span></span></span></span></span></div>
+<p><strong>与 NLL 完全一致！</strong></p>
+<h3 id="5-3" data-heading-text="5.3 核心等价关系">5.3 核心等价关系</h3>
+<div class="math math-display"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mtext>交叉熵</mtext><mo>=</mo><mtext>负对数似然（NLL）</mtext></mrow><annotation encoding="application/x-tex">\text{交叉熵} = \text{负对数似然（NLL）}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord text"><span class="mord cjk_fallback">交叉熵</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord text"><span class="mord cjk_fallback">负对数似然（</span><span class="mord">NLL</span><span class="mord cjk_fallback">）</span></span></span></span></span></span></div>
+<p>因此：</p>
+<div class="math math-display"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>min</mi><mo>⁡</mo><mtext> 交叉熵</mtext><mspace width="1em"/><mo>⟺</mo><mspace width="1em"/><mi>max</mi><mo>⁡</mo><mtext> 对数似然</mtext><mspace width="1em"/><mo>⟺</mo><mspace width="1em"/><mtext>最大似然估计</mtext></mrow><annotation encoding="application/x-tex">\min \text{ 交叉熵} \quad \Longleftrightarrow \quad \max \text{ 对数似然} \quad \Longleftrightarrow \quad \text{最大似然估计}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7073em;vertical-align:-0.024em;"></span><span class="mop">min</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord text"><span class="mord"> </span><span class="mord cjk_fallback">交叉熵</span></span><span class="mspace" style="margin-right:1em;"></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">⟺</span><span class="mspace" style="margin-right:1em;"></span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7073em;vertical-align:-0.024em;"></span><span class="mop">max</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord text"><span class="mord"> </span><span class="mord cjk_fallback">对数似然</span></span><span class="mspace" style="margin-right:1em;"></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">⟺</span><span class="mspace" style="margin-right:1em;"></span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord text"><span class="mord cjk_fallback">最大似然估计</span></span></span></span></span></span></div>
+<h3 id="5-4" data-heading-text="5.4 为什么有不同的名字？">5.4 为什么有不同的名字？</h3>
+<table>
+<thead>
+<tr>
+<th>视角</th>
+<th>术语</th>
+<th>来源</th>
+<th>强调什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>统计学</td>
+<td>最大似然/对数似然</td>
+<td>统计学</td>
+<td>参数估计</td>
+</tr>
+<tr>
+<td>信息论</td>
+<td>交叉熵</td>
+<td>信息论</td>
+<td>分布差异</td>
+</tr>
+<tr>
+<td>工程</td>
+<td>NLL/CrossEntropyLoss</td>
+<td>深度学习</td>
+<td>损失函数</td>
+</tr>
+</tbody>
+</table>
+<p>本质相同，只是不同学科的不同表述。</p>
+<h3 id="5-5" data-heading-text="5.5 数值例子：三者的一致性">5.5 数值例子：三者的一致性</h3>
+<p><strong>3分类问题，3个样本</strong>：</p>
+<p><strong>数据</strong>：</p>
+<ul>
+<li>样本1: y₁=0, 预测 P_θ(0|x₁) = 0.7</li>
+<li>样本2: y₂=1, 预测 P_θ(1|x₂) = 0.8</li>
+<li>样本3: y₃=2, 预测 P_θ(2|x₃) = 0.5</li>
+</ul>
+<p><strong>方法1：MLE（最大化似然）</strong></p>
+<div class="code-block"><pre><code class="hljs">L(θ) = 0.7 × 0.8 × 0.5 = 0.28
+log L(θ) = log(0.7) + log(0.8) + log(0.5) = -1.273
+</code></pre></div>
+<p><strong>方法2：NLL（最小化负对数似然）</strong></p>
+<div class="code-block"><pre><code class="hljs">NLL = -log L(θ) = 1.273
+</code></pre></div>
+<p><strong>方法3：交叉熵</strong></p>
+<div class="code-block"><pre><code class="hljs">L₁ = -log(0.7) ≈ 0.357
+L₂ = -log(0.8) ≈ 0.223
+L₃ = -log(0.5) ≈ 0.693
+总和 = 1.273
+</code></pre></div>
+<p><strong>三种方法，完全相同的结果！</strong></p>
+<hr>
+<h2 id="section-36" data-heading-text="六、为什么这样设计？">六、为什么这样设计？</h2>
+<h3 id="6-1" data-heading-text="6.1 理论基础：来自统计学">6.1 理论基础：来自统计学</h3>
+<p>分类模型在建模条件概率 P(y|x)</p>
+<p><strong>统计学告诉我们</strong>：</p>
+<ul>
+<li>最自然的参数估计方法是 MLE</li>
+<li>MLE 具有一致性、渐近正态性等优良性质</li>
+<li>MLE 等价于最小化交叉熵</li>
+</ul>
+<p><strong>结论</strong>：</p>
+<blockquote>
+<p>交叉熵不是人为设计的，而是从统计学基本原理推导出来的</p>
+</blockquote>
+<h3 id="6-2" data-heading-text="6.2 工程优势：梯度简洁">6.2 工程优势：梯度简洁</h3>
+<p><strong>Softmax + Cross Entropy</strong> 的梯度：</p>
+<div class="math math-display"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mfrac><mrow><mi mathvariant="normal">∂</mi><mi>L</mi></mrow><mrow><mi mathvariant="normal">∂</mi><msub><mi>z</mi><mi>i</mi></msub></mrow></mfrac><mo>=</mo><msub><mi>p</mi><mi>i</mi></msub><mo>−</mo><msub><mi>y</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">\frac{\partial L}{\partial z_i} = p_i - y_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:2.2074em;vertical-align:-0.836em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3714em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord" style="margin-right:0.0556em;">∂</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.044em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.044em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord" style="margin-right:0.0556em;">∂</span><span class="mord mathnormal">L</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.836em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7778em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span></div>
+<p><strong>特点</strong>：</p>
+<ol>
+<li>形式极简：就是预测值和真实值的差</li>
+<li>没有复杂的链式法则</li>
+<li>数值稳定：不会梯度消失或爆炸</li>
+<li>计算高效</li>
+</ol>
+<p>这就是为什么深度学习框架直接提供 <code>CrossEntropyLoss</code>。</p>
+<h3 id="6-3" data-heading-text="6.3 信息论视角：最小化分布差异">6.3 信息论视角：最小化分布差异</h3>
+<p>交叉熵可以分解为：</p>
+<div class="math math-display"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>H</mi><mo stretchy="false">(</mo><mi>P</mi><mo separator="true">,</mo><mi>Q</mi><mo stretchy="false">)</mo><mo>=</mo><mi>H</mi><mo stretchy="false">(</mo><mi>P</mi><mo stretchy="false">)</mo><mo>+</mo><mtext>KL</mtext><mo stretchy="false">(</mo><mi>P</mi><mi mathvariant="normal">∥</mi><mi>Q</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">H(P,Q) = H(P) + \text{KL}(P\|Q)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0813em;">H</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">Q</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0813em;">H</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">KL</span></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="mord">∥</span><span class="mord mathnormal">Q</span><span class="mclose">)</span></span></span></span></span></div>
+<p>其中：</p>
+<ul>
+<li>H(P)：真实分布的熵（常数）</li>
+<li>KL(P‖Q)：KL散度（分布差异）</li>
+</ul>
+<p>因此：最小化交叉熵 ⟺ 最小化 KL 散度 ⟺ 让模型分布逼近真实分布</p>
+<hr>
+<h2 id="section-40" data-heading-text="七、总结">七、总结</h2>
+<h3 id="7-1" data-heading-text="7.1 核心理解">7.1 核心理解</h3>
+<p><strong>交叉熵损失 = -log(正确答案的概率)</strong></p>
+<ul>
+<li>= 负对数似然</li>
+<li>= 最大似然估计的优化目标</li>
+</ul>
+<h3 id="7-2" data-heading-text="7.2 从三个角度理解">7.2 从三个角度理解</h3>
+<p><strong>直觉</strong>：</p>
+<blockquote>
+<p>“你给正确答案分配的概率有多低，我就罚你多狠”</p>
+</blockquote>
+<p><strong>统计学</strong>：</p>
+<blockquote>
+<p>“让已发生的数据在当前模型下概率最大”</p>
+</blockquote>
+<p><strong>信息论</strong>：</p>
+<blockquote>
+<p>“用模型的分布去理解真实分布所付出的代价”</p>
+</blockquote>
+<h3 id="7-3" data-heading-text="7.3 关键等价关系">7.3 关键等价关系</h3>
+<div class="math math-display"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>max</mi><mo>⁡</mo><mi>log</mi><mo>⁡</mo><mi>P</mi><mo stretchy="false">(</mo><mi>y</mi><mi mathvariant="normal">∣</mi><mi>x</mi><mo stretchy="false">)</mo><mspace width="1em"/><mo>=</mo><mspace width="1em"/><mi>min</mi><mo>⁡</mo><mo stretchy="false">[</mo><mo>−</mo><mi>log</mi><mo>⁡</mo><mi>P</mi><mo stretchy="false">(</mo><mi>y</mi><mi mathvariant="normal">∣</mi><mi>x</mi><mo stretchy="false">)</mo><mo stretchy="false">]</mo><mspace width="1em"/><mo>=</mo><mspace width="1em"/><mi>min</mi><mo>⁡</mo><mi>H</mi><mo stretchy="false">(</mo><mi>P</mi><mo separator="true">,</mo><mi>Q</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\max \log P(y|x) \quad = \quad \min [-\log P(y|x)] \quad = \quad \min H(P,Q)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop">max</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="mord">∣</span><span class="mord mathnormal">x</span><span class="mclose">)</span><span class="mspace" style="margin-right:1em;"></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:1em;"></span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop">min</span><span class="mopen">[</span><span class="mord">−</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="mord">∣</span><span class="mord mathnormal">x</span><span class="mclose">)]</span><span class="mspace" style="margin-right:1em;"></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:1em;"></span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop">min</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0813em;">H</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">Q</span><span class="mclose">)</span></span></span></span></span></div>
+<div class="math math-display"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mtext>(最大似然)</mtext><mspace width="2em"/><mtext>(负对数似然)</mtext><mspace width="2em"/><mtext>(交叉熵)</mtext></mrow><annotation encoding="application/x-tex">\text{(最大似然)} \qquad \text{(负对数似然)} \qquad \text{(交叉熵)}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">(</span><span class="mord cjk_fallback">最大似然</span><span class="mord">)</span></span><span class="mspace" style="margin-right:2em;"></span><span class="mord text"><span class="mord">(</span><span class="mord cjk_fallback">负对数似然</span><span class="mord">)</span></span><span class="mspace" style="margin-right:2em;"></span><span class="mord text"><span class="mord">(</span><span class="mord cjk_fallback">交叉熵</span><span class="mord">)</span></span></span></span></span></span></div>
+<h3 id="7-4" data-heading-text="7.4 理解路径">7.4 理解路径</h3>
+<div class="code-block"><pre><code class="hljs">1. 问题：如何评价模型预测？
+       ↓
+2. 直觉：正确答案概率越高越好
+       ↓
+3. 函数：-log(p) 提供合适的惩罚
+       ↓
+4. 统计学：这是最大似然估计
+       ↓
+5. 信息论：这也是交叉熵
+       ↓
+6. 等价：MLE = Log-Likelihood = NLL = Cross Entropy
+</code></pre></div>
+<h3 id="7-5" data-heading-text="7.5 最小记忆单元">7.5 最小记忆单元</h3>
+<p>如果只记一件事：</p>
+<blockquote>
+<p><strong>交叉熵 = -log(正确类的概率)</strong></p>
+<p>它来自最大似然估计：让模型给真实答案的概率最大</p>
+</blockquote>
+<hr>
+<h2 id="section-46" data-heading-text="八、结语">八、结语</h2>
+<p>交叉熵损失看似简单的 <strong>-log(p)</strong>，实际上：</p>
+<ul>
+<li><strong>来自统计学</strong>：最大似然估计的自然结果</li>
+<li><strong>来自信息论</strong>：分布差异的度量</li>
+<li><strong>工程优良</strong>：梯度简洁、数值稳定</li>
+</ul>
+<p>理解交叉熵和最大似然的联系，你就真正理解了：</p>
+<ul>
+<li><strong>为什么</strong>这样设计损失函数</li>
+<li><strong>为什么</strong>深度学习能够工作</li>
+<li><strong>如何</strong>从原理出发思考问题</li>
+</ul>
+
+      </div>
+<div class="article-actions" aria-label="Article actions">
+      <a class="share-link" href="https://twitter.com/intent/tweet?text=%E4%BA%A4%E5%8F%89%E7%86%B5%E6%8D%9F%E5%A4%B1%E4%B8%8E%E6%9C%80%E5%A4%A7%E4%BC%BC%E7%84%B6%E4%BC%B0%E8%AE%A1%EF%BC%9A%E5%AE%8C%E5%85%A8%E7%90%86%E8%A7%A3%E6%8C%87%E5%8D%97&amp;url=https%3A%2F%2Fkingson4wu.github.io%2Fzh%2Fposts%2F20260129%2F" target="_blank" rel="noopener noreferrer" aria-label="Share on X">
+        <span aria-hidden="true">X</span>
+        <span>Share</span>
+      </a>
+    </div>
+    </article>
+<aside class="article-toc" data-article-toc aria-label="目录">
+      <button class="article-toc-toggle" type="button" data-article-toc-toggle aria-expanded="false" aria-controls="article-toc-panel" aria-label="打开目录" data-open-label="打开目录" data-close-label="收起目录">
+        <svg aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M8 6h11"></path>
+          <path d="M8 12h11"></path>
+          <path d="M8 18h11"></path>
+          <path d="M4 6h.01"></path>
+          <path d="M4 12h.01"></path>
+          <path d="M4 18h.01"></path>
+        </svg>
+      </button>
+      <nav id="article-toc-panel" class="article-toc-panel" data-article-toc-panel aria-label="目录">
+        <div class="article-toc-heading">目录</div>
+        <ol class="article-toc-list">
+          <li class="article-toc-level-2"><a href="#section-1" data-article-toc-link>一、从最基本的问题开始</a></li>
+          <li class="article-toc-level-3"><a href="#1-1" data-article-toc-link>1.1 模型如何表达预测？</a></li>
+          <li class="article-toc-level-3"><a href="#1-2" data-article-toc-link>1.2 如何评价模型预测的好坏？</a></li>
+          <li class="article-toc-level-3"><a href="#1-3" data-article-toc-link>1.3 为什么选择对数函数？</a></li>
+          <li class="article-toc-level-3"><a href="#1-4" data-article-toc-link>1.4 交叉熵的最简形式</a></li>
+          <li class="article-toc-level-2"><a href="#section-6" data-article-toc-link>二、为什么叫“交叉熵”？</a></li>
+          <li class="article-toc-level-3"><a href="#2-1" data-article-toc-link>2.1 先理解“熵”</a></li>
+          <li class="article-toc-level-3"><a href="#2-2" data-article-toc-link>2.2 什么是“交叉”？</a></li>
+          <li class="article-toc-level-3"><a href="#2-3" data-article-toc-link>2.3 为什么叫“交叉”？</a></li>
+          <li class="article-toc-level-3"><a href="#2-4" data-article-toc-link>2.4 在机器学习中的应用</a></li>
+          <li class="article-toc-level-3"><a href="#2-5-log-p" data-article-toc-link>2.5 为什么简化成了 -log(p)？</a></li>
+          <li class="article-toc-level-2"><a href="#section-15" data-article-toc-link>三、二分类和多分类的具体形式</a></li>
+          <li class="article-toc-level-3"><a href="#3-1-binary-cross-entropy" data-article-toc-link>3.1 二分类交叉熵（Binary Cross Entropy）</a></li>
+          <li class="article-toc-level-3"><a href="#3-2-categorical-cross-entropy" data-article-toc-link>3.2 多分类交叉熵（Categorical Cross Entropy）</a></li>
+          <li class="article-toc-level-2"><a href="#section-18" data-article-toc-link>四、从最大似然估计理解交叉熵</a></li>
+          <li class="article-toc-level-3"><a href="#4-1" data-article-toc-link>4.1 一个侦探问题</a></li>
+          <li class="article-toc-level-3"><a href="#4-2-vs" data-article-toc-link>4.2 概率 vs 似然：关键区别</a></li>
+          <li class="article-toc-level-3"><a href="#4-3" data-article-toc-link>4.3 硬币问题的形式化</a></li>
+          <li class="article-toc-level-3"><a href="#4-4" data-article-toc-link>4.4 为什么要取对数？</a></li>
+          <li class="article-toc-level-3"><a href="#4-5-mle" data-article-toc-link>4.5 MLE 的通用形式</a></li>
+          <li class="article-toc-level-3"><a href="#4-6-mle" data-article-toc-link>4.6 从 MLE 到机器学习</a></li>
+          <li class="article-toc-level-2"><a href="#mle-nll" data-article-toc-link>五、MLE = NLL = 交叉熵</a></li>
+          <li class="article-toc-level-3"><a href="#5-1" data-article-toc-link>5.1 完整的等价链</a></li>
+          <li class="article-toc-level-3"><a href="#5-2" data-article-toc-link>5.2 逐步推导</a></li>
+          <li class="article-toc-level-3"><a href="#5-3" data-article-toc-link>5.3 核心等价关系</a></li>
+          <li class="article-toc-level-3"><a href="#5-4" data-article-toc-link>5.4 为什么有不同的名字？</a></li>
+          <li class="article-toc-level-3"><a href="#5-5" data-article-toc-link>5.5 数值例子：三者的一致性</a></li>
+          <li class="article-toc-level-2"><a href="#section-36" data-article-toc-link>六、为什么这样设计？</a></li>
+          <li class="article-toc-level-3"><a href="#6-1" data-article-toc-link>6.1 理论基础：来自统计学</a></li>
+          <li class="article-toc-level-3"><a href="#6-2" data-article-toc-link>6.2 工程优势：梯度简洁</a></li>
+          <li class="article-toc-level-3"><a href="#6-3" data-article-toc-link>6.3 信息论视角：最小化分布差异</a></li>
+          <li class="article-toc-level-2"><a href="#section-40" data-article-toc-link>七、总结</a></li>
+          <li class="article-toc-level-3"><a href="#7-1" data-article-toc-link>7.1 核心理解</a></li>
+          <li class="article-toc-level-3"><a href="#7-2" data-article-toc-link>7.2 从三个角度理解</a></li>
+          <li class="article-toc-level-3"><a href="#7-3" data-article-toc-link>7.3 关键等价关系</a></li>
+          <li class="article-toc-level-3"><a href="#7-4" data-article-toc-link>7.4 理解路径</a></li>
+          <li class="article-toc-level-3"><a href="#7-5" data-article-toc-link>7.5 最小记忆单元</a></li>
+          <li class="article-toc-level-2"><a href="#section-46" data-article-toc-link>八、结语</a></li>
+        </ol>
+      </nav>
+    </aside>
+    <script src="/scripts/article-toc.js" defer></script>
+    <nav class="article-nav" aria-label="Adjacent posts">
+      <a href="/zh/posts/20260128-softmax/"><span>Previous</span>Softmax：从直觉到本质</a>
+      <a href="/zh/posts/20260130/"><span>Next</span>感知机与神经网络如何学习并逼近复杂函数</a>
+    </nav>
+<section class="comments" aria-labelledby="comments-heading">
+      <h2 id="comments-heading">评论</h2>
+      <div
+        data-comments
+        data-comments-repo="Kingson4Wu/kingson4wu.github.io"
+        data-comments-issue-term="pathname"
+        data-comments-label="comment"
+      ></div>
+    </section>
+    <script src="/scripts/comments.js" defer></script>
+  </main>
+  <footer class="site-footer">
+    <p>&copy; 2026 拉巴力的纸皮箱</p>
+  </footer>
+  <button class="reading-return" type="button" data-reading-return aria-label="回到开头" title="回到开头">
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <path d="M12 19V5"></path>
+      <path d="m6 11 6-6 6 6"></path>
+    </svg>
+  </button>
+  <script src="/scripts/theme.js"></script>
+  <script src="/scripts/image-viewer.js"></script>
+  <script src="/scripts/reading-tools.js"></script>
+</body>
+</html>

@@ -1,0 +1,127 @@
+# 谈谈定时任务的原理和应用
+
+Canonical: https://kingson4wu.github.io/zh/posts/20230703/
+Markdown: https://kingson4wu.github.io/zh/posts/20230703/index.md
+Language: zh
+Type: post
+Date: 2023-07-03
+Tags: Networking, Go, Programming Languages
+
+定时任务的原理 本质是开一个线程,无限循环,检查本地的当前时间,是否符合执行的条件 Redis: 比如redis-5.0.8，起了一个线程不停的循环检查，比对当前时间（gettimeofday）判断是否需要执行 Golang: 起一个goroutine无限循环,从最小堆中取符合时间的任务 Java: 单线程, 无限循环...
+
+---
+
+## 定时任务的原理
++ 本质是开一个线程,无限循环,检查本地的当前时间,是否符合执行的条件
+
++ Redis: 比如redis-5.0.8，起了一个线程不停的循环检查，比对当前时间（gettimeofday）判断是否需要执行
++ Golang: 起一个goroutine无限循环,从最小堆中取符合时间的任务
++ Java: 单线程, 无限循环,最小堆: java.util.TimerThread#mainLoop
+
+## 定时任务类型
++ 定时任务一般分为 本地定时任务 和 分布式定时任务
+
++ 比如定时加载数据到本地缓存的时候，这时一般就使用本地定时任务
++ 而有些任务定时只需要执行一次， 现在很多服务都不是单点了，这就需要分布式定时任务来进行调度了
+
+## 分布式定时任务使用示例
+
++ 业界上可选择的定时任务工具很多，在工作中使用最多的是Saturn，个人觉得还是很方便的，其他分布式定时任务的原理其实基本大同小异
+
++ 官网地址： https://github.com/vipshop/Saturn
++ [Saturn架构文档](https://github.com/vipshop/Saturn/wiki/Saturn%E6%9E%B6%E6%9E%84%E6%96%87%E6%A1%A3)
+
+
+### Saturn
++ 如果是Java服务，可以很方便的接入Saturn，可以直接通知到服务
++ 但如果是其他语言，则是通过执行shell命令间接实现的
+
+### 使用域信号通知通知服务
++ 这里Go应用为例子，通过域信号结合shell命令，从而方便使用saturn定时任务
+
++ client端：提供shell命令，供saturn定时调用
+
+```go
+const SockPath = "/tmp/notify-os.sock"
+
+func notifyRun(task *notifyTask) {
+
+	httpc := http.Client{
+		Transport: &http.Transport{
+			DialContext: func(_ context.Context, _, _ string) (net.Conn, error) {
+				return net.Dial("unix", SockPath)
+			},
+		},
+	}
+	response, err := httpc.Get("http://unix/" + task.name + "?" + task.args)
+	if err != nil {
+		panic(err)
+	}
+	var buf = make([]byte, 1024)
+	response.Body.Read(buf)
+	logger.Infof("finish notify task: %s, args:%s, resp: %s", task.name, task.args, string(buf))
+}
+
+```
+
++ server端：提供uds服务，介绍请求触发执行相应的任务
+
+```go
+
+type ser struct{}
+
+func (s ser) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
+
+	defer func() {
+		if err := recover(); err != nil {
+			logger.Errorf("notify server panic, r: %s, err:%s", r.RequestURI, err)
+		}
+	}()
+
+	name := r.URL.Path
+
+	if strings.HasPrefix(name, "/") {
+		name = name[1:]
+	}
+
+	if job, ok := jobs[name]; ok {
+		args := map[string]string{}
+		for k, v := range r.URL.Query() {
+			args[k] = v[0]
+		}
+		if job.Handler(args) {
+			rw.Write([]byte("ok"))
+			logger.Infof("job run success, name:%s, args: %s", name, args)
+		} else {
+			rw.Write([]byte("fail"))
+			logger.Errorf("job run fail, name:%s, args: %s", name, args)
+		}
+		return
+	}
+
+	rw.Write([]byte("not exist"))
+	logger.Warnf("job not exist, name:%s", name)
+
+}
+func NotifyServe() {
+	sockPath := utils.BizConfig("notify_uds_file", "")
+
+	if sockPath == "" {
+		panic("sockPath is nil")
+	}
+
+	logger.Info("Unix NotifyServe ...")
+	os.Remove(sockPath)
+	server := http.Server{
+		Handler: ser{},
+	}
+	unixListener, err := net.Listen("unix", sockPath)
+	if err != nil {
+		panic(err)
+	}
+	server.Serve(unixListener)
+}
+
+```
+
++ windows 平台没有uds，可以使用普通的HTTP接口代替

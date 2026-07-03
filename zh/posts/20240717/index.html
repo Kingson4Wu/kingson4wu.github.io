@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>看似理科实则文科，看似文科实则理科 | 拉巴力的纸皮箱</title>
+  <meta name="description" content="前段时间在看Rust，所有权部分涉及到很多规则，让我重新反思了传统文科和理科的区别 学习一门编程语言，大家普遍会认为这是一门理科 但像Rust语言的所有权规则，让我想到了英语中的各种时态规则 大家基本会认为英语是文科 但我其实认为Rust中的规则和英语中的规则，其实没啥区别，都是逻辑规则，比较烧脑。 所以无论是学习文科...">
+  <link rel="canonical" href="https://kingson4wu.github.io/zh/posts/20240717/">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="alternate" type="application/rss+xml" title="拉巴力的纸皮箱" href="/zh/feed.xml">
+  <link rel="alternate" type="text/markdown" href="/zh/posts/20240717/index.md">
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="/styles/main.css">
+  <script>
+    try {
+      var theme = localStorage.getItem('theme');
+      if (theme) document.documentElement.dataset.theme = theme;
+    } catch (_) {}
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="site-title" href="/zh/" aria-label="拉巴力的纸皮箱">
+      <span class="site-logo" aria-hidden="true">K</span>
+      <span>拉巴力的纸皮箱</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="/zh/posts/">文章</a>
+      <a href="/zh/notes/">笔记</a>
+      <a href="/zh/tags/">标签</a>
+      <a href="/zh/about/">关于</a>
+      <a href="/zh/search/">搜索</a>
+      <a href="/en/" lang="en">English</a>
+      <a class="feed-link" href="/zh/feed.xml" aria-label="订阅更新" title="订阅更新">
+        <svg class="feed-icon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M5 5.5A13.5 13.5 0 0 1 18.5 19"></path>
+          <path d="M5 11A8 8 0 0 1 13 19"></path>
+          <circle cx="6" cy="18" r="1.5"></circle>
+        </svg>
+      </a>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换明暗模式" title="切换明暗模式">
+        <svg class="theme-icon theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M21 14.2A8.5 8.5 0 0 1 9.8 3 7 7 0 1 0 21 14.2Z"></path>
+        </svg>
+        <svg class="theme-icon theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"></path>
+        </svg>
+      </button>
+    </nav>
+  </header>
+  <main class="site-main">
+    <article class="article">
+      <header class="article-header">
+        <h1>看似理科实则文科，看似文科实则理科</h1>
+        <time datetime="2024-07-17T09:07:49.000Z">2024年7月17日</time>
+<ul class="tag-list" aria-label="Tags">
+    <li><a href="/zh/tags/Programming%20Languages/">Programming Languages</a></li>
+    <li><a href="/zh/tags/Life/">Life</a></li>
+  </ul>
+      </header>
+      <div class="prose">
+<ul>
+<li>
+<p>前段时间在看Rust，所有权部分涉及到很多规则，让我重新反思了传统文科和理科的区别</p>
+</li>
+<li>
+<p>学习一门编程语言，大家普遍会认为这是一门理科</p>
+</li>
+<li>
+<p>但像Rust语言的所有权规则，让我想到了英语中的各种时态规则</p>
+</li>
+<li>
+<p>大家基本会认为英语是文科</p>
+</li>
+<li>
+<p>但我其实认为Rust中的规则和英语中的规则，其实没啥区别，都是逻辑规则，比较烧脑。</p>
+</li>
+<li>
+<p>所以无论是学习文科还是学习理科，有些地方，都是需要良好的逻辑能力。</p>
+</li>
+<li>
+<p>逻辑能力好的人，基本学习文科理科都不会有太大差异。都是聪明的人。</p>
+</li>
+<li>
+<p>当然中理科中偏理的部分，文科中偏文的部分，这些可能有差异则另说。</p>
+</li>
+</ul>
+
+      </div>
+<div class="article-actions" aria-label="Article actions">
+      <a class="share-link" href="https://twitter.com/intent/tweet?text=%E7%9C%8B%E4%BC%BC%E7%90%86%E7%A7%91%E5%AE%9E%E5%88%99%E6%96%87%E7%A7%91%EF%BC%8C%E7%9C%8B%E4%BC%BC%E6%96%87%E7%A7%91%E5%AE%9E%E5%88%99%E7%90%86%E7%A7%91&amp;url=https%3A%2F%2Fkingson4wu.github.io%2Fzh%2Fposts%2F20240717%2F" target="_blank" rel="noopener noreferrer" aria-label="Share on X">
+        <span aria-hidden="true">X</span>
+        <span>Share</span>
+      </a>
+    </div>
+    </article>
+
+    <nav class="article-nav" aria-label="Adjacent posts">
+      <a href="/zh/posts/20240530/"><span>Previous</span>基于Saturn定时任务的客户端工具设计</a>
+      <a href="/zh/posts/20240718/"><span>Next</span>高效会议的重要性</a>
+    </nav>
+<section class="comments" aria-labelledby="comments-heading">
+      <h2 id="comments-heading">评论</h2>
+      <div
+        data-comments
+        data-comments-repo="Kingson4Wu/kingson4wu.github.io"
+        data-comments-issue-term="pathname"
+        data-comments-label="comment"
+      ></div>
+    </section>
+    <script src="/scripts/comments.js" defer></script>
+  </main>
+  <footer class="site-footer">
+    <p>&copy; 2026 拉巴力的纸皮箱</p>
+  </footer>
+  <button class="reading-return" type="button" data-reading-return aria-label="回到开头" title="回到开头">
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <path d="M12 19V5"></path>
+      <path d="m6 11 6-6 6 6"></path>
+    </svg>
+  </button>
+  <script src="/scripts/theme.js"></script>
+  <script src="/scripts/image-viewer.js"></script>
+  <script src="/scripts/reading-tools.js"></script>
+</body>
+</html>

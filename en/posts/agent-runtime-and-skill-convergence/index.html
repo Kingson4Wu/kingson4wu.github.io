@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>From Custom Agents to Agent Runtime + Skill: Convergence in AI System Architecture | Kingson Wu</title>
+  <meta name="description" content="A systems-level view of how AI applications are evolving from bespoke agent implementations toward a layered architecture of interchangeable Runtime and reusable Skills.">
+  <link rel="canonical" href="https://kingson4wu.github.io/en/posts/agent-runtime-and-skill-convergence/">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="alternate" type="application/rss+xml" title="Kingson Wu" href="/en/feed.xml">
+  <link rel="alternate" type="text/markdown" href="/en/posts/agent-runtime-and-skill-convergence/index.md">
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="/styles/main.css">
+  <script>
+    try {
+      var theme = localStorage.getItem('theme');
+      if (theme) document.documentElement.dataset.theme = theme;
+    } catch (_) {}
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="site-title" href="/en/" aria-label="Kingson Wu">
+      <span class="site-logo" aria-hidden="true">K</span>
+      <span>Kingson Wu</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="/en/posts/">Blog</a>
+      <a href="/en/notes/">Notes</a>
+      <a href="/en/tags/">Tags</a>
+      <a href="/en/about/">About</a>
+      <a href="/en/search/">Search</a>
+      <a href="/zh/" lang="zh">中文</a>
+      <a class="feed-link" href="/en/feed.xml" aria-label="Subscribe" title="Subscribe">
+        <svg class="feed-icon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M5 5.5A13.5 13.5 0 0 1 18.5 19"></path>
+          <path d="M5 11A8 8 0 0 1 13 19"></path>
+          <circle cx="6" cy="18" r="1.5"></circle>
+        </svg>
+      </a>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch color mode" title="Switch color mode">
+        <svg class="theme-icon theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M21 14.2A8.5 8.5 0 0 1 9.8 3 7 7 0 1 0 21 14.2Z"></path>
+        </svg>
+        <svg class="theme-icon theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"></path>
+        </svg>
+      </button>
+    </nav>
+  </header>
+  <main class="site-main">
+    <article class="article">
+      <header class="article-header">
+        <h1>From Custom Agents to Agent Runtime + Skill: Convergence in AI System Architecture</h1>
+        <time datetime="2026-03-28T00:00:00.000Z">March 28, 2026</time>
+<ul class="tag-list" aria-label="Tags">
+    <li><a href="/en/tags/AI/">AI</a></li>
+    <li><a href="/en/tags/LLM/">LLM</a></li>
+    <li><a href="/en/tags/Agent/">Agent</a></li>
+    <li><a href="/en/tags/Skill/">Skill</a></li>
+    <li><a href="/en/tags/Architecture/">Architecture</a></li>
+  </ul>
+      </header>
+      <div class="prose">
+<p>One question keeps surfacing in how I think about AI systems: where does the “intelligence” actually live?</p>
+<p>Common but imprecise framings include “the model is the brain,” “the Agent is a human-like agent,” or “LLM plus Prompt is enough.” None of these hold up well at the engineering level. Time to get more precise.</p>
+<h2 id="llm-inference-engine-not-system" data-heading-text="LLM: Inference Engine, Not a System">LLM: Inference Engine, Not a System</h2>
+<p>A large language model’s actual function is narrow:</p>
+<blockquote>
+<p><strong>A probability-driven inference engine: token → token</strong></p>
+</blockquote>
+<p>It takes in text, generates text. That’s the whole scope. It doesn’t manage state, execute multi-step plans, or call external systems on its own. The most basic system you can build around it is <code>Prompt → LLM → Output</code>, which means:</p>
+<blockquote>
+<p><strong>An LLM alone does not constitute a runnable system.</strong></p>
+</blockquote>
+<h2 id="agent-orchestrator-not" data-heading-text="Agent: Orchestrator, Not Intelligence本体">Agent: Orchestrator, Not Intelligence本体</h2>
+<p>In engineering terms, an Agent is more accurately described as:</p>
+<blockquote>
+<p><strong>An orchestrator — a control system for task decomposition and execution.</strong></p>
+</blockquote>
+<p>Its responsibilities include: understanding the task, breaking it into steps, selecting tools (tool routing), running an execution loop, managing state, and adjusting strategy based on results. The takeaway:</p>
+<blockquote>
+<p><strong>An Agent is not an “intelligence body” — it’s a control system.</strong></p>
+</blockquote>
+<h2 id="tool-vs-skill-structured-capability" data-heading-text="Tool vs. Skill: Structured Capability">Tool vs. Skill: Structured Capability</h2>
+<table>
+<thead>
+<tr>
+<th>Concept</th>
+<th>What it means</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tool</td>
+<td>A single capability (an API, a script)</td>
+</tr>
+<tr>
+<td>Skill</td>
+<td>A capability with context: prompt + tool + usage strategy</td>
+</tr>
+</tbody>
+</table>
+<p>More precisely:</p>
+<blockquote>
+<p><strong>Skill = Tool + how to use it + business semantics</strong></p>
+</blockquote>
+<p>The value of a Skill is that it turns raw capability into a reusable, composable unit — executable knowledge, ready for an Agent to call, and the basic building block of any capability platform.</p>
+<h2 id="two-architectural-paths" data-heading-text="Two Architectural Paths">Two Architectural Paths</h2>
+<h3 id="path-1-custom-agent" data-heading-text="Path 1: Custom Agent">Path 1: Custom Agent</h3>
+<p>Typical stack: LangChain, LangGraph.</p>
+<div class="code-block"><pre><code class="hljs">User → Application → Custom Agent → LLM → Tools / APIs
+</code></pre></div>
+<p>Here the developer owns all of it: tool selection logic, execution loop, state management, workflow control, error handling. High control, high complexity, high development cost.</p>
+<h3 id="path-2-agent-runtime-skill" data-heading-text="Path 2: Agent Runtime + Skill">Path 2: Agent Runtime + Skill</h3>
+<div class="code-block"><pre><code class="hljs">User → Application → Agent Runtime (SDK / Platform) → Skills / Tools
+</code></pre></div>
+<p>Execution loop: understand task → select Skill → execute → analyze result → continue. Application side only provides the task (prompt, parameters, context) and receives the result. Orchestration is handled by the Runtime.</p>
+<table>
+<thead>
+<tr>
+<th>Dimension</th>
+<th>Custom Agent</th>
+<th>Agent Runtime</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Orchestration logic</td>
+<td>Build yourself</td>
+<td>Built in</td>
+</tr>
+<tr>
+<td>Control</td>
+<td>High</td>
+<td>Medium / Low</td>
+</tr>
+<tr>
+<td>Development cost</td>
+<td>High</td>
+<td>Low</td>
+</tr>
+<tr>
+<td>Fit</td>
+<td>Complex systems</td>
+<td>Standard workflows</td>
+</tr>
+</tbody>
+</table>
+<h3 id="when-do-you-actually-need-custom-agent" data-heading-text="When do you actually need a custom Agent?">When do you actually need a custom Agent?</h3>
+<p><strong>Probably not</strong> — for linear, low-branch workflows centered on generation and calling. Think: data collection → analysis → structured output → report → presentation. Runtime + Skill handles this fine.</p>
+<p><strong>Probably yes</strong> — for multi-branch logic, strong state dependencies, high consistency and reliability requirements. Auto-trading systems, risk control, multi-Agent collaboration systems. Build on LangGraph or equivalent.</p>
+<h2 id="skill-loader-bridge-capability-system" data-heading-text="Skill Loader: The Bridge to a Capability System">Skill Loader: The Bridge to a Capability System</h2>
+<p>A Skill Loader connects the Agent to the capability layer. Its jobs: dynamic Skill loading, decoupling capability from implementation, hot-swapping. The natural evolution:</p>
+<div class="code-block"><pre><code class="hljs">Custom Skill Loader → MCP-compatible → Open Skill platform
+</code></pre></div>
+<h3 id="mcp-skill-cli-three-layer-stack" data-heading-text="MCP + Skill + CLI: A Three-Layer Stack">MCP + Skill + CLI: A Three-Layer Stack</h3>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MCP (protocol)</td>
+<td>Standardizes how tools are called</td>
+</tr>
+<tr>
+<td>Skill (capability)</td>
+<td>Encapsulates what can be done</td>
+</tr>
+<tr>
+<td>CLI / API (execution)</td>
+<td>Provides the entry point</td>
+</tr>
+</tbody>
+</table>
+<p>The core goal:</p>
+<blockquote>
+<p><strong>Build a capability system that Agents can invoke.</strong></p>
+</blockquote>
+<h2 id="coding-agent-tool-general-purpose-runtime" data-heading-text="Coding Agent: From Tool to General-Purpose Runtime">Coding Agent: From Tool to General-Purpose Runtime</h2>
+<p>“Coding Agent” sounds narrow — just an Agent that writes code. But systems like Claude Code have clearly outgrown the name. Beyond code generation, they demonstrate: task understanding and decomposition, multi-step execution, tool calling, iterative correction. These are exactly the primitives a general orchestration system needs.</p>
+<p>Add a few more elements:</p>
+<ul>
+<li><strong>MCP</strong> for standardized tool protocols</li>
+<li><strong>Skill</strong> for capability encapsulation</li>
+<li><strong>CLI / API</strong> for execution entry points</li>
+</ul>
+<p>And the capability boundary expands to:</p>
+<blockquote>
+<p><strong>A general-purpose task execution system — a general-purpose Agent Runtime</strong></p>
+</blockquote>
+<p>These tend to ship in two forms:</p>
+<p><strong>Agent SDK (embeddable):</strong> Embedded into your application. You control how the Agent is invoked. Model swaps freely, Skills are extendable. You use the Agent while still owning the Agent.</p>
+<p><strong>Agent Platform (hosted):</strong> The Agent runs on the platform side. Platform handles orchestration. You mainly provide tasks and capabilities. Model and execution logic may be bundled. You use a managed Agent system.</p>
+<p>Both are expressions of the same goal: standardize, productize, and externalize the Agent Runtime. The difference is only where control sits.</p>
+<h2 id="architectural-convergence-three-layer-view" data-heading-text="Architectural Convergence: A Three-Layer View">Architectural Convergence: A Three-Layer View</h2>
+<div class="code-block"><pre><code class="hljs">            ┌─────────────────┐
+            │  Agent Runtime  │  ← swappable
+            └────────┬────────┘
+                     ↓
+            ┌─────────────────┐
+            │   Skill Layer   │  ← core asset
+            └────────┬────────┘
+                     ↓
+            ┌─────────────────┐
+            │  Business Sys   │
+            └─────────────────┘
+</code></pre></div>
+<p>Agent Runtime is becoming infrastructure — standardized components (SDK or platform), no longer requiring developers to build the orchestration layer themselves. Attention shifts to what the system can <em>do</em>: building and accumulating Skills.</p>
+<p><strong>Skill is executable knowledge:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Traditional knowledge</th>
+<th>Skill</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Documentation</td>
+<td>Executable</td>
+</tr>
+<tr>
+<td>Person-in-head experience</td>
+<td>Reusable</td>
+</tr>
+<tr>
+<td>Scattered information</td>
+<td>Structured capability</td>
+</tr>
+</tbody>
+</table>
+<h2 id="implementation-path" data-heading-text="Implementation Path">Implementation Path</h2>
+<p>One guiding principle: <strong>decouple first, platform later.</strong></p>
+<p><strong>Step 1: Decouple with a Skill Loader</strong></p>
+<p>While Agent SDKs are still maturing, use a custom Skill Loader to keep business logic cleanly separated from Agent implementation. This isn’t the long-term solution — it’s a bridge. When the SDK stabilizes, swap it in without rewriting business logic.</p>
+<p><strong>Step 2: Build the platform</strong></p>
+<p>Once the internal protocol chain is in place, capability expansion changes fundamentally:</p>
+<blockquote>
+<p>Before: “write code to implement new features.” After: “write a Skill, configure, ship.”</p>
+</blockquote>
+<p>Internally, teams compose Skills to ship faster. Externally, the platform exposes Skill combinations as capability interfaces via MCP — customers see what the system <em>can do</em>, not how it works. Capability delivery no longer requires a separate development translation layer.</p>
+<h2 id="conclusion" data-heading-text="Conclusion">Conclusion</h2>
+<blockquote>
+<p><strong>“Coding Agent” has outgrown its name. It’s a general-purpose Agent Runtime.</strong></p>
+</blockquote>
+<blockquote>
+<p><strong>The core of AI systems is shifting: from building Agents to accumulating Skills.</strong></p>
+</blockquote>
+<blockquote>
+<p><strong>Agent is the replaceable execution layer. Skill is the compounding core asset. Skill platform is the delivery accelerator.</strong></p>
+</blockquote>
+
+      </div>
+<div class="article-actions" aria-label="Article actions">
+      <a class="share-link" href="https://twitter.com/intent/tweet?text=From+Custom+Agents+to+Agent+Runtime+%2B+Skill%3A+Convergence+in+AI+System+Architecture&amp;url=https%3A%2F%2Fkingson4wu.github.io%2Fen%2Fposts%2Fagent-runtime-and-skill-convergence%2F" target="_blank" rel="noopener noreferrer" aria-label="Share on X">
+        <span aria-hidden="true">X</span>
+        <span>Share</span>
+      </a>
+    </div>
+    </article>
+<aside class="article-toc" data-article-toc aria-label="Contents">
+      <button class="article-toc-toggle" type="button" data-article-toc-toggle aria-expanded="false" aria-controls="article-toc-panel" aria-label="Open contents" data-open-label="Open contents" data-close-label="Close contents">
+        <svg aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M8 6h11"></path>
+          <path d="M8 12h11"></path>
+          <path d="M8 18h11"></path>
+          <path d="M4 6h.01"></path>
+          <path d="M4 12h.01"></path>
+          <path d="M4 18h.01"></path>
+        </svg>
+      </button>
+      <nav id="article-toc-panel" class="article-toc-panel" data-article-toc-panel aria-label="Contents">
+        <div class="article-toc-heading">Contents</div>
+        <ol class="article-toc-list">
+          <li class="article-toc-level-2"><a href="#llm-inference-engine-not-system" data-article-toc-link>LLM: Inference Engine, Not a System</a></li>
+          <li class="article-toc-level-2"><a href="#agent-orchestrator-not" data-article-toc-link>Agent: Orchestrator, Not Intelligence本体</a></li>
+          <li class="article-toc-level-2"><a href="#tool-vs-skill-structured-capability" data-article-toc-link>Tool vs. Skill: Structured Capability</a></li>
+          <li class="article-toc-level-2"><a href="#two-architectural-paths" data-article-toc-link>Two Architectural Paths</a></li>
+          <li class="article-toc-level-3"><a href="#path-1-custom-agent" data-article-toc-link>Path 1: Custom Agent</a></li>
+          <li class="article-toc-level-3"><a href="#path-2-agent-runtime-skill" data-article-toc-link>Path 2: Agent Runtime + Skill</a></li>
+          <li class="article-toc-level-3"><a href="#when-do-you-actually-need-custom-agent" data-article-toc-link>When do you actually need a custom Agent?</a></li>
+          <li class="article-toc-level-2"><a href="#skill-loader-bridge-capability-system" data-article-toc-link>Skill Loader: The Bridge to a Capability System</a></li>
+          <li class="article-toc-level-3"><a href="#mcp-skill-cli-three-layer-stack" data-article-toc-link>MCP + Skill + CLI: A Three-Layer Stack</a></li>
+          <li class="article-toc-level-2"><a href="#coding-agent-tool-general-purpose-runtime" data-article-toc-link>Coding Agent: From Tool to General-Purpose Runtime</a></li>
+          <li class="article-toc-level-2"><a href="#architectural-convergence-three-layer-view" data-article-toc-link>Architectural Convergence: A Three-Layer View</a></li>
+          <li class="article-toc-level-2"><a href="#implementation-path" data-article-toc-link>Implementation Path</a></li>
+          <li class="article-toc-level-2"><a href="#conclusion" data-article-toc-link>Conclusion</a></li>
+        </ol>
+      </nav>
+    </aside>
+    <script src="/scripts/article-toc.js" defer></script>
+    <nav class="article-nav" aria-label="Adjacent posts">
+      <a href="/en/posts/intuition-first-explanation-after/"><span>Previous</span>Intuition First, Explanation After: What Humans and LLMs Have in Common</a>
+      <a href="/en/posts/ai-structural-distribution-imbalance/"><span>Next</span>Technology Advances, Distribution Lags: The Structural Contradiction of the AI Era</a>
+    </nav>
+<section class="comments" aria-labelledby="comments-heading">
+      <h2 id="comments-heading">Comments</h2>
+      <div
+        data-comments
+        data-comments-repo="Kingson4Wu/kingson4wu.github.io"
+        data-comments-issue-term="pathname"
+        data-comments-label="comment"
+      ></div>
+    </section>
+    <script src="/scripts/comments.js" defer></script>
+  </main>
+  <footer class="site-footer">
+    <p>&copy; 2026 Kingson Wu</p>
+  </footer>
+  <button class="reading-return" type="button" data-reading-return aria-label="Back to start" title="Back to start">
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <path d="M12 19V5"></path>
+      <path d="m6 11 6-6 6 6"></path>
+    </svg>
+  </button>
+  <script src="/scripts/theme.js"></script>
+  <script src="/scripts/image-viewer.js"></script>
+  <script src="/scripts/reading-tools.js"></script>
+</body>
+</html>

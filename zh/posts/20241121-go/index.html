@@ -1,0 +1,520 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>对Java、Go、Rust之间的简单对比和总结 | 拉巴力的纸皮箱</title>
+  <meta name="description" content="工作中接触过多种编程语言，主要是 Java 和 Go，最近因个人兴趣简单学习了 Rust，在这里简单记录总结一下 编程语言的GC问题 一般来说，程序需要管理好运行中使用的内存空间，比如传统的C和C++则要求开发者手动管理内存，但这往往导致内存泄漏和安全隐患；而垃圾回收（GC）语言，比如Java和Go在运行时自动回收内存...">
+  <link rel="canonical" href="https://kingson4wu.github.io/zh/posts/20241121-go/">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="alternate" type="application/rss+xml" title="拉巴力的纸皮箱" href="/zh/feed.xml">
+  <link rel="alternate" type="text/markdown" href="/zh/posts/20241121-go/index.md">
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="/styles/main.css">
+  <script>
+    try {
+      var theme = localStorage.getItem('theme');
+      if (theme) document.documentElement.dataset.theme = theme;
+    } catch (_) {}
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="site-title" href="/zh/" aria-label="拉巴力的纸皮箱">
+      <span class="site-logo" aria-hidden="true">K</span>
+      <span>拉巴力的纸皮箱</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="/zh/posts/">文章</a>
+      <a href="/zh/notes/">笔记</a>
+      <a href="/zh/tags/">标签</a>
+      <a href="/zh/about/">关于</a>
+      <a href="/zh/search/">搜索</a>
+      <a href="/en/" lang="en">English</a>
+      <a class="feed-link" href="/zh/feed.xml" aria-label="订阅更新" title="订阅更新">
+        <svg class="feed-icon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M5 5.5A13.5 13.5 0 0 1 18.5 19"></path>
+          <path d="M5 11A8 8 0 0 1 13 19"></path>
+          <circle cx="6" cy="18" r="1.5"></circle>
+        </svg>
+      </a>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换明暗模式" title="切换明暗模式">
+        <svg class="theme-icon theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M21 14.2A8.5 8.5 0 0 1 9.8 3 7 7 0 1 0 21 14.2Z"></path>
+        </svg>
+        <svg class="theme-icon theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"></path>
+        </svg>
+      </button>
+    </nav>
+  </header>
+  <main class="site-main">
+    <article class="article">
+      <header class="article-header">
+        <h1>对Java、Go、Rust之间的简单对比和总结</h1>
+        <time datetime="2024-11-21T08:42:35.000Z">2024年11月21日</time>
+<ul class="tag-list" aria-label="Tags">
+    <li><a href="/zh/tags/Java/">Java</a></li>
+    <li><a href="/zh/tags/Go/">Go</a></li>
+    <li><a href="/zh/tags/Rust/">Rust</a></li>
+    <li><a href="/zh/tags/Programming%20Languages/">Programming Languages</a></li>
+  </ul>
+      </header>
+      <div class="prose">
+<blockquote>
+<blockquote>
+<p>工作中接触过多种编程语言，主要是 Java 和 Go，最近因个人兴趣简单学习了 Rust，在这里简单记录总结一下</p>
+</blockquote>
+</blockquote>
+<h2 id="section-1" data-heading-text="编程语言的GC问题">编程语言的GC问题</h2>
+<ul>
+<li>
+<p>一般来说，程序需要管理好运行中使用的内存空间，比如传统的C和C++则要求开发者手动管理内存，但这往往导致内存泄漏和安全隐患；而垃圾回收（GC）语言，比如Java和Go在运行时自动回收内存，但存在“停顿”（STW）问题；而Rust则采用独特的所有权系统，通过编译期严格的规则检查，在不增加运行时开销的情况下实现内存安全。</p>
+</li>
+<li>
+<p>GC语言，调用栈和内存一直在变化，不STW无法算出没引用的变量（可回收的内存）； 而Rust通过作用域的规则判断自动回收。另外无GC不代表不在堆分配，是代表没有STW的垃圾回收机制。</p>
+</li>
+<li>
+<p>Rust引入了“所有权”概念，每个值都有且仅有一个所有者，当所有者离开作用域时，值会被自动释放。这种方式不仅避免了运行时垃圾回收的性能开销，还能在编译阶段就发现潜在的内存使用问题，有效防止了常见的内存安全缺陷。</p>
+</li>
+</ul>
+<h2 id="section-2" data-heading-text="设计哲学">设计哲学</h2>
+<ul>
+<li>Java 作为一门成熟的编程语言，其设计理念更多体现在企业级应用和跨平台兼容性上。当然个人认为由此历史包袱也比较重。</li>
+<li>相比之下，Go 和 Rust 作为更现代的语言，也各有侧重。Go 语言强调简洁、高效和并发性，而 Rust 则更加注重内存安全、零成本抽象和并发安全性。</li>
+</ul>
+<h2 id="section-3" data-heading-text="交叉编译">交叉编译</h2>
+<ul>
+<li>Go 和 Rust 支持各自编译成对应二进制实现跨平台（可以使用交叉编译）；而Java则编译成统一的字节码，依赖平台安装的运行时（JVM）来运行服务（也可以Graalvm直接编译成可执行二进制）</li>
+</ul>
+<h2 id="section-4" data-heading-text="工具链">工具链</h2>
+<ul>
+<li>相关工具链完善问题，比如Java性能依赖外部开发，比如arthas，asyncProfiler等；而Go自带pprof，单元测试工具等（Rust 也有一些相应的配套工具）；Java历史包袱重，不够现代化</li>
+</ul>
+<h2 id="section-5" data-heading-text="热加载">热加载</h2>
+<ul>
+<li>Java的标准HotSwap机制（基于Instrumentation）有限制，不能新增/删除方法和类，只能修改方法体；但JRebel等商业工具通过更复杂的字节码重写技术突破了这些限制，而Spring DevTools 提供了更轻量的重启机制。</li>
+<li>Go官方不直接支持热加载；第三方工具如 gin-reload、air 实现热重载（通过监控文件变化，重新编译和启动进程，相对简单直接，但不是语言级特性）</li>
+<li>Rust同样没有官方直接的热加载机制；比如cargo-watch 可以监听文件变化并重新编译（由于所有权系统，热加载实现相对复杂）</li>
+</ul>
+<h2 id="section-6" data-heading-text="远程Debug">远程Debug</h2>
+<ul>
+<li>Java远程调试的原理是两个VM之间通过debug协议进行通信，然后以达到远程调试的目的。两者之间可以通过socket进行通信。</li>
+<li>Go原生支持远程调试，使用 dlv（Delve）调试器（基于 gRPC 协议通信）</li>
+<li>Rust支持远程调试，但配置相对较复杂（主要使用 rust-gdb 和 rust-lldb）</li>
+</ul>
+<h2 id="section-7" data-heading-text="依赖管理 以及 冲突解决">依赖管理 以及 冲突解决</h2>
+<h3 id="java" data-heading-text="Java">Java</h3>
+<ul>
+<li>Java 的依赖管理历史上存在诸多挑战。在早期，Java 并没有原生的依赖版本管理机制，开发者需要依赖 Maven 或 Gradle 等外部构建工具来处理项目依赖。更为关键的是，Java 的依赖冲突解析是基于具体类而非整个 JAR 包，这导致了潜在的版本兼容性和类加载问题。为了彻底解决这一痛点，Java 9 引入了模块化系统（Java Platform Module System, JPMS），提供了更精细和可靠的依赖管理和隔离机制，从根本上改善了包依赖和版本控制的复杂性。这一设计不仅简化了大型项目的依赖管理，还增强了 Java 运行时的安全性和可预测性。</li>
+</ul>
+<h3 id="section-9" data-heading-text="关于Java的类重复问题">关于Java的类重复问题</h3>
+<ul>
+<li>
+<p>Java 依赖引入的时 Jar 包，使用时则是含路径信息的类名</p>
+</li>
+<li>
+<p>Go则没有这个问题，因为Go的依赖的引入需要指定模块的全路径，使用时也是使用全路径或别名</p>
+</li>
+<li>
+<p>Rust和 Go 类似，依赖的引入也需要指定模块的全路径。但不同包有相应的依赖文件，利用这个使相同依赖的不兼容版本共存而没有冲突问题</p>
+</li>
+<li>
+<p>Java9之前（模块系统之前）- 只能减少，不能从根本上解决</p>
+<ol>
+<li>协议文件生成的代码，重复拷贝和引入，导致类重复冲突
+<ul>
+<li>使用RPC协议，idl文件生成java文件，容易因为多处拷贝（比如一些业务通用库也使用到），导致类重复问题，这样在运行时可能会造成影响</li>
+<li>这时最好打包的时候，不要将协议文件打进jar包中，让业务使用方自行生成代码</li>
+<li>通过扫描jar包路径类的方式，可以协助检查这种问题</li>
+</ul>
+<div class="code-block" data-language="java"><div class="code-header"><span class="code-language">java</span></div><pre><code class="hljs language-java">        <span class="hljs-type">String</span> <span class="hljs-variable">classPath</span> <span class="hljs-operator">=</span> Optional.ofNullable(thriftClass.getProtectionDomain())
+            .map(ProtectionDomain::getCodeSource)
+            .map(CodeSource::getLocation)
+            .map(URL::getPath).orElse(<span class="hljs-string">&quot;&quot;</span>);
+
+        <span class="hljs-keyword">if</span> (!classPath.contains(jarFileName)) {
+            System.err.println(String.format(<span class="hljs-string">&quot;%s thrift class may be duplicated&quot;</span>, thriftClass.getName()));
+            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">DuplicatedThriftFileException</span>(String.format(<span class="hljs-string">&quot;%s thrift class may be duplicated&quot;</span>, thriftClass.getName()));
+        }
+</code></pre></div>
+</li>
+<li>通过maven-enforcer插件解决类冲突
+<ul>
+<li>本质上就是解压所有依赖的 jar 包，判断是否存在重复的类文件，性能较低</li>
+</ul>
+</li>
+</ol>
+</li>
+<li>
+<p>JVM中Jar包的加载顺序</p>
+<ul>
+<li>由classpath参数指定的顺序决定。这种加载机制可能导致’类版本地狱’问题——不同jar包中的同名类，最终使用哪个版本取决于加载顺序，这在复杂项目中很难追踪和调试。</li>
+<li>如果classpath未明确指明，则由文件系统决定的（readdir函数）
+<ul>
+<li>readdir并不保证读取后的文件顺序，在不同的操作系统上可能有不同的顺序。</li>
+</ul>
+</li>
+<li>如何找出重复类
+<ul>
+<li><code>find . -name &quot;*.jar&quot; -exec sh -c  'jar -tf {}|grep -H --label {} 'JspRuntimeContext ''</code></li>
+<li><code>-verbose:class</code> 查看加载顺序</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>Java9及以上（使用模块系统）</p>
+</li>
+</ul>
+<h3 id="go-vs-rust" data-heading-text="Go VS Rust 库冲突">Go VS Rust 库冲突</h3>
+<ul>
+<li>
+<p>当项目间接依赖同一个库的不同版本时，Rust 和 Go 在处理上有什么异同</p>
+</li>
+<li>
+<p>Go 的处理方式：</p>
+  <pre>
+  依赖关系示例：
+  my-project
+  ├── A 
+  │   └── pkg v1.1.0
+  └── B
+      └── pkg v1.2.3
+  </pre>
+<ul>
+<li>Go 会：
+<ul>
+<li>自动选择最低满足要求的版本（v1.2.3）</li>
+<li>所有代码路径都使用这个版本</li>
+<li>使用 MVS (Minimal Version Selection) 算法</li>
+<li>在 go.mod 中记录最终版本</li>
+</ul>
+  <pre>
+      // go.mod
+      module my-project
+
+      require (
+          A v1.0.0
+          B v1.0.0
+          pkg v1.2.3 // 间接依赖，统一使用最高版本
+      )
+  </pre>    
+</li>
+</ul>
+</li>
+<li>
+<p>Rust 的处理方式：</p>
+  <pre>
+  依赖关系示例：
+  my-project
+  ├── A 
+  │   └── pkg 1.1.0
+  └── B
+      └── pkg 1.2.3
+  </pre>    
+<ul>
+<li>Rust 会：
+<ul>
+<li>允许两个版本同时存在</li>
+<li>分别编译两个版本的代码</li>
+<li>在最终二进制中包含两个版本</li>
+</ul>
+  <pre>
+  Cargo.toml
+  [dependencies]
+  A = “1.0.0”  # 依赖 pkg 1.1.0
+  B = “1.0.0”  # 依赖 pkg 1.2.3
+  </pre>
+</li>
+</ul>
+</li>
+<li>
+<p>主要区别：</p>
+<ul>
+<li>Go: 强制统一版本，避免重复</li>
+<li>Rust: 允许多版本共存，保证兼容性</li>
+<li>这种设计反映了两种不同的理念：
+<ul>
+<li>Go: 简单性优先，避免版本冲突</li>
+<li>Rust: 灵活性优先，保证正确性</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>针对依赖同一个库的不同版本的情况：如果版本相同或兼容，Cargo会选择满足要求的当前最高版本；如果版本不兼容，Cargo允许在项目中同时使用这些不兼容的版本，可以通过别名来区分使用。</p>
+</li>
+</ul>
+<h3 id="section-11" data-heading-text="总结">总结</h3>
+<ul>
+<li>个人看法总结：Rust能做到同时使用同一个库的不同版本，是因为每个项目都有独立的依赖库配置以及引入别名机制，关键的是打包能根据这些信息直接生成二进制。而java是生成 字节码文件，并打包时丢失这方面的信息，虚拟机可能目前由于历史和后续兼容等原因也暂不支持。Go 则是选择简单性优先，避免版本冲突。</li>
+<li>Rust可以运行同一库不同版本；Go和Java（模块化后）都不允许同一库不同版本；Go通过路径能确定库的唯一性；Java（未模块化）存在不同库类冲突的可能。</li>
+</ul>
+<h2 id="section-12" data-heading-text="封装私有性">封装私有性</h2>
+<ul>
+<li>
+<p>Java通过访问修饰符（public、private、protected）控制（反射可以破坏私有性；运行时检查私有访问）</p>
+</li>
+<li>
+<p>Java 9 模块化（JPMS）后，封装私有性发生了显著变化</p>
+<ol>
+<li>更严格的可见性控制（引入模块（module）概念；模块间显式依赖声明）</li>
+<li>可见性新规则（使用 exports 关键字定义可导出包；opens 关键字控制运行时反射访问）</li>
+<li>相比传统机制（编译期就能检查模块间依赖；避免了类路径的“打开式”依赖）</li>
+<li>实际影响（需要在 module-info.java 显式声明依赖；原有代码需要适配模块系统；更接近 Rust 的模块化设计理念）</li>
+</ol>
+</li>
+<li>
+<p>Go首字母大小写决定可见性（小写标识符包内可见，大写标识符全局可见；没有私有修饰符，依赖命名约定）</p>
+</li>
+<li>
+<p>Rust模块系统提供精细的可见性控制（默认私有；pub 关键字定义可见性；可以精确控制字段、方法的可见范围；编译期检查，性能无额外开销）</p>
+</li>
+<li>
+<p>Rust 的封装性设计最为现代和严格，Go 相对最为简单，Java 则相对传统，Java9 之后更加严格，跟 Rust 类似，但由于历史包袱，又显得比较笨重。</p>
+</li>
+</ul>
+<h2 id="section-13" data-heading-text="并发和多线程">并发和多线程</h2>
+<ul>
+<li>并发线程，Rust为了减少运行时，默认使用线程模型的并发。</li>
+<li>Go是绿色线程（协程）。</li>
+<li>Java一般也是线程模型，当然也有一些协程库（其他 JVM 语言比如 kotlin 就自带协程）
+<ul>
+<li>Java 21 开始，日常用的虚拟线程已经是 Project Loom 正式交付的成果</li>
+</ul>
+</li>
+</ul>
+<h3 id="section-14" data-heading-text="主线程结束进程是否停止">主线程结束进程是否停止</h3>
+<ul>
+<li>主线程退出：Java中，主线程结束后，如果还有非守护线程在运行，进程不会退出；而Rust和Go中主线程结束即意味着进程结束，不管其他线程/协程状态。</li>
+</ul>
+<h3 id="section-15" data-heading-text="非主线程异常进程是否停止">非主线程异常进程是否停止</h3>
+<ul>
+<li>Rust 中子线程 panic 的行为与 Java 和 Go 都不同：
+<ul>
+<li><strong>Java</strong>: 子线程未捕获异常会导致该线程终止，但不影响其他线程和进程</li>
+<li><strong>Rust</strong>: 子线程 panic 后，当主线程尝试 join 该线程时会收到 panic。如果不处理（unwrap或?），会导致主线程也panic，进而导致进程退出。Rust提供了灵活的处理机制：
+<ul>
+<li>使用 <code>handle.join()</code> 的 Result 来捕获子线程的 panic</li>
+<li>使用 <code>std::panic::catch_unwind()</code> 在子线程内部捕获 panic</li>
+<li>使用 <code>std::panic::set_hook()</code> 自定义全局 panic 处理</li>
+</ul>
+</li>
+<li><strong>Go</strong>: goroutine panic 会立即导致整个程序崩溃（除非被 recover 捕获）</li>
+</ul>
+</li>
+<li>总结：Go 最严格（默认崩溃），Java 最宽松（只影响当前线程），Rust 居中（通过 join 传播，但可灵活控制），Rust显式错误处理：强制你意识到子线程可能出错</li>
+</ul>
+<h2 id="section-16" data-heading-text="面向对象编程">面向对象编程</h2>
+<ul>
+<li>类定义：java Python js 只有class的概念 go 只有struct概念 c++都有 区别是struct可以在栈中定义</li>
+<li>面向对象：Java中的单继承其实简化了继承的使用方式， Go和Rust，算是彻底抛弃了使用类继承的方式，选择了接口继承。</li>
+<li>Java设计之初就是面向对象，加上由于后续历史兼容等原因，代码看起来比较臃肿（类设计）；Rust博采众长，有各自语法糖；Go追求语法简单，表达力不足，会存在一定丑陋的代码（比如没有set， contains，streams等）</li>
+</ul>
+<h2 id="section-17" data-heading-text="接口设计和多态">接口设计和多态</h2>
+<ul>
+<li>Rust中的 trait 和 Java 以及 Go 的接口：本质上它们都是在解决同一个问题：如何定义和实现抽象行为。主要区别在于语言设计理念导致的一些具体细节</li>
+</ul>
+<h2 id="section-18" data-heading-text="空值问题">空值问题</h2>
+<ul>
+<li>Go的类型系统一个缺憾是，对于一个类型，它的值是零值，还是不存在值，混淆不清。Java 之前也存在类似的问题，但是后来增加了基础类型的包装类型（例如对于int的Integer，double的Double），Go是否也可以参考一下？或者增加一个Option(al)类型，对这些基础类型再包装一下（基于泛型），当然还有其他更优方案那就更好了
+<ul>
+<li>JSON包新提案：用“omitzero”解决编码中的空值困局:<a href="https://mp.weixin.qq.com/s/Lw_l_AELo8RKiLzVdS0H-Q">https://mp.weixin.qq.com/s/Lw_l_AELo8RKiLzVdS0H-Q</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="section-19" data-heading-text="异常处理">异常处理</h2>
+<ul>
+<li>异常：Java分为Error和Exception，异常又分为运行时异常和检查性异常。抛出与捕获。
+这点和go是类似的，go也区分简单返回的错误error和抛出的恐慌panic，而 Rust 也是差不多这么设计。</li>
+</ul>
+<h2 id="section-20" data-heading-text="链式调用">链式调用</h2>
+<ul>
+<li>
+<p>链式调用：Rust和Java支持函数式链式编程，类似stream；Go不支持，要自己实现</p>
+</li>
+<li>
+<p>Rust 的迭代器和 Java 的 Stream API 确实很像，都支持链式调用和函数式编程风格。</p>
+</li>
+<li>
+<p>Go 的设计理念是追求简单直接，所以：</p>
+<ul>
+<li>没有内置的链式调用语法</li>
+<li>更倾向于使用显式的 for range 循环</li>
+<li>性能更可预测（没有懒加载特性）</li>
+</ul>
+</li>
+<li>
+<p>这反映了不同语言的设计理念：</p>
+<ul>
+<li>Rust/Java：提供丰富的抽象和函数式编程特性</li>
+<li>Go：保持简单，倾向于显式的命令式编程</li>
+</ul>
+</li>
+</ul>
+<h2 id="section-21" data-heading-text="其他">其他</h2>
+<ul>
+<li>枚举：Java和Rust支持，Go不支持；Rust可以支持同个枚举内包含不同类型</li>
+</ul>
+<h2 id="reference" data-heading-text="Reference">Reference</h2>
+<ul>
+<li><a href="https://mp.weixin.qq.com/s/UG-6UuqDiLX15dEZrGGrRA">Gopher的Rust第一课：Rust的依赖管理</a></li>
+</ul>
+<h2 id="section-23" data-heading-text="扩展阅读">扩展阅读</h2>
+<ul>
+<li><a href="https://mp.weixin.qq.com/s/cJrQJelrFHVzES2iUm76HQ">Project Loom能否撼动Go和Rust的地位？深入分析三种并发模型</a></li>
+</ul>
+<p>===</p>
+<h2 id="section-24" data-heading-text="其他扩展">其他扩展</h2>
+<h3 id="jpms-graalvm-java-class-level-dead-code-elimination" data-heading-text="从 JPMS 到 GraalVM：为什么 Java 很难做到真正的 Class-Level Dead Code Elimination">从 JPMS 到 GraalVM：为什么 Java 很难做到真正的 Class-Level Dead Code Elimination</h3>
+<ul>
+<li>JDK 9 的 JPMS 只能在模块级别裁剪运行时体积，无法做到 class-level 的未用代码消除，这并非模块系统能力不足，而是 Java 语言与 JVM 长期采用开放世界（open-world）运行模型，允许反射、SPI、动态类加载等行为，导致类的可达性无法在编译期可靠判定。</li>
+<li>GraalVM 在 native-image 模式下 默认会做 class-level 的 Dead Code Elimination ！</li>
+<li>GraalVM native-image 通过引入封闭世界（closed-world）假设和全程序分析，技术上具备 class-level dead code elimination 的能力，但这一能力在通用 Java 应用中会被大量动态特性显著削弱，实际效果高度依赖显式配置与框架配合。</li>
+<li>以 Spring 为代表的传统 Java 框架，由于高度依赖运行期反射和类路径扫描，原生运行模型与 native-image 天然不兼容；当前所谓的“兼容”是通过 AOT 编译将运行期行为前移到构建期、限制动态能力后实现的，实质上是一种新的、静态化的运行形态。</li>
+<li>相比之下，Go 从语言设计阶段即采用封闭世界与静态链接模型，并对反射能力进行严格约束，使编译器能够默认、安全地执行函数级乃至更细粒度的未用代码消除，这也是其可执行文件天然更小、构建模型更简单的根本原因。</li>
+</ul>
+<h3 id="spring-quarkus-micronaut" data-heading-text="**Spring / Quarkus / Micronaut —— 极简本质对比**"><strong>Spring / Quarkus / Micronaut —— 极简本质对比</strong></h3>
+<ul>
+<li>
+<p><strong>Spring</strong>
+运行期框架，动态性最强、生态最全、容错最高；代价是隐式行为多、可预测性较弱。适合复杂业务与快速交付。</p>
+</li>
+<li>
+<p><strong>Quarkus</strong>
+构建期框架，在 build 阶段冻结决策，运行期更轻更快；在灵活性与确定性之间做工程折中。适合云原生与规模化部署。</p>
+</li>
+<li>
+<p><strong>Micronaut</strong>
+编译期框架，几乎不依赖反射，行为在编译期已确定；运行模型最简单、最可预测，但约束最强。适合基础设施与性能敏感服务。</p>
+</li>
+</ul>
+<p><strong>一句话总结</strong>：</p>
+<blockquote>
+<p>Spring 重灵活，Quarkus 重构建期确定性，Micronaut 重编译期确定性。</p>
+</blockquote>
+<h3 id="java-native-image" data-heading-text="**Java Native Image 选择简要总结**"><strong>Java Native Image 选择简要总结</strong></h3>
+<ul>
+<li>
+<p><strong>首选：Quarkus</strong>
+构建期冻结行为，native-image 一等公民，生态与工具链最成熟，整体成本最低。</p>
+</li>
+<li>
+<p><strong>次选：Micronaut</strong>
+编译期生成代码、极少反射，native 友好但生态较小，适合轻量服务和工具。</p>
+</li>
+<li>
+<p><strong>不推荐首选：Spring Boot</strong>
+反射与动态机制重，native 成本高，仅适合已有 Spring 体系强依赖的场景。</p>
+</li>
+</ul>
+<p><strong>一句话结论：</strong></p>
+<blockquote>
+<p>用 native-image，优先选 <strong>Quarkus</strong>，其次 <strong>Micronaut</strong>，最后才考虑 <strong>Spring</strong>。</p>
+</blockquote>
+<h3 id="jpms-go-rust" data-heading-text="JPMS 与 Go / Rust 的本质差异">JPMS 与 Go / Rust 的本质差异</h3>
+<p><strong>核心结论</strong>
+JPMS 并未改变 Java 以“类名”为核心的链接模型，只是通过更严格的规则提前暴露问题；Go 与 Rust 从语言设计层面就避免了这些问题。</p>
+<p><strong>关键要点</strong></p>
+<ul>
+<li><strong>版本冲突</strong>：JPMS 不具备版本感知能力，多版本不兼容仍在运行期以 <code>NoSuchMethodError</code> 暴露；模块系统 ≠ 依赖管理系统。</li>
+<li><strong>Split Package</strong>：JPMS 完全禁止（无论是否 <code>exports</code>），只是编译期与运行期检测时机不同。</li>
+<li><strong>同名类选择</strong>：JPMS 不支持“指定模块加载同名类”，只能通过禁止歧义来兜底。</li>
+</ul>
+<p><strong>根因</strong></p>
+<ul>
+<li>Java 的历史前提：链接单元是 <strong>binary class name</strong>，编译与运行解耦，多版本从未进入语言语义 → 只能靠限制与 fail fast。</li>
+</ul>
+<p><strong>对比</strong></p>
+<ul>
+<li><strong>Go</strong>：命名空间是 import path，编译即链接，问题在语义层面被消解；同一 binary 内通常单版本（或靠路径区分）。</li>
+<li><strong>Rust</strong>：crate 是最小链接单元，Cargo 允许同一 crate 多版本共存，类型系统层面完全隔离，更严格也更彻底。</li>
+</ul>
+<p><strong>一句话总结</strong>
+Java（JPMS）在修补历史；Go 用路径规避问题；Rust 用类型系统根本解决。</p>
+
+      </div>
+<div class="article-actions" aria-label="Article actions">
+      <a class="share-link" href="https://twitter.com/intent/tweet?text=%E5%AF%B9Java%E3%80%81Go%E3%80%81Rust%E4%B9%8B%E9%97%B4%E7%9A%84%E7%AE%80%E5%8D%95%E5%AF%B9%E6%AF%94%E5%92%8C%E6%80%BB%E7%BB%93&amp;url=https%3A%2F%2Fkingson4wu.github.io%2Fzh%2Fposts%2F20241121-go%2F" target="_blank" rel="noopener noreferrer" aria-label="Share on X">
+        <span aria-hidden="true">X</span>
+        <span>Share</span>
+      </a>
+    </div>
+    </article>
+<aside class="article-toc" data-article-toc aria-label="目录">
+      <button class="article-toc-toggle" type="button" data-article-toc-toggle aria-expanded="false" aria-controls="article-toc-panel" aria-label="打开目录" data-open-label="打开目录" data-close-label="收起目录">
+        <svg aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M8 6h11"></path>
+          <path d="M8 12h11"></path>
+          <path d="M8 18h11"></path>
+          <path d="M4 6h.01"></path>
+          <path d="M4 12h.01"></path>
+          <path d="M4 18h.01"></path>
+        </svg>
+      </button>
+      <nav id="article-toc-panel" class="article-toc-panel" data-article-toc-panel aria-label="目录">
+        <div class="article-toc-heading">目录</div>
+        <ol class="article-toc-list">
+          <li class="article-toc-level-2"><a href="#section-1" data-article-toc-link>编程语言的GC问题</a></li>
+          <li class="article-toc-level-2"><a href="#section-2" data-article-toc-link>设计哲学</a></li>
+          <li class="article-toc-level-2"><a href="#section-3" data-article-toc-link>交叉编译</a></li>
+          <li class="article-toc-level-2"><a href="#section-4" data-article-toc-link>工具链</a></li>
+          <li class="article-toc-level-2"><a href="#section-5" data-article-toc-link>热加载</a></li>
+          <li class="article-toc-level-2"><a href="#section-6" data-article-toc-link>远程Debug</a></li>
+          <li class="article-toc-level-2"><a href="#section-7" data-article-toc-link>依赖管理 以及 冲突解决</a></li>
+          <li class="article-toc-level-3"><a href="#java" data-article-toc-link>Java</a></li>
+          <li class="article-toc-level-3"><a href="#section-9" data-article-toc-link>关于Java的类重复问题</a></li>
+          <li class="article-toc-level-3"><a href="#go-vs-rust" data-article-toc-link>Go VS Rust 库冲突</a></li>
+          <li class="article-toc-level-3"><a href="#section-11" data-article-toc-link>总结</a></li>
+          <li class="article-toc-level-2"><a href="#section-12" data-article-toc-link>封装私有性</a></li>
+          <li class="article-toc-level-2"><a href="#section-13" data-article-toc-link>并发和多线程</a></li>
+          <li class="article-toc-level-3"><a href="#section-14" data-article-toc-link>主线程结束进程是否停止</a></li>
+          <li class="article-toc-level-3"><a href="#section-15" data-article-toc-link>非主线程异常进程是否停止</a></li>
+          <li class="article-toc-level-2"><a href="#section-16" data-article-toc-link>面向对象编程</a></li>
+          <li class="article-toc-level-2"><a href="#section-17" data-article-toc-link>接口设计和多态</a></li>
+          <li class="article-toc-level-2"><a href="#section-18" data-article-toc-link>空值问题</a></li>
+          <li class="article-toc-level-2"><a href="#section-19" data-article-toc-link>异常处理</a></li>
+          <li class="article-toc-level-2"><a href="#section-20" data-article-toc-link>链式调用</a></li>
+          <li class="article-toc-level-2"><a href="#section-21" data-article-toc-link>其他</a></li>
+          <li class="article-toc-level-2"><a href="#reference" data-article-toc-link>Reference</a></li>
+          <li class="article-toc-level-2"><a href="#section-23" data-article-toc-link>扩展阅读</a></li>
+          <li class="article-toc-level-2"><a href="#section-24" data-article-toc-link>其他扩展</a></li>
+          <li class="article-toc-level-3"><a href="#jpms-graalvm-java-class-level-dead-code-elimination" data-article-toc-link>从 JPMS 到 GraalVM：为什么 Java 很难做到真正的 Class-Level Dead Code Elimination</a></li>
+          <li class="article-toc-level-3"><a href="#spring-quarkus-micronaut" data-article-toc-link>**Spring / Quarkus / Micronaut —— 极简本质对比**</a></li>
+          <li class="article-toc-level-3"><a href="#java-native-image" data-article-toc-link>**Java Native Image 选择简要总结**</a></li>
+          <li class="article-toc-level-3"><a href="#jpms-go-rust" data-article-toc-link>JPMS 与 Go / Rust 的本质差异</a></li>
+        </ol>
+      </nav>
+    </aside>
+    <script src="/scripts/article-toc.js" defer></script>
+    <nav class="article-nav" aria-label="Adjacent posts">
+      <a href="/zh/posts/20241025/"><span>Previous</span>《认知觉醒》-笔记</a>
+      <a href="/zh/posts/20241129/"><span>Next</span>AI已经如此强大了，帮我写完所有代码</a>
+    </nav>
+<section class="comments" aria-labelledby="comments-heading">
+      <h2 id="comments-heading">评论</h2>
+      <div
+        data-comments
+        data-comments-repo="Kingson4Wu/kingson4wu.github.io"
+        data-comments-issue-term="pathname"
+        data-comments-label="comment"
+      ></div>
+    </section>
+    <script src="/scripts/comments.js" defer></script>
+  </main>
+  <footer class="site-footer">
+    <p>&copy; 2026 拉巴力的纸皮箱</p>
+  </footer>
+  <button class="reading-return" type="button" data-reading-return aria-label="回到开头" title="回到开头">
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <path d="M12 19V5"></path>
+      <path d="m6 11 6-6 6 6"></path>
+    </svg>
+  </button>
+  <script src="/scripts/theme.js"></script>
+  <script src="/scripts/image-viewer.js"></script>
+  <script src="/scripts/reading-tools.js"></script>
+</body>
+</html>

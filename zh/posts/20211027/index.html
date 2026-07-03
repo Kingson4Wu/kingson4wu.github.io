@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>raft学习笔记 | 拉巴力的纸皮箱</title>
+  <meta name="description" content="Raft将共识问题分解三个子问题： Leader election 领导选举：有且仅有一个leader节点，如果leader宕机，通过选举机制选出新的leader； Log replication 日志复制：leader从客户端接收数据更新/删除请求，然后日志复制到follower节点，从而保证集群数据的一致性； Sa...">
+  <link rel="canonical" href="https://kingson4wu.github.io/zh/posts/20211027/">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="alternate" type="application/rss+xml" title="拉巴力的纸皮箱" href="/zh/feed.xml">
+  <link rel="alternate" type="text/markdown" href="/zh/posts/20211027/index.md">
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="/styles/main.css">
+  <script>
+    try {
+      var theme = localStorage.getItem('theme');
+      if (theme) document.documentElement.dataset.theme = theme;
+    } catch (_) {}
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="site-title" href="/zh/" aria-label="拉巴力的纸皮箱">
+      <span class="site-logo" aria-hidden="true">K</span>
+      <span>拉巴力的纸皮箱</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="/zh/posts/">文章</a>
+      <a href="/zh/notes/">笔记</a>
+      <a href="/zh/tags/">标签</a>
+      <a href="/zh/about/">关于</a>
+      <a href="/zh/search/">搜索</a>
+      <a href="/en/" lang="en">English</a>
+      <a class="feed-link" href="/zh/feed.xml" aria-label="订阅更新" title="订阅更新">
+        <svg class="feed-icon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M5 5.5A13.5 13.5 0 0 1 18.5 19"></path>
+          <path d="M5 11A8 8 0 0 1 13 19"></path>
+          <circle cx="6" cy="18" r="1.5"></circle>
+        </svg>
+      </a>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换明暗模式" title="切换明暗模式">
+        <svg class="theme-icon theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M21 14.2A8.5 8.5 0 0 1 9.8 3 7 7 0 1 0 21 14.2Z"></path>
+        </svg>
+        <svg class="theme-icon theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"></path>
+        </svg>
+      </button>
+    </nav>
+  </header>
+  <main class="site-main">
+    <article class="article">
+      <header class="article-header">
+        <h1>raft学习笔记</h1>
+        <time datetime="2021-10-27T02:42:07.000Z">2021年10月27日</time>
+<ul class="tag-list" aria-label="Tags">
+    <li><a href="/zh/tags/Distributed%20Systems/">Distributed Systems</a></li>
+  </ul>
+      </header>
+      <div class="prose">
+<ul>
+<li>
+<p>Raft将共识问题分解三个子问题：</p>
+<ol>
+<li>Leader election 领导选举：有且仅有一个leader节点，如果leader宕机，通过选举机制选出新的leader；</li>
+<li>Log replication 日志复制：leader从客户端接收数据更新/删除请求，然后日志复制到follower节点，从而保证集群数据的一致性；</li>
+<li>Safety 安全性：通过安全性原则来处理一些特殊case，保证Raft算法的完备性；</li>
+</ol>
+</li>
+<li>
+<p>所以，Raft算法核心流程可以归纳为：</p>
+<ul>
+<li>首先选出leader，leader节点负责接收外部的数据更新/删除请求；</li>
+<li>然后日志复制到其他follower节点，同时通过安全性的准则来保证整个日志复制的一致性；</li>
+<li>如果遇到leader故障，followers会重新发起选举出新的leader；</li>
+</ul>
+</li>
+<li>
+<p>Raft规定：只有拥有最新提交日志的follower节点才有资格成为leader节点。具体做法：candidate竞选投票时会携带最新提交日志，follower会用自己的日志和candidate做比较。</p>
+</li>
+<li>
+<p>因为日志提交需要超过半数的节点同意，所以针对日志同步落后的follower（还未同步完全部日志，导致落后于其他节点）在竞选leader的时候，肯定拿不到超过半数的票，也只有那些完成同步的才有可能获取超过半数的票成为leader。</p>
+</li>
+<li>
+<p>日志更新判断方式是比较日志项的term和index：</p>
+<ul>
+<li>如果TermId不同，选择TermId最大的；</li>
+<li>如果TermId相同，选择Index最大的；</li>
+</ul>
+</li>
+<li>
+<p>Raft对日志提交有额外安全机制：leader只能提交当前任期Term的日志，旧任期Term（以前的数据）只能通过当前任期Term的数据提交来间接完成提交。简单的说，日志提交有两个条件需要满足：</p>
+<ul>
+<li>当前任期；</li>
+<li>复制结点超过半数；</li>
+</ul>
+</li>
+<li>
+<p>Raft在日志项提交上增加了限制：只有当前任期且复制超过半数的日志才可以提交。</p>
+</li>
+</ul>
+<h2 id="reference" data-heading-text="Reference">Reference</h2>
+<ul>
+<li><a href="https://mp.weixin.qq.com/s/obnZm2Lhf_rKla2AxbrBlg">分布式一致性算法Raft</a></li>
+<li><a href="https://mp.weixin.qq.com/s/zMnqOCUVvRLQuJUwvM3QRA">Raft 一致性算法论文中文译文</a></li>
+</ul>
+
+      </div>
+<div class="article-actions" aria-label="Article actions">
+      <a class="share-link" href="https://twitter.com/intent/tweet?text=raft%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0&amp;url=https%3A%2F%2Fkingson4wu.github.io%2Fzh%2Fposts%2F20211027%2F" target="_blank" rel="noopener noreferrer" aria-label="Share on X">
+        <span aria-hidden="true">X</span>
+        <span>Share</span>
+      </a>
+    </div>
+    </article>
+
+    <nav class="article-nav" aria-label="Adjacent posts">
+      <a href="/zh/posts/20211012/"><span>Previous</span>CQRS笔记</a>
+      <a href="/zh/posts/20220114/"><span>Next</span>如何做数据库迁移</a>
+    </nav>
+<section class="comments" aria-labelledby="comments-heading">
+      <h2 id="comments-heading">评论</h2>
+      <div
+        data-comments
+        data-comments-repo="Kingson4Wu/kingson4wu.github.io"
+        data-comments-issue-term="pathname"
+        data-comments-label="comment"
+      ></div>
+    </section>
+    <script src="/scripts/comments.js" defer></script>
+  </main>
+  <footer class="site-footer">
+    <p>&copy; 2026 拉巴力的纸皮箱</p>
+  </footer>
+  <button class="reading-return" type="button" data-reading-return aria-label="回到开头" title="回到开头">
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <path d="M12 19V5"></path>
+      <path d="m6 11 6-6 6 6"></path>
+    </svg>
+  </button>
+  <script src="/scripts/theme.js"></script>
+  <script src="/scripts/image-viewer.js"></script>
+  <script src="/scripts/reading-tools.js"></script>
+</body>
+</html>

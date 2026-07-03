@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>标签: Database | 拉巴力的纸皮箱</title>
+  <meta name="description" content="包含此标签的内容。">
+  <link rel="canonical" href="https://kingson4wu.github.io/zh/tags/Database/">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="alternate" type="application/rss+xml" title="拉巴力的纸皮箱" href="/zh/feed.xml">
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="/styles/main.css">
+  <script>
+    try {
+      var theme = localStorage.getItem('theme');
+      if (theme) document.documentElement.dataset.theme = theme;
+    } catch (_) {}
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="site-title" href="/zh/" aria-label="拉巴力的纸皮箱">
+      <span class="site-logo" aria-hidden="true">K</span>
+      <span>拉巴力的纸皮箱</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="/zh/posts/">文章</a>
+      <a href="/zh/notes/">笔记</a>
+      <a href="/zh/tags/">标签</a>
+      <a href="/zh/about/">关于</a>
+      <a href="/zh/search/">搜索</a>
+      <a href="/en/" lang="en">English</a>
+      <a class="feed-link" href="/zh/feed.xml" aria-label="订阅更新" title="订阅更新">
+        <svg class="feed-icon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M5 5.5A13.5 13.5 0 0 1 18.5 19"></path>
+          <path d="M5 11A8 8 0 0 1 13 19"></path>
+          <circle cx="6" cy="18" r="1.5"></circle>
+        </svg>
+      </a>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换明暗模式" title="切换明暗模式">
+        <svg class="theme-icon theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M21 14.2A8.5 8.5 0 0 1 9.8 3 7 7 0 1 0 21 14.2Z"></path>
+        </svg>
+        <svg class="theme-icon theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"></path>
+        </svg>
+      </button>
+    </nav>
+  </header>
+  <main class="site-main">
+    <section class="page-heading">
+      <h1>标签: Database</h1>
+      <p>包含此标签的内容。</p>
+    </section>
+<ol class="post-list">
+    <li>
+      <div class="post-meta">
+        <time datetime="2025-12-19T11:58:45.000Z">2025年12月19日</time>
+        <span>Distributed Systems</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20251219/">云原生数据库环境下的资金一致性问题分析</a></h2>
+        <p>以下内容有ChatGPT和Claude.ai辅助生成 在云原生环境中使用数据库服务时,高可用与自动故障切换往往被视为“基础能力”。对大多数业务而言,这些能力已经足够可靠;但在资金类业务中,系统设计需要面对更严格的约束条件。 本文围绕云原生数据库在主从复制、自动切换场景下可能引入的数据一致性风险进行分析,重点讨论在无法完...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2023-07-30T08:27:34.000Z">2023年7月30日</time>
+        <span>Database</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20230730/">如何在大量数据中判断给定的是否在其中</a></h2>
+        <p>1、 Bloom Filter 缺点：只能增不能减，且有误判场景需要单独处理 可以使用当前进程级的Bloom Filter，也可以使用Redis的Bloom Filter 2、 文件存储 可以使用类似Java的MappedByteBuffer来保存数据 缺点：只能保存连续的一定范围的数字对应的值 Java文件读写与Ma...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2022-04-28T08:36:10.000Z">2022年4月28日</time>
+        <span>Database</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20220408/">elasticsearch学习记录</a></h2>
+        <p>基于ES 7.10下的简要总结 一、官方文档链接 文档主页：https://www.elastic.co/guide/en/elasticsearch/reference/7.10/index.html rest api: https://www.elastic.co/guide/en/elasticsearch/re...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2022-04-03T05:30:21.000Z">2022年4月3日</time>
+        <span>Database</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20220403-index/">index_merge导致死锁问题</a></h2>
+        <p>死锁日志 log2021-09-02T17:29:31.339235+08:00 10137065 [Note] InnoDB: Transactions deadlock detected, dumping detailed information. 2021-09-02T17:29:31.339268+08:00...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2022-01-14T03:26:02.000Z">2022年1月14日</time>
+        <span>Database</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20220114/">如何做数据库迁移</a></h2>
+        <p>先抛出以下问题： 把MHA-1集群的Database-C 迁到 MHA-2 集群中，有没有简单高效的方案? 方案1、在两个MHA集群，在建一套MHA3。MHA2的主作为MHA1的从？这样MH3切换的时候，应用服务就可以直接感知切到新库了； 方案2、先把C同步到2集群，然后做otter同步 方案1： 存在的问题： 中间再...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2020-10-11T03:27:51.000Z">2020年10月11日</time>
+        <span>Database</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20201011/">Redis笔记</a></h2>
+        <p>脑图 命令 info memory 可查看Redis使用了jemalloc Redis Config Get 命令 - 获取指定配置参数的值：https://www.redis.net.cn/order/3667.html cluster nodes Redis 客户端 https://redis.io/clients...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2020-10-03T15:10:18.000Z">2020年10月3日</time>
+        <span>Database</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20201003/">MySQL笔记</a></h2>
+        <p>思维导图 InnoDB 事务隔离级别 隔离级别 脏读 不可重复读 幻读 未提交读(RUC) NO NO NO 已提交读(RC) YES NO NO 可重复读(RR) YES YES NO 可串行化 YES YES YES InnoDB 锁类型 共享/排它锁(Shared and Exclusive Locks) 在In...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2020-08-31T13:39:33.000Z">2020年8月31日</time>
+        <span>Distributed Systems</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20200831-consul/">关于MHA_Consul_MySQL高可用方案的简单总结和思考</a></h2>
+        <p>概述 MHA + Consul + MySQL的高可用方案，网上已经有很多资料，这里只是做一下简要的总结和思考。文章部分文字摘自Reference中的链接。 直接先上一张图 图中的灾备架构适用于同城主备架构的业务，比如金钱业务； DB层是一主多从，主库至在其中一个机房，并在DB集群上搭建跨IDC的MHA；同样Consu...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2020-08-31T13:14:24.000Z">2020年8月31日</time>
+        <span>Architecture</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20200831/">使用Redis实现榜单</a></h2>
+        <p>一、前言 使用redis实现 基于直播间业务场景 不阐述详细实现细节 二、相关Redis数据结构和命令 Redis 集合(Set) Sismember 命令判断成员元素是否是集合的成员。 Redis 有序集合(sorted set) Zrevrank 命令返回有序集中成员的排名。其中有序集成员按分数值递减(从大到小)排...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2020-07-15T15:07:33.000Z">2020年7月15日</time>
+        <span>Database</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20200715/">canal使用总结</a></h2>
+        <p>前言 本文只讲自己在使用canal之后的一些总结，关于canal的基础用法和介绍，不在这里赘述。 原理 canal的原理是基于mysql binlog技术，所以这里一定需要开启mysql的binlog写入功能，建议配置binlog模式为row 原文：https://blog.csdn.net/liupeifeng351...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2020-07-10T14:24:44.000Z">2020年7月10日</time>
+        <span>Architecture</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20200710/">缓存策略简单总结</a></h2>
+        <p>缓存的三座大山 以下内容摘自：翻越缓存的三座大山 缓存一致性 缓存一致性是指业务在引入分布式缓存系统后，业务对数据的更新除了要更新存储以外还需要同时更新缓存，对两个系统进行数据更新就要先解决分布式系统中的隔离性和原子性难题。 缓存击穿 缓存击穿是指查询请求没有在缓存层命中而将查询透传到存储 DB 的问题，当大量的请求发...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2020-07-05T09:27:32.000Z">2020年7月5日</time>
+        <span>Architecture</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20200705/">RPC可以和事务绑定吗？</a></h2>
+        <p>在平常编码的时候，经常会看到很多人喜欢把一次RPC调用和数据库事务绑定在一起，RPC调用成功则提交事务，RPC调用失败或超时，则回滚事务。那么这样做是对的吗？ 业务场景描述 考虑以下一种业务场景：用户加入群聊需要花费200金币。 服务架构：服务A(群服务)，服务B(消费服务)，操作都是幂等的。 加群请求--------...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2020-03-29T04:42:38.000Z">2020年3月29日</time>
+        <span>Architecture</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20200329-2/">表结构变更是否需要处理历史月表？</a></h2>
+        <p>目前针对历史流水表，历史订单表，采用的以月为维度的方式建表，如以下表结构所示 sqlCREATE TABLE `t_order_202002` ( `order_id` varchar(128) NOT NULL COMMENT &amp;#x27;订单id&amp;#x27;, `coin` decimal(32,2) NOT NU...</p>
+      </div>
+    </li>
+  </ol>
+  </main>
+  <footer class="site-footer">
+    <p>&copy; 2026 拉巴力的纸皮箱</p>
+  </footer>
+  <button class="reading-return" type="button" data-reading-return aria-label="回到开头" title="回到开头">
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <path d="M12 19V5"></path>
+      <path d="m6 11 6-6 6 6"></path>
+    </svg>
+  </button>
+  <script src="/scripts/theme.js"></script>
+  <script src="/scripts/image-viewer.js"></script>
+  <script src="/scripts/reading-tools.js"></script>
+</body>
+</html>

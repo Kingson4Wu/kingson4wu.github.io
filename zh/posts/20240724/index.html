@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>谈谈接口调用中的序列化协议 | 拉巴力的纸皮箱</title>
+  <meta name="description" content="接口调用存在于内部服务之间，也存在于客户端和服务端之间 既然涉及接口调用，必然就涉及到数据的序列化 RPC 什么是 RPC？ RPC是“远程过程调用”(Remote Procedure Call)的缩写。这是一种计算机通信协议,允许程序调用另一个地址空间(通常是在其它计算机上)的子程序或过程,而程序员就像调用本地程序一...">
+  <link rel="canonical" href="https://kingson4wu.github.io/zh/posts/20240724/">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="alternate" type="application/rss+xml" title="拉巴力的纸皮箱" href="/zh/feed.xml">
+  <link rel="alternate" type="text/markdown" href="/zh/posts/20240724/index.md">
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="/styles/main.css">
+  <script>
+    try {
+      var theme = localStorage.getItem('theme');
+      if (theme) document.documentElement.dataset.theme = theme;
+    } catch (_) {}
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="site-title" href="/zh/" aria-label="拉巴力的纸皮箱">
+      <span class="site-logo" aria-hidden="true">K</span>
+      <span>拉巴力的纸皮箱</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="/zh/posts/">文章</a>
+      <a href="/zh/notes/">笔记</a>
+      <a href="/zh/tags/">标签</a>
+      <a href="/zh/about/">关于</a>
+      <a href="/zh/search/">搜索</a>
+      <a href="/en/" lang="en">English</a>
+      <a class="feed-link" href="/zh/feed.xml" aria-label="订阅更新" title="订阅更新">
+        <svg class="feed-icon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M5 5.5A13.5 13.5 0 0 1 18.5 19"></path>
+          <path d="M5 11A8 8 0 0 1 13 19"></path>
+          <circle cx="6" cy="18" r="1.5"></circle>
+        </svg>
+      </a>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换明暗模式" title="切换明暗模式">
+        <svg class="theme-icon theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M21 14.2A8.5 8.5 0 0 1 9.8 3 7 7 0 1 0 21 14.2Z"></path>
+        </svg>
+        <svg class="theme-icon theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"></path>
+        </svg>
+      </button>
+    </nav>
+  </header>
+  <main class="site-main">
+    <article class="article">
+      <header class="article-header">
+        <h1>谈谈接口调用中的序列化协议</h1>
+        <time datetime="2024-07-24T08:27:09.000Z">2024年7月24日</time>
+<ul class="tag-list" aria-label="Tags">
+    <li><a href="/zh/tags/Distributed%20Systems/">Distributed Systems</a></li>
+  </ul>
+      </header>
+      <div class="prose">
+<blockquote>
+<blockquote>
+<p>接口调用存在于内部服务之间，也存在于客户端和服务端之间
+既然涉及接口调用，必然就涉及到数据的序列化</p>
+</blockquote>
+</blockquote>
+<h2 id="rpc" data-heading-text="RPC">RPC</h2>
+<ul>
+<li>什么是 RPC？
+<ul>
+<li>RPC是“远程过程调用”(Remote Procedure Call)的缩写。这是一种计算机通信协议,允许程序调用另一个地址空间(通常是在其它计算机上)的子程序或过程,而程序员就像调用本地程序一样,无需额外地为这个交互作用编程。</li>
+</ul>
+</li>
+<li>其实 RPC 不仅可以存在于内部服务之间，前端和服务端之间的交互也可以用 RPC</li>
+</ul>
+<h2 id="section-2" data-heading-text="序列化">序列化</h2>
+<ul>
+<li>一般情况下，我们习惯于使用 idl 文件定义数据格式（比如 thrift 或 Protocol Buffer），然后使用 RPC（比如 gPRC 等）用于服务之间的调用；而使用 JSON 和 HTTP 作为前端和服务端的交互方式</li>
+<li>这里提一点，回看 RPC 的定义，即使使用 JSON 作为序列化协议，也可以使用 RPC 作为接口调用，具体要看 RPC 框架的实现。</li>
+</ul>
+<h2 id="rpc-2" data-heading-text="使用 RPC 和 IDL文件 的好处">使用 RPC 和 IDL文件 的好处</h2>
+<ul>
+<li>本文只关注序列化方面相关的好处</li>
+<li>举个例子，接口调用简单使用 HTTP + JSON；如果后续加字段，而调用方使用不规范，复用接口调用的返回对象用于业务的其他逻辑，而字段名刚好相同，则会冲突从而可能导致逻辑异常，这种低级错误无论是客户端还是服务端都经常发生</li>
+<li>理论上每个接口都应该有单独的接口响应类，这样才不会在后续加字段时产生语义冲突,虽然写起来麻烦，但这是最规范最严谨的做法，所以自动化代码工具很重要</li>
+<li>其中一种解决方式：使用 IDL 文件定义数据格式，并且通过 RPC 框架限制调用的返回对象不被随意设置，从而解决这种低级又容易忽视的错误</li>
+<li>对 RPC 框架的要求：
+<ol>
+<li>限制返回对象不被修改</li>
+<li>排查工具完善，支持将数据转成可阅读格式（比如使用Protobuf二进制传输，将很难排查）</li>
+<li>适配多种语言的客户端 sdk（包括客户端）</li>
+</ol>
+</li>
+</ul>
+
+      </div>
+<div class="article-actions" aria-label="Article actions">
+      <a class="share-link" href="https://twitter.com/intent/tweet?text=%E8%B0%88%E8%B0%88%E6%8E%A5%E5%8F%A3%E8%B0%83%E7%94%A8%E4%B8%AD%E7%9A%84%E5%BA%8F%E5%88%97%E5%8C%96%E5%8D%8F%E8%AE%AE&amp;url=https%3A%2F%2Fkingson4wu.github.io%2Fzh%2Fposts%2F20240724%2F" target="_blank" rel="noopener noreferrer" aria-label="Share on X">
+        <span aria-hidden="true">X</span>
+        <span>Share</span>
+      </a>
+    </div>
+    </article>
+<aside class="article-toc" data-article-toc aria-label="目录">
+      <button class="article-toc-toggle" type="button" data-article-toc-toggle aria-expanded="false" aria-controls="article-toc-panel" aria-label="打开目录" data-open-label="打开目录" data-close-label="收起目录">
+        <svg aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M8 6h11"></path>
+          <path d="M8 12h11"></path>
+          <path d="M8 18h11"></path>
+          <path d="M4 6h.01"></path>
+          <path d="M4 12h.01"></path>
+          <path d="M4 18h.01"></path>
+        </svg>
+      </button>
+      <nav id="article-toc-panel" class="article-toc-panel" data-article-toc-panel aria-label="目录">
+        <div class="article-toc-heading">目录</div>
+        <ol class="article-toc-list">
+          <li class="article-toc-level-2"><a href="#rpc" data-article-toc-link>RPC</a></li>
+          <li class="article-toc-level-2"><a href="#section-2" data-article-toc-link>序列化</a></li>
+          <li class="article-toc-level-2"><a href="#rpc-2" data-article-toc-link>使用 RPC 和 IDL文件 的好处</a></li>
+        </ol>
+      </nav>
+    </aside>
+    <script src="/scripts/article-toc.js" defer></script>
+    <nav class="article-nav" aria-label="Adjacent posts">
+      <a href="/zh/posts/20240718/"><span>Previous</span>高效会议的重要性</a>
+      <a href="/zh/posts/20241022/"><span>Next</span>简单记录我在几家公司的经历</a>
+    </nav>
+<section class="comments" aria-labelledby="comments-heading">
+      <h2 id="comments-heading">评论</h2>
+      <div
+        data-comments
+        data-comments-repo="Kingson4Wu/kingson4wu.github.io"
+        data-comments-issue-term="pathname"
+        data-comments-label="comment"
+      ></div>
+    </section>
+    <script src="/scripts/comments.js" defer></script>
+  </main>
+  <footer class="site-footer">
+    <p>&copy; 2026 拉巴力的纸皮箱</p>
+  </footer>
+  <button class="reading-return" type="button" data-reading-return aria-label="回到开头" title="回到开头">
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <path d="M12 19V5"></path>
+      <path d="m6 11 6-6 6 6"></path>
+    </svg>
+  </button>
+  <script src="/scripts/theme.js"></script>
+  <script src="/scripts/image-viewer.js"></script>
+  <script src="/scripts/reading-tools.js"></script>
+</body>
+</html>

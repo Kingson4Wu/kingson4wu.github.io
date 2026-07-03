@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>外网请求如何保证幂等 | 拉巴力的纸皮箱</title>
+  <meta name="description" content="常见的外网请求，通常来自网页或app。一个不幂等的接口，可能会导致用户只点击一次，却产生多次点击的效果。 如果用户的请求只是修改昵称，那么基本没影响 但如果用户的请求是扣费，比如送礼，那就会产生多扣费的资金问题。 问题的原因 在互联网上，无论是内网还是外网，网络经常会有不稳定的情况。为应对这些网络问题，通常会有各种重试...">
+  <link rel="canonical" href="https://kingson4wu.github.io/zh/posts/20200708/">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="alternate" type="application/rss+xml" title="拉巴力的纸皮箱" href="/zh/feed.xml">
+  <link rel="alternate" type="text/markdown" href="/zh/posts/20200708/index.md">
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="/styles/main.css">
+  <script>
+    try {
+      var theme = localStorage.getItem('theme');
+      if (theme) document.documentElement.dataset.theme = theme;
+    } catch (_) {}
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="site-title" href="/zh/" aria-label="拉巴力的纸皮箱">
+      <span class="site-logo" aria-hidden="true">K</span>
+      <span>拉巴力的纸皮箱</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="/zh/posts/">文章</a>
+      <a href="/zh/notes/">笔记</a>
+      <a href="/zh/tags/">标签</a>
+      <a href="/zh/about/">关于</a>
+      <a href="/zh/search/">搜索</a>
+      <a href="/en/" lang="en">English</a>
+      <a class="feed-link" href="/zh/feed.xml" aria-label="订阅更新" title="订阅更新">
+        <svg class="feed-icon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M5 5.5A13.5 13.5 0 0 1 18.5 19"></path>
+          <path d="M5 11A8 8 0 0 1 13 19"></path>
+          <circle cx="6" cy="18" r="1.5"></circle>
+        </svg>
+      </a>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换明暗模式" title="切换明暗模式">
+        <svg class="theme-icon theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M21 14.2A8.5 8.5 0 0 1 9.8 3 7 7 0 1 0 21 14.2Z"></path>
+        </svg>
+        <svg class="theme-icon theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"></path>
+        </svg>
+      </button>
+    </nav>
+  </header>
+  <main class="site-main">
+    <article class="article">
+      <header class="article-header">
+        <h1>外网请求如何保证幂等</h1>
+        <time datetime="2020-07-07T16:24:29.000Z">2020年7月7日</time>
+<ul class="tag-list" aria-label="Tags">
+    <li><a href="/zh/tags/Architecture/">Architecture</a></li>
+  </ul>
+      </header>
+      <div class="prose">
+<p>常见的外网请求，通常来自网页或app。一个不幂等的接口，可能会导致用户只点击一次，却产生多次点击的效果。</p>
+<ol>
+<li>如果用户的请求只是修改昵称，那么基本没影响</li>
+<li>但如果用户的请求是扣费，比如送礼，那就会产生多扣费的资金问题。</li>
+</ol>
+<h3 id="section-1" data-heading-text="问题的原因">问题的原因</h3>
+<p>在互联网上，无论是内网还是外网，网络经常会有不稳定的情况。为应对这些网络问题，通常会有各种重试策略。</p>
+<ol>
+<li>内网不稳定的情况，通常会在代理上(如nginx)配置一些超时重试，或50x重试策略</li>
+<li>外网不稳定的情况，客户端会在超时时进行重试或切域名重试等</li>
+</ol>
+<p>这些重试策略，导致了用户端只发出一次请求，实际服务端收到多次请求的情况。</p>
+<p>总结：“重试”是产生问题的源头</p>
+<h3 id="section-2" data-heading-text="解决问题的关键">解决问题的关键</h3>
+<p>解决问题的关键其实很简单，就是要让服务端能识别接收到的“多个”请求是否是“同个”请求，从而确保业务只执行一次。</p>
+<h4 id="section-3" data-heading-text="如何标识请求的唯一性">如何标识请求的唯一性</h4>
+<p>本质上是请求的参数中，包含由一个或多个参数组合而成的，唯一且不变的标识。</p>
+<ol>
+<li>像修改用户昵称的请求，业务本身就幂等，因为用户id是唯一且不变的</li>
+<li>像用户的扣费请求，那么通常的做法是使用唯一的订单号，以及相应的唯一ID生成策略</li>
+</ol>
+<h4 id="section-4" data-heading-text="唯一ID算法需要考虑哪些">唯一ID算法需要考虑哪些</h4>
+<ol>
+<li>有序
+<ul>
+<li>唯一ID作为数据的索引，保持有序有助于数据库性能提升</li>
+</ul>
+</li>
+<li>数据库类型
+<ul>
+<li>以MySQL为例，选择bigint(20)还是varchar，前者只有64位，像“2017072809364399365840049582”这种订单号只能用varchar存储</li>
+</ul>
+</li>
+<li>基因
+<ul>
+<li>分库需求，详见：<a href="https://kingson4wu.github.io/2020/07/07/20200707-%E5%94%AF%E4%B8%80ID%E7%9A%84%E5%9F%BA%E5%9B%A0/">唯一ID的基因</a></li>
+</ul>
+</li>
+<li>性能</li>
+</ol>
+<h4 id="section-5" data-heading-text="前端唯一ID生成方案">前端唯一ID生成方案</h4>
+<ol>
+<li>使用UUID (缺点：无序)</li>
+<li>通过后端接口获取唯一ID(缺点：多一次外网的网络请求)</li>
+<li>按一定的业务规则生成，如：timestamp+ 用户ID（10-11位）+ 随机3位数字（或递增）(优点：有序且基本保证唯一)</li>
+</ol>
+<h4 id="section-6" data-heading-text="后端唯一ID生成方案">后端唯一ID生成方案</h4>
+<ol>
+<li>使用snowflake算法实现的唯一ID服务</li>
+<li>其他业界方案</li>
+</ol>
+<h4 id="section-7" data-heading-text="解决方案">解决方案</h4>
+<ol>
+<li>前端唯一ID使用方案3
+<ul>
+<li>后端服务对前端生成的ID进行规则校验，防止恶意伪造不规范的唯一ID</li>
+</ul>
+</li>
+<li>后端唯一ID</li>
+<li>直接使用前端传入的唯一ID</li>
+<li>从唯一ID服务获取(和前端唯一ID进行映射)</li>
+</ol>
+<h3 id="section-8" data-heading-text="扩展">扩展</h3>
+<h4 id="section-9" data-heading-text="不同业务唯一ID冲突问题">不同业务唯一ID冲突问题</h4>
+<ul>
+<li>若后端作为一个基础服务，对接上层业务，每个业务使用的唯一ID规则不一样。那么如何避免业务之间唯一ID冲突？
+<ol>
+<li>使用业务ID＋业务唯一ID进行订单唯一性区分</li>
+<li>统一唯一ID的生成规则(统一从基础服务获取或由该服务提供订单ID申请接口)</li>
+</ol>
+</li>
+</ul>
+<h4 id="section-10" data-heading-text="跨机房的服务幂等问题">跨机房的服务幂等问题</h4>
+<ul>
+<li>若服务部署多个机房（通常每个机房有对应的数据库），如何保证幂等，因为外网请求重试，不一定会到达同一个机房。
+<ol>
+<li>把用户按机房分区</li>
+<li>不考虑跨机房幂等问题(主备架构下同个请求落在不同机房概率不高，收益低)</li>
+</ol>
+</li>
+</ul>
+
+      </div>
+<div class="article-actions" aria-label="Article actions">
+      <a class="share-link" href="https://twitter.com/intent/tweet?text=%E5%A4%96%E7%BD%91%E8%AF%B7%E6%B1%82%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E5%B9%82%E7%AD%89&amp;url=https%3A%2F%2Fkingson4wu.github.io%2Fzh%2Fposts%2F20200708%2F" target="_blank" rel="noopener noreferrer" aria-label="Share on X">
+        <span aria-hidden="true">X</span>
+        <span>Share</span>
+      </a>
+    </div>
+    </article>
+<aside class="article-toc" data-article-toc aria-label="目录">
+      <button class="article-toc-toggle" type="button" data-article-toc-toggle aria-expanded="false" aria-controls="article-toc-panel" aria-label="打开目录" data-open-label="打开目录" data-close-label="收起目录">
+        <svg aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M8 6h11"></path>
+          <path d="M8 12h11"></path>
+          <path d="M8 18h11"></path>
+          <path d="M4 6h.01"></path>
+          <path d="M4 12h.01"></path>
+          <path d="M4 18h.01"></path>
+        </svg>
+      </button>
+      <nav id="article-toc-panel" class="article-toc-panel" data-article-toc-panel aria-label="目录">
+        <div class="article-toc-heading">目录</div>
+        <ol class="article-toc-list">
+          <li class="article-toc-level-3"><a href="#section-1" data-article-toc-link>问题的原因</a></li>
+          <li class="article-toc-level-3"><a href="#section-2" data-article-toc-link>解决问题的关键</a></li>
+          <li class="article-toc-level-3"><a href="#section-8" data-article-toc-link>扩展</a></li>
+        </ol>
+      </nav>
+    </aside>
+    <script src="/scripts/article-toc.js" defer></script>
+    <nav class="article-nav" aria-label="Adjacent posts">
+      <a href="/zh/posts/20200707/"><span>Previous</span>唯一ID的基因</a>
+      <a href="/zh/posts/20200708-2/"><span>Next</span>程序异常时能返回50x吗？</a>
+    </nav>
+<section class="comments" aria-labelledby="comments-heading">
+      <h2 id="comments-heading">评论</h2>
+      <div
+        data-comments
+        data-comments-repo="Kingson4Wu/kingson4wu.github.io"
+        data-comments-issue-term="pathname"
+        data-comments-label="comment"
+      ></div>
+    </section>
+    <script src="/scripts/comments.js" defer></script>
+  </main>
+  <footer class="site-footer">
+    <p>&copy; 2026 拉巴力的纸皮箱</p>
+  </footer>
+  <button class="reading-return" type="button" data-reading-return aria-label="回到开头" title="回到开头">
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <path d="M12 19V5"></path>
+      <path d="m6 11 6-6 6 6"></path>
+    </svg>
+  </button>
+  <script src="/scripts/theme.js"></script>
+  <script src="/scripts/image-viewer.js"></script>
+  <script src="/scripts/reading-tools.js"></script>
+</body>
+</html>

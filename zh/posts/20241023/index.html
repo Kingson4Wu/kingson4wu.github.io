@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>金钱业务数据库事务相关要点记录 | 拉巴力的纸皮箱</title>
+  <meta name="description" content="表结构 sqlCREATE TABLE `user_balance` ( `user_id` varchar(128) NOT NULL DEFAULT &amp;#x27;&amp;#x27; COMMENT &amp;#x27;用户ID&amp;#x27;, `coin` bigint(20) unsigned NOT NULL DEFAULT...">
+  <link rel="canonical" href="https://kingson4wu.github.io/zh/posts/20241023/">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="alternate" type="application/rss+xml" title="拉巴力的纸皮箱" href="/zh/feed.xml">
+  <link rel="alternate" type="text/markdown" href="/zh/posts/20241023/index.md">
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="/styles/main.css">
+  <script>
+    try {
+      var theme = localStorage.getItem('theme');
+      if (theme) document.documentElement.dataset.theme = theme;
+    } catch (_) {}
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="site-title" href="/zh/" aria-label="拉巴力的纸皮箱">
+      <span class="site-logo" aria-hidden="true">K</span>
+      <span>拉巴力的纸皮箱</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="/zh/posts/">文章</a>
+      <a href="/zh/notes/">笔记</a>
+      <a href="/zh/tags/">标签</a>
+      <a href="/zh/about/">关于</a>
+      <a href="/zh/search/">搜索</a>
+      <a href="/en/" lang="en">English</a>
+      <a class="feed-link" href="/zh/feed.xml" aria-label="订阅更新" title="订阅更新">
+        <svg class="feed-icon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M5 5.5A13.5 13.5 0 0 1 18.5 19"></path>
+          <path d="M5 11A8 8 0 0 1 13 19"></path>
+          <circle cx="6" cy="18" r="1.5"></circle>
+        </svg>
+      </a>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换明暗模式" title="切换明暗模式">
+        <svg class="theme-icon theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M21 14.2A8.5 8.5 0 0 1 9.8 3 7 7 0 1 0 21 14.2Z"></path>
+        </svg>
+        <svg class="theme-icon theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"></path>
+        </svg>
+      </button>
+    </nav>
+  </header>
+  <main class="site-main">
+    <article class="article">
+      <header class="article-header">
+        <h1>金钱业务数据库事务相关要点记录</h1>
+        <time datetime="2024-10-23T07:59:48.000Z">2024年10月23日</time>
+<ul class="tag-list" aria-label="Tags">
+    <li><a href="/zh/tags/Finance/">Finance</a></li>
+  </ul>
+      </header>
+      <div class="prose">
+<h2 id="section-1" data-heading-text="表结构">表结构</h2>
+<div class="code-block" data-language="sql"><div class="code-header"><span class="code-language">sql</span></div><pre><code class="hljs language-sql"><span class="hljs-keyword">CREATE TABLE</span> `user_balance` (
+`user_id` <span class="hljs-type">varchar</span>(<span class="hljs-number">128</span>) <span class="hljs-keyword">NOT NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-string">&#x27;&#x27;</span> COMMENT <span class="hljs-string">&#x27;用户ID&#x27;</span>,
+`coin` <span class="hljs-type">bigint</span>(<span class="hljs-number">20</span>) unsigned <span class="hljs-keyword">NOT NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-string">&#x27;0&#x27;</span> COMMENT <span class="hljs-string">&#x27;余额&#x27;</span>,
+`create_time` datetime <span class="hljs-keyword">DEFAULT</span> <span class="hljs-keyword">NULL</span> COMMENT <span class="hljs-string">&#x27;创建时间&#x27;</span>,
+`update_time` datetime <span class="hljs-keyword">DEFAULT</span> <span class="hljs-keyword">NULL</span> COMMENT <span class="hljs-string">&#x27;更新时间&#x27;</span>,
+<span class="hljs-keyword">PRIMARY KEY</span> (`user_id`),
+KEY `idx_updatetime` (`update_time`)
+) ENGINE<span class="hljs-operator">=</span>InnoDB <span class="hljs-keyword">DEFAULT</span> CHARSET<span class="hljs-operator">=</span>utf8mb4 COMMENT<span class="hljs-operator">=</span><span class="hljs-string">&#x27;账户余额表&#x27;</span>;
+
+
+<span class="hljs-keyword">CREATE TABLE</span> `user_balance_log` (
+`log_id` <span class="hljs-type">bigint</span>(<span class="hljs-number">20</span>) unsigned <span class="hljs-keyword">NOT NULL</span> AUTO_INCREMENT COMMENT <span class="hljs-string">&#x27;流水id&#x27;</span>,
+`order_id` <span class="hljs-type">varchar</span>(<span class="hljs-number">128</span>) <span class="hljs-keyword">NOT NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-string">&#x27;&#x27;</span> COMMENT <span class="hljs-string">&#x27;业务订单ID&#x27;</span>,
+`user_id` <span class="hljs-type">varchar</span>(<span class="hljs-number">128</span>) <span class="hljs-keyword">NOT NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-string">&#x27;&#x27;</span> COMMENT <span class="hljs-string">&#x27;用户ID&#x27;</span>,
+`type` tinyint(<span class="hljs-number">4</span>) <span class="hljs-keyword">NOT NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-string">&#x27;0&#x27;</span> COMMENT <span class="hljs-string">&#x27;1：加，2：减&#x27;</span>,
+`coin` <span class="hljs-type">bigint</span>(<span class="hljs-number">20</span>) <span class="hljs-keyword">NOT NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-string">&#x27;0&#x27;</span> COMMENT <span class="hljs-string">&#x27;变更金额&#x27;</span>,
+`coin_after` <span class="hljs-type">bigint</span>(<span class="hljs-number">20</span>) <span class="hljs-keyword">NOT NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-string">&#x27;0&#x27;</span> COMMENT <span class="hljs-string">&#x27;变更后的金额&#x27;</span>,
+`create_time` datetime <span class="hljs-keyword">DEFAULT</span> <span class="hljs-keyword">NULL</span> COMMENT <span class="hljs-string">&#x27;创建时间&#x27;</span>,
+<span class="hljs-keyword">PRIMARY KEY</span> (`log_id`),
+KEY `idx_createtime` (`create_time`)
+) ENGINE<span class="hljs-operator">=</span>InnoDB <span class="hljs-keyword">DEFAULT</span> CHARSET<span class="hljs-operator">=</span>utf8mb4 COMMENT<span class="hljs-operator">=</span><span class="hljs-string">&#x27;账户余额表流水表&#x27;</span>;
+
+<span class="hljs-keyword">INSERT INTO</span> `user_balance`(`user_id`, `coin`, `create_time`, `update_time`) <span class="hljs-keyword">VALUES</span> (<span class="hljs-string">&#x27;kxw&#x27;</span>, <span class="hljs-number">20000000</span>, <span class="hljs-string">&#x27;2024-10-23 00:00:00&#x27;</span>, <span class="hljs-string">&#x27;2024-10-23 00:00:00&#x27;</span>);
+
+<span class="hljs-keyword">UPDATE</span> `user_balance` <span class="hljs-keyword">SET</span> `coin`<span class="hljs-operator">=</span> `coin` <span class="hljs-operator">-</span> <span class="hljs-number">1000</span> <span class="hljs-keyword">WHERE</span> `user_id` <span class="hljs-operator">=</span> <span class="hljs-string">&#x27;kxw&#x27;</span> <span class="hljs-keyword">AND</span> `coin` <span class="hljs-operator">&gt;=</span> <span class="hljs-number">1000</span>;
+
+</code></pre></div>
+<h2 id="section-2" data-heading-text="操作用户余额时注意">操作用户余额时注意</h2>
+<ol>
+<li>可重复读（记录扣费后余额快照）(select <code>coin</code> 后记录到user_balance_log表的<code>coin_after</code>)</li>
+<li>乐观锁（扣费冲突）（set <code>coin</code> - 1000 where <code>coin</code> &gt;= 1000）</li>
+<li>业务幂等（不同业务使用相应的订单表）</li>
+<li>事务（用户余额表<code>user_balance</code>、日志流水表<code>user_balance_log</code>、业务订单表绑定）</li>
+<li>canal 监听 binlog 识别业务异常 (对比 binlog监听的<code>user_balance</code>表<code>coin</code>变化量 和 <code>user_balance_log</code>的 <code>coin</code>记录总量 是否一致)</li>
+</ol>
+<h2 id="after" data-heading-text="流水表只需要记录coin_after">流水表只需要记录coin_after</h2>
+<h3 id="section-4" data-heading-text="事务过程">事务过程</h3>
+<table>
+<thead>
+<tr>
+<th>事务1</th>
+<th>事务2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BEGIN;</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>BEGIN;</td>
+</tr>
+<tr>
+<td>SELECT * FROM <code>user_balance</code> WHERE <code>user_id</code> = ‘kxw’; (coin=20000000)</td>
+<td></td>
+</tr>
+<tr>
+<td>UPDATE <code>user_balance</code> SET <code>coin</code>= <code>coin</code> - 1000 WHERE <code>user_id</code> = ‘kxw’ AND <code>coin</code> &gt;= 1000;</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>SELECT * FROM <code>user_balance</code> WHERE <code>user_id</code> = ‘kxw’; (coin=20000000)</td>
+</tr>
+<tr>
+<td></td>
+<td>UPDATE <code>user_balance</code> SET <code>coin</code>= <code>coin</code> - 1000 WHERE <code>user_id</code> = ‘kxw’ AND <code>coin</code> &gt;= 1000;</td>
+</tr>
+<tr>
+<td>SELECT * FROM <code>user_balance</code> WHERE <code>user_id</code> = ‘kxw’; (coin=19999000)</td>
+<td></td>
+</tr>
+<tr>
+<td>COMMIT;</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>SELECT * FROM <code>user_balance</code> WHERE <code>user_id</code> = ‘kxw’; (coin=19998000)</td>
+</tr>
+<tr>
+<td></td>
+<td>COMMIT;</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>流水表只需要记录<code>coin_after</code>（变更后的余额）即可，因为变更前的余额，可能因为并发导致不准确，除非开启事务后，使用<code>select for update</code>来查询，而不是用普通的快照读</li>
+</ul>
+
+      </div>
+<div class="article-actions" aria-label="Article actions">
+      <a class="share-link" href="https://twitter.com/intent/tweet?text=%E9%87%91%E9%92%B1%E4%B8%9A%E5%8A%A1%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1%E7%9B%B8%E5%85%B3%E8%A6%81%E7%82%B9%E8%AE%B0%E5%BD%95&amp;url=https%3A%2F%2Fkingson4wu.github.io%2Fzh%2Fposts%2F20241023%2F" target="_blank" rel="noopener noreferrer" aria-label="Share on X">
+        <span aria-hidden="true">X</span>
+        <span>Share</span>
+      </a>
+    </div>
+    </article>
+<aside class="article-toc" data-article-toc aria-label="目录">
+      <button class="article-toc-toggle" type="button" data-article-toc-toggle aria-expanded="false" aria-controls="article-toc-panel" aria-label="打开目录" data-open-label="打开目录" data-close-label="收起目录">
+        <svg aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M8 6h11"></path>
+          <path d="M8 12h11"></path>
+          <path d="M8 18h11"></path>
+          <path d="M4 6h.01"></path>
+          <path d="M4 12h.01"></path>
+          <path d="M4 18h.01"></path>
+        </svg>
+      </button>
+      <nav id="article-toc-panel" class="article-toc-panel" data-article-toc-panel aria-label="目录">
+        <div class="article-toc-heading">目录</div>
+        <ol class="article-toc-list">
+          <li class="article-toc-level-2"><a href="#section-1" data-article-toc-link>表结构</a></li>
+          <li class="article-toc-level-2"><a href="#section-2" data-article-toc-link>操作用户余额时注意</a></li>
+          <li class="article-toc-level-2"><a href="#after" data-article-toc-link>流水表只需要记录coin_after</a></li>
+          <li class="article-toc-level-3"><a href="#section-4" data-article-toc-link>事务过程</a></li>
+        </ol>
+      </nav>
+    </aside>
+    <script src="/scripts/article-toc.js" defer></script>
+    <nav class="article-nav" aria-label="Adjacent posts">
+      <a href="/zh/posts/20241022/"><span>Previous</span>简单记录我在几家公司的经历</a>
+      <a href="/zh/posts/20241025/"><span>Next</span>《认知觉醒》-笔记</a>
+    </nav>
+<section class="comments" aria-labelledby="comments-heading">
+      <h2 id="comments-heading">评论</h2>
+      <div
+        data-comments
+        data-comments-repo="Kingson4Wu/kingson4wu.github.io"
+        data-comments-issue-term="pathname"
+        data-comments-label="comment"
+      ></div>
+    </section>
+    <script src="/scripts/comments.js" defer></script>
+  </main>
+  <footer class="site-footer">
+    <p>&copy; 2026 拉巴力的纸皮箱</p>
+  </footer>
+  <button class="reading-return" type="button" data-reading-return aria-label="回到开头" title="回到开头">
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <path d="M12 19V5"></path>
+      <path d="m6 11 6-6 6 6"></path>
+    </svg>
+  </button>
+  <script src="/scripts/theme.js"></script>
+  <script src="/scripts/image-viewer.js"></script>
+  <script src="/scripts/reading-tools.js"></script>
+</body>
+</html>

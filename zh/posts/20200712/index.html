@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>使用回调机制提高接口安全性 | 拉巴力的纸皮箱</title>
+  <meta name="description" content="前言 接口回调在平常的业务开发中并不罕见。做过渠道推广业务，对接过广告平台接口的同学应该比较熟悉。 在业务的作用主要是两个 异步通知 业务查询 本文主要讲的第二种，并通过一个业务例子来展开描述 业务描述 有以下业务场景，用户通过充值加金币： 充值请求----------&gt; 服务A（充值服务） [1.验证用户已经支付成功...">
+  <link rel="canonical" href="https://kingson4wu.github.io/zh/posts/20200712/">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="alternate" type="application/rss+xml" title="拉巴力的纸皮箱" href="/zh/feed.xml">
+  <link rel="alternate" type="text/markdown" href="/zh/posts/20200712/index.md">
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="/styles/main.css">
+  <script>
+    try {
+      var theme = localStorage.getItem('theme');
+      if (theme) document.documentElement.dataset.theme = theme;
+    } catch (_) {}
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="site-title" href="/zh/" aria-label="拉巴力的纸皮箱">
+      <span class="site-logo" aria-hidden="true">K</span>
+      <span>拉巴力的纸皮箱</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="/zh/posts/">文章</a>
+      <a href="/zh/notes/">笔记</a>
+      <a href="/zh/tags/">标签</a>
+      <a href="/zh/about/">关于</a>
+      <a href="/zh/search/">搜索</a>
+      <a href="/en/" lang="en">English</a>
+      <a class="feed-link" href="/zh/feed.xml" aria-label="订阅更新" title="订阅更新">
+        <svg class="feed-icon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M5 5.5A13.5 13.5 0 0 1 18.5 19"></path>
+          <path d="M5 11A8 8 0 0 1 13 19"></path>
+          <circle cx="6" cy="18" r="1.5"></circle>
+        </svg>
+      </a>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换明暗模式" title="切换明暗模式">
+        <svg class="theme-icon theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M21 14.2A8.5 8.5 0 0 1 9.8 3 7 7 0 1 0 21 14.2Z"></path>
+        </svg>
+        <svg class="theme-icon theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"></path>
+        </svg>
+      </button>
+    </nav>
+  </header>
+  <main class="site-main">
+    <article class="article">
+      <header class="article-header">
+        <h1>使用回调机制提高接口安全性</h1>
+        <time datetime="2020-07-12T15:29:36.000Z">2020年7月12日</time>
+<ul class="tag-list" aria-label="Tags">
+    <li><a href="/zh/tags/Security/">Security</a></li>
+  </ul>
+      </header>
+      <div class="prose">
+<h3 id="section-1" data-heading-text="前言">前言</h3>
+<ul>
+<li>接口回调在平常的业务开发中并不罕见。做过渠道推广业务，对接过广告平台接口的同学应该比较熟悉。</li>
+<li>在业务的作用主要是两个
+<ol>
+<li>异步通知</li>
+<li>业务查询</li>
+</ol>
+</li>
+</ul>
+<p>本文主要讲的第二种，并通过一个业务例子来展开描述</p>
+<h3 id="section-2" data-heading-text="业务描述">业务描述</h3>
+<p>有以下业务场景，用户通过充值加金币：</p>
+<pre>
+充值请求----------> 服务A（充值服务）
+             [1.验证用户已经支付成功]
+             [2.发起加金币请求]------------>服务B（金币服务）
+</pre>
+<ul>
+<li>
+<p>服务B如何验证加金币操作的请求是合法，从而保证资金安全呢？</p>
+<ul>
+<li>有一种方法是通过分配业务对应的秘钥和服务端签名对比，验证请求的合法性</li>
+</ul>
+</li>
+<li>
+<p>通过秘钥和验签的方式无法避免以下问题</p>
+<ol>
+<li>其他业务方误用秘钥</li>
+<li>因误操作而发加币请求</li>
+<li>业务方有bug一次充值多次加币</li>
+</ol>
+</li>
+</ul>
+<h3 id="section-3" data-heading-text="解决方案">解决方案</h3>
+<ul>
+<li>其实以上描述的业务有一个特点：每一次操作都有对应的前置操作，比如
+<ol>
+<li>充值加金币的前置操作是：充值支付成功</li>
+<li>活动类加金币的前置操作是：用户达到活动要求</li>
+</ol>
+</li>
+</ul>
+<p>那么作为底层的金币服务，可以使用定义一种同样的回查机制，由各业务方实现查询逻辑，金币服务通过回查来检验请求的合法性，从而提高安全性。</p>
+<ul>
+<li>基础服务（金币服务）接收回调链接地址有两种方式：</li>
+</ul>
+<ol>
+<li>通过后台配置，每个业务配置对应回调链接和相应的参数 （相比可能比较安全可控，但不灵活）</li>
+<li>通过参数获取，如callback参数（灵活，但是要设计完善的校验机制保证安全）
+<ul>
+<li>可结合公司的基础服务实现，如可以通过服务发现获取服务对应的地址，只需传uri即可</li>
+</ul>
+</li>
+</ol>
+<pre>
+充值请求----------> 服务A（充值服务）
+             [1.验证用户已经支付成功]
+             [2.发起加金币请求]------------>服务B（金币服务）
+                                <----------[3.回调验证] 
+                                            [4.加金币] 
+</pre>
+<ul>
+<li>统一回调接口返回格式</li>
+</ul>
+<pre>
+回调接口返回格式
+{
+    “code”: 0,
+    “message”: “success”
+}
+0 代表成功；其他：失败
+
+回调用于查询业务订单是否存在，检验是否非法订单
+一般实现逻辑建议业务方直接查主库
+</pre>
+<ul>
+<li>回调无法绝对解决以上提出的问题，只能说一定程度上提升接口的安全性级别。</li>
+</ul>
+<h2 id="section-4" data-heading-text="扩展">扩展</h2>
+<ul>
+<li>使用非对称加密，是不是可以替换回调验证？（客户端使用公钥解密，服务端使用私钥加密，前提是私钥不泄漏）</li>
+</ul>
+
+      </div>
+<div class="article-actions" aria-label="Article actions">
+      <a class="share-link" href="https://twitter.com/intent/tweet?text=%E4%BD%BF%E7%94%A8%E5%9B%9E%E8%B0%83%E6%9C%BA%E5%88%B6%E6%8F%90%E9%AB%98%E6%8E%A5%E5%8F%A3%E5%AE%89%E5%85%A8%E6%80%A7&amp;url=https%3A%2F%2Fkingson4wu.github.io%2Fzh%2Fposts%2F20200712%2F" target="_blank" rel="noopener noreferrer" aria-label="Share on X">
+        <span aria-hidden="true">X</span>
+        <span>Share</span>
+      </a>
+    </div>
+    </article>
+<aside class="article-toc" data-article-toc aria-label="目录">
+      <button class="article-toc-toggle" type="button" data-article-toc-toggle aria-expanded="false" aria-controls="article-toc-panel" aria-label="打开目录" data-open-label="打开目录" data-close-label="收起目录">
+        <svg aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M8 6h11"></path>
+          <path d="M8 12h11"></path>
+          <path d="M8 18h11"></path>
+          <path d="M4 6h.01"></path>
+          <path d="M4 12h.01"></path>
+          <path d="M4 18h.01"></path>
+        </svg>
+      </button>
+      <nav id="article-toc-panel" class="article-toc-panel" data-article-toc-panel aria-label="目录">
+        <div class="article-toc-heading">目录</div>
+        <ol class="article-toc-list">
+          <li class="article-toc-level-3"><a href="#section-1" data-article-toc-link>前言</a></li>
+          <li class="article-toc-level-3"><a href="#section-2" data-article-toc-link>业务描述</a></li>
+          <li class="article-toc-level-3"><a href="#section-3" data-article-toc-link>解决方案</a></li>
+          <li class="article-toc-level-2"><a href="#section-4" data-article-toc-link>扩展</a></li>
+        </ol>
+      </nav>
+    </aside>
+    <script src="/scripts/article-toc.js" defer></script>
+    <nav class="article-nav" aria-label="Adjacent posts">
+      <a href="/zh/posts/20200711-2/"><span>Previous</span>分布式限流简单总结</a>
+      <a href="/zh/posts/20200713/"><span>Next</span>由灾备工作中引发的对“比例”的思考</a>
+    </nav>
+<section class="comments" aria-labelledby="comments-heading">
+      <h2 id="comments-heading">评论</h2>
+      <div
+        data-comments
+        data-comments-repo="Kingson4Wu/kingson4wu.github.io"
+        data-comments-issue-term="pathname"
+        data-comments-label="comment"
+      ></div>
+    </section>
+    <script src="/scripts/comments.js" defer></script>
+  </main>
+  <footer class="site-footer">
+    <p>&copy; 2026 拉巴力的纸皮箱</p>
+  </footer>
+  <button class="reading-return" type="button" data-reading-return aria-label="回到开头" title="回到开头">
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <path d="M12 19V5"></path>
+      <path d="m6 11 6-6 6 6"></path>
+    </svg>
+  </button>
+  <script src="/scripts/theme.js"></script>
+  <script src="/scripts/image-viewer.js"></script>
+  <script src="/scripts/reading-tools.js"></script>
+</body>
+</html>

@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>深度学习基础入门备忘 | 拉巴力的纸皮箱</title>
+  <meta name="description" content="简单粗略通读了解，先记录备忘 后续考虑结合相关视频深入理解 《深度学习人门：基于Python的理论与实现》：https://github.com/Kingson4Wu/Deep-Learning-from-Scratch 感知机是一种接收多个输入信号并输出一个信号的算法。它的工作原理基于权重和偏置这两个关键参数。 机器...">
+  <link rel="canonical" href="https://kingson4wu.github.io/zh/posts/20250217/">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="alternate" type="application/rss+xml" title="拉巴力的纸皮箱" href="/zh/feed.xml">
+  <link rel="alternate" type="text/markdown" href="/zh/posts/20250217/index.md">
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="/styles/main.css">
+  <script>
+    try {
+      var theme = localStorage.getItem('theme');
+      if (theme) document.documentElement.dataset.theme = theme;
+    } catch (_) {}
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="site-title" href="/zh/" aria-label="拉巴力的纸皮箱">
+      <span class="site-logo" aria-hidden="true">K</span>
+      <span>拉巴力的纸皮箱</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="/zh/posts/">文章</a>
+      <a href="/zh/notes/">笔记</a>
+      <a href="/zh/tags/">标签</a>
+      <a href="/zh/about/">关于</a>
+      <a href="/zh/search/">搜索</a>
+      <a href="/en/" lang="en">English</a>
+      <a class="feed-link" href="/zh/feed.xml" aria-label="订阅更新" title="订阅更新">
+        <svg class="feed-icon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M5 5.5A13.5 13.5 0 0 1 18.5 19"></path>
+          <path d="M5 11A8 8 0 0 1 13 19"></path>
+          <circle cx="6" cy="18" r="1.5"></circle>
+        </svg>
+      </a>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换明暗模式" title="切换明暗模式">
+        <svg class="theme-icon theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M21 14.2A8.5 8.5 0 0 1 9.8 3 7 7 0 1 0 21 14.2Z"></path>
+        </svg>
+        <svg class="theme-icon theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"></path>
+        </svg>
+      </button>
+    </nav>
+  </header>
+  <main class="site-main">
+    <article class="article">
+      <header class="article-header">
+        <h1>深度学习基础入门备忘</h1>
+        <time datetime="2025-02-17T03:08:39.000Z">2025年2月17日</time>
+<ul class="tag-list" aria-label="Tags">
+    <li><a href="/zh/tags/AI/">AI</a></li>
+    <li><a href="/zh/tags/Deep%20Learning/">Deep Learning</a></li>
+  </ul>
+      </header>
+      <div class="prose">
+<blockquote>
+<blockquote>
+<p>简单粗略通读了解，先记录备忘
+后续考虑结合相关视频深入理解</p>
+</blockquote>
+</blockquote>
+<ul>
+<li>
+<p>《深度学习人门：基于Python的理论与实现》：<a href="https://github.com/Kingson4Wu/Deep-Learning-from-Scratch">https://github.com/Kingson4Wu/Deep-Learning-from-Scratch</a></p>
+<ol>
+<li>感知机是一种接收多个输入信号并输出一个信号的算法。它的工作原理基于权重和偏置这两个关键参数。</li>
+<li>机器学习的任务是让计算机自动确定合适的权重和偏置参数值。</li>
+<li>求解机器学习问题的步骤
+<ol>
+<li>训练（学习）</li>
+<li>推理（神经网络的前向传播）</li>
+</ol>
+</li>
+<li>激活函数(activation function)：决定如何来激活输入信号的总和；激活函数是连接感知机和神经网络的桥梁。</li>
+<li>神经网络的学习过程：通过损失函数 (loss function)和梯度法 (gradient method)来优化网络参数
+<ol>
+<li>学习的目标是通过梯度下降法(gradient descent method)找到使损失函数值最小的权重参数</li>
+<li>学习率(learning rate)：决定参数更新的步长（超参数、人工设定）</li>
+</ol>
+</li>
+<li>随机梯度下降(stochastic gradient descent)(SGD)能在一定程度上帮助避免局部最优，通常将SGD与其他技术结合使用,以获得更好的优化效果</li>
+<li>深度学习：加深了层的深度神经网络；通过叠加层，可以创建更深的网络结构</li>
+</ol>
+</li>
+<li>
+<p>《深度学习进阶：自然语言处理》：<a href="https://github.com/Kingson4Wu/Natural-Language-Processing">https://github.com/Kingson4Wu/Natural-Language-Processing</a></p>
+<ol>
+<li>自然语言处理的目标就是让计算机理解人说的话，进而完成 对我们有帮助的事情</li>
+<li>单词的分布式表示（分布式假设）（单词向量化）：“某个单词的含义由它周围的单词形成”；单词本身没有含义，单词含义由它 所在的上下文(语境)形成。</li>
+<li>向量间的相似度：余弦相似度(cosine similarity)；直观地表示了“两个向量在多大程度上指向同一方向”</li>
+<li>让计算机理解单词含义：基于推理的方法(word2vec)（基于神经网络）。</li>
+<li>语言模型(language model)给出了单词序列发生的概率；使用概率来评估一个单词序列发生的可能性，即在多大程度上是自然的 单词序列。
+<ul>
+<li>生成的新文本是训练数据中没有的新生成的文本。因为语言模型并不是背诵了训练数据，而是学习了训练数据中单词的排列模式</li>
+<li>语言模型的评价：困惑度(perplexity)、分叉度</li>
+</ul>
+</li>
+<li>“马尔可夫性”或者“马尔 可夫模型”“马尔可夫链”：指未来的状态仅 依存于当前状态。</li>
+<li>RNN（循环神经网络）：被引入来解决前馈网络在处理时序数据上的局限性。
+<ul>
+<li>传统RNN中存在的梯度消失和梯度爆炸问题</li>
+<li>LSTM的结构与传统RNN的不同之处在于，它引入了记忆单元（c）。记忆单元在LSTM层之间传递，但不直接用作输出。LSTM的对外输出是隐藏状态向量（h）。</li>
+</ul>
+</li>
+<li>seq2seq模型（也称为Encoder-Decoder模型）用于将一个时序数据转换为另一个时序数据
+<ul>
+<li>传统 seq2seq 模型 将编码器输出压缩为固定长度向量，导致长序列信息丢失</li>
+<li>Attention 机制 允许模型在解码时关注输入序列的不同部分，类似人类注意力</li>
+</ul>
+</li>
+<li>Transformer：基于 Attention 构成；基于 Attention 构成</li>
+</ol>
+</li>
+<li>
+<p>《深度学习入门：强化学习》：<a href="https://github.com/Kingson4Wu/Reinforcement-Learning">https://github.com/Kingson4Wu/Reinforcement-Learning</a></p>
+<ol>
+<li>机器学习（按学习方法划分）：监督学习(supervised learning)、无监督学习(unsupervised learning)、强化学习(reinforcement learning)
+<ol>
+<li>监督学习：给正确答案打标签；输入的数据由“老师”打标签</li>
+<li>无监督学习：无“正确答案标签”；没有 “老师”的存在；主要目标是找到隐藏在数据中的结构和模式；分组(聚类)、特征提取、降维</li>
+<li>强化学习：智能代理和环境相互作用；智能代理是行动的主体；强化学习接受“奖励”作为来自环境的反馈</li>
+</ol>
+</li>
+<li>强化学习行动的策略
+<ol>
+<li>“贪婪行动”(greedy )，也叫利用(exploitation)：根据以前的经验选择最佳行动（可能错过更好的选择）</li>
+<li>“非贪婪行动”，也叫作探索(exploration)：对价值做出更准确的估计。</li>
+</ol>
+</li>
+<li>强化学习算法最终归结为如何在“利用”和 “探索”之间取得平衡</li>
+<li>ε-greedy 算法、马尔可夫决策过程(MDP)</li>
+<li>在强化学习中，我们的目标是获得最优策略</li>
+<li>深度强化学习(deep reinforcement learning)：强化学习和深度学习的结合</li>
+<li>通用人工智能(artificial general intelligence, AGI)</li>
+</ol>
+</li>
+</ul>
+<h1 id="section-1" data-heading-text="其他">其他</h1>
+<h2 id="section-2" data-heading-text="参数、输入向量和嵌入模型的真正关系">参数、输入向量和嵌入模型的真正关系</h2>
+<ul>
+<li>
+<p>在神经网络中，“参数”特指模型在训练过程中学习得到的变量，主要包括<strong>权重（weights）和偏置（biases）</strong>，它们决定了模型如何处理输入并生成输出，是模型内部真正“学到的知识”。输入特征的数量（即输入维度）常被初学者误认为是“参数”，但实际上，它属于输入数据的结构，而非模型的可训练部分。每个神经元在接受输入时，会对输入向量进行<strong>加权求和并加上偏置</strong>，将这个结果作为激活函数的输入，激活函数再施加非线性变换，产生神经元的输出。虽然权重确实与输入一一对应，但激活函数并不直接作用于原始输入，而是作用于这个线性组合的结果。</p>
+</li>
+<li>
+<p>在现代深度学习模型中，尤其是语言模型（如 GPT），输入向量的维度是固定的，这一维度通常由<strong>嵌入模型（embedding layer）或输入预处理过程</strong>所决定。例如，文本经过分词和嵌入后，每个 token 被映射为一个固定长度的向量（如 768 维），整个输入变为一个定长矩阵。为了确保矩阵运算的可行性与模型结构的稳定性，输入长度往往被限制在最大长度内，不足时通过填充处理，超长则截断。因此，嵌入层不仅是将离散信息转为向量表示的桥梁，也是模型输入维度的决定因素之一。</p>
+</li>
+</ul>
+<h2 id="section-3" data-heading-text="感知机、激活函数和神经网络三者关系">感知机、激活函数和神经网络三者关系</h2>
+<ul>
+<li>感知机是神经网络的基本构建单元，它通过对输入加权求和后传入激活函数来决定输出。激活函数引入非线性，使神经网络能拟合复杂关系。神经网络由多个感知机层叠构成，层与层之间通过激活函数连接，从而具备强大的表达和学习能力。三者关系为：<strong>激活函数是感知机的一部分，感知机是神经网络的基础单元。</strong></li>
+</ul>
+<h3 id="section-4" data-heading-text="三者之间的关系总结：">三者之间的关系总结：</h3>
+<table>
+<thead>
+<tr>
+<th>组成层级</th>
+<th>关系说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>感知机</td>
+<td>最基础的神经元模型，是神经网络的最小单元</td>
+</tr>
+<tr>
+<td>激活函数</td>
+<td>是感知机或神经元的核心部分，引入非线性</td>
+</tr>
+<tr>
+<td>神经网络</td>
+<td>是多个感知机/神经元的组合，通过激活函数形成强大的拟合能力</td>
+</tr>
+</tbody>
+</table>
+<p>可以这样理解它们的层级结构：</p>
+<div class="code-block"><pre><code class="hljs">神经网络 = 多个感知机（神经元）组成
+感知机 = 线性加权求和 + 激活函数
+激活函数 = 赋予神经网络非线性表达能力的关键
+</code></pre></div>
+<p>===</p>
+<h1 id="section-5" data-heading-text="神经网络训练核心机制">神经网络训练核心机制</h1>
+<h2 id="section-6" data-heading-text="一、训练流程概览">一、训练流程概览</h2>
+<h3 id="section-7" data-heading-text="训练阶段（四步闭环）">训练阶段（四步闭环）</h3>
+<ol>
+<li><strong>前向传播</strong> → 计算预测结果</li>
+<li><strong>计算损失</strong> → 衡量预测与真实值的差距</li>
+<li><strong>反向传播</strong> → 计算各参数的梯度</li>
+<li><strong>参数更新</strong> → 优化算法统一更新参数</li>
+</ol>
+<h3 id="section-8" data-heading-text="推理阶段">推理阶段</h3>
+<p>仅执行前向传播，不涉及梯度计算和参数更新。</p>
+<hr>
+<h2 id="section-9" data-heading-text="二、前向传播：逐层计算预测值">二、前向传播：逐层计算预测值</h2>
+<h3 id="section-10" data-heading-text="定义">定义</h3>
+<p>在参数固定下，输入数据按层级顺序逐层计算得到输出的过程。</p>
+<h3 id="section-11" data-heading-text="每层的两步操作">每层的两步操作</h3>
+<ol>
+<li><strong>线性变换</strong>: z = Wx + b</li>
+<li><strong>激活函数</strong>: a = f(z)</li>
+</ol>
+<h3 id="section-12" data-heading-text="关键特点">关键特点</h3>
+<ul>
+<li>只做计算，不更新参数</li>
+<li>训练和推理都使用</li>
+</ul>
+<hr>
+<h2 id="section-13" data-heading-text="三、激活函数：赋予网络非线性能力">三、激活函数：赋予网络非线性能力</h2>
+<h3 id="section-14" data-heading-text="核心作用">核心作用</h3>
+<p><strong>引入非线性</strong>，否则多层网络等价于单层线性模型。</p>
+<h3 id="xor" data-heading-text="为什么非线性必不可少（XOR 示例）">为什么非线性必不可少（XOR 示例）</h3>
+<ul>
+<li>线性模型无法解决 XOR 等线性不可分问题</li>
+<li>激活函数让网络能学习复杂模式</li>
+</ul>
+<p><strong>结论</strong>: 激活函数是神经网络成立的前提，而非优化技巧。</p>
+<h3 id="section-16" data-heading-text="常用激活函数">常用激活函数</h3>
+<ul>
+<li><strong>隐藏层</strong>: ReLU / GELU</li>
+<li><strong>输出层</strong>:
+<ul>
+<li>回归 → Linear</li>
+<li>二分类 → Sigmoid</li>
+<li>多分类 → Softmax</li>
+<li>多标签 → Sigmoid</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="section-17" data-heading-text="四、反向传播：计算梯度的算法">四、反向传播：计算梯度的算法</h2>
+<h3 id="section-18" data-heading-text="定义">定义</h3>
+<p>利用链式法则，从输出向输入逐层计算损失对每个参数的梯度。</p>
+<h3 id="section-19" data-heading-text="解决的问题">解决的问题</h3>
+<p>在海量参数中，精确计算每个参数对误差的“责任”。</p>
+<h3 id="section-20" data-heading-text="关键认知">关键认知</h3>
+<ul>
+<li><strong>只负责</strong>: 计算梯度</li>
+<li><strong>不负责</strong>: 更新参数</li>
+</ul>
+<h3 id="section-21" data-heading-text="数据流向对比">数据流向对比</h3>
+<ul>
+<li>前向传播: 数据流（输入 → 输出）</li>
+<li>反向传播: 梯度流（输出 → 输入）</li>
+</ul>
+<hr>
+<h2 id="section-22" data-heading-text="五、优化算法：统一更新参数">五、优化算法：统一更新参数</h2>
+<h3 id="section-23" data-heading-text="常见误区澄清">常见误区澄清</h3>
+<ul>
+<li>❌ 反向传播根据误差直接改参数</li>
+<li>✅ 反向传播只算梯度，优化算法负责更新</li>
+</ul>
+<h3 id="section-24" data-heading-text="为什么必须统一更新">为什么必须统一更新</h3>
+<ul>
+<li>所有梯度基于同一次前向传播</li>
+<li>边算边更新会破坏数学一致性</li>
+</ul>
+<h3 id="sgd" data-heading-text="基础更新公式（SGD）">基础更新公式（SGD）</h3>
+<p>θ ← θ - η·∇θL</p>
+<h3 id="section-26" data-heading-text="主流优化器">主流优化器</h3>
+<ol>
+<li><strong>Momentum</strong>: 利用历史梯度，减少震荡</li>
+<li><strong>RMSProp/AdaGrad</strong>: 自适应学习率</li>
+<li><strong>Adam/AdamW</strong>: 动量 + 自适应（工程首选）</li>
+</ol>
+<h3 id="section-27" data-heading-text="使用建议">使用建议</h3>
+<ul>
+<li>默认选择: Adam / AdamW</li>
+<li>追求泛化: SGD + Momentum</li>
+</ul>
+<hr>
+<h2 id="section-28" data-heading-text="六、核心概念速查表">六、核心概念速查表</h2>
+<table>
+<thead>
+<tr>
+<th>组件</th>
+<th>作用</th>
+<th>关键点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>前向传播</strong></td>
+<td>计算预测</td>
+<td>固定参数逐层计算</td>
+</tr>
+<tr>
+<td><strong>激活函数</strong></td>
+<td>引入非线性</td>
+<td>网络表达能力的来源</td>
+</tr>
+<tr>
+<td><strong>反向传播</strong></td>
+<td>计算梯度</td>
+<td>只算梯度不更新参数</td>
+</tr>
+<tr>
+<td><strong>优化算法</strong></td>
+<td>更新参数</td>
+<td>基于梯度统一调整</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="section-29" data-heading-text="七、本质总结">七、本质总结</h2>
+<p><strong>神经网络训练 = 在非线性函数空间中的梯度驱动迭代优化</strong></p>
+
+      </div>
+<div class="article-actions" aria-label="Article actions">
+      <a class="share-link" href="https://twitter.com/intent/tweet?text=%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8%E5%A4%87%E5%BF%98&amp;url=https%3A%2F%2Fkingson4wu.github.io%2Fzh%2Fposts%2F20250217%2F" target="_blank" rel="noopener noreferrer" aria-label="Share on X">
+        <span aria-hidden="true">X</span>
+        <span>Share</span>
+      </a>
+    </div>
+    </article>
+<aside class="article-toc" data-article-toc aria-label="目录">
+      <button class="article-toc-toggle" type="button" data-article-toc-toggle aria-expanded="false" aria-controls="article-toc-panel" aria-label="打开目录" data-open-label="打开目录" data-close-label="收起目录">
+        <svg aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M8 6h11"></path>
+          <path d="M8 12h11"></path>
+          <path d="M8 18h11"></path>
+          <path d="M4 6h.01"></path>
+          <path d="M4 12h.01"></path>
+          <path d="M4 18h.01"></path>
+        </svg>
+      </button>
+      <nav id="article-toc-panel" class="article-toc-panel" data-article-toc-panel aria-label="目录">
+        <div class="article-toc-heading">目录</div>
+        <ol class="article-toc-list">
+          <li class="article-toc-level-2"><a href="#section-2" data-article-toc-link>参数、输入向量和嵌入模型的真正关系</a></li>
+          <li class="article-toc-level-2"><a href="#section-3" data-article-toc-link>感知机、激活函数和神经网络三者关系</a></li>
+          <li class="article-toc-level-3"><a href="#section-4" data-article-toc-link>三者之间的关系总结：</a></li>
+          <li class="article-toc-level-2"><a href="#section-6" data-article-toc-link>一、训练流程概览</a></li>
+          <li class="article-toc-level-3"><a href="#section-7" data-article-toc-link>训练阶段（四步闭环）</a></li>
+          <li class="article-toc-level-3"><a href="#section-8" data-article-toc-link>推理阶段</a></li>
+          <li class="article-toc-level-2"><a href="#section-9" data-article-toc-link>二、前向传播：逐层计算预测值</a></li>
+          <li class="article-toc-level-3"><a href="#section-10" data-article-toc-link>定义</a></li>
+          <li class="article-toc-level-3"><a href="#section-11" data-article-toc-link>每层的两步操作</a></li>
+          <li class="article-toc-level-3"><a href="#section-12" data-article-toc-link>关键特点</a></li>
+          <li class="article-toc-level-2"><a href="#section-13" data-article-toc-link>三、激活函数：赋予网络非线性能力</a></li>
+          <li class="article-toc-level-3"><a href="#section-14" data-article-toc-link>核心作用</a></li>
+          <li class="article-toc-level-3"><a href="#xor" data-article-toc-link>为什么非线性必不可少（XOR 示例）</a></li>
+          <li class="article-toc-level-3"><a href="#section-16" data-article-toc-link>常用激活函数</a></li>
+          <li class="article-toc-level-2"><a href="#section-17" data-article-toc-link>四、反向传播：计算梯度的算法</a></li>
+          <li class="article-toc-level-3"><a href="#section-18" data-article-toc-link>定义</a></li>
+          <li class="article-toc-level-3"><a href="#section-19" data-article-toc-link>解决的问题</a></li>
+          <li class="article-toc-level-3"><a href="#section-20" data-article-toc-link>关键认知</a></li>
+          <li class="article-toc-level-3"><a href="#section-21" data-article-toc-link>数据流向对比</a></li>
+          <li class="article-toc-level-2"><a href="#section-22" data-article-toc-link>五、优化算法：统一更新参数</a></li>
+          <li class="article-toc-level-3"><a href="#section-23" data-article-toc-link>常见误区澄清</a></li>
+          <li class="article-toc-level-3"><a href="#section-24" data-article-toc-link>为什么必须统一更新</a></li>
+          <li class="article-toc-level-3"><a href="#sgd" data-article-toc-link>基础更新公式（SGD）</a></li>
+          <li class="article-toc-level-3"><a href="#section-26" data-article-toc-link>主流优化器</a></li>
+          <li class="article-toc-level-3"><a href="#section-27" data-article-toc-link>使用建议</a></li>
+          <li class="article-toc-level-2"><a href="#section-28" data-article-toc-link>六、核心概念速查表</a></li>
+          <li class="article-toc-level-2"><a href="#section-29" data-article-toc-link>七、本质总结</a></li>
+        </ol>
+      </nav>
+    </aside>
+    <script src="/scripts/article-toc.js" defer></script>
+    <nav class="article-nav" aria-label="Adjacent posts">
+      <a href="/zh/posts/20250213/"><span>Previous</span>关于AI大语言模型替代人类工作的问题</a>
+      <a href="/zh/posts/20250219/"><span>Next</span>LangChain要点记录</a>
+    </nav>
+<section class="comments" aria-labelledby="comments-heading">
+      <h2 id="comments-heading">评论</h2>
+      <div
+        data-comments
+        data-comments-repo="Kingson4Wu/kingson4wu.github.io"
+        data-comments-issue-term="pathname"
+        data-comments-label="comment"
+      ></div>
+    </section>
+    <script src="/scripts/comments.js" defer></script>
+  </main>
+  <footer class="site-footer">
+    <p>&copy; 2026 拉巴力的纸皮箱</p>
+  </footer>
+  <button class="reading-return" type="button" data-reading-return aria-label="回到开头" title="回到开头">
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <path d="M12 19V5"></path>
+      <path d="m6 11 6-6 6 6"></path>
+    </svg>
+  </button>
+  <script src="/scripts/theme.js"></script>
+  <script src="/scripts/image-viewer.js"></script>
+  <script src="/scripts/reading-tools.js"></script>
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>让执行路径成为资产 | 拉巴力的纸皮箱</title>
+  <meta name="description" content="大多数 AI 系统还停留在“单次推理”形态。 任务来了重新规划，执行完毕即丢弃，成功经验从不沉淀。 真正面向长期运行的架构，得把“执行路径”变成资产。 核心是三层分离： 方法层：定义目标和策略 执行层：保存经过验证、可运行的代码或 Script 评估层：检测退化并触发修复 某条路径反复验证稳定后，就应该固化成 Scri...">
+  <link rel="canonical" href="https://kingson4wu.github.io/zh/notes/20260307/">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="alternate" type="application/rss+xml" title="拉巴力的纸皮箱" href="/zh/feed.xml">
+  <link rel="alternate" type="text/markdown" href="/zh/notes/20260307/index.md">
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="/styles/main.css">
+  <script>
+    try {
+      var theme = localStorage.getItem('theme');
+      if (theme) document.documentElement.dataset.theme = theme;
+    } catch (_) {}
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="site-title" href="/zh/" aria-label="拉巴力的纸皮箱">
+      <span class="site-logo" aria-hidden="true">K</span>
+      <span>拉巴力的纸皮箱</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="/zh/posts/">文章</a>
+      <a href="/zh/notes/">笔记</a>
+      <a href="/zh/tags/">标签</a>
+      <a href="/zh/about/">关于</a>
+      <a href="/zh/search/">搜索</a>
+      <a href="/en/" lang="en">English</a>
+      <a class="feed-link" href="/zh/feed.xml" aria-label="订阅更新" title="订阅更新">
+        <svg class="feed-icon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M5 5.5A13.5 13.5 0 0 1 18.5 19"></path>
+          <path d="M5 11A8 8 0 0 1 13 19"></path>
+          <circle cx="6" cy="18" r="1.5"></circle>
+        </svg>
+      </a>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换明暗模式" title="切换明暗模式">
+        <svg class="theme-icon theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M21 14.2A8.5 8.5 0 0 1 9.8 3 7 7 0 1 0 21 14.2Z"></path>
+        </svg>
+        <svg class="theme-icon theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"></path>
+        </svg>
+      </button>
+    </nav>
+  </header>
+  <main class="site-main">
+    <article class="article">
+      <header class="article-header">
+        <h1>让执行路径成为资产</h1>
+        <time datetime="2026-03-07T04:00:00.000Z">2026年3月7日</time>
+<ul class="tag-list" aria-label="Tags">
+    <li><a href="/zh/tags/AI/">AI</a></li>
+    <li><a href="/zh/tags/Skill/">Skill</a></li>
+    <li><a href="/zh/tags/Prompt%20Engineering/">Prompt Engineering</a></li>
+    <li><a href="/zh/tags/Architecture/">Architecture</a></li>
+  </ul>
+      </header>
+      <div class="prose">
+<p>大多数 AI 系统还停留在“单次推理”形态。</p>
+<p>任务来了重新规划，执行完毕即丢弃，成功经验从不沉淀。</p>
+<p>真正面向长期运行的架构，得把“执行路径”变成资产。</p>
+<p>核心是三层分离：</p>
+<ul>
+<li>方法层：定义目标和策略</li>
+<li>执行层：保存经过验证、可运行的代码或 Script</li>
+<li>评估层：检测退化并触发修复</li>
+</ul>
+<p>某条路径反复验证稳定后，就应该固化成 Script，后续默认走它。推理只在出问题时再介入。</p>
+<p>这里有个值得关注的认知转变：</p>
+<p>AI 时代真正需要长期打磨的“代码”，往往不是传统代码本身，而是 prompt、skill、方法描述这些东西。</p>
+<p>传统代码反而更像执行介质，可以在策略约束下被持续生成、替换、修复。</p>
+<p>维护重心也因此上移了。</p>
+<p>过去是在“雕刻代码”，现在更像是在持续优化目标、约束与成功标准的表达方式。</p>
+<p>系统不再是每次重新解题，而是在时间维度上真正积累能力。</p>
+
+      </div>
+<div class="article-actions" aria-label="Article actions">
+      <a class="share-link" href="https://twitter.com/intent/tweet?text=%E8%AE%A9%E6%89%A7%E8%A1%8C%E8%B7%AF%E5%BE%84%E6%88%90%E4%B8%BA%E8%B5%84%E4%BA%A7&amp;url=https%3A%2F%2Fkingson4wu.github.io%2Fzh%2Fnotes%2F20260307%2F" target="_blank" rel="noopener noreferrer" aria-label="Share on X">
+        <span aria-hidden="true">X</span>
+        <span>Share</span>
+      </a>
+    </div>
+    </article>
+
+    <nav class="article-nav" aria-label="Adjacent posts">
+      
+      <a href="/zh/notes/20260327-mcp-skill-cli/"><span>Next</span>MCP、Skill 与 CLI 的分化与协同</a>
+    </nav>
+<section class="comments" aria-labelledby="comments-heading">
+      <h2 id="comments-heading">评论</h2>
+      <div
+        data-comments
+        data-comments-repo="Kingson4Wu/kingson4wu.github.io"
+        data-comments-issue-term="pathname"
+        data-comments-label="comment"
+      ></div>
+    </section>
+    <script src="/scripts/comments.js" defer></script>
+  </main>
+  <footer class="site-footer">
+    <p>&copy; 2026 拉巴力的纸皮箱</p>
+  </footer>
+  <button class="reading-return" type="button" data-reading-return aria-label="回到开头" title="回到开头">
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <path d="M12 19V5"></path>
+      <path d="m6 11 6-6 6 6"></path>
+    </svg>
+  </button>
+  <script src="/scripts/theme.js"></script>
+  <script src="/scripts/image-viewer.js"></script>
+  <script src="/scripts/reading-tools.js"></script>
+</body>
+</html>

@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>如何解决脑裂问题 | 拉巴力的纸皮箱</title>
+  <meta name="description" content="什么是“Split Brain”(脑裂)问题？ Split Brain 是指在同一时刻有两个认为自己处于 Active 状态的 NameNode。对于HA集群而言，确保同一时刻只有一个NameNode处于active状态是至关重要的。否则，两个NameNode的数据状态就会产生分歧，可能丢失数据，或者产生错误的结果。...">
+  <link rel="canonical" href="https://kingson4wu.github.io/zh/posts/20200905/">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="alternate" type="application/rss+xml" title="拉巴力的纸皮箱" href="/zh/feed.xml">
+  <link rel="alternate" type="text/markdown" href="/zh/posts/20200905/index.md">
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="/styles/main.css">
+  <script>
+    try {
+      var theme = localStorage.getItem('theme');
+      if (theme) document.documentElement.dataset.theme = theme;
+    } catch (_) {}
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="site-title" href="/zh/" aria-label="拉巴力的纸皮箱">
+      <span class="site-logo" aria-hidden="true">K</span>
+      <span>拉巴力的纸皮箱</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="/zh/posts/">文章</a>
+      <a href="/zh/notes/">笔记</a>
+      <a href="/zh/tags/">标签</a>
+      <a href="/zh/about/">关于</a>
+      <a href="/zh/search/">搜索</a>
+      <a href="/en/" lang="en">English</a>
+      <a class="feed-link" href="/zh/feed.xml" aria-label="订阅更新" title="订阅更新">
+        <svg class="feed-icon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M5 5.5A13.5 13.5 0 0 1 18.5 19"></path>
+          <path d="M5 11A8 8 0 0 1 13 19"></path>
+          <circle cx="6" cy="18" r="1.5"></circle>
+        </svg>
+      </a>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换明暗模式" title="切换明暗模式">
+        <svg class="theme-icon theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M21 14.2A8.5 8.5 0 0 1 9.8 3 7 7 0 1 0 21 14.2Z"></path>
+        </svg>
+        <svg class="theme-icon theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"></path>
+        </svg>
+      </button>
+    </nav>
+  </header>
+  <main class="site-main">
+    <article class="article">
+      <header class="article-header">
+        <h1>如何解决脑裂问题</h1>
+        <time datetime="2020-09-04T16:04:32.000Z">2020年9月4日</time>
+<ul class="tag-list" aria-label="Tags">
+    <li><a href="/zh/tags/Distributed%20Systems/">Distributed Systems</a></li>
+    <li><a href="/zh/tags/Reliability/">Reliability</a></li>
+  </ul>
+      </header>
+      <div class="prose">
+<p>什么是“Split Brain”(脑裂)问题？</p>
+<p>Split Brain 是指在同一时刻有两个认为自己处于 Active 状态的 NameNode。对于HA集群而言，确保同一时刻只有一个NameNode处于active状态是至关重要的。否则，两个NameNode的数据状态就会产生分歧，可能丢失数据，或者产生错误的结果。</p>
+<h3 id="section-1" data-heading-text="CAP理论">CAP理论</h3>
+<ul>
+<li>
+<p>Consistency (一致性): 副本一致性特指强一致性；</p>
+</li>
+<li>
+<p>Availiablity(可用性): 指系统在出现异常时已经可以提供服务;</p>
+</li>
+<li>
+<p>Tolerance to the partition of network (分区容忍): 指系统可以对网络分区这种异常情 况进行容错处理;</p>
+</li>
+<li>
+<p>CAP理论，对于P（分区容忍性）而言，是实际存在 从而无法避免的。因为，分布系统中的处理不是在本机，而是网络中的许多机器相互通信，故网络分区、网络通信故障问题无法避免。因此，只能尽量地在C 和 A 之间寻求平衡。</p>
+</li>
+<li>
+<p>对于数据存储而言，为了提高可用性（Availability），采用了副本备份。某数据块所在的机器宕机了，就去该数据块副本所在的机器上读取。但是，当需要修改数据时，就需要更新所有的副本数据，这样才能保证数据的一致性（Consistency）。因此，就需要在 C(Consistency) 和 A(Availability) 之间权衡。</p>
+</li>
+<li>
+<p>Quorum机制，就是这样的一种权衡机制，一种将“读写转化”的模型。</p>
+</li>
+</ul>
+<h3 id="section-2" data-heading-text="Quorum机制">Quorum机制</h3>
+<ol>
+<li>Write-all-read-one(简称 WARO).(极端的方案)
+<ul>
+<li>当Client请求向某副本写数据时(更新数据)，只有当所有的副本都更新成功之后，这次写操作才算成功，否则视为失败。</li>
+<li>WARO牺牲了更新服务的可用性，最大程度地增强了读服务的可用性。而Quorum就是更新服务和读服务之间进行一个折衷。</li>
+</ul>
+</li>
+<li>Quorum 机制
+<ul>
+<li>将 WARO 的条件进行松弛,从而使得可以在读写服务可用性之间做折中,得出 Quorum 机制。</li>
+<li>Quorum机制是“抽屉原理”的一个应用。定义如下：假设有N个副本，更新操作wi 在W个副本中更新成功之后，才认为此次更新操作wi 成功。称成功提交的更新操作对应的数据为：“成功提交的数据”。对于读操作而言，至少需要读R个副本才能读到此次更新的数据。其中，W+R&gt;N ，即W和R有重叠。一般，W+R=N+1</li>
+<li>仅仅依赖 quorum 机制是无法保证强一致性的。因为仅有 quorum 机制时无法确 定最新已成功提交的版本号,除非将最新已提交的版本号作为元数据由特定的元数据服务器或元数 据集群管理,否则很难确定最新成功提交的版本号。
+<ul>
+<li>1）如何读取最新的数据？—在已经知道最近成功提交的数据版本号的前提下，最多读R个副本就可以读到最新的数据了。</li>
+<li>2）如何确定 最高版本号 的数据是一个成功提交的数据？—继续读其他的副本，直到读到的 最高版本号副本 出现了W次。</li>
+</ul>
+</li>
+<li>Quorum 机制的三个系统参数 N、W、R 控制了系统的可用性,也是系统对用户的服务承诺:数 据最多有 N 个副本,但数据更新成功 W 个副本即返回用户成功。对于一致性要求较高的 Quorum 系 统,系统还应该承诺任何时候不读取未成功提交的数据,即读取到的数据都是曾经在 W 个副本上成 功的数据。</li>
+</ul>
+</li>
+</ol>
+<h3 id="lease" data-heading-text="Lease 机制">Lease 机制</h3>
+<ul>
+<li>Lease 是由颁发者授予的在某一有效期内的承诺。颁发者一旦发出 lease,则无论接受方是否收到,也无论后续接收方处于何种状态,只要 lease 不过期,颁发者一 定严守承诺;另一方面,接收方在 lease 的有效期内可以使用颁发者的承诺,但一旦 lease 过期,接 收方一定不能继续使用颁发者的承诺。</li>
+<li>Lease 机制依赖于有效期,这就要求颁发者和接收者的时钟是同步的。对于这种时钟不同步,实践中的通常做法是 将颁发者的有效期设置得比接收者的略大,只需大过时钟误差就可以避免对 lease 的有效性的影响。</li>
+</ul>
+<h3 id="section-4" data-heading-text="解决脑裂的关键">解决脑裂的关键</h3>
+<h4 id="section-5" data-heading-text="raft是如何解决的？">raft是如何解决的？</h4>
+<ol start="0">
+<li>核心是“大多数成功”机制。Raft就是基于Quorum机制下实现的。</li>
+<li>看下以下这篇文章:<a href="https://www.jianshu.com/p/072380e12657">为 Raft 引入 leader lease 机制解决集群脑裂时的 stale read 问题</a>
+<ul>
+<li>这种方法牺牲了一定的可用性（在脑裂时部分客户端的可用性）换取了一致性的保证。</li>
+<li>多数派的网络分区挂了，岂不是直接不可写了</li>
+</ul>
+</li>
+<li>如何解决多数派的网络分区挂了，服务就不可用的问题？
+<ul>
+<li>我的答案是部署不止两个网络分区，至少三个网络分区；这样任意一个分区挂了，服务都可用，除非三个分区的大多数分区挂了(挂了2个)；</li>
+</ul>
+</li>
+<li>副本控制协议分为两大类:“中心化(centralized)副本控制协议”和“去中心化(decentralized) 副本控制协议”。解决脑裂的其中一个关键点是哪种 “去中心化的协议”，paxos和raft都是。</li>
+</ol>
+<h4 id="section-6" data-heading-text="使用非分布式存储的应用如何解决？">使用非分布式存储的应用如何解决？</h4>
+<ol>
+<li>上述处理脑裂问题的前提是：服务本身就是一个分布式存储服务，使用raft等一致性协议；那么普通的业务服务，使用MySQL的的情况下，怎么解决脑裂问题？</li>
+<li>MySQL主从服务复制，这种存储服务本身就不是去中心的分布式数据库；</li>
+<li>解决问题的核心点是：引入第三方组件作为整个业务集群的“选主服务”(比如Consul、Etcd，都是基于Raft协议)；结合MySQL的半同步复制机制：支持配置n个从库ack才响应客户端（类似Quorum机制）和MHA，可以很大程度的避免丢数据导致不一致。</li>
+<li>Consul本身就是基于raft协议，可以利用其去中心化的特性，作为选主服务，业务通过Consul识别到哪个集群是主集群之后，可定制进行相应的业务处理。</li>
+</ol>
+<h4 id="section-7" data-heading-text="选主服务">选主服务</h4>
+<ol>
+<li>Consul、Etcd (Raft)
+<ul>
+<li>在本次案例中是通过判断是否能获得Consul集群中的leader来判断孤岛的（调获取某个node的信息接口，如果没有leader会返回“No cluster leader”）；而不是通过Consul分布式锁的方式选主。</li>
+</ul>
+</li>
+<li>ZooKeeper (ZAB、Paxos )</li>
+<li>Chubby 分布式锁；<a href="https://mp.weixin.qq.com/s/R2FCLknar6bCvykJ1m7rJQ">Google的锁，才是分布式锁？</a></li>
+</ol>
+<h3 id="section-8" data-heading-text="使用Consul解决脑裂问题">使用Consul解决脑裂问题</h3>
+<ul>
+<li><img src="/assets/zh/posts/20200905/Consul_no_leader.png" alt=""></li>
+</ul>
+<h4 id="section-9" data-heading-text="如何判断“孤岛”？">如何判断“孤岛”？</h4>
+<ol>
+<li>在三个IDC部署一个Consul集群，该集群会存在一个leader，且每个IDC的service在网络正常的情况下，都能检测到哪个是leader；依赖Consul的raft协议选举判断网络孤岛；(为了后续描述简单，假设每个IDC只部署一个Consul结点)</li>
+<li>每个IDC的service只访问当前IDC对应的Consul结点；当访问返回“No cluster leader”时，说明该网络分区已经是“孤岛”；</li>
+</ol>
+<pre>
+curl 'http://consul:8500/v1/health/service/nodeName?passing&wait=1s&index=1&tag=master'
+No cluster leader
+</pre>
+<ol start="3">
+<li>通过“No cluster leader”来判断孤岛的前提是，假设Consul是高可用的。因为当有两个Consul结点无法访问或挂掉的时候，也有能误判成没有leader（实际上并未出现网络孤岛，只是Consul集群异常）；</li>
+<li>引入双重检查机制，解决Consul集群因为可用性问题导致的误判的可能性；在Consul判断为网络孤岛的情况下，通过ping异地IDC的service的健康检查接口，二次确认；双重检查机制只能解决误判问题，若Consul集群不能高可用，那么判断孤岛的机制将失效。</li>
+</ol>
+<h4 id="section-10" data-heading-text="如何处理“孤岛”？">如何处理“孤岛”？</h4>
+<ol>
+<li>判断为孤岛的网络分区的服务，如果接收到外网请求(因为是孤岛情况下其他IDC内网不通)，可以拒绝服务，也可以返回特殊的业务错误码或HTTP错误码，由上层服务或客户端重试到其他的机房。</li>
+</ol>
+<h4 id="section-11" data-heading-text="“孤岛”消失后如何恢复？">“孤岛”消失后如何恢复？</h4>
+<ol>
+<li>手动恢复。“孤岛”的网络分区服务不恢复提供服务，由开发人员确认DB等无异常后再手动恢复；</li>
+<li>自动恢复。需做好充分的检测手段才能启用自动恢复：DB是否发生切换、主从DB数据是否一致（如比对脚本）、判断网络是否已经恢复到策略(防止来回切)等。</li>
+</ol>
+<h3 id="q" data-heading-text="Q&amp;A">Q&amp;A</h3>
+<h4 id="section-13" data-heading-text="为什么每个IDC的service只访问当前IDC对应的Consul结点？(前提是Consul高可用性)">为什么每个IDC的service只访问当前IDC对应的Consul结点？(前提是Consul高可用性)</h4>
+<ol>
+<li>假设IDC-A出现网络孤岛的情况下，IDC-A的service本身就无法访问IDC-B的Consul结点；</li>
+<li>假设IDC-B未出现网络孤岛，IDC-A的service只需要访问IDC-A的Consul结点即可判断；</li>
+</ol>
+<h4 id="section-14" data-heading-text="选主服务一定要选择基于去中心一致性协议的组件吗？">选主服务一定要选择基于去中心一致性协议的组件吗？</h4>
+<ol>
+<li>不一定。使用选主服务只是利用组件高可用性和选举机制解决脑裂问题。Raft等去中心一致性的协议解决的的一致性问题及其leader的选举机制。换句话，只要该组件能高可用且在结点大多数存活（网络互通）的情况下，能选举出一个Leader即可，数据的一致性并不重要（因为没用到组件提供的数据存储功能）。</li>
+<li>一般情况下，业务使用MHA-Consul-MySQL作为DB切换的高可用方案；那么解决脑裂问题，也使用Consul组件，也可以减少服务对其他组件的依赖。</li>
+</ol>
+<h3 id="section-15" data-heading-text="扩展">扩展</h3>
+<ol>
+<li>Group Replication
+<ul>
+<li>Group Replication由至少3个或更多个节点共同组成一个数据库集群，事务的提交必须经过半数以上节点同意方可提交，在集群中每个节点上都维护一个数据库状态机，保证节点间事务的一致性。Group Replication基于分布式一致性算法Paxos实现，允许部分节点故障，只要保证半数以上节点存活，就不影响对外提供数据库服务，是一个真正可用的高可用数据库集群技术。 Group Replication支持两种模式，单主模式和多主模式。在同一个group内，不允许两种模式同时存在，并且若要切换到不同模式，必须修改配置后重新启动集群。 在单主模式下，只有一个节点可以对外提供读写事务的服务，而其它所有节点只能提供只读事务的服务，这也是官方推荐的Group Replication复制模式。</li>
+</ul>
+</li>
+<li>NewSQL
+<ul>
+<li>关于NewSQL的定义是：这是一类现代关系型的DBMS，旨在为NoSQL的OLTP读写负载提供相同的可扩展性能，同时仍然提供事务的ACID保证。</li>
+<li>TiDB。TiDB 是一个分布式 NewSQL 数据库。它支持水平弹性扩展、ACID 事务、标准 SQL、MySQL 语法和 MySQL 协议，具有数据强一致的高可用特性，是一个不仅适合 OLTP 场景还适OLAP 场景的混合数据库。</li>
+</ul>
+</li>
+</ol>
+<h3 id="reference" data-heading-text="Reference">Reference</h3>
+<ul>
+<li>刘杰：分布式原理介绍</li>
+<li><a href="https://www.cnblogs.com/hapjin/p/5626889.html">分布式系统理论之Quorum机制</a></li>
+<li><a href="https://kingson4wu.gitee.io/2020/08/31/20200831-%E5%85%B3%E4%BA%8EMHA-Consul-MySQL%E9%AB%98%E5%8F%AF%E7%94%A8%E6%96%B9%E6%A1%88%E7%9A%84%E7%AE%80%E5%8D%95%E6%80%BB%E7%BB%93%E5%92%8C%E6%80%9D%E8%80%83/">关于MHA_Consul_MySQL高可用方案的简单总结和思考</a></li>
+<li><a href="http://mysql.taobao.org/monthly/2017/08/01/">MySQL · 引擎特性 · Group Replication内核解析</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/71073707">我们听到的TiDB到底是什么？</a></li>
+</ul>
+
+      </div>
+<div class="article-actions" aria-label="Article actions">
+      <a class="share-link" href="https://twitter.com/intent/tweet?text=%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%E8%84%91%E8%A3%82%E9%97%AE%E9%A2%98&amp;url=https%3A%2F%2Fkingson4wu.github.io%2Fzh%2Fposts%2F20200905%2F" target="_blank" rel="noopener noreferrer" aria-label="Share on X">
+        <span aria-hidden="true">X</span>
+        <span>Share</span>
+      </a>
+    </div>
+    </article>
+<aside class="article-toc" data-article-toc aria-label="目录">
+      <button class="article-toc-toggle" type="button" data-article-toc-toggle aria-expanded="false" aria-controls="article-toc-panel" aria-label="打开目录" data-open-label="打开目录" data-close-label="收起目录">
+        <svg aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M8 6h11"></path>
+          <path d="M8 12h11"></path>
+          <path d="M8 18h11"></path>
+          <path d="M4 6h.01"></path>
+          <path d="M4 12h.01"></path>
+          <path d="M4 18h.01"></path>
+        </svg>
+      </button>
+      <nav id="article-toc-panel" class="article-toc-panel" data-article-toc-panel aria-label="目录">
+        <div class="article-toc-heading">目录</div>
+        <ol class="article-toc-list">
+          <li class="article-toc-level-3"><a href="#section-1" data-article-toc-link>CAP理论</a></li>
+          <li class="article-toc-level-3"><a href="#section-2" data-article-toc-link>Quorum机制</a></li>
+          <li class="article-toc-level-3"><a href="#lease" data-article-toc-link>Lease 机制</a></li>
+          <li class="article-toc-level-3"><a href="#section-4" data-article-toc-link>解决脑裂的关键</a></li>
+          <li class="article-toc-level-3"><a href="#section-8" data-article-toc-link>使用Consul解决脑裂问题</a></li>
+          <li class="article-toc-level-3"><a href="#q" data-article-toc-link>Q&amp;A</a></li>
+          <li class="article-toc-level-3"><a href="#section-15" data-article-toc-link>扩展</a></li>
+          <li class="article-toc-level-3"><a href="#reference" data-article-toc-link>Reference</a></li>
+        </ol>
+      </nav>
+    </aside>
+    <script src="/scripts/article-toc.js" defer></script>
+    <nav class="article-nav" aria-label="Adjacent posts">
+      <a href="/zh/posts/20200831-consul/"><span>Previous</span>关于MHA_Consul_MySQL高可用方案的简单总结和思考</a>
+      <a href="/zh/posts/20200908/"><span>Next</span>金融业务容灾体系简述</a>
+    </nav>
+<section class="comments" aria-labelledby="comments-heading">
+      <h2 id="comments-heading">评论</h2>
+      <div
+        data-comments
+        data-comments-repo="Kingson4Wu/kingson4wu.github.io"
+        data-comments-issue-term="pathname"
+        data-comments-label="comment"
+      ></div>
+    </section>
+    <script src="/scripts/comments.js" defer></script>
+  </main>
+  <footer class="site-footer">
+    <p>&copy; 2026 拉巴力的纸皮箱</p>
+  </footer>
+  <button class="reading-return" type="button" data-reading-return aria-label="回到开头" title="回到开头">
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <path d="M12 19V5"></path>
+      <path d="m6 11 6-6 6 6"></path>
+    </svg>
+  </button>
+  <script src="/scripts/theme.js"></script>
+  <script src="/scripts/image-viewer.js"></script>
+  <script src="/scripts/reading-tools.js"></script>
+</body>
+</html>

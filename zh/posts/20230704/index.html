@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>我接触过的几种服务发现和rpc | 拉巴力的纸皮箱</title>
+  <meta name="description" content="公司V 主要Java语言 最原始 没有服务发现 通过域名调用，服务器ip配置在nginx 数据传输使用JSON协议 公司U 主要Java语言 公司基础团队自己实现服务发现机制 服务发现使用netty做tcp长链，用于服务注册等 服务sdk从服务中心获取所调用的对端服务的ip和端口 通过tcp长链通知服务上下线等 通过服...">
+  <link rel="canonical" href="https://kingson4wu.github.io/zh/posts/20230704/">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="alternate" type="application/rss+xml" title="拉巴力的纸皮箱" href="/zh/feed.xml">
+  <link rel="alternate" type="text/markdown" href="/zh/posts/20230704/index.md">
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="/styles/main.css">
+  <script>
+    try {
+      var theme = localStorage.getItem('theme');
+      if (theme) document.documentElement.dataset.theme = theme;
+    } catch (_) {}
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="site-title" href="/zh/" aria-label="拉巴力的纸皮箱">
+      <span class="site-logo" aria-hidden="true">K</span>
+      <span>拉巴力的纸皮箱</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="/zh/posts/">文章</a>
+      <a href="/zh/notes/">笔记</a>
+      <a href="/zh/tags/">标签</a>
+      <a href="/zh/about/">关于</a>
+      <a href="/zh/search/">搜索</a>
+      <a href="/en/" lang="en">English</a>
+      <a class="feed-link" href="/zh/feed.xml" aria-label="订阅更新" title="订阅更新">
+        <svg class="feed-icon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M5 5.5A13.5 13.5 0 0 1 18.5 19"></path>
+          <path d="M5 11A8 8 0 0 1 13 19"></path>
+          <circle cx="6" cy="18" r="1.5"></circle>
+        </svg>
+      </a>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换明暗模式" title="切换明暗模式">
+        <svg class="theme-icon theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M21 14.2A8.5 8.5 0 0 1 9.8 3 7 7 0 1 0 21 14.2Z"></path>
+        </svg>
+        <svg class="theme-icon theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"></path>
+        </svg>
+      </button>
+    </nav>
+  </header>
+  <main class="site-main">
+    <article class="article">
+      <header class="article-header">
+        <h1>我接触过的几种服务发现和rpc</h1>
+        <time datetime="2023-07-04T07:22:29.000Z">2023年7月4日</time>
+<ul class="tag-list" aria-label="Tags">
+    <li><a href="/zh/tags/Distributed%20Systems/">Distributed Systems</a></li>
+  </ul>
+      </header>
+      <div class="prose">
+<h1 id="section-1" data-heading-text="公司V">公司V</h1>
+<ul>
+<li>主要Java语言</li>
+<li>最原始</li>
+<li>没有服务发现</li>
+<li>通过域名调用，服务器ip配置在nginx</li>
+<li>数据传输使用JSON协议</li>
+</ul>
+<h1 id="section-2" data-heading-text="公司U">公司U</h1>
+<ul>
+<li>主要Java语言</li>
+<li>公司基础团队自己实现服务发现机制</li>
+<li>服务发现使用netty做tcp长链，用于服务注册等</li>
+<li>服务sdk从服务中心获取所调用的对端服务的ip和端口</li>
+<li>通过tcp长链通知服务上下线等</li>
+<li>通过服务的ip和端口调用</li>
+<li>数据传输使用hessian协议</li>
+</ul>
+<h1 id="section-3" data-heading-text="公司K">公司K</h1>
+<h2 id="section-4" data-heading-text="部门1">部门1</h2>
+<h3 id="section-5" data-heading-text="版本v1">版本v1</h3>
+<ul>
+<li>主要Java语言</li>
+<li>使用Eureka做服务发现（HTTP协议）</li>
+<li>服务sdk从Eureka获取所调用的对端服务的ip和端口</li>
+<li>通过HTTP接口从Eureka定时更新服务实例</li>
+<li>通过服务的ip和端口调用</li>
+<li>数据传输使用Thrift协议/JSON协议</li>
+</ul>
+<h3 id="section-6" data-heading-text="版本v2">版本v2</h3>
+<ul>
+<li>在版本1的基础上增加LocalProxy 作为代理</li>
+<li>加入local proxy （service mesh）
+（服务a）-&gt;本地LP -&gt;（服务b）</li>
+</ul>
+<h3 id="section-7" data-heading-text="版本v3">版本v3</h3>
+<ul>
+<li>在k8s 部署</li>
+<li>让每个pod都是单独的实例，ip和物理机一样可以访问，使用calico打通网络，兼容原来的服务发现机制，暂时不使用k8s的service功能
+（服务a）-&gt;远程LP -&gt;（服务b）</li>
+</ul>
+<h3 id="section-8" data-heading-text="版本v4">版本v4</h3>
+<ul>
+<li>使用Istio替换LP</li>
+<li>LP（linkerd）使用Euerka，Istio使用k8s service</li>
+<li>（服务a）-&gt;istio-istio →（服务b）</li>
+<li>内部调用：（服务a，istio-envoy1）-》（istio-envoy2，服务b）
+（）标识同一个pod</li>
+</ul>
+<h2 id="section-9" data-heading-text="部门2">部门2</h2>
+<ul>
+<li>使用nginx二次开发，作为localproxy，以域名作为服务名</li>
+<li>比较原始的方案（公司起步比较早，当时的方案一直沿用至今）</li>
+</ul>
+
+      </div>
+<div class="article-actions" aria-label="Article actions">
+      <a class="share-link" href="https://twitter.com/intent/tweet?text=%E6%88%91%E6%8E%A5%E8%A7%A6%E8%BF%87%E7%9A%84%E5%87%A0%E7%A7%8D%E6%9C%8D%E5%8A%A1%E5%8F%91%E7%8E%B0%E5%92%8Crpc&amp;url=https%3A%2F%2Fkingson4wu.github.io%2Fzh%2Fposts%2F20230704%2F" target="_blank" rel="noopener noreferrer" aria-label="Share on X">
+        <span aria-hidden="true">X</span>
+        <span>Share</span>
+      </a>
+    </div>
+    </article>
+<aside class="article-toc" data-article-toc aria-label="目录">
+      <button class="article-toc-toggle" type="button" data-article-toc-toggle aria-expanded="false" aria-controls="article-toc-panel" aria-label="打开目录" data-open-label="打开目录" data-close-label="收起目录">
+        <svg aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M8 6h11"></path>
+          <path d="M8 12h11"></path>
+          <path d="M8 18h11"></path>
+          <path d="M4 6h.01"></path>
+          <path d="M4 12h.01"></path>
+          <path d="M4 18h.01"></path>
+        </svg>
+      </button>
+      <nav id="article-toc-panel" class="article-toc-panel" data-article-toc-panel aria-label="目录">
+        <div class="article-toc-heading">目录</div>
+        <ol class="article-toc-list">
+          <li class="article-toc-level-2"><a href="#section-4" data-article-toc-link>部门1</a></li>
+          <li class="article-toc-level-3"><a href="#section-5" data-article-toc-link>版本v1</a></li>
+          <li class="article-toc-level-3"><a href="#section-6" data-article-toc-link>版本v2</a></li>
+          <li class="article-toc-level-3"><a href="#section-7" data-article-toc-link>版本v3</a></li>
+          <li class="article-toc-level-3"><a href="#section-8" data-article-toc-link>版本v4</a></li>
+          <li class="article-toc-level-2"><a href="#section-9" data-article-toc-link>部门2</a></li>
+        </ol>
+      </nav>
+    </aside>
+    <script src="/scripts/article-toc.js" defer></script>
+    <nav class="article-nav" aria-label="Adjacent posts">
+      <a href="/zh/posts/20230703/"><span>Previous</span>谈谈定时任务的原理和应用</a>
+      <a href="/zh/posts/20230730-2/"><span>Next</span>记一次socket泄露问题排查记录</a>
+    </nav>
+<section class="comments" aria-labelledby="comments-heading">
+      <h2 id="comments-heading">评论</h2>
+      <div
+        data-comments
+        data-comments-repo="Kingson4Wu/kingson4wu.github.io"
+        data-comments-issue-term="pathname"
+        data-comments-label="comment"
+      ></div>
+    </section>
+    <script src="/scripts/comments.js" defer></script>
+  </main>
+  <footer class="site-footer">
+    <p>&copy; 2026 拉巴力的纸皮箱</p>
+  </footer>
+  <button class="reading-return" type="button" data-reading-return aria-label="回到开头" title="回到开头">
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <path d="M12 19V5"></path>
+      <path d="m6 11 6-6 6 6"></path>
+    </svg>
+  </button>
+  <script src="/scripts/theme.js"></script>
+  <script src="/scripts/image-viewer.js"></script>
+  <script src="/scripts/reading-tools.js"></script>
+</body>
+</html>

@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Intuition First, Explanation After: What Humans and LLMs Have in Common | Kingson Wu</title>
+  <meta name="description" content="A closer look at the shared tendency of humans and large language models to arrive at conclusions before generating plausible justifications — and what this means for how we understand &quot;understanding.&quot;">
+  <link rel="canonical" href="https://kingson4wu.github.io/en/posts/intuition-first-explanation-after/">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="alternate" type="application/rss+xml" title="Kingson Wu" href="/en/feed.xml">
+  <link rel="alternate" type="text/markdown" href="/en/posts/intuition-first-explanation-after/index.md">
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="/styles/main.css">
+  <script>
+    try {
+      var theme = localStorage.getItem('theme');
+      if (theme) document.documentElement.dataset.theme = theme;
+    } catch (_) {}
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="site-title" href="/en/" aria-label="Kingson Wu">
+      <span class="site-logo" aria-hidden="true">K</span>
+      <span>Kingson Wu</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="/en/posts/">Blog</a>
+      <a href="/en/notes/">Notes</a>
+      <a href="/en/tags/">Tags</a>
+      <a href="/en/about/">About</a>
+      <a href="/en/search/">Search</a>
+      <a href="/zh/" lang="zh">中文</a>
+      <a class="feed-link" href="/en/feed.xml" aria-label="Subscribe" title="Subscribe">
+        <svg class="feed-icon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M5 5.5A13.5 13.5 0 0 1 18.5 19"></path>
+          <path d="M5 11A8 8 0 0 1 13 19"></path>
+          <circle cx="6" cy="18" r="1.5"></circle>
+        </svg>
+      </a>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch color mode" title="Switch color mode">
+        <svg class="theme-icon theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M21 14.2A8.5 8.5 0 0 1 9.8 3 7 7 0 1 0 21 14.2Z"></path>
+        </svg>
+        <svg class="theme-icon theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"></path>
+        </svg>
+      </button>
+    </nav>
+  </header>
+  <main class="site-main">
+    <article class="article">
+      <header class="article-header">
+        <h1>Intuition First, Explanation After: What Humans and LLMs Have in Common</h1>
+        <time datetime="2026-02-04T00:00:00.000Z">February 4, 2026</time>
+<ul class="tag-list" aria-label="Tags">
+    <li><a href="/en/tags/AI/">AI</a></li>
+    <li><a href="/en/tags/LLM/">LLM</a></li>
+  </ul>
+      </header>
+      <div class="prose">
+<p>I used to think that if someone could explain their reasoning clearly, it meant they actually understood what they were doing. That turns out to be less reliable than it sounds — for both humans and the models I work with.</p>
+<h2 id="why-explanations-are-unreliable" data-heading-text="Why &quot;Explanations&quot; Are Unreliable">Why “Explanations” Are Unreliable</h2>
+<p>Here’s a pattern I’ve noticed: both humans and large language models can produce a result, then follow it up with a perfectly plausible-sounding reasoning chain. The problem is that this chain is often generated <em>after</em> the conclusion is already settled.</p>
+<p>For language models, what gets called “reasoning” is really a post-hoc language generation task. The model has already arrived at an answer with high confidence, and then produces text that sounds like a logical walkthrough. It’s documentation, not a debug log.</p>
+<p>Humans are similar. A decision gets made fast, in parallel across a lot of neural machinery we can’t introspect directly. The verbal explanation that follows is an edited reconstruction — cleaned up, made linear, stripped of the noise and false starts. The explanation is often genuinely related to the decision, but it rarely describes the actual process by which the decision was reached.</p>
+<p>This doesn’t make explanations useless. Sometimes the post-hoc account does catch real patterns. But it’s usually incomplete, imprecise, and cannot stand in for the internal process that produced the result.</p>
+<p>Which means: whether someone — or some model — can <em>explain</em> their way to an answer is not a reliable test of whether they actually reasoned their way there.</p>
+<h2 id="intuition-comes-first-explanation-follows" data-heading-text="Intuition Comes First, Explanation Follows">Intuition Comes First, Explanation Follows</h2>
+<p>A lot of genuine cognition follows this sequence:</p>
+<ol>
+<li>A judgment or reaction appears</li>
+<li>We then search for reasons to justify it</li>
+</ol>
+<p>For a chess player, that instant sense that “this move is wrong.” For a programmer, the gut feeling that “something is off here.” For a model, the next-token prediction. In each case, what’s actually happening is:</p>
+<ul>
+<li>A large amount of historical experience</li>
+<li>Compressed in a high-dimensional space</li>
+<li>Into a fast, stable reactive pattern</li>
+</ul>
+<p>The explanation isn’t what drove the decision. It’s a linguistic summary generated after the fact.</p>
+<p>A more accurate framing: <em>decisions are driven by structure and experience; explanations are an optional language layer added afterward.</em></p>
+<h2 id="rethinking-what-understanding-means" data-heading-text="Rethinking What &quot;Understanding&quot; Means">Rethinking What “Understanding” Means</h2>
+<p>If explanations are routinely post-hoc, we need to reconsider what “understanding” actually means.</p>
+<p>The old model: understanding = can recite the rules, can trace the causal chain.</p>
+<p>The more practical test: <em>can you still give reasonable responses when conditions change, when surface rules stop applying, when the problem is restated?</em></p>
+<p>That’s where understanding shows up — not in what you say, but in how you behave when things shift. Understanding, viewed this way, is less like knowledge and more like a shape: an internal structure that has been shaped by experience, and that tends to produce appropriate responses even in novel situations.</p>
+<p>This structure, because of its complexity and high-dimensional nature, is not easily reducible to a linear set of rules. You might acknowledge that understanding is structural without being able to turn that structure into a clear, articulable form.</p>
+<h2 id="deep-learning-s-foundational-designs-are-representation-assumptions" data-heading-text="Deep Learning's Foundational Designs Are &quot;Representation Assumptions&quot;">Deep Learning’s Foundational Designs Are “Representation Assumptions”</h2>
+<p>Stepping back, many of the foundational techniques in deep learning — discretization, normalization, activation functions, attention, regularization, network architecture — are usually described as engineering tricks. But a more honest framing is that they’re answers to a single underlying question:</p>
+<blockquote>
+<p><strong>What kind of representation makes it easier for a model to extract stable, generalizable patterns from real-world data?</strong></p>
+</blockquote>
+<p>Some examples:</p>
+<ul>
+<li><strong>Discretization</strong>: splitting the continuous world into composable units, enabling pattern reuse</li>
+<li><strong>Normalization</strong>: suppressing absolute scale so features compete on equal footing</li>
+<li><strong>Activation functions</strong>: creating boundaries in the representation space, turning flat linear space into something with structure</li>
+<li><strong>Attention</strong>: encoding the assumption that effective learning requires selective focus</li>
+<li><strong>Regularization</strong>: encoding the prior that simpler patterns generalize better than complex ones</li>
+<li><strong>Layered structure</strong>: encoding the assumption that real problems have hierarchical generative features</li>
+</ul>
+<p>These aren’t neutral. Each one embeds a bet about how reality generates the patterns we’re trying to learn.</p>
+<h2 id="structural-similarity-between-model-internals-and-human-methodologies" data-heading-text="Structural Similarity Between Model Internals and Human Methodologies">Structural Similarity Between Model Internals and Human Methodologies</h2>
+<p>At a higher level of abstraction, there’s something striking: the activation functions, optimization methods, and network structures in a model occupy the same conceptual space as the techniques, frameworks, and learning methods that humans develop through experience.</p>
+<p>Both share this trait:</p>
+<ul>
+<li><strong>Cannot explain the mechanism of any single success.</strong> A human can’t fully explain that moment of sudden clarity; a model can’t trace exactly how a given output emerged from a forward pass.</li>
+<li><strong>But both have accumulated empirical methods that raise success rates.</strong> Humans trust that deliberate practice, spaced repetition, the Feynman technique, and a path from concrete to abstract will, with enough repetition, reliably produce learning. Deep learning similarly trusts that discretization, normalization, attention, regularization, and optimization will, together, give the model the ability to learn new tasks and patterns.</li>
+</ul>
+<p>Neither humans nor models have cracked the “how did this specific instance succeed” problem. What both have instead is a set of empirically validated methods for increasing the odds.</p>
+<p>This matters for how we think about using large language models. We can’t program them the way we program traditional software — with explicit instructions that deterministically produce specific behavior. They behave more like people: you can’t write a rule that makes them do something, you can only create conditions — through examples, feedback, environment — that make the desired behavior more likely to emerge. That tendency is shaped during training, not programmed in.</p>
+<h2 id="role-reflection-not-replaying-process-but-reinforcing-intuition" data-heading-text="The Role of Reflection: Not Replaying the Process, But Reinforcing Intuition">The Role of Reflection: Not Replaying the Process, But Reinforcing Intuition</h2>
+<p>Both human self-reflection and the “reflection” mechanisms in some models serve a similar function — but it’s not what the word suggests.</p>
+<p>They’re not replaying the actual internal process. Their main effect is:</p>
+<ul>
+<li>Adjusting the outcomes</li>
+<li>Stabilizing useful reactive patterns</li>
+<li>Making future performance on similar problems better</li>
+</ul>
+<p>There’s a real difference in degree, though. Humans have active metacognition: we can monitor our strategy mid-task, catch ourselves, shift approach, and even question the framework we’re using to think with. A model’s reflection is closer to an additional training step: generating more output, running extra inference, or fine-tuning — improvement through iteration, not through real-time self-monitoring.</p>
+<p>Still, the functional role is similar: reflection is a form of secondary optimization, not a faithful reconstruction of the original reasoning path.</p>
+<h2 id="conclusion-understanding-is-structured-experience-action" data-heading-text="Conclusion: Understanding Is Structured Experience in Action">Conclusion: Understanding Is Structured Experience in Action</h2>
+<p>These observations converge on a deeper point: <strong>cognition is not primarily about explicitness — it’s about adaptability.</strong></p>
+<p>A few implications:</p>
+<ul>
+<li>
+<p><strong>Explanations are post-hoc.</strong> Models can produce results without being able to explain the actual internal path; when they do produce “reasoning,” it’s generated after the conclusion is already formed. Humans are the same. Explanations have value but are typically incomplete and imprecise.</p>
+</li>
+<li>
+<p><strong>Intuition precedes explanation.</strong> For both humans and models, many decisive moments are essentially fast pattern-matching from structured experience. The explanation comes later.</p>
+</li>
+<li>
+<p><strong>Understanding is acting rightly under novelty.</strong> It’s less “can you articulate why” and more “can you keep responding appropriately as conditions shift.” This capacity lives in internal structure — structure too complex and distributed to cleanly transcribe into language.</p>
+</li>
+<li>
+<p><strong>Methods are analogous.</strong> Activation functions and optimization techniques sit at the same level of abstraction as human-developed methods like deliberate practice or spaced repetition. They don’t replace thinking — they create the conditions under which good thinking becomes more likely.</p>
+</li>
+<li>
+<p><strong>Guidance, not control.</strong> This structural similarity suggests that interacting with LLMs should feel more like teaching than programming. You shape behavior through examples, feedback, and environment — not through precise rule instructions.</p>
+</li>
+<li>
+<p><strong>Reflection reinforces, it doesn’t reconstruct.</strong> Repeated training and reflection can sharpen intuition, but that intuition doesn’t depend on a clean, articulable reasoning chain. Humans have an edge in metacognition, but the core function — strengthening useful patterns rather than replaying process — is shared.</p>
+</li>
+</ul>
+<p>The common ground: both human cognition and deep learning are, at their core, <strong>stable, generalizable reactive patterns shaped by the interaction of experience and structure.</strong></p>
+
+      </div>
+<div class="article-actions" aria-label="Article actions">
+      <a class="share-link" href="https://twitter.com/intent/tweet?text=Intuition+First%2C+Explanation+After%3A+What+Humans+and+LLMs+Have+in+Common&amp;url=https%3A%2F%2Fkingson4wu.github.io%2Fen%2Fposts%2Fintuition-first-explanation-after%2F" target="_blank" rel="noopener noreferrer" aria-label="Share on X">
+        <span aria-hidden="true">X</span>
+        <span>Share</span>
+      </a>
+    </div>
+    </article>
+<aside class="article-toc" data-article-toc aria-label="Contents">
+      <button class="article-toc-toggle" type="button" data-article-toc-toggle aria-expanded="false" aria-controls="article-toc-panel" aria-label="Open contents" data-open-label="Open contents" data-close-label="Close contents">
+        <svg aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M8 6h11"></path>
+          <path d="M8 12h11"></path>
+          <path d="M8 18h11"></path>
+          <path d="M4 6h.01"></path>
+          <path d="M4 12h.01"></path>
+          <path d="M4 18h.01"></path>
+        </svg>
+      </button>
+      <nav id="article-toc-panel" class="article-toc-panel" data-article-toc-panel aria-label="Contents">
+        <div class="article-toc-heading">Contents</div>
+        <ol class="article-toc-list">
+          <li class="article-toc-level-2"><a href="#why-explanations-are-unreliable" data-article-toc-link>Why &quot;Explanations&quot; Are Unreliable</a></li>
+          <li class="article-toc-level-2"><a href="#intuition-comes-first-explanation-follows" data-article-toc-link>Intuition Comes First, Explanation Follows</a></li>
+          <li class="article-toc-level-2"><a href="#rethinking-what-understanding-means" data-article-toc-link>Rethinking What &quot;Understanding&quot; Means</a></li>
+          <li class="article-toc-level-2"><a href="#deep-learning-s-foundational-designs-are-representation-assumptions" data-article-toc-link>Deep Learning&#39;s Foundational Designs Are &quot;Representation Assumptions&quot;</a></li>
+          <li class="article-toc-level-2"><a href="#structural-similarity-between-model-internals-and-human-methodologies" data-article-toc-link>Structural Similarity Between Model Internals and Human Methodologies</a></li>
+          <li class="article-toc-level-2"><a href="#role-reflection-not-replaying-process-but-reinforcing-intuition" data-article-toc-link>The Role of Reflection: Not Replaying the Process, But Reinforcing Intuition</a></li>
+          <li class="article-toc-level-2"><a href="#conclusion-understanding-is-structured-experience-action" data-article-toc-link>Conclusion: Understanding Is Structured Experience in Action</a></li>
+        </ol>
+      </nav>
+    </aside>
+    <script src="/scripts/article-toc.js" defer></script>
+    <nav class="article-nav" aria-label="Adjacent posts">
+      <a href="/en/posts/why-rust-requires-explicit-lifetime-annotations-caller-contracts-design-essence/"><span>Previous</span>Why Rust Makes Lifetime Annotations Part of the API</a>
+      <a href="/en/posts/agent-runtime-and-skill-convergence/"><span>Next</span>From Custom Agents to Agent Runtime + Skill: Convergence in AI System Architecture</a>
+    </nav>
+<section class="comments" aria-labelledby="comments-heading">
+      <h2 id="comments-heading">Comments</h2>
+      <div
+        data-comments
+        data-comments-repo="Kingson4Wu/kingson4wu.github.io"
+        data-comments-issue-term="pathname"
+        data-comments-label="comment"
+      ></div>
+    </section>
+    <script src="/scripts/comments.js" defer></script>
+  </main>
+  <footer class="site-footer">
+    <p>&copy; 2026 Kingson Wu</p>
+  </footer>
+  <button class="reading-return" type="button" data-reading-return aria-label="Back to start" title="Back to start">
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <path d="M12 19V5"></path>
+      <path d="m6 11 6-6 6 6"></path>
+    </svg>
+  </button>
+  <script src="/scripts/theme.js"></script>
+  <script src="/scripts/image-viewer.js"></script>
+  <script src="/scripts/reading-tools.js"></script>
+</body>
+</html>

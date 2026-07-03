@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>对工作中接触过的几种编程语言及其部署架构的看法 | 拉巴力的纸皮箱</title>
+  <meta name="description" content="公司V 使用Java作为编程语言 使用Spring-MVC框架 使用Tomcat作为Web容器 打包运行方式： 服务器预安装了Java和Tomcat 将代码打包成war包 将war包上传到服务器的Tomcat的web目录 重启tomcat更新服务 公司U 使用Java作为编程语言 使用二次开发的Play1.x作为web...">
+  <link rel="canonical" href="https://kingson4wu.github.io/zh/posts/20230702/">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="alternate" type="application/rss+xml" title="拉巴力的纸皮箱" href="/zh/feed.xml">
+  <link rel="alternate" type="text/markdown" href="/zh/posts/20230702/index.md">
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="/styles/main.css">
+  <script>
+    try {
+      var theme = localStorage.getItem('theme');
+      if (theme) document.documentElement.dataset.theme = theme;
+    } catch (_) {}
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="site-title" href="/zh/" aria-label="拉巴力的纸皮箱">
+      <span class="site-logo" aria-hidden="true">K</span>
+      <span>拉巴力的纸皮箱</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="/zh/posts/">文章</a>
+      <a href="/zh/notes/">笔记</a>
+      <a href="/zh/tags/">标签</a>
+      <a href="/zh/about/">关于</a>
+      <a href="/zh/search/">搜索</a>
+      <a href="/en/" lang="en">English</a>
+      <a class="feed-link" href="/zh/feed.xml" aria-label="订阅更新" title="订阅更新">
+        <svg class="feed-icon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M5 5.5A13.5 13.5 0 0 1 18.5 19"></path>
+          <path d="M5 11A8 8 0 0 1 13 19"></path>
+          <circle cx="6" cy="18" r="1.5"></circle>
+        </svg>
+      </a>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换明暗模式" title="切换明暗模式">
+        <svg class="theme-icon theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M21 14.2A8.5 8.5 0 0 1 9.8 3 7 7 0 1 0 21 14.2Z"></path>
+        </svg>
+        <svg class="theme-icon theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"></path>
+        </svg>
+      </button>
+    </nav>
+  </header>
+  <main class="site-main">
+    <article class="article">
+      <header class="article-header">
+        <h1>对工作中接触过的几种编程语言及其部署架构的看法</h1>
+        <time datetime="2023-07-02T14:15:20.000Z">2023年7月2日</time>
+<ul class="tag-list" aria-label="Tags">
+    <li><a href="/zh/tags/Java/">Java</a></li>
+    <li><a href="/zh/tags/Go/">Go</a></li>
+    <li><a href="/zh/tags/Programming%20Languages/">Programming Languages</a></li>
+  </ul>
+      </header>
+      <div class="prose">
+<h2 id="section-1" data-heading-text="公司V">公司V</h2>
+<p><img src="/assets/zh/posts/20230702/01.V_Java.drawio.png" alt=""></p>
+<ul>
+<li>
+<p>使用Java作为编程语言</p>
+</li>
+<li>
+<p>使用Spring-MVC框架</p>
+</li>
+<li>
+<p>使用Tomcat作为Web容器</p>
+</li>
+<li>
+<p>打包运行方式：</p>
+<ol>
+<li>服务器预安装了Java和Tomcat</li>
+<li>将代码打包成war包</li>
+<li>将war包上传到服务器的Tomcat的web目录</li>
+<li>重启tomcat更新服务</li>
+</ol>
+</li>
+</ul>
+<h2 id="section-2" data-heading-text="公司U">公司U</h2>
+<p><img src="/assets/zh/posts/20230702/02.U_Java.drawio.png" alt=""></p>
+<ul>
+<li>
+<p>使用Java作为编程语言</p>
+</li>
+<li>
+<p>使用二次开发的Play1.x作为web框架（底层基于Netty）</p>
+</li>
+<li>
+<p>公司在框架自行研发了服务发现等功能</p>
+</li>
+<li>
+<p>打包运行方式：</p>
+<ol>
+<li>服务器预安装了Java</li>
+<li>将代码打包成Zip包</li>
+<li>将zip包上传到服务器的指定目录</li>
+<li>通过信号停止服务（kill），通过Java命令启动服务</li>
+</ol>
+</li>
+</ul>
+<h2 id="section-3" data-heading-text="公司B">公司B</h2>
+<p><img src="/assets/zh/posts/20230702/03.D_Java.drawio.png" alt=""></p>
+<ul>
+<li>
+<p>使用Java作为编程语言</p>
+</li>
+<li>
+<p>使用Spring-Boot框架</p>
+</li>
+<li>
+<p>使用Tomcat作为Web容器</p>
+</li>
+<li>
+<p>打包运行方式：</p>
+<ol>
+<li>服务器预安装了Java和Tomcat</li>
+<li>将代码打包成war包</li>
+<li>将war包上传到服务器的Tomcat的web目录</li>
+<li>重启tomcat更新服务</li>
+</ol>
+</li>
+</ul>
+<h2 id="section-4" data-heading-text="公司K">公司K</h2>
+<h3 id="java" data-heading-text="Java">Java</h3>
+<p><img src="/assets/zh/posts/20230702/04.K_Java.drawio.png" alt=""></p>
+<ul>
+<li>
+<p>使用Java作为编程语言</p>
+</li>
+<li>
+<p>使用二次开发的Spring-Boot和Spring-Cloud作为web框架</p>
+</li>
+<li>
+<p>公司在框架自行研发了服务发现，服务治理，数据库切换、容灾相关等功能</p>
+</li>
+<li>
+<p>打包运行方式：</p>
+<ol>
+<li>服务器预安装了Java</li>
+<li>将代码打包成Zip包</li>
+<li>将zip包上传到服务器的指定目录</li>
+<li>通过信号停止服务（kill），通过Java命令启动服务</li>
+</ol>
+</li>
+</ul>
+<h3 id="lua" data-heading-text="Lua">Lua</h3>
+<p><img src="/assets/zh/posts/20230702/04.K_Lua.drawio.png" alt=""></p>
+<ul>
+<li>
+<p>使用Lua作为编程语言</p>
+</li>
+<li>
+<p>使用OpenResty作为服务器</p>
+</li>
+<li>
+<p>公司开发了一些通用的sdk，在OpenResty配置中include即可</p>
+</li>
+<li>
+<p>打包运行方式：</p>
+<ol>
+<li>服务器预安装了OpenResty</li>
+<li>将代码文件上传到指定的目录</li>
+<li>执行 <code>nginx -s reload</code> 更新OpenResty的lua文件即可</li>
+</ol>
+</li>
+</ul>
+<h3 id="php" data-heading-text="PHP">PHP</h3>
+<p><img src="/assets/zh/posts/20230702/04.K_PHP.drawio.png" alt=""></p>
+<ul>
+<li>
+<p>使用PHP作为编程语言</p>
+</li>
+<li>
+<p>使用OpenResty作为服务器</p>
+</li>
+<li>
+<p>打包运行方式：</p>
+<ol>
+<li>服务器预安装了OpenResty和PHP</li>
+<li>将代码文件上传到指定的目录</li>
+<li>执行 <code>nginx -s reload</code> 更新OpenResty的PHP文件即可</li>
+</ol>
+</li>
+</ul>
+<h3 id="go" data-heading-text="Go">Go</h3>
+<p><img src="/assets/zh/posts/20230702/04.K_Go.drawio.png" alt=""></p>
+<ul>
+<li>
+<p>使用Go作为编程语言</p>
+</li>
+<li>
+<p>打包运行方式：</p>
+<ol>
+<li>将代码打包成二进制可执行文件</li>
+<li>使用nohup运行二进制即可（有的使用supervisor，有的使用systemctl）</li>
+</ol>
+</li>
+</ul>
+<h2 id="section-9" data-heading-text="对这些编程语言和运行方式的理解和看法">对这些编程语言和运行方式的理解和看法</h2>
+<h3 id="java-2" data-heading-text="Java">Java</h3>
+<ul>
+<li>编译语言</li>
+<li>Java服务需要运行在JVM上，而JVM是使用C++实现的</li>
+<li>Java代码编译后本质上是一堆字节码文件，不具备单独运行的能力</li>
+<li>运行Java字节码，需要JRE环境</li>
+</ul>
+<h3 id="php-2" data-heading-text="PHP">PHP</h3>
+<ul>
+<li>脚本语言</li>
+<li>PHP通常和Web服务器搭配（比如Apache和Nginx），对外提供Web服务</li>
+<li>以Nginx为例，Nginx不能直接处理PHP脚本，需要使用FastCGI协议将请求转发到PHP解释器
+（因此，首先需要安装PHP和FastCGI进程管理器，例如php-fpm）</li>
+<li>通常情况下，PHP解释器会安装在机器本机上。当Nginx通过FastCGI协议与PHP解释器进行通信时，它会将请求转发到运行在本机的FastCGI进程管理器，然后再将请求转发到本机上运行的PHP解释器</li>
+</ul>
+<h3 id="lua-2" data-heading-text="Lua">Lua</h3>
+<ul>
+<li>脚本语言</li>
+<li>以OpenResty作为web服务器运行Lua脚本是一种方式</li>
+<li>Nginx + LuaJIT = OpenResty</li>
+</ul>
+<h4 id="openresty" data-heading-text="OpenResty">OpenResty</h4>
+<ul>
+<li>OpenResty本质上是将 LuaJIT 的虚拟机嵌入到 Nginx 的管理进程和工作进程中，同一个进程内的所有协程都会共享这个虚拟机，并在虚拟机中执行Lua代码。在性能上，OpenResty接近或超过 Nginx 的C模块，而且开发效率更高。</li>
+<li>OpenResty中的核心技术cosocket将 Lua 协程和 Nginx 的事件机制结合在一起，最终实现了非阻塞网络IO。不仅和HTTP客户端之间的网络通信是非阻塞的，与MySQL、Memcached以及Redis等众多后端之间的网络通信也是非阻塞的。</li>
+</ul>
+<h4 id="openresty-2" data-heading-text="Openresty 是怎么嵌入lua虚拟机的">Openresty 是怎么嵌入lua虚拟机的</h4>
+<ul>
+<li>OpenResty 是一个基于 Nginx 的 Web 应用服务器，它可以通过嵌入 Lua 脚本语言来实现高性能的 Web 应用程序。OpenResty 在运行过程中通过 LuaJIT 虚拟机来解释执行 Lua 代码。</li>
+<li>OpenResty 在编译时会将 LuaJIT 虚拟机源代码打包成动态链接库，然后将其嵌入到 Nginx 中。OpenResty 运行时会通过 LuaJIT 虚拟机来加载和执行 Lua 代码，从而实现了高性能的 Web 应用程序。</li>
+</ul>
+<h3 id="go-2" data-heading-text="Go">Go</h3>
+<ul>
+<li>编译语言</li>
+<li>编译成二进制文件后，可以直接在服务器运行，相比其他语言，一般可以认为没其他依赖</li>
+</ul>
+<h3 id="section-16" data-heading-text="个人看法">个人看法</h3>
+<ul>
+<li>Lua比较小众，不适合做大型的业务开发，而且debug比较不方便；</li>
+<li>PHP在业界已经是快被淘汰的语言了，不做仔细研究，初步体验感觉一般（可能是受限于公司的维护环境过于糟糕，各种老版本，和高深莫测的代码）；</li>
+<li>Java是我职业生涯接触最久的编程语言，谈不上喜欢也谈不上讨厌，但自从学习了Go之后，有了新的体会；</li>
+<li>当初学习Go的其中一个原因是自己的个人项目比较轻量，Go其中一个优势是不依赖其他软件就可以运行，而且分发方便；</li>
+<li>Go使用AOT的方式编译，针对特定平台，除了加快启动速度，也使程序打包体积大大减少；</li>
+<li>当然Java也可以用graalvm打成二进制文件启动（没尝试过，感觉还是有不少前置条件）；</li>
+<li>除此之外，还有很多其他以后补充</li>
+</ul>
+
+      </div>
+<div class="article-actions" aria-label="Article actions">
+      <a class="share-link" href="https://twitter.com/intent/tweet?text=%E5%AF%B9%E5%B7%A5%E4%BD%9C%E4%B8%AD%E6%8E%A5%E8%A7%A6%E8%BF%87%E7%9A%84%E5%87%A0%E7%A7%8D%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80%E5%8F%8A%E5%85%B6%E9%83%A8%E7%BD%B2%E6%9E%B6%E6%9E%84%E7%9A%84%E7%9C%8B%E6%B3%95&amp;url=https%3A%2F%2Fkingson4wu.github.io%2Fzh%2Fposts%2F20230702%2F" target="_blank" rel="noopener noreferrer" aria-label="Share on X">
+        <span aria-hidden="true">X</span>
+        <span>Share</span>
+      </a>
+    </div>
+    </article>
+<aside class="article-toc" data-article-toc aria-label="目录">
+      <button class="article-toc-toggle" type="button" data-article-toc-toggle aria-expanded="false" aria-controls="article-toc-panel" aria-label="打开目录" data-open-label="打开目录" data-close-label="收起目录">
+        <svg aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M8 6h11"></path>
+          <path d="M8 12h11"></path>
+          <path d="M8 18h11"></path>
+          <path d="M4 6h.01"></path>
+          <path d="M4 12h.01"></path>
+          <path d="M4 18h.01"></path>
+        </svg>
+      </button>
+      <nav id="article-toc-panel" class="article-toc-panel" data-article-toc-panel aria-label="目录">
+        <div class="article-toc-heading">目录</div>
+        <ol class="article-toc-list">
+          <li class="article-toc-level-2"><a href="#section-1" data-article-toc-link>公司V</a></li>
+          <li class="article-toc-level-2"><a href="#section-2" data-article-toc-link>公司U</a></li>
+          <li class="article-toc-level-2"><a href="#section-3" data-article-toc-link>公司B</a></li>
+          <li class="article-toc-level-2"><a href="#section-4" data-article-toc-link>公司K</a></li>
+          <li class="article-toc-level-3"><a href="#java" data-article-toc-link>Java</a></li>
+          <li class="article-toc-level-3"><a href="#lua" data-article-toc-link>Lua</a></li>
+          <li class="article-toc-level-3"><a href="#php" data-article-toc-link>PHP</a></li>
+          <li class="article-toc-level-3"><a href="#go" data-article-toc-link>Go</a></li>
+          <li class="article-toc-level-2"><a href="#section-9" data-article-toc-link>对这些编程语言和运行方式的理解和看法</a></li>
+          <li class="article-toc-level-3"><a href="#java-2" data-article-toc-link>Java</a></li>
+          <li class="article-toc-level-3"><a href="#php-2" data-article-toc-link>PHP</a></li>
+          <li class="article-toc-level-3"><a href="#lua-2" data-article-toc-link>Lua</a></li>
+          <li class="article-toc-level-3"><a href="#go-2" data-article-toc-link>Go</a></li>
+          <li class="article-toc-level-3"><a href="#section-16" data-article-toc-link>个人看法</a></li>
+        </ol>
+      </nav>
+    </aside>
+    <script src="/scripts/article-toc.js" defer></script>
+    <nav class="article-nav" aria-label="Adjacent posts">
+      <a href="/zh/posts/20230302-notes/"><span>Previous</span>软技能_代码之外的生存指南_notes</a>
+      <a href="/zh/posts/20230703/"><span>Next</span>谈谈定时任务的原理和应用</a>
+    </nav>
+<section class="comments" aria-labelledby="comments-heading">
+      <h2 id="comments-heading">评论</h2>
+      <div
+        data-comments
+        data-comments-repo="Kingson4Wu/kingson4wu.github.io"
+        data-comments-issue-term="pathname"
+        data-comments-label="comment"
+      ></div>
+    </section>
+    <script src="/scripts/comments.js" defer></script>
+  </main>
+  <footer class="site-footer">
+    <p>&copy; 2026 拉巴力的纸皮箱</p>
+  </footer>
+  <button class="reading-return" type="button" data-reading-return aria-label="回到开头" title="回到开头">
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <path d="M12 19V5"></path>
+      <path d="m6 11 6-6 6 6"></path>
+    </svg>
+  </button>
+  <script src="/scripts/theme.js"></script>
+  <script src="/scripts/image-viewer.js"></script>
+  <script src="/scripts/reading-tools.js"></script>
+</body>
+</html>

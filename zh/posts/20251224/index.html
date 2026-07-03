@@ -1,0 +1,499 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>从零开始理解：点积为什么能反映向量夹角？ | 拉巴力的纸皮箱</title>
+  <meta name="description" content="以下内容由AI辅助生成 当我们谈到词向量相似度时，总会用到“余弦相似度”这个概念。但你有没有想过：为什么两个向量的点积能反映它们的夹角？这背后的数学原理是什么？ 一、从投影说起：最直观的理解 投影的几何意义 看这个图： a /| / | / | |a|cos(θ) / | /_)θ | b————————————→ a...">
+  <link rel="canonical" href="https://kingson4wu.github.io/zh/posts/20251224/">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="alternate" type="application/rss+xml" title="拉巴力的纸皮箱" href="/zh/feed.xml">
+  <link rel="alternate" type="text/markdown" href="/zh/posts/20251224/index.md">
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="/styles/main.css">
+  <script>
+    try {
+      var theme = localStorage.getItem('theme');
+      if (theme) document.documentElement.dataset.theme = theme;
+    } catch (_) {}
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="site-title" href="/zh/" aria-label="拉巴力的纸皮箱">
+      <span class="site-logo" aria-hidden="true">K</span>
+      <span>拉巴力的纸皮箱</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="/zh/posts/">文章</a>
+      <a href="/zh/notes/">笔记</a>
+      <a href="/zh/tags/">标签</a>
+      <a href="/zh/about/">关于</a>
+      <a href="/zh/search/">搜索</a>
+      <a href="/en/" lang="en">English</a>
+      <a class="feed-link" href="/zh/feed.xml" aria-label="订阅更新" title="订阅更新">
+        <svg class="feed-icon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M5 5.5A13.5 13.5 0 0 1 18.5 19"></path>
+          <path d="M5 11A8 8 0 0 1 13 19"></path>
+          <circle cx="6" cy="18" r="1.5"></circle>
+        </svg>
+      </a>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换明暗模式" title="切换明暗模式">
+        <svg class="theme-icon theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M21 14.2A8.5 8.5 0 0 1 9.8 3 7 7 0 1 0 21 14.2Z"></path>
+        </svg>
+        <svg class="theme-icon theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"></path>
+        </svg>
+      </button>
+    </nav>
+  </header>
+  <main class="site-main">
+    <article class="article">
+      <header class="article-header">
+        <h1>从零开始理解：点积为什么能反映向量夹角？</h1>
+        <time datetime="2025-12-24T09:18:33.000Z">2025年12月24日</time>
+<ul class="tag-list" aria-label="Tags">
+    <li><a href="/zh/tags/AI/">AI</a></li>
+    <li><a href="/zh/tags/LLM/">LLM</a></li>
+    <li><a href="/zh/tags/Deep%20Learning/">Deep Learning</a></li>
+    <li><a href="/zh/tags/Math/">Math</a></li>
+  </ul>
+      </header>
+      <div class="prose">
+<blockquote>
+<blockquote>
+<p>以下内容由AI辅助生成</p>
+</blockquote>
+</blockquote>
+<p>当我们谈到词向量相似度时，总会用到“余弦相似度”这个概念。但你有没有想过：<strong>为什么两个向量的点积能反映它们的夹角？这背后的数学原理是什么？</strong></p>
+<h2 id="section-1" data-heading-text="一、从投影说起：最直观的理解">一、从投影说起：最直观的理解</h2>
+<h3 id="section-2" data-heading-text="投影的几何意义">投影的几何意义</h3>
+<p>看这个图：</p>
+<div class="code-block"><pre><code class="hljs">      a
+     /|
+    / |
+   /  | |a|cos(θ)
+  /   |
+ /_)θ |
+b————————————→
+</code></pre></div>
+<p><strong>a 在 b 方向上的投影长度 = |a|cos(θ)</strong></p>
+<h3 id="section-3" data-heading-text="为什么投影能反映相似度？">为什么投影能反映相似度？</h3>
+<p>想象两个向量代表不同的方向：</p>
+<p><strong>情况1：方向完全一致（θ=0°）</strong></p>
+<div class="code-block"><pre><code class="hljs">你  →→→→→
+    →→→→→
+</code></pre></div>
+<p>投影 = 全部长度，cos(0°) = 1，投影最大</p>
+<p><strong>情况2：方向垂直（θ=90°）</strong></p>
+<div class="code-block"><pre><code class="hljs">你  ↑↑↑
+    →→→
+</code></pre></div>
+<p>投影 = 0，cos(90°) = 0，没有共同分量</p>
+<p><strong>情况3：方向相反（θ=180°）</strong></p>
+<div class="code-block"><pre><code class="hljs">你  ←←←←←
+    →→→→→
+</code></pre></div>
+<p>投影为负，cos(180°) = -1，完全相反</p>
+<p><strong>关键洞察</strong>：</p>
+<ul>
+<li><strong>夹角越小</strong> → cos(θ) 越大 → <strong>投影越长</strong> → 两个方向越一致</li>
+<li><strong>夹角为90°</strong> → cos(90°) = 0 → <strong>投影为0</strong> → 两个方向完全无关</li>
+<li><strong>夹角为180°</strong> → cos(180°) = -1 → <strong>投影为负</strong> → 两个方向完全相反</li>
+</ul>
+<p>这就是为什么 cos(θ) 能反映方向相似性。</p>
+<h3 id="section-4" data-heading-text="cos函数的性质">cos函数的性质</h3>
+<p>在 [0°, 180°] 范围内：</p>
+<div class="code-block"><pre><code class="hljs">θ = 0°   → cos(0°) = 1      (完全同向)
+θ = 45°  → cos(45°) ≈ 0.707
+θ = 90°  → cos(90°) = 0     (垂直)
+θ = 135° → cos(135°) ≈ -0.707
+θ = 180° → cos(180°) = -1   (完全反向)
+</code></pre></div>
+<p>cos(θ) 随夹角单调递减，这是余弦函数的基本性质。</p>
+<p>用图像理解：</p>
+<div class="code-block"><pre><code class="hljs">  cos(θ)
+    1 |     ●
+      |    /
+    0 |___/__________ θ
+      |  /
+   -1 | ●
+      0°  90°  180°
+</code></pre></div>
+<p>夹角越小 → cos值越大 → 点积越大（向量长度相同时）</p>
+<h2 id="section-5" data-heading-text="二、点积的定义和几何意义">二、点积的定义和几何意义</h2>
+<h3 id="section-6" data-heading-text="点积的代数定义">点积的代数定义</h3>
+<p>点积的原始定义（代数形式）：</p>
+<p><strong>a · b = a₁b₁ + a₂b₂ + … + aₙbₙ</strong></p>
+<p>就是对应坐标相乘再求和。</p>
+<h3 id="section-7" data-heading-text="点积的几何意义">点积的几何意义</h3>
+<p>点积还有一个几何解释：</p>
+<p><strong>a · b = |b| × (|a|cos(θ))</strong><br>
+= b的长度 × a在b方向上的投影</p>
+<p>或反过来：</p>
+<p><strong>a · b = |a| × (|b|cos(θ))</strong><br>
+= a的长度 × b在a方向上的投影</p>
+<h3 id="section-8" data-heading-text="为什么投影还要乘以b的长度？">为什么投影还要乘以b的长度？</h3>
+<p><strong>举个例子</strong>：</p>
+<div class="code-block"><pre><code class="hljs">a = [3, 4]
+b = [2, 0]  (纯x方向，长度为2)
+
+点积 = 3×2 + 4×0 = 6
+</code></pre></div>
+<p>这个6怎么来的？</p>
+<ul>
+<li>a 在 x 方向的分量是 3</li>
+<li>b 在 x 方向的分量是 2（包含了 b 的长度）</li>
+<li>两者相乘：3 × 2 = 6</li>
+</ul>
+<p><strong>如果 b 是单位向量呢？</strong></p>
+<div class="code-block"><pre><code class="hljs">b&#39; = [1, 0]  (长度为1)
+
+点积 = 3×1 + 4×0 = 3
+</code></pre></div>
+<p>这时候点积恰好等于 a 的投影！</p>
+<p><strong>本质原因：坐标分量的乘积</strong></p>
+<p>点积的每一项是 <strong>aᵢbᵢ</strong>，不是 <strong>aᵢ × 1</strong>。</p>
+<div class="code-block"><pre><code class="hljs">a = [a₁, a₂]
+b = [b₁, b₂]
+
+点积 = a₁b₁ + a₂b₂
+</code></pre></div>
+<p>b₁ 和 b₂ 本身就包含了 b 的长度信息。</p>
+<p>用极坐标看更清楚：</p>
+<div class="code-block"><pre><code class="hljs">b₁ = |b|cos(β)  ← 包含了|b|
+b₂ = |b|sin(β)  ← 包含了|b|
+
+点积 = a₁(|b|cos(β)) + a₂(|b|sin(β))
+     = |b|(a₁cos(β) + a₂sin(β))
+     ↑
+     这就是|b|的来源
+</code></pre></div>
+<p><strong>结论</strong>：</p>
+<ul>
+<li>如果 b 是<strong>单位向量</strong>（|b|=1），点积 = a 的投影</li>
+<li>如果 b 不是单位向量，点积 = a 的投影 × |b|</li>
+</ul>
+<h3 id="section-9" data-heading-text="如果只想要投影怎么办？">如果只想要投影怎么办？</h3>
+<p>如果你只想要“a 在 b 方向上的投影”，需要：</p>
+<p><strong>投影 = (a · b) / |b|</strong></p>
+<p>或者先把 b 变成单位向量：</p>
+<p><strong>b̂ = b / |b|</strong>  (单位向量)</p>
+<p><strong>投影 = a · b̂ = (a · b) / |b|</strong></p>
+<p>余弦相似度就是这样做的——同时除以两个向量的长度。</p>
+<h2 id="section-10" data-heading-text="三、为什么点积公式天然就能算出夹角？">三、为什么点积公式天然就能算出夹角？</h2>
+<h3 id="section-11" data-heading-text="坐标分量的乘积求和">坐标分量的乘积求和</h3>
+<p>让我们看看点积 <strong>a₁b₁ + a₂b₂</strong> 在做什么：</p>
+<p><strong>假设</strong>：</p>
+<div class="code-block"><pre><code class="hljs">a = [3, 4]
+b = [5, 0]  (纯x方向)
+
+点积 = 3×5 + 4×0 = 15
+</code></pre></div>
+<p>这在算什么？</p>
+<p>b 是纯 x 方向，所以点积只保留了 a 在 x 方向的分量：</p>
+<ul>
+<li>a 的 x 分量是 3</li>
+<li>b 的长度是 5</li>
+<li>结果 = 3×5 = 15</li>
+</ul>
+<p><strong>本质</strong>：点积的每一项 <strong>aᵢbᵢ</strong> 都在计算“两个向量在第 i 个坐标轴上的分量的乘积”，求和后就得到了“总的共同分量”。</p>
+<h3 id="section-12" data-heading-text="再看两个例子">再看两个例子</h3>
+<p><strong>例子1</strong>：</p>
+<div class="code-block"><pre><code class="hljs">a = [1, 1]    // 指向45°方向
+b = [1, 0]    // 指向0°方向
+θ = 45°
+
+点积 = 1×1 + 1×0 = 1
+|a| = √2
+|b| = 1
+
+公式验证：|a||b|cos(45°) = √2 × 1 × 0.707 ≈ 1 ✓
+</code></pre></div>
+<p><strong>例子2</strong>：</p>
+<div class="code-block"><pre><code class="hljs">a = [0, 1]    // 指向90°方向
+b = [1, 0]    // 指向0°方向
+θ = 90°
+
+点积 = 0×1 + 1×0 = 0
+
+验证：|a||b|cos(90°) = 1 × 1 × 0 = 0 ✓
+</code></pre></div>
+<h2 id="b-cos" data-heading-text="四、数学推导：点积 = |a||b|cos(θ)">四、数学推导：点积 = |a||b|cos(θ)</h2>
+<p>现在严格推导，证明点积的代数定义和几何定义是等价的。</p>
+<h3 id="section-14" data-heading-text="方法一：从二维开始（最直观）">方法一：从二维开始（最直观）</h3>
+<p><strong>第一步：用极坐标表示向量</strong></p>
+<p>假设两个二维向量：</p>
+<div class="code-block"><pre><code class="hljs">a = [a₁, a₂]
+b = [b₁, b₂]
+</code></pre></div>
+<p>用极坐标表示：</p>
+<div class="code-block"><pre><code class="hljs">a = [|a|cos(α), |a|sin(α)]  // α是a与x轴的夹角
+b = [|b|cos(β), |b|sin(β)]  // β是b与x轴的夹角
+</code></pre></div>
+<p>其中 <strong>θ = β - α</strong> 是两个向量之间的夹角。</p>
+<p><strong>第二步：计算点积</strong></p>
+<div class="code-block"><pre><code class="hljs">a · b = a₁b₁ + a₂b₂
+     = |a|cos(α) × |b|cos(β) + |a|sin(α) × |b|sin(β)
+     = |a||b| [cos(α)cos(β) + sin(α)sin(β)]
+</code></pre></div>
+<p><strong>第三步：使用三角恒等式</strong></p>
+<p>关键的三角恒等式：</p>
+<p><strong>cos(α)cos(β) + sin(α)sin(β) = cos(β - α) = cos(θ)</strong></p>
+<p>所以：</p>
+<p><strong>a · b = |a||b|cos(θ)</strong></p>
+<p>这不是定义，是推导出来的结论！</p>
+<h3 id="section-15" data-heading-text="方法二：用余弦定理（适用于任意维度）">方法二：用余弦定理（适用于任意维度）</h3>
+<p>考虑由原点O、向量a的终点A、向量b的终点B构成的三角形：</p>
+<div class="code-block"><pre><code class="hljs">      A (向量a的终点)
+     /|
+    / |
+   /  |θ
+  /   |
+ O————|————B (向量b的终点)
+</code></pre></div>
+<p>三条边的长度：</p>
+<ul>
+<li>OA = |a|</li>
+<li>OB = |b|</li>
+<li>AB = |a - b|</li>
+</ul>
+<p><strong>余弦定理</strong>：</p>
+<p><strong>|a - b|² = |a|² + |b|² - 2|a||b|cos(θ)</strong></p>
+<p><strong>展开左边</strong>：</p>
+<div class="code-block"><pre><code class="hljs">|a - b|² = (a - b)·(a - b)
+         = a·a - 2a·b + b·b
+         = |a|² - 2a·b + |b|²
+</code></pre></div>
+<p><strong>两式相等</strong>：</p>
+<div class="code-block"><pre><code class="hljs">|a|² - 2a·b + |b|² = |a|² + |b|² - 2|a||b|cos(θ)
+
+⇒ -2a·b = -2|a||b|cos(θ)
+
+⇒ a·b = |a||b|cos(θ)
+</code></pre></div>
+<p>这个证明对任意维度都成立！</p>
+<h3 id="section-16" data-heading-text="三维和高维推广">三维和高维推广</h3>
+<p><strong>三维</strong>：用球坐标表示向量，通过更复杂的三角恒等式，同样可以得到：</p>
+<p><strong>a · b = |a||b|cos(θ)</strong></p>
+<p><strong>高维</strong>：用余弦定理的方法，对<strong>任意 n 维向量</strong>都有：</p>
+<p><strong>a · b = |a||b|cos(θ)</strong></p>
+<p>因此余弦相似度在任意维度都适用！</p>
+<h2 id="section-17" data-heading-text="五、余弦相似度：剥离长度，只看方向">五、余弦相似度：剥离长度，只看方向</h2>
+<h3 id="section-18" data-heading-text="推导余弦相似度公式">推导余弦相似度公式</h3>
+<p>现在我们知道了：</p>
+<p><strong>a · b = |a| |b| cos(θ)</strong></p>
+<p>两边同时除以 <strong>|a||b|</strong>：</p>
+<p><strong>cos(θ) = (a · b) / (|a| × |b|)</strong></p>
+<p>这就是余弦相似度公式！</p>
+<h3 id="section-19" data-heading-text="完整推导链条">完整推导链条</h3>
+<div class="code-block"><pre><code class="hljs">1. 向量用极坐标表示：a = |a|[cos(α), sin(α)]
+
+2. 计算点积：a·b = |a||b|[cos(α)cos(β) + sin(α)sin(β)]
+
+3. 三角恒等式：cos(α)cos(β) + sin(α)sin(β) = cos(β-α) = cos(θ)
+
+4. 得到：a·b = |a||b|cos(θ)
+
+5. 移项：cos(θ) = (a·b)/(|a||b|)
+</code></pre></div>
+<h3 id="section-20" data-heading-text="验证：用具体数字">验证：用具体数字</h3>
+<p><strong>例子1：两个向量夹角45°</strong></p>
+<div class="code-block"><pre><code class="hljs">a = [1, 0]     // 在x轴上，α = 0°
+b = [1, 1]     // 在45°方向，β = 45°
+θ = 45°
+
+计算：
+|a| = √(1² + 0²) = 1
+|b| = √(1² + 1²) = √2
+a · b = 1×1 + 0×1 = 1
+
+余弦相似度 = 1 / (1 × √2) = 1/√2 ≈ 0.707
+
+验证：cos(45°) = √2/2 ≈ 0.707 ✓
+</code></pre></div>
+<p><strong>例子2：两个向量垂直</strong></p>
+<div class="code-block"><pre><code class="hljs">a = [1, 0]     // x轴
+b = [0, 1]     // y轴
+θ = 90°
+
+计算：
+|a| = 1
+|b| = 1
+a · b = 1×0 + 0×1 = 0
+
+余弦相似度 = 0 / (1 × 1) = 0
+
+验证：cos(90°) = 0 ✓
+</code></pre></div>
+<p><strong>例子3：两个向量同向但长度不同</strong></p>
+<div class="code-block"><pre><code class="hljs">a = [3, 4]     // 长度5
+b = [6, 8]     // 长度10，方向相同
+θ = 0°
+
+计算：
+|a| = √(3² + 4²) = 5
+|b| = √(6² + 8²) = 10
+a · b = 3×6 + 4×8 = 18 + 32 = 50
+
+余弦相似度 = 50 / (5 × 10) = 1
+
+验证：cos(0°) = 1 ✓
+</code></pre></div>
+<h3 id="section-21" data-heading-text="为什么要用余弦相似度？">为什么要用余弦相似度？</h3>
+<p>在语义分析中，我们只关心方向（语义），不关心长度（词频）。</p>
+<p><strong>例如</strong>：</p>
+<div class="code-block"><pre><code class="hljs">&quot;国王&quot; = [0.2, 0.5, 0.8, ...]  长度可能是1.2
+&quot;王后&quot; = [0.3, 0.6, 0.9, ...]  长度可能是1.5
+</code></pre></div>
+<p>这两个词向量方向一致，语义应该相似：</p>
+<ul>
+<li><strong>原始点积</strong>：会受长度影响</li>
+<li><strong>余弦相似度</strong>：消除长度影响，只看方向</li>
+</ul>
+<h3 id="section-22" data-heading-text="余弦相似度的标准化范围">余弦相似度的标准化范围</h3>
+<p><strong>-1 ≤ cos(θ) ≤ 1</strong></p>
+<ul>
+<li><strong>cos(θ) = 1</strong>：完全同向（θ = 0°）</li>
+<li><strong>cos(θ) = 0</strong>：垂直（θ = 90°），语义无关</li>
+<li><strong>cos(θ) = -1</strong>：完全反向（θ = 180°）</li>
+</ul>
+<h2 id="section-23" data-heading-text="六、核心总结">六、核心总结</h2>
+<h3 id="section-24" data-heading-text="为什么点积能反映夹角？">为什么点积能反映夹角？</h3>
+<p><strong>1. 数学本质</strong></p>
+<p>点积的代数定义（坐标分量乘积求和）和几何定义（长度×夹角余弦）是数学上等价的，这是通过三角恒等式严格推导出来的。</p>
+<p><strong>2. 直观理解</strong></p>
+<ul>
+<li><strong>投影视角</strong>：点积 = 一个向量长度 × 另一个向量在其上的投影</li>
+<li><strong>分量视角</strong>：点积 = 各坐标轴上“共同分量”的总和</li>
+<li><strong>夹角视角</strong>：cos(θ)天然单调递减，完美编码了方向差异</li>
+</ul>
+<p><strong>3. 为什么夹角越小，点积越大？</strong></p>
+<p>因为：</p>
+<ul>
+<li>点积 = |a||b|cos(θ)</li>
+<li>cos函数在[0°,180°]单调递减</li>
+<li>θ小 → cos(θ)大 → 点积大（长度不变时）</li>
+</ul>
+<p>这不是人为设计，而是数学结构的必然结果。</p>
+<h3 id="section-25" data-heading-text="余弦相似度的意义">余弦相似度的意义</h3>
+<p><strong>cos(θ) = (a · b) / (|a| × |b|)</strong></p>
+<ul>
+<li><strong>消除了向量长度的影响</strong>：同时除以两个向量的长度</li>
+<li><strong>只保留纯粹的方向信息</strong>：结果只依赖夹角 θ</li>
+<li><strong>标准化范围 [-1, 1]</strong>：便于比较和解释</li>
+<li><strong>完美适用于语义相似度</strong>：在NLP中，我们只关心语义方向，不关心词频</li>
+</ul>
+<p>所以点积用来衡量“方向一致性”是非常自然的，因为它的数学定义天然就包含了夹角信息。词向量技术只是巧妙地利用了这个数学事实。</p>
+<hr>
+<h3 id="transformer" data-heading-text="扩展：余弦相似度的几何特性与 Transformer 实战">扩展：余弦相似度的几何特性与 Transformer 实战</h3>
+<p>在深度学习中，余弦相似度（Cosine Similarity）是最常用的度量手段，但其背后的几何逻辑与实际工程应用存在关键差异。</p>
+<h4 id="1" data-heading-text="1. 核心矛盾：方向一致性 语义完全等价">1. 核心矛盾：方向一致性  语义完全等价</h4>
+<ul>
+<li><strong>数学逻辑</strong>：若两个向量共线（同方向），其余弦相似度为 1。</li>
+<li><strong>物理现实</strong>：在 Embedding 空间中，即使是同义词（如“苹果”与“Apple”）也很难完全共线。模型会利用微小的夹角和向量长度来区分语境、词频或语法特征。</li>
+<li><strong>结论</strong>：余弦相似度衡量的是“<strong>主题相关性</strong>”，而非绝对的“<strong>语义等同</strong>”。</li>
+</ul>
+<h4 id="2" data-heading-text="2. 余弦相似度的“盲区”">2. 余弦相似度的“盲区”</h4>
+<p>余弦相似度最大的特点是<strong>模长无关性</strong>。</p>
+<ul>
+<li><strong>几何直觉</strong>：它只能分辨向量“指向哪里”，无法分辨向量“走了多远”。对于处于同一条射线上的两个点，余弦相似度认为它们是完全一样的。</li>
+<li><strong>局限性</strong>：这会导致它无法捕捉语义的“强度”。例如，“好”和“非常好”在方向上可能一致，但后者在向量长度（能量）上通常更强。</li>
+</ul>
+<h4 id="3-transformer" data-heading-text="3. Transformer 是只用余弦相似度吗？">3. Transformer 是只用余弦相似度吗？</h4>
+<p>这是一个常见的误解。事实上，模型在不同阶段对“长度”的态度完全不同：</p>
+<ul>
+<li><strong>训练阶段（内部机理）</strong>：
+Transformer 核心的 **Attention 机制使用点积（Dot Product）**而非余弦相似度。向量长度会被保留并参与运算，用以调节注意力的权重分布。<strong>此时，长度是重要的信号。</strong></li>
+<li><strong>检索阶段（工程应用）</strong>：
+在向量数据库检索时，通常会先对 Embedding 进行 <strong>L2 归一化</strong>。归一化后的点积计算在数学上等价于余弦相似度。<strong>此时，长度被视为噪声而被抹除。</strong></li>
+</ul>
+<h4 id="section-30" data-heading-text="本节要点">本节要点</h4>
+<ul>
+<li><strong>余弦相似度</strong>擅长比较“是什么”，但在区分“程度有多深”上存在天然弱点。</li>
+<li><strong>模型内部</strong>利用长度来建模重要性，<strong>模型外部</strong>利用方向来保证检索的稳定性。</li>
+</ul>
+
+      </div>
+<div class="article-actions" aria-label="Article actions">
+      <a class="share-link" href="https://twitter.com/intent/tweet?text=%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%90%86%E8%A7%A3%EF%BC%9A%E7%82%B9%E7%A7%AF%E4%B8%BA%E4%BB%80%E4%B9%88%E8%83%BD%E5%8F%8D%E6%98%A0%E5%90%91%E9%87%8F%E5%A4%B9%E8%A7%92%EF%BC%9F&amp;url=https%3A%2F%2Fkingson4wu.github.io%2Fzh%2Fposts%2F20251224%2F" target="_blank" rel="noopener noreferrer" aria-label="Share on X">
+        <span aria-hidden="true">X</span>
+        <span>Share</span>
+      </a>
+    </div>
+    </article>
+<aside class="article-toc" data-article-toc aria-label="目录">
+      <button class="article-toc-toggle" type="button" data-article-toc-toggle aria-expanded="false" aria-controls="article-toc-panel" aria-label="打开目录" data-open-label="打开目录" data-close-label="收起目录">
+        <svg aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M8 6h11"></path>
+          <path d="M8 12h11"></path>
+          <path d="M8 18h11"></path>
+          <path d="M4 6h.01"></path>
+          <path d="M4 12h.01"></path>
+          <path d="M4 18h.01"></path>
+        </svg>
+      </button>
+      <nav id="article-toc-panel" class="article-toc-panel" data-article-toc-panel aria-label="目录">
+        <div class="article-toc-heading">目录</div>
+        <ol class="article-toc-list">
+          <li class="article-toc-level-2"><a href="#section-1" data-article-toc-link>一、从投影说起：最直观的理解</a></li>
+          <li class="article-toc-level-3"><a href="#section-2" data-article-toc-link>投影的几何意义</a></li>
+          <li class="article-toc-level-3"><a href="#section-3" data-article-toc-link>为什么投影能反映相似度？</a></li>
+          <li class="article-toc-level-3"><a href="#section-4" data-article-toc-link>cos函数的性质</a></li>
+          <li class="article-toc-level-2"><a href="#section-5" data-article-toc-link>二、点积的定义和几何意义</a></li>
+          <li class="article-toc-level-3"><a href="#section-6" data-article-toc-link>点积的代数定义</a></li>
+          <li class="article-toc-level-3"><a href="#section-7" data-article-toc-link>点积的几何意义</a></li>
+          <li class="article-toc-level-3"><a href="#section-8" data-article-toc-link>为什么投影还要乘以b的长度？</a></li>
+          <li class="article-toc-level-3"><a href="#section-9" data-article-toc-link>如果只想要投影怎么办？</a></li>
+          <li class="article-toc-level-2"><a href="#section-10" data-article-toc-link>三、为什么点积公式天然就能算出夹角？</a></li>
+          <li class="article-toc-level-3"><a href="#section-11" data-article-toc-link>坐标分量的乘积求和</a></li>
+          <li class="article-toc-level-3"><a href="#section-12" data-article-toc-link>再看两个例子</a></li>
+          <li class="article-toc-level-2"><a href="#b-cos" data-article-toc-link>四、数学推导：点积 = |a||b|cos(θ)</a></li>
+          <li class="article-toc-level-3"><a href="#section-14" data-article-toc-link>方法一：从二维开始（最直观）</a></li>
+          <li class="article-toc-level-3"><a href="#section-15" data-article-toc-link>方法二：用余弦定理（适用于任意维度）</a></li>
+          <li class="article-toc-level-3"><a href="#section-16" data-article-toc-link>三维和高维推广</a></li>
+          <li class="article-toc-level-2"><a href="#section-17" data-article-toc-link>五、余弦相似度：剥离长度，只看方向</a></li>
+          <li class="article-toc-level-3"><a href="#section-18" data-article-toc-link>推导余弦相似度公式</a></li>
+          <li class="article-toc-level-3"><a href="#section-19" data-article-toc-link>完整推导链条</a></li>
+          <li class="article-toc-level-3"><a href="#section-20" data-article-toc-link>验证：用具体数字</a></li>
+          <li class="article-toc-level-3"><a href="#section-21" data-article-toc-link>为什么要用余弦相似度？</a></li>
+          <li class="article-toc-level-3"><a href="#section-22" data-article-toc-link>余弦相似度的标准化范围</a></li>
+          <li class="article-toc-level-2"><a href="#section-23" data-article-toc-link>六、核心总结</a></li>
+          <li class="article-toc-level-3"><a href="#section-24" data-article-toc-link>为什么点积能反映夹角？</a></li>
+          <li class="article-toc-level-3"><a href="#section-25" data-article-toc-link>余弦相似度的意义</a></li>
+          <li class="article-toc-level-3"><a href="#transformer" data-article-toc-link>扩展：余弦相似度的几何特性与 Transformer 实战</a></li>
+        </ol>
+      </nav>
+    </aside>
+    <script src="/scripts/article-toc.js" defer></script>
+    <nav class="article-nav" aria-label="Adjacent posts">
+      <a href="/zh/posts/20251224-python-c/"><span>Previous</span>Python 调用 C 扩展与库机制全解析</a>
+      <a href="/zh/posts/20260120-ai/"><span>Next</span>AI 数学精要速览</a>
+    </nav>
+<section class="comments" aria-labelledby="comments-heading">
+      <h2 id="comments-heading">评论</h2>
+      <div
+        data-comments
+        data-comments-repo="Kingson4Wu/kingson4wu.github.io"
+        data-comments-issue-term="pathname"
+        data-comments-label="comment"
+      ></div>
+    </section>
+    <script src="/scripts/comments.js" defer></script>
+  </main>
+  <footer class="site-footer">
+    <p>&copy; 2026 拉巴力的纸皮箱</p>
+  </footer>
+  <button class="reading-return" type="button" data-reading-return aria-label="回到开头" title="回到开头">
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <path d="M12 19V5"></path>
+      <path d="m6 11 6-6 6 6"></path>
+    </svg>
+  </button>
+  <script src="/scripts/theme.js"></script>
+  <script src="/scripts/image-viewer.js"></script>
+  <script src="/scripts/reading-tools.js"></script>
+</body>
+</html>

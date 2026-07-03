@@ -1,0 +1,471 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>单元测试使用总结 | 拉巴力的纸皮箱</title>
+  <meta name="description" content="mockito使用 mock实例 Test test = mock(Test.class); Test test = spy(new Test()); 在Spring中使用 @Mock Test test; @Spy Test test = new Test(); @MockBean Test test; (起spri...">
+  <link rel="canonical" href="https://kingson4wu.github.io/zh/posts/20201111/">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="alternate" type="application/rss+xml" title="拉巴力的纸皮箱" href="/zh/feed.xml">
+  <link rel="alternate" type="text/markdown" href="/zh/posts/20201111/index.md">
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="/styles/main.css">
+  <script>
+    try {
+      var theme = localStorage.getItem('theme');
+      if (theme) document.documentElement.dataset.theme = theme;
+    } catch (_) {}
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="site-title" href="/zh/" aria-label="拉巴力的纸皮箱">
+      <span class="site-logo" aria-hidden="true">K</span>
+      <span>拉巴力的纸皮箱</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="/zh/posts/">文章</a>
+      <a href="/zh/notes/">笔记</a>
+      <a href="/zh/tags/">标签</a>
+      <a href="/zh/about/">关于</a>
+      <a href="/zh/search/">搜索</a>
+      <a href="/en/" lang="en">English</a>
+      <a class="feed-link" href="/zh/feed.xml" aria-label="订阅更新" title="订阅更新">
+        <svg class="feed-icon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M5 5.5A13.5 13.5 0 0 1 18.5 19"></path>
+          <path d="M5 11A8 8 0 0 1 13 19"></path>
+          <circle cx="6" cy="18" r="1.5"></circle>
+        </svg>
+      </a>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换明暗模式" title="切换明暗模式">
+        <svg class="theme-icon theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M21 14.2A8.5 8.5 0 0 1 9.8 3 7 7 0 1 0 21 14.2Z"></path>
+        </svg>
+        <svg class="theme-icon theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"></path>
+        </svg>
+      </button>
+    </nav>
+  </header>
+  <main class="site-main">
+    <article class="article">
+      <header class="article-header">
+        <h1>单元测试使用总结</h1>
+        <time datetime="2020-11-11T13:02:48.000Z">2020年11月11日</time>
+<ul class="tag-list" aria-label="Tags">
+    <li><a href="/zh/tags/Testing/">Testing</a></li>
+  </ul>
+      </header>
+      <div class="prose">
+<h2 id="section-1" data-heading-text="mockito使用">mockito使用</h2>
+<h3 id="section-2" data-heading-text="mock实例">mock实例</h3>
+<ul>
+<li><code>Test test = mock(Test.class);</code></li>
+<li><code>Test test = spy(new Test());</code></li>
+</ul>
+<h3 id="section-3" data-heading-text="在Spring中使用">在Spring中使用</h3>
+<ul>
+<li><code>@Mock Test test;</code></li>
+<li><code>@Spy Test test = new Test();</code></li>
+<li><code>@MockBean Test test;</code> (起spring容器时)</li>
+<li><code>@InjectMocks Test test;</code> (起mockito容器时的测试对象)</li>
+<li>Spring boot使用@MockBean和@SpyBean来定义Mockito的mock和spy。</li>
+<li>使用@mockBean，未mock的方法可能会导致返回默认值，从而导致异常的逻辑造成脏数据（可能是代码本来不完善）；可以注意尽量@SpyBean</li>
+</ul>
+<h3 id="section-4" data-heading-text="mock使用">mock使用</h3>
+<ul>
+<li><code>when().thenReturn()</code>模式 和 <code>doReturn().when()</code>模式
+两种模式都用于模拟对象方法，在mock实例下使用时，基本上是没有差别的。但是，在spy实例下使用时，<code>when().thenReturn()</code>模式会执行原方法，而<code>doReturn().when()</code>模式不会执行原方法。</li>
+<li><code>when(test.do(anyString())).thenReturn(true);</code></li>
+<li>返回值为void： <code>doAnswer((Answer&lt;Void&gt;)invocation -&gt; null).when(test).do(anyString(),anyLong(),anyString());</code></li>
+<li>抛异常：<code>doThrow(new RuntimeException(&quot;error&quot;)).when(test).do(anyLong(), anyString());</code></li>
+<li><code>doReturn(expected).when(spyList).get(100);</code> (使用spy时)
+- <code>org.mockito.Mockito.doReturn;</code> 注意不要导入powermock的包
+- <code>doReturn().when()</code>模式: 用于模拟对象方法，直接返回期望的值、异常、应答，或调用真实的方法，无需执行原始方法</li>
+<li>直接调用真实方法:<code>Mockito.doCallRealMethod().when(userService).getUser(userId);</code>, <code>Mockito.when(userService.getUser(userId)).thenCallRealMethod();</code></li>
+<li>模拟可空参数方法: <code>Mockito.doReturn(user).when(userDAO).queryCompany(Mockito.anyLong(), Mockito.nullable(Long.class));</code></li>
+<li>匹配null对象，可以使用isNull方法，或使用eq(null):<code>Mockito.doReturn(user).when(userDAO).queryCompany(Mockito.anyLong(), Mockito.isNull());</code>, <code>Mockito.when(userDAO.queryCompany(Mockito.anyLong(), Mockito.eq(null))).thenReturn(user);</code></li>
+<li>模拟final方法: PowerMock提供对final方法的模拟，方法跟模拟普通方法一样。但是，需要把对应的模拟类添加到@PrepareForTest注解中。</li>
+<li>模拟私有方法: PowerMock提供提对私有方法的模拟，但是需要把私有方法所在的类放在@PrepareForTest注解中。</li>
+</ul>
+<div class="code-block" data-language="java"><div class="code-header"><span class="code-language">java</span></div><pre><code class="hljs language-java">PowerMockito.<span class="hljs-keyword">when</span>(userService, <span class="hljs-string">&quot;isSuperUser&quot;</span>, userId).thenReturn(!expected);
+<span class="hljs-comment">//通过模拟方法stub(存根)，也可以实现模拟私有方法。但是，只能模拟整个方法的返回值，而不能模拟指定参数的返回值。</span>
+PowerMockito.stub(PowerMockito.method(UserService.class, <span class="hljs-string">&quot;isSuperUser&quot;</span>, Long.class)).toReturn(!expected);
+<span class="hljs-type">Method</span> <span class="hljs-variable">method</span> <span class="hljs-operator">=</span> PowerMockito.method(UserService.class, <span class="hljs-string">&quot;isSuperUser&quot;</span>, Long.class);
+<span class="hljs-type">Object</span> <span class="hljs-variable">actual</span> <span class="hljs-operator">=</span> method.invoke(userService, userId);
+</code></pre></div>
+<ul>
+<li>模拟构造方法: PowerMock提供PowerMockito.whenNew方法来模拟构造方法，但是需要把使用构造方法的类放在@PrepareForTest注解中。</li>
+</ul>
+<div class="code-block" data-language="java"><div class="code-header"><span class="code-language">java</span></div><pre><code class="hljs language-java">PowerMockito.whenNew(MockClass.class).withNoArguments().thenReturn(expectedObject);
+PowerMockito.whenNew(MockClass.class).withArguments(someArgs).thenReturn(expectedObject);
+</code></pre></div>
+<ul>
+<li>
+<p>调用无访问权限的构造方法: 调用无访问权限的构造方法，可以使用PowerMock提供的Whitebox.invokeConstructor方法。</p>
+</li>
+<li>
+<p>调用无权限访问的普通方法: 调用无访问权限的普通方法，可以使用PowerMock提供的Whitebox.invokeMethod方法。</p>
+</li>
+<li>
+<p>附加匹配器
+Mockito的AdditionalMatchers类提供了一些很少使用的参数匹配器，我们可以进行参数大于(gt)、小于(lt)、大于等于(geq)、小于等于(leq)等比较操作，也可以进行参数与(and)、或(or)、非(not)等逻辑计算等。
+<code>PowerMockito.when(mockList.get(AdditionalMatchers.geq(0))).thenReturn(expected);</code></p>
+</li>
+<li>
+<p>Whitebox.setInternalState方法
+现在使用PowerMock进行单元测试时，可以采用Whitebox.setInternalState方法设置私有属性值: <code>Whitebox.setInternalState(Foo.class, &quot;FIELD_NAME&quot;, &quot;value&quot;);</code></p>
+</li>
+</ul>
+<h3 id="section-5" data-heading-text="mock静态方法">mock静态方法</h3>
+<ul>
+<li>返回值为void： <code>PowerMockito.doNothing().when(FileUtils.class, &quot;writeStringToFile&quot;, any(File.class), anyString());</code></li>
+<li><code>BDDMockito.given(FileUtils.readFileToString(eq(new File(file)))).willReturn(IOUtils.toString(getClass().getClassLoader().getResourceAsStream(&quot;test.json&quot;)));</code></li>
+<li>前置初始化：</li>
+</ul>
+<div class="code-block" data-language="java"><div class="code-header"><span class="code-language">java</span></div><pre><code class="hljs language-java"><span class="hljs-meta">@RunWith(PowerMockRunner.class)</span>
+  <span class="hljs-meta">@PrepareForTest({FileUtils.class})</span>
+  <span class="hljs-meta">@Before</span>
+  {
+     MockitoAnnotations.initMocks(<span class="hljs-built_in">this</span>)
+     PowerMockito.mockStatic(FileUtils.class);
+  }
+</code></pre></div>
+<h4 id="section-6" data-heading-text="设置静态常量字段值">设置静态常量字段值</h4>
+<ul>
+<li>有时候，我们需要对静态常量对象进行模拟，然后去验证是否执行了对应分支下的方法。比如：需要模拟Lombok的@Slf4j生成的log静态常量。但是，Whitebox.setInternalState方法和@InjectMocks注解并不支持设置静态常量，需要自己实现一个设置静态常量的方法：</li>
+</ul>
+<div class="code-block" data-language="java"><div class="code-header"><span class="code-language">java</span></div><pre><code class="hljs language-java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">FieldHelper</span> {
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">setStaticFinalField</span><span class="hljs-params">(Class clazz, String fieldName, Object fieldValue)</span> <span class="hljs-keyword">throws</span> NoSuchFieldException, IllegalAccessException {
+<span class="hljs-type">Field</span> <span class="hljs-variable">field</span> <span class="hljs-operator">=</span> clazz.getDeclaredField(fieldName);
+FieldUtils.removeFinalModifier(field);
+FieldUtils.writeStaticField(field, fieldValue, <span class="hljs-literal">true</span>);
+}
+}
+</code></pre></div>
+<h3 id="section-7" data-heading-text="使用Answer来生成期望的返回">使用Answer来生成期望的返回</h3>
+<div class="code-block" data-language="java"><div class="code-header"><span class="code-language">java</span></div><pre><code class="hljs language-java"><span class="hljs-keyword">when</span>(test.<span class="hljs-keyword">do</span>(anyList())).thenAnswer(
+            (Answer)invocation -&gt; {
+                Object[] args = invocation.getArguments();
+                <span class="hljs-comment">//Object mock = invocation.getMock();</span>
+                <span class="hljs-keyword">return</span> list.stream().filter(v -&gt; ((List&lt;Integer&gt;)args[<span class="hljs-number">0</span>]).contains(v.getAid())).collect(
+                    Collectors.toList());
+            });
+doReturn(resp).<span class="hljs-keyword">when</span>(test).<span class="hljs-keyword">do</span>(argThat(<span class="hljs-keyword">new</span> <span class="hljs-title class_">ArgumentMatcher</span>&lt;List&lt;Long&gt;&gt;() {
+            <span class="hljs-meta">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">matches</span><span class="hljs-params">(Object argument)</span> {
+                <span class="hljs-keyword">return</span> ((List&lt;Long&gt;)argument).size() == <span class="hljs-number">1</span>;
+            }
+        }));
+</code></pre></div>
+<h3 id="section-8" data-heading-text="verify使用">verify使用</h3>
+<ul>
+<li>校验执行次数：Mockito提供vertify关键字来实现校验方法是否被调用，从未被调用never()，调用次数times(1), <code>verify(test).do(any());</code></li>
+<li>验证私有方法
+<code>PowerMockito.verifyPrivate(userService).invoke(&quot;isSuperUser&quot;, userId);</code></li>
+<li>验证方法调用并捕获参数值: Mockito提供ArgumentCaptor类来捕获参数值，通过调用forClass(Class clazz)方法来构建一个ArgumentCaptor对象，然后在验证方法调用时来捕获参数，最后获取到捕获的参数值并验证。如果一个方法有多个参数都要捕获并验证，那就需要创建多个ArgumentCaptor对象。</li>
+<li>verify语句, 除times外，Mockito还支持atLeastOnce、atLeast、only、atMostOnce、atMost等次数验证器。</li>
+</ul>
+<div class="code-block" data-language="java"><div class="code-header"><span class="code-language">java</span></div><pre><code class="hljs language-java">
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ListTest</span> {
+    <span class="hljs-meta">@Test</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">testAdd</span><span class="hljs-params">()</span> {
+           List&lt;Integer&gt; mockedList = PowerMockito.mock(List.class);
+        PowerMockito.doReturn(<span class="hljs-literal">true</span>).<span class="hljs-keyword">when</span>(mockedList).add(Mockito.anyInt());
+        mockedList.add(<span class="hljs-number">1</span>);
+        mockedList.add(<span class="hljs-number">2</span>);
+        mockedList.add(<span class="hljs-number">3</span>);
+        <span class="hljs-type">InOrder</span> <span class="hljs-variable">inOrder</span> <span class="hljs-operator">=</span> Mockito.inOrder(mockedList);
+        inOrder.verify(mockedList).add(<span class="hljs-number">1</span>);
+        inOrder.verify(mockedList).add(<span class="hljs-number">2</span>);
+        inOrder.verify(mockedList).add(<span class="hljs-number">3</span>);
+    }
+}
+</code></pre></div>
+<ul>
+<li>验证调用参数</li>
+</ul>
+<div class="code-block" data-language="java"><div class="code-header"><span class="code-language">java</span></div><pre><code class="hljs language-java">
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ListTest</span> {
+    <span class="hljs-meta">@Test</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">testArgumentCaptor</span><span class="hljs-params">()</span> {
+        Integer[] expecteds = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Integer</span>[] {<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>};
+        List&lt;Integer&gt; mockedList = PowerMockito.mock(List.class);
+        PowerMockito.doReturn(<span class="hljs-literal">true</span>).<span class="hljs-keyword">when</span>(mockedList).add(Mockito.anyInt());
+        <span class="hljs-keyword">for</span> (Integer expected : expecteds) {
+            mockedList.add(expected);
+        }
+        ArgumentCaptor&lt;Integer&gt; argumentCaptor = ArgumentCaptor.forClass(Integer.class);
+        Mockito.verify(mockedList, Mockito.times(<span class="hljs-number">3</span>)).add(argumentCaptor.capture());
+        Integer[] actuals = argumentCaptor.getAllValues().toArray(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Integer</span>[<span class="hljs-number">0</span>]);
+        Assert.assertArrayEquals(<span class="hljs-string">&quot;返回值不相等&quot;</span>, expecteds, actuals);
+    }
+}
+</code></pre></div>
+<ul>
+<li>确保验证完毕.
+Mockito提供Mockito.verifyNoMoreInteractions方法，在所有验证方法之后可以使用此方法，以确保所有调用都得到验证。如果模拟对象上存在任何未验证的调用</li>
+<li>验证静态方法。Mockito没有静态方法的验证方法，但是PowerMock提供这方面的支持。</li>
+</ul>
+<div class="code-block" data-language="java"><div class="code-header"><span class="code-language">java</span></div><pre><code class="hljs language-java"><span class="hljs-meta">@RunWith(PowerMockRunner.class)</span>
+<span class="hljs-meta">@PrepareForTest({StringUtils.class})</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">StringUtilsTest</span> {
+    <span class="hljs-meta">@Test</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">testVerifyStatic</span><span class="hljs-params">()</span> {
+        PowerMockito.mockStatic(StringUtils.class);
+        <span class="hljs-type">String</span> <span class="hljs-variable">expected</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;abc&quot;</span>;
+        StringUtils.isEmpty(expected);
+        PowerMockito.verifyStatic(StringUtils.class);
+        ArgumentCaptor&lt;String&gt; argumentCaptor = ArgumentCaptor.forClass(String.class);
+        StringUtils.isEmpty(argumentCaptor.capture());
+        Assert.assertEquals(<span class="hljs-string">&quot;参数不相等&quot;</span>, argumentCaptor.getValue(), expected);
+    }
+}
+</code></pre></div>
+<h3 id="section-9" data-heading-text="其他">其他</h3>
+<ul>
+<li><code>ReflectionTestUtils.setField(config, &quot;id&quot;, id);</code></li>
+<li><code>Mockito.reset(test);</code></li>
+<li><code>@VisibleForTesting</code></li>
+<li>Mocking a method in the same test class using - Mockito:<a href="https://towardsdatascience.com/mocking-a-method-in-the-same-test-class-using-mockito-b8f997916109">https://towardsdatascience.com/mocking-a-method-in-the-same-test-class-using-mockito-b8f997916109</a></li>
+</ul>
+<div class="code-block" data-language="java"><div class="code-header"><span class="code-language">java</span></div><pre><code class="hljs language-java">  <span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">PersonTest</span>{
+
+    <span class="hljs-meta">@Test</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">playTest</span><span class="hljs-params">()</span> {
+      <span class="hljs-type">Person</span> <span class="hljs-variable">person</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Person</span>(<span class="hljs-string">&quot;name&quot;</span>, <span class="hljs-number">15</span>, <span class="hljs-string">&quot;23435678V&quot;</span>);
+
+      <span class="hljs-type">Person</span> <span class="hljs-variable">person1</span> <span class="hljs-operator">=</span> Mockito.spy(person);
+
+      Mockito.doReturn(<span class="hljs-literal">true</span>).<span class="hljs-keyword">when</span>(person1).runInGround(<span class="hljs-string">&quot;ground&quot;</span>);
+
+      Assert.assertEquals(<span class="hljs-literal">true</span>, person1.isPlay());
+    }
+  }
+</code></pre></div>
+<p>一般不建议在同个类mock自己的方法，如果一定要，可以使用spy</p>
+<ul>
+<li>@Captor注解在字段级别创建参数捕获器。但是，在测试方法启动前，必须调用<code>MockitoAnnotations.openMocks(this)</code>进行初始化。</li>
+<li>@PowerMockIgnore注解
+为了解决使用PowerMock后，提示ClassLoader错误。</li>
+</ul>
+<h2 id="section-10" data-heading-text="异常测试">异常测试</h2>
+<div class="code-block" data-language="java"><div class="code-header"><span class="code-language">java</span></div><pre><code class="hljs language-java">    <span class="hljs-meta">@Rule</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-type">ExpectedException</span> <span class="hljs-variable">thrown</span> <span class="hljs-operator">=</span> ExpectedException.none();
+
+    <span class="hljs-meta">@Test</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">test</span><span class="hljs-params">()</span> {
+        thrown.expect(<span class="hljs-keyword">new</span> <span class="hljs-title class_">BizExceptionCodeMatches</span>(ExceptionCodeEnum.FAIL_CODE.code()));
+        <span class="hljs-comment">//do</span>
+ }
+</code></pre></div>
+<div class="code-block" data-language="java"><div class="code-header"><span class="code-language">java</span></div><pre><code class="hljs language-java"><span class="hljs-meta">@Test(expected = IndexOutOfBoundsException.class)</span>
+</code></pre></div>
+<h2 id="section-11" data-heading-text="异步测试">异步测试</h2>
+<ul>
+<li>异步系统的两种测试方法:<a href="https://mp.weixin.qq.com/s/ft7LDsLmJByxunPuqGUOuQ">https://mp.weixin.qq.com/s/ft7LDsLmJByxunPuqGUOuQ</a></li>
+</ul>
+<div class="code-block" data-language="java"><div class="code-header"><span class="code-language">java</span></div><pre><code class="hljs language-java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ExampleTest</span> {
+
+<span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> <span class="hljs-type">Object</span> <span class="hljs-variable">lock</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Object</span>();
+
+<span class="hljs-meta">@Before</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">init</span><span class="hljs-params">()</span> {
+     <span class="hljs-keyword">new</span> <span class="hljs-title class_">Thread</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Runnable</span>() {
+        <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">run</span><span class="hljs-params">()</span> {
+            <span class="hljs-keyword">synchronized</span>
+                (lock) {
+                    <span class="hljs-comment">//获得锁</span>
+                            monitorEvent();
+                    <span class="hljs-comment">//监听异步事件的到来</span>
+                            lock.notifyAll();
+                    <span class="hljs-comment">//事件到达，释放锁</span>
+                        }
+                    }
+                }).start();
+    }
+
+<span class="hljs-meta">@Test</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span>  <span class="hljs-title function_">testAsynchronousMethod</span><span class="hljs-params">()</span> {
+     callAsynchronousMethod();
+    <span class="hljs-comment">//调用异步方法，需要较长一段时间才能执行完，并触发事件通知</span>
+    <span class="hljs-comment">/**
+         * 事件未到达时由于init已经获得了锁而阻塞，事件到达后因init中的锁释放而获得锁，
+         * 此时异步任务已执行完成，可以放心的执行断言验证结果了
+         */</span>
+    <span class="hljs-keyword">synchronized</span>
+        (lock) {
+            assertTestResult();
+        }
+    }
+}
+</code></pre></div>
+<h2 id="section-12" data-heading-text="基于Spock的数据驱动测试">基于Spock的数据驱动测试</h2>
+<div class="code-block" data-language="groovy"><div class="code-header"><span class="code-language">groovy</span></div><pre><code class="hljs language-groovy"><span class="hljs-keyword">class</span> <span class="hljs-title class_">SpockTest</span>  <span class="hljs-keyword">extends</span> <span class="hljs-title class_">Specification</span>{
+
+    <span class="hljs-comment">// 初始化</span>
+    <span class="hljs-keyword">def</span> setupSpec() {
+        println <span class="hljs-string">&quot;&gt;&gt;&gt;&gt;&gt;&gt;   setupSpec&quot;</span>
+    }
+    <span class="hljs-keyword">def</span> setup() {
+        println <span class="hljs-string">&quot;&gt;&gt;&gt;&gt;&gt;&gt;   setup&quot;</span>
+    }
+    <span class="hljs-keyword">def</span> cleanup() {
+        println <span class="hljs-string">&quot;&gt;&gt;&gt;&gt;&gt;&gt;   cleanup&quot;</span>
+    }
+    <span class="hljs-keyword">def</span> cleanupSpec() {
+        println <span class="hljs-string">&quot;&gt;&gt;&gt;&gt;&gt;&gt;   cleanupSpec&quot;</span>
+    }
+
+    <span class="hljs-keyword">def</span> <span class="hljs-type">void</span> testAdd(<span class="hljs-type">int</span> a, <span class="hljs-type">int</span> b, <span class="hljs-type">int</span> expect) {
+
+        <span class="hljs-symbol">expect:</span>
+        <span class="hljs-keyword">assert</span> expect == a + b
+
+        <span class="hljs-symbol">where:</span>
+        a | b | expect
+        <span class="hljs-number">1</span> | <span class="hljs-number">1</span> | <span class="hljs-number">2</span>
+        <span class="hljs-number">2</span> | <span class="hljs-number">2</span> | <span class="hljs-number">4</span>
+    }
+
+}
+</code></pre></div>
+<h2 id="section-13" data-heading-text="使用rest-assured进行接口层测试">使用rest-assured进行接口层测试</h2>
+<div class="code-block" data-language="java"><div class="code-header"><span class="code-language">java</span></div><pre><code class="hljs language-java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">RestAssuredMockMvcTest</span> {
+
+    <span class="hljs-meta">@Before</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">before</span><span class="hljs-params">()</span>{
+        RestAssured.registerParser(<span class="hljs-string">&quot;text/plain&quot;</span>, Parser.JSON);
+    }
+
+    <span class="hljs-comment">///https://github.com/rest-assured/rest-assured/wiki/Usage#spring-mock-mvc-module</span>
+    <span class="hljs-meta">@Test</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">test</span><span class="hljs-params">()</span>{
+
+        given().
+                standaloneSetup(<span class="hljs-keyword">new</span> <span class="hljs-title class_">GreetingController</span>()).
+                param(<span class="hljs-string">&quot;name&quot;</span>, <span class="hljs-string">&quot;Johan&quot;</span>).
+                <span class="hljs-keyword">when</span>().
+                get(<span class="hljs-string">&quot;/greeting&quot;</span>).
+                then().
+                statusCode(<span class="hljs-number">200</span>).
+                body(<span class="hljs-string">&quot;code&quot;</span>, equalTo(<span class="hljs-number">0</span>));
+                <span class="hljs-comment">//body(&quot;data&quot;, equalTo(&quot;Hello, Johan!&quot;));</span>
+    }
+}
+</code></pre></div>
+<h2 id="section-14" data-heading-text="事务测试">事务测试</h2>
+<ul>
+<li>TODO</li>
+</ul>
+<h2 id="section-15" data-heading-text="其他">其他</h2>
+<ul>
+<li>单元测试的运行速度重要吗？
+违背这个原则的典型反例，就是在单测中启动 Spring。</li>
+<li>数据驱动测试（Data Driven Test）</li>
+<li>mockito只能用于纯逻辑的验证，涉及事务那些还是没办法。单个类的单元测试逻辑正确不代表逻辑就覆盖全了，所以针对重要的接口需要单独集成测试用例</li>
+<li>ContiPerf:: 更为优雅和方便的单元压力测试工具。</li>
+</ul>
+<h2 id="section-16" data-heading-text="扩展">扩展</h2>
+<ul>
+<li>[JDK11下Mock框架进化：从PowerMockito到Mockito Only]<a href="https://mp.weixin.qq.com/s/OsySrzocrMmJdk6C0_h60A">https://mp.weixin.qq.com/s/OsySrzocrMmJdk6C0_h60A</a></li>
+</ul>
+<h2 id="reference" data-heading-text="Reference">Reference</h2>
+<ul>
+<li><a href="https://www.baeldung.com/mockito-void-methods">https://www.baeldung.com/mockito-void-methods</a></li>
+<li><a href="https://stackoverflow.com/questions/2276271/how-to-make-mock-to-void-methods-with-mockito">https://stackoverflow.com/questions/2276271/how-to-make-mock-to-void-methods-with-mockito</a></li>
+<li><a href="https://github.com/eugenp/tutorials/tree/master/testing-modules/mockito">https://github.com/eugenp/tutorials/tree/master/testing-modules/mockito</a></li>
+<li>&lt;/<a href="https://stackoverflow.com/questions/9585323/how-do-i-mock-a-static-method-that-returns-void-with-powermock">https://stackoverflow.com/questions/9585323/how-do-i-mock-a-static-method-that-returns-void-with-powermock</a>&gt;</li>
+<li><a href="https://www.cnblogs.com/Ming8006/p/6297333.html#c2.9">https://www.cnblogs.com/Ming8006/p/6297333.html#c2.9</a></li>
+<li><a href="https://www.baeldung.com/mockito-annotations">https://www.baeldung.com/mockito-annotations</a></li>
+<li><a href="https://javapointers.com/tutorial/difference-between-spy-and-mock-in-mockito/">https://javapointers.com/tutorial/difference-between-spy-and-mock-in-mockito/</a></li>
+<li><a href="https://github.com/eugenp/tutorials/tree/master/testing-modules/mockito">https://github.com/eugenp/tutorials/tree/master/testing-modules/mockito</a></li>
+<li><a href="https://github.com/rest-assured/rest-assured/wiki/Usage#spring-mock-mvc-module">https://github.com/rest-assured/rest-assured/wiki/Usage#spring-mock-mvc-module</a></li>
+<li><a href="https://mp.weixin.qq.com/s/nIntjcrhgLQMiNo0XqPyyg">单元测试，只是测试吗？</a></li>
+<li><a href="https://mp.weixin.qq.com/s/TjJ31yWTMwr4szz1JqtKcQ">单元测试难？来试试这些套路</a></li>
+<li><a href="https://mp.weixin.qq.com/s/U1FArrcdFf3NKui6_Sf-qw">Spock单元测试框架以及在美团优选的实践</a></li>
+<li>[阿里开源的 Mock 工具：TestableMock]</li>
+<li><a href="https://mp.weixin.qq.com/s/hX_RIYs-nBnqVwdq5B4rhg">收藏！Java编程技巧之单元测试用例编写流程</a> – 这个很全了。。。</li>
+<li><a href="https://stackoverflow.com/questions/30890011/whats-the-difference-between-mockito-matchers-isa-any-eq-and-same">https://stackoverflow.com/questions/30890011/whats-the-difference-between-mockito-matchers-isa-any-eq-and-same</a></li>
+<li><a href="https://stackoverflow.com/questions/24295197/is-there-mockito-eq-matcher-for-varargs-array">https://stackoverflow.com/questions/24295197/is-there-mockito-eq-matcher-for-varargs-array</a></li>
+<li><a href="https://stackoverflow.com/questions/5385161/powermock-testing-set-static-field-of-class">https://stackoverflow.com/questions/5385161/powermock-testing-set-static-field-of-class</a></li>
+<li><a href="https://mp.weixin.qq.com/s/LSkTvpsTnBmdOB5nihkxng">Java单元测试技巧之PowerMock:</a></li>
+</ul>
+<hr>
+<ul>
+<li>转：分享一个观点：区分集成测试和单元测试的最本质差别在于，单元测试没有不可控外部依赖，也就是不会因为外部的原因导致测试失败。其它差别都不是能有效区分单元测试和集成测试的。</li>
+</ul>
+
+      </div>
+<div class="article-actions" aria-label="Article actions">
+      <a class="share-link" href="https://twitter.com/intent/tweet?text=%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95%E4%BD%BF%E7%94%A8%E6%80%BB%E7%BB%93&amp;url=https%3A%2F%2Fkingson4wu.github.io%2Fzh%2Fposts%2F20201111%2F" target="_blank" rel="noopener noreferrer" aria-label="Share on X">
+        <span aria-hidden="true">X</span>
+        <span>Share</span>
+      </a>
+    </div>
+    </article>
+<aside class="article-toc" data-article-toc aria-label="目录">
+      <button class="article-toc-toggle" type="button" data-article-toc-toggle aria-expanded="false" aria-controls="article-toc-panel" aria-label="打开目录" data-open-label="打开目录" data-close-label="收起目录">
+        <svg aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M8 6h11"></path>
+          <path d="M8 12h11"></path>
+          <path d="M8 18h11"></path>
+          <path d="M4 6h.01"></path>
+          <path d="M4 12h.01"></path>
+          <path d="M4 18h.01"></path>
+        </svg>
+      </button>
+      <nav id="article-toc-panel" class="article-toc-panel" data-article-toc-panel aria-label="目录">
+        <div class="article-toc-heading">目录</div>
+        <ol class="article-toc-list">
+          <li class="article-toc-level-2"><a href="#section-1" data-article-toc-link>mockito使用</a></li>
+          <li class="article-toc-level-3"><a href="#section-2" data-article-toc-link>mock实例</a></li>
+          <li class="article-toc-level-3"><a href="#section-3" data-article-toc-link>在Spring中使用</a></li>
+          <li class="article-toc-level-3"><a href="#section-4" data-article-toc-link>mock使用</a></li>
+          <li class="article-toc-level-3"><a href="#section-5" data-article-toc-link>mock静态方法</a></li>
+          <li class="article-toc-level-3"><a href="#section-7" data-article-toc-link>使用Answer来生成期望的返回</a></li>
+          <li class="article-toc-level-3"><a href="#section-8" data-article-toc-link>verify使用</a></li>
+          <li class="article-toc-level-3"><a href="#section-9" data-article-toc-link>其他</a></li>
+          <li class="article-toc-level-2"><a href="#section-10" data-article-toc-link>异常测试</a></li>
+          <li class="article-toc-level-2"><a href="#section-11" data-article-toc-link>异步测试</a></li>
+          <li class="article-toc-level-2"><a href="#section-12" data-article-toc-link>基于Spock的数据驱动测试</a></li>
+          <li class="article-toc-level-2"><a href="#section-13" data-article-toc-link>使用rest-assured进行接口层测试</a></li>
+          <li class="article-toc-level-2"><a href="#section-14" data-article-toc-link>事务测试</a></li>
+          <li class="article-toc-level-2"><a href="#section-15" data-article-toc-link>其他</a></li>
+          <li class="article-toc-level-2"><a href="#section-16" data-article-toc-link>扩展</a></li>
+          <li class="article-toc-level-2"><a href="#reference" data-article-toc-link>Reference</a></li>
+        </ol>
+      </nav>
+    </aside>
+    <script src="/scripts/article-toc.js" defer></script>
+    <nav class="article-nav" aria-label="Adjacent posts">
+      <a href="/zh/posts/20201103/"><span>Previous</span>《我的第一本金融入门书》-笔记</a>
+      <a href="/zh/posts/20201219/"><span>Next</span>《枪炮、病菌与钢铁：人类社会的命运》-笔记</a>
+    </nav>
+<section class="comments" aria-labelledby="comments-heading">
+      <h2 id="comments-heading">评论</h2>
+      <div
+        data-comments
+        data-comments-repo="Kingson4Wu/kingson4wu.github.io"
+        data-comments-issue-term="pathname"
+        data-comments-label="comment"
+      ></div>
+    </section>
+    <script src="/scripts/comments.js" defer></script>
+  </main>
+  <footer class="site-footer">
+    <p>&copy; 2026 拉巴力的纸皮箱</p>
+  </footer>
+  <button class="reading-return" type="button" data-reading-return aria-label="回到开头" title="回到开头">
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <path d="M12 19V5"></path>
+      <path d="m6 11 6-6 6 6"></path>
+    </svg>
+  </button>
+  <script src="/scripts/theme.js"></script>
+  <script src="/scripts/image-viewer.js"></script>
+  <script src="/scripts/reading-tools.js"></script>
+</body>
+</html>

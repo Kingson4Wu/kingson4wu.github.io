@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>用脚本+AI CLI半自动写代码：实践经验分享 | 拉巴力的纸皮箱</title>
+  <meta name="description" content="最近在折腾一个“半自动编程”项目，目标是让 AI 工具在一个相对可控的框架下持续编码，帮我实现一个个明确的开发任务。这里分享整个过程、思路和实践套路，算是一次探索性的工程笔记。 为什么要搞半自动 市面上的 AI 编程工具越来越多，比如：Claude Code、Gemini CLI、QWEN CODE 以及其他支持 CL...">
+  <link rel="canonical" href="https://kingson4wu.github.io/zh/posts/20250902-ai/">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="alternate" type="application/rss+xml" title="拉巴力的纸皮箱" href="/zh/feed.xml">
+  <link rel="alternate" type="text/markdown" href="/zh/posts/20250902-ai/index.md">
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="/styles/main.css">
+  <script>
+    try {
+      var theme = localStorage.getItem('theme');
+      if (theme) document.documentElement.dataset.theme = theme;
+    } catch (_) {}
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="site-title" href="/zh/" aria-label="拉巴力的纸皮箱">
+      <span class="site-logo" aria-hidden="true">K</span>
+      <span>拉巴力的纸皮箱</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="/zh/posts/">文章</a>
+      <a href="/zh/notes/">笔记</a>
+      <a href="/zh/tags/">标签</a>
+      <a href="/zh/about/">关于</a>
+      <a href="/zh/search/">搜索</a>
+      <a href="/en/" lang="en">English</a>
+      <a class="feed-link" href="/zh/feed.xml" aria-label="订阅更新" title="订阅更新">
+        <svg class="feed-icon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M5 5.5A13.5 13.5 0 0 1 18.5 19"></path>
+          <path d="M5 11A8 8 0 0 1 13 19"></path>
+          <circle cx="6" cy="18" r="1.5"></circle>
+        </svg>
+      </a>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换明暗模式" title="切换明暗模式">
+        <svg class="theme-icon theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M21 14.2A8.5 8.5 0 0 1 9.8 3 7 7 0 1 0 21 14.2Z"></path>
+        </svg>
+        <svg class="theme-icon theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"></path>
+        </svg>
+      </button>
+    </nav>
+  </header>
+  <main class="site-main">
+    <article class="article">
+      <header class="article-header">
+        <h1>用脚本+AI CLI半自动写代码：实践经验分享</h1>
+        <time datetime="2025-09-02T13:44:21.000Z">2025年9月2日</time>
+<ul class="tag-list" aria-label="Tags">
+    <li><a href="/zh/tags/AI/">AI</a></li>
+    <li><a href="/zh/tags/Prompt%20Engineering/">Prompt Engineering</a></li>
+    <li><a href="/zh/tags/Python/">Python</a></li>
+    <li><a href="/zh/tags/Programming%20Languages/">Programming Languages</a></li>
+  </ul>
+      </header>
+      <div class="prose">
+<p>最近在折腾一个“半自动编程”项目，目标是让 AI 工具在一个相对可控的框架下持续编码，帮我实现一个个明确的开发任务。这里分享整个过程、思路和实践套路，算是一次探索性的工程笔记。</p>
+<h2 id="section-1" data-heading-text="为什么要搞半自动">为什么要搞半自动</h2>
+<p>市面上的 AI 编程工具越来越多，比如：Claude Code、Gemini CLI、QWEN CODE 以及其他支持 CLI 模式的 AI 工具。
+它们都能帮我们提高开发效率，但如果只是一次次手动问问题，效率还是不够高。我的想法是：</p>
+<ol>
+<li>用脚本封装和调度这些 AI 工具；</li>
+<li>利用 <code>tmux</code> 维持 AI CLI 的会话状态；</li>
+<li>自动给 AI 下发任务、收集结果，让 AI 一直“干活”，直到任务完成。</li>
+</ol>
+<p>这就像有个“虚拟小弟”24小时帮你写代码，而你更多做架构和技术方案的管理。</p>
+<hr>
+<h2 id="section-2" data-heading-text="总体套路">总体套路</h2>
+<p>我总结下来整个流程可以分成四步，每一步都强调<strong>人工 review</strong>，避免“AI乱写”导致项目失控。</p>
+<h3 id="1" data-heading-text="1. 初始化项目：立规范、搭框架">1. 初始化项目：立规范、搭框架</h3>
+<p>项目开始前先搞定<strong>规范和架构</strong>，这是整个半自动化的基础。</p>
+<ul>
+<li>
+<p>新建 GitHub 仓库，初始化代码框架：</p>
+<div class="code-block" data-language="bash"><div class="code-header"><span class="code-language">bash</span></div><pre><code class="hljs language-bash">git <span class="hljs-built_in">clone</span> git@github.com:Kingson4Wu/ts-playground.git
+</code></pre></div>
+</li>
+<li>
+<p>参考已有项目文档，比如我用的 <a href="https://github.com/Kingson4Wu/cpp-linux-playground/blob/main/PROJECT.md">cpp-linux-playground</a>，根据 TypeScript 项目的需求，改写成自己的 <code>PROJECT.md</code>。</p>
+</li>
+<li>
+<p>规划好：</p>
+<ul>
+<li>技术栈（语言、工具链、标准）</li>
+<li>测试和任务验收标准</li>
+<li>静态分析工具</li>
+<li>项目目录结构</li>
+<li>Git 提交规范</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>小建议：把 <code>docs/</code> 改成更专门的目录名（比如 <code>specifications/</code>），避免混乱。</p>
+</blockquote>
+<p>这一阶段主要是人工定规则、搭骨架，AI可以辅助起草文档，但最终必须你拍板。</p>
+<hr>
+<h3 id="2" data-heading-text="2. 细化任务实现方案">2. 细化任务实现方案</h3>
+<p>所有任务先出详细的实现和测试方案，放在 <code>@specifications/task_specs/</code> 下。
+原则：</p>
+<ul>
+<li>
+<p><strong>不直接写代码</strong>，先写详细设计；</p>
+</li>
+<li>
+<p>每个任务的设计经过人工审查和修改；</p>
+</li>
+<li>
+<p>任务设计文件需要明确：</p>
+<ul>
+<li>功能描述</li>
+<li>实现逻辑</li>
+<li>输入输出</li>
+<li>单元测试方案</li>
+<li>潜在问题或风险点</li>
+</ul>
+</li>
+</ul>
+<p>这样做的好处是：AI有明确的执行指南，写出的代码更可控，后续修改成本也低。</p>
+<hr>
+<h3 id="3" data-heading-text="3. 半自动化驱动编码">3. 半自动化驱动编码</h3>
+<p>有了规范和任务设计，就可以开始半自动写代码了。
+我的方案是：</p>
+<ul>
+<li>
+<p>用 Python 脚本驱动 AI CLI 工具；</p>
+</li>
+<li>
+<p>通过 <code>tmux</code> 维持 AI 会话，避免中断；</p>
+</li>
+<li>
+<p>每个任务循环：</p>
+<ol>
+<li>给 AI 发实现方案；</li>
+<li>要求它按方案写代码，但<strong>不要自动提交代码</strong>；</li>
+<li>人工检查后再提交到 Git。</li>
+</ol>
+</li>
+</ul>
+<p>脚本和逻辑可以参考 <a href="https://github.com/Kingson4Wu/ForgeFlow">ForgeFlow</a>，里面有完整的交互逻辑示例。</p>
+<blockquote>
+<p>小技巧：</p>
+<ul>
+<li>每个 Prompt 末尾强调“不要自动提交代码”；</li>
+<li>如果任务超时超过1小时，自动触发检查机制；</li>
+<li>项目进度同步到 <code>TODO.md</code>，并在 <code>PROJECT.md</code> 中引用。</li>
+</ul>
+</blockquote>
+<hr>
+<h3 id="4" data-heading-text="4. 定义“完成”的标准">4. 定义“完成”的标准</h3>
+<p>一个任务完成的定义：</p>
+<ol>
+<li>按实现方案完成代码；</li>
+<li>单元测试全部通过；</li>
+<li>脚本和 Prompt 更新到位；</li>
+<li>构建和测试无异常；</li>
+<li>Git 提交所有改动；</li>
+<li>进入下一个任务。</li>
+</ol>
+<p>最终目标是：</p>
+<blockquote>
+<p>输出所有方案 -&gt; 自动实现 -&gt; 所有项目任务完成后，AI只返回“完成”两个字。</p>
+</blockquote>
+<hr>
+<h2 id="section-7" data-heading-text="实战项目参考">实战项目参考</h2>
+<p>示例项目：<a href="https://github.com/Kingson4Wu/ts-playground">ts-playground</a>
+这是我搭的一个 TypeScript 学习和实验环境：</p>
+<ul>
+<li>CI/CD 流程完整；</li>
+<li>用于系统掌握 TypeScript 类型系统；</li>
+<li>可以复用于后端服务、CLI 工具开发。</li>
+</ul>
+<p>这个项目就是通过“人机协作+半自动化”方式落地的。</p>
+<hr>
+<h2 id="vs" data-heading-text="半自动 vs 全自动">半自动 vs 全自动</h2>
+<p>目前这种方案是“半自动”，而不是“全自动”。原因：</p>
+<ul>
+<li><strong>设计和规范必须人工介入</strong>：AI生成的规范往往不够完善；</li>
+<li><strong>脚本和Prompt需要不断打磨</strong>：无法覆盖所有场景；</li>
+<li><strong>代码质量还需人工检查</strong>：AI的水平不总是稳定。</li>
+</ul>
+<p>换句话说，这是一个低成本、可控、复用性强的探索阶段方案。
+全自动化？有点远，尤其是多Agent复杂度太高，难以管理上下文和控制风险。</p>
+<hr>
+<h2 id="section-9" data-heading-text="上下文管理的核心">上下文管理的核心</h2>
+<p>要想让AI持续有效地工作，项目上下文必须有序管理：</p>
+<ol>
+<li>规范文件分类清晰，按模块分目录；</li>
+<li>方案文档结构化，方便AI快速索引；</li>
+<li>自动化脚本根据任务调度上下文，让AI“看得懂项目”。</li>
+</ol>
+<p>这才是真正的“AI编程助手”关键所在。</p>
+<hr>
+<h2 id="section-10" data-heading-text="一点哲学思考">一点哲学思考</h2>
+<p>这套方案的本质是把开发人员角色分层：</p>
+<ul>
+<li>AI是“码农+助理”，帮你实现具体功能；</li>
+<li>你是“开发经理”，负责设计、审查、控制质量；</li>
+<li>团队协作依旧重要，人类仍然是决策核心。</li>
+</ul>
+<p>AI工具不是真正的替代，而是推动开发人员往更高的抽象层次发展。
+从这个角度看，AI是个强大的加速器，而不是终点。</p>
+<hr>
+<h2 id="section-11" data-heading-text="总结">总结</h2>
+<p>整个实践路线：</p>
+<ol>
+<li>项目初始化，搭规范和骨架；</li>
+<li>细化任务方案，人工Review；</li>
+<li>用脚本驱动AI半自动写代码；</li>
+<li>明确完成标准，逐步推进。</li>
+</ol>
+<p>这是目前我能找到的最可控、最实用的“AI编程”方式。
+它既降低了成本，又不至于乱套，非常适合小团队或者个人工程师快速起项目。</p>
+<h2 id="section-12" data-heading-text="扩展">扩展</h2>
+<ul>
+<li><a href="https://agents.md/">AGENTS.md</a>: Think of <a href="http://AGENTS.md">AGENTS.md</a> as a README for agents</li>
+<li>细化任务方案，可以参考<a href="https://github.com/github/spec-kit">spec-kit</a> 或 <a href="https://github.com/Fission-AI/OpenSpec">OpenSpec</a>的套路</li>
+</ul>
+
+      </div>
+<div class="article-actions" aria-label="Article actions">
+      <a class="share-link" href="https://twitter.com/intent/tweet?text=%E7%94%A8%E8%84%9A%E6%9C%AC%2BAI+CLI%E5%8D%8A%E8%87%AA%E5%8A%A8%E5%86%99%E4%BB%A3%E7%A0%81%EF%BC%9A%E5%AE%9E%E8%B7%B5%E7%BB%8F%E9%AA%8C%E5%88%86%E4%BA%AB&amp;url=https%3A%2F%2Fkingson4wu.github.io%2Fzh%2Fposts%2F20250902-ai%2F" target="_blank" rel="noopener noreferrer" aria-label="Share on X">
+        <span aria-hidden="true">X</span>
+        <span>Share</span>
+      </a>
+    </div>
+    </article>
+<aside class="article-toc" data-article-toc aria-label="目录">
+      <button class="article-toc-toggle" type="button" data-article-toc-toggle aria-expanded="false" aria-controls="article-toc-panel" aria-label="打开目录" data-open-label="打开目录" data-close-label="收起目录">
+        <svg aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M8 6h11"></path>
+          <path d="M8 12h11"></path>
+          <path d="M8 18h11"></path>
+          <path d="M4 6h.01"></path>
+          <path d="M4 12h.01"></path>
+          <path d="M4 18h.01"></path>
+        </svg>
+      </button>
+      <nav id="article-toc-panel" class="article-toc-panel" data-article-toc-panel aria-label="目录">
+        <div class="article-toc-heading">目录</div>
+        <ol class="article-toc-list">
+          <li class="article-toc-level-2"><a href="#section-1" data-article-toc-link>为什么要搞半自动</a></li>
+          <li class="article-toc-level-2"><a href="#section-2" data-article-toc-link>总体套路</a></li>
+          <li class="article-toc-level-3"><a href="#1" data-article-toc-link>1. 初始化项目：立规范、搭框架</a></li>
+          <li class="article-toc-level-3"><a href="#2" data-article-toc-link>2. 细化任务实现方案</a></li>
+          <li class="article-toc-level-3"><a href="#3" data-article-toc-link>3. 半自动化驱动编码</a></li>
+          <li class="article-toc-level-3"><a href="#4" data-article-toc-link>4. 定义“完成”的标准</a></li>
+          <li class="article-toc-level-2"><a href="#section-7" data-article-toc-link>实战项目参考</a></li>
+          <li class="article-toc-level-2"><a href="#vs" data-article-toc-link>半自动 vs 全自动</a></li>
+          <li class="article-toc-level-2"><a href="#section-9" data-article-toc-link>上下文管理的核心</a></li>
+          <li class="article-toc-level-2"><a href="#section-10" data-article-toc-link>一点哲学思考</a></li>
+          <li class="article-toc-level-2"><a href="#section-11" data-article-toc-link>总结</a></li>
+          <li class="article-toc-level-2"><a href="#section-12" data-article-toc-link>扩展</a></li>
+        </ol>
+      </nav>
+    </aside>
+    <script src="/scripts/article-toc.js" defer></script>
+    <nav class="article-nav" aria-label="Adjacent posts">
+      <a href="/zh/posts/20250828-tmux/"><span>Previous</span>用 tmux + 内网穿透，让出门也能指导编程任务</a>
+      <a href="/zh/posts/20250915-dns/"><span>Next</span>深入理解域名解析与管理：从 DNS 原理到注册商与注册局</a>
+    </nav>
+<section class="comments" aria-labelledby="comments-heading">
+      <h2 id="comments-heading">评论</h2>
+      <div
+        data-comments
+        data-comments-repo="Kingson4Wu/kingson4wu.github.io"
+        data-comments-issue-term="pathname"
+        data-comments-label="comment"
+      ></div>
+    </section>
+    <script src="/scripts/comments.js" defer></script>
+  </main>
+  <footer class="site-footer">
+    <p>&copy; 2026 拉巴力的纸皮箱</p>
+  </footer>
+  <button class="reading-return" type="button" data-reading-return aria-label="回到开头" title="回到开头">
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <path d="M12 19V5"></path>
+      <path d="m6 11 6-6 6 6"></path>
+    </svg>
+  </button>
+  <script src="/scripts/theme.js"></script>
+  <script src="/scripts/image-viewer.js"></script>
+  <script src="/scripts/reading-tools.js"></script>
+</body>
+</html>

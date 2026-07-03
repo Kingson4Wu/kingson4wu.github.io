@@ -1,20 +1,28 @@
-# Kingson Wu Blog Root Redirect
+# Kingson Wu Blog
 
-This repository owns the root site at `https://kingson4wu.github.io/`.
+Unified bilingual static blog for `https://kingson4wu.github.io/`.
 
-Current behavior:
+## Structure
 
-- `/` redirects to `/zh/`
+- `content/`: Markdown posts, notes, about pages, legacy redirects, and article assets.
+- `site/`: custom TypeScript static generator, renderers, migration scripts, styles, and browser scripts.
+- `dist/`: generated GitHub Pages output.
 
-Configuration:
+## Commands
 
-- Change `redirect-config.js` to switch the default landing path
+```bash
+npm install
+npm run migrate
+npm run check
+npm run build
+npm run dev
+```
 
-Content repositories:
+## URLs
 
-- Chinese blog source: `Kingson4Wu/zh`
-- English blog source: `Kingson4Wu/en`
-
-Maintenance guide:
-
-- See `MAINTENANCE.md`
+- `/` and `/en/`: English homepage.
+- `/zh/`: Chinese homepage.
+- `/en/search/`: English search.
+- `/zh/search/`: Chinese search.
+- `/search/`: redirects to English search for compatibility.
+- `/en/rss.xml` and `/zh/rss.xml`: RSS feeds.

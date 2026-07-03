@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>从第一性原理看 Harness Engineering | 拉巴力的纸皮箱</title>
+  <meta name="description" content="LLM 只做一件事：给定输入，生成输出。 模型是固定的。你能控制的，其实只有输入，以及围绕输入输出构建的系统。 由此派生出两个真实的工程问题域。 问题域 A：如何构造更好的输入 这是一个连续的复杂度谱系： 手工写指令 -&amp;gt; Prompt Engineering 动态检索、拼装、压缩信息 -&amp;gt; Context...">
+  <link rel="canonical" href="https://kingson4wu.github.io/zh/notes/20260328-harness-engineering/">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="alternate" type="application/rss+xml" title="拉巴力的纸皮箱" href="/zh/feed.xml">
+  <link rel="alternate" type="text/markdown" href="/zh/notes/20260328-harness-engineering/index.md">
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="/styles/main.css">
+  <script>
+    try {
+      var theme = localStorage.getItem('theme');
+      if (theme) document.documentElement.dataset.theme = theme;
+    } catch (_) {}
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="site-title" href="/zh/" aria-label="拉巴力的纸皮箱">
+      <span class="site-logo" aria-hidden="true">K</span>
+      <span>拉巴力的纸皮箱</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="/zh/posts/">文章</a>
+      <a href="/zh/notes/">笔记</a>
+      <a href="/zh/tags/">标签</a>
+      <a href="/zh/about/">关于</a>
+      <a href="/zh/search/">搜索</a>
+      <a href="/en/" lang="en">English</a>
+      <a class="feed-link" href="/zh/feed.xml" aria-label="订阅更新" title="订阅更新">
+        <svg class="feed-icon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M5 5.5A13.5 13.5 0 0 1 18.5 19"></path>
+          <path d="M5 11A8 8 0 0 1 13 19"></path>
+          <circle cx="6" cy="18" r="1.5"></circle>
+        </svg>
+      </a>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换明暗模式" title="切换明暗模式">
+        <svg class="theme-icon theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M21 14.2A8.5 8.5 0 0 1 9.8 3 7 7 0 1 0 21 14.2Z"></path>
+        </svg>
+        <svg class="theme-icon theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"></path>
+        </svg>
+      </button>
+    </nav>
+  </header>
+  <main class="site-main">
+    <article class="article">
+      <header class="article-header">
+        <h1>从第一性原理看 Harness Engineering</h1>
+        <time datetime="2026-03-28T06:10:00.000Z">2026年3月28日</time>
+<ul class="tag-list" aria-label="Tags">
+    <li><a href="/zh/tags/AI/">AI</a></li>
+    <li><a href="/zh/tags/LLM/">LLM</a></li>
+    <li><a href="/zh/tags/MCP/">MCP</a></li>
+    <li><a href="/zh/tags/Prompt%20Engineering/">Prompt Engineering</a></li>
+  </ul>
+      </header>
+      <div class="prose">
+<p>LLM 只做一件事：给定输入，生成输出。</p>
+<p>模型是固定的。你能控制的，其实只有输入，以及围绕输入输出构建的系统。</p>
+<p>由此派生出两个真实的工程问题域。</p>
+<h2 id="section-1" data-heading-text="问题域 A：如何构造更好的输入">问题域 A：如何构造更好的输入</h2>
+<p>这是一个连续的复杂度谱系：</p>
+<ul>
+<li>手工写指令 -&gt; Prompt Engineering</li>
+<li>动态检索、拼装、压缩信息 -&gt; Context Engineering</li>
+</ul>
+<p>两者解决的是同一类问题，只是复杂度不同。</p>
+<p>Context Engineering 本质上是 Prompt Engineering 在系统规模下的自然延伸。它们是同一问题域上复杂度递增的连续谱系，不是独立的新范式。</p>
+<h2 id="b" data-heading-text="问题域 B：如何让围绕模型的系统可靠运行">问题域 B：如何让围绕模型的系统可靠运行</h2>
+<p>执行控制、测试评估、监控、改进闭环，这才是真正不同的问题域。</p>
+<p>它和输入构造无关，是围绕模型系统化运行时新增出来的工程复杂度。</p>
+<h2 id="section-3" data-heading-text="更清晰的结构">更清晰的结构</h2>
+<div class="code-block" data-language="text"><div class="code-header"><span class="code-language">text</span></div><pre><code class="hljs language-text">LLM 工程
+│
+├── 输入构造（A）
+│   └── Prompt Engineering -&gt; Context Engineering
+│       （同一问题域，复杂度递增）
+│
+└── 系统可靠性（B）
+    └── Execution / Eval / Observability / Feedback
+        （不同问题域，真正的新增复杂度）
+</code></pre></div>
+<p>Harness Engineering = A + B，不是独立的新范式。</p>
+<p>结论也就很清楚：</p>
+<ul>
+<li>Prompt Engineering 和 Context Engineering：程度差异，不是本质差异</li>
+<li>Harness 的工程基础设施层：才是真正不同的问题域</li>
+<li>把三者并列称为独立范式：是一种概念通货膨胀，反而掩盖了真实的工程结构</li>
+</ul>
+
+      </div>
+<div class="article-actions" aria-label="Article actions">
+      <a class="share-link" href="https://twitter.com/intent/tweet?text=%E4%BB%8E%E7%AC%AC%E4%B8%80%E6%80%A7%E5%8E%9F%E7%90%86%E7%9C%8B+Harness+Engineering&amp;url=https%3A%2F%2Fkingson4wu.github.io%2Fzh%2Fnotes%2F20260328-harness-engineering%2F" target="_blank" rel="noopener noreferrer" aria-label="Share on X">
+        <span aria-hidden="true">X</span>
+        <span>Share</span>
+      </a>
+    </div>
+    </article>
+
+    <nav class="article-nav" aria-label="Adjacent posts">
+      <a href="/zh/notes/20260327-mcp-skill-cli/"><span>Previous</span>MCP、Skill 与 CLI 的分化与协同</a>
+      <a href="/zh/notes/20260329-skill-agent/"><span>Next</span>Skill 可能比 Agent 更像长期资产</a>
+    </nav>
+<section class="comments" aria-labelledby="comments-heading">
+      <h2 id="comments-heading">评论</h2>
+      <div
+        data-comments
+        data-comments-repo="Kingson4Wu/kingson4wu.github.io"
+        data-comments-issue-term="pathname"
+        data-comments-label="comment"
+      ></div>
+    </section>
+    <script src="/scripts/comments.js" defer></script>
+  </main>
+  <footer class="site-footer">
+    <p>&copy; 2026 拉巴力的纸皮箱</p>
+  </footer>
+  <button class="reading-return" type="button" data-reading-return aria-label="回到开头" title="回到开头">
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <path d="M12 19V5"></path>
+      <path d="m6 11 6-6 6 6"></path>
+    </svg>
+  </button>
+  <script src="/scripts/theme.js"></script>
+  <script src="/scripts/image-viewer.js"></script>
+  <script src="/scripts/reading-tools.js"></script>
+</body>
+</html>

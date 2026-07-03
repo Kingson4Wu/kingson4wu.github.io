@@ -1,0 +1,498 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Python 调用 C 扩展与库机制全解析 | 拉巴力的纸皮箱</title>
+  <meta name="description" content="以下内容有ChatGPT和Claude.ai辅助生成 系统梳理 Python C 扩展、动态库、ABI、多语言互操作及第三方库加载机制。 1️⃣ Python C 扩展基础 完整示例 c#include &amp;lt;Python.h&amp;gt; static PyObject* py_add(PyObject* self, P...">
+  <link rel="canonical" href="https://kingson4wu.github.io/zh/posts/20251224-python-c/">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="alternate" type="application/rss+xml" title="拉巴力的纸皮箱" href="/zh/feed.xml">
+  <link rel="alternate" type="text/markdown" href="/zh/posts/20251224-python-c/index.md">
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="/styles/main.css">
+  <script>
+    try {
+      var theme = localStorage.getItem('theme');
+      if (theme) document.documentElement.dataset.theme = theme;
+    } catch (_) {}
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="site-title" href="/zh/" aria-label="拉巴力的纸皮箱">
+      <span class="site-logo" aria-hidden="true">K</span>
+      <span>拉巴力的纸皮箱</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="/zh/posts/">文章</a>
+      <a href="/zh/notes/">笔记</a>
+      <a href="/zh/tags/">标签</a>
+      <a href="/zh/about/">关于</a>
+      <a href="/zh/search/">搜索</a>
+      <a href="/en/" lang="en">English</a>
+      <a class="feed-link" href="/zh/feed.xml" aria-label="订阅更新" title="订阅更新">
+        <svg class="feed-icon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M5 5.5A13.5 13.5 0 0 1 18.5 19"></path>
+          <path d="M5 11A8 8 0 0 1 13 19"></path>
+          <circle cx="6" cy="18" r="1.5"></circle>
+        </svg>
+      </a>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换明暗模式" title="切换明暗模式">
+        <svg class="theme-icon theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M21 14.2A8.5 8.5 0 0 1 9.8 3 7 7 0 1 0 21 14.2Z"></path>
+        </svg>
+        <svg class="theme-icon theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"></path>
+        </svg>
+      </button>
+    </nav>
+  </header>
+  <main class="site-main">
+    <article class="article">
+      <header class="article-header">
+        <h1>Python 调用 C 扩展与库机制全解析</h1>
+        <time datetime="2025-12-24T08:08:43.000Z">2025年12月24日</time>
+<ul class="tag-list" aria-label="Tags">
+    <li><a href="/zh/tags/Python/">Python</a></li>
+    <li><a href="/zh/tags/Programming%20Languages/">Programming Languages</a></li>
+  </ul>
+      </header>
+      <div class="prose">
+<blockquote>
+<blockquote>
+<p>以下内容有ChatGPT和Claude.ai辅助生成</p>
+</blockquote>
+</blockquote>
+<p>系统梳理 Python C 扩展、动态库、ABI、多语言互操作及第三方库加载机制。</p>
+<hr>
+<h2 id="1-python-c" data-heading-text="1️⃣ Python C 扩展基础">1️⃣ Python C 扩展基础</h2>
+<h3 id="section-2" data-heading-text="完整示例">完整示例</h3>
+<div class="code-block" data-language="c"><div class="code-header"><span class="code-language">c</span></div><pre><code class="hljs language-c"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;Python.h&gt;</span></span>
+
+<span class="hljs-type">static</span> PyObject* <span class="hljs-title function_">py_add</span><span class="hljs-params">(PyObject* self, PyObject* args)</span> {
+    <span class="hljs-type">int</span> a, b;
+    <span class="hljs-keyword">if</span> (!PyArg_ParseTuple(args, <span class="hljs-string">&quot;ii&quot;</span>, &amp;a, &amp;b)) <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>;
+    <span class="hljs-keyword">return</span> PyLong_FromLong(a + b);
+}
+
+<span class="hljs-type">static</span> PyMethodDef methods[] = {
+    {<span class="hljs-string">&quot;add&quot;</span>, py_add, METH_VARARGS, <span class="hljs-string">&quot;Add two integers&quot;</span>},
+    {<span class="hljs-literal">NULL</span>, <span class="hljs-literal">NULL</span>, <span class="hljs-number">0</span>, <span class="hljs-literal">NULL</span>}
+};
+
+<span class="hljs-type">static</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">PyModuleDef</span> <span class="hljs-title">module</span> =</span> {
+    PyModuleDef_HEAD_INIT, <span class="hljs-string">&quot;my_module&quot;</span>, <span class="hljs-literal">NULL</span>, <span class="hljs-number">-1</span>, methods
+};
+
+PyMODINIT_FUNC <span class="hljs-title function_">PyInit_my_module</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span> {
+    <span class="hljs-keyword">return</span> PyModule_Create(&amp;module);
+}
+</code></pre></div>
+<p><strong>编译（<a href="http://setup.py">setup.py</a>）：</strong></p>
+<div class="code-block" data-language="python"><div class="code-header"><span class="code-language">python</span></div><pre><code class="hljs language-python"><span class="hljs-keyword">from</span> setuptools <span class="hljs-keyword">import</span> setup, Extension
+setup(ext_modules=[Extension(<span class="hljs-string">&#x27;my_module&#x27;</span>, sources=[<span class="hljs-string">&#x27;my_module.c&#x27;</span>])])
+</code></pre></div>
+<div class="code-block" data-language="bash"><div class="code-header"><span class="code-language">bash</span></div><pre><code class="hljs language-bash">python setup.py build_ext --inplace
+</code></pre></div>
+<p><strong>使用：</strong></p>
+<div class="code-block" data-language="python"><div class="code-header"><span class="code-language">python</span></div><pre><code class="hljs language-python"><span class="hljs-keyword">import</span> my_module
+result = my_module.add(<span class="hljs-number">3</span>, <span class="hljs-number">5</span>)  <span class="hljs-comment"># 返回 8</span>
+</code></pre></div>
+<h3 id="section-3" data-heading-text="执行原理">执行原理</h3>
+<div class="code-block"><pre><code class="hljs">import my_module
+    ↓
+dlopen() 加载 .so 到进程内存
+    ↓
+查找并调用 PyInit_my_module
+    ↓
+注册函数到 sys.modules
+
+调用 my_module.add(3, 5)
+    ↓
+PyArg_ParseTuple：Python object → C int
+    ↓
+C 函数执行（CPU 直接执行机器码）
+    ↓
+PyLong_FromLong：C int → Python object
+    ↓
+返回结果
+</code></pre></div>
+<p><strong>性能特征：</strong></p>
+<ul>
+<li>动态库加载到 Python 进程内存，同进程内执行</li>
+<li>主要开销在类型转换（Python object ↔ C types）</li>
+<li>C 函数本身接近原生性能，无虚拟机开销</li>
+<li>需手动管理 Python 对象引用计数（<code>Py_INCREF</code>/<code>Py_DECREF</code>）</li>
+<li>默认持有 GIL，多线程场景需显式释放</li>
+</ul>
+<hr>
+<h2 id="2-python-c" data-heading-text="2️⃣ Python 调用 C 的多种方式">2️⃣ Python 调用 C 的多种方式</h2>
+<table>
+<thead>
+<tr>
+<th>方式</th>
+<th>适用场景</th>
+<th>优点</th>
+<th>缺点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>C API</strong></td>
+<td>高性能扩展、底层控制</td>
+<td>性能最优、完全控制</td>
+<td>代码复杂、手动管理引用</td>
+</tr>
+<tr>
+<td><strong>ctypes</strong></td>
+<td>调用现有 C 库</td>
+<td>无需编译、纯 Python</td>
+<td>性能较低、类型不安全</td>
+</tr>
+<tr>
+<td><strong>CFFI</strong></td>
+<td>C 库绑定</td>
+<td>代码简洁、支持 ABI/API 模式</td>
+<td>需额外依赖</td>
+</tr>
+<tr>
+<td><strong>Cython</strong></td>
+<td>Python 代码加速</td>
+<td>语法接近 Python、渐进优化</td>
+<td>需编译步骤</td>
+</tr>
+<tr>
+<td><strong>pybind11</strong></td>
+<td>C++ 库绑定</td>
+<td>现代 C++、自动类型转换</td>
+<td>仅支持 C++</td>
+</tr>
+</tbody>
+</table>
+<p><strong>ctypes 示例：</strong></p>
+<div class="code-block" data-language="python"><div class="code-header"><span class="code-language">python</span></div><pre><code class="hljs language-python"><span class="hljs-keyword">import</span> ctypes
+libc = ctypes.CDLL(<span class="hljs-string">&#x27;libc.so.6&#x27;</span>)  <span class="hljs-comment"># Linux</span>
+strlen = libc.strlen
+strlen.argtypes = [ctypes.c_char_p]
+strlen.restype = ctypes.c_int
+result = strlen(<span class="hljs-string">b&quot;Hello&quot;</span>)  <span class="hljs-comment"># 返回 5</span>
+</code></pre></div>
+<hr>
+<h2 id="3-vs" data-heading-text="3️⃣ 动态库 vs 静态库">3️⃣ 动态库 vs 静态库</h2>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>静态库 (.a/.lib)</th>
+<th>动态库 (.so/.dll/.dylib)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>链接时机</td>
+<td>编译时</td>
+<td>运行时</td>
+</tr>
+<tr>
+<td>包含方式</td>
+<td>代码拷贝进可执行文件</td>
+<td>独立文件</td>
+</tr>
+<tr>
+<td>内存使用</td>
+<td>每进程独立副本</td>
+<td>代码段多进程共享</td>
+</tr>
+<tr>
+<td>更新方式</td>
+<td>需重新编译链接</td>
+<td>直接替换库文件</td>
+</tr>
+<tr>
+<td>Python 使用</td>
+<td>不可直接 import</td>
+<td>普通动态库不能直接 <code>import</code>；只有符合 Python 扩展模块规范的共享库才可被 <code>import</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="section-6" data-heading-text="动态库加载流程">动态库加载流程</h3>
+<div class="code-block"><pre><code class="hljs">dlopen(&quot;lib.so&quot;)
+    ↓
+查找库文件（LD_LIBRARY_PATH、/lib、/usr/lib）
+    ↓
+mmap 映射到内存
+  ├─ 代码段：只读、可共享
+  ├─ 数据段：可读写、进程独立
+  └─ BSS 段：未初始化数据
+    ↓
+重定位（修正代码中的地址引用）
+    ↓
+符号绑定（延迟绑定 BIND_LAZY / 立即绑定 BIND_NOW）
+    ↓
+执行初始化函数（C++: 全局对象构造）
+</code></pre></div>
+<hr>
+<h2 id="4-abi" data-heading-text="4️⃣ ABI（应用二进制接口）">4️⃣ ABI（应用二进制接口）</h2>
+<h3 id="section-8" data-heading-text="定义与组成">定义与组成</h3>
+<p>ABI 规定二进制层面的调用规范，确保不同编译器/语言生成的代码能互操作。</p>
+<p><strong>核心要素：</strong></p>
+<ol>
+<li><strong>调用约定</strong>：参数传递方式（寄存器/栈）、返回值、栈清理责任</li>
+<li><strong>数据布局</strong>：类型大小、结构体对齐、字节序</li>
+<li><strong>符号规则</strong>：C 直接导出，C++ 名称修饰（需 <code>extern &quot;C&quot;</code>）</li>
+<li><strong>异常处理</strong>：栈展开机制</li>
+</ol>
+<h3 id="section-9" data-heading-text="常见调用约定">常见调用约定</h3>
+<table>
+<thead>
+<tr>
+<th>约定</th>
+<th>参数传递</th>
+<th>清栈</th>
+<th>平台</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cdecl</td>
+<td>栈（右→左）</td>
+<td>调用者</td>
+<td>Linux/Windows C 默认</td>
+</tr>
+<tr>
+<td>System V x64</td>
+<td>寄存器（rdi,rsi,rdx,rcx,r8,r9）</td>
+<td>-</td>
+<td>Linux x64</td>
+</tr>
+<tr>
+<td>MS x64</td>
+<td>寄存器（rcx,rdx,r8,r9）</td>
+<td>-</td>
+<td>Windows x64</td>
+</tr>
+</tbody>
+</table>
+<h3 id="api-vs-abi" data-heading-text="API vs ABI">API vs ABI</h3>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>API</th>
+<th>ABI</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>层级</td>
+<td>源码</td>
+<td>二进制/机器码</td>
+</tr>
+<tr>
+<td>内容</td>
+<td>函数声明、类型定义</td>
+<td>调用约定、内存布局、寄存器使用</td>
+</tr>
+<tr>
+<td>兼容性</td>
+<td>源码兼容</td>
+<td>二进制兼容</td>
+</tr>
+<tr>
+<td>示例</td>
+<td><code>int add(int, int)</code></td>
+<td>参数通过 rdi, rsi 传递</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="5" data-heading-text="5️⃣ 多语言动态库对比">5️⃣ 多语言动态库对比</h2>
+<h3 id="section-12" data-heading-text="运行时特征">运行时特征</h3>
+<table>
+<thead>
+<tr>
+<th>语言</th>
+<th>运行时组成</th>
+<th>库体积</th>
+<th>导出限制</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>C</strong></td>
+<td>无/最小 CRT</td>
+<td>最小</td>
+<td>无</td>
+</tr>
+<tr>
+<td><strong>C++</strong></td>
+<td>CRT + libstdc++ + 异常处理 + RTTI</td>
+<td>中等</td>
+<td>需 <code>extern &quot;C&quot;</code></td>
+</tr>
+<tr>
+<td><strong>Rust</strong></td>
+<td>panic 处理 + allocator</td>
+<td>小</td>
+<td>需 <code>#[no_mangle]</code></td>
+</tr>
+<tr>
+<td><strong>Go</strong></td>
+<td>goroutine 调度器 + GC + 内存管理</td>
+<td>大（数 MB）</td>
+<td>仅基本类型和指针</td>
+</tr>
+</tbody>
+</table>
+<h3 id="section-13" data-heading-text="代码示例">代码示例</h3>
+<p><strong>Rust：</strong></p>
+<div class="code-block" data-language="rust"><div class="code-header"><span class="code-language">rust</span></div><pre><code class="hljs language-rust"><span class="hljs-meta">#[no_mangle]</span>
+<span class="hljs-keyword">pub</span> <span class="hljs-keyword">extern</span> <span class="hljs-string">&quot;C&quot;</span> <span class="hljs-keyword">fn</span> <span class="hljs-title function_">rust_add</span>(a: <span class="hljs-type">i32</span>, b: <span class="hljs-type">i32</span>) <span class="hljs-punctuation">-&gt;</span> <span class="hljs-type">i32</span> { a + b }
+</code></pre></div>
+<div class="code-block" data-language="bash"><div class="code-header"><span class="code-language">bash</span></div><pre><code class="hljs language-bash">cargo build --release --crate-type cdylib
+</code></pre></div>
+<p><strong>Go：</strong></p>
+<div class="code-block" data-language="go"><div class="code-header"><span class="code-language">go</span></div><pre><code class="hljs language-go"><span class="hljs-keyword">import</span> <span class="hljs-string">&quot;C&quot;</span>
+<span class="hljs-comment">//export GoAdd</span>
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">GoAdd</span><span class="hljs-params">(a, b C.<span class="hljs-type">int</span>)</span></span> C.<span class="hljs-type">int</span> { <span class="hljs-keyword">return</span> a + b }
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> {}
+</code></pre></div>
+<div class="code-block" data-language="bash"><div class="code-header"><span class="code-language">bash</span></div><pre><code class="hljs language-bash">go build -buildmode=c-shared -o libgo.so
+</code></pre></div>
+<p><strong>C++：</strong></p>
+<div class="code-block" data-language="cpp"><div class="code-header"><span class="code-language">cpp</span></div><pre><code class="hljs language-cpp"><span class="hljs-keyword">extern</span> <span class="hljs-string">&quot;C&quot;</span> {
+    <span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">cpp_add</span><span class="hljs-params">(<span class="hljs-type">int</span> a, <span class="hljs-type">int</span> b)</span> </span>{ <span class="hljs-keyword">return</span> a + b; }
+}
+</code></pre></div>
+<p><strong>适用场景：</strong></p>
+<ul>
+<li>C/Rust：轻量高性能库，适合纯计算、数据处理</li>
+<li>C++：复杂系统，需注意不同编译器 ABI 兼容性</li>
+<li>Go：包含完整 runtime，适合独立服务，不适合作为轻量库</li>
+</ul>
+<hr>
+<h2 id="6-python" data-heading-text="6️⃣ Python 第三方库机制">6️⃣ Python 第三方库机制</h2>
+<h3 id="numpy" data-heading-text="安装流程（以 NumPy 为例）">安装流程（以 NumPy 为例）</h3>
+<div class="code-block"><pre><code class="hljs">pip install numpy
+    ↓
+查询 PyPI，下载 wheel 文件
+numpy-1.24.0-cp311-cp311-manylinux_x86_64.whl
+  ├─ Python 代码（__init__.py 等）
+  └─ 编译好的 C 扩展（.so）
+    ↓
+解压到 site-packages/numpy/
+</code></pre></div>
+<h3 id="section-16" data-heading-text="导入与加载">导入与加载</h3>
+<div class="code-block" data-language="python"><div class="code-header"><span class="code-language">python</span></div><pre><code class="hljs language-python"><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
+</code></pre></div>
+<p><strong>执行步骤：</strong></p>
+<div class="code-block"><pre><code class="hljs">检查 sys.modules 缓存
+    ↓
+搜索 sys.path 查找 numpy/
+    ↓
+执行 __init__.py（导入 C 扩展）
+    ↓
+dlopen() 加载 _multiarray_umath.so
+    ↓
+调用 PyInit_* 初始化函数
+    ↓
+注册到 sys.modules（后续直接从缓存返回）
+</code></pre></div>
+<h3 id="section-17" data-heading-text="内存管理">内存管理</h3>
+<ul>
+<li><strong>Python 对象</strong>：由 GC 管理（引用计数 + 循环检测）</li>
+<li><strong>动态库代码段</strong>：常驻内存直到进程退出</li>
+<li><strong>卸载限制</strong>：<code>del sys.modules['numpy']</code> 仅删除引用，<code>.so</code> 不会真正卸载</li>
+</ul>
+<hr>
+<h2 id="7" data-heading-text="7️⃣ 核心总结">7️⃣ 核心总结</h2>
+<ol>
+<li><strong>执行机制</strong>：C 扩展是编译后的机器码，在 Python 进程内直接执行</li>
+<li><strong>性能瓶颈</strong>：主要在 Python ↔ C 类型转换，而非函数调用本身</li>
+<li><strong>动态库</strong>：运行时加载、代码段共享、常驻内存直到进程退出</li>
+<li><strong>ABI</strong>：二进制接口规范，确保不同语言/编译器的代码能互操作</li>
+<li><strong>多语言库</strong>：Rust 轻量、Go 自带完整 runtime、C++ 需注意 ABI 兼容性</li>
+<li><strong>第三方库</strong>：通过 wheel 分发，包含 Python 代码和编译好的 C 扩展</li>
+</ol>
+<hr>
+<p><strong>参考资源：</strong></p>
+<ul>
+<li><a href="https://docs.python.org/3/c-api/">Python C API 文档</a></li>
+<li><a href="https://www.sco.com/developers/gabi/">System V ABI 规范</a></li>
+</ul>
+
+      </div>
+<div class="article-actions" aria-label="Article actions">
+      <a class="share-link" href="https://twitter.com/intent/tweet?text=Python+%E8%B0%83%E7%94%A8+C+%E6%89%A9%E5%B1%95%E4%B8%8E%E5%BA%93%E6%9C%BA%E5%88%B6%E5%85%A8%E8%A7%A3%E6%9E%90&amp;url=https%3A%2F%2Fkingson4wu.github.io%2Fzh%2Fposts%2F20251224-python-c%2F" target="_blank" rel="noopener noreferrer" aria-label="Share on X">
+        <span aria-hidden="true">X</span>
+        <span>Share</span>
+      </a>
+    </div>
+    </article>
+<aside class="article-toc" data-article-toc aria-label="目录">
+      <button class="article-toc-toggle" type="button" data-article-toc-toggle aria-expanded="false" aria-controls="article-toc-panel" aria-label="打开目录" data-open-label="打开目录" data-close-label="收起目录">
+        <svg aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M8 6h11"></path>
+          <path d="M8 12h11"></path>
+          <path d="M8 18h11"></path>
+          <path d="M4 6h.01"></path>
+          <path d="M4 12h.01"></path>
+          <path d="M4 18h.01"></path>
+        </svg>
+      </button>
+      <nav id="article-toc-panel" class="article-toc-panel" data-article-toc-panel aria-label="目录">
+        <div class="article-toc-heading">目录</div>
+        <ol class="article-toc-list">
+          <li class="article-toc-level-2"><a href="#1-python-c" data-article-toc-link>1️⃣ Python C 扩展基础</a></li>
+          <li class="article-toc-level-3"><a href="#section-2" data-article-toc-link>完整示例</a></li>
+          <li class="article-toc-level-3"><a href="#section-3" data-article-toc-link>执行原理</a></li>
+          <li class="article-toc-level-2"><a href="#2-python-c" data-article-toc-link>2️⃣ Python 调用 C 的多种方式</a></li>
+          <li class="article-toc-level-2"><a href="#3-vs" data-article-toc-link>3️⃣ 动态库 vs 静态库</a></li>
+          <li class="article-toc-level-3"><a href="#section-6" data-article-toc-link>动态库加载流程</a></li>
+          <li class="article-toc-level-2"><a href="#4-abi" data-article-toc-link>4️⃣ ABI（应用二进制接口）</a></li>
+          <li class="article-toc-level-3"><a href="#section-8" data-article-toc-link>定义与组成</a></li>
+          <li class="article-toc-level-3"><a href="#section-9" data-article-toc-link>常见调用约定</a></li>
+          <li class="article-toc-level-3"><a href="#api-vs-abi" data-article-toc-link>API vs ABI</a></li>
+          <li class="article-toc-level-2"><a href="#5" data-article-toc-link>5️⃣ 多语言动态库对比</a></li>
+          <li class="article-toc-level-3"><a href="#section-12" data-article-toc-link>运行时特征</a></li>
+          <li class="article-toc-level-3"><a href="#section-13" data-article-toc-link>代码示例</a></li>
+          <li class="article-toc-level-2"><a href="#6-python" data-article-toc-link>6️⃣ Python 第三方库机制</a></li>
+          <li class="article-toc-level-3"><a href="#numpy" data-article-toc-link>安装流程（以 NumPy 为例）</a></li>
+          <li class="article-toc-level-3"><a href="#section-16" data-article-toc-link>导入与加载</a></li>
+          <li class="article-toc-level-3"><a href="#section-17" data-article-toc-link>内存管理</a></li>
+          <li class="article-toc-level-2"><a href="#7" data-article-toc-link>7️⃣ 核心总结</a></li>
+        </ol>
+      </nav>
+    </aside>
+    <script src="/scripts/article-toc.js" defer></script>
+    <nav class="article-nav" aria-label="Adjacent posts">
+      <a href="/zh/posts/20251223-python-web/"><span>Previous</span>Python 运行内幕-深度解析底层执行机制与现代 Web 架构</a>
+      <a href="/zh/posts/20251224/"><span>Next</span>从零开始理解：点积为什么能反映向量夹角？</a>
+    </nav>
+<section class="comments" aria-labelledby="comments-heading">
+      <h2 id="comments-heading">评论</h2>
+      <div
+        data-comments
+        data-comments-repo="Kingson4Wu/kingson4wu.github.io"
+        data-comments-issue-term="pathname"
+        data-comments-label="comment"
+      ></div>
+    </section>
+    <script src="/scripts/comments.js" defer></script>
+  </main>
+  <footer class="site-footer">
+    <p>&copy; 2026 拉巴力的纸皮箱</p>
+  </footer>
+  <button class="reading-return" type="button" data-reading-return aria-label="回到开头" title="回到开头">
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <path d="M12 19V5"></path>
+      <path d="m6 11 6-6 6 6"></path>
+    </svg>
+  </button>
+  <script src="/scripts/theme.js"></script>
+  <script src="/scripts/image-viewer.js"></script>
+  <script src="/scripts/reading-tools.js"></script>
+</body>
+</html>

@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Why Temperature-0 LLM Inference Still Isn’t Deterministic | Kingson Wu</title>
+  <meta name="description" content="A practical look at why identical prompts can diverge under temperature=0, how batch-variant kernels create that behavior, and why batch-invariant operators matter for RL and reproducible experiments.">
+  <link rel="canonical" href="https://kingson4wu.github.io/en/posts/nondeterminism-llm-inference-floating-point-arithmetic-engineering-implementation/">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="alternate" type="application/rss+xml" title="Kingson Wu" href="/en/feed.xml">
+  <link rel="alternate" type="text/markdown" href="/en/posts/nondeterminism-llm-inference-floating-point-arithmetic-engineering-implementation/index.md">
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="/styles/main.css">
+  <script>
+    try {
+      var theme = localStorage.getItem('theme');
+      if (theme) document.documentElement.dataset.theme = theme;
+    } catch (_) {}
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="site-title" href="/en/" aria-label="Kingson Wu">
+      <span class="site-logo" aria-hidden="true">K</span>
+      <span>Kingson Wu</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="/en/posts/">Blog</a>
+      <a href="/en/notes/">Notes</a>
+      <a href="/en/tags/">Tags</a>
+      <a href="/en/about/">About</a>
+      <a href="/en/search/">Search</a>
+      <a href="/zh/" lang="zh">中文</a>
+      <a class="feed-link" href="/en/feed.xml" aria-label="Subscribe" title="Subscribe">
+        <svg class="feed-icon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M5 5.5A13.5 13.5 0 0 1 18.5 19"></path>
+          <path d="M5 11A8 8 0 0 1 13 19"></path>
+          <circle cx="6" cy="18" r="1.5"></circle>
+        </svg>
+      </a>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch color mode" title="Switch color mode">
+        <svg class="theme-icon theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M21 14.2A8.5 8.5 0 0 1 9.8 3 7 7 0 1 0 21 14.2Z"></path>
+        </svg>
+        <svg class="theme-icon theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"></path>
+        </svg>
+      </button>
+    </nav>
+  </header>
+  <main class="site-main">
+    <article class="article">
+      <header class="article-header">
+        <h1>Why Temperature-0 LLM Inference Still Isn’t Deterministic</h1>
+        <time datetime="2025-12-16T16:00:00.000Z">December 16, 2025</time>
+<ul class="tag-list" aria-label="Tags">
+    <li><a href="/en/tags/AI/">AI</a></li>
+    <li><a href="/en/tags/LLM/">LLM</a></li>
+  </ul>
+      </header>
+      <div class="prose">
+<p>I used to think <code>temperature=0</code> meant “the model will always give the same answer.” In practice, that is often false once you run inference at scale.</p>
+<p>If the prompt, weights, and decoding strategy are identical, where does the variation come from? The short answer is that a model forward pass may be mathematically “the same” while the inference engine still executes different numerical paths under different loads.</p>
+<p>This post is about that gap between the mental model and the implementation reality. The interesting part is not “floating point is weird” by itself, but how throughput-oriented inference systems turn tiny numerical differences into visibly different outputs.</p>
+<h2 id="where-nondeterminism-comes" data-heading-text="Where the Nondeterminism Comes From">Where the Nondeterminism Comes From</h2>
+<h3 id="non-associativity-floating-point-operations" data-heading-text="Non-Associativity of Floating-Point Operations">Non-Associativity of Floating-Point Operations</h3>
+<p>Floating-point arithmetic in computers does not satisfy the associative property. While mathematically <code>(a + b) + c = a + (b + c)</code> always holds, this equality may fail with finite-precision floating-point operations due to rounding errors.</p>
+<p><strong>Concrete Example</strong>:</p>
+<div class="code-block"><pre><code class="hljs">Numbers: x=10000000, y=1, z=-10000000
+
+Order 1: (x + y) + z
+       = 10000001 + z     // Precision loss, becomes 10000000
+       = 0
+
+Order 2: x + (y + z)
+       = x + (-9999999)
+       = 1
+</code></pre></div>
+<h3 id="parallel-execution-changes-order-operations" data-heading-text="Parallel Execution Changes the Order of Operations">Parallel Execution Changes the Order of Operations</h3>
+<p>To maximize efficiency, GPU parallel computation splits sequential calculations into multiple parallel paths and then merges results. Different parallelization strategies mean different addition tree structures, leading to different floating-point rounding paths.</p>
+<p><strong>Serial Computation</strong>:</p>
+<div class="code-block" data-language="python"><div class="code-header"><span class="code-language">python</span></div><pre><code class="hljs language-python"><span class="hljs-built_in">sum</span> = <span class="hljs-number">0</span>
+<span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> data:
+    <span class="hljs-built_in">sum</span> += i  <span class="hljs-comment"># Fixed order</span>
+</code></pre></div>
+<p><strong>Parallel Computation (2 threads)</strong>:</p>
+<div class="code-block"><pre><code class="hljs">Thread 1: (((a+b)+c)+d)
+Thread 2: (((e+f)+g)+h)
+Final: thread1 + thread2
+</code></pre></div>
+<p><strong>Parallel Computation (4 threads)</strong>:</p>
+<div class="code-block"><pre><code class="hljs">t1: a+b,  t2: c+d,  t3: e+f,  t4: g+h
+Then: (t1+t2) + (t3+t4)
+</code></pre></div>
+<p>While mathematically equivalent, the topology of the addition tree is completely different, resulting in different floating-point accumulation errors.</p>
+<p>For a single scalar value, these differences are tiny. For token generation, they can still matter because later steps amplify them.</p>
+<h2 id="real-engineering-problem-batch-variant-kernels" data-heading-text="The Real Engineering Problem: Batch-Variant Kernels">The Real Engineering Problem: Batch-Variant Kernels</h2>
+<h3 id="inference-engines-optimize-for-throughput-not-reproducibility" data-heading-text="Inference Engines Optimize for Throughput, Not Reproducibility">Inference Engines Optimize for Throughput, Not Reproducibility</h3>
+<p>Modern inference engines (e.g., vLLM, TensorRT) dynamically select parallelization strategies based on current load to achieve maximum GPU utilization:</p>
+<table>
+<thead>
+<tr>
+<th>Batch Size</th>
+<th>Parallelization Strategy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Small batches</td>
+<td>Simple kernels</td>
+</tr>
+<tr>
+<td>Large batches</td>
+<td>Complex parallel kernels</td>
+</tr>
+<tr>
+<td>Mixed workloads</td>
+<td>Dynamic kernel switching</td>
+</tr>
+</tbody>
+</table>
+<p>The result is simple: <strong>the same request can take different computational paths depending on what else the system is doing</strong>.</p>
+<p>That is a very sensible systems choice if your goal is throughput. It is much less sensible if you assumed “<code>temperature=0</code> means bitwise stability.”</p>
+<h3 id="operators-where-this-shows-up-most-clearly" data-heading-text="Operators Where This Shows Up Most Clearly">Operators Where This Shows Up Most Clearly</h3>
+<p>Three operators most prone to nondeterminism:</p>
+<ol>
+<li><strong>RMSNorm</strong>: Requires reduction across hidden dimensions; reduction tree structure varies with batch size</li>
+<li><strong>MatMul</strong>: Large-scale matrix multiplication accumulation order is highly sensitive</li>
+<li><strong>Attention</strong>: The exp-sum-normalize chain in softmax is a hotspot for numerical instability</li>
+</ol>
+<h2 id="why-argmax-turns-tiny-errors-into-different-tokens" data-heading-text="Why `argmax` Turns Tiny Errors Into Different Tokens">Why <code>argmax</code> Turns Tiny Errors Into Different Tokens</h2>
+<h3 id="what-argmax-actually-does" data-heading-text="What `argmax` Actually Does">What <code>argmax</code> Actually Does</h3>
+<p>argmax returns not the maximum value itself, but <strong>the position of the maximum value</strong>.</p>
+<div class="code-block" data-language="python"><div class="code-header"><span class="code-language">python</span></div><pre><code class="hljs language-python">logits = [<span class="hljs-number">5.000000</span>, <span class="hljs-number">4.999999</span>, <span class="hljs-number">3.2</span>]
+argmax(logits) = <span class="hljs-number">0</span>  <span class="hljs-comment"># Returns token at index 0</span>
+
+<span class="hljs-comment"># But if parallel path changes cause tiny errors</span>
+logits = [<span class="hljs-number">4.999998</span>, <span class="hljs-number">4.999999</span>, <span class="hljs-number">3.2</span>]
+argmax(logits) = <span class="hljs-number">1</span>  <span class="hljs-comment"># Returns token at index 1</span>
+</code></pre></div>
+<h3 id="why-this-is-so-fragile" data-heading-text="Why This Is So Fragile">Why This Is So Fragile</h3>
+<p>argmax is a <strong>cliff-edge mapping from continuous to discrete</strong>:</p>
+<ul>
+<li>Before argmax: numerical changes are smooth</li>
+<li>After argmax: results are binary (black or white)</li>
+</ul>
+<p>So a 0.000001 numerical difference can lead to:</p>
+<ul>
+<li>100% different token selection</li>
+<li>Completely different subsequent generation paths</li>
+<li>Total divergence of generated text</li>
+</ul>
+<p>This is also why <code>temperature=0</code> can be surprisingly brittle. Once you rely on a hard <code>argmax</code> boundary, “almost the same logits” is no longer “almost the same output.”</p>
+<h2 id="one-fix-batch-invariant-operators" data-heading-text="One Fix: Batch-Invariant Operators">One Fix: Batch-Invariant Operators</h2>
+<h3 id="core-idea" data-heading-text="Core Idea">Core Idea</h3>
+<p>The goal is not to remove parallelism. The goal is to <strong>keep the reduction structure stable across batch sizes and runtime conditions</strong>.</p>
+<h3 id="implementation-approach" data-heading-text="Implementation Approach">Implementation Approach</h3>
+<ol>
+<li><strong>Fixed reduction tree</strong>: Use the same addition tree regardless of batch size</li>
+<li><strong>Disable automatic kernel switching</strong>: Explicitly specify computation paths; prevent engine from dynamically selecting based on load</li>
+<li><strong>Unified normalization order</strong>: Force fixed computation order in attention and softmax</li>
+</ol>
+<h3 id="trade-offs" data-heading-text="Trade-Offs">Trade-Offs</h3>
+<ul>
+<li>✅ Achieves complete determinism (bitwise identical results)</li>
+<li>❌ Sacrifices some GPU throughput and dynamic optimization capability</li>
+</ul>
+<h3 id="what-reported-results-look-like" data-heading-text="What the Reported Results Look Like">What the Reported Results Look Like</h3>
+<p>On Qwen3-235B model:</p>
+<ul>
+<li><strong>Before fix</strong>: Same prompt produces 80 different outputs across 1000 inferences</li>
+<li><strong>After fix</strong>: 1000 inferences produce identical output</li>
+</ul>
+<h2 id="why-this-matters-so-much-for-reinforcement-learning" data-heading-text="Why This Matters So Much for Reinforcement Learning">Why This Matters So Much for Reinforcement Learning</h2>
+<h3 id="policy-assumptions-can-quietly-break" data-heading-text="On-Policy Assumptions Can Quietly Break">On-Policy Assumptions Can Quietly Break</h3>
+<p>In reinforcement learning, on-policy requires:</p>
+<div class="code-block"><pre><code class="hljs">Sampling policy π_sample = Training assumed policy π_train
+</code></pre></div>
+<p>But due to inference nondeterminism:</p>
+<ul>
+<li>You think you’re doing greedy sampling (<code>temperature=0</code>)</li>
+<li>Actually argmax boundaries keep flipping</li>
+<li>Resulting in <code>π_sample ≠ π_train</code></li>
+<li>Becomes <strong>pseudo off-policy</strong></li>
+</ul>
+<h3 id="kl-divergence-as-sanity-check" data-heading-text="KL Divergence as a Sanity Check">KL Divergence as a Sanity Check</h3>
+<p>After adopting batch-invariant operators, KL divergence during training remains at 0, proving complete consistency between sampling and training. This is nearly impossible in traditional LLM reinforcement learning.</p>
+<h2 id="where-this-fits-practice" data-heading-text="Where This Fits in Practice">Where This Fits in Practice</h2>
+<h3 id="current-state" data-heading-text="Current State">Current State</h3>
+<ul>
+<li>✅ Working research prototype available (<a href="https://github.com/thinking-machines-lab/batch_invariant_ops">GitHub repository</a>)</li>
+<li>✅ Validated on 235B-scale models</li>
+<li>❌ Not yet integrated into mainstream inference engines (vLLM, TensorRT)</li>
+</ul>
+<h3 id="why-this-is-not-default-everywhere" data-heading-text="Why This Is Not the Default Everywhere">Why This Is Not the Default Everywhere</h3>
+<ol>
+<li><strong>Performance cost</strong>: Fixed computation paths mean abandoning dynamic optimization</li>
+<li><strong>Priority mismatch</strong>: Most applications use <code>temperature&gt;0</code>, which already allows randomness</li>
+<li><strong>Design philosophy conflict</strong>: Mainstream engines prioritize throughput over determinism</li>
+</ol>
+<h3 id="what-this-solves-and-what-it-does-not" data-heading-text="What This Solves, and What It Does Not">What This Solves, and What It Does Not</h3>
+<p>It is easy to overstate this approach as a universal reproducibility fix. It is not. What it gives you is <strong>consistency inside a fixed deployment environment and time window</strong>.</p>
+<p><strong>What it does NOT guarantee</strong>:</p>
+<ul>
+<li>Cross-version reproducibility (model weights, tokenizers will update)</li>
+<li>Cross-time reproducibility (inference engines, CUDA versions will change)</li>
+<li>Historical archival replay (doesn’t record kernel versions, reduction trees)</li>
+</ul>
+<p><strong>What it truly guarantees</strong>:</p>
+<ul>
+<li>Within the same model version, same inference system, same deployment cycle</li>
+<li>Inference results do not drift due to load and scheduling variations</li>
+<li>This is about “eliminating system noise,” not “freezing history”</li>
+</ul>
+<p>By analogy, this is more like <strong>database transaction isolation levels</strong> rather than permanent snapshots—it guarantees consistent behavior within a transaction, but not replay of the same transaction ten years later.</p>
+<p>Why not record the complete computation path? Because recording every kernel, every block/warp, every floating-point rounding point on a 235B model is infeasible in terms of storage, replay, and performance. The approach chosen is <strong>structural constraints to guarantee path equivalence</strong>—the only engineering-viable route.</p>
+<h3 id="where-this-is-actually-useful" data-heading-text="Where This Is Actually Useful">Where This Is Actually Useful</h3>
+<p>The core value of this solution lies in <strong>consistency within the same time window</strong>:</p>
+<ol>
+<li>
+<p><strong>Reinforcement Learning Training</strong>: In a single training round, if the sampling policy drifts due to batch changes, that round is already contaminated. This isn’t about whether we can reproduce results three months later—it’s about maintaining on-policy within the current training cycle.</p>
+</li>
+<li>
+<p><strong>Scientific Research</strong>: Requires bitwise-level reproducibility during the experiment period to eliminate system noise from interfering with experimental conclusions.</p>
+</li>
+<li>
+<p><strong>Security Auditing</strong>: Within the audit period, identical inputs must produce identical outputs to support behavior tracing.</p>
+</li>
+</ol>
+<h3 id="what-i-expect-happen" data-heading-text="What I Expect to Happen">What I Expect to Happen</h3>
+<p>More likely to appear as an <strong>optional mode</strong> in inference engines:</p>
+<div class="code-block" data-language="bash"><div class="code-header"><span class="code-language">bash</span></div><pre><code class="hljs language-bash">vllm serve --deterministic
+vllm serve --batch-invariant
+vllm serve --rl-training-mode
+</code></pre></div>
+<p>Similar to PyTorch’s <code>torch.use_deterministic_algorithms(True)</code>, allowing users to choose between performance and determinism.</p>
+<h2 id="temperature-is-not-same-thing-as-randomness" data-heading-text="Temperature Is Not the Same Thing as Randomness">Temperature Is Not the Same Thing as Randomness</h2>
+<h3 id="what-temperature-actually-changes" data-heading-text="What Temperature Actually Changes">What Temperature Actually Changes</h3>
+<p>Temperature doesn’t directly control “whether it’s random” but rather <strong>adjusts the steepness of the probability distribution</strong>:</p>
+<div class="code-block"><pre><code class="hljs">p_i = exp(z_i / T) / Σ exp(z_j / T)
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Temperature</th>
+<th>Probability Distribution</th>
+<th>Behavioral Characteristics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>[1, 0, 0]</td>
+<td>Completely deterministic (argmax)</td>
+</tr>
+<tr>
+<td>1</td>
+<td>[0.5, 0.3, 0.2]</td>
+<td>Original model distribution</td>
+</tr>
+<tr>
+<td>2</td>
+<td>[0.41, 0.32, 0.27]</td>
+<td>More smooth</td>
+</tr>
+<tr>
+<td>5</td>
+<td>[0.36, 0.33, 0.31]</td>
+<td>Near-uniform distribution</td>
+</tr>
+</tbody>
+</table>
+<h3 id="important-distinction" data-heading-text="The Important Distinction">The Important Distinction</h3>
+<ul>
+<li><strong>Temperature</strong>: Changes probability distribution</li>
+<li><strong>Sampling</strong>: Rolls the dice according to probability distribution</li>
+</ul>
+<p><code>temperature&gt;0</code> doesn’t mean “will be random”—only when combined with sampling does it truly introduce randomness.</p>
+<h2 id="closing-thought" data-heading-text="Closing Thought">Closing Thought</h2>
+<p>The main lesson here is not merely that floating-point math is non-associative. It is that modern inference stacks intentionally trade numerical path stability for performance, and most of the time that is the right trade.</p>
+<blockquote>
+<p><strong>A model can be “deterministic in principle” while the serving system around it is not deterministic in practice.</strong></p>
+</blockquote>
+<p>Batch-invariant operators are one way to narrow that gap. They do not make history replayable forever, but they can remove a meaningful source of system noise in places where consistency matters more than raw throughput.</p>
+<p>That makes them especially interesting for reinforcement learning, reproducible experiments, and auditing workflows. In those settings, “slower but stable” is often a better engineering choice than “faster but numerically slippery.”</p>
+<hr>
+<p><strong>References</strong>:</p>
+<ul>
+<li>Article: <a href="https://thinkingmachines.ai/blog/defeating-nondeterminism-in-llm-inference/">Defeating Nondeterminism in LLM Inference</a></li>
+<li>Code: <a href="https://github.com/thinking-machines-lab/batch_invariant_ops">batch_invariant_ops</a></li>
+</ul>
+
+      </div>
+<div class="article-actions" aria-label="Article actions">
+      <a class="share-link" href="https://twitter.com/intent/tweet?text=Why+Temperature-0+LLM+Inference+Still+Isn%E2%80%99t+Deterministic&amp;url=https%3A%2F%2Fkingson4wu.github.io%2Fen%2Fposts%2Fnondeterminism-llm-inference-floating-point-arithmetic-engineering-implementation%2F" target="_blank" rel="noopener noreferrer" aria-label="Share on X">
+        <span aria-hidden="true">X</span>
+        <span>Share</span>
+      </a>
+    </div>
+    </article>
+<aside class="article-toc" data-article-toc aria-label="Contents">
+      <button class="article-toc-toggle" type="button" data-article-toc-toggle aria-expanded="false" aria-controls="article-toc-panel" aria-label="Open contents" data-open-label="Open contents" data-close-label="Close contents">
+        <svg aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M8 6h11"></path>
+          <path d="M8 12h11"></path>
+          <path d="M8 18h11"></path>
+          <path d="M4 6h.01"></path>
+          <path d="M4 12h.01"></path>
+          <path d="M4 18h.01"></path>
+        </svg>
+      </button>
+      <nav id="article-toc-panel" class="article-toc-panel" data-article-toc-panel aria-label="Contents">
+        <div class="article-toc-heading">Contents</div>
+        <ol class="article-toc-list">
+          <li class="article-toc-level-2"><a href="#where-nondeterminism-comes" data-article-toc-link>Where the Nondeterminism Comes From</a></li>
+          <li class="article-toc-level-3"><a href="#non-associativity-floating-point-operations" data-article-toc-link>Non-Associativity of Floating-Point Operations</a></li>
+          <li class="article-toc-level-3"><a href="#parallel-execution-changes-order-operations" data-article-toc-link>Parallel Execution Changes the Order of Operations</a></li>
+          <li class="article-toc-level-2"><a href="#real-engineering-problem-batch-variant-kernels" data-article-toc-link>The Real Engineering Problem: Batch-Variant Kernels</a></li>
+          <li class="article-toc-level-3"><a href="#inference-engines-optimize-for-throughput-not-reproducibility" data-article-toc-link>Inference Engines Optimize for Throughput, Not Reproducibility</a></li>
+          <li class="article-toc-level-3"><a href="#operators-where-this-shows-up-most-clearly" data-article-toc-link>Operators Where This Shows Up Most Clearly</a></li>
+          <li class="article-toc-level-2"><a href="#why-argmax-turns-tiny-errors-into-different-tokens" data-article-toc-link>Why `argmax` Turns Tiny Errors Into Different Tokens</a></li>
+          <li class="article-toc-level-3"><a href="#what-argmax-actually-does" data-article-toc-link>What `argmax` Actually Does</a></li>
+          <li class="article-toc-level-3"><a href="#why-this-is-so-fragile" data-article-toc-link>Why This Is So Fragile</a></li>
+          <li class="article-toc-level-2"><a href="#one-fix-batch-invariant-operators" data-article-toc-link>One Fix: Batch-Invariant Operators</a></li>
+          <li class="article-toc-level-3"><a href="#core-idea" data-article-toc-link>Core Idea</a></li>
+          <li class="article-toc-level-3"><a href="#implementation-approach" data-article-toc-link>Implementation Approach</a></li>
+          <li class="article-toc-level-3"><a href="#trade-offs" data-article-toc-link>Trade-Offs</a></li>
+          <li class="article-toc-level-3"><a href="#what-reported-results-look-like" data-article-toc-link>What the Reported Results Look Like</a></li>
+          <li class="article-toc-level-2"><a href="#why-this-matters-so-much-for-reinforcement-learning" data-article-toc-link>Why This Matters So Much for Reinforcement Learning</a></li>
+          <li class="article-toc-level-3"><a href="#policy-assumptions-can-quietly-break" data-article-toc-link>On-Policy Assumptions Can Quietly Break</a></li>
+          <li class="article-toc-level-3"><a href="#kl-divergence-as-sanity-check" data-article-toc-link>KL Divergence as a Sanity Check</a></li>
+          <li class="article-toc-level-2"><a href="#where-this-fits-practice" data-article-toc-link>Where This Fits in Practice</a></li>
+          <li class="article-toc-level-3"><a href="#current-state" data-article-toc-link>Current State</a></li>
+          <li class="article-toc-level-3"><a href="#why-this-is-not-default-everywhere" data-article-toc-link>Why This Is Not the Default Everywhere</a></li>
+          <li class="article-toc-level-3"><a href="#what-this-solves-and-what-it-does-not" data-article-toc-link>What This Solves, and What It Does Not</a></li>
+          <li class="article-toc-level-3"><a href="#where-this-is-actually-useful" data-article-toc-link>Where This Is Actually Useful</a></li>
+          <li class="article-toc-level-3"><a href="#what-i-expect-happen" data-article-toc-link>What I Expect to Happen</a></li>
+          <li class="article-toc-level-2"><a href="#temperature-is-not-same-thing-as-randomness" data-article-toc-link>Temperature Is Not the Same Thing as Randomness</a></li>
+          <li class="article-toc-level-3"><a href="#what-temperature-actually-changes" data-article-toc-link>What Temperature Actually Changes</a></li>
+          <li class="article-toc-level-3"><a href="#important-distinction" data-article-toc-link>The Important Distinction</a></li>
+          <li class="article-toc-level-2"><a href="#closing-thought" data-article-toc-link>Closing Thought</a></li>
+        </ol>
+      </nav>
+    </aside>
+    <script src="/scripts/article-toc.js" defer></script>
+    <nav class="article-nav" aria-label="Adjacent posts">
+      
+      <a href="/en/posts/why-rust-requires-explicit-lifetime-annotations-caller-contracts-design-essence/"><span>Next</span>Why Rust Makes Lifetime Annotations Part of the API</a>
+    </nav>
+<section class="comments" aria-labelledby="comments-heading">
+      <h2 id="comments-heading">Comments</h2>
+      <div
+        data-comments
+        data-comments-repo="Kingson4Wu/kingson4wu.github.io"
+        data-comments-issue-term="pathname"
+        data-comments-label="comment"
+      ></div>
+    </section>
+    <script src="/scripts/comments.js" defer></script>
+  </main>
+  <footer class="site-footer">
+    <p>&copy; 2026 Kingson Wu</p>
+  </footer>
+  <button class="reading-return" type="button" data-reading-return aria-label="Back to start" title="Back to start">
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <path d="M12 19V5"></path>
+      <path d="m6 11 6-6 6 6"></path>
+    </svg>
+  </button>
+  <script src="/scripts/theme.js"></script>
+  <script src="/scripts/image-viewer.js"></script>
+  <script src="/scripts/reading-tools.js"></script>
+</body>
+</html>

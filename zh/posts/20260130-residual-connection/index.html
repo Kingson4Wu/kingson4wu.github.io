@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>残差连接（Residual Connection）：从直觉困境到现代神经网络的核心结构 | 拉巴力的纸皮箱</title>
+  <meta name="description" content="从深层网络退化问题出发，解释残差连接为何成为现代神经网络中的关键结构。">
+  <link rel="canonical" href="https://kingson4wu.github.io/zh/posts/20260130-residual-connection/">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="alternate" type="application/rss+xml" title="拉巴力的纸皮箱" href="/zh/feed.xml">
+  <link rel="alternate" type="text/markdown" href="/zh/posts/20260130-residual-connection/index.md">
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="/styles/main.css">
+  <script>
+    try {
+      var theme = localStorage.getItem('theme');
+      if (theme) document.documentElement.dataset.theme = theme;
+    } catch (_) {}
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="site-title" href="/zh/" aria-label="拉巴力的纸皮箱">
+      <span class="site-logo" aria-hidden="true">K</span>
+      <span>拉巴力的纸皮箱</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="/zh/posts/">文章</a>
+      <a href="/zh/notes/">笔记</a>
+      <a href="/zh/tags/">标签</a>
+      <a href="/zh/about/">关于</a>
+      <a href="/zh/search/">搜索</a>
+      <a href="/en/" lang="en">English</a>
+      <a class="feed-link" href="/zh/feed.xml" aria-label="订阅更新" title="订阅更新">
+        <svg class="feed-icon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M5 5.5A13.5 13.5 0 0 1 18.5 19"></path>
+          <path d="M5 11A8 8 0 0 1 13 19"></path>
+          <circle cx="6" cy="18" r="1.5"></circle>
+        </svg>
+      </a>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换明暗模式" title="切换明暗模式">
+        <svg class="theme-icon theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M21 14.2A8.5 8.5 0 0 1 9.8 3 7 7 0 1 0 21 14.2Z"></path>
+        </svg>
+        <svg class="theme-icon theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"></path>
+        </svg>
+      </button>
+    </nav>
+  </header>
+  <main class="site-main">
+    <article class="article">
+      <header class="article-header">
+        <h1>残差连接（Residual Connection）：从直觉困境到现代神经网络的核心结构</h1>
+        <time datetime="2026-01-30T08:11:53.000Z">2026年1月30日</time>
+<ul class="tag-list" aria-label="Tags">
+    <li><a href="/zh/tags/AI/">AI</a></li>
+    <li><a href="/zh/tags/LLM/">LLM</a></li>
+    <li><a href="/zh/tags/Deep%20Learning/">Deep Learning</a></li>
+    <li><a href="/zh/tags/Math/">Math</a></li>
+  </ul>
+      </header>
+      <div class="prose">
+<blockquote>
+<blockquote>
+<p>以下内容由AI辅助生成</p>
+</blockquote>
+</blockquote>
+<h2 id="1" data-heading-text="1. 引言：一个看似显然却失败的直觉">1. 引言：一个看似显然却失败的直觉</h2>
+<p>在深度学习中，一个最自然的想法是：</p>
+<blockquote>
+<p>神经网络越深，模型的表达能力越强，性能应该越好。</p>
+</blockquote>
+<p>然而，大量实验表明，当网络深度不断增加时（例如从几十层到上百层），模型往往会出现一个反直觉现象：</p>
+<ul>
+<li><strong>训练误差上升</strong></li>
+<li>即使在训练集上，也无法达到较浅网络的性能</li>
+</ul>
+<p>这种现象被称为<strong>深层网络退化问题（Degradation Problem）</strong>。</p>
+<p>重要的是，这并不是由于过拟合，也不仅仅是梯度消失或爆炸，而是一个<strong>深层模型在优化层面“学不动”的问题</strong>。</p>
+<hr>
+<h2 id="2" data-heading-text="2. 问题的本质：为什么深层网络会“退化”？">2. 问题的本质：为什么深层网络会“退化”？</h2>
+<p>从理论上看，一个更深的网络至少应该能够模拟一个浅层网络：</p>
+<ul>
+<li>只要新增的层学会<strong>恒等映射（Identity Mapping）</strong></li>
+<li>网络性能就不应下降</li>
+</ul>
+<p>但实践中发现：</p>
+<blockquote>
+<p><strong>普通神经网络并不擅长学习“恒等变换”</strong></p>
+</blockquote>
+<p>也就是说，让几层网络保持输出与输入一致（y = x），在数值优化上并不容易。</p>
+<p>这揭示了退化问题的本质：</p>
+<ul>
+<li>不是模型不够强</li>
+<li>而是<strong>优化目标本身不友好</strong></li>
+</ul>
+<hr>
+<h2 id="3" data-heading-text="3. 残差连接的直观思想">3. 残差连接的直观思想</h2>
+<p>残差连接的核心思想可以用一个非常生活化的比喻来理解。</p>
+<ul>
+<li>
+<p>传统网络：</p>
+<blockquote>
+<p>从零开始学习一个完整映射</p>
+</blockquote>
+</li>
+<li>
+<p>残差思想：</p>
+<blockquote>
+<p>在原有输入的基础上，只学习“需要修正的部分”</p>
+</blockquote>
+</li>
+</ul>
+<p>换句话说，与其直接学习目标函数 <span class="math math-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>H</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">H(x)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0813em;">H</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">)</span></span></span></span></span>，不如学习它相对于输入的偏差。</p>
+<hr>
+<h2 id="4" data-heading-text="4. 形式化定义：什么是残差连接？">4. 形式化定义：什么是残差连接？</h2>
+<p>在数学上，残差学习通过一次重参数化来实现。</p>
+<p>传统形式：</p>
+<div class="math math-display"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>y</mi><mo>=</mo><mi>H</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">y = H(x)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0813em;">H</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">)</span></span></span></span></span></div>
+<p>残差形式：</p>
+<div class="math math-display"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>F</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo><mo>=</mo><mi>H</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo><mo>−</mo><mi>x</mi></mrow><annotation encoding="application/x-tex">F(x) = H(x) - x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">F</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0813em;">H</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></span></div>
+<div class="math math-display"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>y</mi><mo>=</mo><mi>F</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo><mo>+</mo><mi>x</mi></mrow><annotation encoding="application/x-tex">y = F(x) + x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">F</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></span></div>
+<p>其中：</p>
+<ul>
+<li><span class="math math-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></span>：输入</li>
+<li><span class="math math-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>F</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">F(x)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">F</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">)</span></span></span></span></span>：残差函数</li>
+<li>从 <span class="math math-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></span> 直接加到输出的通路称为 <strong>残差连接（Residual / Skip Connection）</strong></li>
+</ul>
+<hr>
+<h2 id="5" data-heading-text="5. 为什么残差连接有效？">5. 为什么残差连接有效？</h2>
+<h3 id="5-1" data-heading-text="5.1 恒等映射变得容易">5.1 恒等映射变得容易</h3>
+<p>如果某些层对任务无贡献：</p>
+<ul>
+<li>普通网络：很难逼近恒等映射</li>
+<li>残差网络：只需令 <span class="math math-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>F</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">F(x)=0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">F</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0</span></span></span></span></span></li>
+</ul>
+<p>这使得：</p>
+<blockquote>
+<p><strong>“零修正”成为一种稳定解</strong></p>
+</blockquote>
+<p>从而保证深层网络至少不会比浅层网络更差。</p>
+<hr>
+<h3 id="5-2" data-heading-text="5.2 梯度传播更顺畅">5.2 梯度传播更顺畅</h3>
+<p>对于残差结构：</p>
+<div class="math math-display"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>y</mi><mo>=</mo><mi>F</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo><mo>+</mo><mi>x</mi></mrow><annotation encoding="application/x-tex">y = F(x) + x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">F</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></span></div>
+<p>反向传播时：</p>
+<div class="math math-display"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mfrac><mrow><mi mathvariant="normal">∂</mi><mi>y</mi></mrow><mrow><mi mathvariant="normal">∂</mi><mi>x</mi></mrow></mfrac><mo>=</mo><mfrac><mrow><mi mathvariant="normal">∂</mi><mi>F</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow><mrow><mi mathvariant="normal">∂</mi><mi>x</mi></mrow></mfrac><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\frac{\partial y}{\partial x} = \frac{\partial F(x)}{\partial x} + 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:2.0574em;vertical-align:-0.686em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3714em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord" style="margin-right:0.0556em;">∂</span><span class="mord mathnormal">x</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord" style="margin-right:0.0556em;">∂</span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.113em;vertical-align:-0.686em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.427em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord" style="margin-right:0.0556em;">∂</span><span class="mord mathnormal">x</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord" style="margin-right:0.0556em;">∂</span><span class="mord mathnormal" style="margin-right:0.1389em;">F</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">)</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></span></div>
+<p>这个恒定的 “+1”：</p>
+<ul>
+<li>为梯度提供了一条直接通路</li>
+<li>显著缓解了梯度消失问题</li>
+</ul>
+<hr>
+<h3 id="5-3" data-heading-text="5.3 优化过程更友好">5.3 优化过程更友好</h3>
+<p>经验和理论分析表明：</p>
+<ul>
+<li>残差结构使损失函数的优化景观更加平滑</li>
+<li>梯度下降类方法更容易收敛</li>
+</ul>
+<p>这是极深网络得以成功训练的关键。</p>
+<hr>
+<h2 id="6" data-heading-text="6. 一个重要澄清：是不是每一层都应该用残差？">6. 一个重要澄清：是不是每一层都应该用残差？</h2>
+<p>答案是否定的。</p>
+<p>现代神经网络并不是对<strong>每一层</strong>使用残差，而是：</p>
+<blockquote>
+<p><strong>在“模块（Block）级别”使用残差连接</strong></p>
+</blockquote>
+<p>原因在于：</p>
+<ul>
+<li>层层残差会削弱非线性表达能力</li>
+<li>有些层的目标是“改变表示空间”，并不适合残差</li>
+</ul>
+<hr>
+<h2 id="7" data-heading-text="7. 残差连接在经典模型中的使用">7. 残差连接在经典模型中的使用</h2>
+<h3 id="7-1-resnet" data-heading-text="7.1 ResNet">7.1 ResNet</h3>
+<p>ResNet 的基本单元不是单层，而是一个残差块：</p>
+<ul>
+<li>2～3 层卷积 + 非线性</li>
+<li>外部包裹一条 shortcut</li>
+</ul>
+<p>残差连接作用于整个模块，而非每一层。</p>
+<hr>
+<h3 id="7-2-transformer" data-heading-text="7.2 Transformer">7.2 Transformer</h3>
+<p>在 Transformer 中：</p>
+<ul>
+<li>Attention 子层</li>
+<li>Feed-Forward 子层</li>
+</ul>
+<p>每一个子层外部都配有残差连接，但子层内部仍然是传统结构。</p>
+<p>这说明：</p>
+<blockquote>
+<p>残差是一种<strong>结构设计原则</strong>，而不是具体算子。</p>
+</blockquote>
+<hr>
+<h2 id="8" data-heading-text="8. 什么时候不适合使用残差连接？">8. 什么时候不适合使用残差连接？</h2>
+<p>通常不使用残差的地方包括：</p>
+<ul>
+<li>输入嵌入层</li>
+<li>下采样或维度剧烈变化的层</li>
+<li>输出层（分类 / 回归头）</li>
+<li>非常浅的网络</li>
+</ul>
+<p>残差更适合用于：</p>
+<blockquote>
+<p><strong>在同一表示空间内逐步精炼特征</strong></p>
+</blockquote>
+<hr>
+<h2 id="9" data-heading-text="9. 总结">9. 总结</h2>
+<p>残差连接的核心价值在于：</p>
+<ol>
+<li>重参数化学习目标，使优化更容易</li>
+<li>为梯度提供稳定通路</li>
+<li>保证深层模型不发生性能退化</li>
+</ol>
+<p>因此，现代深度学习模型的设计范式可以概括为：</p>
+<blockquote>
+<p><strong>用传统网络层构建表示，用残差连接保证这些表示能被有效优化。</strong></p>
+</blockquote>
+<p>这也是为什么，从 ResNet 到 Transformer，残差连接已经成为深度模型的基础组件。</p>
+
+      </div>
+<div class="article-actions" aria-label="Article actions">
+      <a class="share-link" href="https://twitter.com/intent/tweet?text=%E6%AE%8B%E5%B7%AE%E8%BF%9E%E6%8E%A5%EF%BC%88Residual+Connection%EF%BC%89%EF%BC%9A%E4%BB%8E%E7%9B%B4%E8%A7%89%E5%9B%B0%E5%A2%83%E5%88%B0%E7%8E%B0%E4%BB%A3%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%9A%84%E6%A0%B8%E5%BF%83%E7%BB%93%E6%9E%84&amp;url=https%3A%2F%2Fkingson4wu.github.io%2Fzh%2Fposts%2F20260130-residual-connection%2F" target="_blank" rel="noopener noreferrer" aria-label="Share on X">
+        <span aria-hidden="true">X</span>
+        <span>Share</span>
+      </a>
+    </div>
+    </article>
+<aside class="article-toc" data-article-toc aria-label="目录">
+      <button class="article-toc-toggle" type="button" data-article-toc-toggle aria-expanded="false" aria-controls="article-toc-panel" aria-label="打开目录" data-open-label="打开目录" data-close-label="收起目录">
+        <svg aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M8 6h11"></path>
+          <path d="M8 12h11"></path>
+          <path d="M8 18h11"></path>
+          <path d="M4 6h.01"></path>
+          <path d="M4 12h.01"></path>
+          <path d="M4 18h.01"></path>
+        </svg>
+      </button>
+      <nav id="article-toc-panel" class="article-toc-panel" data-article-toc-panel aria-label="目录">
+        <div class="article-toc-heading">目录</div>
+        <ol class="article-toc-list">
+          <li class="article-toc-level-2"><a href="#1" data-article-toc-link>1. 引言：一个看似显然却失败的直觉</a></li>
+          <li class="article-toc-level-2"><a href="#2" data-article-toc-link>2. 问题的本质：为什么深层网络会“退化”？</a></li>
+          <li class="article-toc-level-2"><a href="#3" data-article-toc-link>3. 残差连接的直观思想</a></li>
+          <li class="article-toc-level-2"><a href="#4" data-article-toc-link>4. 形式化定义：什么是残差连接？</a></li>
+          <li class="article-toc-level-2"><a href="#5" data-article-toc-link>5. 为什么残差连接有效？</a></li>
+          <li class="article-toc-level-3"><a href="#5-1" data-article-toc-link>5.1 恒等映射变得容易</a></li>
+          <li class="article-toc-level-3"><a href="#5-2" data-article-toc-link>5.2 梯度传播更顺畅</a></li>
+          <li class="article-toc-level-3"><a href="#5-3" data-article-toc-link>5.3 优化过程更友好</a></li>
+          <li class="article-toc-level-2"><a href="#6" data-article-toc-link>6. 一个重要澄清：是不是每一层都应该用残差？</a></li>
+          <li class="article-toc-level-2"><a href="#7" data-article-toc-link>7. 残差连接在经典模型中的使用</a></li>
+          <li class="article-toc-level-3"><a href="#7-1-resnet" data-article-toc-link>7.1 ResNet</a></li>
+          <li class="article-toc-level-3"><a href="#7-2-transformer" data-article-toc-link>7.2 Transformer</a></li>
+          <li class="article-toc-level-2"><a href="#8" data-article-toc-link>8. 什么时候不适合使用残差连接？</a></li>
+          <li class="article-toc-level-2"><a href="#9" data-article-toc-link>9. 总结</a></li>
+        </ol>
+      </nav>
+    </aside>
+    <script src="/scripts/article-toc.js" defer></script>
+    <nav class="article-nav" aria-label="Adjacent posts">
+      <a href="/zh/posts/20260130-0/"><span>Previous</span>从 0 理解梯度消失与梯度爆炸</a>
+      <a href="/zh/posts/20260130-softmax/"><span>Next</span>为什么点积太大会导致 Softmax 梯度问题，以及这个问题是如何被解决的</a>
+    </nav>
+<section class="comments" aria-labelledby="comments-heading">
+      <h2 id="comments-heading">评论</h2>
+      <div
+        data-comments
+        data-comments-repo="Kingson4Wu/kingson4wu.github.io"
+        data-comments-issue-term="pathname"
+        data-comments-label="comment"
+      ></div>
+    </section>
+    <script src="/scripts/comments.js" defer></script>
+  </main>
+  <footer class="site-footer">
+    <p>&copy; 2026 拉巴力的纸皮箱</p>
+  </footer>
+  <button class="reading-return" type="button" data-reading-return aria-label="回到开头" title="回到开头">
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <path d="M12 19V5"></path>
+      <path d="m6 11 6-6 6 6"></path>
+    </svg>
+  </button>
+  <script src="/scripts/theme.js"></script>
+  <script src="/scripts/image-viewer.js"></script>
+  <script src="/scripts/reading-tools.js"></script>
+</body>
+</html>

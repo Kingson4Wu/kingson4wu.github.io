@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>表结构变更是否需要处理历史月表？ | 拉巴力的纸皮箱</title>
+  <meta name="description" content="目前针对历史流水表，历史订单表，采用的以月为维度的方式建表，如以下表结构所示 sqlCREATE TABLE `t_order_202002` ( `order_id` varchar(128) NOT NULL COMMENT &amp;#x27;订单id&amp;#x27;, `coin` decimal(32,2) NOT NU...">
+  <link rel="canonical" href="https://kingson4wu.github.io/zh/posts/20200329-2/">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="alternate" type="application/rss+xml" title="拉巴力的纸皮箱" href="/zh/feed.xml">
+  <link rel="alternate" type="text/markdown" href="/zh/posts/20200329-2/index.md">
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="/styles/main.css">
+  <script>
+    try {
+      var theme = localStorage.getItem('theme');
+      if (theme) document.documentElement.dataset.theme = theme;
+    } catch (_) {}
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="site-title" href="/zh/" aria-label="拉巴力的纸皮箱">
+      <span class="site-logo" aria-hidden="true">K</span>
+      <span>拉巴力的纸皮箱</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="/zh/posts/">文章</a>
+      <a href="/zh/notes/">笔记</a>
+      <a href="/zh/tags/">标签</a>
+      <a href="/zh/about/">关于</a>
+      <a href="/zh/search/">搜索</a>
+      <a href="/en/" lang="en">English</a>
+      <a class="feed-link" href="/zh/feed.xml" aria-label="订阅更新" title="订阅更新">
+        <svg class="feed-icon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M5 5.5A13.5 13.5 0 0 1 18.5 19"></path>
+          <path d="M5 11A8 8 0 0 1 13 19"></path>
+          <circle cx="6" cy="18" r="1.5"></circle>
+        </svg>
+      </a>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换明暗模式" title="切换明暗模式">
+        <svg class="theme-icon theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M21 14.2A8.5 8.5 0 0 1 9.8 3 7 7 0 1 0 21 14.2Z"></path>
+        </svg>
+        <svg class="theme-icon theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"></path>
+        </svg>
+      </button>
+    </nav>
+  </header>
+  <main class="site-main">
+    <article class="article">
+      <header class="article-header">
+        <h1>表结构变更是否需要处理历史月表？</h1>
+        <time datetime="2020-03-29T04:42:38.000Z">2020年3月29日</time>
+<ul class="tag-list" aria-label="Tags">
+    <li><a href="/zh/tags/Architecture/">Architecture</a></li>
+    <li><a href="/zh/tags/Database/">Database</a></li>
+  </ul>
+      </header>
+      <div class="prose">
+<p><img src="/assets/zh/shared/photo/Henry.jpeg" alt=""></p>
+<ul>
+<li>目前针对历史流水表，历史订单表，采用的以月为维度的方式建表，如以下表结构所示</li>
+</ul>
+<div class="code-block" data-language="sql"><div class="code-header"><span class="code-language">sql</span></div><pre><code class="hljs language-sql"><span class="hljs-keyword">CREATE TABLE</span> `t_order_202002` (
+`order_id` <span class="hljs-type">varchar</span>(<span class="hljs-number">128</span>) <span class="hljs-keyword">NOT NULL</span> COMMENT <span class="hljs-string">&#x27;订单id&#x27;</span>,
+`coin` <span class="hljs-type">decimal</span>(<span class="hljs-number">32</span>,<span class="hljs-number">2</span>) <span class="hljs-keyword">NOT NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-string">&#x27;0.00&#x27;</span> COMMENT <span class="hljs-string">&#x27;支付币数&#x27;</span>,
+`user_id` <span class="hljs-type">bigint</span>(<span class="hljs-number">20</span>) unsigned <span class="hljs-keyword">NOT NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-string">&#x27;0&#x27;</span> COMMENT <span class="hljs-string">&#x27;用户id&#x27;</span>,
+`create_time` datetime <span class="hljs-keyword">NOT NULL</span> COMMENT <span class="hljs-string">&#x27;创建时间&#x27;</span>,
+`update_time` datetime <span class="hljs-keyword">NOT NULL</span> COMMENT <span class="hljs-string">&#x27;更新时间&#x27;</span>,
+<span class="hljs-keyword">PRIMARY KEY</span> (`order_id`)
+) ENGINE<span class="hljs-operator">=</span>InnoDB <span class="hljs-keyword">DEFAULT</span> CHARSET<span class="hljs-operator">=</span>utf8mb4 COMMENT<span class="hljs-operator">=</span><span class="hljs-string">&#x27;订单表&#x27;</span>
+
+<span class="hljs-keyword">CREATE TABLE</span> `t_order_202003` (
+`order_id` <span class="hljs-type">varchar</span>(<span class="hljs-number">128</span>) <span class="hljs-keyword">NOT NULL</span> COMMENT <span class="hljs-string">&#x27;订单id&#x27;</span>,
+`coin` <span class="hljs-type">decimal</span>(<span class="hljs-number">32</span>,<span class="hljs-number">2</span>) <span class="hljs-keyword">NOT NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-string">&#x27;0.00&#x27;</span> COMMENT <span class="hljs-string">&#x27;支付币数&#x27;</span>,
+`user_id` <span class="hljs-type">bigint</span>(<span class="hljs-number">20</span>) unsigned <span class="hljs-keyword">NOT NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-string">&#x27;0&#x27;</span> COMMENT <span class="hljs-string">&#x27;用户id&#x27;</span>,
+`create_time` datetime <span class="hljs-keyword">NOT NULL</span> COMMENT <span class="hljs-string">&#x27;创建时间&#x27;</span>,
+`update_time` datetime <span class="hljs-keyword">NOT NULL</span> COMMENT <span class="hljs-string">&#x27;更新时间&#x27;</span>,
+<span class="hljs-keyword">PRIMARY KEY</span> (`order_id`)
+) ENGINE<span class="hljs-operator">=</span>InnoDB <span class="hljs-keyword">DEFAULT</span> CHARSET<span class="hljs-operator">=</span>utf8mb4 COMMENT<span class="hljs-operator">=</span><span class="hljs-string">&#x27;订单表&#x27;</span>
+
+<span class="hljs-keyword">CREATE TABLE</span> `t_order_202004` (
+`order_id` <span class="hljs-type">varchar</span>(<span class="hljs-number">128</span>) <span class="hljs-keyword">NOT NULL</span> COMMENT <span class="hljs-string">&#x27;订单id&#x27;</span>,
+`coin` <span class="hljs-type">decimal</span>(<span class="hljs-number">32</span>,<span class="hljs-number">2</span>) <span class="hljs-keyword">NOT NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-string">&#x27;0.00&#x27;</span> COMMENT <span class="hljs-string">&#x27;支付币数&#x27;</span>,
+`user_id` <span class="hljs-type">bigint</span>(<span class="hljs-number">20</span>) unsigned <span class="hljs-keyword">NOT NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-string">&#x27;0&#x27;</span> COMMENT <span class="hljs-string">&#x27;用户id&#x27;</span>,
+`create_time` datetime <span class="hljs-keyword">NOT NULL</span> COMMENT <span class="hljs-string">&#x27;创建时间&#x27;</span>,
+`update_time` datetime <span class="hljs-keyword">NOT NULL</span> COMMENT <span class="hljs-string">&#x27;更新时间&#x27;</span>,
+<span class="hljs-keyword">PRIMARY KEY</span> (`order_id`)
+) ENGINE<span class="hljs-operator">=</span>InnoDB <span class="hljs-keyword">DEFAULT</span> CHARSET<span class="hljs-operator">=</span>utf8mb4 COMMENT<span class="hljs-operator">=</span><span class="hljs-string">&#x27;订单表&#x27;</span>
+</code></pre></div>
+<p>现要对表结构增加一个字段 room_id</p>
+<div class="code-block" data-language="sql"><div class="code-header"><span class="code-language">sql</span></div><pre><code class="hljs language-sql"><span class="hljs-keyword">ALTER TABLE</span> t_order_202003
+<span class="hljs-keyword">ADD</span> <span class="hljs-keyword">COLUMN</span> `room_id` <span class="hljs-type">bigint</span>(<span class="hljs-number">20</span>) <span class="hljs-keyword">NOT NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-string">&#x27;0&#x27;</span> COMMENT <span class="hljs-string">&#x27;动作发生的所在房间ID&#x27;</span>;
+<span class="hljs-keyword">ALTER TABLE</span> t_order_202004
+<span class="hljs-keyword">ADD</span> <span class="hljs-keyword">COLUMN</span> `room_id` <span class="hljs-type">bigint</span>(<span class="hljs-number">20</span>) <span class="hljs-keyword">NOT NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-string">&#x27;0&#x27;</span> COMMENT <span class="hljs-string">&#x27;动作发生的所在房间ID&#x27;</span>;
+</code></pre></div>
+<p>那么久的历史表可以不处理吗？</p>
+<ol>
+<li>假如全部的查询语句都是<code>select *</code>,  那么久的历史表可以不处理，但是这样违反了按需查询原则</li>
+<li>如果查询语句有指定字段如<code>select order_id, room_id</code>,那么查询到旧的表时会报错</li>
+</ol>
+<h3 id="section-1" data-heading-text="解决方法">解决方法</h3>
+<ol>
+<li>历史表和当前的表结构保存一致，在进行表结构变更时一并处理，避免后续的坑(没精力折腾的建议这样处理，可以增加一些监控手段)</li>
+<li>历史表不处理，在程序代码上兼容。这样会增加代码复杂度，难以维护，如果有必要最好统一sdk中处理。</li>
+<li>运维层面，统一处理，统一月表的结构，需要DBA工具支持</li>
+</ol>
+
+      </div>
+<div class="article-actions" aria-label="Article actions">
+      <a class="share-link" href="https://twitter.com/intent/tweet?text=%E8%A1%A8%E7%BB%93%E6%9E%84%E5%8F%98%E6%9B%B4%E6%98%AF%E5%90%A6%E9%9C%80%E8%A6%81%E5%A4%84%E7%90%86%E5%8E%86%E5%8F%B2%E6%9C%88%E8%A1%A8%EF%BC%9F&amp;url=https%3A%2F%2Fkingson4wu.github.io%2Fzh%2Fposts%2F20200329-2%2F" target="_blank" rel="noopener noreferrer" aria-label="Share on X">
+        <span aria-hidden="true">X</span>
+        <span>Share</span>
+      </a>
+    </div>
+    </article>
+
+    <nav class="article-nav" aria-label="Adjacent posts">
+      <a href="/zh/posts/20200326/"><span>Previous</span>移动端下一种折中的分页方法</a>
+      <a href="/zh/posts/20200329/"><span>Next</span>发版过程的兼容性考虑</a>
+    </nav>
+<section class="comments" aria-labelledby="comments-heading">
+      <h2 id="comments-heading">评论</h2>
+      <div
+        data-comments
+        data-comments-repo="Kingson4Wu/kingson4wu.github.io"
+        data-comments-issue-term="pathname"
+        data-comments-label="comment"
+      ></div>
+    </section>
+    <script src="/scripts/comments.js" defer></script>
+  </main>
+  <footer class="site-footer">
+    <p>&copy; 2026 拉巴力的纸皮箱</p>
+  </footer>
+  <button class="reading-return" type="button" data-reading-return aria-label="回到开头" title="回到开头">
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <path d="M12 19V5"></path>
+      <path d="m6 11 6-6 6 6"></path>
+    </svg>
+  </button>
+  <script src="/scripts/theme.js"></script>
+  <script src="/scripts/image-viewer.js"></script>
+  <script src="/scripts/reading-tools.js"></script>
+</body>
+</html>

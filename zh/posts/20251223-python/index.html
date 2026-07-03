@@ -1,0 +1,918 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Python 依赖与环境管理完全指南 | 拉巴力的纸皮箱</title>
+  <meta name="description" content="以下内容有ChatGPT和Claude.ai辅助生成 适用读者 本指南适合： 从其他语言转向 Python 的开发者 对 Python 依赖管理困惑的初中级开发者 需要在团队中统一工具链的技术负责人 希望了解现代 Python 工具生态的从业者 一、核心概念 1.1 Python 包管理的本质特点 Python 与其他...">
+  <link rel="canonical" href="https://kingson4wu.github.io/zh/posts/20251223-python/">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="alternate" type="application/rss+xml" title="拉巴力的纸皮箱" href="/zh/feed.xml">
+  <link rel="alternate" type="text/markdown" href="/zh/posts/20251223-python/index.md">
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="/styles/main.css">
+  <script>
+    try {
+      var theme = localStorage.getItem('theme');
+      if (theme) document.documentElement.dataset.theme = theme;
+    } catch (_) {}
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="site-title" href="/zh/" aria-label="拉巴力的纸皮箱">
+      <span class="site-logo" aria-hidden="true">K</span>
+      <span>拉巴力的纸皮箱</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="/zh/posts/">文章</a>
+      <a href="/zh/notes/">笔记</a>
+      <a href="/zh/tags/">标签</a>
+      <a href="/zh/about/">关于</a>
+      <a href="/zh/search/">搜索</a>
+      <a href="/en/" lang="en">English</a>
+      <a class="feed-link" href="/zh/feed.xml" aria-label="订阅更新" title="订阅更新">
+        <svg class="feed-icon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M5 5.5A13.5 13.5 0 0 1 18.5 19"></path>
+          <path d="M5 11A8 8 0 0 1 13 19"></path>
+          <circle cx="6" cy="18" r="1.5"></circle>
+        </svg>
+      </a>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换明暗模式" title="切换明暗模式">
+        <svg class="theme-icon theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M21 14.2A8.5 8.5 0 0 1 9.8 3 7 7 0 1 0 21 14.2Z"></path>
+        </svg>
+        <svg class="theme-icon theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"></path>
+        </svg>
+      </button>
+    </nav>
+  </header>
+  <main class="site-main">
+    <article class="article">
+      <header class="article-header">
+        <h1>Python 依赖与环境管理完全指南</h1>
+        <time datetime="2025-12-23T04:47:04.000Z">2025年12月23日</time>
+<ul class="tag-list" aria-label="Tags">
+    <li><a href="/zh/tags/Python/">Python</a></li>
+    <li><a href="/zh/tags/Programming%20Languages/">Programming Languages</a></li>
+  </ul>
+      </header>
+      <div class="prose">
+<blockquote>
+<blockquote>
+<p>以下内容有ChatGPT和Claude.ai辅助生成</p>
+</blockquote>
+</blockquote>
+<h2 id="section-1" data-heading-text="适用读者">适用读者</h2>
+<p>本指南适合：</p>
+<ul>
+<li>从其他语言转向 Python 的开发者</li>
+<li>对 Python 依赖管理困惑的初中级开发者</li>
+<li>需要在团队中统一工具链的技术负责人</li>
+<li>希望了解现代 Python 工具生态的从业者</li>
+</ul>
+<hr>
+<h2 id="section-2" data-heading-text="一、核心概念">一、核心概念</h2>
+<h3 id="1-1-python" data-heading-text="1.1 Python 包管理的本质特点">1.1 Python 包管理的本质特点</h3>
+<p>Python 与其他语言（Java/Go）的根本差异：</p>
+<ul>
+<li><strong>运行时加载</strong>：Python 在执行 <code>import</code> 时才加载模块，无编译期检查</li>
+<li><strong>路径依赖</strong>：直接从 <code>sys.path</code> 加载库，不像 Java 每个程序独立加载 jar</li>
+<li><strong>冲突易发</strong>：不同项目依赖同一库的不同版本容易冲突</li>
+<li><strong>隔离必要</strong>：环境隔离是解决依赖冲突的核心手段</li>
+</ul>
+<h3 id="1-2" data-heading-text="1.2 真正的隔离是什么">1.2 真正的隔离是什么</h3>
+<p><strong>你要隔离的本质是 <code>sys.path</code></strong></p>
+<ul>
+<li><strong>venv / Poetry / uv</strong>：路径隔离（逻辑隔离 + 文件冗余）</li>
+<li><strong>conda</strong>：路径隔离 + 包共享（硬链接）</li>
+<li><strong>Docker</strong>：进程级隔离（直接跳过 Python 层面问题）</li>
+</ul>
+<hr>
+<h2 id="section-5" data-heading-text="二、环境管理工具对比">二、环境管理工具对比</h2>
+<h3 id="2-1" data-heading-text="2.1 工具分类与特点">2.1 工具分类与特点</h3>
+<table>
+<thead>
+<tr>
+<th>工具</th>
+<th>分类</th>
+<th>核心功能</th>
+<th>包共享</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>venv</code></td>
+<td>标准库</td>
+<td>轻量虚拟环境</td>
+<td>❌</td>
+<td>简单项目</td>
+</tr>
+<tr>
+<td><code>virtualenv</code></td>
+<td>第三方</td>
+<td>venv 增强版</td>
+<td>❌</td>
+<td>兼容旧版 Python</td>
+</tr>
+<tr>
+<td><code>pyenv</code></td>
+<td>第三方</td>
+<td>Python 版本管理</td>
+<td>❌</td>
+<td>多版本 Python 共存</td>
+</tr>
+<tr>
+<td><code>Poetry</code></td>
+<td>第三方</td>
+<td>依赖+环境+构建+发布</td>
+<td>❌</td>
+<td>现代项目全流程</td>
+</tr>
+<tr>
+<td><code>uv</code></td>
+<td>第三方</td>
+<td>超高速工具链</td>
+<td>❌</td>
+<td>追求极致性能</td>
+</tr>
+<tr>
+<td><code>conda</code></td>
+<td>第三方</td>
+<td>跨语言包+环境管理</td>
+<td>✅</td>
+<td>科学计算/大依赖</td>
+</tr>
+</tbody>
+</table>
+<h3 id="2-2" data-heading-text="2.2 包共享机制深度解析">2.2 包共享机制深度解析</h3>
+<p><strong>什么是真正的“包共享”？</strong></p>
+<p>指同一版本的包在磁盘上只存一份实体文件，通过硬链接引用，而非：</p>
+<ul>
+<li>网络下载缓存（<code>pip cache</code>）</li>
+<li>Wheel 缓存</li>
+<li>源码缓存</li>
+</ul>
+<p><strong>各工具的包共享情况：</strong></p>
+<h4 id="venv-virtualenv-poetry-uv" data-heading-text="❌ venv / virtualenv / Poetry / uv">❌ venv / virtualenv / Poetry / uv</h4>
+<p><strong>原理</strong>：每个虚拟环境有独立的 <code>site-packages</code>，包完整复制</p>
+<div class="code-block"><pre><code class="hljs">envA/site-packages/numpy/  ← 完整副本
+envB/site-packages/numpy/  ← 完整副本
+</code></pre></div>
+<p><strong>设计哲学</strong>：“一个环境 = 一套完全自洽的 Python 运行时”</p>
+<ul>
+<li>✅ 简单、可预测、行为一致</li>
+<li>❌ 磁盘冗余</li>
+</ul>
+<h4 id="conda" data-heading-text="✅ conda（唯一真正共享）">✅ conda（唯一真正共享）</h4>
+<p><strong>原理</strong>：全局包缓存 + 环境硬链接引用</p>
+<div class="code-block"><pre><code class="hljs">conda/pkgs/numpy-1.26.4/  ← 唯一实体
+   ↑ 硬链接      ↑ 硬链接
+ envA/        envB/
+</code></pre></div>
+<p><strong>技术实现</strong>：conda 使用硬链接（hard links）技术，同一版本的包在磁盘上只存储一份，不同环境通过硬链接引用同一份文件。</p>
+<p><strong>设计哲学</strong>：“包是资源，环境只是视图”</p>
+<ul>
+<li>✅ 节省磁盘、大库友好、C/C++ 依赖复用</li>
+<li>❌ 机制复杂、调试成本高、与 pip 生态有摩擦</li>
+</ul>
+<hr>
+<h2 id="section-10" data-heading-text="三、依赖管理工具对比">三、依赖管理工具对比</h2>
+<h3 id="3-1" data-heading-text="3.1 依赖声明文件">3.1 依赖声明文件</h3>
+<table>
+<thead>
+<tr>
+<th>文件</th>
+<th>工具</th>
+<th>特点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>requirements.txt</code></td>
+<td>pip</td>
+<td>最基础，手动维护版本</td>
+</tr>
+<tr>
+<td><code>requirements.in</code> + <code>.txt</code></td>
+<td>pip-tools</td>
+<td>分离抽象/锁定依赖</td>
+</tr>
+<tr>
+<td><code>setup.py</code> / <code>setup.cfg</code></td>
+<td>setuptools</td>
+<td>库开发依赖声明</td>
+</tr>
+<tr>
+<td><code>Pipfile</code> + <code>Pipfile.lock</code></td>
+<td>pipenv</td>
+<td>区分生产/开发依赖</td>
+</tr>
+<tr>
+<td><code>pyproject.toml</code> + <code>poetry.lock</code></td>
+<td>Poetry</td>
+<td>现代标准，统一管理</td>
+</tr>
+<tr>
+<td><code>pyproject.toml</code> + <code>uv.lock</code></td>
+<td>uv</td>
+<td>PEP 标准兼容</td>
+</tr>
+<tr>
+<td><code>environment.yml</code></td>
+<td>conda</td>
+<td>跨语言依赖</td>
+</tr>
+</tbody>
+</table>
+<h3 id="3-2" data-heading-text="3.2 依赖管理工具深度对比">3.2 依赖管理工具深度对比</h3>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>pip</th>
+<th>Poetry</th>
+<th>uv</th>
+<th>conda</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>定位</strong></td>
+<td>基础安装器</td>
+<td>项目全生命周期</td>
+<td>超快工具链</td>
+<td>跨语言包管理</td>
+</tr>
+<tr>
+<td><strong>速度</strong></td>
+<td>慢</td>
+<td>慢</td>
+<td>🚀 极快（10-100倍）</td>
+<td>中等</td>
+</tr>
+<tr>
+<td><strong>锁定版本</strong></td>
+<td>需 pip-tools</td>
+<td>✅ poetry.lock</td>
+<td>✅ uv.lock</td>
+<td>✅ conda-lock</td>
+</tr>
+<tr>
+<td><strong>环境管理</strong></td>
+<td>需配合 venv</td>
+<td>✅ 自动创建</td>
+<td>✅ 自动创建</td>
+<td>✅ 原生支持</td>
+</tr>
+<tr>
+<td><strong>依赖解析</strong></td>
+<td>基础</td>
+<td>完整但慢</td>
+<td>极快且现代</td>
+<td>完整</td>
+</tr>
+<tr>
+<td><strong>Python 版本管理</strong></td>
+<td>❌</td>
+<td>❌</td>
+<td>✅ 内置</td>
+<td>✅ 原生</td>
+</tr>
+<tr>
+<td><strong>构建发布</strong></td>
+<td>需其他工具</td>
+<td>✅ 完整</td>
+<td>⚠️ 构建有限</td>
+<td>支持</td>
+</tr>
+<tr>
+<td><strong>二进制依赖</strong></td>
+<td>弱</td>
+<td>弱</td>
+<td>弱</td>
+<td>强</td>
+</tr>
+<tr>
+<td><strong>生态成熟度</strong></td>
+<td>最成熟</td>
+<td>成熟（2018-）</td>
+<td>较新（2023-）</td>
+<td>成熟</td>
+</tr>
+<tr>
+<td><strong>实现语言</strong></td>
+<td>Python</td>
+<td>Python</td>
+<td>Rust</td>
+<td>C++/Python</td>
+</tr>
+</tbody>
+</table>
+<h3 id="3-3-poetry-vs-uv" data-heading-text="3.3 Poetry vs uv 核心差异">3.3 Poetry vs uv 核心差异</h3>
+<p><strong>一句话定位：</strong></p>
+<ul>
+<li><strong>Poetry</strong>：完整的项目/包管理工具（类似 npm/yarn）</li>
+<li><strong>uv</strong>：超高速 Python 工具链（类似 pnpm + bun）</li>
+</ul>
+<p><strong>本质差异：</strong></p>
+<table>
+<thead>
+<tr>
+<th>能力</th>
+<th>Poetry</th>
+<th>uv</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>依赖管理</td>
+<td>✅ 完整</td>
+<td>✅ 完整（pip 兼容）</td>
+</tr>
+<tr>
+<td>锁文件</td>
+<td>poetry.lock</td>
+<td>uv.lock（可选）</td>
+</tr>
+<tr>
+<td>虚拟环境</td>
+<td>内置</td>
+<td>内置，快 N 倍</td>
+</tr>
+<tr>
+<td>安装速度</td>
+<td>较慢</td>
+<td>🚀 极快（Rust）</td>
+</tr>
+<tr>
+<td>执行脚本</td>
+<td>❌</td>
+<td><code>uv run</code>、<code>uv tool</code></td>
+</tr>
+<tr>
+<td>Python 版本管理</td>
+<td>❌</td>
+<td>✅ 内置自动下载</td>
+</tr>
+<tr>
+<td>构建发布</td>
+<td>✅ 完整</td>
+<td>⚠️ 发布功能待完善</td>
+</tr>
+<tr>
+<td>工具范围</td>
+<td>项目专注</td>
+<td>全栈工具链</td>
+</tr>
+<tr>
+<td>社区生态</td>
+<td>成熟丰富</td>
+<td>快速成长中</td>
+</tr>
+</tbody>
+</table>
+<p><strong>选择建议：</strong></p>
+<ul>
+<li>
+<p><strong>选 Poetry</strong>：</p>
+<ul>
+<li>库/SDK 开发，需要成熟发布流程</li>
+<li>已有 Poetry 项目，团队熟悉</li>
+<li>需要丰富的插件和社区支持</li>
+<li>稳定性优先的企业项目</li>
+</ul>
+</li>
+<li>
+<p><strong>选 uv</strong>：</p>
+<ul>
+<li>追求极致性能的新项目</li>
+<li>AI/后端服务开发</li>
+<li>想要统一工具链（版本管理+依赖+运行）</li>
+<li>愿意跟进新工具的迭代</li>
+</ul>
+</li>
+</ul>
+<p><strong>成熟度提醒</strong>：</p>
+<blockquote>
+<p>uv 是较新的工具（2023年发布），虽然性能卓越，但生态成熟度和社区资源不如 Poetry。建议在新项目中尝试，成熟项目谨慎迁移。生产环境使用前建议充分测试。</p>
+</blockquote>
+<p><strong>高级用法</strong>（适合有经验的开发者）：
+可以用 uv 加速日常开发（<code>uv sync</code>、<code>uv run</code>），同时保留 Poetry 配置用于构建发布。但初学者建议选择其一，避免工具链过于复杂。</p>
+<div class="code-block" data-language="bash"><div class="code-header"><span class="code-language">bash</span></div><pre><code class="hljs language-bash"><span class="hljs-comment"># 日常开发（快）</span>
+uv <span class="hljs-built_in">sync</span>
+uv run python app.py
+
+<span class="hljs-comment"># 构建发布（成熟）</span>
+poetry build
+poetry publish
+</code></pre></div>
+<hr>
+<h2 id="section-14" data-heading-text="四、依赖管理全流程">四、依赖管理全流程</h2>
+<h3 id="4-1" data-heading-text="4.1 依赖管理的三个层次">4.1 依赖管理的三个层次</h3>
+<h4 id="1" data-heading-text="1️⃣ 仅安装依赖（基础）">1️⃣ 仅安装依赖（基础）</h4>
+<div class="code-block" data-language="bash"><div class="code-header"><span class="code-language">bash</span></div><pre><code class="hljs language-bash">pip install package
+pip install -r requirements.txt
+</code></pre></div>
+<ul>
+<li>✅ 简单</li>
+<li>❌ 易版本冲突、不可复现</li>
+</ul>
+<h4 id="2" data-heading-text="2️⃣ 锁定依赖（标准）">2️⃣ 锁定依赖（标准）</h4>
+<div class="code-block" data-language="bash"><div class="code-header"><span class="code-language">bash</span></div><pre><code class="hljs language-bash"><span class="hljs-comment"># pip-tools</span>
+pip-compile requirements.in
+
+<span class="hljs-comment"># Poetry</span>
+poetry lock
+
+<span class="hljs-comment"># uv</span>
+uv lock
+</code></pre></div>
+<ul>
+<li>✅ 保证版本一致</li>
+<li>✅ 不同机器可复现</li>
+</ul>
+<h4 id="3" data-heading-text="3️⃣ 环境+依赖一体化（现代）">3️⃣ 环境+依赖一体化（现代）</h4>
+<div class="code-block" data-language="bash"><div class="code-header"><span class="code-language">bash</span></div><pre><code class="hljs language-bash"><span class="hljs-comment"># Poetry</span>
+poetry install
+
+<span class="hljs-comment"># uv</span>
+uv <span class="hljs-built_in">sync</span>
+
+<span class="hljs-comment"># conda</span>
+conda <span class="hljs-built_in">env</span> create -f environment.yml
+</code></pre></div>
+<ul>
+<li>✅ 隔离性好</li>
+<li>✅ 依赖可复现</li>
+<li>⚠️ 工具学习成本</li>
+</ul>
+<h3 id="4-2" data-heading-text="4.2 完整流程示意">4.2 完整流程示意</h3>
+<div class="code-block"><pre><code class="hljs">┌─────────────────┐
+│  环境管理（隔离） │
+│ venv / conda    │
+│ Poetry / uv     │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│  声明依赖        │
+│ pyproject.toml  │
+│ requirements.in │
+└────────┬────────┘
+        │
+         ▼
+┌─────────────────┐
+│  生成锁文件      │
+│ poetry lock     │
+│ uv lock         │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│  安装依赖        │
+│ poetry install  │
+│ uv sync         │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│  升级/维护       │
+│ poetry update   │
+│ uv upgrade      │
+└─────────────────┘
+</code></pre></div>
+<hr>
+<h2 id="section-20" data-heading-text="五、实战场景选择方案">五、实战场景选择方案</h2>
+<h3 id="5-1" data-heading-text="5.1 本地开发">5.1 本地开发</h3>
+<p><strong>推荐：Poetry 或 uv</strong></p>
+<div class="code-block" data-language="bash"><div class="code-header"><span class="code-language">bash</span></div><pre><code class="hljs language-bash"><span class="hljs-comment"># Poetry（成熟稳定）</span>
+poetry config virtualenvs.in-project <span class="hljs-literal">true</span>  <span class="hljs-comment"># 虚拟环境放项目内</span>
+poetry add requests
+poetry install
+
+<span class="hljs-comment"># uv（极致性能）</span>
+uv init
+uv add requests
+uv <span class="hljs-built_in">sync</span>
+</code></pre></div>
+<p><strong>Poetry 虚拟环境管理：</strong></p>
+<div class="code-block" data-language="bash"><div class="code-header"><span class="code-language">bash</span></div><pre><code class="hljs language-bash"><span class="hljs-comment"># 查看所有环境</span>
+poetry <span class="hljs-built_in">env</span> list
+
+<span class="hljs-comment"># 删除指定环境</span>
+poetry <span class="hljs-built_in">env</span> remove python3.11
+
+<span class="hljs-comment"># 配置环境在项目内（推荐）</span>
+poetry config virtualenvs.in-project <span class="hljs-literal">true</span>
+</code></pre></div>
+<h3 id="5-2" data-heading-text="5.2 科学计算/大依赖">5.2 科学计算/大依赖</h3>
+<p><strong>推荐：conda</strong></p>
+<div class="code-block" data-language="bash"><div class="code-header"><span class="code-language">bash</span></div><pre><code class="hljs language-bash">conda create -n myenv python=3.11 numpy pandas
+conda activate myenv
+</code></pre></div>
+<p><strong>也可结合 Poetry：</strong></p>
+<div class="code-block" data-language="bash"><div class="code-header"><span class="code-language">bash</span></div><pre><code class="hljs language-bash"><span class="hljs-comment"># 创建 conda 环境</span>
+conda create -n myenv python=3.11
+
+<span class="hljs-comment"># Poetry 使用这个环境</span>
+poetry <span class="hljs-built_in">env</span> use /path/to/conda/env/bin/python
+poetry install
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>对比项</th>
+<th>venv/Poetry</th>
+<th>conda/Poetry</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>磁盘占用</td>
+<td>高（每个环境完整副本）</td>
+<td>低（硬链接共享）</td>
+</tr>
+<tr>
+<td>二进制依赖</td>
+<td>弱（需系统编译）</td>
+<td>强（预编译包）</td>
+</tr>
+<tr>
+<td>适用场景</td>
+<td>Web/轻量项目</td>
+<td>数据科学/多项目</td>
+</tr>
+</tbody>
+</table>
+<h3 id="5-3-docker" data-heading-text="5.3 生产环境（Docker）">5.3 生产环境（Docker）</h3>
+<p><strong>核心原则：Docker 已提供环境隔离，依赖管理只需锁定版本</strong></p>
+<h4 id="requirements-txt-pip" data-heading-text="方案 A：requirements.txt + pip（最简单、最稳定）">方案 A：requirements.txt + pip（最简单、最稳定）</h4>
+<div class="code-block" data-language="dockerfile"><div class="code-header"><span class="code-language">dockerfile</span></div><pre><code class="hljs language-dockerfile"><span class="hljs-keyword">FROM</span> python:<span class="hljs-number">3.11</span>-slim
+<span class="hljs-keyword">WORKDIR</span><span class="language-bash"> /app</span>
+<span class="hljs-keyword">COPY</span><span class="language-bash"> requirements.txt .</span>
+<span class="hljs-keyword">RUN</span><span class="language-bash"> pip install --no-cache-dir -r requirements.txt</span>
+<span class="hljs-keyword">COPY</span><span class="language-bash"> . .</span>
+<span class="hljs-keyword">CMD</span><span class="language-bash"> [<span class="hljs-string">&quot;python&quot;</span>, <span class="hljs-string">&quot;app.py&quot;</span>]</span>
+</code></pre></div>
+<h4 id="b-poetry" data-heading-text="方案 B：Poetry 导出（开发+生产结合）">方案 B：Poetry 导出（开发+生产结合）</h4>
+<div class="code-block" data-language="bash"><div class="code-header"><span class="code-language">bash</span></div><pre><code class="hljs language-bash"><span class="hljs-comment"># 本地开发用 Poetry</span>
+poetry add requests
+
+<span class="hljs-comment"># 导出给 Docker</span>
+poetry <span class="hljs-built_in">export</span> -f requirements.txt -o requirements.txt --without-hashes
+</code></pre></div>
+<div class="code-block" data-language="dockerfile"><div class="code-header"><span class="code-language">dockerfile</span></div><pre><code class="hljs language-dockerfile"><span class="hljs-keyword">FROM</span> python:<span class="hljs-number">3.11</span>-slim
+<span class="hljs-keyword">WORKDIR</span><span class="language-bash"> /app</span>
+<span class="hljs-keyword">COPY</span><span class="language-bash"> requirements.txt .</span>
+<span class="hljs-keyword">RUN</span><span class="language-bash"> pip install --no-cache-dir -r requirements.txt</span>
+<span class="hljs-keyword">COPY</span><span class="language-bash"> . .</span>
+<span class="hljs-keyword">CMD</span><span class="language-bash"> [<span class="hljs-string">&quot;python&quot;</span>, <span class="hljs-string">&quot;app.py&quot;</span>]</span>
+</code></pre></div>
+<h4 id="c-uv" data-heading-text="方案 C：uv 加速（极致性能）">方案 C：uv 加速（极致性能）</h4>
+<div class="code-block" data-language="dockerfile"><div class="code-header"><span class="code-language">dockerfile</span></div><pre><code class="hljs language-dockerfile"><span class="hljs-keyword">FROM</span> python:<span class="hljs-number">3.11</span>-slim
+<span class="hljs-keyword">COPY</span><span class="language-bash"> --from=ghcr.io/astral-sh/uv:latest /uv /bin/uv</span>
+<span class="hljs-keyword">WORKDIR</span><span class="language-bash"> /app</span>
+<span class="hljs-keyword">COPY</span><span class="language-bash"> pyproject.toml uv.lock ./</span>
+<span class="hljs-keyword">RUN</span><span class="language-bash"> uv <span class="hljs-built_in">sync</span> --frozen --no-dev</span>
+<span class="hljs-keyword">COPY</span><span class="language-bash"> . .</span>
+<span class="hljs-keyword">CMD</span><span class="language-bash"> [<span class="hljs-string">&quot;python&quot;</span>, <span class="hljs-string">&quot;app.py&quot;</span>]</span>
+</code></pre></div>
+<p><strong>注意</strong>：生产环境直接调用 <code>python</code>，不使用 <code>uv run</code> 包装，以减少运行时开销。</p>
+<p><strong>生产环境总结：</strong></p>
+<ul>
+<li>Docker 负责环境隔离</li>
+<li>Python 工具只负责“装对包”</li>
+<li>requirements.txt + pip 最稳定通用</li>
+<li>Poetry/uv 可用于开发，Docker 构建时导出</li>
+</ul>
+<h3 id="5-4-uv" data-heading-text="5.4 uv 的依赖导出机制">5.4 uv 的依赖导出机制</h3>
+<div class="code-block" data-language="bash"><div class="code-header"><span class="code-language">bash</span></div><pre><code class="hljs language-bash"><span class="hljs-comment"># 导出生产依赖</span>
+uv <span class="hljs-built_in">export</span> --format requirements-txt &gt; requirements.txt
+
+<span class="hljs-comment"># 导出开发依赖</span>
+uv <span class="hljs-built_in">export</span> --dev --format requirements-txt &gt; dev-requirements.txt
+</code></pre></div>
+<p><strong>工作原理：</strong></p>
+<div class="code-block"><pre><code class="hljs">pyproject.toml（声明依赖）
+        ↓
+    uv.lock（锁定版本）
+        ↓
+requirements.txt（导出产物，给 pip 用）
+</code></pre></div>
+<hr>
+<h2 id="section-28" data-heading-text="六、依赖完整性保障">六、依赖完整性保障</h2>
+<h3 id="6-1-python" data-heading-text="6.1 Python 的根本限制">6.1 Python 的根本限制</h3>
+<p><strong>核心问题：Python 是解释型语言，无编译期检查</strong></p>
+<ul>
+<li>Rust/Go/Java：编译阶段检查依赖，缺失直接报错</li>
+<li>Python：<code>import</code> 在运行时触发，只能 <code>ModuleNotFoundError</code></li>
+</ul>
+<p><strong>结论：无法像编译型语言那样 100% 保证依赖完整</strong></p>
+<h3 id="6-2" data-heading-text="6.2 最佳实践（尽量接近编译期检查）">6.2 最佳实践（尽量接近编译期检查）</h3>
+<h4 id="1-2" data-heading-text="1️⃣ 依赖声明 + 锁文件（基础）">1️⃣ 依赖声明 + 锁文件（基础）</h4>
+<div class="code-block" data-language="bash"><div class="code-header"><span class="code-language">bash</span></div><pre><code class="hljs language-bash"><span class="hljs-comment"># Poetry</span>
+poetry add requests
+poetry lock
+
+<span class="hljs-comment"># uv</span>
+uv add requests
+uv lock
+</code></pre></div>
+<h4 id="2-import" data-heading-text="2️⃣ 静态扫描 import（进阶）">2️⃣ 静态扫描 import（进阶）</h4>
+<p><strong>工具：</strong></p>
+<ul>
+<li><code>dephell deps check</code></li>
+<li>自定义脚本（用 <code>ast</code> 模块解析 import）</li>
+</ul>
+<p><strong>CI 流程：</strong></p>
+<div class="code-block" data-language="bash"><div class="code-header"><span class="code-language">bash</span></div><pre><code class="hljs language-bash"><span class="hljs-comment"># 扫描代码 import</span>
+python scan_imports.py
+
+<span class="hljs-comment"># 对比 pyproject.toml</span>
+<span class="hljs-comment"># 发现未声明依赖 → 阻止提交</span>
+</code></pre></div>
+<h4 id="3-2" data-heading-text="3️⃣ 全覆盖测试（核心）">3️⃣ 全覆盖测试（核心）</h4>
+<div class="code-block" data-language="bash"><div class="code-header"><span class="code-language">bash</span></div><pre><code class="hljs language-bash"><span class="hljs-comment"># CI 里执行</span>
+poetry install
+pytest --cov=src tests/
+
+<span class="hljs-comment"># 任何缺失依赖在测试中暴露</span>
+</code></pre></div>
+<h4 id="4" data-heading-text="4️⃣ 综合方案（最强）">4️⃣ 综合方案（最强）</h4>
+<div class="code-block"><pre><code class="hljs">提交代码
+   ↓
+静态扫描 import vs pyproject.toml
+   ↓（发现未声明 → 拒绝）
+全量单元测试
+   ↓（import 报错 → 拒绝）
+CI 通过
+   ↓
+合并代码
+</code></pre></div>
+<p><strong>限制：</strong></p>
+<ul>
+<li>动态 import 无法完全捕获</li>
+<li>条件 import 可能遗漏</li>
+<li>间接依赖可能误判</li>
+</ul>
+<hr>
+<h2 id="section-35" data-heading-text="七、常见问题">七、常见问题</h2>
+<h3 id="7-1-venv-base" data-heading-text="7.1 `(venv) (base)` 同时出现">7.1 <code>(venv) (base)</code> 同时出现</h3>
+<p><strong>原因：</strong></p>
+<ul>
+<li><code>(base)</code>：conda 默认环境自动激活</li>
+<li><code>(venv)</code>：手动激活的 Python 虚拟环境</li>
+</ul>
+<p><strong>实际效果：</strong></p>
+<ul>
+<li>Python 解释器使用 <code>venv</code> 的</li>
+<li>conda base 的 PATH 仍在，但被 venv 覆盖</li>
+</ul>
+<p><strong>解决方案：</strong></p>
+<div class="code-block" data-language="bash"><div class="code-header"><span class="code-language">bash</span></div><pre><code class="hljs language-bash"><span class="hljs-comment"># 方案 A：关闭 conda 自动激活</span>
+conda config --<span class="hljs-built_in">set</span> auto_activate_base <span class="hljs-literal">false</span>
+
+<span class="hljs-comment"># 方案 B：只用 conda 环境</span>
+conda create -n myenv python=3.11
+conda activate myenv
+
+<span class="hljs-comment"># 方案 C：不管它（不影响使用）</span>
+</code></pre></div>
+<h3 id="7-2" data-heading-text="7.2 未使用依赖的清理">7.2 未使用依赖的清理</h3>
+<p><strong>Poetry 本身不自动识别，需借助工具：</strong></p>
+<div class="code-block" data-language="bash"><div class="code-header"><span class="code-language">bash</span></div><pre><code class="hljs language-bash"><span class="hljs-comment"># 使用 poetry-detect-unused</span>
+pip install poetry-detect-unused
+poetry unused
+
+<span class="hljs-comment"># 手动移除</span>
+poetry remove &lt;package&gt;
+poetry lock
+</code></pre></div>
+<p><strong>最佳实践：</strong></p>
+<ol>
+<li>定期用 <code>poetry show --tree</code> 检查依赖树</li>
+<li>用 <code>poetry-detect-unused</code> 扫描</li>
+<li>手动确认后 <code>poetry remove</code></li>
+<li><code>poetry lock</code> 更新锁文件</li>
+</ol>
+<h3 id="7-3-poetry" data-heading-text="7.3 Poetry 虚拟环境残留">7.3 Poetry 虚拟环境残留</h3>
+<p><strong>问题：</strong></p>
+<ul>
+<li>默认虚拟环境在系统目录，删项目后仍占空间</li>
+</ul>
+<p><strong>解决：</strong></p>
+<div class="code-block" data-language="bash"><div class="code-header"><span class="code-language">bash</span></div><pre><code class="hljs language-bash"><span class="hljs-comment"># 查看所有环境</span>
+poetry <span class="hljs-built_in">env</span> list
+
+<span class="hljs-comment"># 删除特定环境</span>
+poetry <span class="hljs-built_in">env</span> remove &lt;env-name&gt;
+
+<span class="hljs-comment"># 推荐配置：环境放项目内</span>
+poetry config virtualenvs.in-project <span class="hljs-literal">true</span>
+</code></pre></div>
+<h3 id="7-4-windows" data-heading-text="7.4 Windows 系统注意事项">7.4 Windows 系统注意事项</h3>
+<p><strong>常见问题：</strong></p>
+<ul>
+<li>路径分隔符差异（<code>\</code> vs <code>/</code>）</li>
+<li>某些包的二进制依赖在 Windows 编译困难</li>
+<li>虚拟环境激活脚本位置不同</li>
+</ul>
+<p><strong>建议：</strong></p>
+<ul>
+<li>使用 conda 处理复杂二进制依赖</li>
+<li>优先选择提供预编译 wheel 的包</li>
+<li>在 Windows 上，<code>pip install</code> 时优先安装 wheel 而非从源码编译</li>
+</ul>
+<hr>
+<h2 id="section-40" data-heading-text="八、总结与选择指南">八、总结与选择指南</h2>
+<h3 id="8-1" data-heading-text="8.1 核心原则">8.1 核心原则</h3>
+<ul>
+<li><strong>环境管理</strong> → 解决“隔离和 Python 版本”</li>
+<li><strong>依赖管理</strong> → 解决“项目需要哪些包及版本锁定”</li>
+<li><strong>生产部署</strong> → Docker 提供终极隔离</li>
+</ul>
+<h3 id="8-2" data-heading-text="8.2 技术选型决策树">8.2 技术选型决策树</h3>
+<div class="code-block"><pre><code class="hljs">项目类型？
+├─ Web/后端服务
+│  ├─ 追求性能 + 新项目 → uv
+│  └─ 成熟稳定 + 企业项目 → Poetry
+│
+├─ 库/SDK 开发
+│  └─ Poetry（完整发布流程）
+│
+├─ 数据科学/ML
+│  ├─ 大依赖/二进制包 → conda
+│  └─ 轻量级/纯 Python → uv/Poetry
+│
+└─ 生产部署
+   └─ Docker + requirements.txt（最稳定）
+</code></pre></div>
+<h3 id="8-3" data-heading-text="8.3 现代项目最佳实践">8.3 现代项目最佳实践</h3>
+<p><strong>本地开发：</strong></p>
+<div class="code-block" data-language="bash"><div class="code-header"><span class="code-language">bash</span></div><pre><code class="hljs language-bash">uv init                    <span class="hljs-comment"># 极快环境创建</span>
+uv add requests numpy      <span class="hljs-comment"># 依赖管理</span>
+uv run python app.py       <span class="hljs-comment"># 日常开发</span>
+</code></pre></div>
+<p><strong>团队协作：</strong></p>
+<div class="code-block" data-language="bash"><div class="code-header"><span class="code-language">bash</span></div><pre><code class="hljs language-bash">poetry add requests        <span class="hljs-comment"># 统一依赖管理</span>
+poetry lock               <span class="hljs-comment"># 锁定版本</span>
+poetry <span class="hljs-built_in">export</span> -o requirements.txt  <span class="hljs-comment"># 导出给 CI/Docker</span>
+</code></pre></div>
+<p><strong>生产部署：</strong></p>
+<div class="code-block" data-language="dockerfile"><div class="code-header"><span class="code-language">dockerfile</span></div><pre><code class="hljs language-dockerfile"><span class="hljs-keyword">FROM</span> python:<span class="hljs-number">3.11</span>-slim
+<span class="hljs-keyword">COPY</span><span class="language-bash"> requirements.txt .</span>
+<span class="hljs-keyword">RUN</span><span class="language-bash"> pip install --no-cache-dir -r requirements.txt</span>
+<span class="hljs-keyword">COPY</span><span class="language-bash"> . .</span>
+<span class="hljs-keyword">CMD</span><span class="language-bash"> [<span class="hljs-string">&quot;python&quot;</span>, <span class="hljs-string">&quot;app.py&quot;</span>]</span>
+</code></pre></div>
+<h3 id="8-4" data-heading-text="8.4 终极真相">8.4 终极真相</h3>
+<p><strong>关于依赖共享：</strong></p>
+<ul>
+<li>✅ 真正物理共享：<strong>只有 conda</strong>（通过硬链接技术）</li>
+<li>❌ 其他工具（venv/Poetry/uv）：逻辑隔离 + 文件冗余</li>
+<li>这是设计选择，不是技术落后</li>
+</ul>
+<p><strong>关于依赖完整性：</strong></p>
+<ul>
+<li>Python 解释型特性决定无法 100% 编译期检查</li>
+<li>最佳实践：<strong>锁文件 + 静态扫描 + 全覆盖测试 + CI 阻断</strong></li>
+<li>目标：把运行时风险降到极低，而非完全杜绝</li>
+</ul>
+<p><strong>关于工具选择：</strong></p>
+<ul>
+<li>没有完美工具，只有适合场景</li>
+<li>现代趋势：<code>pyproject.toml</code> + <code>uv/Poetry</code> + Docker</li>
+<li>老项目：<code>requirements.txt</code> + <code>venv</code> 依然可靠</li>
+</ul>
+<p><strong>关于工具成熟度：</strong></p>
+<ul>
+<li><strong>Poetry</strong>: 2018年发布，生态成熟，大量生产案例</li>
+<li><strong>uv</strong>: 2023年发布，性能卓越但相对年轻，快速迭代中</li>
+<li><strong>pip/venv</strong>: 官方标准，最稳定但功能基础</li>
+<li><strong>conda</strong>: 科学计算领域事实标准</li>
+</ul>
+<hr>
+<h2 id="section-45" data-heading-text="附录：快速参考">附录：快速参考</h2>
+<h3 id="section-46" data-heading-text="常用命令速查">常用命令速查</h3>
+<p><strong>Poetry:</strong></p>
+<div class="code-block" data-language="bash"><div class="code-header"><span class="code-language">bash</span></div><pre><code class="hljs language-bash">poetry new myproject          <span class="hljs-comment"># 创建新项目</span>
+poetry add requests           <span class="hljs-comment"># 添加依赖</span>
+poetry install                <span class="hljs-comment"># 安装所有依赖</span>
+poetry update                 <span class="hljs-comment"># 更新依赖</span>
+poetry <span class="hljs-built_in">export</span> -f requirements.txt -o requirements.txt  <span class="hljs-comment"># 导出</span>
+</code></pre></div>
+<p><strong>uv:</strong></p>
+<div class="code-block" data-language="bash"><div class="code-header"><span class="code-language">bash</span></div><pre><code class="hljs language-bash">uv init                       <span class="hljs-comment"># 初始化项目</span>
+uv add requests               <span class="hljs-comment"># 添加依赖</span>
+uv <span class="hljs-built_in">sync</span>                       <span class="hljs-comment"># 同步依赖</span>
+uv run python app.py          <span class="hljs-comment"># 运行脚本</span>
+uv pip install package        <span class="hljs-comment"># pip 兼容模式</span>
+</code></pre></div>
+<p><strong>conda:</strong></p>
+<div class="code-block" data-language="bash"><div class="code-header"><span class="code-language">bash</span></div><pre><code class="hljs language-bash">conda create -n myenv python=3.11     <span class="hljs-comment"># 创建环境</span>
+conda activate myenv                   <span class="hljs-comment"># 激活环境</span>
+conda install numpy pandas             <span class="hljs-comment"># 安装包</span>
+conda <span class="hljs-built_in">env</span> <span class="hljs-built_in">export</span> &gt; environment.yml     <span class="hljs-comment"># 导出环境</span>
+</code></pre></div>
+<h3 id="section-47" data-heading-text="推荐资源">推荐资源</h3>
+<ul>
+<li><strong>Poetry 文档</strong>: <a href="https://python-poetry.org/docs/">https://python-poetry.org/docs/</a></li>
+<li><strong>uv 文档</strong>: <a href="https://docs.astral.sh/uv/">https://docs.astral.sh/uv/</a></li>
+<li><strong>Python 打包指南</strong>: <a href="https://packaging.python.org/">https://packaging.python.org/</a></li>
+<li><strong>PEP 621</strong> (pyproject.toml 标准): <a href="https://peps.python.org/pep-0621/">https://peps.python.org/pep-0621/</a></li>
+</ul>
+
+      </div>
+<div class="article-actions" aria-label="Article actions">
+      <a class="share-link" href="https://twitter.com/intent/tweet?text=Python+%E4%BE%9D%E8%B5%96%E4%B8%8E%E7%8E%AF%E5%A2%83%E7%AE%A1%E7%90%86%E5%AE%8C%E5%85%A8%E6%8C%87%E5%8D%97&amp;url=https%3A%2F%2Fkingson4wu.github.io%2Fzh%2Fposts%2F20251223-python%2F" target="_blank" rel="noopener noreferrer" aria-label="Share on X">
+        <span aria-hidden="true">X</span>
+        <span>Share</span>
+      </a>
+    </div>
+    </article>
+<aside class="article-toc" data-article-toc aria-label="目录">
+      <button class="article-toc-toggle" type="button" data-article-toc-toggle aria-expanded="false" aria-controls="article-toc-panel" aria-label="打开目录" data-open-label="打开目录" data-close-label="收起目录">
+        <svg aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M8 6h11"></path>
+          <path d="M8 12h11"></path>
+          <path d="M8 18h11"></path>
+          <path d="M4 6h.01"></path>
+          <path d="M4 12h.01"></path>
+          <path d="M4 18h.01"></path>
+        </svg>
+      </button>
+      <nav id="article-toc-panel" class="article-toc-panel" data-article-toc-panel aria-label="目录">
+        <div class="article-toc-heading">目录</div>
+        <ol class="article-toc-list">
+          <li class="article-toc-level-2"><a href="#section-1" data-article-toc-link>适用读者</a></li>
+          <li class="article-toc-level-2"><a href="#section-2" data-article-toc-link>一、核心概念</a></li>
+          <li class="article-toc-level-3"><a href="#1-1-python" data-article-toc-link>1.1 Python 包管理的本质特点</a></li>
+          <li class="article-toc-level-3"><a href="#1-2" data-article-toc-link>1.2 真正的隔离是什么</a></li>
+          <li class="article-toc-level-2"><a href="#section-5" data-article-toc-link>二、环境管理工具对比</a></li>
+          <li class="article-toc-level-3"><a href="#2-1" data-article-toc-link>2.1 工具分类与特点</a></li>
+          <li class="article-toc-level-3"><a href="#2-2" data-article-toc-link>2.2 包共享机制深度解析</a></li>
+          <li class="article-toc-level-2"><a href="#section-10" data-article-toc-link>三、依赖管理工具对比</a></li>
+          <li class="article-toc-level-3"><a href="#3-1" data-article-toc-link>3.1 依赖声明文件</a></li>
+          <li class="article-toc-level-3"><a href="#3-2" data-article-toc-link>3.2 依赖管理工具深度对比</a></li>
+          <li class="article-toc-level-3"><a href="#3-3-poetry-vs-uv" data-article-toc-link>3.3 Poetry vs uv 核心差异</a></li>
+          <li class="article-toc-level-2"><a href="#section-14" data-article-toc-link>四、依赖管理全流程</a></li>
+          <li class="article-toc-level-3"><a href="#4-1" data-article-toc-link>4.1 依赖管理的三个层次</a></li>
+          <li class="article-toc-level-3"><a href="#4-2" data-article-toc-link>4.2 完整流程示意</a></li>
+          <li class="article-toc-level-2"><a href="#section-20" data-article-toc-link>五、实战场景选择方案</a></li>
+          <li class="article-toc-level-3"><a href="#5-1" data-article-toc-link>5.1 本地开发</a></li>
+          <li class="article-toc-level-3"><a href="#5-2" data-article-toc-link>5.2 科学计算/大依赖</a></li>
+          <li class="article-toc-level-3"><a href="#5-3-docker" data-article-toc-link>5.3 生产环境（Docker）</a></li>
+          <li class="article-toc-level-3"><a href="#5-4-uv" data-article-toc-link>5.4 uv 的依赖导出机制</a></li>
+          <li class="article-toc-level-2"><a href="#section-28" data-article-toc-link>六、依赖完整性保障</a></li>
+          <li class="article-toc-level-3"><a href="#6-1-python" data-article-toc-link>6.1 Python 的根本限制</a></li>
+          <li class="article-toc-level-3"><a href="#6-2" data-article-toc-link>6.2 最佳实践（尽量接近编译期检查）</a></li>
+          <li class="article-toc-level-2"><a href="#section-35" data-article-toc-link>七、常见问题</a></li>
+          <li class="article-toc-level-3"><a href="#7-1-venv-base" data-article-toc-link>7.1 `(venv) (base)` 同时出现</a></li>
+          <li class="article-toc-level-3"><a href="#7-2" data-article-toc-link>7.2 未使用依赖的清理</a></li>
+          <li class="article-toc-level-3"><a href="#7-3-poetry" data-article-toc-link>7.3 Poetry 虚拟环境残留</a></li>
+          <li class="article-toc-level-3"><a href="#7-4-windows" data-article-toc-link>7.4 Windows 系统注意事项</a></li>
+          <li class="article-toc-level-2"><a href="#section-40" data-article-toc-link>八、总结与选择指南</a></li>
+          <li class="article-toc-level-3"><a href="#8-1" data-article-toc-link>8.1 核心原则</a></li>
+          <li class="article-toc-level-3"><a href="#8-2" data-article-toc-link>8.2 技术选型决策树</a></li>
+          <li class="article-toc-level-3"><a href="#8-3" data-article-toc-link>8.3 现代项目最佳实践</a></li>
+          <li class="article-toc-level-3"><a href="#8-4" data-article-toc-link>8.4 终极真相</a></li>
+          <li class="article-toc-level-2"><a href="#section-45" data-article-toc-link>附录：快速参考</a></li>
+          <li class="article-toc-level-3"><a href="#section-46" data-article-toc-link>常用命令速查</a></li>
+          <li class="article-toc-level-3"><a href="#section-47" data-article-toc-link>推荐资源</a></li>
+        </ol>
+      </nav>
+    </aside>
+    <script src="/scripts/article-toc.js" defer></script>
+    <nav class="article-nav" aria-label="Adjacent posts">
+      <a href="/zh/posts/20251223-rust/"><span>Previous</span>Rust 为什么需要显式生命周期标注：从调用方契约到设计本质</a>
+      <a href="/zh/posts/20251223-python-web/"><span>Next</span>Python 运行内幕-深度解析底层执行机制与现代 Web 架构</a>
+    </nav>
+<section class="comments" aria-labelledby="comments-heading">
+      <h2 id="comments-heading">评论</h2>
+      <div
+        data-comments
+        data-comments-repo="Kingson4Wu/kingson4wu.github.io"
+        data-comments-issue-term="pathname"
+        data-comments-label="comment"
+      ></div>
+    </section>
+    <script src="/scripts/comments.js" defer></script>
+  </main>
+  <footer class="site-footer">
+    <p>&copy; 2026 拉巴力的纸皮箱</p>
+  </footer>
+  <button class="reading-return" type="button" data-reading-return aria-label="回到开头" title="回到开头">
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <path d="M12 19V5"></path>
+      <path d="m6 11 6-6 6 6"></path>
+    </svg>
+  </button>
+  <script src="/scripts/theme.js"></script>
+  <script src="/scripts/image-viewer.js"></script>
+  <script src="/scripts/reading-tools.js"></script>
+</body>
+</html>

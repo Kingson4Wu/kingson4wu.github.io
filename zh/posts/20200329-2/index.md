@@ -1,0 +1,60 @@
+# 表结构变更是否需要处理历史月表？
+
+Canonical: https://kingson4wu.github.io/zh/posts/20200329-2/
+Markdown: https://kingson4wu.github.io/zh/posts/20200329-2/index.md
+Language: zh
+Type: post
+Date: 2020-03-29
+Tags: Architecture, Database
+
+目前针对历史流水表，历史订单表，采用的以月为维度的方式建表，如以下表结构所示 sqlCREATE TABLE `t_order_202002` ( `order_id` varchar(128) NOT NULL COMMENT &#x27;订单id&#x27;, `coin` decimal(32,2) NOT NU...
+
+---
+
+![](/assets/zh/shared/photo/Henry.jpeg)
+
++ 目前针对历史流水表，历史订单表，采用的以月为维度的方式建表，如以下表结构所示
+```sql
+CREATE TABLE `t_order_202002` (
+`order_id` varchar(128) NOT NULL COMMENT '订单id',
+`coin` decimal(32,2) NOT NULL DEFAULT '0.00' COMMENT '支付币数',
+`user_id` bigint(20) unsigned NOT NULL DEFAULT '0' COMMENT '用户id',
+`create_time` datetime NOT NULL COMMENT '创建时间',
+`update_time` datetime NOT NULL COMMENT '更新时间',
+PRIMARY KEY (`order_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='订单表'
+
+CREATE TABLE `t_order_202003` (
+`order_id` varchar(128) NOT NULL COMMENT '订单id',
+`coin` decimal(32,2) NOT NULL DEFAULT '0.00' COMMENT '支付币数',
+`user_id` bigint(20) unsigned NOT NULL DEFAULT '0' COMMENT '用户id',
+`create_time` datetime NOT NULL COMMENT '创建时间',
+`update_time` datetime NOT NULL COMMENT '更新时间',
+PRIMARY KEY (`order_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='订单表'
+
+CREATE TABLE `t_order_202004` (
+`order_id` varchar(128) NOT NULL COMMENT '订单id',
+`coin` decimal(32,2) NOT NULL DEFAULT '0.00' COMMENT '支付币数',
+`user_id` bigint(20) unsigned NOT NULL DEFAULT '0' COMMENT '用户id',
+`create_time` datetime NOT NULL COMMENT '创建时间',
+`update_time` datetime NOT NULL COMMENT '更新时间',
+PRIMARY KEY (`order_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='订单表'
+```
+现要对表结构增加一个字段 room_id
+```sql
+ALTER TABLE t_order_202003
+ADD COLUMN `room_id` bigint(20) NOT NULL DEFAULT '0' COMMENT '动作发生的所在房间ID';
+ALTER TABLE t_order_202004
+ADD COLUMN `room_id` bigint(20) NOT NULL DEFAULT '0' COMMENT '动作发生的所在房间ID';
+```
+那么久的历史表可以不处理吗？
+
+1. 假如全部的查询语句都是`select *`,  那么久的历史表可以不处理，但是这样违反了按需查询原则
+2. 如果查询语句有指定字段如`select order_id, room_id`,那么查询到旧的表时会报错
+
+### 解决方法
+1. 历史表和当前的表结构保存一致，在进行表结构变更时一并处理，避免后续的坑(没精力折腾的建议这样处理，可以增加一些监控手段)
+2. 历史表不处理，在程序代码上兼容。这样会增加代码复杂度，难以维护，如果有必要最好统一sdk中处理。
+3. 运维层面，统一处理，统一月表的结构，需要DBA工具支持

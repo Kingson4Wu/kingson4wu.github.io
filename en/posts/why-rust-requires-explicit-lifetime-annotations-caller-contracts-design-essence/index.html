@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Why Rust Makes Lifetime Annotations Part of the API | Kingson Wu</title>
+  <meta name="description" content="Rust lifetime annotations are not just compiler hints. They are part of the function contract, which is why explicit lifetimes matter for callers, traits, and API stability.">
+  <link rel="canonical" href="https://kingson4wu.github.io/en/posts/why-rust-requires-explicit-lifetime-annotations-caller-contracts-design-essence/">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="alternate" type="application/rss+xml" title="Kingson Wu" href="/en/feed.xml">
+  <link rel="alternate" type="text/markdown" href="/en/posts/why-rust-requires-explicit-lifetime-annotations-caller-contracts-design-essence/index.md">
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="/styles/main.css">
+  <script>
+    try {
+      var theme = localStorage.getItem('theme');
+      if (theme) document.documentElement.dataset.theme = theme;
+    } catch (_) {}
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="site-title" href="/en/" aria-label="Kingson Wu">
+      <span class="site-logo" aria-hidden="true">K</span>
+      <span>Kingson Wu</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="/en/posts/">Blog</a>
+      <a href="/en/notes/">Notes</a>
+      <a href="/en/tags/">Tags</a>
+      <a href="/en/about/">About</a>
+      <a href="/en/search/">Search</a>
+      <a href="/zh/" lang="zh">中文</a>
+      <a class="feed-link" href="/en/feed.xml" aria-label="Subscribe" title="Subscribe">
+        <svg class="feed-icon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M5 5.5A13.5 13.5 0 0 1 18.5 19"></path>
+          <path d="M5 11A8 8 0 0 1 13 19"></path>
+          <circle cx="6" cy="18" r="1.5"></circle>
+        </svg>
+      </a>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch color mode" title="Switch color mode">
+        <svg class="theme-icon theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M21 14.2A8.5 8.5 0 0 1 9.8 3 7 7 0 1 0 21 14.2Z"></path>
+        </svg>
+        <svg class="theme-icon theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"></path>
+        </svg>
+      </button>
+    </nav>
+  </header>
+  <main class="site-main">
+    <article class="article">
+      <header class="article-header">
+        <h1>Why Rust Makes Lifetime Annotations Part of the API</h1>
+        <time datetime="2025-12-22T16:00:00.000Z">December 22, 2025</time>
+<ul class="tag-list" aria-label="Tags">
+    <li><a href="/en/tags/Rust/">Rust</a></li>
+    <li><a href="/en/tags/Programming%20Languages/">Programming Languages</a></li>
+  </ul>
+      </header>
+      <div class="prose">
+<p>When people first learn Rust lifetimes, they usually ask a reasonable question:</p>
+<blockquote>
+<p>If the compiler can detect errors in lifetime annotations,
+why can’t it automatically infer the correct lifetime declarations?</p>
+</blockquote>
+<p>At first glance, this sounds like a compiler ergonomics problem. If Rust can reject the wrong annotation, why not infer the right one and save everyone the trouble?</p>
+<p>I think that framing misses the real issue. The important question is not “how smart is the compiler?” but “what information belongs in the function signature in the first place?”</p>
+<p>Once you look at lifetimes from the caller’s point of view, Rust’s design becomes much less arbitrary. Lifetime annotations are not there mainly because inference is hard. They are there because lifetime relationships are part of the API contract.</p>
+<p>This post is about that design choice, not about memorizing syntax rules.</p>
+<hr>
+<h2 id="i-starting-point-why-longest-cannot-just-be-auto-inferred" data-heading-text="I. The Starting Point: Why `longest` Cannot Just Be &quot;Auto-Inferred&quot;">I. The Starting Point: Why <code>longest</code> Cannot Just Be “Auto-Inferred”</h2>
+<p>Consider this classic example:</p>
+<div class="code-block" data-language="rust"><div class="code-header"><span class="code-language">rust</span></div><pre><code class="hljs language-rust"><span class="hljs-keyword">fn</span> <span class="hljs-title function_">longest</span>&lt;<span class="hljs-symbol">&#x27;a</span>&gt;(s1: &amp;<span class="hljs-symbol">&#x27;a</span> <span class="hljs-type">str</span>, s2: &amp;<span class="hljs-symbol">&#x27;a</span> <span class="hljs-type">str</span>) <span class="hljs-punctuation">-&gt;</span> &amp;<span class="hljs-symbol">&#x27;a</span> <span class="hljs-type">str</span> {
+    <span class="hljs-keyword">if</span> s1.<span class="hljs-title function_ invoke__">len</span>() &gt; s2.<span class="hljs-title function_ invoke__">len</span>() {
+        s1
+    } <span class="hljs-keyword">else</span> {
+        s2
+    }
+}
+</code></pre></div>
+<p>The instinct behind the question is obvious:</p>
+<ul>
+<li>The return value must be either <code>s1</code> or <code>s2</code></li>
+<li>Control flow is deterministic</li>
+<li>The compiler could easily trace the if/else branches to identify the return reference’s origin</li>
+</ul>
+<p>You might then try something like:</p>
+<div class="code-block" data-language="rust"><div class="code-header"><span class="code-language">rust</span></div><pre><code class="hljs language-rust"><span class="hljs-keyword">fn</span> <span class="hljs-title function_">longest</span>&lt;<span class="hljs-symbol">&#x27;a</span>, <span class="hljs-symbol">&#x27;b</span>&gt;(s1: &amp;<span class="hljs-symbol">&#x27;a</span> <span class="hljs-type">str</span>, s2: &amp;<span class="hljs-symbol">&#x27;b</span> <span class="hljs-type">str</span>) <span class="hljs-punctuation">-&gt;</span> &amp;<span class="hljs-type">str</span>
+</code></pre></div>
+<p>This naturally raises the question:</p>
+<blockquote>
+<p>Why can’t the compiler automatically infer the return value’s lifetime based on the function’s implementation?</p>
+</blockquote>
+<hr>
+<h2 id="ii-key-premise-callers-rely-signatures-not-implementations" data-heading-text="II. The Key Premise: Callers Rely on Signatures, Not Implementations">II. The Key Premise: Callers Rely on Signatures, Not Implementations</h2>
+<h3 id="1-function-calls-happen-at-signature-level" data-heading-text="1. Function Calls Happen at the Signature Level">1. Function Calls Happen at the Signature Level</h3>
+<p>From the caller’s perspective, a function is fundamentally a <strong>type signature</strong>:</p>
+<div class="code-block" data-language="rust"><div class="code-header"><span class="code-language">rust</span></div><pre><code class="hljs language-rust"><span class="hljs-keyword">fn</span> <span class="hljs-title function_">foo</span>(...) <span class="hljs-punctuation">-&gt;</span> ...
+</code></pre></div>
+<p>Callers may be dealing with:</p>
+<ul>
+<li>Functions from third-party crates</li>
+<li>Trait methods</li>
+<li>FFI boundaries</li>
+<li>Libraries with only type information, no source code</li>
+</ul>
+<p><strong>Callers can never—and should never—depend on function implementation details to determine lifetime safety.</strong></p>
+<hr>
+<h3 id="2-what-breaks-if-lifetimes-live-only-implementation" data-heading-text="2. What Breaks If Lifetimes Live Only in the Implementation?">2. What Breaks If Lifetimes Live Only in the Implementation?</h3>
+<p>If Rust permitted:</p>
+<blockquote>
+<p>“Automatically inferring return value lifetimes from function implementations”</p>
+</blockquote>
+<p>This would mean:</p>
+<ul>
+<li>Lifetimes would no longer be part of the API</li>
+<li>Caller safety reasoning would depend on implementation logic</li>
+<li>Any implementation change could silently alter API semantics</li>
+</ul>
+<p>This would directly violate module boundaries, crate boundaries, and version stability—entirely unacceptable from an engineering perspective.</p>
+<hr>
+<h2 id="iii-why-detecting-error-is-not-same-as-synthesizing-contract" data-heading-text="III. Why &quot;Detecting an Error&quot; Is Not the Same as &quot;Synthesizing the Contract&quot;">III. Why “Detecting an Error” Is Not the Same as “Synthesizing the Contract”</h2>
+<p>This is the point where the discussion usually gets muddled.</p>
+<h3 id="1-these-are-two-different-compiler-capabilities" data-heading-text="1. These Are Two Different Compiler Capabilities">1. These Are Two Different Compiler Capabilities</h3>
+<ul>
+<li>
+<p><strong>Verification Capability</strong>
+Determining “whether the current implementation satisfies your declared lifetime contract”</p>
+</li>
+<li>
+<p><strong>Synthesis Capability</strong>
+Generating a lifetime contract valid for all callers without any prior declaration</p>
+</li>
+</ul>
+<p>The first is a constraint-checking problem. The second is a specification problem. Those are not the same job.</p>
+<hr>
+<h3 id="2-even-infinite-compiler-budget-rust-would-still-avoid-this" data-heading-text="2. Even With Infinite Compiler Budget, Rust Would Still Avoid This">2. Even With Infinite Compiler Budget, Rust Would Still Avoid This</h3>
+<p>Theoretically, the compiler could:</p>
+<ul>
+<li>Analyze all control flow paths</li>
+<li>Analyze value flows, borrow relationships, and lifetime boundaries</li>
+<li>Infer a “widest” or “strictest” lifetime relationship</li>
+<li>Even generate an externally visible “automatic signature file” (like TypeScript’s <code>.d.ts</code> for lifetimes)</li>
+</ul>
+<p>Rust still does not choose this route, not because it is unimaginable, but because:</p>
+<ul>
+<li>Lifetimes are fundamentally <strong>external promises</strong></li>
+<li>Promises should not be generated by tools</li>
+<li>API semantics should not drift with implementation details</li>
+<li>Explicit declarations are the anchor point for API stability</li>
+</ul>
+<hr>
+<h3 id="3-why-rust-can-reject-bad-annotation-but-still-refuse-invent-one" data-heading-text="3. Why Rust Can Reject a Bad Annotation But Still Refuse to Invent One">3. Why Rust Can Reject a Bad Annotation But Still Refuse to Invent One</h3>
+<p>Because:</p>
+<ul>
+<li>The compiler can prove:
+<strong>The current implementation cannot satisfy your declared contract</strong></li>
+<li>But the compiler cannot decide for you:
+<strong>What lifetime relationship you intend to promise to callers</strong></li>
+</ul>
+<p>Lifetimes describe <strong>what the API author is willing to promise</strong>, not just facts extracted from one implementation. That promise has to come from the API author.</p>
+<hr>
+<h3 id="4-what-about-compiler-generated-suggestions" data-heading-text="4. What About Compiler-Generated Suggestions?">4. What About Compiler-Generated Suggestions?</h3>
+<p>One might ask: couldn’t the compiler generate a “recommended lifetime signature” for developers to review and confirm?</p>
+<p>That sounds appealing, but it does not really solve the design problem:</p>
+<ul>
+<li>For simple functions, developers can write correct annotations at a glance—no tool generation needed</li>
+<li>For complex functions, automatically inferred results are often either too conservative or too permissive, requiring developers to adjust based on business semantics</li>
+<li><strong>Most critically</strong>: lifetimes express “what I want to promise externally,” not “what the implementation permits”</li>
+</ul>
+<p>This is analogous to API design where return types should be determined by designers based on semantics, not inferred by compilers from implementations.
+Even if a compiler could analyze that “this function could return <code>Result&lt;T, E&gt;</code> or <code>Option&lt;T&gt;</code> or <code>T</code>,”
+the final choice remains an API design decision, not an automation problem.</p>
+<hr>
+<h2 id="iv-lifetimes-are-contracts-not-byproducts-inference" data-heading-text="IV. Lifetimes Are Contracts, Not Byproducts of Inference">IV. Lifetimes Are Contracts, Not Byproducts of Inference</h2>
+<h3 id="1-what-lifetime-signature-really-says" data-heading-text="1. What a Lifetime Signature Really Says">1. What a Lifetime Signature Really Says</h3>
+<p>When you write:</p>
+<div class="code-block" data-language="rust"><div class="code-header"><span class="code-language">rust</span></div><pre><code class="hljs language-rust"><span class="hljs-keyword">fn</span> <span class="hljs-title function_">f</span>&lt;<span class="hljs-symbol">&#x27;a</span>&gt;(x: &amp;<span class="hljs-symbol">&#x27;a</span> T, y: &amp;<span class="hljs-symbol">&#x27;a</span> T) <span class="hljs-punctuation">-&gt;</span> &amp;<span class="hljs-symbol">&#x27;a</span> T
+</code></pre></div>
+<p>What this really says is:</p>
+<blockquote>
+<p>“I promise: the return value’s lifetime will not outlive the shorter of <code>x</code> and <code>y</code>.”</p>
+</blockquote>
+<p>This is a <strong>static guarantee</strong> to callers, independent of which parameter the current implementation actually returns.</p>
+<hr>
+<h3 id="2-callers-trust-promise-not-current-body" data-heading-text="2. Callers Trust the Promise, Not the Current Body">2. Callers Trust the Promise, Not the Current Body</h3>
+<p>Precisely because of this:</p>
+<ul>
+<li>Callers need not examine implementations</li>
+<li>Multiple crates can compose safely</li>
+<li>Trait constraints remain stable</li>
+<li>Generic inference won’t break when implementations change</li>
+</ul>
+<hr>
+<h3 id="3-what-would-happen-if-lifetimes-were-auto-inferred" data-heading-text="3. What Would Happen If Lifetimes Were Auto-Inferred?">3. What Would Happen If Lifetimes Were Auto-Inferred?</h3>
+<div class="code-block" data-language="rust"><div class="code-header"><span class="code-language">rust</span></div><pre><code class="hljs language-rust"><span class="hljs-comment">// If lifetimes could be auto-inferred, what would happen?</span>
+<span class="hljs-keyword">fn</span> <span class="hljs-title function_">process</span>(config: &amp;Config, data: &amp;Data) <span class="hljs-punctuation">-&gt;</span> &amp;Output {
+    <span class="hljs-comment">// Version 1: returns a reference from data</span>
+    &amp;data.result
+}
+
+<span class="hljs-comment">// After some optimization</span>
+<span class="hljs-keyword">fn</span> <span class="hljs-title function_">process</span>(config: &amp;Config, data: &amp;Data) <span class="hljs-punctuation">-&gt;</span> &amp;Output {
+    <span class="hljs-comment">// Version 2: now returns a reference from config</span>
+    &amp;config.cached_result
+}
+
+<span class="hljs-comment">// With automatic lifetime inference:</span>
+<span class="hljs-comment">// - Version 1 infers: return value constrained by data</span>
+<span class="hljs-comment">// - Version 2 infers: return value constrained by config</span>
+<span class="hljs-comment">// - Caller code might silently compile, but semantics have changed!</span>
+</code></pre></div>
+<hr>
+<h2 id="v-once-lifetimes-are-signature-they-become-part-api" data-heading-text="V. Once Lifetimes Are in the Signature, They Become Part of the API">V. Once Lifetimes Are in the Signature, They Become Part of the API</h2>
+<h3 id="1-lifetimes-are-part-function-type" data-heading-text="1. Lifetimes Are Part of the Function Type">1. Lifetimes Are Part of the Function Type</h3>
+<p>These two functions are <strong>completely different APIs</strong> in Rust’s type system:</p>
+<div class="code-block" data-language="rust"><div class="code-header"><span class="code-language">rust</span></div><pre><code class="hljs language-rust"><span class="hljs-keyword">fn</span> <span class="hljs-title function_">f</span>&lt;<span class="hljs-symbol">&#x27;a</span>&gt;(x: &amp;<span class="hljs-symbol">&#x27;a</span> T, y: &amp;<span class="hljs-symbol">&#x27;a</span> T) <span class="hljs-punctuation">-&gt;</span> &amp;<span class="hljs-symbol">&#x27;a</span> T
+<span class="hljs-keyword">fn</span> <span class="hljs-title function_">f</span>&lt;<span class="hljs-symbol">&#x27;a</span>, <span class="hljs-symbol">&#x27;b</span>&gt;(x: &amp;<span class="hljs-symbol">&#x27;a</span> T, y: &amp;<span class="hljs-symbol">&#x27;b</span> T) <span class="hljs-punctuation">-&gt;</span> &amp;<span class="hljs-symbol">&#x27;a</span> T
+</code></pre></div>
+<p>Even if their implementation logic is identical.</p>
+<hr>
+<h3 id="2-changing-lifetimes-changes-contract" data-heading-text="2. Changing Lifetimes Changes the Contract">2. Changing Lifetimes Changes the Contract</h3>
+<p>Lifetime changes affect type inference and trait matching:</p>
+<ul>
+<li><strong>Tightening constraints</strong> (e.g., from <code>'a, 'b</code> to <code>'a</code>) is almost always a breaking change</li>
+<li><strong>Relaxing constraints</strong> (e.g., from <code>'a</code> to <code>'a, 'b</code>) is typically backward compatible but may still affect type inference</li>
+</ul>
+<p>More importantly: regardless of technical compatibility, <strong>lifetime changes fundamentally alter the API’s semantic promise</strong>.
+Under strict semantic versioning (SemVer) interpretation, any contract change should be treated as API evolution requiring careful consideration.</p>
+<hr>
+<h3 id="3-what-good-api-hygiene-looks-like" data-heading-text="3. What Good API Hygiene Looks Like">3. What Good API Hygiene Looks Like</h3>
+<ul>
+<li>Implementations may be more conservative internally, but external contracts must remain stable</li>
+<li>To change lifetime semantics, define a new method or new API</li>
+<li>Published methods’ lifetime contracts should be considered frozen</li>
+</ul>
+<hr>
+<h2 id="vi-real-reason-rust-requires-explicit-lifetimes" data-heading-text="VI. The Real Reason Rust Requires Explicit Lifetimes">VI. The Real Reason Rust Requires Explicit Lifetimes</h2>
+<p>Putting it together, Rust’s insistence on explicit lifetimes comes from two layers of reasoning:</p>
+<h3 id="design-level-contracts-need-be-explicit" data-heading-text="Design Level: Contracts Need to Be Explicit">Design Level: Contracts Need to Be Explicit</h3>
+<p>Lifetimes in function signatures are <strong>static promises from API providers to callers</strong>, expressing:</p>
+<ul>
+<li>“When I publish this function, I intend the return value to be constrained by these inputs”</li>
+<li>Not “whatever relationship the current implementation happens to imply today”</li>
+</ul>
+<p>These promises:</p>
+<ul>
+<li>Must exist independently of implementations (to support modularity, traits, FFI)</li>
+<li>Must remain stable once published (engineering maintainability)</li>
+<li>Can only be explicitly provided by API designers (reflecting design intent)</li>
+</ul>
+<p><strong>Therefore, lifetimes are inherently not “implementation details that can be auto-inferred,” but rather “contract clauses that must be explicitly declared.”</strong></p>
+<h3 id="implementation-level-full-inference-would-still-be-costly-and-ambiguous" data-heading-text="Implementation Level: Full Inference Would Still Be Costly and Ambiguous">Implementation Level: Full Inference Would Still Be Costly and Ambiguous</h3>
+<p>Even disregarding contract nature, purely technical full-scale automatic lifetime synthesis faces:</p>
+<ul>
+<li>Control flow analysis complexity (exponential growth)</li>
+<li>Cross-crate compilation information propagation costs</li>
+<li>Semantic ambiguity in inference results (widest? strictest? caller perspective?)</li>
+</ul>
+<p>However, these are <strong>engineering constraints</strong>, not design motivations.</p>
+<p>The deeper point is this: <strong>Rust makes lifetimes explicit because it wants signatures to carry the borrowing contract in a stable, composable way.</strong></p>
+<p>Callers can only depend on signatures, not implementations, so lifetime relationships must be explicitly declared by providers; once published, lifetimes become an inseparable part of method signatures—any change equals defining a new method.</p>
+<p>From that perspective, Rust’s design is coherent: lifetimes are <strong>declarative contracts</strong>, not implementation exhaust. The compiler verifies that your code satisfies the contract; it does not decide the contract on your behalf.</p>
+<p>That is not a workaround for a weak compiler. It is a deliberate choice about where API meaning should live.</p>
+
+      </div>
+<div class="article-actions" aria-label="Article actions">
+      <a class="share-link" href="https://twitter.com/intent/tweet?text=Why+Rust+Makes+Lifetime+Annotations+Part+of+the+API&amp;url=https%3A%2F%2Fkingson4wu.github.io%2Fen%2Fposts%2Fwhy-rust-requires-explicit-lifetime-annotations-caller-contracts-design-essence%2F" target="_blank" rel="noopener noreferrer" aria-label="Share on X">
+        <span aria-hidden="true">X</span>
+        <span>Share</span>
+      </a>
+    </div>
+    </article>
+<aside class="article-toc" data-article-toc aria-label="Contents">
+      <button class="article-toc-toggle" type="button" data-article-toc-toggle aria-expanded="false" aria-controls="article-toc-panel" aria-label="Open contents" data-open-label="Open contents" data-close-label="Close contents">
+        <svg aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M8 6h11"></path>
+          <path d="M8 12h11"></path>
+          <path d="M8 18h11"></path>
+          <path d="M4 6h.01"></path>
+          <path d="M4 12h.01"></path>
+          <path d="M4 18h.01"></path>
+        </svg>
+      </button>
+      <nav id="article-toc-panel" class="article-toc-panel" data-article-toc-panel aria-label="Contents">
+        <div class="article-toc-heading">Contents</div>
+        <ol class="article-toc-list">
+          <li class="article-toc-level-2"><a href="#i-starting-point-why-longest-cannot-just-be-auto-inferred" data-article-toc-link>I. The Starting Point: Why `longest` Cannot Just Be &quot;Auto-Inferred&quot;</a></li>
+          <li class="article-toc-level-2"><a href="#ii-key-premise-callers-rely-signatures-not-implementations" data-article-toc-link>II. The Key Premise: Callers Rely on Signatures, Not Implementations</a></li>
+          <li class="article-toc-level-3"><a href="#1-function-calls-happen-at-signature-level" data-article-toc-link>1. Function Calls Happen at the Signature Level</a></li>
+          <li class="article-toc-level-3"><a href="#2-what-breaks-if-lifetimes-live-only-implementation" data-article-toc-link>2. What Breaks If Lifetimes Live Only in the Implementation?</a></li>
+          <li class="article-toc-level-2"><a href="#iii-why-detecting-error-is-not-same-as-synthesizing-contract" data-article-toc-link>III. Why &quot;Detecting an Error&quot; Is Not the Same as &quot;Synthesizing the Contract&quot;</a></li>
+          <li class="article-toc-level-3"><a href="#1-these-are-two-different-compiler-capabilities" data-article-toc-link>1. These Are Two Different Compiler Capabilities</a></li>
+          <li class="article-toc-level-3"><a href="#2-even-infinite-compiler-budget-rust-would-still-avoid-this" data-article-toc-link>2. Even With Infinite Compiler Budget, Rust Would Still Avoid This</a></li>
+          <li class="article-toc-level-3"><a href="#3-why-rust-can-reject-bad-annotation-but-still-refuse-invent-one" data-article-toc-link>3. Why Rust Can Reject a Bad Annotation But Still Refuse to Invent One</a></li>
+          <li class="article-toc-level-3"><a href="#4-what-about-compiler-generated-suggestions" data-article-toc-link>4. What About Compiler-Generated Suggestions?</a></li>
+          <li class="article-toc-level-2"><a href="#iv-lifetimes-are-contracts-not-byproducts-inference" data-article-toc-link>IV. Lifetimes Are Contracts, Not Byproducts of Inference</a></li>
+          <li class="article-toc-level-3"><a href="#1-what-lifetime-signature-really-says" data-article-toc-link>1. What a Lifetime Signature Really Says</a></li>
+          <li class="article-toc-level-3"><a href="#2-callers-trust-promise-not-current-body" data-article-toc-link>2. Callers Trust the Promise, Not the Current Body</a></li>
+          <li class="article-toc-level-3"><a href="#3-what-would-happen-if-lifetimes-were-auto-inferred" data-article-toc-link>3. What Would Happen If Lifetimes Were Auto-Inferred?</a></li>
+          <li class="article-toc-level-2"><a href="#v-once-lifetimes-are-signature-they-become-part-api" data-article-toc-link>V. Once Lifetimes Are in the Signature, They Become Part of the API</a></li>
+          <li class="article-toc-level-3"><a href="#1-lifetimes-are-part-function-type" data-article-toc-link>1. Lifetimes Are Part of the Function Type</a></li>
+          <li class="article-toc-level-3"><a href="#2-changing-lifetimes-changes-contract" data-article-toc-link>2. Changing Lifetimes Changes the Contract</a></li>
+          <li class="article-toc-level-3"><a href="#3-what-good-api-hygiene-looks-like" data-article-toc-link>3. What Good API Hygiene Looks Like</a></li>
+          <li class="article-toc-level-2"><a href="#vi-real-reason-rust-requires-explicit-lifetimes" data-article-toc-link>VI. The Real Reason Rust Requires Explicit Lifetimes</a></li>
+          <li class="article-toc-level-3"><a href="#design-level-contracts-need-be-explicit" data-article-toc-link>Design Level: Contracts Need to Be Explicit</a></li>
+          <li class="article-toc-level-3"><a href="#implementation-level-full-inference-would-still-be-costly-and-ambiguous" data-article-toc-link>Implementation Level: Full Inference Would Still Be Costly and Ambiguous</a></li>
+        </ol>
+      </nav>
+    </aside>
+    <script src="/scripts/article-toc.js" defer></script>
+    <nav class="article-nav" aria-label="Adjacent posts">
+      <a href="/en/posts/nondeterminism-llm-inference-floating-point-arithmetic-engineering-implementation/"><span>Previous</span>Why Temperature-0 LLM Inference Still Isn’t Deterministic</a>
+      <a href="/en/posts/intuition-first-explanation-after/"><span>Next</span>Intuition First, Explanation After: What Humans and LLMs Have in Common</a>
+    </nav>
+<section class="comments" aria-labelledby="comments-heading">
+      <h2 id="comments-heading">Comments</h2>
+      <div
+        data-comments
+        data-comments-repo="Kingson4Wu/kingson4wu.github.io"
+        data-comments-issue-term="pathname"
+        data-comments-label="comment"
+      ></div>
+    </section>
+    <script src="/scripts/comments.js" defer></script>
+  </main>
+  <footer class="site-footer">
+    <p>&copy; 2026 Kingson Wu</p>
+  </footer>
+  <button class="reading-return" type="button" data-reading-return aria-label="Back to start" title="Back to start">
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <path d="M12 19V5"></path>
+      <path d="m6 11 6-6 6 6"></path>
+    </svg>
+  </button>
+  <script src="/scripts/theme.js"></script>
+  <script src="/scripts/image-viewer.js"></script>
+  <script src="/scripts/reading-tools.js"></script>
+</body>
+</html>

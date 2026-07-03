@@ -1,0 +1,31 @@
+# 程序异常时能返回50x吗？
+
+Canonical: https://kingson4wu.github.io/zh/posts/20200708-2/
+Markdown: https://kingson4wu.github.io/zh/posts/20200708-2/index.md
+Language: zh
+Type: post
+Date: 2020-07-08
+Tags: Reliability
+
+问题描述 内网nginx配置 proxy_next_upstream error timeout http_500 http_502 http_503 http_504; proxy_upstream_tries 5; 表示超时或50x(500,502,503,504)，nginx会进行重试，一共5次 2. 服务的程序...
+
+---
+
+![](/assets/zh/shared/photo/Gerrard_2.jpeg)
+
+### 问题描述
+
+1. 内网nginx配置
+<pre>
+proxy_next_upstream error timeout http_500 http_502 http_503 http_504;
+proxy_upstream_tries 5;
+</pre>
+表示超时或50x(500,502,503,504)，nginx会进行重试，一共5次
+2. 服务的程序有bug，报NullPointException，实际逻辑已经执行成功
+3. 服务使用springboot，默认异常时返回的HTTP状态是500
+4. nginx收到500之后，进行重试
+5. 服务的接口不幂等
+
+### 解决
+1. 很难保证服务的所有接口都幂等，并且是外网的幂等
+2. 服务的统一异常拦截，最好把状态码设置成200，调用方通过业务错误码判断，避免nginx误重试。

@@ -1,0 +1,43 @@
+# Kingson Wu / 拉巴力的纸皮箱
+
+> Bilingual personal blog about software engineering, AI systems, architecture, programming, and learning.
+
+## Site
+
+- Canonical: https://kingson4wu.github.io
+- English home: https://kingson4wu.github.io/en/
+- Chinese home: https://kingson4wu.github.io/zh/
+- Sitemap: https://kingson4wu.github.io/sitemap.xml
+- Full AI context: https://kingson4wu.github.io/llms-full.txt
+- Structured profile JSON: https://kingson4wu.github.io/ai-profile.json
+
+## Content Themes
+
+- AI systems and agent engineering
+- software architecture and distributed systems
+- programming languages, especially Rust, Go, Python, and Java
+- engineering practice, career reflection, and reading notes
+
+## Feeds
+
+- English RSS: https://kingson4wu.github.io/en/feed.xml
+- Chinese RSS: https://kingson4wu.github.io/zh/feed.xml
+
+## Latest Public Writing
+
+- [Skill 机制与编排流程深度解析：Anthropic vs OpenAI Agent SDK 对比](https://kingson4wu.github.io/zh/posts/20260419-skill-anthropic-vs-openai-agent-sdk/) — 2026 年 4 月 15 日，OpenAI 发布 Agents SDK v0.14.0，引入了 SandboxAgent + Capabilities 架构。本地 Skill 加载（Skills Capability、LocalDirLazySkillSource、load_skill 工具）终于成为了 SDK 一等...
+- [技术进步与分配失衡：AI时代的结构性矛盾](https://kingson4wu.github.io/zh/posts/20260331/) — AI替代认知劳动的边际成本趋近于零，导致经济增长与就业增长脱钩；AI是资本增强器而非劳动增强器，分配机制滞后于生产力发展，形成结构性失衡。
+- [从 Skill 化到控制权：AI 系统中的能力分层与资产保护](https://kingson4wu.github.io/zh/posts/20260331-skill-ai/) — 当 AI 系统将任务封装为 Skills 交给外部执行时，哪些能力可以暴露，哪些必须留在内部？本文从数据暴露的三种形态出发，提出通用能力、业务能力、核心能力的三层划分框架，以及“最小输入而非脱敏”的数据策略。
+- [Technology Advances, Distribution Lags: The Structural Contradiction of the AI Era](https://kingson4wu.github.io/en/posts/ai-structural-distribution-imbalance/) — AI is approaching zero marginal cost for cognitive labor, decoupling economic growth from employment. This is not the same story as previous industrial revolutions.
+- [Skills May Matter More Than Agents](https://kingson4wu.github.io/en/notes/skills-may-matter-more-than-agents/) — Main AI vendors may be converging on a common pattern: the SDK provides the Runtime; developers own the Skills. A Skill is fundamentally an act of knowledge ext...
+- [Skill 可能比 Agent 更像长期资产](https://kingson4wu.github.io/zh/notes/20260329-skill-agent/) — 主流 AI 厂商或许正在趋同于一种模式：SDK 提供 Runtime，开发者负责 Skills。 Skill 本质是在做知识外化——把工作流、业务规则和验证过的处理逻辑，转成结构化、可复用的能力单元。从这个角度看，更具长期价值的，可能是 Skills，而不是 Agent。 同时，Agent Runtime 正在走向基础...
+- [Harness Engineering Is Not a New Paradigm](https://kingson4wu.github.io/en/notes/harness-engineering-is-not-new-paradigm/) — Most people are treating Harness Engineering like it’s a new paradigm. It’s not. Start from first principles: an LLM takes input and produces output. The model...
+- [从自建 Agent 到 Agent Runtime + Skill：AI 系统架构的演进与收敛](https://kingson4wu.github.io/zh/posts/20260328-agent-agent-runtime-skill-ai/) — 从系统分层视角梳理 AI 应用从自建 Agent 走向 Runtime 与 Skill 组合架构的演进逻辑。
+- [从第一性原理看 Harness Engineering](https://kingson4wu.github.io/zh/notes/20260328-harness-engineering/) — LLM 只做一件事：给定输入，生成输出。 模型是固定的。你能控制的，其实只有输入，以及围绕输入输出构建的系统。 由此派生出两个真实的工程问题域。 问题域 A：如何构造更好的输入 这是一个连续的复杂度谱系： 手工写指令 -&gt; Prompt Engineering 动态检索、拼装、压缩信息 -&gt; Context...
+- [From Custom Agents to Agent Runtime + Skill: Convergence in AI System Architecture](https://kingson4wu.github.io/en/posts/agent-runtime-and-skill-convergence/) — A systems-level view of how AI applications are evolving from bespoke agent implementations toward a layered architecture of interchangeable Runtime and reusable Skills.
+- [MCP and Skills Solve Different Problems](https://kingson4wu.github.io/en/notes/mcp-and-skills-solve-different-problems/) — MCP is basically a capability contract. It tells you what tools exist, how to call them, and what the permission boundaries are. A Skill is a different thing en...
+- [MCP、Skill 与 CLI 的分化与协同](https://kingson4wu.github.io/zh/notes/20260327-mcp-skill-cli/) — MCP 更像是一份“平台能力说明书”。 它定义了有哪些工具、怎么调用、权限边界在哪。 Skill 则是在回答另一类问题：具体怎么把事做完。它本质上是 prompt 加上工具使用策略的封装。 Skill 之所以更好用，是因为关键步骤、调用方式、甚至容错逻辑，都已经被提前写进去了。这本来就不是 MCP 要解决的问题。 至于...
+
+## Markdown Routes
+
+Every article and note has an adjacent Markdown representation at `index.md`, linked from the HTML page with `rel="alternate" type="text/markdown"`.

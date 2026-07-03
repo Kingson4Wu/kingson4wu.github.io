@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>理解状态机原理及实践 | 拉巴力的纸皮箱</title>
+  <meta name="description" content="基本概念 有限状态机FSM 描述事物的有限状态机模型的元素由以下组成： 状态(State)：事物的状态，包括初始状态和所有事件触发后的状态 事件(Event)：触发状态变化或者保持原状态的事件 行为或转换(Action/Transition)：执行状态转换的过程 检测器(Guard)：检测某种状态要转换成另一种状态的条...">
+  <link rel="canonical" href="https://kingson4wu.github.io/zh/posts/20220223/">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="alternate" type="application/rss+xml" title="拉巴力的纸皮箱" href="/zh/feed.xml">
+  <link rel="alternate" type="text/markdown" href="/zh/posts/20220223/index.md">
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="/styles/main.css">
+  <script>
+    try {
+      var theme = localStorage.getItem('theme');
+      if (theme) document.documentElement.dataset.theme = theme;
+    } catch (_) {}
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="site-title" href="/zh/" aria-label="拉巴力的纸皮箱">
+      <span class="site-logo" aria-hidden="true">K</span>
+      <span>拉巴力的纸皮箱</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="/zh/posts/">文章</a>
+      <a href="/zh/notes/">笔记</a>
+      <a href="/zh/tags/">标签</a>
+      <a href="/zh/about/">关于</a>
+      <a href="/zh/search/">搜索</a>
+      <a href="/en/" lang="en">English</a>
+      <a class="feed-link" href="/zh/feed.xml" aria-label="订阅更新" title="订阅更新">
+        <svg class="feed-icon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M5 5.5A13.5 13.5 0 0 1 18.5 19"></path>
+          <path d="M5 11A8 8 0 0 1 13 19"></path>
+          <circle cx="6" cy="18" r="1.5"></circle>
+        </svg>
+      </a>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换明暗模式" title="切换明暗模式">
+        <svg class="theme-icon theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M21 14.2A8.5 8.5 0 0 1 9.8 3 7 7 0 1 0 21 14.2Z"></path>
+        </svg>
+        <svg class="theme-icon theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"></path>
+        </svg>
+      </button>
+    </nav>
+  </header>
+  <main class="site-main">
+    <article class="article">
+      <header class="article-header">
+        <h1>理解状态机原理及实践</h1>
+        <time datetime="2022-02-23T05:42:47.000Z">2022年2月23日</time>
+<ul class="tag-list" aria-label="Tags">
+    <li><a href="/zh/tags/Architecture/">Architecture</a></li>
+  </ul>
+      </header>
+      <div class="prose">
+<h2 id="section-1" data-heading-text="基本概念">基本概念</h2>
+<ul>
+<li>
+<p>有限状态机FSM</p>
+</li>
+<li>
+<p>描述事物的有限状态机模型的元素由以下组成：</p>
+<ol>
+<li>状态(State)：事物的状态，包括初始状态和所有事件触发后的状态</li>
+<li>事件(Event)：触发状态变化或者保持原状态的事件</li>
+<li>行为或转换(Action/Transition)：执行状态转换的过程</li>
+<li>检测器(Guard)：检测某种状态要转换成另一种状态的条件是否满足</li>
+</ol>
+</li>
+<li>
+<p><a href="https://www.jianshu.com/p/37281543f506">https://www.jianshu.com/p/37281543f506</a></p>
+</li>
+<li>
+<p><a href="https://zhuanlan.zhihu.com/p/46347732">深入浅出理解有限状态机</a></p>
+</li>
+<li>
+<p>状态机的要素</p>
+</li>
+<li>
+<p>状态机可归纳为4个要素，即现态、条件、动作、次态。“现态”和“条件”是因，“动作”和“次态”是果。详解如下：
+1. 现态：是指当前所处的状态。
+2. 条件：又称为“事件”。当一个条件被满足，将会触发一个动作，或者执行一次状态的迁移。
+3. 动作：条件满足后执行的动作。动作执行完毕后，可以迁移到新的状态，也可以仍旧保持原状态。动作不是必需的，当条件满足后，也可以不执行任何动作，直接迁移到新状态。
+4. 次态：条件满足后要迁往的新状态。“次态”是相对于“现态”而言的，“次态”一旦被激活，就转变成新的“现态”了。</p>
+</li>
+</ul>
+<h2 id="section-2" data-heading-text="代码实现">代码实现</h2>
+<ol>
+<li>定义状态</li>
+</ol>
+<div class="code-block" data-language="java"><div class="code-header"><span class="code-language">java</span></div><pre><code class="hljs language-java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">enum</span> <span class="hljs-title class_">ProcessState</span> {
+
+    INIT(<span class="hljs-number">0</span>, <span class="hljs-string">&quot;未开始&quot;</span>),
+    READY_ONE_SIDE(<span class="hljs-number">1</span>, <span class="hljs-string">&quot;一方准备完成&quot;</span>),
+    READY_ALL(<span class="hljs-number">2</span>, <span class="hljs-string">&quot;双方准备完成&quot;</span>),
+    CHAT(<span class="hljs-number">3</span>, <span class="hljs-string">&quot;发言完成&quot;</span>),
+    END(<span class="hljs-number">4</span>, <span class="hljs-string">&quot;结束&quot;</span>),
+    ;
+
+    <span class="hljs-keyword">private</span> <span class="hljs-type">int</span> val;
+    <span class="hljs-keyword">private</span> String desc;
+
+    ProcessState(<span class="hljs-type">int</span> val, String desc) {
+        <span class="hljs-built_in">this</span>.val = val;
+        <span class="hljs-built_in">this</span>.desc = desc;
+    }
+
+    <span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">getVal</span><span class="hljs-params">()</span> {
+        <span class="hljs-keyword">return</span> val;
+    }
+}
+</code></pre></div>
+<ol start="2">
+<li>定义事件</li>
+</ol>
+<div class="code-block" data-language="java"><div class="code-header"><span class="code-language">java</span></div><pre><code class="hljs language-java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">enum</span> <span class="hljs-title class_">ProcessEvent</span> {
+
+    READY_ONE_SIDE(<span class="hljs-number">1</span>, <span class="hljs-string">&quot;一方准备&quot;</span>),
+		READY_ALL(<span class="hljs-number">2</span>, <span class="hljs-string">&quot;另一方准备&quot;</span>),
+		CHAT(<span class="hljs-number">3</span>, <span class="hljs-string">&quot;发言&quot;</span>),
+		FORBID_ALL(<span class="hljs-number">4</span>, <span class="hljs-string">&quot;全员禁言&quot;</span>),
+    ;
+
+    <span class="hljs-keyword">private</span> Integer code;
+    <span class="hljs-keyword">private</span> String desc;
+
+    ProcessEvent(Integer code, String desc) {
+        <span class="hljs-built_in">this</span>.code = code;
+        <span class="hljs-built_in">this</span>.desc = desc;
+    }
+
+    <span class="hljs-keyword">public</span> Integer <span class="hljs-title function_">getCode</span><span class="hljs-params">()</span> {
+        <span class="hljs-keyword">return</span> code;
+    }
+}
+</code></pre></div>
+<ol start="3">
+<li>定义状态机</li>
+</ol>
+<div class="code-block" data-language="java"><div class="code-header"><span class="code-language">java</span></div><pre><code class="hljs language-java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ProcessEventConfig</span> {
+
+    <span class="hljs-keyword">private</span> ProcessEvent event;
+    <span class="hljs-keyword">private</span> ProcessState fromState;
+    <span class="hljs-keyword">private</span> ProcessState toState;
+
+    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">desc</span><span class="hljs-params">()</span>{
+        <span class="hljs-keyword">return</span> fromState.getDesc() + <span class="hljs-string">&quot;_&quot;</span> + event.getDesc() + <span class="hljs-string">&quot;_&quot;</span> + toState.getDesc();
+    }
+}
+
+
+List&lt;ProcessEventConfig&gt; configList = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;(<span class="hljs-number">16</span>);
+configList.add(<span class="hljs-keyword">new</span> <span class="hljs-title class_">ProcessEventConfig</span>(ProcessEvent.READY_ONE_SIDE, ProcessState.INIT, ProcessState.READY_ONE_SIDE));
+configList.add(<span class="hljs-keyword">new</span> <span class="hljs-title class_">ProcessEventConfig</span>(ProcessEvent.READY_ALL, ProcessState.READY_ONE_SIDE, ProcessState.READY_ALL));
+configList.add(<span class="hljs-keyword">new</span> <span class="hljs-title class_">ProcessEventConfig</span>(ProcessEvent.CHAT, ProcessState.READY_ALL, ProcessState.CHAT));
+configList.add(<span class="hljs-keyword">new</span> <span class="hljs-title class_">ProcessEventConfig</span>(ProcessEvent.FORBID_ALL, ProcessState.CHAT, ProcessState.END));
+
+Map&lt;ProcessEvent, ProcessEventConfig&gt; eventResultStateConfigMap = <span class="hljs-keyword">new</span> <span class="hljs-title class_">EnumMap</span>&lt;&gt;(ProcessEvent.class);
+
+configList.forEach(eventConfig -&gt; eventResultStateConfigMap.put(eventConfig.getEvent(), eventConfig));
+
+</code></pre></div>
+<ol start="4">
+<li>触发状态变化</li>
+</ol>
+<div class="code-block" data-language="java"><div class="code-header"><span class="code-language">java</span></div><pre><code class="hljs language-java"><span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">fire</span><span class="hljs-params">(ProcessEvent event, Process process)</span> {
+
+        <span class="hljs-type">ProcessEventConfig</span> <span class="hljs-variable">config</span> <span class="hljs-operator">=</span> Optional.ofNullable(eventResultStateConfigMap.get(event)).orElseThrow(() -&gt; ExceptionCodeEnum.AGRS_INVALID.newException(<span class="hljs-string">&quot;不存在该事件&quot;</span>));
+
+        <span class="hljs-keyword">if</span> (process.getStatus() != config.getFromState().getVal()) {
+            <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+        }
+        process.setRemark(config.desc());
+        process.setStatus(config.getToState().getVal());
+
+				<span class="hljs-comment">//DB改变状态</span>
+				<span class="hljs-comment">/*update table set status=${status} WHERE id={id} AND status=${beforeStatus}*/</span>
+        <span class="hljs-type">boolean</span> <span class="hljs-variable">suc</span> <span class="hljs-operator">=</span> processManager.updateStatus(process, config.getFromState().getVal());
+        <span class="hljs-keyword">if</span> (suc) {
+               <span class="hljs-comment">//变更成功，业务逻辑</span>
+        }
+        <span class="hljs-keyword">return</span> suc;
+}
+</code></pre></div>
+
+      </div>
+<div class="article-actions" aria-label="Article actions">
+      <a class="share-link" href="https://twitter.com/intent/tweet?text=%E7%90%86%E8%A7%A3%E7%8A%B6%E6%80%81%E6%9C%BA%E5%8E%9F%E7%90%86%E5%8F%8A%E5%AE%9E%E8%B7%B5&amp;url=https%3A%2F%2Fkingson4wu.github.io%2Fzh%2Fposts%2F20220223%2F" target="_blank" rel="noopener noreferrer" aria-label="Share on X">
+        <span aria-hidden="true">X</span>
+        <span>Share</span>
+      </a>
+    </div>
+    </article>
+<aside class="article-toc" data-article-toc aria-label="目录">
+      <button class="article-toc-toggle" type="button" data-article-toc-toggle aria-expanded="false" aria-controls="article-toc-panel" aria-label="打开目录" data-open-label="打开目录" data-close-label="收起目录">
+        <svg aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M8 6h11"></path>
+          <path d="M8 12h11"></path>
+          <path d="M8 18h11"></path>
+          <path d="M4 6h.01"></path>
+          <path d="M4 12h.01"></path>
+          <path d="M4 18h.01"></path>
+        </svg>
+      </button>
+      <nav id="article-toc-panel" class="article-toc-panel" data-article-toc-panel aria-label="目录">
+        <div class="article-toc-heading">目录</div>
+        <ol class="article-toc-list">
+          <li class="article-toc-level-2"><a href="#section-1" data-article-toc-link>基本概念</a></li>
+          <li class="article-toc-level-2"><a href="#section-2" data-article-toc-link>代码实现</a></li>
+        </ol>
+      </nav>
+    </aside>
+    <script src="/scripts/article-toc.js" defer></script>
+    <nav class="article-nav" aria-label="Adjacent posts">
+      <a href="/zh/posts/20220220/"><span>Previous</span>nba选秀抽签具体是如何操作的？</a>
+      <a href="/zh/posts/20220228/"><span>Next</span>经典排序算法</a>
+    </nav>
+<section class="comments" aria-labelledby="comments-heading">
+      <h2 id="comments-heading">评论</h2>
+      <div
+        data-comments
+        data-comments-repo="Kingson4Wu/kingson4wu.github.io"
+        data-comments-issue-term="pathname"
+        data-comments-label="comment"
+      ></div>
+    </section>
+    <script src="/scripts/comments.js" defer></script>
+  </main>
+  <footer class="site-footer">
+    <p>&copy; 2026 拉巴力的纸皮箱</p>
+  </footer>
+  <button class="reading-return" type="button" data-reading-return aria-label="回到开头" title="回到开头">
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <path d="M12 19V5"></path>
+      <path d="m6 11 6-6 6 6"></path>
+    </svg>
+  </button>
+  <script src="/scripts/theme.js"></script>
+  <script src="/scripts/image-viewer.js"></script>
+  <script src="/scripts/reading-tools.js"></script>
+</body>
+</html>

@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>如何接手一个旧项目 | 拉巴力的纸皮箱</title>
+  <meta name="description" content="改变心态，以前会抱怨业务乱，但是业务在发展过程中乱是很正常的，也要有人来主动整理，同时也在考验和锻炼整理人的能力。 梳理现有业务文档，进行归类(如果有的话？) 拉代码，服务本地跑起来，并跑通单元测试 梳理服务现有的所有监控平台和数据 梳理服务的依赖关系和超时时间 梳理服务的依赖组件（MQ，Redis，DB等）和部署情况...">
+  <link rel="canonical" href="https://kingson4wu.github.io/zh/posts/20200714-3/">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="alternate" type="application/rss+xml" title="拉巴力的纸皮箱" href="/zh/feed.xml">
+  <link rel="alternate" type="text/markdown" href="/zh/posts/20200714-3/index.md">
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="/styles/main.css">
+  <script>
+    try {
+      var theme = localStorage.getItem('theme');
+      if (theme) document.documentElement.dataset.theme = theme;
+    } catch (_) {}
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="site-title" href="/zh/" aria-label="拉巴力的纸皮箱">
+      <span class="site-logo" aria-hidden="true">K</span>
+      <span>拉巴力的纸皮箱</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="/zh/posts/">文章</a>
+      <a href="/zh/notes/">笔记</a>
+      <a href="/zh/tags/">标签</a>
+      <a href="/zh/about/">关于</a>
+      <a href="/zh/search/">搜索</a>
+      <a href="/en/" lang="en">English</a>
+      <a class="feed-link" href="/zh/feed.xml" aria-label="订阅更新" title="订阅更新">
+        <svg class="feed-icon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M5 5.5A13.5 13.5 0 0 1 18.5 19"></path>
+          <path d="M5 11A8 8 0 0 1 13 19"></path>
+          <circle cx="6" cy="18" r="1.5"></circle>
+        </svg>
+      </a>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换明暗模式" title="切换明暗模式">
+        <svg class="theme-icon theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M21 14.2A8.5 8.5 0 0 1 9.8 3 7 7 0 1 0 21 14.2Z"></path>
+        </svg>
+        <svg class="theme-icon theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"></path>
+        </svg>
+      </button>
+    </nav>
+  </header>
+  <main class="site-main">
+    <article class="article">
+      <header class="article-header">
+        <h1>如何接手一个旧项目</h1>
+        <time datetime="2020-07-14T13:57:47.000Z">2020年7月14日</time>
+<ul class="tag-list" aria-label="Tags">
+    <li><a href="/zh/tags/Architecture/">Architecture</a></li>
+    <li><a href="/zh/tags/Career/">Career</a></li>
+  </ul>
+      </header>
+      <div class="prose">
+<blockquote>
+<blockquote>
+<p>改变心态，以前会抱怨业务乱，但是业务在发展过程中乱是很正常的，也要有人来主动整理，同时也在考验和锻炼整理人的能力。</p>
+</blockquote>
+</blockquote>
+<ol>
+<li>梳理现有业务文档，进行归类(如果有的话？)</li>
+<li>拉代码，服务本地跑起来，并跑通单元测试</li>
+<li>梳理服务现有的所有监控平台和数据</li>
+<li>梳理服务的依赖关系和超时时间</li>
+<li>梳理服务的依赖组件（MQ，Redis，DB等）和部署情况</li>
+<li>数据库表梳理</li>
+<li>了解服务的部署和灾备架构（机器数，机房，流量入口）</li>
+<li>代码核心逻辑阅读（核心流量接口）</li>
+<li>了解服务的监控情况，常用配置和开关，相关告警配置通知人</li>
+<li>待优化任务和遗留问题接手</li>
+</ol>
+<h2 id="section-1" data-heading-text="扩展">扩展</h2>
+<ul>
+<li><a href="https://mp.weixin.qq.com/s/lJAbzU43RJU-YLFMfiM__w">软件泥潭真体验</a>
+<ul>
+<li>“定时炸弹”</li>
+</ul>
+</li>
+</ul>
+<pre>
+附录1: 交接列表示例（设计与开发）
+
+## 项目管理
+	- 项目日程 
+	- 会议记录
+	- 体制图 
+## 项目要件
+	- 业务功能清单 
+	- 业务流程图 
+	- 需求变更记录 
+	- 操作说明书/用户手册 
+	- 常见问题一览 
+## 界面设计
+	- UE设计稿
+	- 高保真画面设计稿
+	- 需求变更一览
+## 系统设计
+	- 系统架构设计图
+	- 部署架构图DB关联图（ER图）和DB详细设计
+	- 系统间集成关系图
+	- 对接系统一览表和对接系统接口清单
+## 开发制作
+	- 源代码
+	- 代码运行说明
+## 测试
+	- 系统测试用例与系统测试报告书
+	- 性能测试用例与性能测试报告书
+	- 用户测试用例
+	- 用户测试签字
+
+附录2: 交接列表示例（运维相关）
+
+## 上线相关
+	- 上线判定表
+	- 上线操作记录
+	- 历次上线版本说明
+	- 临时对应体制
+## 基础设施
+	- 硬件资源一览
+	- 软件资源一览
+	- 服务器/系统账号权限
+	- 系统工具 - 付费/免费软件
+## 运维体制
+	- 运维工作一览表
+	- 近半年运维工作应对流程
+	- 运维体制
+	- 故障对应流程
+	- SLA（服务水平协议）
+## DEVOPS（开发运维一体化）
+	- CI/CD工具与使用
+	- 监控工具
+	- 备份管理
+	- 代码库与分支管理
+	- 数据库相关配置与策略
+
+</pre>
+
+      </div>
+<div class="article-actions" aria-label="Article actions">
+      <a class="share-link" href="https://twitter.com/intent/tweet?text=%E5%A6%82%E4%BD%95%E6%8E%A5%E6%89%8B%E4%B8%80%E4%B8%AA%E6%97%A7%E9%A1%B9%E7%9B%AE&amp;url=https%3A%2F%2Fkingson4wu.github.io%2Fzh%2Fposts%2F20200714-3%2F" target="_blank" rel="noopener noreferrer" aria-label="Share on X">
+        <span aria-hidden="true">X</span>
+        <span>Share</span>
+      </a>
+    </div>
+    </article>
+
+    <nav class="article-nav" aria-label="Adjacent posts">
+      <a href="/zh/posts/20200714-2/"><span>Previous</span>单元测试的工具和技巧</a>
+      <a href="/zh/posts/20200715/"><span>Next</span>canal使用总结</a>
+    </nav>
+<section class="comments" aria-labelledby="comments-heading">
+      <h2 id="comments-heading">评论</h2>
+      <div
+        data-comments
+        data-comments-repo="Kingson4Wu/kingson4wu.github.io"
+        data-comments-issue-term="pathname"
+        data-comments-label="comment"
+      ></div>
+    </section>
+    <script src="/scripts/comments.js" defer></script>
+  </main>
+  <footer class="site-footer">
+    <p>&copy; 2026 拉巴力的纸皮箱</p>
+  </footer>
+  <button class="reading-return" type="button" data-reading-return aria-label="回到开头" title="回到开头">
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <path d="M12 19V5"></path>
+      <path d="m6 11 6-6 6 6"></path>
+    </svg>
+  </button>
+  <script src="/scripts/theme.js"></script>
+  <script src="/scripts/image-viewer.js"></script>
+  <script src="/scripts/reading-tools.js"></script>
+</body>
+</html>

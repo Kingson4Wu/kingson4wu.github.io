@@ -1,0 +1,688 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Java代码段查阅 | 拉巴力的纸皮箱</title>
+  <meta name="description" content="集合处理 List集合拼接成以逗号分隔的字符串 list.stream().collect(Collectors.joining(&amp;quot;,&amp;quot;)); String.join(&amp;quot;,&amp;quot;, list) 两个List集合取交集 list1.retainAll(list2) 交集、并集、差集 j...">
+  <link rel="canonical" href="https://kingson4wu.github.io/zh/posts/20220401/">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="alternate" type="application/rss+xml" title="拉巴力的纸皮箱" href="/zh/feed.xml">
+  <link rel="alternate" type="text/markdown" href="/zh/posts/20220401/index.md">
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="/styles/main.css">
+  <script>
+    try {
+      var theme = localStorage.getItem('theme');
+      if (theme) document.documentElement.dataset.theme = theme;
+    } catch (_) {}
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="site-title" href="/zh/" aria-label="拉巴力的纸皮箱">
+      <span class="site-logo" aria-hidden="true">K</span>
+      <span>拉巴力的纸皮箱</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="/zh/posts/">文章</a>
+      <a href="/zh/notes/">笔记</a>
+      <a href="/zh/tags/">标签</a>
+      <a href="/zh/about/">关于</a>
+      <a href="/zh/search/">搜索</a>
+      <a href="/en/" lang="en">English</a>
+      <a class="feed-link" href="/zh/feed.xml" aria-label="订阅更新" title="订阅更新">
+        <svg class="feed-icon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M5 5.5A13.5 13.5 0 0 1 18.5 19"></path>
+          <path d="M5 11A8 8 0 0 1 13 19"></path>
+          <circle cx="6" cy="18" r="1.5"></circle>
+        </svg>
+      </a>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换明暗模式" title="切换明暗模式">
+        <svg class="theme-icon theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M21 14.2A8.5 8.5 0 0 1 9.8 3 7 7 0 1 0 21 14.2Z"></path>
+        </svg>
+        <svg class="theme-icon theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"></path>
+        </svg>
+      </button>
+    </nav>
+  </header>
+  <main class="site-main">
+    <article class="article">
+      <header class="article-header">
+        <h1>Java代码段查阅</h1>
+        <time datetime="2022-04-01T08:04:14.000Z">2022年4月1日</time>
+<ul class="tag-list" aria-label="Tags">
+    <li><a href="/zh/tags/Java/">Java</a></li>
+    <li><a href="/zh/tags/Programming%20Languages/">Programming Languages</a></li>
+  </ul>
+      </header>
+      <div class="prose">
+<h2 id="section-1" data-heading-text="集合处理">集合处理</h2>
+<h3 id="section-2" data-heading-text="List集合拼接成以逗号分隔的字符串">List集合拼接成以逗号分隔的字符串</h3>
+<ol>
+<li><code>list.stream().collect(Collectors.joining(&quot;,&quot;));</code></li>
+<li><code>String.join(&quot;,&quot;, list)</code></li>
+</ol>
+<h3 id="section-3" data-heading-text="两个List集合取交集">两个List集合取交集</h3>
+<ul>
+<li><code>list1.retainAll(list2)</code></li>
+</ul>
+<h3 id="section-4" data-heading-text="交集、并集、差集">交集、并集、差集</h3>
+<div class="code-block" data-language="java"><div class="code-header"><span class="code-language">java</span></div><pre><code class="hljs language-java"><span class="hljs-comment">/*交集*/</span>
+List&lt;AClass&gt; intersectResult = aClassList1.stream().filter(aClassList2::contains).collect(Collectors.toList());
+<span class="hljs-comment">/*并集*/</span>
+Stream.of(list1, list2).flatMap(Collection::stream).collect(Collectors.toList());
+<span class="hljs-comment">/*差集*/</span>
+List&lt;AClass&gt; differenceResult = aClassList1.stream().filter(x -&gt; !aClassList2.contains(x)).collect(Collectors.toList());
+</code></pre></div>
+<h3 id="section-5" data-heading-text="使用parallelStream时要注意线程安全问题">使用parallelStream时要注意线程安全问题</h3>
+<ul>
+<li>在并发时使用HashMap和ArrayList等非线程安全的类是会存在问题的</li>
+<li>应使用
+<ol>
+<li>list合并：</li>
+</ol>
+<div class="code-block" data-language="java"><div class="code-header"><span class="code-language">java</span></div><pre><code class="hljs language-java">Stream.of().parallel()
+        .mapToObj(index -&gt; {
+            <span class="hljs-keyword">return</span> Collections.&lt;T&gt;emptyList();
+        }).flatMap(Collection::stream).collect(Collectors.toList());
+</code></pre></div>
+<ol start="2">
+<li>map合并：</li>
+</ol>
+<div class="code-block" data-language="java"><div class="code-header"><span class="code-language">java</span></div><pre><code class="hljs language-java">Stream.of().parallel()
+        .mapToObj(index -&gt; {
+            <span class="hljs-keyword">return</span> Collections.&lt;K, V&gt;emptyMap();
+        })
+					.flatMap(x -&gt; x.entrySet().stream())
+					.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (v1, v2) -&gt; v1));
+</code></pre></div>
+</li>
+</ul>
+<h3 id="section-6" data-heading-text="排序">排序</h3>
+<ul>
+<li><code>list.sort(Comparator.comparing(XXX::getXX, Comparator.reverseOrder()).thenComparing(XXX::getXXX))</code></li>
+<li></li>
+</ul>
+<div class="code-block" data-language="java"><div class="code-header"><span class="code-language">java</span></div><pre><code class="hljs language-java">list.sort(
+            Comparator.comparing((Function&lt;XXXBO, Integer&gt;)xxxBO -&gt; {
+                <span class="hljs-keyword">if</span> (ids.contains(xxxBO.getId())) {
+                    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+                }
+                <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+            }).thenComparing(xxxBO -&gt; {
+                <span class="hljs-keyword">if</span> (ptIds.contains(xxxBO.getTId())) {
+                    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+                }
+                <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;
+            })
+                .thenComparing(XXXBO::getAddTime, Comparator.reverseOrder())
+                    .thenComparing(XXXBO::getId, Comparator.reverseOrder()));
+</code></pre></div>
+<h2 id="section-7" data-heading-text="字符串">字符串</h2>
+<h3 id="section-8" data-heading-text="首字母转成大写">首字母转成大写</h3>
+<ul>
+<li><code>StringUtils.capitalize(str);</code></li>
+</ul>
+<h3 id="section-9" data-heading-text="重复拼接字符串">重复拼接字符串</h3>
+<ul>
+<li><code>StringUtils.repeat(&quot;ab&quot;, 2);</code></li>
+</ul>
+<h3 id="section-10" data-heading-text="字符串分割">字符串分割</h3>
+<div class="code-block" data-language="java"><div class="code-header"><span class="code-language">java</span></div><pre><code class="hljs language-java">Iterable&lt;String&gt; split = Splitter.on(<span class="hljs-string">&#x27;,&#x27;</span>)
+							 .trimResults()
+							 .omitEmptyStrings()
+							 .split(sourceStr);
+			 <span class="hljs-keyword">return</span> Sets.newHashSet(split)
+
+Sets.newHashSet(Splitter.on(<span class="hljs-string">&quot;,&quot;</span>).omitEmptyStrings().trimResults().splitToList(topics));
+</code></pre></div>
+<h2 id="section-11" data-heading-text="日期">日期</h2>
+<h3 id="section-12" data-heading-text="Date类型转String类型">Date类型转String类型</h3>
+<ul>
+<li><code>String date = DateFormatUtils.format(new Date(), &quot;yyyy-MM-dd HH:mm:ss&quot;);</code></li>
+</ul>
+<h3 id="section-13" data-heading-text="String类型转Date类型">String类型转Date类型</h3>
+<ul>
+<li><code>Date date = DateUtils.parseDate(&quot;2021-05-01 01:01:01&quot;, &quot;yyyy-MM-dd HH:mm:ss&quot;);</code></li>
+</ul>
+<h3 id="section-14" data-heading-text="计算一个小时后的日期">计算一个小时后的日期</h3>
+<ul>
+<li><code>Date date = DateUtils.addHours(new Date(), 1);</code></li>
+</ul>
+<h3 id="java8" data-heading-text="java8">java8</h3>
+<div class="code-block" data-language="java"><div class="code-header"><span class="code-language">java</span></div><pre><code class="hljs language-java"><span class="hljs-type">long</span> <span class="hljs-variable">tomorrowZeroTime</span> <span class="hljs-operator">=</span> LocalDate.now().plusDays(<span class="hljs-number">1</span>).atTime(LocalTime.MIN).atZone(ZoneId.systemDefault()).toEpochSecond();
+ <span class="hljs-type">long</span> <span class="hljs-variable">days</span> <span class="hljs-operator">=</span> (expireZeroTime - nowZeroTime) / SECONDS_PER_DAY;
+ <span class="hljs-type">long</span> <span class="hljs-variable">beginTime</span> <span class="hljs-operator">=</span> LocalDateTime.now().plusHours(-<span class="hljs-number">2</span>).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+ <span class="hljs-type">long</span> <span class="hljs-variable">endTime</span> <span class="hljs-operator">=</span> LocalDateTime.now().plusHours(-<span class="hljs-number">1</span>).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+ <span class="hljs-type">long</span> <span class="hljs-variable">exportStartTime</span> <span class="hljs-operator">=</span> LocalDateTime.of(LocalDate.now(), LocalTime.MIN).minusDays(<span class="hljs-number">1</span>).atZone(ZoneId.systemDefault()).toEpochSecond();
+ <span class="hljs-type">long</span> <span class="hljs-variable">exportStartTime</span> <span class="hljs-operator">=</span>LocalDateTime.now().withHours(<span class="hljs-number">0</span>).plusHours(-<span class="hljs-number">1</span>).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+ <span class="hljs-type">Long</span> <span class="hljs-variable">millisecond</span> <span class="hljs-operator">=</span> Instant.now().toEpochMilli();  <span class="hljs-comment">// 精确到毫秒</span>
+ <span class="hljs-type">Long</span> <span class="hljs-variable">second</span> <span class="hljs-operator">=</span> Instant.now().getEpochSecond();<span class="hljs-comment">// 精确到秒</span>
+ LocalDateTime.ofInstant(Instant.ofEpochMilli(time),ZoneId.systemDefault())
+  <span class="hljs-type">DateTimeFormatter</span> <span class="hljs-variable">formatter</span> <span class="hljs-operator">=</span> DateTimeFormatter.ofPattern(<span class="hljs-string">&quot;yyyyMMdd&quot;</span>);
+             <span class="hljs-type">LocalDate</span> <span class="hljs-variable">dt</span> <span class="hljs-operator">=</span> LocalDate.parse(<span class="hljs-string">&quot;20191020&quot;</span>, formatter);
+             dt.plusDays(<span class="hljs-number">1</span>);
+             <span class="hljs-type">String</span> <span class="hljs-variable">day</span> <span class="hljs-operator">=</span> dt.format(formatter);
+  <span class="hljs-comment">//Java8的DateTimeFormatter是线程安全的，而SimpleDateFormat并不是线程安全。</span>
+
+</code></pre></div>
+<h2 id="section-16" data-heading-text="开源库">开源库</h2>
+<h3 id="commons-collections4" data-heading-text="commons-collections4">commons-collections4</h3>
+<div class="code-block" data-language="java"><div class="code-header"><span class="code-language">java</span></div><pre><code class="hljs language-java"><span class="hljs-comment">// 两个集合取交集</span>
+Collection&lt;String&gt; collection = CollectionUtils.retainAll(listA, listB);
+<span class="hljs-comment">// 两个集合取并集</span>
+Collection&lt;String&gt; collection = CollectionUtils.union(listA, listB);
+<span class="hljs-comment">// 两个集合取差集</span>
+Collection&lt;String&gt; collection = CollectionUtils.subtract(listA, listB);
+</code></pre></div>
+<h3 id="common-beanutils" data-heading-text="common-beanutils 操作对象">common-beanutils 操作对象</h3>
+<div class="code-block" data-language="java"><div class="code-header"><span class="code-language">java</span></div><pre><code class="hljs language-java"><span class="hljs-type">User</span> <span class="hljs-variable">user</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">User</span>();
+BeanUtils.setProperty(user, <span class="hljs-string">&quot;id&quot;</span>, <span class="hljs-number">1</span>);
+BeanUtils.setProperty(user, <span class="hljs-string">&quot;name&quot;</span>, <span class="hljs-string">&quot;yideng&quot;</span>);
+System.out.println(BeanUtils.getProperty(user, <span class="hljs-string">&quot;name&quot;</span>)); <span class="hljs-comment">// 输出 yideng</span>
+System.out.println(user); <span class="hljs-comment">// 输出 {&quot;id&quot;:1,&quot;name&quot;:&quot;yideng&quot;}</span>
+对象和map互转
+
+<span class="hljs-comment">// 对象转map</span>
+Map&lt;String, String&gt; map = BeanUtils.describe(user);
+System.out.println(map); <span class="hljs-comment">// 输出 {&quot;id&quot;:&quot;1&quot;,&quot;name&quot;:&quot;yideng&quot;}</span>
+<span class="hljs-comment">// map转对象</span>
+<span class="hljs-type">User</span> <span class="hljs-variable">newUser</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">User</span>();
+BeanUtils.populate(newUser, map);
+System.out.println(newUser); <span class="hljs-comment">// 输出 {&quot;id&quot;:1,&quot;name&quot;:&quot;yideng&quot;}</span>
+</code></pre></div>
+<h3 id="commons-io" data-heading-text="commons-io 文件流处理">commons-io 文件流处理</h3>
+<div class="code-block" data-language="java"><div class="code-header"><span class="code-language">java</span></div><pre><code class="hljs language-java"><span class="hljs-type">File</span> <span class="hljs-variable">file</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">File</span>(<span class="hljs-string">&quot;demo1.txt&quot;</span>);
+<span class="hljs-comment">// 读取文件</span>
+List&lt;String&gt; lines = FileUtils.readLines(file, Charset.defaultCharset());
+
+FileUtils.readFileToString(<span class="hljs-keyword">new</span> <span class="hljs-title class_">File</span>(<span class="hljs-string">&quot;xxx&quot;</span>));
+<span class="hljs-comment">// 写入文件</span>
+FileUtils.writeLines(<span class="hljs-keyword">new</span> <span class="hljs-title class_">File</span>(<span class="hljs-string">&quot;demo2.txt&quot;</span>), lines);
+<span class="hljs-comment">// 复制文件</span>
+FileUtils.copyFile(srcFile, destFile);
+
+</code></pre></div>
+<h3 id="google-guava" data-heading-text="Google Guava 工具类库">Google Guava 工具类库</h3>
+<div class="code-block" data-language="java"><div class="code-header"><span class="code-language">java</span></div><pre><code class="hljs language-java"><span class="hljs-comment">//创建集合</span>
+List&lt;String&gt; list = Lists.newArrayList();
+List&lt;Integer&gt; list = Lists.newArrayList(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>);
+<span class="hljs-comment">// 反转list</span>
+List&lt;Integer&gt; reverse = Lists.reverse(list);
+System.out.println(reverse); <span class="hljs-comment">// 输出 [3, 2, 1]</span>
+<span class="hljs-comment">// list集合元素太多，可以分成若干个集合，每个集合10个元素</span>
+List&lt;List&lt;Integer&gt;&gt; partition = Lists.partition(list, <span class="hljs-number">10</span>);
+
+Map&lt;String, String&gt; map = Maps.newHashMap();
+Set&lt;String&gt; set = Sets.newHashSet();
+
+<span class="hljs-comment">//Multimap 一个key可以映射多个value的HashMap</span>
+Multimap&lt;String, Integer&gt; map = ArrayListMultimap.create();
+map.put(<span class="hljs-string">&quot;key&quot;</span>, <span class="hljs-number">1</span>);
+map.put(<span class="hljs-string">&quot;key&quot;</span>, <span class="hljs-number">2</span>);
+Collection&lt;Integer&gt; values = map.get(<span class="hljs-string">&quot;key&quot;</span>);
+System.out.println(map); <span class="hljs-comment">// 输出 {&quot;key&quot;:[1,2]}</span>
+<span class="hljs-comment">// 还能返回你以前使用的臃肿的Map</span>
+Map&lt;String, Collection&lt;Integer&gt;&gt; collectionMap = map.asMap();
+
+<span class="hljs-comment">//BiMap 一种连value也不能重复的HashMap</span>
+BiMap&lt;String, String&gt; biMap = HashBiMap.create();
+<span class="hljs-comment">// 如果value重复，put方法会抛异常，除非用forcePut方法</span>
+biMap.put(<span class="hljs-string">&quot;key&quot;</span>,<span class="hljs-string">&quot;value&quot;</span>);
+System.out.println(biMap); <span class="hljs-comment">// 输出 {&quot;key&quot;:&quot;value&quot;}</span>
+<span class="hljs-comment">// 既然value不能重复，何不实现个翻转key/value的方法，已经有了</span>
+BiMap&lt;String, String&gt; inverse = biMap.inverse();
+System.out.println(inverse); <span class="hljs-comment">// 输出 {&quot;value&quot;:&quot;key&quot;}</span>
+
+<span class="hljs-comment">//Table 一种有两个key的HashMap</span>
+<span class="hljs-comment">// 一批用户，同时按年龄和性别分组</span>
+Table&lt;Integer, String, String&gt; table = HashBasedTable.create();
+table.put(<span class="hljs-number">18</span>, <span class="hljs-string">&quot;男&quot;</span>, <span class="hljs-string">&quot;yideng&quot;</span>);
+table.put(<span class="hljs-number">18</span>, <span class="hljs-string">&quot;女&quot;</span>, <span class="hljs-string">&quot;Lily&quot;</span>);
+System.out.println(table.get(<span class="hljs-number">18</span>, <span class="hljs-string">&quot;男&quot;</span>)); <span class="hljs-comment">// 输出 yideng</span>
+<span class="hljs-comment">// 这其实是一个二维的Map，可以查看行数据</span>
+Map&lt;String, String&gt; row = table.row(<span class="hljs-number">18</span>);
+System.out.println(row); <span class="hljs-comment">// 输出 {&quot;男&quot;:&quot;yideng&quot;,&quot;女&quot;:&quot;Lily&quot;}</span>
+<span class="hljs-comment">// 查看列数据</span>
+Map&lt;Integer, String&gt; column = table.column(<span class="hljs-string">&quot;男&quot;</span>);
+System.out.println(column); <span class="hljs-comment">// 输出 {18:&quot;yideng&quot;}</span>
+<span class="hljs-comment">// Multiset 一种用来计数的Set</span>
+Multiset&lt;String&gt; multiset = HashMultiset.create();
+multiset.add(<span class="hljs-string">&quot;apple&quot;</span>);
+multiset.add(<span class="hljs-string">&quot;apple&quot;</span>);
+multiset.add(<span class="hljs-string">&quot;orange&quot;</span>);
+System.out.println(multiset.count(<span class="hljs-string">&quot;apple&quot;</span>)); <span class="hljs-comment">// 输出 2</span>
+<span class="hljs-comment">// 查看去重的元素</span>
+Set&lt;String&gt; set = multiset.elementSet();
+System.out.println(set); <span class="hljs-comment">// 输出 [&quot;orange&quot;,&quot;apple&quot;]</span>
+<span class="hljs-comment">// 还能查看没有去重的元素</span>
+Iterator&lt;String&gt; iterator = multiset.iterator();
+<span class="hljs-keyword">while</span> (iterator.hasNext()) {
+    System.out.println(iterator.next());
+}
+<span class="hljs-comment">// 还能手动设置某个元素出现的次数</span>
+multiset.setCount(<span class="hljs-string">&quot;apple&quot;</span>, <span class="hljs-number">5</span>);
+</code></pre></div>
+<h2 id="section-21" data-heading-text="其他">其他</h2>
+<h3 id="section-22" data-heading-text="比较两个对象是否相等">比较两个对象是否相等</h3>
+<ul>
+<li><code>Objects.equals(strA, strB);</code> (防止空指针)</li>
+</ul>
+<h3 id="section-23" data-heading-text="异步">异步</h3>
+<ol>
+<li></li>
+</ol>
+<div class="code-block" data-language="java"><div class="code-header"><span class="code-language">java</span></div><pre><code class="hljs language-java">CompletableFuture.supplyAsync(
+                  () -&gt; {
+                  });
+</code></pre></div>
+<ol start="2">
+<li></li>
+</ol>
+<div class="code-block" data-language="java"><div class="code-header"><span class="code-language">java</span></div><pre><code class="hljs language-java">CompletableFuture.runAsync(() -&gt; {
+		});
+</code></pre></div>
+<h3 id="section-24" data-heading-text="重写toString">重写toString</h3>
+<div class="code-block" data-language="java"><div class="code-header"><span class="code-language">java</span></div><pre><code class="hljs language-java"><span class="hljs-meta">@Override</span>
+<span class="hljs-keyword">public</span> String <span class="hljs-title function_">toString</span><span class="hljs-params">()</span> {
+  		<span class="hljs-keyword">return</span> ReflectionToStringBuilder.toString(<span class="hljs-built_in">this</span>,
+  				ToStringStyle.SHORT_PREFIX_STYLE);
+}
+
+ <span class="hljs-meta">@Override</span>
+<span class="hljs-keyword">public</span> String <span class="hljs-title function_">toString</span><span class="hljs-params">()</span> {
+          <span class="hljs-type">ReflectionToStringBuilder</span> <span class="hljs-variable">builder</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ReflectionToStringBuilder</span>(
+                  <span class="hljs-built_in">this</span>, ToStringStyle.SHORT_PREFIX_STYLE) {
+              <span class="hljs-meta">@Override</span>
+              <span class="hljs-keyword">protected</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">accept</span><span class="hljs-params">(Field field)</span> {
+                  <span class="hljs-keyword">return</span> !<span class="hljs-string">&quot;createTime&quot;</span>.equals(field.getName()) &amp;&amp;
+                          !field.getName().equals(<span class="hljs-string">&quot;updateTime&quot;</span>) &amp;&amp;
+                          !field.getName().equals(<span class="hljs-string">&quot;xxx&quot;</span>);
+              }
+          };
+          <span class="hljs-keyword">return</span> builder.toString();
+}
+</code></pre></div>
+<h3 id="stream" data-heading-text="Stream">Stream</h3>
+<div class="code-block" data-language="java"><div class="code-header"><span class="code-language">java</span></div><pre><code class="hljs language-java">Map&lt;String, String&gt; requestMap =
+            request.getParameterMap().entrySet().stream().collect(
+                Collectors.toMap(Map.Entry::getKey, entry -&gt; entry.getValue()[<span class="hljs-number">0</span>], (v1, v2) -&gt; {
+                        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RuntimeException</span>(String.format(<span class="hljs-string">&quot;Duplicate key for values %s and %s&quot;</span>, v1, v2));
+                    },
+                    TreeMap::<span class="hljs-keyword">new</span>));
+</code></pre></div>
+<h3 id="optional" data-heading-text="Optional">Optional</h3>
+<div class="code-block" data-language="java"><div class="code-header"><span class="code-language">java</span></div><pre><code class="hljs language-java">.orElseThrow(() -&gt; <span class="hljs-keyword">new</span> <span class="hljs-title class_">ContextedRuntimeException</span>(<span class="hljs-string">&quot;notExist&quot;</span>).addContextValue(<span class="hljs-string">&quot;id&quot;</span>, id));
+</code></pre></div>
+<h4 id="section-27" data-heading-text="Optional中map和flatMap">Optional中map和flatMap</h4>
+<ul>
+<li><a href="https://blog.csdn.net/qq_28988969/article/details/80995927">https://blog.csdn.net/qq_28988969/article/details/80995927</a></li>
+</ul>
+<div class="code-block" data-language="java"><div class="code-header"><span class="code-language">java</span></div><pre><code class="hljs language-java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">FlightTicketInfo</span> {
+
+    <span class="hljs-keyword">private</span> String orderNumber;
+
+    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">getOrderNumber</span><span class="hljs-params">()</span> {
+        <span class="hljs-keyword">return</span> orderNumber;
+    }
+
+}
+
+<span class="hljs-comment">/**
+ * desc :
+ * create_user : cheng
+ * create_date : 2018/7/4 11:21
+ */</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">OptionalTest</span> {
+
+    <span class="hljs-meta">@Test</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">testMap</span><span class="hljs-params">()</span> {
+        <span class="hljs-type">FlightTicketInfo</span> <span class="hljs-variable">flightTicketInfo</span> <span class="hljs-operator">=</span> <span class="hljs-literal">null</span>;
+
+        Optional&lt;Optional&lt;String&gt;&gt; s1 = Optional.ofNullable(flightTicketInfo).map(OptionalTest::getOrderNumber);
+
+        Optional&lt;String&gt; s2 = Optional.ofNullable(flightTicketInfo).map(FlightTicketInfo::getOrderNumber);
+
+        Optional&lt;String&gt; s3 = Optional.ofNullable(flightTicketInfo).flatMap(OptionalTest::getOrderNumber);
+    }
+
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> Optional&lt;String&gt; <span class="hljs-title function_">getOrderNumber</span><span class="hljs-params">(FlightTicketInfo flightTicketInfo)</span> {
+        <span class="hljs-keyword">return</span> Optional.ofNullable(flightTicketInfo).map(f -&gt; f.getOrderNumber());
+    }
+
+}
+</code></pre></div>
+<ul>
+<li>1.9新增 or()方法是作为orElse()和orElseGet()方法的改进而出现的，使用方法一致，但后两个方法在执行完成后返回的并非包装值。如果需要执行一些逻辑并返回Optional时，可以使用or()方法。该方法传入Supplier接口的实例，当value有值时直接返回自身Optional，当为空时，自动执行suuplier的get()方法，并包装成Optional返回，其源码中包装的语句如下：</li>
+</ul>
+<div class="code-block" data-language="java"><div class="code-header"><span class="code-language">java</span></div><pre><code class="hljs language-java">Optional&lt;T&gt; r = (Optional&lt;T&gt;) supplier.get();
+<span class="hljs-keyword">return</span> Objects.requireNonNull(r);
+</code></pre></div>
+<ul>
+<li>stream()方法则不用多说，是一个提供给流式编程使用的方法，功能上是一个适配器，将Optional转换成Stream：没有值返回一个空的stream，或者包含一个Optional的stream。其源码如下：</li>
+</ul>
+<div class="code-block" data-language="java"><div class="code-header"><span class="code-language">java</span></div><pre><code class="hljs language-java"><span class="hljs-keyword">if</span> (!isPresent()) {
+<span class="hljs-keyword">return</span> Stream.empty();
+} <span class="hljs-keyword">else</span> {
+<span class="hljs-keyword">return</span> Stream.of(value);
+}
+</code></pre></div>
+<ul>
+<li>其原因是orElseGet()的参数是Supplier目标类型的函数，简单来说，Suppiler接口类似Spring的懒加载，声明之后并不会占用内存，只有执行了get()方法之后，才会调用构造方法创建出对象，而orElse()是快加载，即使没有调用，也会实际的运行。
+这个特性在一些简单的方法上差距不大，但是当方法是一些执行密集型的调用时，比如远程调用，计算类或者查询类方法时，会损耗一定的性能。
+orElseThrow()方法与orElseGet()方法的参数都是Supplier参数都是函数类型的，这意味着这两种方法都是懒加载，但针对于必须要使用异常控制流程的场景，orElseThrow()会更加合适，因为可以控制异常类型，使得相比NPE会有更丰富的语义。</li>
+</ul>
+<h3 id="bigdecimal" data-heading-text="BigDecimal">BigDecimal</h3>
+<ul>
+<li><code>user.getMoney().stripTrailingZeros().toPlainString()</code></li>
+</ul>
+<div class="code-block" data-language="java"><div class="code-header"><span class="code-language">java</span></div><pre><code class="hljs language-java"><span class="hljs-keyword">public</span> BigDecimal <span class="hljs-title function_">sum</span><span class="hljs-params">(Function&lt;XXX, BigDecimal&gt; get, List&lt;XXX&gt; list)</span> {
+        <span class="hljs-keyword">return</span> list.stream().map(get).reduce((acc, item) -&gt; {
+            acc = acc.add(item);
+            <span class="hljs-keyword">return</span> acc;
+        }).get().divide(BigDecimal.valueOf(<span class="hljs-number">100</span>));
+    }
+</code></pre></div>
+<h3 id="section-29" data-heading-text="包装临时对象">包装临时对象</h3>
+<ul>
+<li>当一个方法需要返回两个及以上字段时，可以使用Pair和Triple</li>
+<li>返回两个字段
+<code>ImmutablePair&lt;Integer, String&gt; pair = ImmutablePair.of(1, &quot;yideng&quot;);</code></li>
+<li>返回三个字段
+<code>ImmutableTriple&lt;Integer, String, Date&gt; triple = ImmutableTriple.of(1, &quot;yideng&quot;, new Date());</code></li>
+</ul>
+<h3 id="section-30" data-heading-text="临时文件返回">临时文件返回</h3>
+<div class="code-block" data-language="java"><div class="code-header"><span class="code-language">java</span></div><pre><code class="hljs language-java"><span class="hljs-meta">@RestController</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">XXXController</span> {
+
+     <span class="hljs-meta">@GetMapping(value = &quot;/xxdata.txt&quot;)</span>
+     <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">bidata</span><span class="hljs-params">(HttpServletResponse response)</span> {
+
+            <span class="hljs-type">String</span> <span class="hljs-variable">content</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;success|=|333\nsuccess|=|333&quot;</span>;
+            <span class="hljs-keyword">try</span> {
+                response.setHeader(<span class="hljs-string">&quot;Content-Type&quot;</span>, <span class="hljs-string">&quot;text/plain;charset=utf-8&quot;</span>);
+                response.addHeader(<span class="hljs-string">&quot;Content-Disposition&quot;</span>,<span class="hljs-string">&quot;attachment;filename=xxdata.txt&quot;</span>);
+                <span class="hljs-type">OutputStream</span> <span class="hljs-variable">output</span> <span class="hljs-operator">=</span> response.getOutputStream();
+                output.write(content.getBytes(Charset.forName(<span class="hljs-string">&quot;UTF-8&quot;</span>)));
+                output.flush();
+            } <span class="hljs-keyword">catch</span> (Exception e) {
+               e.printStackTrace();
+            }
+        }
+
+     <span class="hljs-meta">@GetMapping(value = &quot;/xxdata.txt&quot;)</span>
+     <span class="hljs-keyword">public</span> String <span class="hljs-title function_">bidata</span><span class="hljs-params">(HttpServletResponse response)</span> {
+
+                response.setHeader(<span class="hljs-string">&quot;Content-Type&quot;</span>, <span class="hljs-string">&quot;text/plain;charset=utf-8&quot;</span>);
+                response.addHeader(<span class="hljs-string">&quot;Content-Disposition&quot;</span>,<span class="hljs-string">&quot;attachment;filename=xxdata.txt&quot;</span>);
+                <span class="hljs-keyword">return</span>  <span class="hljs-string">&quot;success|=|333\nsuccess|=|333&quot;</span>;
+
+     }
+
+<span class="hljs-meta">@GetMapping(value = &quot;/xxvideo/{uri}&quot;)</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">proxy</span><span class="hljs-params">(<span class="hljs-meta">@PathVariable(&quot;uri&quot;)</span> String uri, HttpServletResponse response)</span> {
+        <span class="hljs-keyword">try</span> {
+
+            response.setHeader(<span class="hljs-string">&quot;Access-Control-Allow-Origin&quot;</span>, <span class="hljs-string">&quot;*.xx.cn, *.xx.xx.com&quot;</span>);
+
+            <span class="hljs-type">OutputStream</span> <span class="hljs-variable">output</span> <span class="hljs-operator">=</span> response.getOutputStream();
+            <span class="hljs-type">String</span> <span class="hljs-variable">url</span> <span class="hljs-operator">=</span> xxxService.getRealUrl(uri);
+
+            <span class="hljs-keyword">if</span> (StringUtils.isBlank(url)) {
+                response.setStatus(HttpStatus.NOT_FOUND_404);
+                <span class="hljs-keyword">return</span>;
+            }
+            <span class="hljs-type">Proxy</span> <span class="hljs-variable">proxy</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Proxy</span>(Proxy.Type.HTTP, <span class="hljs-keyword">new</span> <span class="hljs-title class_">InetSocketAddress</span>(forwardProxyHost, forwardProxyPort));
+            <span class="hljs-keyword">try</span> (<span class="hljs-type">InputStream</span> <span class="hljs-variable">input</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">URL</span>(url).openConnection(proxy).getInputStream()) {
+                IOUtils.copy(input, output);
+            } <span class="hljs-keyword">finally</span> {
+            }
+        } <span class="hljs-keyword">catch</span> (Exception e) {
+            LOGGER.error(<span class="hljs-string">&quot;error，uri:{}&quot;</span>, uri, e);
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR_500);
+        }
+    }
+}
+</code></pre></div>
+<h3 id="section-31" data-heading-text="线程池">线程池</h3>
+<div class="code-block" data-language="java"><div class="code-header"><span class="code-language">java</span></div><pre><code class="hljs language-java"><span class="hljs-type">ExecutorService</span> <span class="hljs-variable">executor</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ScheduledThreadPoolExecutor</span>(Runtime.getRuntime().availableProcessors() * <span class="hljs-number">2</span>, <span class="hljs-keyword">new</span> <span class="hljs-title class_">BasicThreadFactory</span>.Builder().namingPattern(<span class="hljs-string">&quot;common-schedule-pool-%d&quot;</span>).daemon(<span class="hljs-literal">true</span>).build());
+</code></pre></div>
+<ul>
+<li>Java线程池中三种方式创建 ThreadFactory 设置线程名称: <a href="https://blog.csdn.net/u010648555/article/details/106137206">https://blog.csdn.net/u010648555/article/details/106137206</a></li>
+</ul>
+<h3 id="section-32" data-heading-text="扫描注解">扫描注解</h3>
+<div class="code-block" data-language="java"><div class="code-header"><span class="code-language">java</span></div><pre><code class="hljs language-java">
+ <span class="hljs-type">Reflections</span> <span class="hljs-variable">reflections</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Reflections</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">ConfigurationBuilder</span>()
+                .addUrls(ClasspathHelper.forPackage(<span class="hljs-string">&quot;com.xxx&quot;</span>))
+                .setScanners(<span class="hljs-keyword">new</span> <span class="hljs-title class_">MethodAnnotationsScanner</span>()));
+
+  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">final</span> Method method : reflections.getMethodsAnnotatedWith(xxxxx.class)) {
+            Class&lt;?&gt; clazz = method.getDeclaringClass();
+            Collection&lt;?&gt; beans = applicationContext.getBeansOfType(clazz).values();
+            <span class="hljs-type">int</span> <span class="hljs-variable">size</span> <span class="hljs-operator">=</span> beans.size();
+           }
+</code></pre></div>
+<div class="code-block" data-language="xml"><div class="code-header"><span class="code-language">xml</span></div><pre><code class="hljs language-xml"> <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.reflections<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>reflections<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>0.9.11<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span>
+</code></pre></div>
+<h3 id="section-33" data-heading-text="并发">并发</h3>
+<div class="code-block" data-language="java"><div class="code-header"><span class="code-language">java</span></div><pre><code class="hljs language-java"> CompletableFuture&lt;Boolean&gt; future = CompletableFuture.supplyAsync(() -&gt; {
+            <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+});
+CompletableFuture&lt;Boolean&gt; future2 = CompletableFuture.supplyAsync(() -&gt; <span class="hljs-literal">true</span>);
+CompletableFuture&lt;Boolean&gt; future3 = CompletableFuture.supplyAsync(() -&gt; <span class="hljs-literal">true</span>);
+</code></pre></div>
+<div class="code-block" data-language="java"><div class="code-header"><span class="code-language">java</span></div><pre><code class="hljs language-java">List&lt;Supplier&lt;Boolean&gt;&gt; tasks = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;(<span class="hljs-number">2</span>);
+        tasks.add(() -&gt; {
+            <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+        });
+
+        tasks.add(() -&gt; {
+            <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+        });
+        tasks.stream().parallel().forEach(Supplier::get);
+</code></pre></div>
+<div class="code-block" data-language="java"><div class="code-header"><span class="code-language">java</span></div><pre><code class="hljs language-java">CompletableFuture&lt;CallResult&gt; future1 = CompletableFuture.supplyAsync(() -&gt; {
+            <span class="hljs-keyword">return</span> CallResult.FAIL;
+        });
+
+CompletableFuture&lt;CallResult&gt; future2 = CompletableFuture.supplyAsync(() -&gt; {
+            <span class="hljs-keyword">return</span> CallResult.FAIL;
+        });
+
+List&lt;CallResult&gt; resultList = Stream.of(future1, future2).map(CompletableFuture::join).collect(
+            Collectors.toList());
+
+<span class="hljs-keyword">if</span> (resultList.stream().filter(v -&gt; CallResult.FAIL.equals(v)).count() &gt; <span class="hljs-number">0</span>) {
+            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Exception</span>(<span class="hljs-string">&quot; call exception&quot;</span>);
+}
+</code></pre></div>
+<div class="code-block" data-language="java"><div class="code-header"><span class="code-language">java</span></div><pre><code class="hljs language-java"> <span class="hljs-keyword">return</span> IntStream.range(<span class="hljs-number">0</span>, DBTableConfig.SIZE).parallel()
+	  .mapToObj(index -&gt; mapper.selectAllList(index, Date.from(Instant.ofEpochSecond(startTime)),
+     Date.from(Instant.ofEpochSecond(endTime)), xxx, Arrays.asList(xx, xx), limit)).flatMap(Collection::stream).collect(Collectors.toList());
+</code></pre></div>
+<div class="code-block" data-language="java"><div class="code-header"><span class="code-language">java</span></div><pre><code class="hljs language-java">CompletableFuture&lt;Void&gt; cf6 = CompletableFuture.allOf(cf3, cf4, cf5);
+CompletableFuture&lt;String&gt; result = cf6.thenApply(v -&gt; {
+  <span class="hljs-comment">//这里的join并不会阻塞，因为传给thenApply的函数是在CF3、CF4、CF5全部完成时，才会执行 。</span>
+  result3 = cf3.join();
+  result4 = cf4.join();
+  result5 = cf5.join();
+  <span class="hljs-comment">//根据result3、result4、result5组装最终result;</span>
+  <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;result&quot;</span>;
+});
+</code></pre></div>
+<h2 id="section-34" data-heading-text="开源类库">开源类库</h2>
+<ul>
+<li>apache commons</li>
+<li>commons-lang3</li>
+<li>commons-collections</li>
+</ul>
+<h2 id="web" data-heading-text="Web">Web</h2>
+<div class="code-block" data-language="java"><div class="code-header"><span class="code-language">java</span></div><pre><code class="hljs language-java"><span class="hljs-type">RequestAttributes</span> <span class="hljs-variable">requestAttributes</span> <span class="hljs-operator">=</span> RequestContextHolder.getRequestAttributes();
+        <span class="hljs-keyword">if</span> (requestAttributes <span class="hljs-keyword">instanceof</span> ServletRequestAttributes) {
+            <span class="hljs-type">HttpServletRequest</span> <span class="hljs-variable">request</span> <span class="hljs-operator">=</span> ((ServletRequestAttributes)requestAttributes).getRequest();
+
+        }
+</code></pre></div>
+<div class="code-block" data-language="java"><div class="code-header"><span class="code-language">java</span></div><pre><code class="hljs language-java">    <span class="hljs-comment">/**
+     * curl -XPOST -F &quot;materialFile=@/D:/Downloads/5c1.FBX&quot; &quot;http://127.0.0.1:19201/addMaterial&quot;
+     * <span class="hljs-doctag">@param</span> materialFile
+     * <span class="hljs-doctag">@return</span>
+     */</span>
+    <span class="hljs-meta">@CheckToken(false)</span>
+    <span class="hljs-meta">@PostMapping(&quot;/addMaterial&quot;)</span>
+    <span class="hljs-keyword">public</span> ApplicationResponse <span class="hljs-title function_">addMaterial</span><span class="hljs-params">(<span class="hljs-meta">@RequestParam(&quot;materialFile&quot;)</span> MultipartFile materialFile
+            )</span> {
+        <span class="hljs-keyword">return</span> ApplicationResponse.ok().build();
+    }
+
+spring.http.multipart.maxFileSize=10MB
+spring.http.multipart.maxRequestSize=10MB
+</code></pre></div>
+<ul>
+<li>long 前端失精问题</li>
+</ul>
+<div class="code-block" data-language="java"><div class="code-header"><span class="code-language">java</span></div><pre><code class="hljs language-java">    <span class="hljs-meta">@Bean(&quot;jackson2ObjectMapperBuilderCustomizer&quot;)</span>
+    <span class="hljs-meta">@ConditionalOnProperty(name = &quot;config.long2string&quot;, havingValue = &quot;true&quot;, matchIfMissing = true)</span>
+    <span class="hljs-keyword">public</span> Jackson2ObjectMapperBuilderCustomizer <span class="hljs-title function_">jackson2ObjectMapperBuilderCustomizer</span><span class="hljs-params">()</span> {
+        <span class="hljs-type">Jackson2ObjectMapperBuilderCustomizer</span> <span class="hljs-variable">customizer</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Jackson2ObjectMapperBuilderCustomizer</span>() {
+            <span class="hljs-meta">@Override</span>
+            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">customize</span><span class="hljs-params">(Jackson2ObjectMapperBuilder jacksonObjectMapperBuilder)</span> {
+                jacksonObjectMapperBuilder.serializerByType(Long.class, ToStringSerializer.instance)
+                        .serializerByType(Long.TYPE, ToStringSerializer.instance);
+            }
+        };
+        <span class="hljs-keyword">return</span> customizer;
+    }
+</code></pre></div>
+<h2 id="mybatis" data-heading-text="MyBatis">MyBatis</h2>
+<div class="code-block" data-language="xml"><div class="code-header"><span class="code-language">xml</span></div><pre><code class="hljs language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">select</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;queryBookInfo&quot;</span> <span class="hljs-attr">parameterType</span>=<span class="hljs-string">&quot;com.tjt.platform.entity.BookInfo&quot;</span> <span class="hljs-attr">resultType</span>=<span class="hljs-string">&quot;java.lang.Integer&quot;</span>&gt;</span>
+select count(*) from t_rule_BookInfo t
+<span class="hljs-tag">&lt;<span class="hljs-name">where</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">if</span> <span class="hljs-attr">test</span>=<span class="hljs-string">&quot;title !=null and title !=&#x27;&#x27; &quot;</span>&gt;</span>
+title = #{title}
+<span class="hljs-tag">&lt;/<span class="hljs-name">if</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">if</span> <span class="hljs-attr">test</span>=<span class="hljs-string">&quot;author !=null and author !=&#x27;&#x27; &quot;</span>&gt;</span>
+AND author = #{author}
+<span class="hljs-tag">&lt;/<span class="hljs-name">if</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">where</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">select</span>&gt;</span>
+
+UPDATE 操作也一样，可以用标记代替 1=1。
+</code></pre></div>
+<div class="code-block" data-language="xml"><div class="code-header"><span class="code-language">xml</span></div><pre><code class="hljs language-xml"> @Select({
+                &quot;<span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="language-handlebars"><span class="language-xml">&quot;,
+                &quot;SELECT &quot; +  FIELDS,
+                &quot;FROM  `t_xxxx_task` t&quot;,
+                &quot;WHERE createTime <span class="hljs-symbol">&amp;gt;</span>= #{startTime} AND createTime <span class="hljs-symbol">&amp;lt;</span> #{endTime} &quot;,
+                &quot;<span class="hljs-tag">&lt;<span class="hljs-name">when</span> <span class="hljs-attr">test</span> = <span class="hljs-string">&#x27;statusList != null and statusList.size &gt; 0&#x27;</span>&gt;</span>&quot;,
+                &quot;AND `status` in (<span class="hljs-tag">&lt;<span class="hljs-name">foreach</span> <span class="hljs-attr">collection</span> = <span class="hljs-string">&#x27;statusList&#x27;</span> <span class="hljs-attr">item</span> = <span class="hljs-string">&#x27;status&#x27;</span> <span class="hljs-attr">index</span>=<span class="hljs-string">&#x27;index&#x27;</span> <span class="hljs-attr">open</span>=<span class="hljs-string">&#x27;&#x27;</span> <span class="hljs-attr">close</span>=<span class="hljs-string">&#x27;&#x27;</span> <span class="hljs-attr">separator</span>=<span class="hljs-string">&#x27;,&#x27;</span>&gt;</span>#{status}<span class="hljs-tag">&lt;/<span class="hljs-name">foreach</span>&gt;</span>)&quot;,
+                &quot;<span class="hljs-tag">&lt;/<span class="hljs-name">when</span>&gt;</span>&quot;,
+                &quot;LIMIT #{limit}&quot;,
+                &quot;</span></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>&quot;
+        })
+        List<span class="hljs-tag">&lt;<span class="hljs-name">TxxxxTask</span>&gt;</span> selectList(@Param(&quot;startTime&quot;)Date startTime, @Param(&quot;endTime&quot;)Date endTime, @Param(&quot;statusList&quot;) List<span class="hljs-tag">&lt;<span class="hljs-name">Integer</span>&gt;</span> statusList, @Param(&quot;limit&quot;) int limit);
+
+</code></pre></div>
+<h2 id="reference" data-heading-text="Reference">Reference</h2>
+<ul>
+<li><a href="https://www.toutiao.com/i6943239541448917512">实现同样逻辑，代码量减少90%，Java程序员必会的工具库</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/515993095">CompletableFuture原理与实践-外卖商家端API的异步化</a></li>
+</ul>
+
+      </div>
+<div class="article-actions" aria-label="Article actions">
+      <a class="share-link" href="https://twitter.com/intent/tweet?text=Java%E4%BB%A3%E7%A0%81%E6%AE%B5%E6%9F%A5%E9%98%85&amp;url=https%3A%2F%2Fkingson4wu.github.io%2Fzh%2Fposts%2F20220401%2F" target="_blank" rel="noopener noreferrer" aria-label="Share on X">
+        <span aria-hidden="true">X</span>
+        <span>Share</span>
+      </a>
+    </div>
+    </article>
+<aside class="article-toc" data-article-toc aria-label="目录">
+      <button class="article-toc-toggle" type="button" data-article-toc-toggle aria-expanded="false" aria-controls="article-toc-panel" aria-label="打开目录" data-open-label="打开目录" data-close-label="收起目录">
+        <svg aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M8 6h11"></path>
+          <path d="M8 12h11"></path>
+          <path d="M8 18h11"></path>
+          <path d="M4 6h.01"></path>
+          <path d="M4 12h.01"></path>
+          <path d="M4 18h.01"></path>
+        </svg>
+      </button>
+      <nav id="article-toc-panel" class="article-toc-panel" data-article-toc-panel aria-label="目录">
+        <div class="article-toc-heading">目录</div>
+        <ol class="article-toc-list">
+          <li class="article-toc-level-2"><a href="#section-1" data-article-toc-link>集合处理</a></li>
+          <li class="article-toc-level-3"><a href="#section-2" data-article-toc-link>List集合拼接成以逗号分隔的字符串</a></li>
+          <li class="article-toc-level-3"><a href="#section-3" data-article-toc-link>两个List集合取交集</a></li>
+          <li class="article-toc-level-3"><a href="#section-4" data-article-toc-link>交集、并集、差集</a></li>
+          <li class="article-toc-level-3"><a href="#section-5" data-article-toc-link>使用parallelStream时要注意线程安全问题</a></li>
+          <li class="article-toc-level-3"><a href="#section-6" data-article-toc-link>排序</a></li>
+          <li class="article-toc-level-2"><a href="#section-7" data-article-toc-link>字符串</a></li>
+          <li class="article-toc-level-3"><a href="#section-8" data-article-toc-link>首字母转成大写</a></li>
+          <li class="article-toc-level-3"><a href="#section-9" data-article-toc-link>重复拼接字符串</a></li>
+          <li class="article-toc-level-3"><a href="#section-10" data-article-toc-link>字符串分割</a></li>
+          <li class="article-toc-level-2"><a href="#section-11" data-article-toc-link>日期</a></li>
+          <li class="article-toc-level-3"><a href="#section-12" data-article-toc-link>Date类型转String类型</a></li>
+          <li class="article-toc-level-3"><a href="#section-13" data-article-toc-link>String类型转Date类型</a></li>
+          <li class="article-toc-level-3"><a href="#section-14" data-article-toc-link>计算一个小时后的日期</a></li>
+          <li class="article-toc-level-3"><a href="#java8" data-article-toc-link>java8</a></li>
+          <li class="article-toc-level-2"><a href="#section-16" data-article-toc-link>开源库</a></li>
+          <li class="article-toc-level-3"><a href="#commons-collections4" data-article-toc-link>commons-collections4</a></li>
+          <li class="article-toc-level-3"><a href="#common-beanutils" data-article-toc-link>common-beanutils 操作对象</a></li>
+          <li class="article-toc-level-3"><a href="#commons-io" data-article-toc-link>commons-io 文件流处理</a></li>
+          <li class="article-toc-level-3"><a href="#google-guava" data-article-toc-link>Google Guava 工具类库</a></li>
+          <li class="article-toc-level-2"><a href="#section-21" data-article-toc-link>其他</a></li>
+          <li class="article-toc-level-3"><a href="#section-22" data-article-toc-link>比较两个对象是否相等</a></li>
+          <li class="article-toc-level-3"><a href="#section-23" data-article-toc-link>异步</a></li>
+          <li class="article-toc-level-3"><a href="#section-24" data-article-toc-link>重写toString</a></li>
+          <li class="article-toc-level-3"><a href="#stream" data-article-toc-link>Stream</a></li>
+          <li class="article-toc-level-3"><a href="#optional" data-article-toc-link>Optional</a></li>
+          <li class="article-toc-level-3"><a href="#bigdecimal" data-article-toc-link>BigDecimal</a></li>
+          <li class="article-toc-level-3"><a href="#section-29" data-article-toc-link>包装临时对象</a></li>
+          <li class="article-toc-level-3"><a href="#section-30" data-article-toc-link>临时文件返回</a></li>
+          <li class="article-toc-level-3"><a href="#section-31" data-article-toc-link>线程池</a></li>
+          <li class="article-toc-level-3"><a href="#section-32" data-article-toc-link>扫描注解</a></li>
+          <li class="article-toc-level-3"><a href="#section-33" data-article-toc-link>并发</a></li>
+          <li class="article-toc-level-2"><a href="#section-34" data-article-toc-link>开源类库</a></li>
+          <li class="article-toc-level-2"><a href="#web" data-article-toc-link>Web</a></li>
+          <li class="article-toc-level-2"><a href="#mybatis" data-article-toc-link>MyBatis</a></li>
+          <li class="article-toc-level-2"><a href="#reference" data-article-toc-link>Reference</a></li>
+        </ol>
+      </nav>
+    </aside>
+    <script src="/scripts/article-toc.js" defer></script>
+    <nav class="article-nav" aria-label="Adjacent posts">
+      <a href="/zh/posts/20220322/"><span>Previous</span>轻量级微服务公共库设计</a>
+      <a href="/zh/posts/20220402/"><span>Next</span>Scrum笔记</a>
+    </nav>
+<section class="comments" aria-labelledby="comments-heading">
+      <h2 id="comments-heading">评论</h2>
+      <div
+        data-comments
+        data-comments-repo="Kingson4Wu/kingson4wu.github.io"
+        data-comments-issue-term="pathname"
+        data-comments-label="comment"
+      ></div>
+    </section>
+    <script src="/scripts/comments.js" defer></script>
+  </main>
+  <footer class="site-footer">
+    <p>&copy; 2026 拉巴力的纸皮箱</p>
+  </footer>
+  <button class="reading-return" type="button" data-reading-return aria-label="回到开头" title="回到开头">
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <path d="M12 19V5"></path>
+      <path d="m6 11 6-6 6 6"></path>
+    </svg>
+  </button>
+  <script src="/scripts/theme.js"></script>
+  <script src="/scripts/image-viewer.js"></script>
+  <script src="/scripts/reading-tools.js"></script>
+</body>
+</html>

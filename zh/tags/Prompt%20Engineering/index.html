@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>标签: Prompt Engineering | 拉巴力的纸皮箱</title>
+  <meta name="description" content="包含此标签的内容。">
+  <link rel="canonical" href="https://kingson4wu.github.io/zh/tags/Prompt%20Engineering/">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="alternate" type="application/rss+xml" title="拉巴力的纸皮箱" href="/zh/feed.xml">
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="/styles/main.css">
+  <script>
+    try {
+      var theme = localStorage.getItem('theme');
+      if (theme) document.documentElement.dataset.theme = theme;
+    } catch (_) {}
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="site-title" href="/zh/" aria-label="拉巴力的纸皮箱">
+      <span class="site-logo" aria-hidden="true">K</span>
+      <span>拉巴力的纸皮箱</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="/zh/posts/">文章</a>
+      <a href="/zh/notes/">笔记</a>
+      <a href="/zh/tags/">标签</a>
+      <a href="/zh/about/">关于</a>
+      <a href="/zh/search/">搜索</a>
+      <a href="/en/" lang="en">English</a>
+      <a class="feed-link" href="/zh/feed.xml" aria-label="订阅更新" title="订阅更新">
+        <svg class="feed-icon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M5 5.5A13.5 13.5 0 0 1 18.5 19"></path>
+          <path d="M5 11A8 8 0 0 1 13 19"></path>
+          <circle cx="6" cy="18" r="1.5"></circle>
+        </svg>
+      </a>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换明暗模式" title="切换明暗模式">
+        <svg class="theme-icon theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M21 14.2A8.5 8.5 0 0 1 9.8 3 7 7 0 1 0 21 14.2Z"></path>
+        </svg>
+        <svg class="theme-icon theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"></path>
+        </svg>
+      </button>
+    </nav>
+  </header>
+  <main class="site-main">
+    <section class="page-heading">
+      <h1>标签: Prompt Engineering</h1>
+      <p>包含此标签的内容。</p>
+    </section>
+<ol class="post-list">
+    <li>
+      <div class="post-meta">
+        <time datetime="2026-03-28T06:10:00.000Z">2026年3月28日</time>
+        <span>AI</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/notes/20260328-harness-engineering/">从第一性原理看 Harness Engineering</a></h2>
+        <p>LLM 只做一件事：给定输入，生成输出。 模型是固定的。你能控制的，其实只有输入，以及围绕输入输出构建的系统。 由此派生出两个真实的工程问题域。 问题域 A：如何构造更好的输入 这是一个连续的复杂度谱系： 手工写指令 -&amp;gt; Prompt Engineering 动态检索、拼装、压缩信息 -&amp;gt; Context...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2026-03-07T04:00:00.000Z">2026年3月7日</time>
+        <span>AI</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/notes/20260307/">让执行路径成为资产</a></h2>
+        <p>大多数 AI 系统还停留在“单次推理”形态。 任务来了重新规划，执行完毕即丢弃，成功经验从不沉淀。 真正面向长期运行的架构，得把“执行路径”变成资产。 核心是三层分离： 方法层：定义目标和策略 执行层：保存经过验证、可运行的代码或 Script 评估层：检测退化并触发修复 某条路径反复验证稳定后，就应该固化成 Scri...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2026-02-04T08:15:39.000Z">2026年2月4日</time>
+        <span>AI</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20260204-prompt-agentic-rag-ai/">从 Prompt 到碳基 Agentic RAG：AI 时代的人类认知外化</a></h2>
+        <p>从 Prompt、Context 与协议出发，讨论 AI 应用背后的人类认知组织能力如何被外化与结构化。</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2025-12-12T04:18:27.000Z">2025年12月12日</time>
+        <span>AI</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20251212-function-calling/">大模型中的 Function Calling 与工具模式:机制、区别与本质</a></h2>
+        <p>本文由ChatGPT和Claude.ai辅助完成 大模型(LLM)在现代应用中的一个核心能力,是能够按照严格结构调用外部工具,例如数据库查询、Python 代码执行、HTTP 请求、存储系统等。围绕这一点,业界形成了“function calling”与“tools API”等概念。尽管二者在语义上相近,但其实现逻辑、...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2025-09-02T13:44:21.000Z">2025年9月2日</time>
+        <span>AI</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20250902-ai/">用脚本+AI CLI半自动写代码：实践经验分享</a></h2>
+        <p>最近在折腾一个“半自动编程”项目，目标是让 AI 工具在一个相对可控的框架下持续编码，帮我实现一个个明确的开发任务。这里分享整个过程、思路和实践套路，算是一次探索性的工程笔记。 为什么要搞半自动 市面上的 AI 编程工具越来越多，比如：Claude Code、Gemini CLI、QWEN CODE 以及其他支持 CL...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2025-02-25T13:48:37.000Z">2025年2月25日</time>
+        <span>AI</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20250225/">关于大模型的Prompt</a></h2>
+        <p>网上资料摘要 一些个人理解 大模型交互的核心：提示词工程 以下基于个人理解，并通过claude优化（2025-02-26） 提示词（Prompt）是大模型的输入，也是调用大模型能力的接口，用以激发或引导大模型生成特定类型的回答。 提示词工程的目的是尽量把任务说清楚，让大模型能充分理解我们的意图，以按照正确的方向回答问题...</p>
+      </div>
+    </li>
+  </ol>
+  </main>
+  <footer class="site-footer">
+    <p>&copy; 2026 拉巴力的纸皮箱</p>
+  </footer>
+  <button class="reading-return" type="button" data-reading-return aria-label="回到开头" title="回到开头">
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <path d="M12 19V5"></path>
+      <path d="m6 11 6-6 6 6"></path>
+    </svg>
+  </button>
+  <script src="/scripts/theme.js"></script>
+  <script src="/scripts/image-viewer.js"></script>
+  <script src="/scripts/reading-tools.js"></script>
+</body>
+</html>

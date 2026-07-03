@@ -1,0 +1,1907 @@
+# 刷LeetCode总结的算法基础和套路
+
+Canonical: https://kingson4wu.github.io/zh/posts/20250709/
+Markdown: https://kingson4wu.github.io/zh/posts/20250709/index.md
+Language: zh
+Type: post
+Date: 2025-07-09
+Tags: Algorithms
+
+最近重新刷LeetCode，对一些算法基础和套路做下总结，以做备忘 简要分类总结 数据结构 数组（Array） 链表（Linked List） 哈希表（HashMap / HashSet） 堆（Heap） 最大堆 / 最小堆 常用于：优先队列、Top K、调度排序 栈 / 队列（Stack / Queue） DFS 通...
+
+---
+
+>> 最近重新刷LeetCode，对一些算法基础和套路做下总结，以做备忘
+
+
+---
+
+# 简要分类总结
+
+## 数据结构
+
++ 数组（Array）
++ 链表（Linked List） 
++ 哈希表（HashMap / HashSet）
++ 堆（Heap）
+    - 最大堆 / 最小堆
+    - 常用于：优先队列、Top K、调度排序
++ 栈 / 队列（Stack / Queue）
+    - DFS 通常借助栈实现，BFS 借助队列
++ 树（Tree）
+    - 普通二叉树
+    - 二叉搜索树（BST）
+    - 平衡二叉树（AVL / 红黑树）
+    - 字典树（Trie）
+    - 线段树（Segment Tree）
+    - 树状数组（Fenwick Tree）
+    - 并查集  
++ 图（Graph）
+    - 表示方式：邻接表、邻接矩阵
+    - 有向图 / 无向图，带权图 / 无权图
+    - 拓扑排序
+        - Kahn 算法（BFS 实现）
+        - DFS 逆后序（递归 + 回退）
+        - 用于检测有向图中是否存在环、任务调度等
+    - 最短路径算法：Dijkstra、Floyd、Bellman-Ford（带权图最短路径）
+    - 最小生成树算法：Kruskal / Prim
+    - 稠密图和稀疏图
+        - 稠密图：边很多，接近“完全图”
+        - 稀疏图：边很少，大多数节点之间没有直接连接           
+
+## 算法
++ 遍历算法
+    - 深度优先搜索（DFS）
+        - 栈结构实现（递归或手动栈）
+        - 回溯 （= DFS + 剪枝 + 状态恢复（回退））
+            - 常用于：组合、排列、子集、数独、八皇后等问题
+    - 广度优先搜索（BFS）
+        - 队列结构实现，逐层遍历    
++ 排序（冒泡、快速、堆）
++ 快慢指针/ 双指针
++ 滑动窗口
++ 单调栈 / 单调队列
++ 二分查找
++ 分治算法（Divide & Conquer）
++ 贪心算法（Greedy）
++ 动态规划（DP）
+    - 背包问题（0-1 背包、子集背包、完全背包）
+    - 子序列问题（LIS 最长递增子序列、LCS 最长公共子序列）
+    - 区间 DP / 状态压缩 / 滚动数组
++ 回溯算法（Backtracking）
+    - 用于枚举所有可能解，如全排列、组合 / 子集
+
+---
+
+# 链表
+
+* 与数组不同，链表在构建子链时不会增加额外的空间复杂度。因此可以放心地构造子链，无需考虑节点交换的问题，也不必执着于“原地交换”的思路。
+* 使用哨兵节点是一种常见技巧，它可以避免处理头指针等特殊情况，在代码实现上更加简洁。
+
+  * **链表内指定区间反转：**
+    给定一个单链表的头指针 `head`，以及两个整数 `left` 和 `right`（其中 `left <= right`），请你反转从位置 `left` 到位置 `right` 的链表节点，返回反转后的链表。
+
+  ```go
+  func reverseBetween(head *ListNode, m int, n int) *ListNode {
+      if m == n || head == nil {
+          return head
+      }
+
+      // 哨兵节点，避免处理头指针的特殊情况
+      dummy := &ListNode{Next: head}
+      pre := dummy
+
+      // 1. 找到第 m-1 个节点
+      for i := 1; i < m; i++ {
+          pre = pre.Next
+      }
+
+      // 2. 反转 m 到 n 之间的节点，采用头插法
+      start := pre.Next      // 第 m 个节点
+      then := start.Next     // 第 m+1 个节点
+
+      for i := 0; i < n-m; i++ {
+          start.Next = then.Next
+          then.Next = pre.Next
+          pre.Next = then
+          then = start.Next
+      }
+
+      return dummy.Next
+  }
+  ```
+
+
+# 二叉树
+
+* **二叉树遍历（先序、中序、后序）**
+
+  * 先序（中左右）、中序（左中右）、后序（左右中）
+  * 包含递归与非递归两种实现方式
+  * **DFS**：先序 / 中序 / 后序（递归 / 栈实现）
+  * **BFS**：层序遍历（借助队列实现）
+
+* **二叉查找树（Binary Search Tree，简称 BST）**
+
+  * 左子树所有节点的值均小于根节点，右子树所有节点的值均大于根节点（**不允许等于**）
+  * **中序遍历结果是升序序列**
+
+* **完全二叉树**
+
+  * 如果一棵深度为 `h` 的二叉树，除了第 `h` 层，其它每一层的节点数都达到最大值，并且第 `h` 层的节点都尽量靠左排列，则该树是完全二叉树
+  * 第 `h` 层可能包含 `1 ~ 2^h` 个节点
+  * **堆**（大顶堆 / 小顶堆）是一种基于完全二叉树的结构
+
+* **平衡二叉树（Balanced Binary Tree）**
+
+  * 要么是空树，要么满足以下条件：左右子树的高度差的绝对值不超过 1，且左右子树也分别是平衡二叉树
+
+
+## 二叉树遍历
+
+* 树的遍历主要分为两类：
+
+  * **广度优先遍历（BFS）**：也称层序遍历，使用队列实现
+  * **深度优先遍历（DFS）**：包括先序、中序、后序三种形式，可使用递归或栈实现
+
+    * 递归
+    * 栈
+
+* **深度优先遍历（DFS）说明**
+
+  * 使用递归实现 DFS 时，虽然代码中未显式使用栈，但其实是借助系统的 **调用栈（Call Stack）** 来进行函数的递归与回溯
+
+### 先序遍历（前序）
+
+* 栈实现流程：
+
+  1. 循环条件：`root != nil || len(stack) > 0`
+  2. 若 `root != nil`，访问节点、入栈、转向左子树
+  3. 否则出栈、转向右子树
+
+```go
+func (root *TreeNode) preorder() []int {
+	res := []int{}
+	if root == nil {
+		return res
+	}
+	stack := []*TreeNode{}
+	for root != nil || len(stack) > 0 {
+		if root != nil {
+			res = append(res, root.data)      // 访问当前节点
+			stack = append(stack, root)       // 入栈
+			root = root.Lchild                // 向左子树移动
+		} else {
+			root = stack[len(stack)-1]        // 出栈
+			stack = stack[:len(stack)-1]
+			root = root.Rchild                // 转向右子树
+		}
+	}
+	return res
+}
+```
+
+### 中序遍历
+
+* 栈实现流程：
+
+  1. 循环条件：`root != nil || len(stack) > 0`
+  2. 若 `root != nil`，将当前节点入栈并转向左子树
+  3. 否则出栈并访问节点
+  4. 然后转向右子树
+
+```go
+func (root *TreeNode) inorder() []int {
+	res := []int{}
+	if root == nil {
+		return res
+	}
+	stack := []*TreeNode{}
+	for root != nil || len(stack) > 0 {
+		if root != nil {
+			stack = append(stack, root)       // 入栈，等待回溯
+			root = root.Lchild                // 向左走
+		} else {
+			root = stack[len(stack)-1]        // 出栈
+			stack = stack[:len(stack)-1]
+			res = append(res, root.data)      // 访问节点
+			root = root.Rchild                // 转向右子树
+		}
+	}
+	return res
+}
+```
+
+* 示例题目：判断一棵二叉树是否为二叉搜索树
+
+```go
+func isValidBST(root *TreeNode) bool {
+    stack := []*TreeNode{}
+    inorder := math.MinInt64
+    for len(stack) > 0 || root != nil {
+        for root != nil {
+            stack = append(stack, root)
+            root = root.Left
+        }
+        root = stack[len(stack)-1]
+        stack = stack[:len(stack)-1]
+        if root.Val <= inorder {
+            return false
+        }
+        inorder = root.Val
+        root = root.Right
+    }
+    return true
+}
+```
+
+### 后序遍历
+
+* 非递归实现关键：访问节点需保证其左右子树均已访问或为空
+
+```go
+func (root *TreeNode) Postorder() []int {
+	res := []int{}
+	if root == nil {
+		return res
+	}
+	stack := []*TreeNode{}
+	var pre *TreeNode = nil
+	stack = append(stack, root)
+
+	for len(stack) > 0 {
+		cur := stack[len(stack)-1]
+		// 如果是叶子节点，或子节点已访问，则访问当前节点
+		if (cur.Lchild == nil && cur.Rchild == nil) || (pre != nil && (pre == cur.Lchild || pre == cur.Rchild)) {
+			res = append(res, cur.data)
+			stack = stack[:len(stack)-1]
+			pre = cur // 标记当前已访问
+		} else {
+			if cur.Rchild != nil {
+				stack = append(stack, cur.Rchild)
+			}
+			if cur.Lchild != nil {
+				stack = append(stack, cur.Lchild)
+			}
+		}
+	}
+	return res
+}
+```
+
+
+## 删除二叉搜索树中的节点
+
+* 删除节点的四种情况：
+
+  1. **叶子节点（无子节点）**
+
+     * 直接删除，返回 `nil`。
+  2. **只有左子树**
+
+     * 用左子节点替代当前节点，返回 `root.Left`。
+  3. **只有右子树**
+
+     * 用右子节点替代当前节点，返回 `root.Right`。
+  4. **左右子树都有**
+
+     * 找右子树中最小的节点（即**后继 successor**），
+     * 用 successor 的值替代当前节点的值，
+     * 然后在右子树中递归删除该 successor 节点。
+
+* 情况 4 的说明：
+
+  * \*\*右子树的最小节点（successor）\*\*不一定是叶子节点；
+  * 它一定没有左子节点，但**可能有右子节点**。
+
+```
+      10                        11        
+     /  \                      /  \
+    5    15                   5   15
+        /                         /  
+       11       -->             13
+         \                     /  \  
+         13                   12  14
+        /  \
+       12   14
+```
+
+* 什么是“递归删除 successor 节点”？
+
+  * 当我们删除一个节点（设为 `root`）且其有左右子树时，选择右子树中最小节点（successor）作为替代；
+  * 但此时右子树中仍存在原来的 successor 节点，因此需在右子树中递归删除该节点；
+  * 这样才能确保整棵树依然符合\*\*二叉搜索树（BST）\*\*的性质。
+
+## 实现示例
+```go
+func deleteNode(root *TreeNode, key int) *TreeNode {
+	if root == nil {
+		return nil
+	}
+	if key < root.Val {
+		root.Left = deleteNode(root.Left, key)
+		return root
+	} else if key > root.Val {
+		root.Right = deleteNode(root.Right, key)
+		return root
+	}
+	//找到要删除的结点
+	if root.Left == nil {
+		return root.Right
+	}
+	if root.Right == nil {
+		return root.Left
+	}
+	// 情况4：左右子树都有
+	//需要找右子树的最小值的结点, 最小的一定在最左边
+	successor := root.Right
+	for successor.Left != nil {
+		successor = successor.Left
+	}
+	successor.Right = deleteNode(root.Right, successor.Val)
+	successor.Left = root.Left
+	return successor
+}
+```
+
+## 树状数组（Fenwick Tree / Binary Indexed Tree）
+
+* **适用场景**：一维前缀和问题（如区间求和、频率统计等）
+* **核心思想**：
+
+  * 利用二进制的最低位（lowbit）来定位负责某段区间的节点
+  * 是一种空间压缩形式的前缀树结构
+* 一种可动态维护序列前缀和的数据结构，支持以下操作：
+
+  * **单点更新 `update(i, v)`**：将第 `i` 个位置的值增加 `v`（如本题中 `v = 1`）
+
+  ```go
+  func update(i int, v int) {
+      for i <= n {  // n 是树状数组的长度
+          bit[i] += v
+          i += i & -i  // 跳到下一个负责这个区间的节点
+      }
+  }
+  ```
+
+  * **区间查询 `query(i)`**：查询区间 `[1..i]` 的前缀和
+
+    * 通过跳跃式回溯累加，效率高
+
+    ```go
+    // 查询 bit[1] 到 bit[i] 的前缀和
+    func query(i int) int {
+        res := 0
+        for i > 0 {
+            res += bit[i]
+            i -= i & -i  // i & -i 取最低位的 1
+        }
+        return res
+    }
+    ```
+
+### query(p) 的跳跃计算示意
+
+* 树状数组 `bit[]` 示意如下：
+
+| 下标（i） | bit\[i] | 表示的区间     |
+| ----- | ------- | --------- |
+| 1     | 2       | sum(1)    |
+| 2     | 1       | sum(1..2) |
+| 3     | 0       | sum(3)    |
+| 4     | 3       | sum(1..4) |
+| 5     | 0       | sum(5)    |
+| 6     | 0       | sum(5..6) |
+| 7     | 0       | sum(7)    |
+| 8     | ?       | sum(1..8) |
+
+* 查询 `query(5)` 实际执行过程如下：
+
+  * 第一次：`p = 5` → `sum += bit[5] = 0` → `p = 5 - 1 = 4`
+  * 第二次：`p = 4` → `sum += bit[4] = 3` → `p = 4 - 4 = 0`
+  * 退出循环，结果为 `sum = 3`
+
+* 实际加了哪些区间：
+
+  * `bit[5]` → 表示 `[5]`
+  * `bit[4]` → 表示 `[1..4]`
+  * 所以 `sum[1..5] = bit[5] + bit[4]`
+
+### 为什么 `x & (-x)` 能取得 `x` 的最低位 1？
+
+* 原理：使用补码
+
+  * `-x = ^x + 1`（按位取反再加 1）
+
+```go
+x     = 00001100
+-x    = 11110100
+----------------
+x & -x = 00000100  // 取出最低位的 1
+```
+
+* 补码运算确保 `x & -x` 恰好保留最低位的 1，其它位互斥
+
+### 树状数组的安全构造方式
+
+```go
+// 计算最小安全长度（为离散化后的数组保留空间）
+func getSafeFenwickArraySize(n int) int {
+    nextPowerOf2 := 1 << bits.Len(uint(n))
+    return nextPowerOf2 + 1 // +1 处理边界
+}
+```
+
+## 例题：[315. 计算右侧小于当前元素的个数](https://leetcode.cn/problems/count-of-smaller-numbers-after-self/description/)
+
+* **题意**：返回数组 `counts`，其中 `counts[i]` 表示 `nums[i]` 右侧比它小的元素数量
+* **解法**：树状数组 + 离散化优化空间
+
+### 解题流程：
+
+1. **离散化**：将原数组值映射到连续整数范围（防止值域过大）
+2. **从后向前遍历**：
+
+   * 查询当前数 **前面比它小** 的数的出现次数 → `query(id - 1)`
+   * 更新当前数出现次数 → `update(id)`
+3. **树状数组操作时间复杂度：O(log n)**
+
+### 实现代码：
+
+```go
+func countSmaller(nums []int) []int {
+    // 离散化映射：数值 -> 索引
+    numToId := func(nums []int) map[int]int {
+        set := make(map[int]struct{})
+        for _, num := range nums {
+            set[num] = struct{}{}
+        }
+        a := make([]int, 0, len(set))
+        for num := range set {
+            a = append(a, num)
+        }
+        sort.Ints(a)
+        m := make(map[int]int)
+        for i, num := range a {
+            m[num] = i + 1  // 从 1 开始
+        }
+        return m
+    }(nums)
+
+    c := make([]int, len(nums)+5)
+    lowBit := func(x int) int {
+        return x & -x
+    }
+    query := func(pos int) int {
+        ret := 0
+        for pos > 0 {
+            ret += c[pos]
+            pos -= lowBit(pos)
+        }
+        return ret
+    }
+    update := func(pos int) {
+        for pos < len(c) {
+            c[pos]++
+            pos += lowBit(pos)
+        }
+    }
+
+    ans := make([]int, len(nums))
+    for i := len(nums) - 1; i >= 0; i-- {
+        id := numToId[nums[i]]
+        ans[i] = query(id - 1)
+        update(id)
+    }
+    return ans
+}
+```
+
+
+## 线段树（Segment Tree）
+
+* **适用场景**：支持区间查询 + 单点或区间修改等
+
+* **典型用途**：
+
+  * 区间最大值、最小值、区间和
+  * 区间赋值、区间加法（懒标记 / Lazy Propagation）
+
+* **结构特征**：
+
+  * 完全二叉树结构
+  * 每个节点维护一个区间的信息
+  * 父节点信息由左右子树合并而来
+
+
+## 例题：[699. 掉落的方块](https://leetcode.cn/problems/falling-squares/description/)
+
+* 问题：模拟落方块过程，返回每一步的最高高度
+* 典型的线段树区间最大值更新与查询问题
+
+### 解题流程：
+
+1. **离散化所有坐标**：防止空间浪费（坐标最大值可达 10^9）
+2. **使用线段树**维护每个区间的最大高度
+3. **每次插入一个方块**：
+
+   * 查询当前 `[left, right]` 区间的最大高度 `h`
+   * 更新该区间的值为 `h + sideLength`
+   * 记录全局最大高度
+
+## 并查集
+## 例题：[684. 冗余连接](https://leetcode.cn/problems/redundant-connection/description)
++ 在含有一个环的无向图中找出一条可删边使其变为树
+
+### 解题流程：
++ 使用并查集判断边是否构成环：
+    - 初始化每个节点为不同集合；
+        - 遍历 edges 中每条边 (u, v)：
+            - 如果 u 与 v 已在同一集合中，说明这条边构成环 → 返回它；
+            - 否则合并 u 和 v；
+    - 因为题目要求返回「最后构成环的边」，只需从前往后遍历一次即可。
+
+### 实现代码  
+```go
+func findRedundantConnection(edges [][]int) []int {
+    parent := make([]int, len(edges)+1)
+    for i := range parent {
+        parent[i] = i
+    }
+    var find func(int) int
+    find = func(x int) int {
+        if parent[x] != x {
+            parent[x] = find(parent[x])
+        }
+        return parent[x]
+    }
+    union := func(from, to int) bool {
+        x, y := find(from), find(to)
+        if x == y {
+            return false
+        }
+        parent[x] = y
+        return true
+    }
+    for _, e := range edges {
+        if !union(e[0], e[1]) {
+            return e
+        }
+    }
+    return nil
+}
+```
+
+# 堆
+
+### 基本性质与操作（以最大堆为例）
+
+1. 最大堆的性质
+
+   * 最大堆是一种**完全二叉树**，满足每个父节点的值都**大于或等于**其左右子节点的值。
+   * 虽然逻辑结构为树，实际通常使用**数组**来实现。
+
+2. 元素的插入与删除方式
+
+   * **插入新节点**：将元素追加到数组末尾，然后进行**向上调整（Sift-Up）**，直到堆序性恢复。
+   * **删除任意节点**：将目标节点与数组最后一个元素交换，然后删除最后一个元素：
+
+     * 若新值**大于父节点** → 进行**向上调整**；
+     * 若新值**小于任一子节点** → 进行**向下调整**。
+
+3. 特殊操作：删除堆顶（最大值）
+
+   * 删除堆顶（即数组第一个元素）时，将最后一个元素移至根节点位置，再进行**向下调整（Sift-Down）**，以恢复堆的结构。
+
+4. 时间复杂度分析
+
+   * **插入**或**删除**操作中，最多需要调整一条从叶节点到根节点或从根节点到叶节点的路径，因此时间复杂度均为：
+
+     > ✅ **O(log n)**
+
+5. 与二分查找的比较
+
+   * **二分查找**的时间复杂度也是：
+
+     > ✅ **O(log n)**
+   * 不过它依赖于**有序数组**，而最大堆只维护**局部有序结构**（即每个父节点大于子节点）。两者在原理和应用场景上存在本质区别。
+
+
+
+# 图
+
+## 无向图
+
+* 由两个部分组成：
+
+  * **顶点（Vertices）**：图中的节点。
+  * **边（Edges）**：连接两个顶点的线段。
+
+* **边用集合表示**：一条边连接两个顶点，用 `{A, B}` 表示（不区分方向），区别于有向图中的 `(A, B)`。
+  **度（Degree）**：一个顶点的度是连接它的边的数量（不考虑方向）。
+
+* 无向图可以表示为：
+
+  * 顶点：`{A, B, C}`
+  * 边：`{{A, B}, {B, C}}`
+
+* 图形示意：
+
+  * `A —— B —— C`
+
+* **无向图的深度优先搜索（DFS）**
+
+  * 从某个顶点开始；
+  * 标记为“已访问”；
+  * 遍历它的邻居；
+  * 对每一个未访问的邻居递归执行 DFS；
+  * 如果遇到没有未访问邻居的死胡同，则回退。
+
+* **递归实现 DFS**：
+
+```python
+def dfs(graph, start, visited=None):
+    if visited is None:
+        visited = set()
+    print(start)  # 访问当前节点
+    visited.add(start)
+
+    for neighbor in graph[start]:
+        if neighbor not in visited:
+            dfs(graph, neighbor, visited)
+
+# 调用
+dfs(graph, 'A')
+```
+
+* **非递归实现（使用栈）**：
+
+```python
+def dfs_iterative(graph, start):
+    visited = set()
+    stack = [start]
+
+    while stack:
+        node = stack.pop()
+        if node not in visited:
+            print(node)
+            visited.add(node)
+            # 为了保持访问顺序，反转邻居顺序
+            for neighbor in reversed(graph[node]):
+                if neighbor not in visited:
+                    stack.append(neighbor)
+
+dfs_iterative(graph, 'A')
+```
+
+* **无向图 DFS 的注意事项**：
+
+  * **防止死循环**：必须使用 `visited` 集合记录已访问节点，因为无向图的边是双向的，若不记录，会在 A-B-A-B 间无限循环。
+  * **图不连通的情况**：只对一个起点 DFS 无法遍历所有节点。可对所有节点进行一次 DFS。
+
+```python
+def dfs_all(graph):
+    visited = set()
+    for node in graph:
+        if node not in visited:
+            dfs(graph, node, visited)
+```
+
+
+## 有向图
+
+### 有向图的拓扑排序
+
+* 拓扑排序（Topological Sorting）适用于 **有向无环图（DAG，Directed Acyclic Graph）**。其目标是将所有顶点排成一个线性序列，使得每条边 `u → v` 中，顶点 `u` 排在 `v` 的前面。
+
+* 举例说明：
+
+  * **学习顺序**：先学 A，再学 B，最后学 C。
+  * **任务依赖**：任务 B 必须在任务 A 完成后执行。
+  * 将任务抽象为节点，依赖关系为边，则问题转化为 DAG 的拓扑排序。
+
+* **适用范围**：
+
+  * 必须是有向无环图（DAG）。
+  * 若图中存在环，则无法进行拓扑排序。
+
+* **拓扑排序的两种常用算法**：
+
+  * **方法一：Kahn 算法（入度表 + 队列）**
+
+    * 统计所有顶点的入度。
+    * 将入度为 0 的顶点加入队列。
+    * 从队列中取出顶点 `u` 加入结果序列。
+    * 删除 `u` 指向的边（使相邻顶点 `v` 入度减 1）。
+    * 若 `v` 入度变为 0，加入队列。
+    * 重复以上过程直至队列为空。
+    * 若最终结果序列包含所有节点，则拓扑排序成功；否则图中存在环。
+
+  * **方法二：DFS 法（后序入栈）**
+
+    * 从未访问的节点开始 DFS。
+    * 递归访问其所有后继节点。
+    * 当前节点所有后继访问完成后，将其压入栈中。
+    * 所有节点访问完成后，从栈顶依次弹出即为拓扑序列。
+
+* **常见应用场景**：
+
+  * 编译器模块依赖分析
+  * 项目任务调度
+  * 数据处理管道排序
+  * 课程安排问题（Leetcode 207、210）
+
+
+### Kahn 算法（Golang 实现）：
+
+```go
+// 拓扑排序（Kahn 算法）
+func topologicalSort(graph map[string][]string) ([]string, bool) {
+  inDegree := make(map[string]int)
+  var result []string
+
+  // 初始化入度表
+  for u := range graph {
+    if _, ok := inDegree[u]; !ok {
+      inDegree[u] = 0
+    }
+    for _, v := range graph[u] {
+      inDegree[v]++
+    }
+  }
+
+  // 入度为 0 的节点入队
+  var queue []string
+  for node, deg := range inDegree {
+    if deg == 0 {
+      queue = append(queue, node)
+    }
+  }
+
+  // 拓扑排序
+  for len(queue) > 0 {
+    node := queue[0]
+    queue = queue[1:]
+    result = append(result, node)
+
+    for _, neighbor := range graph[node] {
+      inDegree[neighbor]--
+      if inDegree[neighbor] == 0 {
+        queue = append(queue, neighbor)
+      }
+    }
+  }
+
+  // 判断是否存在环
+  if len(result) != len(inDegree) {
+    return nil, false
+  }
+  return result, true
+}
+
+func main() {
+  graph := map[string][]string{
+    "A": {"B", "C"},
+    "B": {"D"},
+    "C": {"D"},
+    "D": {},
+  }
+
+  order, ok := topologicalSort(graph)
+  if !ok {
+    fmt.Println("图中存在环，无法拓扑排序")
+  } else {
+    fmt.Println("拓扑排序结果：", order)
+  }
+}
+```
+
+* **Kahn 算法的核心逻辑**：
+
+  * 每次只处理入度为 0 的节点，即“无依赖”的任务。
+  * 处理后从图中移除该节点影响（即更新其邻接节点的入度）。
+  * 保证每个节点的依赖都先被处理。
+
+* **为什么 Kahn 算法只适用于 DAG？**
+
+  * 如果存在环，某些节点将永远无法变为入度 0，导致无法完成排序。
+  * 若排序结果节点数 < 总节点数，说明图中存在环。
+
+✅ **因此：Kahn 算法不仅能进行拓扑排序，还能用于判断图中是否存在环。**
+
+* **Kahn 算法实质上是 BFS 的变种**，关注“入度为 0”的节点而不是“邻接点”。
+
+
+### Kahn 算法 vs 广度优先搜索（BFS）
+
+| 项目     | Kahn 算法（拓扑排序）  | 广度优先搜索（BFS） |
+| ------ | -------------- | ----------- |
+| 遍历方式   | 一层一层，按入度为 0 的点 | 一层一层，按邻接点   |
+| 使用数据结构 | 队列（Queue）      | 队列（Queue）   |
+| 访问顺序   | 所有无依赖的点先访问     | 当前点的所有邻居先访问 |
+| 主要用途   | 拓扑排序 / 检测环     | 遍历所有可达节点    |
+
+> **Kahn 算法 = BFS 的拓扑排序版本**，核心是基于“入度为 0”的节点层层推进，保证拓扑顺序合法。
+
+
+---
+
+
+## 二分查找
+
+1. `for lower <= upper` —— **闭区间版本 `[lower, upper]`**
+
+   * `mid = (lower + upper) / 2`（向下取整）
+
+     * 如果 `mid` 满足条件（要往左找更小或更左的）：`upper = mid - 1`
+     * 如果不满足条件（要往右找）：`lower = mid + 1`
+
+   * **是否跳过了 mid？**
+
+     * 表面上看，`upper = mid - 1` 似乎跳过了 `mid`
+     * 实际上，`mid` 已经被判断过，`lower` 没变，下一轮中 `lower == mid`
+     * 循环仍会继续执行，直到 `lower > upper` 时退出
+
+   * **示例分析：**
+
+     * 在数组 `[3, 4, 5]` 中查找“第一个大于等于 4 的数”
+     * 初始区间为 `[3, 5]`，`mid = 4`
+     * `mid = 4` 满足条件 → `upper = 3`
+     * 下一轮区间为 `[3, 3]`，`mid = 3`
+     * `mid = 3` 不满足条件 → `lower = 4`
+     * 区间变为 `[4, 3]`，循环结束
+     * 返回 `lower = 4`，即最小满足条件的值
+
+2. `for lower < upper` —— **半开区间版本 `[lower, upper)`**
+
+   * 如果 `mid` 满足条件（要往左找）：`upper = mid`
+   * 如果不满足条件：`lower = mid + 1`
+   * 循环结束时 `lower == upper`，即为最小满足条件的位置
+
+
+# 排序
+
+## 冒泡排序
+
+* 相邻元素两两比较并交换，使用双重循环；
+* 若某次遍历中未发生任何交换，说明数组已有序，可提前结束；
+* 代码示例：
+
+```go
+func bubbleSort(arr []int) {
+    n := len(arr)
+    if n <= 1 {
+        return
+    }
+
+    for i := 0; i < n; i++ {
+        unChanged := true
+        for j := 0; j < n-i-1; j++ {
+            if arr[j] > arr[j+1] {
+                arr[j], arr[j+1] = arr[j+1], arr[j]
+                unChanged = false
+            }
+        }
+        if unChanged {
+            break
+        }
+    }
+}
+```
+
+## 快速排序
+
+* 通过一趟排序将序列划分为左右两个子区间，其中左边的元素都小于右边的元素，再分别对左右区间递归排序，从而实现整体有序。
+
+* 分区逻辑说明（采用首元素为基准）：
+
+  * 交替比较并交换元素值，最终确定基准值的位置；
+  * 每步都需判断 `low < high`，不要遗漏；
+  * `high--` 与 `low++` 的条件是与 `temp`（基准值）进行比较。
+
+* TopK 剪枝优化（用于只需前K个元素的场景）：
+
+  * 若 `mid > k`，递归处理左边；
+  * 若 `mid < k`，递归处理右边。
+
+* 分区函数定义模板：
+
+```go
+func partition(arr []int, low, high int) int {
+    // 首先从 high 开始比较，循环 high--，跳出后赋值；
+    // 然后从 low 开始比较，同理；
+    // 每步都要判断 low < high；
+}
+```
+
+* 快速排序递归模板：
+
+```go
+var quick func(arr []int, start, end int)
+quick = func(arr []int, start, end int) {
+    // ...
+}
+```
+
+* 代码示例：
+
+```go
+// 升序快速排序
+func quickSort(arr []int) {
+    var quick func(arr []int, start, end int)
+    quick = func(arr []int, start, end int) {
+        if start >= end {
+            return
+        }
+        mid := partition(arr, start, end)
+        quick(arr, start, mid)
+        quick(arr, mid+1, end)
+    }
+    quick(arr, 0, len(arr)-1)
+}
+
+// 分区函数，low < high 判断不要漏！
+func partition(arr []int, low, high int) int {
+    temp := arr[low]
+    for low < high {
+        for low < high && arr[high] >= temp {
+            high--
+        }
+        if low < high {
+            arr[low] = arr[high]
+        }
+
+        for low < high && arr[low] < temp {
+            low++
+        }
+        if low < high {
+            arr[high] = arr[low]
+        }
+    }
+    arr[low] = temp
+    return low
+}
+
+// 前K个最小值
+func quickSortTopK(arr []int, k int) {
+    var quick func(arr []int, start, end, k int)
+    quick = func(arr []int, start, end, k int) {
+        if start >= end {
+            return
+        }
+        mid := partition(arr, start, end)
+        if mid > k {
+            quick(arr, start, mid, k)
+        } else if mid < k {
+            quick(arr, mid+1, end, k)
+        }
+    }
+    quick(arr, 0, len(arr)-1, k)
+}
+```
+
+## 堆排序
+
+1. 堆是一种**完全二叉树结构**；
+2. **最大堆**：父节点 ≥ 子节点；**最小堆**：父节点 ≤ 子节点；
+
+* **实现步骤**：
+
+  1. **调整堆（自上而下）**：
+
+     * 函数签名：`adjust(nums []int, root int, length int)`
+     * 从当前根节点开始，比较左右子节点，找出较大者与根交换，递归向下直到无需调整。
+  2. **初始化堆**：
+
+     * 从最后一个非叶子节点（`length/2`）开始，依次向上调整；
+  3. **堆排序过程**：
+
+     * 每次将堆顶元素与末尾交换，再对堆顶进行调整；
+     * 排序范围逐步缩小，直到全部有序。
+
+* **最大堆调整函数**：
+
+```go
+func adjust(nums []int, root, length int) {
+    child := root*2 + 1
+
+    for child < length {
+        if child+1 < length && nums[child+1] > nums[child] {
+            child++
+        }
+
+        if nums[child] <= nums[root] {
+            break
+        }
+
+        nums[child], nums[root] = nums[root], nums[child]
+        root = child
+        child = root*2 + 1
+    }
+}
+```
+
+* 代码示例：
+
+```go
+func heapSort(nums []int) {
+    // 初始化堆（自底向上）
+    for i := len(nums) / 2; i >= 0; i-- {
+        adjust(nums, i, len(nums))
+    }
+
+    // 排序过程
+    for i := len(nums) - 1; i > 0; i-- {
+        nums[i], nums[0] = nums[0], nums[i]
+        adjust(nums, 0, i)
+    }
+}
+
+/** 最大堆取 TopK（前K大）且有序 */
+func heapSortTopK(nums []int, k int) []int {
+    // 初始化最大堆
+    for i := len(nums) / 2; i >= 0; i-- {
+        adjust(nums, i, len(nums))
+    }
+
+    // 取出前K大元素
+    for i := len(nums) - 1; i > len(nums)-1-k; i-- {
+        nums[i], nums[0] = nums[0], nums[i]
+        adjust(nums, 0, i)
+    }
+
+    return nums[len(nums)-k:]
+}
+```
+
+> ⚠️注意事项：
+>
+> * 初始化堆：自底向上遍历构建，但每个节点的调整是自上而下；
+> * 排序时：堆顶与尾部交换，再调整堆顶；
+> * `adjust` 函数中需确保越界处理、优先选择较大子节点交换；
+
+
+# 贪心算法（Greedy）
+
+* **贪心算法：通过局部最优解实现全局最优**
+
+* [55. 跳跃游戏](https://leetcode.cn/problems/jump-game/description/)
+
+  * 给定一个非负整数数组 `nums`，你最初位于数组的第一个下标。数组中的每个元素代表你在该位置可以跳跃的最大长度。
+  * 判断你是否能够到达最后一个下标
+
+* 遍历数组，并实时维护「最远可以到达的位置」
+
+  ```go
+  func canJump(nums []int) bool {
+      mostIndex := 0
+      for i := 0; i < len(nums); i++ {
+          if i <= mostIndex {
+              mostIndex = max(mostIndex, i+nums[i])
+              if mostIndex >= len(nums)-1 {
+                  return true
+              }
+          } else {
+              break
+          }
+      }
+      return false
+  }
+  ```
+
+* [45. 跳跃游戏 II](https://leetcode.cn/problems/jump-game-ii/description/)
+
+  * 计算到达最后一个位置的最小跳跃次数
+
+* **贪心 + 正向查找「可达的最远位置」**
+
+  * 每次在当前跳跃的范围内，选择可以跳得最远的位置，作为下一跳的终点
+
+* **贪心策略的正确性：**
+
+  * 在当前跳跃范围内尽量跳得远，可以最大化下一跳的「选择空间」
+  * 避免走回头路或多跳一次的情况
+
+* **为什么不遍历到最后一个元素？**
+
+  * 跳到最后一个位置时，必然是在前一步完成跳跃
+  * 如果访问 `i == len(nums) - 1`，可能导致「多跳一步」
+
+    ```go
+    func jump(nums []int) int {
+        end, farthest := 0, 0
+        steps := 0
+
+        for i := 0; i < len(nums)-1; i++ {
+            farthest = max(farthest, i+nums[i])
+            if i == end {
+                steps++
+                end = farthest
+            }
+        }
+
+        return steps
+    }
+
+    func max(a, b int) int {
+        if a > b {
+            return a
+        }
+        return b
+    }
+    ```
+
+
+# 动态规划（Dynamic Programming）
+
+* **动态规划的本质**：通过**穷举所有可能解法**来寻找最优解。
+
+  * 常见的穷举方式有两种：**回溯算法**和**动态规划**。回溯是暴力尝试每种可能，动态规划则利用**状态转移方程**推导各个状态。
+  * 动态规划相比暴力穷举更高效，其核心优势在于：**利用状态转移 + 记忆**，**消除重复计算的子问题（重叠子问题）**。
+
+* 动态规划问题通常具有大量**重叠子问题**，直接穷举效率极低，因此需借助以下两种优化方式：
+
+  * 使用 **备忘录（记忆化递归）** 或 **DP table（递推表格）** 来**避免重复计算**；
+  * 其中，**记忆化递归为自顶向下**，**DP table 为自底向上**。
+
+* **动态规划 = 穷举 + 剪枝**
+
+* 动态规划的标准解题流程：
+
+  1. 明确“**状态**”和“**选择**”；
+  2. 定义 `dp` 数组或函数的含义；
+  3. 写出**状态转移方程（递推关系）**。
+
+* 常通过**状态压缩**优化空间复杂度，例如将 `O(N^2)` 降为 `O(N)`。
+
+
+## 背包问题（Knapsack）
+
+### ✅ 分类依据：**每个物品的使用次数是否受限**
+
+| 问题类型         | 每种物品使用次数 | 描述                             |
+| ------------ | -------- | ------------------------------ |
+| **0-1 背包问题** | 最多使用一次   | 每件物品要么选，要么不选，不能重复使用。           |
+| **子集和问题**    | 最多使用一次   | 0-1 背包的特例：目标是恰好凑出某个和，而非最大价值。   |
+| **完全背包问题**   | 可无限次使用   | 每种物品可选多次，适用于硬币兑换、无限供给的资源选择等场景。 |
+
+### 🎯 拓展理解：
+
+* **0-1 背包** = 最经典模型，用于资源受限问题。
+* **子集和问题** = 判断“是否可以凑出某个值”，不关心价值。
+* **完全背包** = 每种物品无限可选，常见于无限物品、找零等问题。
+
+
+### 0-1 背包问题
+
+* **题目描述**
+
+  * 给定一个容量为 `W` 的背包，以及 `N` 个物品，每个物品有：重量 `wt[i]` 和价值 `val[i]`
+  * 每种物品只能选择一次，求在不超过总容量 `W` 的前提下，最大可获得的总价值。
+
+* **解题思路**
+
+  * 状态定义：`dp[i][w]` 表示前 `i` 个物品中，容量为 `w` 的背包所能达到的最大价值。
+  * 状态转移：
+
+    ```go
+    if w < wt[i-1]:
+        dp[i][w] = dp[i-1][w]
+    else:
+        dp[i][w] = max(dp[i-1][w], dp[i-1][w - wt[i-1]] + val[i-1])
+    ```
+  * 初始化：
+
+    * `dp[0][..] = 0`：没有物品可选，价值为 0；
+    * `dp[..][0] = 0`：背包容量为 0，价值也为 0。
+
+* **代码实现**
+
+```go
+func knapsack(W int, wt, val []int) int {
+    N := len(wt)
+    dp := make([][]int, N+1)
+    for i := range dp {
+        dp[i] = make([]int, W+1)
+    }
+
+    for i := 1; i <= N; i++ {
+        for w := 1; w <= W; w++ {
+            if w < wt[i-1] {
+                dp[i][w] = dp[i-1][w]
+            } else {
+                dp[i][w] = max(dp[i-1][w], dp[i-1][w - wt[i-1]] + val[i-1])
+            }
+        }
+    }
+    return dp[N][W]
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+
+### 子集背包问题（Subset Sum）
+
+* **Leetcode 416. [分割等和子集](https://leetcode.cn/problems/partition-equal-subset-sum/description/)**
+
+  * 给定一个只包含正整数的非空数组 `nums`，判断是否可以将其分割为两个子集，且两个子集的元素和相等。
+  * 转换为背包问题：给一个容量为 `sum / 2` 的背包，判断是否可以从数组中选出若干数字恰好装满它。
+
+* **解题思路**
+
+  * 状态定义：`dp[i][j]` 表示前 `i` 个数中，是否存在子集和为 `j`。
+  * 状态转移：
+
+  ```go
+  if j < nums[i]:
+      dp[i][j] = dp[i-1][j]
+  else:
+      dp[i][j] = dp[i-1][j] || dp[i-1][j - nums[i]]
+  ```
+
+  * 初始化：
+
+    * `dp[..][0] = true`：背包容量为 0，总能装满；
+    * `dp[0][nums[0]] = true`：只有一个数且恰好等于容量；
+  * 剪枝条件：
+
+    * 若 `sum` 为奇数，直接返回 `false`；
+    * 若某元素大于 `sum / 2`，可提前跳过。
+
+* **二维数组实现**
+
+```go
+func canPartition(nums []int) bool {
+    sum := 0
+    for _, num := range nums {
+        sum += num
+    }
+    if sum%2 != 0 {
+        return false
+    }
+    target := sum / 2
+    N := len(nums)
+
+    dp := make([][]bool, N)
+    for i := range dp {
+        dp[i] = make([]bool, target+1)
+    }
+
+    for i := 0; i < N; i++ {
+        dp[i][0] = true
+    }
+    if nums[0] <= target {
+        dp[0][nums[0]] = true
+    }
+
+    for i := 1; i < N; i++ {
+        for j := 1; j <= target; j++ {
+            if j < nums[i] {
+                dp[i][j] = dp[i-1][j]
+            } else {
+                dp[i][j] = dp[i-1][j] || dp[i-1][j - nums[i]]
+            }
+        }
+    }
+
+    return dp[N-1][target]
+}
+```
+
+* **状态压缩：一维优化版本（倒序）**
+
+```go
+func canPartition(nums []int) bool {
+    sum := 0
+    for _, num := range nums {
+        sum += num
+    }
+    if sum%2 != 0 {
+        return false
+    }
+    target := sum / 2
+
+    dp := make([]bool, target+1)
+    dp[0] = true
+
+    for _, num := range nums {
+        for j := target; j >= num; j-- {
+            dp[j] = dp[j] || dp[j - num]
+        }
+    }
+
+    return dp[target]
+}
+```
+
+### 完全背包问题（Unbounded Knapsack）
+
+* **Leetcode 518. [零钱兑换 II](https://leetcode.cn/problems/coin-change-ii/description/)**
+
+  * 给定一个背包容量为 `amount`，以及一个物品数组 `coins`（可重复使用），求有多少种不同的方法可以凑出该金额。
+
+* **解题思路**
+
+  * 状态定义：`dp[i][j]` 表示使用前 `i` 种硬币，凑出金额 `j` 的方法数。
+  * 状态转移：
+
+    ```go
+    if j < coins[i-1]:
+        dp[i][j] = dp[i-1][j]
+    else:
+        dp[i][j] = dp[i-1][j] + dp[i][j - coins[i-1]]
+    ```
+  * 初始化：
+
+    * `dp[0][..] = 0`：没有硬币无法组成正金额；
+    * `dp[..][0] = 1`：金额为 0，只有 1 种凑法（什么都不选）。
+
+* **二维数组实现**
+
+```go
+func change(amount int, coins []int) int {
+    n := len(coins)
+    dp := make([][]int, n+1)
+    for i := range dp {
+        dp[i] = make([]int, amount+1)
+        dp[i][0] = 1
+    }
+
+    for i := 1; i <= n; i++ {
+        for j := 0; j <= amount; j++ {
+            if j < coins[i-1] {
+                dp[i][j] = dp[i-1][j]
+            } else {
+                dp[i][j] = dp[i-1][j] + dp[i][j - coins[i-1]]
+            }
+        }
+    }
+    return dp[n][amount]
+}
+```
+
+* **一维数组优化（正序遍历）**
+
+```go
+func change(amount int, coins []int) int {
+    dp := make([]int, amount+1)
+    dp[0] = 1
+
+    for _, coin := range coins {
+        for j := coin; j <= amount; j++ {
+            dp[j] += dp[j - coin]
+        }
+    }
+
+    return dp[amount]
+}
+```
+
+
+# 回溯
+
+* 适用于排列、组合、子集等构造类枚举问题
+
+### 通用回溯模板总结
+
+| 题型                                | 递归参数 | 关键点                | 重复处理策略                 | 代码模板示例（Go 伪码简化）      |
+| --------------------------------- | ---- | ------------------ | ---------------------- | -------------------- |
+| **排列（Permutation）**               | 无需起点 | 需要标记已使用元素 `used[]` | 排序 + `used` + 跳过相邻重复元素 | 见 *排列 II* 模板         |
+| **组合 / 子集（Combination / Subset）** | 需要起点 | 控制遍历起点，防止重复使用前面元素  | 排序 + 跳过同层相邻重复元素        | 见 *组合 II / 子集 II* 模板 |
+
+## 1. 排列（Permutation）
+
+### 1.1 无重复元素 — 基础排列（[46. 全排列](https://leetcode.cn/problems/permutations/description/)）
+
+```go
+func permute(nums []int) [][]int {
+    var res [][]int
+    var path []int
+    used := make([]bool, len(nums))
+
+    var dfs func()
+    dfs = func() {
+        if len(path) == len(nums) {
+            res = append(res, append([]int(nil), path...))
+            return
+        }
+        for i := 0; i < len(nums); i++ {
+            if used[i] {
+                continue
+            }
+            used[i] = true
+            path = append(path, nums[i])
+            dfs()
+            path = path[:len(path)-1]
+            used[i] = false
+        }
+    }
+    dfs()
+    return res
+}
+```
+
+### 1.2 有重复元素 — 排列 II（[47. 全排列 II](https://leetcode.cn/problems/permutations-ii/)）
+
+* 相较于 46，需增加：
+
+  * 排序以便判断相邻重复
+  * 重复剪枝：跳过已访问前一个相同元素
+
+```go
+func permuteUnique(nums []int) [][]int {
+    sort.Ints(nums)
+    var res [][]int
+    var path []int
+    used := make([]bool, len(nums))
+
+    var dfs func()
+    dfs = func() {
+        if len(path) == len(nums) {
+            res = append(res, append([]int(nil), path...))
+            return
+        }
+        for i := 0; i < len(nums); i++ {
+            if used[i] {
+                continue
+            }
+            //只能先用同一组重复数字的“第一个”，不能先用后面的。
+			//如果现在选择了后一个重复元素，就会导致重复排列。
+			//!used[i-1]表明前一个相同的还没用，所以你这边就别先用了
+            if i > 0 && nums[i] == nums[i-1] && !used[i-1] {
+                continue
+            }
+            used[i] = true
+            path = append(path, nums[i])
+            dfs()
+            path = path[:len(path)-1]
+            used[i] = false
+        }
+    }
+    dfs()
+    return res
+}
+```
+
+## 2. 组合 / 子集（Combination / Subset）
+
+> 本质都是选取元素的子集，区别主要在题意和输出要求。
+
+### 2.1 无重复元素 — 子集 I（[78. 子集](https://leetcode.cn/problems/subsets/)）
+
+```go
+func subsets(nums []int) [][]int {
+    var res [][]int
+    var path []int
+
+    var dfs func(start int)
+    dfs = func(start int) {
+        res = append(res, append([]int(nil), path...))
+        for i := start; i < len(nums); i++ {
+            path = append(path, nums[i])
+            dfs(i + 1)
+            path = path[:len(path)-1]
+        }
+    }
+    dfs(0)
+    return res
+}
+```
+
+
+### 2.2 有重复元素 — 子集 II（[90. 子集 II](https://leetcode.cn/problems/subsets-ii/)）
+
+```go
+func subsetsWithDup(nums []int) [][]int {
+    sort.Ints(nums)
+    var res [][]int
+    var path []int
+
+    var dfs func(start int)
+    dfs = func(start int) {
+        res = append(res, append([]int(nil), path...))
+        for i := start; i < len(nums); i++ {
+            if i > start && nums[i] == nums[i-1] {
+                continue
+            }
+            path = append(path, nums[i])
+            dfs(i + 1)
+            path = path[:len(path)-1]
+        }
+    }
+    dfs(0)
+    return res
+}
+```
+
+### 子集的另一种方式：不使用 for 循环（显式选与不选）
+
+```go
+func subsetsDfs(nums []int) [][]int {
+    var res [][]int
+    var set []int
+
+    var dfs func(int)
+    dfs = func(cur int) {
+        if cur == len(nums) {
+            res = append(res, append([]int(nil), set...))
+            return
+        }
+        // 选择当前
+        set = append(set, nums[cur])
+        dfs(cur + 1)
+        // 撤销选择
+        set = set[:len(set)-1]
+        // 不选择当前
+        dfs(cur + 1)
+    }
+    dfs(0)
+    return res
+}
+```
+
+
+## 总结要点
+
+| 特征         | 排列（Permutation）                             | 组合 / 子集（Combination / Subset）        |
+| ---------- | ------------------------------------------- | ------------------------------------ |
+| 是否用 `used` | 是                                           | 否（一般）                                |
+| 是否排序       | 有重复元素时必须排序                                  | 同左                                   |
+| 是否有起点参数    | 无需（但可选）                                     | 必须有，通常为 `start`                      |
+| 去重策略       | `i > 0 && nums[i]==nums[i-1] && !used[i-1]` | `i > start && nums[i]==nums[i-1]` 跳过 |
+| 递归形式       | `dfs()` / `dfs(index)`                      | `dfs(start int)`                     |
+
+
+## 扩展说明
+
+* **全局变量 vs 参数传递：**
+
+  * 全局变量：书写更简洁，多个函数共享更方便。
+  * 参数传递：封装更清晰，递归状态更独立，减少副作用。
+
+* **for 循环的角色：**
+
+  * 回溯中 for 循环用于枚举“选项”。
+  * 不要在 for 中处理“不选”的逻辑，不然会重复或乱序。
+
+
+## 举例：组合总和（[39. Combination Sum](https://leetcode.cn/problems/combination-sum/)）
+
+* 元素可重复使用，需遍历所有可行组合
+
+#### ✅ 推荐写法：for 中只做“选”的动作
+
+```go
+func combinationSum(candidates []int, target int) [][]int {
+    var res [][]int
+    var path []int
+
+    var dfs func(start, target int)
+    dfs = func(start, target int) {
+        if target == 0 {
+            res = append(res, append([]int(nil), path...))
+            return
+        }
+        for i := start; i < len(candidates); i++ {
+            if target >= candidates[i] {
+                path = append(path, candidates[i])
+                dfs(i, target - candidates[i])
+                path = path[:len(path)-1]
+            }
+        }
+    }
+    dfs(0, target)
+    return res
+}
+```
+
+#### 🚫 不推荐写法：用“选/不选”逻辑递归（逻辑复杂，易错）
+
+```go
+func combinationSum(candidates []int, target int) [][]int {
+    var res [][]int
+    var path []int
+
+    var dfs func(index, target int)
+    dfs = func(index, target int) {
+        if target == 0 {
+            res = append(res, append([]int(nil), path...))
+            return
+        }
+        if index == len(candidates) || target < 0 {
+            return
+        }
+        // 选当前
+        path = append(path, candidates[index])
+        dfs(index, target - candidates[index])
+        path = path[:len(path)-1]
+        // 不选当前
+        dfs(index + 1, target)
+    }
+    dfs(0, target)
+    return res
+}
+```
+
+## DFS 模板的两种核心模式
+
+### 模式一：**组合型问题（需 for 循环）**
+
+* 子集、组合、排列等
+* 每一步从当前位置开始向后枚举选项
+
+```go
+for i := start; i < len(nums); i++ {
+    path = append(path, nums[i])
+    dfs(i + 1)
+    path = path[:len(path)-1]
+}
+```
+
+### 模式二：**构造型问题（不需 for 循环）**
+
+* 例如：电话号码字母组合、迷宫路径、树遍历等
+* 每层只能处理一个“位置”的合法选项，当前层不枚举后面
+
+#### 示例：[17. 电话号码的字母组合](https://leetcode.cn/problems/letter-combinations-of-a-phone-number/)
+
+```go
+func letterCombinations(digits string) []string {
+    if len(digits) == 0 {
+        return []string{}
+    }
+    phoneMap := map[rune]string{
+        '2': "abc", '3': "def", '4': "ghi", '5': "jkl",
+        '6': "mno", '7': "pqrs", '8': "tuv", '9': "wxyz",
+    }
+    var res []string
+    var dfs func(index int, str string)
+    dfs = func(index int, str string) {
+        if index == len(digits) {
+            res = append(res, str)
+            return
+        }
+        for _, ch := range phoneMap[rune(digits[index])] {
+            dfs(index + 1, str + string(ch))
+        }
+    }
+    dfs(0, "")
+    return res
+}
+```
+
+
+## 总结结构图
+
+```
+回溯问题分类
+├── 排列类：顺序重要，used + path
+├── 组合类：顺序不重要，start 起点控制，元素不可重复
+├── 子集类：所有组合（选 or 不选）
+└── 构造类：必须填满所有位置，如数字组合/字符串构造等
+```
+
+> ✅ 判断是否需要 for：是否在当前层“枚举选项”
+>
+> * 有枚举（子集/组合/排列）：需要 `for`
+> * 无枚举（构造型）：不需要 `for`
+
+
+---
+
+
+# 典型问题
+
+## TopK
+
+* **不要求有序**：使用快速选择算法（基于快速排序思想）；也可以使用堆结构
+* **要求有序**：使用堆
+
+  * 最大堆：用于求前 K 个最大值
+  * 最小堆：用于求前 K 个最小值
+
+## 快慢指针
+
+* **19. 删除链表的倒数第 N 个节点**
+  快指针先走 N 步，然后快慢指针一起前进，快指针到达末尾时，慢指针刚好指向待删除节点的前一个节点
+* **141. 环形链表**
+  快慢指针，快指针每次走两步，慢指针每次走一步；若存在环，两者最终会相遇
+* **142. 环形链表 II**
+  快慢指针相遇后，快指针从头开始，慢指针继续前进；再次相遇点即为入环点
+* **234. 回文链表**
+  快慢指针找到链表中点，同时将前半部分链表原地反转；再从中点与反转后的链表逐一比较，判断是否回文
+* **287. 寻找重复数**
+  使用 Floyd 判圈算法，将数组视为链表结构；第一次快慢指针相遇后，将其中一个指针重新指向起点，两个指针再次相遇时即为重复数字（环的入口）
+
+## 双指针
+
+* **160. 相交链表**
+  两指针分别从两个链表头出发，走到末尾后切换至对方链表头继续走；若相交，则最终会在交点相遇；若无交点，则会同时为 `null` 结束
+
+
+
+---
+
+# 经典题目
+
+## 缓存
+
+* **146. LRU 缓存**（`HashMap + 双向链表`）
+
+  ```go
+  type LRUCache struct {
+      data     map[int]*LinkedNode
+      head     *LinkedNode
+      tail     *LinkedNode
+      count    int
+      capacity int
+  }
+
+  type LinkedNode struct {
+      key  int
+      val  int
+      pre  *LinkedNode
+      next *LinkedNode
+  }
+  ```
+
+  * `data`: 使用 HashMap 存储 key 与节点指针的映射
+  * `双向链表`: 头部表示最近访问节点，新加入或访问的节点会被移动到头部，尾部为最久未使用节点，便于淘汰
+
+* **460. LFU 缓存**（`双 Hash + 双向链表`）
+
+  ```go
+  type LFUCache struct {
+      keyToValFreq   map[int]*LFUNode
+      freqToKeysHead map[int]*LFUNode
+      freqToKeysTail map[int]*LFUNode
+      minFreq        int
+      capacity       int
+      size           int
+  }
+
+  type LFUNode struct {
+      key  int
+      val  int
+      freq int
+      pre  *LFUNode
+      next *LFUNode
+  }
+  ```
+
+  * `keyToValFreq`: 记录每个 key 的值和频率
+  * `freqToKeys`: 按照频率映射到对应频率的链表（内部按 LRU 顺序）
+  * `minFreq`: 当前缓存中的最小访问频率
+  * 注意 `put` 操作中若 key 已存在，需要更新其值和频率！
+
+
+## 打家劫舍
+
+* **198. 打家劫舍**（相邻房屋不能偷）
+
+  * 动态规划
+  * `dp[i]` 表示前 `i` 间房屋能偷到的最大金额
+  * 状态转移方程：`dp[i] = max(dp[i-2] + nums[i], dp[i-1])`
+
+* **213. 打家劫舍 II**（房屋围成一圈）
+
+  * 环状结构，首尾不能同时选择
+  * 拆分为两种情况：`(0, n-2)` 和 `(1, n-1)`，分别计算最大值，取较大者
+
+* **2560. 打家劫舍 IV**（给定偷 `k` 间房的条件，求最小窃取能力）
+  * 题考的是：在不能偷相邻房子的条件下，选择至少 k 个房子，求所有方案中「最大金额最小」的那种偷法的最大单间金额（即窃取能力）的最小值。  
+  * 二分 + 贪心
+  * 在 `[min(nums), max(nums)]` 范围内二分 `x`，判断是否存在方案在不相邻的前提下偷到 `k` 间房且每间 ≤ `x`
+  * 最小可行的 `x` 即为答案
+
+* **337. 打家劫舍 III**（树形结构）
+
+  * 二叉树结构，不能偷父子节点
+  * 返回两个值：偷当前节点与不偷当前节点的最大值
+  * 后序遍历递归实现
+
+
+## 课程表
+
+* **207. 课程表**
+
+  * 判断有向图是否存在环
+  * 使用拓扑排序（Kahn 算法）
+  * 若排序后的节点数 `== numCourses`，说明可完成全部课程
+
+
+## 会议室
+
+* **253. 会议室 II**（计算最少需要多少间会议室）
+
+  * 将所有会议按开始时间排序
+  * 使用最小堆记录正在进行的会议的结束时间
+  * 遇到新的会议时，检查是否能复用已结束的会议室
+  * 最后堆的大小即为最少会议室数
+
+* **2402. 会议室 III**（找出被安排次数最多的会议室编号）（如果没有可用的会议室，会议将会延期，直到存在空闲的会议室。延期会议的持续时间和原会议持续时间 相同 ）
+
+  * 所有会议按开始时间排序
+  * 构造两个最小堆：
+
+    * 空闲会议室（按编号）
+    * 占用会议室（按结束时间 + 编号）
+  * 每轮会议安排时：
+
+    * 如果无空闲会议室，则延期
+    * 记录每个会议室的使用次数
+  * 最终返回使用次数最多的会议室中编号最小者
+
+
+## 买卖股票
+
+* **309. 最佳买卖股票时机含冷冻期**
+  * 卖出股票后，你无法在第二天买入股票 (即冷冻期为 1 天)。
+
+  * 三种状态转移：
+
+    * `f[i][0]`: 第 i 天持有股票
+    * `f[i][1]`: 第 i 天卖出股票（进入冷冻期）
+    * `f[i][2]`: 第 i 天未持股（非冷冻期）
+  * 状态转移方程：
+
+    * `f[i][0] = max(f[i-1][0], f[i-1][2] - prices[i])`
+    * `f[i][1] = f[i-1][0] + prices[i]`
+    * `f[i][2] = max(f[i-1][1], f[i-1][2])`
+  * 最终答案：`max(f[n-1][1], f[n-1][2])`
+
+
+## 高楼扔鸡蛋
+
+* **887. 鸡蛋掉落**
+
+  * 给定 `k` 个鸡蛋和 `n` 层楼，找出确定临界楼层所需的最少操作次数（最坏情况下）
+  * 定义：`f(t, k)` 表示在最多尝试 `t` 次、拥有 `k` 个鸡蛋的情况下，最多能测试的楼层数
+
+    * 转移方程：`f(t, k) = 1 + f(t-1, k-1) + f(t-1, k)`
+  * 最终寻找最小的 `t`，使得 `f(t, k) >= n`
+
+  ```go
+  func superEggDrop(k int, n int) int {
+      ans := math.MaxInt32
+      dp := make([][]int, n+1)
+      for i := 1; i <= n; i++ {
+          dp[i] = make([]int, k+1)
+      }
+      for i := 1; i <= n; i++ {
+          dp[i][1] = i
+      }
+      for j := 1; j <= k; j++ {
+          dp[1][j] = 1
+      }
+      if n == 1 {
+          return 1
+      }
+
+      i := 2
+      for i <= n {
+          for j := 1; j <= k; j++ {
+              dp[i][j] = 1 + dp[i-1][j-1] + dp[i-1][j]
+          }
+          if dp[i][k] >= n {
+              ans = i
+              break
+          }
+          i++
+      }
+      return ans
+  }
+  ```
+
+
+---
+
+# 后记
++ 学习总被寄予理解的希望，现实却常逼我们回归重复与记忆的路径。掌握技巧、熟悉模板，也许并不光鲜，却是应对复杂世界最有效的方式之一。
++ 然而熟练，何尝不是另一种形式的“背”呢。

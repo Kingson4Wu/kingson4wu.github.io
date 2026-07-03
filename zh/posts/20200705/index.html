@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RPC可以和事务绑定吗？ | 拉巴力的纸皮箱</title>
+  <meta name="description" content="在平常编码的时候，经常会看到很多人喜欢把一次RPC调用和数据库事务绑定在一起，RPC调用成功则提交事务，RPC调用失败或超时，则回滚事务。那么这样做是对的吗？ 业务场景描述 考虑以下一种业务场景：用户加入群聊需要花费200金币。 服务架构：服务A(群服务)，服务B(消费服务)，操作都是幂等的。 加群请求--------...">
+  <link rel="canonical" href="https://kingson4wu.github.io/zh/posts/20200705/">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="alternate" type="application/rss+xml" title="拉巴力的纸皮箱" href="/zh/feed.xml">
+  <link rel="alternate" type="text/markdown" href="/zh/posts/20200705/index.md">
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="/styles/main.css">
+  <script>
+    try {
+      var theme = localStorage.getItem('theme');
+      if (theme) document.documentElement.dataset.theme = theme;
+    } catch (_) {}
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="site-title" href="/zh/" aria-label="拉巴力的纸皮箱">
+      <span class="site-logo" aria-hidden="true">K</span>
+      <span>拉巴力的纸皮箱</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="/zh/posts/">文章</a>
+      <a href="/zh/notes/">笔记</a>
+      <a href="/zh/tags/">标签</a>
+      <a href="/zh/about/">关于</a>
+      <a href="/zh/search/">搜索</a>
+      <a href="/en/" lang="en">English</a>
+      <a class="feed-link" href="/zh/feed.xml" aria-label="订阅更新" title="订阅更新">
+        <svg class="feed-icon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M5 5.5A13.5 13.5 0 0 1 18.5 19"></path>
+          <path d="M5 11A8 8 0 0 1 13 19"></path>
+          <circle cx="6" cy="18" r="1.5"></circle>
+        </svg>
+      </a>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换明暗模式" title="切换明暗模式">
+        <svg class="theme-icon theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M21 14.2A8.5 8.5 0 0 1 9.8 3 7 7 0 1 0 21 14.2Z"></path>
+        </svg>
+        <svg class="theme-icon theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"></path>
+        </svg>
+      </button>
+    </nav>
+  </header>
+  <main class="site-main">
+    <article class="article">
+      <header class="article-header">
+        <h1>RPC可以和事务绑定吗？</h1>
+        <time datetime="2020-07-05T09:27:32.000Z">2020年7月5日</time>
+<ul class="tag-list" aria-label="Tags">
+    <li><a href="/zh/tags/Architecture/">Architecture</a></li>
+    <li><a href="/zh/tags/Distributed%20Systems/">Distributed Systems</a></li>
+    <li><a href="/zh/tags/Database/">Database</a></li>
+  </ul>
+      </header>
+      <div class="prose">
+<p><img src="/assets/zh/shared/photo/MSN.jpg" alt=""></p>
+<p>在平常编码的时候，经常会看到很多人喜欢把一次RPC调用和数据库事务绑定在一起，RPC调用成功则提交事务，RPC调用失败或超时，则回滚事务。那么这样做是对的吗？</p>
+<h3 id="section-1" data-heading-text="业务场景描述">业务场景描述</h3>
+<p>考虑以下一种业务场景：用户加入群聊需要花费200金币。
+服务架构：服务A(群服务)，服务B(消费服务)，操作都是幂等的。</p>
+<pre>
+加群请求----------> 服务A
+             [1.新增事务]
+             [2.RPC进行扣费]------------>服务B
+             [3.执行加群操作(DB操作)]
+             [4.提交事务]
+</pre>
+<h3 id="section-2" data-heading-text="业务场景分析">业务场景分析</h3>
+<ol>
+<li>服务B返回成功，业务无异常</li>
+<li>服务B返回失败，事务回滚，业务无异常</li>
+<li>服务B超时，或服务A RPC调用之后重启等场景，业务异常！</li>
+</ol>
+<p>业务异常表现为：用户已经扣费，但是没加群成功(即服务A和服务B数据不一致)</p>
+<h3 id="section-3" data-heading-text="如何解决">如何解决</h3>
+<ul>
+<li>
+<p>服务A通过本地事务表解决。</p>
+<ol>
+<li>服务A在进行RPC调用之前，需先保存一条订单，订单状态为“待扣费”，扣费成功后，更新订单状态为“已扣费”。</li>
+<li>启动定时任务，查询过去某时间范围内（如30分钟前至当前时间1分钟前）的“待扣费”的订单是否已扣费。若已扣费进行加群操作，并更新订单状态；否则，将订单置为无效状态。</li>
+<li>订单状态：[1待扣费，2已扣费，3已加群，4无效]</li>
+</ol>
+</li>
+<li>
+<p>加群流程图</p>
+</li>
+</ul>
+<pre>
+加群请求----------> 服务A
+             [1.新增“待扣费”订单(DB操作)]
+             [2.RPC进行扣费]------------>服务B
+             [3.更新订单状态为“已扣费”(DB操作)]
+             [4.执行加群操作(DB操作)]
+             [5.更新订单状态为“已加群”(DB操作)]
+</pre>
+<p>上图的每个操作都是单独的，其中某一步异常都会导致后续中断，因此需要两个定时任务，分别检查“待扣费”和“已扣费”的订单。</p>
+<ul>
+<li>定时任务1</li>
+</ul>
+<pre>
+定时任务1---------> 服务A
+             [1.查询“待扣费”订单]
+             [2.RPC查询是否已扣费]------------>服务B
+             |(1)已扣费                         |(2)未扣费
+             |                                         |
+[3.更新订单状态为“已扣费”(DB操作)]           [3.更新订单状态为“无效”(DB操作)]
+[4.执行加群操作(DB操作)]
+[5.更新订单状态为“已加群”(DB操作)]             
+</pre>
+<ul>
+<li>定时任务2</li>
+</ul>
+<pre>
+定时任务2---------> 服务A
+             [1.查询“已扣费”订单]    
+             [2.执行加群操作(DB操作)]
+             [3.更新订单状态为“已加群”(DB操作)]             
+</pre>
+<p>当然定时任务1和2可以放在同一个定时任务执行</p>
+<ul>
+<li>解决了问题之后，我们再回头看看一开始的问题：“RPC调用和数据库事务不能绑定吗？”
+<ul>
+<li>答案是看具体业务情况而定</li>
+<li>比如上述的业务场景。操作1显然是不能绑事务的</li>
+<li>但是2,3,4,5操作其实是可以绑事务的，因为定时任务可以进行补偿，而且可以因此减少定时任务2</li>
+<li>总结：rpc操作后续可补偿重试或查询，那么就是可以绑事务的，因为服务不会“失忆”；相反数据未落地之前，是不能进行绑事务了，因为一旦异常，数据就会回滚而“丢失”。</li>
+</ul>
+</li>
+</ul>
+<h3 id="section-4" data-heading-text="其他解决方式">其他解决方式</h3>
+<ol>
+<li>业务对账，补偿机制。即接入第三方服务进行业务流水对账，发现不一致，进行修正；具体修正方式需根据具体业务场景，是退币，还是使加群成功。</li>
+<li>使用其他分布式事务解决方案(tcc，seata等)</li>
+</ol>
+<h3 id="section-5" data-heading-text="扩展">扩展</h3>
+<ul>
+<li>重试是 “写”还是“读”？比如上述扣费操作，超时情况下，服务A重试是查询还是重新执行扣费？
+<ul>
+<li>其实还是取决于业务场景</li>
+<li>一般情况下，超时情况下，返回用户是失败，所以使用查询比较合适，不系统自动为用户扣费，这时候应该是“读”</li>
+<li>如果需要使用rpc调用进行加群，用户扣费了就必须要加群成功，那么加群RPC重试应该是“写”</li>
+<li>对于金钱业务来说，一般情况下，加币操作(充值，活动赠币)是“写”，扣币操作(送礼，用户触发)是“读”；入仓是“写”，出仓是“读”</li>
+</ul>
+</li>
+<li>补偿操作是“正向”还是“逆向”？比如上述扣费操作，超时情况下，服务A重试查询到用户已经扣费成功，这是是应该给用户退币，还是加群成功？
+<ul>
+<li>一样还是取决于业务场景</li>
+<li>如果用户只是想加群，那么只需要正向操作就好了，不影响用户利益，只是加群操作有些延迟，这时候应该是“正向”</li>
+<li>如果用户扣费之后，可以进行抽奖等，相当于用户的权益是具备实时性的，因为扣费超时(实际成功)导致无法抽奖，那么应该是退币才对的，即“逆向”</li>
+</ul>
+</li>
+<li>“无效”状态的订单应该支持重试，因为无效是因为未扣费，若作为一个基础服务，上次服务可能会使用同一个订单号进行重试，那么不能告诉业务方，操作失败等，应该作为一个全新的请求处理。可以通过增加订单的流水日志解决数据覆盖问题。</li>
+<li>上述的处理方式中，余额不足的扣费，会导致比较多的无效订单，因此在扣费之前，可以增加一次RPC查询，判断是余额是否足够</li>
+</ul>
+
+      </div>
+<div class="article-actions" aria-label="Article actions">
+      <a class="share-link" href="https://twitter.com/intent/tweet?text=RPC%E5%8F%AF%E4%BB%A5%E5%92%8C%E4%BA%8B%E5%8A%A1%E7%BB%91%E5%AE%9A%E5%90%97%EF%BC%9F&amp;url=https%3A%2F%2Fkingson4wu.github.io%2Fzh%2Fposts%2F20200705%2F" target="_blank" rel="noopener noreferrer" aria-label="Share on X">
+        <span aria-hidden="true">X</span>
+        <span>Share</span>
+      </a>
+    </div>
+    </article>
+<aside class="article-toc" data-article-toc aria-label="目录">
+      <button class="article-toc-toggle" type="button" data-article-toc-toggle aria-expanded="false" aria-controls="article-toc-panel" aria-label="打开目录" data-open-label="打开目录" data-close-label="收起目录">
+        <svg aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M8 6h11"></path>
+          <path d="M8 12h11"></path>
+          <path d="M8 18h11"></path>
+          <path d="M4 6h.01"></path>
+          <path d="M4 12h.01"></path>
+          <path d="M4 18h.01"></path>
+        </svg>
+      </button>
+      <nav id="article-toc-panel" class="article-toc-panel" data-article-toc-panel aria-label="目录">
+        <div class="article-toc-heading">目录</div>
+        <ol class="article-toc-list">
+          <li class="article-toc-level-3"><a href="#section-1" data-article-toc-link>业务场景描述</a></li>
+          <li class="article-toc-level-3"><a href="#section-2" data-article-toc-link>业务场景分析</a></li>
+          <li class="article-toc-level-3"><a href="#section-3" data-article-toc-link>如何解决</a></li>
+          <li class="article-toc-level-3"><a href="#section-4" data-article-toc-link>其他解决方式</a></li>
+          <li class="article-toc-level-3"><a href="#section-5" data-article-toc-link>扩展</a></li>
+        </ol>
+      </nav>
+    </aside>
+    <script src="/scripts/article-toc.js" defer></script>
+    <nav class="article-nav" aria-label="Adjacent posts">
+      <a href="/zh/posts/20200329/"><span>Previous</span>发版过程的兼容性考虑</a>
+      <a href="/zh/posts/20200705-2/"><span>Next</span>关于服务间一致性和前置校验的思考</a>
+    </nav>
+<section class="comments" aria-labelledby="comments-heading">
+      <h2 id="comments-heading">评论</h2>
+      <div
+        data-comments
+        data-comments-repo="Kingson4Wu/kingson4wu.github.io"
+        data-comments-issue-term="pathname"
+        data-comments-label="comment"
+      ></div>
+    </section>
+    <script src="/scripts/comments.js" defer></script>
+  </main>
+  <footer class="site-footer">
+    <p>&copy; 2026 拉巴力的纸皮箱</p>
+  </footer>
+  <button class="reading-return" type="button" data-reading-return aria-label="回到开头" title="回到开头">
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <path d="M12 19V5"></path>
+      <path d="m6 11 6-6 6 6"></path>
+    </svg>
+  </button>
+  <script src="/scripts/theme.js"></script>
+  <script src="/scripts/image-viewer.js"></script>
+  <script src="/scripts/reading-tools.js"></script>
+</body>
+</html>

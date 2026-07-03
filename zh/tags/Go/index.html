@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>标签: Go | 拉巴力的纸皮箱</title>
+  <meta name="description" content="包含此标签的内容。">
+  <link rel="canonical" href="https://kingson4wu.github.io/zh/tags/Go/">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="alternate" type="application/rss+xml" title="拉巴力的纸皮箱" href="/zh/feed.xml">
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="/styles/main.css">
+  <script>
+    try {
+      var theme = localStorage.getItem('theme');
+      if (theme) document.documentElement.dataset.theme = theme;
+    } catch (_) {}
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="site-title" href="/zh/" aria-label="拉巴力的纸皮箱">
+      <span class="site-logo" aria-hidden="true">K</span>
+      <span>拉巴力的纸皮箱</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="/zh/posts/">文章</a>
+      <a href="/zh/notes/">笔记</a>
+      <a href="/zh/tags/">标签</a>
+      <a href="/zh/about/">关于</a>
+      <a href="/zh/search/">搜索</a>
+      <a href="/en/" lang="en">English</a>
+      <a class="feed-link" href="/zh/feed.xml" aria-label="订阅更新" title="订阅更新">
+        <svg class="feed-icon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M5 5.5A13.5 13.5 0 0 1 18.5 19"></path>
+          <path d="M5 11A8 8 0 0 1 13 19"></path>
+          <circle cx="6" cy="18" r="1.5"></circle>
+        </svg>
+      </a>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换明暗模式" title="切换明暗模式">
+        <svg class="theme-icon theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M21 14.2A8.5 8.5 0 0 1 9.8 3 7 7 0 1 0 21 14.2Z"></path>
+        </svg>
+        <svg class="theme-icon theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"></path>
+        </svg>
+      </button>
+    </nav>
+  </header>
+  <main class="site-main">
+    <section class="page-heading">
+      <h1>标签: Go</h1>
+      <p>包含此标签的内容。</p>
+    </section>
+<ol class="post-list">
+    <li>
+      <div class="post-meta">
+        <time datetime="2025-07-16T16:20:44.000Z">2025年7月16日</time>
+        <span>Go</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20250717-quick-worker-channel-cpu/">quick_worker 项目分析：基于 Channel 的高效异步批处理与 CPU 空转问题解析</a></h2>
+        <p>quick_worker 是一个用 Go 实现的轻量级异步批处理框架。它通过 channel 和 goroutine 构建了一个高效的生产者-消费者模型，支持按批量大小或超时触发数据处理，适合高并发、吞吐敏感的场景。 本文将围绕其核心并发模型进行分析，重点讨论： 是否存在 CPU 空转（Busy Waiting）问题...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2024-11-21T08:42:35.000Z">2024年11月21日</time>
+        <span>Java</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20241121-go/">对Java、Go、Rust之间的简单对比和总结</a></h2>
+        <p>工作中接触过多种编程语言，主要是 Java 和 Go，最近因个人兴趣简单学习了 Rust，在这里简单记录总结一下 编程语言的GC问题 一般来说，程序需要管理好运行中使用的内存空间，比如传统的C和C++则要求开发者手动管理内存，但这往往导致内存泄漏和安全隐患；而垃圾回收（GC）语言，比如Java和Go在运行时自动回收内存...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2024-05-30T04:15:11.000Z">2024年5月30日</time>
+        <span>Networking</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20240530/">基于Saturn定时任务的客户端工具设计</a></h2>
+        <p>基于之前写的这篇谈谈定时任务的原理和应用继续聊。 由于业务进程不是Java编写的，无法使用Saturn提供的Java定时任务，只能使用Shell定时任务 这里选择用UDS实现Shell进程和服务进程之间的通信，实现和使用Java定时任务一样的效果 在上次的实现中，只考虑了如何触发定时任务执行，并没有考虑如何停止 实现对...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2024-04-07T01:22:08.000Z">2024年4月7日</time>
+        <span>Java</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20240407/">从Java转Go的个人体会</a></h2>
+        <p>这里仅从一个业务开发的角度谈谈体会，格局较低，仅做个人记录 编程语言是程序员接触和使用最多的工具 后端技术基础的深度是快速学习和适应新语言的关键 基于对工作中接触过的几种编程语言及其部署架构的看法继续聊。 截至目前，职业生涯五分之四的时间都是在使用Java。出于个人意愿和兴趣，以及行业的发展形势，也系统的自学了Go语言...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2023-07-03T12:59:41.000Z">2023年7月3日</time>
+        <span>Networking</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20230703/">谈谈定时任务的原理和应用</a></h2>
+        <p>定时任务的原理 本质是开一个线程,无限循环,检查本地的当前时间,是否符合执行的条件 Redis: 比如redis-5.0.8，起了一个线程不停的循环检查，比对当前时间（gettimeofday）判断是否需要执行 Golang: 起一个goroutine无限循环,从最小堆中取符合时间的任务 Java: 单线程, 无限循环...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2023-07-02T14:15:20.000Z">2023年7月2日</time>
+        <span>Java</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20230702/">对工作中接触过的几种编程语言及其部署架构的看法</a></h2>
+        <p>公司V 使用Java作为编程语言 使用Spring-MVC框架 使用Tomcat作为Web容器 打包运行方式： 服务器预安装了Java和Tomcat 将代码打包成war包 将war包上传到服务器的Tomcat的web目录 重启tomcat更新服务 公司U 使用Java作为编程语言 使用二次开发的Play1.x作为web...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2022-06-01T03:44:05.000Z">2022年6月1日</time>
+        <span>Go</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20220601/">开发golang程序和进行内网穿透，作为微信公众号服务器</a></h2>
+        <p>一直想部署一个私有服务，平常在外的时候可以为自己提供服务。 私有服务的好处是，可以根据自己的需求，开发程序，提供个人定制化的服务 服务器的选择 阿里云、腾讯云等 优点：使用方便，只要有网络就可以连上 缺点：有持续产生的费用，对于个人服务来说，平常几乎都是闲置，性价比很低 自建服务器 优点：总体成本低，购买服务器后，后续...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2022-02-20T12:26:21.000Z">2022年2月20日</time>
+        <span>Go</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20220220/">nba选秀抽签具体是如何操作的？</a></h2>
+        <p>nba选秀抽签具体是如何操作的？ 14个乒乓球分别贴上1-14数字，随机滚出4个，加起来是1001可能，其中11、12、13、14这个组合不算，剩下1000种可能。 闲来无事，使用Go粗暴模拟了一下 gopackage main import ( &amp;quot;fmt&amp;quot; &amp;quot;math/rand&amp;quot...</p>
+      </div>
+    </li>
+  </ol>
+  </main>
+  <footer class="site-footer">
+    <p>&copy; 2026 拉巴力的纸皮箱</p>
+  </footer>
+  <button class="reading-return" type="button" data-reading-return aria-label="回到开头" title="回到开头">
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <path d="M12 19V5"></path>
+      <path d="m6 11 6-6 6 6"></path>
+    </svg>
+  </button>
+  <script src="/scripts/theme.js"></script>
+  <script src="/scripts/image-viewer.js"></script>
+  <script src="/scripts/reading-tools.js"></script>
+</body>
+</html>

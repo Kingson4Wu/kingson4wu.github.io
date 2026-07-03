@@ -1,0 +1,432 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>记一次socket泄露问题排查记录 | 拉巴力的纸皮箱</title>
+  <meta name="description" content="结论先行 服务死锁导致大量请求hang住，进程无法提供服务且大量socket泄漏 具体过程 服务某些逻辑处理不当导致死锁 大量请求hang住没有响应 上层的nginx超时主动关闭连接 服务被关闭连接，导致大量CLOSE_WAIT 由于服务对连接处理不当（待分析原因TODO），导致大量socket泄漏 前置知识 TCP状...">
+  <link rel="canonical" href="https://kingson4wu.github.io/zh/posts/20230730-2/">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="alternate" type="application/rss+xml" title="拉巴力的纸皮箱" href="/zh/feed.xml">
+  <link rel="alternate" type="text/markdown" href="/zh/posts/20230730-2/index.md">
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="/styles/main.css">
+  <script>
+    try {
+      var theme = localStorage.getItem('theme');
+      if (theme) document.documentElement.dataset.theme = theme;
+    } catch (_) {}
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="site-title" href="/zh/" aria-label="拉巴力的纸皮箱">
+      <span class="site-logo" aria-hidden="true">K</span>
+      <span>拉巴力的纸皮箱</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="/zh/posts/">文章</a>
+      <a href="/zh/notes/">笔记</a>
+      <a href="/zh/tags/">标签</a>
+      <a href="/zh/about/">关于</a>
+      <a href="/zh/search/">搜索</a>
+      <a href="/en/" lang="en">English</a>
+      <a class="feed-link" href="/zh/feed.xml" aria-label="订阅更新" title="订阅更新">
+        <svg class="feed-icon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M5 5.5A13.5 13.5 0 0 1 18.5 19"></path>
+          <path d="M5 11A8 8 0 0 1 13 19"></path>
+          <circle cx="6" cy="18" r="1.5"></circle>
+        </svg>
+      </a>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换明暗模式" title="切换明暗模式">
+        <svg class="theme-icon theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M21 14.2A8.5 8.5 0 0 1 9.8 3 7 7 0 1 0 21 14.2Z"></path>
+        </svg>
+        <svg class="theme-icon theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"></path>
+        </svg>
+      </button>
+    </nav>
+  </header>
+  <main class="site-main">
+    <article class="article">
+      <header class="article-header">
+        <h1>记一次socket泄露问题排查记录</h1>
+        <time datetime="2023-07-30T05:03:45.000Z">2023年7月30日</time>
+<ul class="tag-list" aria-label="Tags">
+    <li><a href="/zh/tags/Networking/">Networking</a></li>
+  </ul>
+      </header>
+      <div class="prose">
+<h2 id="section-1" data-heading-text="结论先行">结论先行</h2>
+<ul>
+<li>服务死锁导致大量请求hang住，进程无法提供服务且大量socket泄漏</li>
+</ul>
+<h3 id="section-2" data-heading-text="具体过程">具体过程</h3>
+<ul>
+<li>服务某些逻辑处理不当导致死锁</li>
+<li>大量请求hang住没有响应</li>
+<li>上层的nginx超时主动关闭连接</li>
+<li>服务被关闭连接，导致大量CLOSE_WAIT</li>
+<li>由于服务对连接处理不当（待分析原因TODO），导致大量socket泄漏</li>
+</ul>
+<hr>
+<h2 id="section-3" data-heading-text="前置知识">前置知识</h2>
+<h3 id="section-4" data-heading-text="TCP状态图">TCP状态图</h3>
+<ul>
+<li>从网上找的
+<img src="/assets/zh/posts/20230730-2/TCP%E7%8A%B6%E6%80%81%E5%9B%BE.jpg" alt=""></li>
+</ul>
+<h3 id="section-5" data-heading-text="相关排查命令">相关排查命令</h3>
+<pre>
+sudo lsof | grep sock | awk '{++S[$1]} END {for(a in S) print a, S[a]}' | sort -nr
+sudo lsof | awk '/sock/ {++S[substr($0, index($0, $9))]} END {for(a in S) print a, S[a]}'
+sudo lsof | grep sock|grep 'identify protocol'|awk ' {++S[$2]} END {for(a in S) print a, S[a]}'| sort -nr
+//打开句柄数目最多的进程
+lsof -n|awk '{print $2}'| sort | uniq -c | sort -nr | head
+//查看close_wait连接统计：
+sudo netstat -anp|grep 'CLOSE_WAIT'|grep 'ssogo'| awk '{print $5}'|sort |uniq -c | sort -nr
+//查看FIN_WAIT2连接统计：
+sudo netstat -anp|grep 'FIN_WAIT2'|grep 'ssogo'| awk '{print $5}'|sort |uniq -c | sort -nr
+//查看CLOSE_WAIT最多的进程
+sudo netstat -anp|grep 'CLOSE_WAIT'| awk '{print $7}'|sort |uniq -c | sort -nr
+sudo netstat -anp|grep 'FIN_WAIT2'| awk '{print $7}'|sort |uniq -c | sort -nr
+</pre>
+<h3 id="ss" data-heading-text="ss">ss</h3>
+<ul>
+<li>在 ss -s 命令的输出中，“closed” 表示已关闭的 TCP 连接的数量。</li>
+</ul>
+<blockquote>
+<blockquote>
+<p>具体地，TCP 的 “closed” 状态表示连接已经关闭，不再使用，并且不再具有任何网络连接或状态信息。这些连接处于已经结束的状态，但它们的套接字资源还未被完全释放或回收。</p>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<p>在输出结果中，“closed” 数量是指当前处于已关闭状态的 TCP 连接的数量。这些连接可能是先前已经建立的连接，已经完成了其通信任务，双方都关闭了连接，并且连接的套接字资源等待系统进行资源回收。</p>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<p>需要注意的是，已关闭的连接数量的增加和减少是动态的，因为在系统的运行过程中，套接字的打开和关闭是常见的网络操作。</p>
+</blockquote>
+</blockquote>
+<h2 id="lsof" data-heading-text="lsof">lsof</h2>
+<ul>
+<li>
+<p><code>lsof| grep &quot;can't identify protocol&quot;</code>
+如果存在很多，则代表socket泄漏，同时会显示哪个进程使用的sock未关闭。</p>
+</li>
+<li>
+<p><a href="http://mdba.cn/2015/03/10/tcp-socket%E6%96%87%E4%BB%B6%E5%8F%A5%E6%9F%84%E6%B3%84%E6%BC%8F/">tcp-socket文件句柄泄漏</a></p>
+</li>
+</ul>
+<hr>
+<h2 id="section-8" data-heading-text="架构图">架构图</h2>
+<ul>
+<li>TODO</li>
+</ul>
+<hr>
+<h2 id="section-9" data-heading-text="处理过程1">处理过程1</h2>
+<p><img src="/assets/zh/posts/20230730-2/socket%E6%95%B0%E9%87%8F%E6%9A%B4%E6%B6%A8.png" alt=""></p>
+<ul>
+<li>
+<p>紧急重启服务（业务Go服务）后socket数量下降</p>
+</li>
+<li>
+<p>在现场已经没了的情况下，分析发现机器上本身已经存在大量socket泄漏的情况</p>
+</li>
+</ul>
+<p><img src="/assets/zh/posts/20230730-2/identify%20protocol.png" alt=""></p>
+<p><img src="/assets/zh/posts/20230730-2/process.png" alt="">
+<img src="/assets/zh/posts/20230730-2/process2.png" alt=""></p>
+<ul>
+<li>
+<p>nginx和gateway都reload，那么nginx会产生新的worker进程，但是应该shutdown的老进程因为和gateway还有连接，所以也不会销毁，这样时间长了会有很多处于shutting状态的进程，这些进程都会占用资源。</p>
+</li>
+<li>
+<p>初步怀疑是这些异常的nginx worker进程导致的，于是处理所有机器上这些异常（kill）</p>
+<ol>
+<li>如果清掉这些异常进程后，问题不再发生，那么很大可能就是这个原因导致的</li>
+<li>如果问题还继续发生，说明是其他的原因</li>
+</ol>
+</li>
+</ul>
+<hr>
+<h2 id="section-10" data-heading-text="处理过程2">处理过程2</h2>
+<ul>
+<li>即使上次清理了所有有问题的nginx worker进程，释放了大量泄漏的socket，相同的问题后续还是发生了</li>
+</ul>
+<p><img src="/assets/zh/posts/20230730-2/%E8%BF%87%E7%A8%8B2-1.png" alt=""></p>
+<ul>
+<li>还是出现了大量的closed状态，已经大量的close_wait和fin_wait2状态</li>
+</ul>
+<p><img src="/assets/zh/posts/20230730-2/%E8%BF%87%E7%A8%8B2-1.png" alt=""></p>
+<ul>
+<li>通过lsof查看，确实是Go业务进程泄漏的socket</li>
+</ul>
+<p><img src="/assets/zh/posts/20230730-2/%E8%BF%87%E7%A8%8B2-3.png" alt=""></p>
+<ul>
+<li>
+<p>上图的正常状态下，close_wait和fin_wait2状态的数量，并没那么多</p>
+</li>
+<li>
+<p>todo： 后续统计一下：</p>
+</li>
+</ul>
+<pre>
+//查看close_wait连接统计：
+sudo netstat -anp|grep 'CLOSE_WAIT'|grep 'ssogo'| awk '{print $5}'|sort |uniq -c | sort -nr
+//查看FIN_WAIT2连接统计：
+sudo netstat -anp|grep 'FIN_WAIT2'|grep 'ssogo'| awk '{print $5}'|sort |uniq -c | sort -nr
+//查看CLOSE_WAIT最多的进程
+sudo netstat -anp|grep 'CLOSE_WAIT'| awk '{print $7}'|sort |uniq -c | sort -nr
+sudo netstat -anp|grep 'FIN_WAIT2'| awk '{print $7}'|sort |uniq -c | sort -nr
+</pre>
+<ul>
+<li>
+<p>通过pprof输出进程的goroutine情况，从数量和堆栈分析，大量goroutine锁住，导致请求被hang住</p>
+</li>
+<li>
+<p>至此，问题的基本表现分析如下</p>
+<ol>
+<li>Go进程出问题hang住大量请求</li>
+<li>上层的nginx超时主动关闭连接，状态变成FIN_WAIT2，而Go进程对应的socket拦截则变成CLOSE_WAIT
+<ul>
+<li>查看设置为 proxy_read_timeout 10（即10s）：proxy_read_timeout 是用来设置与后端代理服务器之间的读取超时时间，它控制 Nginx 从后端代理服务器读取响应的最长等待时间。当从后端服务器读取响应数据的时间超过了设置的超时时间，Nginx 将认为后端服务器的响应已经超时，并且会中断与后端服务器的连接。</li>
+</ul>
+</li>
+<li>Go进程对已关闭的连接处理异常，导致大量“can’t identify protocol”
+<ul>
+<li>请求被hang住，进程没释放，socket会占有（不然被新的请求占有造成数据包混乱）</li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+<h3 id="section-11" data-heading-text="扩展">扩展</h3>
+<h4 id="can-t-identify-protocol" data-heading-text="can't identify protocol 是怎么出现的？">can’t identify protocol 是怎么出现的？</h4>
+<ul>
+<li><a href="https://idea.popcount.org/2012-12-09-lsof-cant-identify-protocol/">https://idea.popcount.org/2012-12-09-lsof-cant-identify-protocol/</a></li>
+</ul>
+<div class="code-block" data-language="python"><div class="code-header"><span class="code-language">python</span></div><pre><code class="hljs language-python"><span class="hljs-keyword">import</span> socket
+<span class="hljs-keyword">import</span> os
+<span class="hljs-keyword">import</span> sys
+
+PORT = <span class="hljs-number">9918</span>
+
+sd = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+sd.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, <span class="hljs-number">1</span>)
+sd.bind((<span class="hljs-string">&#x27;0.0.0.0&#x27;</span>, PORT))
+sd.listen(<span class="hljs-number">5</span>)
+
+<span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">10</span>):
+    <span class="hljs-keyword">if</span> os.fork() == <span class="hljs-number">0</span>:
+        sd.close()
+        cd = socket.socket(socket.AF_INET,
+                           socket.SOCK_STREAM)
+        cd.connect((<span class="hljs-string">&#x27;127.0.0.1&#x27;</span>, PORT))
+        sys.exit()
+
+<span class="hljs-built_in">print</span> <span class="hljs-string">&quot;Server process pid=%i&quot;</span> % (os.getpid(),)
+sockets = []
+<span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">10</span>):
+    (cd, address) = sd.accept()
+    sockets.append(cd)
+    cd.shutdown(socket.SHUT_WR)
+
+os.system(<span class="hljs-string">&quot;lsof -p %i&quot;</span> % (os.getpid(),))
+</code></pre></div>
+<ul>
+<li><code>cd.connect(('127.0.0.1', PORT))</code>之后没有执行<code>cd.close()</code>（关闭客户端套接字，确保连接被正确关闭）, 直接执行 sys.exit()，导致连接没有正确关闭，从而出现了“can’t identify protocol”的问题</li>
+</ul>
+<h4 id="section-13" data-heading-text="为什么lsof和ss的执行结果不同">为什么lsof和ss的执行结果不同</h4>
+<ul>
+<li>ss命令显示closed状态的socket，在lsof显示的是can’t identity protocol</li>
+<li>大概是两个命令实现的原理差异吧</li>
+</ul>
+<h4 id="section-14" data-heading-text="通过模拟client断开，server端hang住">通过模拟client断开，server端hang住</h4>
+<ul>
+<li><a href="https://raw.githubusercontent.com/Kingson4Wu/awesome-tools/main/network/http-print.c">https://raw.githubusercontent.com/Kingson4Wu/awesome-tools/main/network/http-print.c</a> 加上 <code>sleep(600);</code>的代码</li>
+<li>curl --connect-timeout 10 -m 20 “<a href="http://XXXXXXX">http://XXXXXXX</a>”</li>
+<li>执行lsof 只出现了‘CLOSE_WAIT’,没有出现 can’t identity protocol</li>
+</ul>
+<h4 id="section-15" data-heading-text="go进程为什么没正确关闭socket">go进程为什么没正确关闭socket</h4>
+<ul>
+<li>todo</li>
+<li>strace -p</li>
+</ul>
+<h4 id="strace" data-heading-text="strace 怎么使用">strace 怎么使用</h4>
+<ul>
+<li>todo</li>
+</ul>
+<h3 id="section-17" data-heading-text="gin怎么设置接受的socket数量">gin怎么设置接受的socket数量</h3>
+<ul>
+<li>todo</li>
+<li>gin接收请求数量上限设置</li>
+</ul>
+<hr>
+<h2 id="section-18" data-heading-text="处理过程3">处理过程3</h2>
+<ul>
+<li>
+<p>分析Go进程死锁原因</p>
+</li>
+<li>
+<p>通过分析pprof的goroutine堆栈</p>
+</li>
+</ul>
+<div class="code-block" data-language="go"><div class="code-header"><span class="code-language">go</span></div><pre><code class="hljs language-go"><span class="hljs-keyword">type</span> GuardPolicy <span class="hljs-keyword">struct</span> {
+	mu      *sync.RWMutex
+	errData <span class="hljs-keyword">map</span>[*sql.DB]<span class="hljs-type">int</span>
+}
+
+<span class="hljs-keyword">type</span> sortPool <span class="hljs-keyword">struct</span> {
+	connPool gorm.ConnPool
+	errCnt   <span class="hljs-type">int</span>
+}
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(s *GuardPolicy)</span></span> countErr(db *gorm.DB) {
+	<span class="hljs-keyword">if</span> db.Error == <span class="hljs-literal">nil</span> || errors.Is(db.Error, gorm.ErrRecordNotFound) {
+		<span class="hljs-keyword">return</span>
+	}
+	<span class="hljs-keyword">if</span> ins, ok := db.Statement.ConnPool.(*sql.DB); ok {
+		s.mu.Lock()
+		<span class="hljs-keyword">defer</span> s.mu.Unlock()
+		s.errData[ins] = s.errData[ins] + <span class="hljs-number">1</span>
+	}
+}
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(s *GuardPolicy)</span></span> Resolve(connPools []gorm.ConnPool) gorm.ConnPool {
+	<span class="hljs-keyword">var</span> x = <span class="hljs-built_in">make</span>([]*sortPool, <span class="hljs-number">0</span>, <span class="hljs-built_in">len</span>(connPools))
+	<span class="hljs-keyword">for</span> i := <span class="hljs-keyword">range</span> connPools {
+		p, ok := connPools[i].(*sql.DB)
+		<span class="hljs-keyword">if</span> !ok {
+			x = <span class="hljs-built_in">append</span>(x, &amp;sortPool{connPool: connPools[i], errCnt: <span class="hljs-number">0</span>})
+		} <span class="hljs-keyword">else</span> {
+			s.mu.RLock()
+			<span class="hljs-keyword">defer</span> s.mu.RUnlock()
+			x = <span class="hljs-built_in">append</span>(x, &amp;sortPool{connPool: connPools[i], errCnt: s.errData[p]})
+		}
+	}
+	sort.Slice(x, <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(i, j <span class="hljs-type">int</span>)</span></span> <span class="hljs-type">bool</span> {
+		<span class="hljs-keyword">return</span> x[i].errCnt &lt;= x[j].errCnt
+	})
+	<span class="hljs-keyword">return</span> x[<span class="hljs-number">0</span>].connPool
+}
+</code></pre></div>
+<p>（1） goroutine1: s.mu.RLock()
+（2） goroutine2: s.mu.Lock() - 等待（1）
+（3） goroutine1: s.mu.RLock() - 等待（2）
+相当于goroutine1自己等待自己</p>
+<ul>
+<li>问chatgpt：
+是的，提供的代码存在死锁风险。死锁可能发生在Resolve方法中。</li>
+</ul>
+<p>在Resolve方法中，对于sql.DB类型的连接，当读取errData映射的错误计数时，使用了RWMutex的读锁（s.mu.RLock()）。但是，在循环的每次迭代中都会调用defer s.mu.RUnlock()，这会在for循环结束时解锁，而不是在每次迭代结束时解锁。</p>
+<p>这意味着如果在某次循环迭代中获取了读锁，但在获取下一个读锁之前已经进入了循环的下一次迭代，那么这两次迭代将持有读锁，但没有释放，从而导致死锁。</p>
+<p>要解决这个问题，可以将读锁的获取和解锁放在同一次循环迭代中，确保每次获取读锁后都会及时释放，而不会在后续迭代中持有读锁。以下是修改后的代码：</p>
+<div class="code-block" data-language="go"><div class="code-header"><span class="code-language">go</span></div><pre><code class="hljs language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(s *GuardPolicy)</span></span> Resolve(connPools []gorm.ConnPool) gorm.ConnPool {
+	<span class="hljs-keyword">var</span> x = <span class="hljs-built_in">make</span>([]*sortPool, <span class="hljs-number">0</span>, <span class="hljs-built_in">len</span>(connPools))
+	<span class="hljs-keyword">for</span> i := <span class="hljs-keyword">range</span> connPools {
+		p, ok := connPools[i].(*sql.DB)
+		<span class="hljs-keyword">if</span> !ok {
+			x = <span class="hljs-built_in">append</span>(x, &amp;sortPool{connPool: connPools[i], errCnt: <span class="hljs-number">0</span>})
+		} <span class="hljs-keyword">else</span> {
+			s.mu.RLock()
+			errCnt := s.errData[p]
+			s.mu.RUnlock()
+			x = <span class="hljs-built_in">append</span>(x, &amp;sortPool{connPool: connPools[i], errCnt: errCnt})
+		}
+	}
+	sort.Slice(x, <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(i, j <span class="hljs-type">int</span>)</span></span> <span class="hljs-type">bool</span> {
+		<span class="hljs-keyword">return</span> x[i].errCnt &lt;= x[j].errCnt
+	})
+	<span class="hljs-keyword">return</span> x[<span class="hljs-number">0</span>].connPool
+}
+
+</code></pre></div>
+<h2 id="section-19" data-heading-text="扩展">扩展</h2>
+<ul>
+<li>跟这个很像：<a href="https://ms2008.github.io/2019/07/04/golang-redis-deadlock/">线上一次大量 CLOSE_WAIT 复盘</a></li>
+</ul>
+<hr>
+<h2 id="reference" data-heading-text="Reference">Reference</h2>
+<ul>
+<li><a href="https://blog.csdn.net/wodatoucai/article/details/69389288">tcp socket文件句柄泄漏</a></li>
+<li><a href="https://www.cnblogs.com/rootq/articles/1403720.html">确认是否有socket泄露</a></li>
+<li><a href="https://zzyongx.github.io/blogs/socket_fd_leak.html">记一次排查socket fd泄漏</a></li>
+<li><a href="https://zzyongx.github.io/blogs/socket_fd_leak_2.html">又一次排查socket fd泄漏</a></li>
+<li><a href="https://blog.csdn.net/stpeace/article/details/57103089">socket句柄泄漏问题的定位： losf和strace的联合使用</a></li>
+</ul>
+
+      </div>
+<div class="article-actions" aria-label="Article actions">
+      <a class="share-link" href="https://twitter.com/intent/tweet?text=%E8%AE%B0%E4%B8%80%E6%AC%A1socket%E6%B3%84%E9%9C%B2%E9%97%AE%E9%A2%98%E6%8E%92%E6%9F%A5%E8%AE%B0%E5%BD%95&amp;url=https%3A%2F%2Fkingson4wu.github.io%2Fzh%2Fposts%2F20230730-2%2F" target="_blank" rel="noopener noreferrer" aria-label="Share on X">
+        <span aria-hidden="true">X</span>
+        <span>Share</span>
+      </a>
+    </div>
+    </article>
+<aside class="article-toc" data-article-toc aria-label="目录">
+      <button class="article-toc-toggle" type="button" data-article-toc-toggle aria-expanded="false" aria-controls="article-toc-panel" aria-label="打开目录" data-open-label="打开目录" data-close-label="收起目录">
+        <svg aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M8 6h11"></path>
+          <path d="M8 12h11"></path>
+          <path d="M8 18h11"></path>
+          <path d="M4 6h.01"></path>
+          <path d="M4 12h.01"></path>
+          <path d="M4 18h.01"></path>
+        </svg>
+      </button>
+      <nav id="article-toc-panel" class="article-toc-panel" data-article-toc-panel aria-label="目录">
+        <div class="article-toc-heading">目录</div>
+        <ol class="article-toc-list">
+          <li class="article-toc-level-2"><a href="#section-1" data-article-toc-link>结论先行</a></li>
+          <li class="article-toc-level-3"><a href="#section-2" data-article-toc-link>具体过程</a></li>
+          <li class="article-toc-level-2"><a href="#section-3" data-article-toc-link>前置知识</a></li>
+          <li class="article-toc-level-3"><a href="#section-4" data-article-toc-link>TCP状态图</a></li>
+          <li class="article-toc-level-3"><a href="#section-5" data-article-toc-link>相关排查命令</a></li>
+          <li class="article-toc-level-3"><a href="#ss" data-article-toc-link>ss</a></li>
+          <li class="article-toc-level-2"><a href="#lsof" data-article-toc-link>lsof</a></li>
+          <li class="article-toc-level-2"><a href="#section-8" data-article-toc-link>架构图</a></li>
+          <li class="article-toc-level-2"><a href="#section-9" data-article-toc-link>处理过程1</a></li>
+          <li class="article-toc-level-2"><a href="#section-10" data-article-toc-link>处理过程2</a></li>
+          <li class="article-toc-level-3"><a href="#section-11" data-article-toc-link>扩展</a></li>
+          <li class="article-toc-level-3"><a href="#section-17" data-article-toc-link>gin怎么设置接受的socket数量</a></li>
+          <li class="article-toc-level-2"><a href="#section-18" data-article-toc-link>处理过程3</a></li>
+          <li class="article-toc-level-2"><a href="#section-19" data-article-toc-link>扩展</a></li>
+          <li class="article-toc-level-2"><a href="#reference" data-article-toc-link>Reference</a></li>
+        </ol>
+      </nav>
+    </aside>
+    <script src="/scripts/article-toc.js" defer></script>
+    <nav class="article-nav" aria-label="Adjacent posts">
+      <a href="/zh/posts/20230704/"><span>Previous</span>我接触过的几种服务发现和rpc</a>
+      <a href="/zh/posts/20230730/"><span>Next</span>如何在大量数据中判断给定的是否在其中</a>
+    </nav>
+<section class="comments" aria-labelledby="comments-heading">
+      <h2 id="comments-heading">评论</h2>
+      <div
+        data-comments
+        data-comments-repo="Kingson4Wu/kingson4wu.github.io"
+        data-comments-issue-term="pathname"
+        data-comments-label="comment"
+      ></div>
+    </section>
+    <script src="/scripts/comments.js" defer></script>
+  </main>
+  <footer class="site-footer">
+    <p>&copy; 2026 拉巴力的纸皮箱</p>
+  </footer>
+  <button class="reading-return" type="button" data-reading-return aria-label="回到开头" title="回到开头">
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <path d="M12 19V5"></path>
+      <path d="m6 11 6-6 6 6"></path>
+    </svg>
+  </button>
+  <script src="/scripts/theme.js"></script>
+  <script src="/scripts/image-viewer.js"></script>
+  <script src="/scripts/reading-tools.js"></script>
+</body>
+</html>

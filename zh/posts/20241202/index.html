@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>一个无中心节点的局域网通信工具 | 拉巴力的纸皮箱</title>
+  <meta name="description" content="通信协议 初始阶段：UDP广播发现 建立连接后：切换到TCP进行可靠通信（也可以使用 UDP）（增加接收完成确认机制） AI生成的需求文档 ===== 局域网去中心化点对点通信工具 iOS 应用需求文档 项目概述 开发一款完全去中心化的局域网点对点即时通信应用，无需中心服务器，通过UDP广播实现设备发现和通信。 核心设...">
+  <link rel="canonical" href="https://kingson4wu.github.io/zh/posts/20241202/">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="alternate" type="application/rss+xml" title="拉巴力的纸皮箱" href="/zh/feed.xml">
+  <link rel="alternate" type="text/markdown" href="/zh/posts/20241202/index.md">
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="/styles/main.css">
+  <script>
+    try {
+      var theme = localStorage.getItem('theme');
+      if (theme) document.documentElement.dataset.theme = theme;
+    } catch (_) {}
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="site-title" href="/zh/" aria-label="拉巴力的纸皮箱">
+      <span class="site-logo" aria-hidden="true">K</span>
+      <span>拉巴力的纸皮箱</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="/zh/posts/">文章</a>
+      <a href="/zh/notes/">笔记</a>
+      <a href="/zh/tags/">标签</a>
+      <a href="/zh/about/">关于</a>
+      <a href="/zh/search/">搜索</a>
+      <a href="/en/" lang="en">English</a>
+      <a class="feed-link" href="/zh/feed.xml" aria-label="订阅更新" title="订阅更新">
+        <svg class="feed-icon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M5 5.5A13.5 13.5 0 0 1 18.5 19"></path>
+          <path d="M5 11A8 8 0 0 1 13 19"></path>
+          <circle cx="6" cy="18" r="1.5"></circle>
+        </svg>
+      </a>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换明暗模式" title="切换明暗模式">
+        <svg class="theme-icon theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M21 14.2A8.5 8.5 0 0 1 9.8 3 7 7 0 1 0 21 14.2Z"></path>
+        </svg>
+        <svg class="theme-icon theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"></path>
+        </svg>
+      </button>
+    </nav>
+  </header>
+  <main class="site-main">
+    <article class="article">
+      <header class="article-header">
+        <h1>一个无中心节点的局域网通信工具</h1>
+        <time datetime="2024-12-02T06:54:49.000Z">2024年12月2日</time>
+<ul class="tag-list" aria-label="Tags">
+    <li><a href="/zh/tags/Networking/">Networking</a></li>
+    <li><a href="/zh/tags/Rust/">Rust</a></li>
+    <li><a href="/zh/tags/Programming%20Languages/">Programming Languages</a></li>
+  </ul>
+      </header>
+      <div class="prose">
+<h2 id="section-1" data-heading-text="通信协议">通信协议</h2>
+<ol>
+<li>初始阶段：UDP广播发现</li>
+<li>建立连接后：切换到TCP进行可靠通信（也可以使用 UDP）（增加接收完成确认机制）</li>
+</ol>
+<h2 id="section-2" data-heading-text="AI生成的需求文档">AI生成的需求文档</h2>
+<p>=====</p>
+<h2 id="ios" data-heading-text="局域网去中心化点对点通信工具 iOS 应用需求文档">局域网去中心化点对点通信工具 iOS 应用需求文档</h2>
+<h3 id="section-4" data-heading-text="项目概述">项目概述</h3>
+<p>开发一款完全去中心化的局域网点对点即时通信应用，无需中心服务器，通过UDP广播实现设备发现和通信。</p>
+<h3 id="section-5" data-heading-text="核心设计理念">核心设计理念</h3>
+<ul>
+<li>完全去中心化</li>
+<li>基于局域网的点对点直接通信</li>
+<li>无需任何中心服务器</li>
+<li>设备间直接建立连接</li>
+</ul>
+<h3 id="section-6" data-heading-text="网络通信技术架构">网络通信技术架构</h3>
+<h4 id="1" data-heading-text="1. 设备发现机制">1. 设备发现机制</h4>
+<h5 id="1-1-udp" data-heading-text="1.1 UDP 广播发现">1.1 UDP 广播发现</h5>
+<ul>
+<li>使用UDP广播进行设备发现</li>
+<li>广播地址：255.255.255.255</li>
+<li>广播端口：固定端口（如 48689）</li>
+<li>发现报文结构：<div class="code-block" data-language="json"><div class="code-header"><span class="code-language">json</span></div><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">&quot;deviceId&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;唯一设备标识&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;nickname&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;用户昵称&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;timestamp&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;时间戳&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;publicKey&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;公钥信息&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;capabilities&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">&quot;支持的功能列表&quot;</span><span class="hljs-punctuation">]</span>
+<span class="hljs-punctuation">}</span>
+</code></pre></div>
+</li>
+</ul>
+<h4 id="2" data-heading-text="2. 连接建立协议">2. 连接建立协议</h4>
+<ul>
+<li>发现阶段：UDP 广播</li>
+<li>连接阶段：切换到 TCP</li>
+<li>通信协议：自定义应用层协议</li>
+<li>连接建立流程：
+<ol>
+<li>UDP 广播发现</li>
+<li>交换公钥</li>
+<li>建立加密 TCP 通道</li>
+</ol>
+</li>
+</ul>
+<h4 id="3" data-heading-text="3. 通信模型">3. 通信模型</h4>
+<ul>
+<li>无中心节点</li>
+<li>每个设备既是客户端又是服务端</li>
+<li>直接点对点通信</li>
+<li>消息路由完全去中心化</li>
+</ul>
+<h3 id="section-11" data-heading-text="功能需求详细描述">功能需求详细描述</h3>
+<h4 id="1-2" data-heading-text="1. 网络发现与连接">1. 网络发现与连接</h4>
+<ul>
+<li>持续监听 UDP 广播</li>
+<li>自动发现局域网内设备</li>
+<li>支持手动/自动添加好友</li>
+<li>好友关系本地持久化</li>
+</ul>
+<h4 id="2-2" data-heading-text="2. 消息通信机制">2. 消息通信机制</h4>
+<ul>
+<li>UDP 广播发现</li>
+<li>TCP 建立稳定通道</li>
+<li>消息队列管理</li>
+<li>离线消息处理</li>
+</ul>
+<h4 id="3-2" data-heading-text="3. 安全性设计">3. 安全性设计</h4>
+<ul>
+<li>设备间公钥交换</li>
+<li>端到端消息加密</li>
+<li>防重放攻击</li>
+<li>消息签名验证</li>
+</ul>
+<h3 id="section-15" data-heading-text="技术实现细节">技术实现细节</h3>
+<h4 id="section-16" data-heading-text="网络通信协议">网络通信协议</h4>
+<div class="code-block" data-language="mermaid"><div class="code-header"><span class="code-language">mermaid</span></div><pre><code class="hljs language-mermaid">sequenceDiagram
+    participant A as 设备A
+    participant B as 设备B
+
+    A-&gt;&gt;B: UDP广播：发现请求
+    B--&gt;&gt;A: UDP广播：发现响应
+    A-&gt;&gt;B: TCP建立连接
+    A--&gt;&gt;B: 交换公钥
+    A-&gt;&gt;B: 加密消息传输
+</code></pre></div>
+<h4 id="section-17" data-heading-text="消息队列流程">消息队列流程</h4>
+<div class="code-block" data-language="mermaid"><div class="code-header"><span class="code-language">mermaid</span></div><pre><code class="hljs language-mermaid">stateDiagram-v2
+    [*] --&gt; 消息生成
+    消息生成 --&gt; 本地队列
+    本地队列 --&gt; 检测网络
+    检测网络 --&gt; 同一局域网: 直接发送
+    检测网络 --&gt; 离线: 保持队列
+    同一局域网 --&gt; 消息发送
+    消息发送 --&gt; [*]
+</code></pre></div>
+<h3 id="section-18" data-heading-text="系统架构图">系统架构图</h3>
+<div class="code-block" data-language="mermaid"><div class="code-header"><span class="code-language">mermaid</span></div><pre><code class="hljs language-mermaid">graph TD
+    A[UDP广播发现] --&gt; B[设备信息交换]
+    B --&gt; C[TCP安全通道]
+    C --&gt; D[端到端加密通信]
+    D --&gt; E[本地消息队列]
+    E --&gt; F[离线/在线消息管理]
+</code></pre></div>
+<h3 id="section-19" data-heading-text="技术选型">技术选型</h3>
+<ul>
+<li>语言：Swift</li>
+<li>网络框架：Network.framework</li>
+<li>加密：CryptoKit</li>
+<li>存储：CoreData</li>
+<li>UI：SwiftUI</li>
+</ul>
+<h3 id="section-20" data-heading-text="关键技术挑战">关键技术挑战</h3>
+<ol>
+<li>跨设备一致性</li>
+<li>网络发现可靠性</li>
+<li>安全性保证</li>
+<li>低功耗设计</li>
+</ol>
+<h3 id="section-21" data-heading-text="性能目标">性能目标</h3>
+<ul>
+<li>设备发现时间 &lt; 3秒</li>
+<li>消息延迟 &lt; 1秒</li>
+<li>电池资源占用 &lt; 5%</li>
+<li>网络资源占用最小化</li>
+</ul>
+<h3 id="section-22" data-heading-text="安全性要求">安全性要求</h3>
+<ul>
+<li>端到端加密</li>
+<li>防重放攻击</li>
+<li>设备指纹验证</li>
+<li>消息签名机制</li>
+</ul>
+<h3 id="section-23" data-heading-text="隐私保护">隐私保护</h3>
+<ul>
+<li>无中心服务器</li>
+<li>本地数据完全加密</li>
+<li>用户完全控制通信</li>
+<li>不依赖任何第三方服务</li>
+</ul>
+<h3 id="section-24" data-heading-text="开发交付物">开发交付物</h3>
+<ol>
+<li>完整 Xcode 工程</li>
+<li>详细技术文档</li>
+<li>安全性测试报告</li>
+<li>性能基准测试结果</li>
+</ol>
+<h3 id="section-25" data-heading-text="版本迭代计划">版本迭代计划</h3>
+<ul>
+<li>v1.0：基础局域网通信</li>
+<li>v1.1：增强安全性</li>
+<li>v1.2：优化性能</li>
+<li>v2.0：跨平台支持</li>
+</ul>
+<h3 id="section-26" data-heading-text="开发注意事项">开发注意事项</h3>
+<ul>
+<li>严格遵循 Apple 安全guidelines</li>
+<li>代码安全审查</li>
+<li>最小权限原则</li>
+<li>用户体验优先</li>
+</ul>
+<p>====</p>
+<h3 id="section-27" data-heading-text="Rust简易版本">Rust简易版本</h3>
+<ul>
+<li><a href="https://github.com/Kingson4Wu/mesh-talk">https://github.com/Kingson4Wu/mesh-talk</a> （使用windsurf生成）</li>
+</ul>
+<p>====</p>
+<h2 id="section-28" data-heading-text="扩展">扩展</h2>
+<blockquote>
+<blockquote>
+<p>发现已经有了相关实现，非常棒！</p>
+</blockquote>
+</blockquote>
+<ul>
+<li><a href="https://github.com/localsend/localsend">https://github.com/localsend/localsend</a> 局域网文件传输，广播发现，可以简易发消息</li>
+</ul>
+
+      </div>
+<div class="article-actions" aria-label="Article actions">
+      <a class="share-link" href="https://twitter.com/intent/tweet?text=%E4%B8%80%E4%B8%AA%E6%97%A0%E4%B8%AD%E5%BF%83%E8%8A%82%E7%82%B9%E7%9A%84%E5%B1%80%E5%9F%9F%E7%BD%91%E9%80%9A%E4%BF%A1%E5%B7%A5%E5%85%B7&amp;url=https%3A%2F%2Fkingson4wu.github.io%2Fzh%2Fposts%2F20241202%2F" target="_blank" rel="noopener noreferrer" aria-label="Share on X">
+        <span aria-hidden="true">X</span>
+        <span>Share</span>
+      </a>
+    </div>
+    </article>
+<aside class="article-toc" data-article-toc aria-label="目录">
+      <button class="article-toc-toggle" type="button" data-article-toc-toggle aria-expanded="false" aria-controls="article-toc-panel" aria-label="打开目录" data-open-label="打开目录" data-close-label="收起目录">
+        <svg aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M8 6h11"></path>
+          <path d="M8 12h11"></path>
+          <path d="M8 18h11"></path>
+          <path d="M4 6h.01"></path>
+          <path d="M4 12h.01"></path>
+          <path d="M4 18h.01"></path>
+        </svg>
+      </button>
+      <nav id="article-toc-panel" class="article-toc-panel" data-article-toc-panel aria-label="目录">
+        <div class="article-toc-heading">目录</div>
+        <ol class="article-toc-list">
+          <li class="article-toc-level-2"><a href="#section-1" data-article-toc-link>通信协议</a></li>
+          <li class="article-toc-level-2"><a href="#section-2" data-article-toc-link>AI生成的需求文档</a></li>
+          <li class="article-toc-level-2"><a href="#ios" data-article-toc-link>局域网去中心化点对点通信工具 iOS 应用需求文档</a></li>
+          <li class="article-toc-level-3"><a href="#section-4" data-article-toc-link>项目概述</a></li>
+          <li class="article-toc-level-3"><a href="#section-5" data-article-toc-link>核心设计理念</a></li>
+          <li class="article-toc-level-3"><a href="#section-6" data-article-toc-link>网络通信技术架构</a></li>
+          <li class="article-toc-level-3"><a href="#section-11" data-article-toc-link>功能需求详细描述</a></li>
+          <li class="article-toc-level-3"><a href="#section-15" data-article-toc-link>技术实现细节</a></li>
+          <li class="article-toc-level-3"><a href="#section-18" data-article-toc-link>系统架构图</a></li>
+          <li class="article-toc-level-3"><a href="#section-19" data-article-toc-link>技术选型</a></li>
+          <li class="article-toc-level-3"><a href="#section-20" data-article-toc-link>关键技术挑战</a></li>
+          <li class="article-toc-level-3"><a href="#section-21" data-article-toc-link>性能目标</a></li>
+          <li class="article-toc-level-3"><a href="#section-22" data-article-toc-link>安全性要求</a></li>
+          <li class="article-toc-level-3"><a href="#section-23" data-article-toc-link>隐私保护</a></li>
+          <li class="article-toc-level-3"><a href="#section-24" data-article-toc-link>开发交付物</a></li>
+          <li class="article-toc-level-3"><a href="#section-25" data-article-toc-link>版本迭代计划</a></li>
+          <li class="article-toc-level-3"><a href="#section-26" data-article-toc-link>开发注意事项</a></li>
+          <li class="article-toc-level-3"><a href="#section-27" data-article-toc-link>Rust简易版本</a></li>
+          <li class="article-toc-level-2"><a href="#section-28" data-article-toc-link>扩展</a></li>
+        </ol>
+      </nav>
+    </aside>
+    <script src="/scripts/article-toc.js" defer></script>
+    <nav class="article-nav" aria-label="Adjacent posts">
+      <a href="/zh/posts/20241129/"><span>Previous</span>AI已经如此强大了，帮我写完所有代码</a>
+      <a href="/zh/posts/20241203/"><span>Next</span>人工智能相关技术简要总结记录</a>
+    </nav>
+<section class="comments" aria-labelledby="comments-heading">
+      <h2 id="comments-heading">评论</h2>
+      <div
+        data-comments
+        data-comments-repo="Kingson4Wu/kingson4wu.github.io"
+        data-comments-issue-term="pathname"
+        data-comments-label="comment"
+      ></div>
+    </section>
+    <script src="/scripts/comments.js" defer></script>
+  </main>
+  <footer class="site-footer">
+    <p>&copy; 2026 拉巴力的纸皮箱</p>
+  </footer>
+  <button class="reading-return" type="button" data-reading-return aria-label="回到开头" title="回到开头">
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <path d="M12 19V5"></path>
+      <path d="m6 11 6-6 6 6"></path>
+    </svg>
+  </button>
+  <script src="/scripts/theme.js"></script>
+  <script src="/scripts/image-viewer.js"></script>
+  <script src="/scripts/reading-tools.js"></script>
+</body>
+</html>

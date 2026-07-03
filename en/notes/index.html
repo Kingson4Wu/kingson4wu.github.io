@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Notes | Kingson Wu</title>
+  <meta name="description" content="Technical writing on software, AI systems, architecture, and learning.">
+  <link rel="canonical" href="https://kingson4wu.github.io/en/notes/">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="alternate" type="application/rss+xml" title="Kingson Wu" href="/en/feed.xml">
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="/styles/main.css">
+  <script>
+    try {
+      var theme = localStorage.getItem('theme');
+      if (theme) document.documentElement.dataset.theme = theme;
+    } catch (_) {}
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="site-title" href="/en/" aria-label="Kingson Wu">
+      <span class="site-logo" aria-hidden="true">K</span>
+      <span>Kingson Wu</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="/en/posts/">Blog</a>
+      <a href="/en/notes/">Notes</a>
+      <a href="/en/tags/">Tags</a>
+      <a href="/en/about/">About</a>
+      <a href="/en/search/">Search</a>
+      <a href="/zh/" lang="zh">中文</a>
+      <a class="feed-link" href="/en/feed.xml" aria-label="Subscribe" title="Subscribe">
+        <svg class="feed-icon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M5 5.5A13.5 13.5 0 0 1 18.5 19"></path>
+          <path d="M5 11A8 8 0 0 1 13 19"></path>
+          <circle cx="6" cy="18" r="1.5"></circle>
+        </svg>
+      </a>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch color mode" title="Switch color mode">
+        <svg class="theme-icon theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M21 14.2A8.5 8.5 0 0 1 9.8 3 7 7 0 1 0 21 14.2Z"></path>
+        </svg>
+        <svg class="theme-icon theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"></path>
+        </svg>
+      </button>
+    </nav>
+  </header>
+  <main class="site-main">
+    <section class="page-heading">
+      <h1>Notes</h1>
+      <p>Technical writing on software, AI systems, architecture, and learning.</p>
+    </section>
+<div class="note-feed">
+    <article class="note-item">
+      <header class="note-header">
+        <h2><a href="/en/notes/skills-may-matter-more-than-agents/">Skills May Matter More Than Agents</a></h2>
+        <time datetime="2026-03-29T12:00:00.000Z">March 29, 2026</time>
+      </header>
+      <div class="prose">
+<p>Main AI vendors may be converging on a common pattern: the SDK provides the Runtime; developers own the Skills.</p>
+<p>A Skill is fundamentally an act of knowledge externalization — translating workflows, business rules, and validated processing logic into structured, reusable capability units. From this perspective, Skills may carry more long-term value than Agents.</p>
+<p>Meanwhile, Agent Runtime is becoming infrastructure: standardized, interchangeable, converging toward commodity.</p>
+<p>Agents can be replaced. Proprietary data and Skills are the harder assets to replicate.</p>
+<p>The open question: when a Skill runs on a third-party Runtime, its data and logic are inevitably exposed to the platform. How do you protect against that?</p>
+
+      </div>
+      <a class="note-permalink" href="/en/notes/skills-may-matter-more-than-agents/">Open note</a>
+    </article>
+    <article class="note-item">
+      <header class="note-header">
+        <h2><a href="/en/notes/harness-engineering-is-not-new-paradigm/">Harness Engineering Is Not a New Paradigm</a></h2>
+        <time datetime="2026-03-28T15:00:00.000Z">March 28, 2026</time>
+      </header>
+      <div class="prose">
+<p>Most people are treating Harness Engineering like it’s a new paradigm. It’s not.</p>
+<p>Start from first principles: an LLM takes input and produces output. The model is fixed. You only control two things.</p>
+<p>The first is how you construct the input. Prompt Engineering and Context Engineering are the same problem at different scales. One is just the scaled-up version of the other. They are not two paradigms, just one continuous spectrum.</p>
+<p>The second is how you make the system around the model reliable: execution control, evaluation, observability, and feedback loops. That is genuinely different engineering territory.</p>
+<p>Harness Engineering is just both of these combined. OpenAI gave it a name, backed it with a 1M-line codebase story, and framed it as a new era.</p>
+<p>The underlying problems are not new. The label is.</p>
+
+      </div>
+      <a class="note-permalink" href="/en/notes/harness-engineering-is-not-new-paradigm/">Open note</a>
+    </article>
+    <article class="note-item">
+      <header class="note-header">
+        <h2><a href="/en/notes/mcp-and-skills-solve-different-problems/">MCP and Skills Solve Different Problems</a></h2>
+        <time datetime="2026-03-27T12:00:00.000Z">March 27, 2026</time>
+      </header>
+      <div class="prose">
+<p>MCP is basically a capability contract. It tells you what tools exist, how to call them, and what the permission boundaries are.</p>
+<p>A Skill is a different thing entirely. It packages how you actually get something done, which in practice is prompt logic plus a tool-use strategy.</p>
+<p>Skills feel more immediately useful because the key steps, calling conventions, and even error handling are already written in. That was never MCP’s job.</p>
+<p>As for CLI replacing MCP, I think they are splitting into different lanes.</p>
+<p>CLI is more straightforward for local automation and single-user setups. But once you bring in permissions, audit requirements, or cross-system coordination, a protocol layer like MCP still has advantages you cannot just wave away.</p>
+<p>Longer term, we will probably see new interfaces that are better suited for agents specifically. These things are evolving together, not replacing one another.</p>
+
+      </div>
+      <a class="note-permalink" href="/en/notes/mcp-and-skills-solve-different-problems/">Open note</a>
+    </article>
+    <article class="note-item">
+      <header class="note-header">
+        <h2><a href="/en/notes/ai-systems-need-method-execution-evaluation/">AI Systems Need Method, Execution, and Evaluation</a></h2>
+        <time datetime="2026-03-07T12:00:00.000Z">March 7, 2026</time>
+      </header>
+      <div class="prose">
+<p>Most AI systems are still stuck in a single-inference pattern: they re-plan every time, discard execution results immediately, and accumulate no experience.</p>
+<p>A more sustainable architecture separates concerns into three layers:</p>
+<ul>
+<li>a method layer defining goals and strategy</li>
+<li>an execution layer housing validated, reusable scripts</li>
+<li>an evaluation layer detecting degradation and triggering repair</li>
+</ul>
+<p>Reasoning should intervene only when necessary.</p>
+<p>The deeper shift is this: in the AI era, the real code is prompts, skills, and method descriptions. Traditional code degrades into a replaceable execution artifact.</p>
+<p>The maintenance focus moves from crafting code to clearly expressing objectives, constraints, and success criteria.</p>
+
+      </div>
+      <a class="note-permalink" href="/en/notes/ai-systems-need-method-execution-evaluation/">Open note</a>
+    </article>
+    <article class="note-item">
+      <header class="note-header">
+        <h2><a href="/en/notes/generative-ai-does-not-think/">Generative AI Does Not Think</a></h2>
+        <time datetime="2026-02-28T15:00:00.000Z">February 28, 2026</time>
+      </header>
+      <div class="prose">
+<p>Generative AI does not think. What it does is predict the highest-probability token given the preceding context.</p>
+<p>Humans can actively violate rules: “I know the expected answer, and I will deliberately avoid it.”</p>
+<p>AI cannot do this. It can only re-optimize under new constraints.</p>
+<p>This is not just a capability gap. It is a structural difference, at least for now.</p>
+
+      </div>
+      <a class="note-permalink" href="/en/notes/generative-ai-does-not-think/">Open note</a>
+    </article>
+    <article class="note-item">
+      <header class="note-header">
+        <h2><a href="/en/notes/ai-displacement-repeats-old-patterns/">AI Displacement Repeats Old Patterns</a></h2>
+        <time datetime="2026-02-28T14:00:00.000Z">February 28, 2026</time>
+      </header>
+      <div class="prose">
+<p>This wave of AI displacement shares familiar patterns with previous industrial revolutions.</p>
+<p>Technology moves forward, and some people get left behind before the promised new opportunities ever arrive.</p>
+<p>Whether they land on their feet depends on how quickly they adapt and whether policy can keep up.</p>
+<p>Neither of those is guaranteed.</p>
+
+      </div>
+      <a class="note-permalink" href="/en/notes/ai-displacement-repeats-old-patterns/">Open note</a>
+    </article>
+    <article class="note-item">
+      <header class="note-header">
+        <h2><a href="/en/notes/ai-is-reshaping-social-learning/">AI Is Reshaping Social Learning</a></h2>
+        <time datetime="2026-02-28T13:00:00.000Z">February 28, 2026</time>
+      </header>
+      <div class="prose">
+<p>AI is reshaping social learning.</p>
+<p>We once relied on peers to recommend resources, challenge ideas, and surface blind spots. Now more of those cognitive functions are being handled by AI.</p>
+<p>Human relationships will not disappear, but the division of roles is shifting:</p>
+<ul>
+<li>knowledge and thinking from AI</li>
+<li>meaning, values, and shared experience from humans</li>
+</ul>
+
+      </div>
+      <a class="note-permalink" href="/en/notes/ai-is-reshaping-social-learning/">Open note</a>
+    </article>
+    <article class="note-item">
+      <header class="note-header">
+        <h2><a href="/en/notes/expression-is-cheap-taste-is-edge/">Expression Is Cheap, Taste Is the Edge</a></h2>
+        <time datetime="2026-02-28T12:00:00.000Z">February 28, 2026</time>
+      </header>
+      <div class="prose">
+<p>AI makes expression cheaper, but judgment becomes more important.</p>
+<p>Originality is shifting away from “who wrote the words” toward “who decided why this content should exist.”</p>
+<p>Expression is becoming commoditized.</p>
+<p>Taste is the new edge.</p>
+
+      </div>
+      <a class="note-permalink" href="/en/notes/expression-is-cheap-taste-is-edge/">Open note</a>
+    </article>
+    <article class="note-item">
+      <header class="note-header">
+        <h2><a href="/en/notes/ai-is-combinational-not-conceptual/">AI Is Combinational, Not Conceptual</a></h2>
+        <time datetime="2026-02-28T11:00:00.000Z">February 28, 2026</time>
+      </header>
+      <div class="prose">
+<p>Generative AI is not discovering new continents. It is a hyper-efficient search engine over high-dimensional probability space.</p>
+<p>It is strong at combinational innovation and weak at true conceptual breakthroughs.</p>
+<p>AI amplifies creativity, but defining new problem spaces is still a human job.</p>
+
+      </div>
+      <a class="note-permalink" href="/en/notes/ai-is-combinational-not-conceptual/">Open note</a>
+    </article>
+    <article class="note-item">
+      <header class="note-header">
+        <h2><a href="/en/notes/engineering-cognition-into-executable-form/">Engineering Cognition into Executable Form</a></h2>
+        <time datetime="2026-02-28T10:00:00.000Z">February 28, 2026</time>
+      </header>
+      <div class="prose">
+<p>We are not merely learning how to use AI.</p>
+<p>We are learning how to translate human tacit cognition into machine-interpretable, executable structures:</p>
+<ul>
+<li>thinking -&gt; prompts</li>
+<li>experience -&gt; context</li>
+<li>consensus -&gt; protocols</li>
+<li>workflows -&gt; agents</li>
+</ul>
+<p>Prompt, Context, Protocol, and Agent are all ways of engineering cognition into executable form.</p>
+
+      </div>
+      <a class="note-permalink" href="/en/notes/engineering-cognition-into-executable-form/">Open note</a>
+    </article>
+    <article class="note-item">
+      <header class="note-header">
+        <h2><a href="/en/notes/understanding-is-being-right-under-novelty/">Understanding Is Being Right Under Novelty</a></h2>
+        <time datetime="2026-02-28T09:00:00.000Z">February 28, 2026</time>
+      </header>
+      <div class="prose">
+<p>Perhaps we have misunderstood what understanding really means.</p>
+<p>Humans and large language models are alike in one crucial way: intuition comes first, reasoning follows.</p>
+<p>What we call explanations are often stories constructed after the fact.</p>
+<p>True understanding is not the ability to articulate reasons. It is the ability to remain correct in unfamiliar situations.</p>
+
+      </div>
+      <a class="note-permalink" href="/en/notes/understanding-is-being-right-under-novelty/">Open note</a>
+    </article>
+  </div>
+  </main>
+  <footer class="site-footer">
+    <p>&copy; 2026 Kingson Wu</p>
+  </footer>
+  <button class="reading-return" type="button" data-reading-return aria-label="Back to start" title="Back to start">
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <path d="M12 19V5"></path>
+      <path d="m6 11 6-6 6 6"></path>
+    </svg>
+  </button>
+  <script src="/scripts/theme.js"></script>
+  <script src="/scripts/image-viewer.js"></script>
+  <script src="/scripts/reading-tools.js"></script>
+</body>
+</html>

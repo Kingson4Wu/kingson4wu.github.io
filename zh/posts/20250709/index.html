@@ -1,0 +1,2433 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>刷LeetCode总结的算法基础和套路 | 拉巴力的纸皮箱</title>
+  <meta name="description" content="最近重新刷LeetCode，对一些算法基础和套路做下总结，以做备忘 简要分类总结 数据结构 数组（Array） 链表（Linked List） 哈希表（HashMap / HashSet） 堆（Heap） 最大堆 / 最小堆 常用于：优先队列、Top K、调度排序 栈 / 队列（Stack / Queue） DFS 通...">
+  <link rel="canonical" href="https://kingson4wu.github.io/zh/posts/20250709/">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="alternate" type="application/rss+xml" title="拉巴力的纸皮箱" href="/zh/feed.xml">
+  <link rel="alternate" type="text/markdown" href="/zh/posts/20250709/index.md">
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="/styles/main.css">
+  <script>
+    try {
+      var theme = localStorage.getItem('theme');
+      if (theme) document.documentElement.dataset.theme = theme;
+    } catch (_) {}
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="site-title" href="/zh/" aria-label="拉巴力的纸皮箱">
+      <span class="site-logo" aria-hidden="true">K</span>
+      <span>拉巴力的纸皮箱</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="/zh/posts/">文章</a>
+      <a href="/zh/notes/">笔记</a>
+      <a href="/zh/tags/">标签</a>
+      <a href="/zh/about/">关于</a>
+      <a href="/zh/search/">搜索</a>
+      <a href="/en/" lang="en">English</a>
+      <a class="feed-link" href="/zh/feed.xml" aria-label="订阅更新" title="订阅更新">
+        <svg class="feed-icon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M5 5.5A13.5 13.5 0 0 1 18.5 19"></path>
+          <path d="M5 11A8 8 0 0 1 13 19"></path>
+          <circle cx="6" cy="18" r="1.5"></circle>
+        </svg>
+      </a>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换明暗模式" title="切换明暗模式">
+        <svg class="theme-icon theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M21 14.2A8.5 8.5 0 0 1 9.8 3 7 7 0 1 0 21 14.2Z"></path>
+        </svg>
+        <svg class="theme-icon theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"></path>
+        </svg>
+      </button>
+    </nav>
+  </header>
+  <main class="site-main">
+    <article class="article">
+      <header class="article-header">
+        <h1>刷LeetCode总结的算法基础和套路</h1>
+        <time datetime="2025-07-09T07:20:22.000Z">2025年7月9日</time>
+<ul class="tag-list" aria-label="Tags">
+    <li><a href="/zh/tags/Algorithms/">Algorithms</a></li>
+  </ul>
+      </header>
+      <div class="prose">
+<blockquote>
+<blockquote>
+<p>最近重新刷LeetCode，对一些算法基础和套路做下总结，以做备忘</p>
+</blockquote>
+</blockquote>
+<hr>
+<h1 id="section-1" data-heading-text="简要分类总结">简要分类总结</h1>
+<h2 id="section-2" data-heading-text="数据结构">数据结构</h2>
+<ul>
+<li>数组（Array）</li>
+<li>链表（Linked List）</li>
+<li>哈希表（HashMap / HashSet）</li>
+<li>堆（Heap）
+<ul>
+<li>最大堆 / 最小堆</li>
+<li>常用于：优先队列、Top K、调度排序</li>
+</ul>
+</li>
+<li>栈 / 队列（Stack / Queue）
+<ul>
+<li>DFS 通常借助栈实现，BFS 借助队列</li>
+</ul>
+</li>
+<li>树（Tree）
+<ul>
+<li>普通二叉树</li>
+<li>二叉搜索树（BST）</li>
+<li>平衡二叉树（AVL / 红黑树）</li>
+<li>字典树（Trie）</li>
+<li>线段树（Segment Tree）</li>
+<li>树状数组（Fenwick Tree）</li>
+<li>并查集</li>
+</ul>
+</li>
+<li>图（Graph）
+<ul>
+<li>表示方式：邻接表、邻接矩阵</li>
+<li>有向图 / 无向图，带权图 / 无权图</li>
+<li>拓扑排序
+<ul>
+<li>Kahn 算法（BFS 实现）</li>
+<li>DFS 逆后序（递归 + 回退）</li>
+<li>用于检测有向图中是否存在环、任务调度等</li>
+</ul>
+</li>
+<li>最短路径算法：Dijkstra、Floyd、Bellman-Ford（带权图最短路径）</li>
+<li>最小生成树算法：Kruskal / Prim</li>
+<li>稠密图和稀疏图
+<ul>
+<li>稠密图：边很多，接近“完全图”</li>
+<li>稀疏图：边很少，大多数节点之间没有直接连接</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="section-3" data-heading-text="算法">算法</h2>
+<ul>
+<li>遍历算法
+<ul>
+<li>深度优先搜索（DFS）
+<ul>
+<li>栈结构实现（递归或手动栈）</li>
+<li>回溯 （= DFS + 剪枝 + 状态恢复（回退））
+<ul>
+<li>常用于：组合、排列、子集、数独、八皇后等问题</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>广度优先搜索（BFS）
+<ul>
+<li>队列结构实现，逐层遍历</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>排序（冒泡、快速、堆）</li>
+<li>快慢指针/ 双指针</li>
+<li>滑动窗口</li>
+<li>单调栈 / 单调队列</li>
+<li>二分查找</li>
+<li>分治算法（Divide &amp; Conquer）</li>
+<li>贪心算法（Greedy）</li>
+<li>动态规划（DP）
+<ul>
+<li>背包问题（0-1 背包、子集背包、完全背包）</li>
+<li>子序列问题（LIS 最长递增子序列、LCS 最长公共子序列）</li>
+<li>区间 DP / 状态压缩 / 滚动数组</li>
+</ul>
+</li>
+<li>回溯算法（Backtracking）
+<ul>
+<li>用于枚举所有可能解，如全排列、组合 / 子集</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id="section-4" data-heading-text="链表">链表</h1>
+<ul>
+<li>
+<p>与数组不同，链表在构建子链时不会增加额外的空间复杂度。因此可以放心地构造子链，无需考虑节点交换的问题，也不必执着于“原地交换”的思路。</p>
+</li>
+<li>
+<p>使用哨兵节点是一种常见技巧，它可以避免处理头指针等特殊情况，在代码实现上更加简洁。</p>
+<ul>
+<li><strong>链表内指定区间反转：</strong>
+给定一个单链表的头指针 <code>head</code>，以及两个整数 <code>left</code> 和 <code>right</code>（其中 <code>left &lt;= right</code>），请你反转从位置 <code>left</code> 到位置 <code>right</code> 的链表节点，返回反转后的链表。</li>
+</ul>
+<div class="code-block" data-language="go"><div class="code-header"><span class="code-language">go</span></div><pre><code class="hljs language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">reverseBetween</span><span class="hljs-params">(head *ListNode, m <span class="hljs-type">int</span>, n <span class="hljs-type">int</span>)</span></span> *ListNode {
+    <span class="hljs-keyword">if</span> m == n || head == <span class="hljs-literal">nil</span> {
+        <span class="hljs-keyword">return</span> head
+    }
+
+    <span class="hljs-comment">// 哨兵节点，避免处理头指针的特殊情况</span>
+    dummy := &amp;ListNode{Next: head}
+    pre := dummy
+
+    <span class="hljs-comment">// 1. 找到第 m-1 个节点</span>
+    <span class="hljs-keyword">for</span> i := <span class="hljs-number">1</span>; i &lt; m; i++ {
+        pre = pre.Next
+    }
+
+    <span class="hljs-comment">// 2. 反转 m 到 n 之间的节点，采用头插法</span>
+    start := pre.Next      <span class="hljs-comment">// 第 m 个节点</span>
+    then := start.Next     <span class="hljs-comment">// 第 m+1 个节点</span>
+
+    <span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; n-m; i++ {
+        start.Next = then.Next
+        then.Next = pre.Next
+        pre.Next = then
+        then = start.Next
+    }
+
+    <span class="hljs-keyword">return</span> dummy.Next
+}
+</code></pre></div>
+</li>
+</ul>
+<h1 id="section-5" data-heading-text="二叉树">二叉树</h1>
+<ul>
+<li>
+<p><strong>二叉树遍历（先序、中序、后序）</strong></p>
+<ul>
+<li>先序（中左右）、中序（左中右）、后序（左右中）</li>
+<li>包含递归与非递归两种实现方式</li>
+<li><strong>DFS</strong>：先序 / 中序 / 后序（递归 / 栈实现）</li>
+<li><strong>BFS</strong>：层序遍历（借助队列实现）</li>
+</ul>
+</li>
+<li>
+<p><strong>二叉查找树（Binary Search Tree，简称 BST）</strong></p>
+<ul>
+<li>左子树所有节点的值均小于根节点，右子树所有节点的值均大于根节点（<strong>不允许等于</strong>）</li>
+<li><strong>中序遍历结果是升序序列</strong></li>
+</ul>
+</li>
+<li>
+<p><strong>完全二叉树</strong></p>
+<ul>
+<li>如果一棵深度为 <code>h</code> 的二叉树，除了第 <code>h</code> 层，其它每一层的节点数都达到最大值，并且第 <code>h</code> 层的节点都尽量靠左排列，则该树是完全二叉树</li>
+<li>第 <code>h</code> 层可能包含 <code>1 ~ 2^h</code> 个节点</li>
+<li><strong>堆</strong>（大顶堆 / 小顶堆）是一种基于完全二叉树的结构</li>
+</ul>
+</li>
+<li>
+<p><strong>平衡二叉树（Balanced Binary Tree）</strong></p>
+<ul>
+<li>要么是空树，要么满足以下条件：左右子树的高度差的绝对值不超过 1，且左右子树也分别是平衡二叉树</li>
+</ul>
+</li>
+</ul>
+<h2 id="section-6" data-heading-text="二叉树遍历">二叉树遍历</h2>
+<ul>
+<li>
+<p>树的遍历主要分为两类：</p>
+<ul>
+<li>
+<p><strong>广度优先遍历（BFS）</strong>：也称层序遍历，使用队列实现</p>
+</li>
+<li>
+<p><strong>深度优先遍历（DFS）</strong>：包括先序、中序、后序三种形式，可使用递归或栈实现</p>
+<ul>
+<li>递归</li>
+<li>栈</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>深度优先遍历（DFS）说明</strong></p>
+<ul>
+<li>使用递归实现 DFS 时，虽然代码中未显式使用栈，但其实是借助系统的 <strong>调用栈（Call Stack）</strong> 来进行函数的递归与回溯</li>
+</ul>
+</li>
+</ul>
+<h3 id="section-7" data-heading-text="先序遍历（前序）">先序遍历（前序）</h3>
+<ul>
+<li>
+<p>栈实现流程：</p>
+<ol>
+<li>循环条件：<code>root != nil || len(stack) &gt; 0</code></li>
+<li>若 <code>root != nil</code>，访问节点、入栈、转向左子树</li>
+<li>否则出栈、转向右子树</li>
+</ol>
+</li>
+</ul>
+<div class="code-block" data-language="go"><div class="code-header"><span class="code-language">go</span></div><pre><code class="hljs language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(root *TreeNode)</span></span> preorder() []<span class="hljs-type">int</span> {
+	res := []<span class="hljs-type">int</span>{}
+	<span class="hljs-keyword">if</span> root == <span class="hljs-literal">nil</span> {
+		<span class="hljs-keyword">return</span> res
+	}
+	stack := []*TreeNode{}
+	<span class="hljs-keyword">for</span> root != <span class="hljs-literal">nil</span> || <span class="hljs-built_in">len</span>(stack) &gt; <span class="hljs-number">0</span> {
+		<span class="hljs-keyword">if</span> root != <span class="hljs-literal">nil</span> {
+			res = <span class="hljs-built_in">append</span>(res, root.data)      <span class="hljs-comment">// 访问当前节点</span>
+			stack = <span class="hljs-built_in">append</span>(stack, root)       <span class="hljs-comment">// 入栈</span>
+			root = root.Lchild                <span class="hljs-comment">// 向左子树移动</span>
+		} <span class="hljs-keyword">else</span> {
+			root = stack[<span class="hljs-built_in">len</span>(stack)<span class="hljs-number">-1</span>]        <span class="hljs-comment">// 出栈</span>
+			stack = stack[:<span class="hljs-built_in">len</span>(stack)<span class="hljs-number">-1</span>]
+			root = root.Rchild                <span class="hljs-comment">// 转向右子树</span>
+		}
+	}
+	<span class="hljs-keyword">return</span> res
+}
+</code></pre></div>
+<h3 id="section-8" data-heading-text="中序遍历">中序遍历</h3>
+<ul>
+<li>
+<p>栈实现流程：</p>
+<ol>
+<li>循环条件：<code>root != nil || len(stack) &gt; 0</code></li>
+<li>若 <code>root != nil</code>，将当前节点入栈并转向左子树</li>
+<li>否则出栈并访问节点</li>
+<li>然后转向右子树</li>
+</ol>
+</li>
+</ul>
+<div class="code-block" data-language="go"><div class="code-header"><span class="code-language">go</span></div><pre><code class="hljs language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(root *TreeNode)</span></span> inorder() []<span class="hljs-type">int</span> {
+	res := []<span class="hljs-type">int</span>{}
+	<span class="hljs-keyword">if</span> root == <span class="hljs-literal">nil</span> {
+		<span class="hljs-keyword">return</span> res
+	}
+	stack := []*TreeNode{}
+	<span class="hljs-keyword">for</span> root != <span class="hljs-literal">nil</span> || <span class="hljs-built_in">len</span>(stack) &gt; <span class="hljs-number">0</span> {
+		<span class="hljs-keyword">if</span> root != <span class="hljs-literal">nil</span> {
+			stack = <span class="hljs-built_in">append</span>(stack, root)       <span class="hljs-comment">// 入栈，等待回溯</span>
+			root = root.Lchild                <span class="hljs-comment">// 向左走</span>
+		} <span class="hljs-keyword">else</span> {
+			root = stack[<span class="hljs-built_in">len</span>(stack)<span class="hljs-number">-1</span>]        <span class="hljs-comment">// 出栈</span>
+			stack = stack[:<span class="hljs-built_in">len</span>(stack)<span class="hljs-number">-1</span>]
+			res = <span class="hljs-built_in">append</span>(res, root.data)      <span class="hljs-comment">// 访问节点</span>
+			root = root.Rchild                <span class="hljs-comment">// 转向右子树</span>
+		}
+	}
+	<span class="hljs-keyword">return</span> res
+}
+</code></pre></div>
+<ul>
+<li>示例题目：判断一棵二叉树是否为二叉搜索树</li>
+</ul>
+<div class="code-block" data-language="go"><div class="code-header"><span class="code-language">go</span></div><pre><code class="hljs language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">isValidBST</span><span class="hljs-params">(root *TreeNode)</span></span> <span class="hljs-type">bool</span> {
+    stack := []*TreeNode{}
+    inorder := math.MinInt64
+    <span class="hljs-keyword">for</span> <span class="hljs-built_in">len</span>(stack) &gt; <span class="hljs-number">0</span> || root != <span class="hljs-literal">nil</span> {
+        <span class="hljs-keyword">for</span> root != <span class="hljs-literal">nil</span> {
+            stack = <span class="hljs-built_in">append</span>(stack, root)
+            root = root.Left
+        }
+        root = stack[<span class="hljs-built_in">len</span>(stack)<span class="hljs-number">-1</span>]
+        stack = stack[:<span class="hljs-built_in">len</span>(stack)<span class="hljs-number">-1</span>]
+        <span class="hljs-keyword">if</span> root.Val &lt;= inorder {
+            <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>
+        }
+        inorder = root.Val
+        root = root.Right
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>
+}
+</code></pre></div>
+<h3 id="section-9" data-heading-text="后序遍历">后序遍历</h3>
+<ul>
+<li>非递归实现关键：访问节点需保证其左右子树均已访问或为空</li>
+</ul>
+<div class="code-block" data-language="go"><div class="code-header"><span class="code-language">go</span></div><pre><code class="hljs language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(root *TreeNode)</span></span> Postorder() []<span class="hljs-type">int</span> {
+	res := []<span class="hljs-type">int</span>{}
+	<span class="hljs-keyword">if</span> root == <span class="hljs-literal">nil</span> {
+		<span class="hljs-keyword">return</span> res
+	}
+	stack := []*TreeNode{}
+	<span class="hljs-keyword">var</span> pre *TreeNode = <span class="hljs-literal">nil</span>
+	stack = <span class="hljs-built_in">append</span>(stack, root)
+
+	<span class="hljs-keyword">for</span> <span class="hljs-built_in">len</span>(stack) &gt; <span class="hljs-number">0</span> {
+		cur := stack[<span class="hljs-built_in">len</span>(stack)<span class="hljs-number">-1</span>]
+		<span class="hljs-comment">// 如果是叶子节点，或子节点已访问，则访问当前节点</span>
+		<span class="hljs-keyword">if</span> (cur.Lchild == <span class="hljs-literal">nil</span> &amp;&amp; cur.Rchild == <span class="hljs-literal">nil</span>) || (pre != <span class="hljs-literal">nil</span> &amp;&amp; (pre == cur.Lchild || pre == cur.Rchild)) {
+			res = <span class="hljs-built_in">append</span>(res, cur.data)
+			stack = stack[:<span class="hljs-built_in">len</span>(stack)<span class="hljs-number">-1</span>]
+			pre = cur <span class="hljs-comment">// 标记当前已访问</span>
+		} <span class="hljs-keyword">else</span> {
+			<span class="hljs-keyword">if</span> cur.Rchild != <span class="hljs-literal">nil</span> {
+				stack = <span class="hljs-built_in">append</span>(stack, cur.Rchild)
+			}
+			<span class="hljs-keyword">if</span> cur.Lchild != <span class="hljs-literal">nil</span> {
+				stack = <span class="hljs-built_in">append</span>(stack, cur.Lchild)
+			}
+		}
+	}
+	<span class="hljs-keyword">return</span> res
+}
+</code></pre></div>
+<h2 id="section-10" data-heading-text="删除二叉搜索树中的节点">删除二叉搜索树中的节点</h2>
+<ul>
+<li>
+<p>删除节点的四种情况：</p>
+<ol>
+<li>
+<p><strong>叶子节点（无子节点）</strong></p>
+<ul>
+<li>直接删除，返回 <code>nil</code>。</li>
+</ul>
+</li>
+<li>
+<p><strong>只有左子树</strong></p>
+<ul>
+<li>用左子节点替代当前节点，返回 <code>root.Left</code>。</li>
+</ul>
+</li>
+<li>
+<p><strong>只有右子树</strong></p>
+<ul>
+<li>用右子节点替代当前节点，返回 <code>root.Right</code>。</li>
+</ul>
+</li>
+<li>
+<p><strong>左右子树都有</strong></p>
+<ul>
+<li>找右子树中最小的节点（即<strong>后继 successor</strong>），</li>
+<li>用 successor 的值替代当前节点的值，</li>
+<li>然后在右子树中递归删除该 successor 节点。</li>
+</ul>
+</li>
+</ol>
+</li>
+<li>
+<p>情况 4 的说明：</p>
+<ul>
+<li>**右子树的最小节点（successor）**不一定是叶子节点；</li>
+<li>它一定没有左子节点，但<strong>可能有右子节点</strong>。</li>
+</ul>
+</li>
+</ul>
+<div class="code-block"><pre><code class="hljs">      10                        11
+     /  \                      /  \
+    5    15                   5   15
+        /                         /
+       11       --&gt;             13
+         \                     /  \
+         13                   12  14
+        /  \
+       12   14
+</code></pre></div>
+<ul>
+<li>
+<p>什么是“递归删除 successor 节点”？</p>
+<ul>
+<li>当我们删除一个节点（设为 <code>root</code>）且其有左右子树时，选择右子树中最小节点（successor）作为替代；</li>
+<li>但此时右子树中仍存在原来的 successor 节点，因此需在右子树中递归删除该节点；</li>
+<li>这样才能确保整棵树依然符合**二叉搜索树（BST）**的性质。</li>
+</ul>
+</li>
+</ul>
+<h2 id="section-11" data-heading-text="实现示例">实现示例</h2>
+<div class="code-block" data-language="go"><div class="code-header"><span class="code-language">go</span></div><pre><code class="hljs language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">deleteNode</span><span class="hljs-params">(root *TreeNode, key <span class="hljs-type">int</span>)</span></span> *TreeNode {
+	<span class="hljs-keyword">if</span> root == <span class="hljs-literal">nil</span> {
+		<span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span>
+	}
+	<span class="hljs-keyword">if</span> key &lt; root.Val {
+		root.Left = deleteNode(root.Left, key)
+		<span class="hljs-keyword">return</span> root
+	} <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> key &gt; root.Val {
+		root.Right = deleteNode(root.Right, key)
+		<span class="hljs-keyword">return</span> root
+	}
+	<span class="hljs-comment">//找到要删除的结点</span>
+	<span class="hljs-keyword">if</span> root.Left == <span class="hljs-literal">nil</span> {
+		<span class="hljs-keyword">return</span> root.Right
+	}
+	<span class="hljs-keyword">if</span> root.Right == <span class="hljs-literal">nil</span> {
+		<span class="hljs-keyword">return</span> root.Left
+	}
+	<span class="hljs-comment">// 情况4：左右子树都有</span>
+	<span class="hljs-comment">//需要找右子树的最小值的结点, 最小的一定在最左边</span>
+	successor := root.Right
+	<span class="hljs-keyword">for</span> successor.Left != <span class="hljs-literal">nil</span> {
+		successor = successor.Left
+	}
+	successor.Right = deleteNode(root.Right, successor.Val)
+	successor.Left = root.Left
+	<span class="hljs-keyword">return</span> successor
+}
+</code></pre></div>
+<h2 id="fenwick-tree-binary-indexed-tree" data-heading-text="树状数组（Fenwick Tree / Binary Indexed Tree）">树状数组（Fenwick Tree / Binary Indexed Tree）</h2>
+<ul>
+<li>
+<p><strong>适用场景</strong>：一维前缀和问题（如区间求和、频率统计等）</p>
+</li>
+<li>
+<p><strong>核心思想</strong>：</p>
+<ul>
+<li>利用二进制的最低位（lowbit）来定位负责某段区间的节点</li>
+<li>是一种空间压缩形式的前缀树结构</li>
+</ul>
+</li>
+<li>
+<p>一种可动态维护序列前缀和的数据结构，支持以下操作：</p>
+<ul>
+<li><strong>单点更新 <code>update(i, v)</code></strong>：将第 <code>i</code> 个位置的值增加 <code>v</code>（如本题中 <code>v = 1</code>）</li>
+</ul>
+<div class="code-block" data-language="go"><div class="code-header"><span class="code-language">go</span></div><pre><code class="hljs language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">update</span><span class="hljs-params">(i <span class="hljs-type">int</span>, v <span class="hljs-type">int</span>)</span></span> {
+    <span class="hljs-keyword">for</span> i &lt;= n {  <span class="hljs-comment">// n 是树状数组的长度</span>
+        bit[i] += v
+        i += i &amp; -i  <span class="hljs-comment">// 跳到下一个负责这个区间的节点</span>
+    }
+}
+</code></pre></div>
+<ul>
+<li>
+<p><strong>区间查询 <code>query(i)</code></strong>：查询区间 <code>[1..i]</code> 的前缀和</p>
+<ul>
+<li>通过跳跃式回溯累加，效率高</li>
+</ul>
+<div class="code-block" data-language="go"><div class="code-header"><span class="code-language">go</span></div><pre><code class="hljs language-go"><span class="hljs-comment">// 查询 bit[1] 到 bit[i] 的前缀和</span>
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">query</span><span class="hljs-params">(i <span class="hljs-type">int</span>)</span></span> <span class="hljs-type">int</span> {
+    res := <span class="hljs-number">0</span>
+    <span class="hljs-keyword">for</span> i &gt; <span class="hljs-number">0</span> {
+        res += bit[i]
+        i -= i &amp; -i  <span class="hljs-comment">// i &amp; -i 取最低位的 1</span>
+    }
+    <span class="hljs-keyword">return</span> res
+}
+</code></pre></div>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="query-p" data-heading-text="query(p) 的跳跃计算示意">query(p) 的跳跃计算示意</h3>
+<ul>
+<li>树状数组 <code>bit[]</code> 示意如下：</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>下标（i）</th>
+<th>bit[i]</th>
+<th>表示的区间</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>2</td>
+<td>sum(1)</td>
+</tr>
+<tr>
+<td>2</td>
+<td>1</td>
+<td>sum(1…2)</td>
+</tr>
+<tr>
+<td>3</td>
+<td>0</td>
+<td>sum(3)</td>
+</tr>
+<tr>
+<td>4</td>
+<td>3</td>
+<td>sum(1…4)</td>
+</tr>
+<tr>
+<td>5</td>
+<td>0</td>
+<td>sum(5)</td>
+</tr>
+<tr>
+<td>6</td>
+<td>0</td>
+<td>sum(5…6)</td>
+</tr>
+<tr>
+<td>7</td>
+<td>0</td>
+<td>sum(7)</td>
+</tr>
+<tr>
+<td>8</td>
+<td>?</td>
+<td>sum(1…8)</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>
+<p>查询 <code>query(5)</code> 实际执行过程如下：</p>
+<ul>
+<li>第一次：<code>p = 5</code> → <code>sum += bit[5] = 0</code> → <code>p = 5 - 1 = 4</code></li>
+<li>第二次：<code>p = 4</code> → <code>sum += bit[4] = 3</code> → <code>p = 4 - 4 = 0</code></li>
+<li>退出循环，结果为 <code>sum = 3</code></li>
+</ul>
+</li>
+<li>
+<p>实际加了哪些区间：</p>
+<ul>
+<li><code>bit[5]</code> → 表示 <code>[5]</code></li>
+<li><code>bit[4]</code> → 表示 <code>[1..4]</code></li>
+<li>所以 <code>sum[1..5] = bit[5] + bit[4]</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="x-x-x-1" data-heading-text="为什么 `x &amp; (-x)` 能取得 `x` 的最低位 1？">为什么 <code>x &amp; (-x)</code> 能取得 <code>x</code> 的最低位 1？</h3>
+<ul>
+<li>
+<p>原理：使用补码</p>
+<ul>
+<li><code>-x = ^x + 1</code>（按位取反再加 1）</li>
+</ul>
+</li>
+</ul>
+<div class="code-block" data-language="go"><div class="code-header"><span class="code-language">go</span></div><pre><code class="hljs language-go">x     = <span class="hljs-number">00001100</span>
+-x    = <span class="hljs-number">11110100</span>
+----------------
+x &amp; -x = <span class="hljs-number">00000100</span>  <span class="hljs-comment">// 取出最低位的 1</span>
+</code></pre></div>
+<ul>
+<li>补码运算确保 <code>x &amp; -x</code> 恰好保留最低位的 1，其它位互斥</li>
+</ul>
+<h3 id="section-15" data-heading-text="树状数组的安全构造方式">树状数组的安全构造方式</h3>
+<div class="code-block" data-language="go"><div class="code-header"><span class="code-language">go</span></div><pre><code class="hljs language-go"><span class="hljs-comment">// 计算最小安全长度（为离散化后的数组保留空间）</span>
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">getSafeFenwickArraySize</span><span class="hljs-params">(n <span class="hljs-type">int</span>)</span></span> <span class="hljs-type">int</span> {
+    nextPowerOf2 := <span class="hljs-number">1</span> &lt;&lt; bits.Len(<span class="hljs-type">uint</span>(n))
+    <span class="hljs-keyword">return</span> nextPowerOf2 + <span class="hljs-number">1</span> <span class="hljs-comment">// +1 处理边界</span>
+}
+</code></pre></div>
+<h2 id="315-https-leetcode-cn-problems-count-smaller-numbers-after-self-description" data-heading-text="例题：[315. 计算右侧小于当前元素的个数](https://leetcode.cn/problems/count-of-smaller-numbers-after-self/description/)">例题：<a href="https://leetcode.cn/problems/count-of-smaller-numbers-after-self/description/">315. 计算右侧小于当前元素的个数</a></h2>
+<ul>
+<li><strong>题意</strong>：返回数组 <code>counts</code>，其中 <code>counts[i]</code> 表示 <code>nums[i]</code> 右侧比它小的元素数量</li>
+<li><strong>解法</strong>：树状数组 + 离散化优化空间</li>
+</ul>
+<h3 id="section-17" data-heading-text="解题流程：">解题流程：</h3>
+<ol>
+<li>
+<p><strong>离散化</strong>：将原数组值映射到连续整数范围（防止值域过大）</p>
+</li>
+<li>
+<p><strong>从后向前遍历</strong>：</p>
+<ul>
+<li>查询当前数 <strong>前面比它小</strong> 的数的出现次数 → <code>query(id - 1)</code></li>
+<li>更新当前数出现次数 → <code>update(id)</code></li>
+</ul>
+</li>
+<li>
+<p><strong>树状数组操作时间复杂度：O(log n)</strong></p>
+</li>
+</ol>
+<h3 id="section-18" data-heading-text="实现代码：">实现代码：</h3>
+<div class="code-block" data-language="go"><div class="code-header"><span class="code-language">go</span></div><pre><code class="hljs language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">countSmaller</span><span class="hljs-params">(nums []<span class="hljs-type">int</span>)</span></span> []<span class="hljs-type">int</span> {
+    <span class="hljs-comment">// 离散化映射：数值 -&gt; 索引</span>
+    numToId := <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(nums []<span class="hljs-type">int</span>)</span></span> <span class="hljs-keyword">map</span>[<span class="hljs-type">int</span>]<span class="hljs-type">int</span> {
+        set := <span class="hljs-built_in">make</span>(<span class="hljs-keyword">map</span>[<span class="hljs-type">int</span>]<span class="hljs-keyword">struct</span>{})
+        <span class="hljs-keyword">for</span> _, num := <span class="hljs-keyword">range</span> nums {
+            set[num] = <span class="hljs-keyword">struct</span>{}{}
+        }
+        a := <span class="hljs-built_in">make</span>([]<span class="hljs-type">int</span>, <span class="hljs-number">0</span>, <span class="hljs-built_in">len</span>(set))
+        <span class="hljs-keyword">for</span> num := <span class="hljs-keyword">range</span> set {
+            a = <span class="hljs-built_in">append</span>(a, num)
+        }
+        sort.Ints(a)
+        m := <span class="hljs-built_in">make</span>(<span class="hljs-keyword">map</span>[<span class="hljs-type">int</span>]<span class="hljs-type">int</span>)
+        <span class="hljs-keyword">for</span> i, num := <span class="hljs-keyword">range</span> a {
+            m[num] = i + <span class="hljs-number">1</span>  <span class="hljs-comment">// 从 1 开始</span>
+        }
+        <span class="hljs-keyword">return</span> m
+    }(nums)
+
+    c := <span class="hljs-built_in">make</span>([]<span class="hljs-type">int</span>, <span class="hljs-built_in">len</span>(nums)+<span class="hljs-number">5</span>)
+    lowBit := <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(x <span class="hljs-type">int</span>)</span></span> <span class="hljs-type">int</span> {
+        <span class="hljs-keyword">return</span> x &amp; -x
+    }
+    query := <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(pos <span class="hljs-type">int</span>)</span></span> <span class="hljs-type">int</span> {
+        ret := <span class="hljs-number">0</span>
+        <span class="hljs-keyword">for</span> pos &gt; <span class="hljs-number">0</span> {
+            ret += c[pos]
+            pos -= lowBit(pos)
+        }
+        <span class="hljs-keyword">return</span> ret
+    }
+    update := <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(pos <span class="hljs-type">int</span>)</span></span> {
+        <span class="hljs-keyword">for</span> pos &lt; <span class="hljs-built_in">len</span>(c) {
+            c[pos]++
+            pos += lowBit(pos)
+        }
+    }
+
+    ans := <span class="hljs-built_in">make</span>([]<span class="hljs-type">int</span>, <span class="hljs-built_in">len</span>(nums))
+    <span class="hljs-keyword">for</span> i := <span class="hljs-built_in">len</span>(nums) - <span class="hljs-number">1</span>; i &gt;= <span class="hljs-number">0</span>; i-- {
+        id := numToId[nums[i]]
+        ans[i] = query(id - <span class="hljs-number">1</span>)
+        update(id)
+    }
+    <span class="hljs-keyword">return</span> ans
+}
+</code></pre></div>
+<h2 id="segment-tree" data-heading-text="线段树（Segment Tree）">线段树（Segment Tree）</h2>
+<ul>
+<li>
+<p><strong>适用场景</strong>：支持区间查询 + 单点或区间修改等</p>
+</li>
+<li>
+<p><strong>典型用途</strong>：</p>
+<ul>
+<li>区间最大值、最小值、区间和</li>
+<li>区间赋值、区间加法（懒标记 / Lazy Propagation）</li>
+</ul>
+</li>
+<li>
+<p><strong>结构特征</strong>：</p>
+<ul>
+<li>完全二叉树结构</li>
+<li>每个节点维护一个区间的信息</li>
+<li>父节点信息由左右子树合并而来</li>
+</ul>
+</li>
+</ul>
+<h2 id="699-https-leetcode-cn-problems-falling-squares-description" data-heading-text="例题：[699. 掉落的方块](https://leetcode.cn/problems/falling-squares/description/)">例题：<a href="https://leetcode.cn/problems/falling-squares/description/">699. 掉落的方块</a></h2>
+<ul>
+<li>问题：模拟落方块过程，返回每一步的最高高度</li>
+<li>典型的线段树区间最大值更新与查询问题</li>
+</ul>
+<h3 id="section-21" data-heading-text="解题流程：">解题流程：</h3>
+<ol>
+<li>
+<p><strong>离散化所有坐标</strong>：防止空间浪费（坐标最大值可达 10^9）</p>
+</li>
+<li>
+<p><strong>使用线段树</strong>维护每个区间的最大高度</p>
+</li>
+<li>
+<p><strong>每次插入一个方块</strong>：</p>
+<ul>
+<li>查询当前 <code>[left, right]</code> 区间的最大高度 <code>h</code></li>
+<li>更新该区间的值为 <code>h + sideLength</code></li>
+<li>记录全局最大高度</li>
+</ul>
+</li>
+</ol>
+<h2 id="section-22" data-heading-text="并查集">并查集</h2>
+<h2 id="684-https-leetcode-cn-problems-redundant-connection-description" data-heading-text="例题：[684. 冗余连接](https://leetcode.cn/problems/redundant-connection/description)">例题：<a href="https://leetcode.cn/problems/redundant-connection/description">684. 冗余连接</a></h2>
+<ul>
+<li>在含有一个环的无向图中找出一条可删边使其变为树</li>
+</ul>
+<h3 id="section-24" data-heading-text="解题流程：">解题流程：</h3>
+<ul>
+<li>使用并查集判断边是否构成环：
+<ul>
+<li>初始化每个节点为不同集合；
+<ul>
+<li>遍历 edges 中每条边 (u, v)：
+<ul>
+<li>如果 u 与 v 已在同一集合中，说明这条边构成环 → 返回它；</li>
+<li>否则合并 u 和 v；</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>因为题目要求返回「最后构成环的边」，只需从前往后遍历一次即可。</li>
+</ul>
+</li>
+</ul>
+<h3 id="section-25" data-heading-text="实现代码">实现代码</h3>
+<div class="code-block" data-language="go"><div class="code-header"><span class="code-language">go</span></div><pre><code class="hljs language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">findRedundantConnection</span><span class="hljs-params">(edges [][]<span class="hljs-type">int</span>)</span></span> []<span class="hljs-type">int</span> {
+    parent := <span class="hljs-built_in">make</span>([]<span class="hljs-type">int</span>, <span class="hljs-built_in">len</span>(edges)+<span class="hljs-number">1</span>)
+    <span class="hljs-keyword">for</span> i := <span class="hljs-keyword">range</span> parent {
+        parent[i] = i
+    }
+    <span class="hljs-keyword">var</span> find <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(<span class="hljs-type">int</span>)</span></span> <span class="hljs-type">int</span>
+    find = <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(x <span class="hljs-type">int</span>)</span></span> <span class="hljs-type">int</span> {
+        <span class="hljs-keyword">if</span> parent[x] != x {
+            parent[x] = find(parent[x])
+        }
+        <span class="hljs-keyword">return</span> parent[x]
+    }
+    union := <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(from, to <span class="hljs-type">int</span>)</span></span> <span class="hljs-type">bool</span> {
+        x, y := find(from), find(to)
+        <span class="hljs-keyword">if</span> x == y {
+            <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>
+        }
+        parent[x] = y
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>
+    }
+    <span class="hljs-keyword">for</span> _, e := <span class="hljs-keyword">range</span> edges {
+        <span class="hljs-keyword">if</span> !union(e[<span class="hljs-number">0</span>], e[<span class="hljs-number">1</span>]) {
+            <span class="hljs-keyword">return</span> e
+        }
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span>
+}
+</code></pre></div>
+<h1 id="section-26" data-heading-text="堆">堆</h1>
+<h3 id="section-27" data-heading-text="基本性质与操作（以最大堆为例）">基本性质与操作（以最大堆为例）</h3>
+<ol>
+<li>
+<p>最大堆的性质</p>
+<ul>
+<li>最大堆是一种<strong>完全二叉树</strong>，满足每个父节点的值都<strong>大于或等于</strong>其左右子节点的值。</li>
+<li>虽然逻辑结构为树，实际通常使用<strong>数组</strong>来实现。</li>
+</ul>
+</li>
+<li>
+<p>元素的插入与删除方式</p>
+<ul>
+<li>
+<p><strong>插入新节点</strong>：将元素追加到数组末尾，然后进行<strong>向上调整（Sift-Up）</strong>，直到堆序性恢复。</p>
+</li>
+<li>
+<p><strong>删除任意节点</strong>：将目标节点与数组最后一个元素交换，然后删除最后一个元素：</p>
+<ul>
+<li>若新值<strong>大于父节点</strong> → 进行<strong>向上调整</strong>；</li>
+<li>若新值<strong>小于任一子节点</strong> → 进行<strong>向下调整</strong>。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>特殊操作：删除堆顶（最大值）</p>
+<ul>
+<li>删除堆顶（即数组第一个元素）时，将最后一个元素移至根节点位置，再进行<strong>向下调整（Sift-Down）</strong>，以恢复堆的结构。</li>
+</ul>
+</li>
+<li>
+<p>时间复杂度分析</p>
+<ul>
+<li>
+<p><strong>插入</strong>或<strong>删除</strong>操作中，最多需要调整一条从叶节点到根节点或从根节点到叶节点的路径，因此时间复杂度均为：</p>
+<blockquote>
+<p>✅ <strong>O(log n)</strong></p>
+</blockquote>
+</li>
+</ul>
+</li>
+<li>
+<p>与二分查找的比较</p>
+<ul>
+<li>
+<p><strong>二分查找</strong>的时间复杂度也是：</p>
+<blockquote>
+<p>✅ <strong>O(log n)</strong></p>
+</blockquote>
+</li>
+<li>
+<p>不过它依赖于<strong>有序数组</strong>，而最大堆只维护<strong>局部有序结构</strong>（即每个父节点大于子节点）。两者在原理和应用场景上存在本质区别。</p>
+</li>
+</ul>
+</li>
+</ol>
+<h1 id="section-28" data-heading-text="图">图</h1>
+<h2 id="section-29" data-heading-text="无向图">无向图</h2>
+<ul>
+<li>
+<p>由两个部分组成：</p>
+<ul>
+<li><strong>顶点（Vertices）</strong>：图中的节点。</li>
+<li><strong>边（Edges）</strong>：连接两个顶点的线段。</li>
+</ul>
+</li>
+<li>
+<p><strong>边用集合表示</strong>：一条边连接两个顶点，用 <code>{A, B}</code> 表示（不区分方向），区别于有向图中的 <code>(A, B)</code>。
+<strong>度（Degree）</strong>：一个顶点的度是连接它的边的数量（不考虑方向）。</p>
+</li>
+<li>
+<p>无向图可以表示为：</p>
+<ul>
+<li>顶点：<code>{A, B, C}</code></li>
+<li>边：<code>{{A, B}, {B, C}}</code></li>
+</ul>
+</li>
+<li>
+<p>图形示意：</p>
+<ul>
+<li><code>A —— B —— C</code></li>
+</ul>
+</li>
+<li>
+<p><strong>无向图的深度优先搜索（DFS）</strong></p>
+<ul>
+<li>从某个顶点开始；</li>
+<li>标记为“已访问”；</li>
+<li>遍历它的邻居；</li>
+<li>对每一个未访问的邻居递归执行 DFS；</li>
+<li>如果遇到没有未访问邻居的死胡同，则回退。</li>
+</ul>
+</li>
+<li>
+<p><strong>递归实现 DFS</strong>：</p>
+</li>
+</ul>
+<div class="code-block" data-language="python"><div class="code-header"><span class="code-language">python</span></div><pre><code class="hljs language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">dfs</span>(<span class="hljs-params">graph, start, visited=<span class="hljs-literal">None</span></span>):
+    <span class="hljs-keyword">if</span> visited <span class="hljs-keyword">is</span> <span class="hljs-literal">None</span>:
+        visited = <span class="hljs-built_in">set</span>()
+    <span class="hljs-built_in">print</span>(start)  <span class="hljs-comment"># 访问当前节点</span>
+    visited.add(start)
+
+    <span class="hljs-keyword">for</span> neighbor <span class="hljs-keyword">in</span> graph[start]:
+        <span class="hljs-keyword">if</span> neighbor <span class="hljs-keyword">not</span> <span class="hljs-keyword">in</span> visited:
+            dfs(graph, neighbor, visited)
+
+<span class="hljs-comment"># 调用</span>
+dfs(graph, <span class="hljs-string">&#x27;A&#x27;</span>)
+</code></pre></div>
+<ul>
+<li><strong>非递归实现（使用栈）</strong>：</li>
+</ul>
+<div class="code-block" data-language="python"><div class="code-header"><span class="code-language">python</span></div><pre><code class="hljs language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">dfs_iterative</span>(<span class="hljs-params">graph, start</span>):
+    visited = <span class="hljs-built_in">set</span>()
+    stack = [start]
+
+    <span class="hljs-keyword">while</span> stack:
+        node = stack.pop()
+        <span class="hljs-keyword">if</span> node <span class="hljs-keyword">not</span> <span class="hljs-keyword">in</span> visited:
+            <span class="hljs-built_in">print</span>(node)
+            visited.add(node)
+            <span class="hljs-comment"># 为了保持访问顺序，反转邻居顺序</span>
+            <span class="hljs-keyword">for</span> neighbor <span class="hljs-keyword">in</span> <span class="hljs-built_in">reversed</span>(graph[node]):
+                <span class="hljs-keyword">if</span> neighbor <span class="hljs-keyword">not</span> <span class="hljs-keyword">in</span> visited:
+                    stack.append(neighbor)
+
+dfs_iterative(graph, <span class="hljs-string">&#x27;A&#x27;</span>)
+</code></pre></div>
+<ul>
+<li>
+<p><strong>无向图 DFS 的注意事项</strong>：</p>
+<ul>
+<li><strong>防止死循环</strong>：必须使用 <code>visited</code> 集合记录已访问节点，因为无向图的边是双向的，若不记录，会在 A-B-A-B 间无限循环。</li>
+<li><strong>图不连通的情况</strong>：只对一个起点 DFS 无法遍历所有节点。可对所有节点进行一次 DFS。</li>
+</ul>
+</li>
+</ul>
+<div class="code-block" data-language="python"><div class="code-header"><span class="code-language">python</span></div><pre><code class="hljs language-python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">dfs_all</span>(<span class="hljs-params">graph</span>):
+    visited = <span class="hljs-built_in">set</span>()
+    <span class="hljs-keyword">for</span> node <span class="hljs-keyword">in</span> graph:
+        <span class="hljs-keyword">if</span> node <span class="hljs-keyword">not</span> <span class="hljs-keyword">in</span> visited:
+            dfs(graph, node, visited)
+</code></pre></div>
+<h2 id="section-30" data-heading-text="有向图">有向图</h2>
+<h3 id="section-31" data-heading-text="有向图的拓扑排序">有向图的拓扑排序</h3>
+<ul>
+<li>
+<p>拓扑排序（Topological Sorting）适用于 <strong>有向无环图（DAG，Directed Acyclic Graph）</strong>。其目标是将所有顶点排成一个线性序列，使得每条边 <code>u → v</code> 中，顶点 <code>u</code> 排在 <code>v</code> 的前面。</p>
+</li>
+<li>
+<p>举例说明：</p>
+<ul>
+<li><strong>学习顺序</strong>：先学 A，再学 B，最后学 C。</li>
+<li><strong>任务依赖</strong>：任务 B 必须在任务 A 完成后执行。</li>
+<li>将任务抽象为节点，依赖关系为边，则问题转化为 DAG 的拓扑排序。</li>
+</ul>
+</li>
+<li>
+<p><strong>适用范围</strong>：</p>
+<ul>
+<li>必须是有向无环图（DAG）。</li>
+<li>若图中存在环，则无法进行拓扑排序。</li>
+</ul>
+</li>
+<li>
+<p><strong>拓扑排序的两种常用算法</strong>：</p>
+<ul>
+<li>
+<p><strong>方法一：Kahn 算法（入度表 + 队列）</strong></p>
+<ul>
+<li>统计所有顶点的入度。</li>
+<li>将入度为 0 的顶点加入队列。</li>
+<li>从队列中取出顶点 <code>u</code> 加入结果序列。</li>
+<li>删除 <code>u</code> 指向的边（使相邻顶点 <code>v</code> 入度减 1）。</li>
+<li>若 <code>v</code> 入度变为 0，加入队列。</li>
+<li>重复以上过程直至队列为空。</li>
+<li>若最终结果序列包含所有节点，则拓扑排序成功；否则图中存在环。</li>
+</ul>
+</li>
+<li>
+<p><strong>方法二：DFS 法（后序入栈）</strong></p>
+<ul>
+<li>从未访问的节点开始 DFS。</li>
+<li>递归访问其所有后继节点。</li>
+<li>当前节点所有后继访问完成后，将其压入栈中。</li>
+<li>所有节点访问完成后，从栈顶依次弹出即为拓扑序列。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>常见应用场景</strong>：</p>
+<ul>
+<li>编译器模块依赖分析</li>
+<li>项目任务调度</li>
+<li>数据处理管道排序</li>
+<li>课程安排问题（Leetcode 207、210）</li>
+</ul>
+</li>
+</ul>
+<h3 id="kahn-golang" data-heading-text="Kahn 算法（Golang 实现）：">Kahn 算法（Golang 实现）：</h3>
+<div class="code-block" data-language="go"><div class="code-header"><span class="code-language">go</span></div><pre><code class="hljs language-go"><span class="hljs-comment">// 拓扑排序（Kahn 算法）</span>
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">topologicalSort</span><span class="hljs-params">(graph <span class="hljs-keyword">map</span>[<span class="hljs-type">string</span>][]<span class="hljs-type">string</span>)</span></span> ([]<span class="hljs-type">string</span>, <span class="hljs-type">bool</span>) {
+  inDegree := <span class="hljs-built_in">make</span>(<span class="hljs-keyword">map</span>[<span class="hljs-type">string</span>]<span class="hljs-type">int</span>)
+  <span class="hljs-keyword">var</span> result []<span class="hljs-type">string</span>
+
+  <span class="hljs-comment">// 初始化入度表</span>
+  <span class="hljs-keyword">for</span> u := <span class="hljs-keyword">range</span> graph {
+    <span class="hljs-keyword">if</span> _, ok := inDegree[u]; !ok {
+      inDegree[u] = <span class="hljs-number">0</span>
+    }
+    <span class="hljs-keyword">for</span> _, v := <span class="hljs-keyword">range</span> graph[u] {
+      inDegree[v]++
+    }
+  }
+
+  <span class="hljs-comment">// 入度为 0 的节点入队</span>
+  <span class="hljs-keyword">var</span> queue []<span class="hljs-type">string</span>
+  <span class="hljs-keyword">for</span> node, deg := <span class="hljs-keyword">range</span> inDegree {
+    <span class="hljs-keyword">if</span> deg == <span class="hljs-number">0</span> {
+      queue = <span class="hljs-built_in">append</span>(queue, node)
+    }
+  }
+
+  <span class="hljs-comment">// 拓扑排序</span>
+  <span class="hljs-keyword">for</span> <span class="hljs-built_in">len</span>(queue) &gt; <span class="hljs-number">0</span> {
+    node := queue[<span class="hljs-number">0</span>]
+    queue = queue[<span class="hljs-number">1</span>:]
+    result = <span class="hljs-built_in">append</span>(result, node)
+
+    <span class="hljs-keyword">for</span> _, neighbor := <span class="hljs-keyword">range</span> graph[node] {
+      inDegree[neighbor]--
+      <span class="hljs-keyword">if</span> inDegree[neighbor] == <span class="hljs-number">0</span> {
+        queue = <span class="hljs-built_in">append</span>(queue, neighbor)
+      }
+    }
+  }
+
+  <span class="hljs-comment">// 判断是否存在环</span>
+  <span class="hljs-keyword">if</span> <span class="hljs-built_in">len</span>(result) != <span class="hljs-built_in">len</span>(inDegree) {
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">nil</span>, <span class="hljs-literal">false</span>
+  }
+  <span class="hljs-keyword">return</span> result, <span class="hljs-literal">true</span>
+}
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> {
+  graph := <span class="hljs-keyword">map</span>[<span class="hljs-type">string</span>][]<span class="hljs-type">string</span>{
+    <span class="hljs-string">&quot;A&quot;</span>: {<span class="hljs-string">&quot;B&quot;</span>, <span class="hljs-string">&quot;C&quot;</span>},
+    <span class="hljs-string">&quot;B&quot;</span>: {<span class="hljs-string">&quot;D&quot;</span>},
+    <span class="hljs-string">&quot;C&quot;</span>: {<span class="hljs-string">&quot;D&quot;</span>},
+    <span class="hljs-string">&quot;D&quot;</span>: {},
+  }
+
+  order, ok := topologicalSort(graph)
+  <span class="hljs-keyword">if</span> !ok {
+    fmt.Println(<span class="hljs-string">&quot;图中存在环，无法拓扑排序&quot;</span>)
+  } <span class="hljs-keyword">else</span> {
+    fmt.Println(<span class="hljs-string">&quot;拓扑排序结果：&quot;</span>, order)
+  }
+}
+</code></pre></div>
+<ul>
+<li>
+<p><strong>Kahn 算法的核心逻辑</strong>：</p>
+<ul>
+<li>每次只处理入度为 0 的节点，即“无依赖”的任务。</li>
+<li>处理后从图中移除该节点影响（即更新其邻接节点的入度）。</li>
+<li>保证每个节点的依赖都先被处理。</li>
+</ul>
+</li>
+<li>
+<p><strong>为什么 Kahn 算法只适用于 DAG？</strong></p>
+<ul>
+<li>如果存在环，某些节点将永远无法变为入度 0，导致无法完成排序。</li>
+<li>若排序结果节点数 &lt; 总节点数，说明图中存在环。</li>
+</ul>
+</li>
+</ul>
+<p>✅ <strong>因此：Kahn 算法不仅能进行拓扑排序，还能用于判断图中是否存在环。</strong></p>
+<ul>
+<li><strong>Kahn 算法实质上是 BFS 的变种</strong>，关注“入度为 0”的节点而不是“邻接点”。</li>
+</ul>
+<h3 id="kahn-vs-bfs" data-heading-text="Kahn 算法 vs 广度优先搜索（BFS）">Kahn 算法 vs 广度优先搜索（BFS）</h3>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>Kahn 算法（拓扑排序）</th>
+<th>广度优先搜索（BFS）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>遍历方式</td>
+<td>一层一层，按入度为 0 的点</td>
+<td>一层一层，按邻接点</td>
+</tr>
+<tr>
+<td>使用数据结构</td>
+<td>队列（Queue）</td>
+<td>队列（Queue）</td>
+</tr>
+<tr>
+<td>访问顺序</td>
+<td>所有无依赖的点先访问</td>
+<td>当前点的所有邻居先访问</td>
+</tr>
+<tr>
+<td>主要用途</td>
+<td>拓扑排序 / 检测环</td>
+<td>遍历所有可达节点</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Kahn 算法 = BFS 的拓扑排序版本</strong>，核心是基于“入度为 0”的节点层层推进，保证拓扑顺序合法。</p>
+</blockquote>
+<hr>
+<h2 id="section-34" data-heading-text="二分查找">二分查找</h2>
+<ol>
+<li>
+<p><code>for lower &lt;= upper</code> —— <strong>闭区间版本 <code>[lower, upper]</code></strong></p>
+<ul>
+<li>
+<p><code>mid = (lower + upper) / 2</code>（向下取整）</p>
+<ul>
+<li>如果 <code>mid</code> 满足条件（要往左找更小或更左的）：<code>upper = mid - 1</code></li>
+<li>如果不满足条件（要往右找）：<code>lower = mid + 1</code></li>
+</ul>
+</li>
+<li>
+<p><strong>是否跳过了 mid？</strong></p>
+<ul>
+<li>表面上看，<code>upper = mid - 1</code> 似乎跳过了 <code>mid</code></li>
+<li>实际上，<code>mid</code> 已经被判断过，<code>lower</code> 没变，下一轮中 <code>lower == mid</code></li>
+<li>循环仍会继续执行，直到 <code>lower &gt; upper</code> 时退出</li>
+</ul>
+</li>
+<li>
+<p><strong>示例分析：</strong></p>
+<ul>
+<li>在数组 <code>[3, 4, 5]</code> 中查找“第一个大于等于 4 的数”</li>
+<li>初始区间为 <code>[3, 5]</code>，<code>mid = 4</code></li>
+<li><code>mid = 4</code> 满足条件 → <code>upper = 3</code></li>
+<li>下一轮区间为 <code>[3, 3]</code>，<code>mid = 3</code></li>
+<li><code>mid = 3</code> 不满足条件 → <code>lower = 4</code></li>
+<li>区间变为 <code>[4, 3]</code>，循环结束</li>
+<li>返回 <code>lower = 4</code>，即最小满足条件的值</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><code>for lower &lt; upper</code> —— <strong>半开区间版本 <code>[lower, upper)</code></strong></p>
+<ul>
+<li>如果 <code>mid</code> 满足条件（要往左找）：<code>upper = mid</code></li>
+<li>如果不满足条件：<code>lower = mid + 1</code></li>
+<li>循环结束时 <code>lower == upper</code>，即为最小满足条件的位置</li>
+</ul>
+</li>
+</ol>
+<h1 id="section-35" data-heading-text="排序">排序</h1>
+<h2 id="section-36" data-heading-text="冒泡排序">冒泡排序</h2>
+<ul>
+<li>相邻元素两两比较并交换，使用双重循环；</li>
+<li>若某次遍历中未发生任何交换，说明数组已有序，可提前结束；</li>
+<li>代码示例：</li>
+</ul>
+<div class="code-block" data-language="go"><div class="code-header"><span class="code-language">go</span></div><pre><code class="hljs language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">bubbleSort</span><span class="hljs-params">(arr []<span class="hljs-type">int</span>)</span></span> {
+    n := <span class="hljs-built_in">len</span>(arr)
+    <span class="hljs-keyword">if</span> n &lt;= <span class="hljs-number">1</span> {
+        <span class="hljs-keyword">return</span>
+    }
+
+    <span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; n; i++ {
+        unChanged := <span class="hljs-literal">true</span>
+        <span class="hljs-keyword">for</span> j := <span class="hljs-number">0</span>; j &lt; n-i<span class="hljs-number">-1</span>; j++ {
+            <span class="hljs-keyword">if</span> arr[j] &gt; arr[j+<span class="hljs-number">1</span>] {
+                arr[j], arr[j+<span class="hljs-number">1</span>] = arr[j+<span class="hljs-number">1</span>], arr[j]
+                unChanged = <span class="hljs-literal">false</span>
+            }
+        }
+        <span class="hljs-keyword">if</span> unChanged {
+            <span class="hljs-keyword">break</span>
+        }
+    }
+}
+</code></pre></div>
+<h2 id="section-37" data-heading-text="快速排序">快速排序</h2>
+<ul>
+<li>
+<p>通过一趟排序将序列划分为左右两个子区间，其中左边的元素都小于右边的元素，再分别对左右区间递归排序，从而实现整体有序。</p>
+</li>
+<li>
+<p>分区逻辑说明（采用首元素为基准）：</p>
+<ul>
+<li>交替比较并交换元素值，最终确定基准值的位置；</li>
+<li>每步都需判断 <code>low &lt; high</code>，不要遗漏；</li>
+<li><code>high--</code> 与 <code>low++</code> 的条件是与 <code>temp</code>（基准值）进行比较。</li>
+</ul>
+</li>
+<li>
+<p>TopK 剪枝优化（用于只需前K个元素的场景）：</p>
+<ul>
+<li>若 <code>mid &gt; k</code>，递归处理左边；</li>
+<li>若 <code>mid &lt; k</code>，递归处理右边。</li>
+</ul>
+</li>
+<li>
+<p>分区函数定义模板：</p>
+</li>
+</ul>
+<div class="code-block" data-language="go"><div class="code-header"><span class="code-language">go</span></div><pre><code class="hljs language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">partition</span><span class="hljs-params">(arr []<span class="hljs-type">int</span>, low, high <span class="hljs-type">int</span>)</span></span> <span class="hljs-type">int</span> {
+    <span class="hljs-comment">// 首先从 high 开始比较，循环 high--，跳出后赋值；</span>
+    <span class="hljs-comment">// 然后从 low 开始比较，同理；</span>
+    <span class="hljs-comment">// 每步都要判断 low &lt; high；</span>
+}
+</code></pre></div>
+<ul>
+<li>快速排序递归模板：</li>
+</ul>
+<div class="code-block" data-language="go"><div class="code-header"><span class="code-language">go</span></div><pre><code class="hljs language-go"><span class="hljs-keyword">var</span> quick <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(arr []<span class="hljs-type">int</span>, start, end <span class="hljs-type">int</span>)</span></span>
+quick = <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(arr []<span class="hljs-type">int</span>, start, end <span class="hljs-type">int</span>)</span></span> {
+    <span class="hljs-comment">// ...</span>
+}
+</code></pre></div>
+<ul>
+<li>代码示例：</li>
+</ul>
+<div class="code-block" data-language="go"><div class="code-header"><span class="code-language">go</span></div><pre><code class="hljs language-go"><span class="hljs-comment">// 升序快速排序</span>
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">quickSort</span><span class="hljs-params">(arr []<span class="hljs-type">int</span>)</span></span> {
+    <span class="hljs-keyword">var</span> quick <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(arr []<span class="hljs-type">int</span>, start, end <span class="hljs-type">int</span>)</span></span>
+    quick = <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(arr []<span class="hljs-type">int</span>, start, end <span class="hljs-type">int</span>)</span></span> {
+        <span class="hljs-keyword">if</span> start &gt;= end {
+            <span class="hljs-keyword">return</span>
+        }
+        mid := partition(arr, start, end)
+        quick(arr, start, mid)
+        quick(arr, mid+<span class="hljs-number">1</span>, end)
+    }
+    quick(arr, <span class="hljs-number">0</span>, <span class="hljs-built_in">len</span>(arr)<span class="hljs-number">-1</span>)
+}
+
+<span class="hljs-comment">// 分区函数，low &lt; high 判断不要漏！</span>
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">partition</span><span class="hljs-params">(arr []<span class="hljs-type">int</span>, low, high <span class="hljs-type">int</span>)</span></span> <span class="hljs-type">int</span> {
+    temp := arr[low]
+    <span class="hljs-keyword">for</span> low &lt; high {
+        <span class="hljs-keyword">for</span> low &lt; high &amp;&amp; arr[high] &gt;= temp {
+            high--
+        }
+        <span class="hljs-keyword">if</span> low &lt; high {
+            arr[low] = arr[high]
+        }
+
+        <span class="hljs-keyword">for</span> low &lt; high &amp;&amp; arr[low] &lt; temp {
+            low++
+        }
+        <span class="hljs-keyword">if</span> low &lt; high {
+            arr[high] = arr[low]
+        }
+    }
+    arr[low] = temp
+    <span class="hljs-keyword">return</span> low
+}
+
+<span class="hljs-comment">// 前K个最小值</span>
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">quickSortTopK</span><span class="hljs-params">(arr []<span class="hljs-type">int</span>, k <span class="hljs-type">int</span>)</span></span> {
+    <span class="hljs-keyword">var</span> quick <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(arr []<span class="hljs-type">int</span>, start, end, k <span class="hljs-type">int</span>)</span></span>
+    quick = <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(arr []<span class="hljs-type">int</span>, start, end, k <span class="hljs-type">int</span>)</span></span> {
+        <span class="hljs-keyword">if</span> start &gt;= end {
+            <span class="hljs-keyword">return</span>
+        }
+        mid := partition(arr, start, end)
+        <span class="hljs-keyword">if</span> mid &gt; k {
+            quick(arr, start, mid, k)
+        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> mid &lt; k {
+            quick(arr, mid+<span class="hljs-number">1</span>, end, k)
+        }
+    }
+    quick(arr, <span class="hljs-number">0</span>, <span class="hljs-built_in">len</span>(arr)<span class="hljs-number">-1</span>, k)
+}
+</code></pre></div>
+<h2 id="section-38" data-heading-text="堆排序">堆排序</h2>
+<ol>
+<li>堆是一种<strong>完全二叉树结构</strong>；</li>
+<li><strong>最大堆</strong>：父节点 ≥ 子节点；<strong>最小堆</strong>：父节点 ≤ 子节点；</li>
+</ol>
+<ul>
+<li>
+<p><strong>实现步骤</strong>：</p>
+<ol>
+<li>
+<p><strong>调整堆（自上而下）</strong>：</p>
+<ul>
+<li>函数签名：<code>adjust(nums []int, root int, length int)</code></li>
+<li>从当前根节点开始，比较左右子节点，找出较大者与根交换，递归向下直到无需调整。</li>
+</ul>
+</li>
+<li>
+<p><strong>初始化堆</strong>：</p>
+<ul>
+<li>从最后一个非叶子节点（<code>length/2</code>）开始，依次向上调整；</li>
+</ul>
+</li>
+<li>
+<p><strong>堆排序过程</strong>：</p>
+<ul>
+<li>每次将堆顶元素与末尾交换，再对堆顶进行调整；</li>
+<li>排序范围逐步缩小，直到全部有序。</li>
+</ul>
+</li>
+</ol>
+</li>
+<li>
+<p><strong>最大堆调整函数</strong>：</p>
+</li>
+</ul>
+<div class="code-block" data-language="go"><div class="code-header"><span class="code-language">go</span></div><pre><code class="hljs language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">adjust</span><span class="hljs-params">(nums []<span class="hljs-type">int</span>, root, length <span class="hljs-type">int</span>)</span></span> {
+    child := root*<span class="hljs-number">2</span> + <span class="hljs-number">1</span>
+
+    <span class="hljs-keyword">for</span> child &lt; length {
+        <span class="hljs-keyword">if</span> child+<span class="hljs-number">1</span> &lt; length &amp;&amp; nums[child+<span class="hljs-number">1</span>] &gt; nums[child] {
+            child++
+        }
+
+        <span class="hljs-keyword">if</span> nums[child] &lt;= nums[root] {
+            <span class="hljs-keyword">break</span>
+        }
+
+        nums[child], nums[root] = nums[root], nums[child]
+        root = child
+        child = root*<span class="hljs-number">2</span> + <span class="hljs-number">1</span>
+    }
+}
+</code></pre></div>
+<ul>
+<li>代码示例：</li>
+</ul>
+<div class="code-block" data-language="go"><div class="code-header"><span class="code-language">go</span></div><pre><code class="hljs language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">heapSort</span><span class="hljs-params">(nums []<span class="hljs-type">int</span>)</span></span> {
+    <span class="hljs-comment">// 初始化堆（自底向上）</span>
+    <span class="hljs-keyword">for</span> i := <span class="hljs-built_in">len</span>(nums) / <span class="hljs-number">2</span>; i &gt;= <span class="hljs-number">0</span>; i-- {
+        adjust(nums, i, <span class="hljs-built_in">len</span>(nums))
+    }
+
+    <span class="hljs-comment">// 排序过程</span>
+    <span class="hljs-keyword">for</span> i := <span class="hljs-built_in">len</span>(nums) - <span class="hljs-number">1</span>; i &gt; <span class="hljs-number">0</span>; i-- {
+        nums[i], nums[<span class="hljs-number">0</span>] = nums[<span class="hljs-number">0</span>], nums[i]
+        adjust(nums, <span class="hljs-number">0</span>, i)
+    }
+}
+
+<span class="hljs-comment">/** 最大堆取 TopK（前K大）且有序 */</span>
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">heapSortTopK</span><span class="hljs-params">(nums []<span class="hljs-type">int</span>, k <span class="hljs-type">int</span>)</span></span> []<span class="hljs-type">int</span> {
+    <span class="hljs-comment">// 初始化最大堆</span>
+    <span class="hljs-keyword">for</span> i := <span class="hljs-built_in">len</span>(nums) / <span class="hljs-number">2</span>; i &gt;= <span class="hljs-number">0</span>; i-- {
+        adjust(nums, i, <span class="hljs-built_in">len</span>(nums))
+    }
+
+    <span class="hljs-comment">// 取出前K大元素</span>
+    <span class="hljs-keyword">for</span> i := <span class="hljs-built_in">len</span>(nums) - <span class="hljs-number">1</span>; i &gt; <span class="hljs-built_in">len</span>(nums)<span class="hljs-number">-1</span>-k; i-- {
+        nums[i], nums[<span class="hljs-number">0</span>] = nums[<span class="hljs-number">0</span>], nums[i]
+        adjust(nums, <span class="hljs-number">0</span>, i)
+    }
+
+    <span class="hljs-keyword">return</span> nums[<span class="hljs-built_in">len</span>(nums)-k:]
+}
+</code></pre></div>
+<blockquote>
+<p>⚠️注意事项：</p>
+<ul>
+<li>初始化堆：自底向上遍历构建，但每个节点的调整是自上而下；</li>
+<li>排序时：堆顶与尾部交换，再调整堆顶；</li>
+<li><code>adjust</code> 函数中需确保越界处理、优先选择较大子节点交换；</li>
+</ul>
+</blockquote>
+<h1 id="greedy" data-heading-text="贪心算法（Greedy）">贪心算法（Greedy）</h1>
+<ul>
+<li>
+<p><strong>贪心算法：通过局部最优解实现全局最优</strong></p>
+</li>
+<li>
+<p><a href="https://leetcode.cn/problems/jump-game/description/">55. 跳跃游戏</a></p>
+<ul>
+<li>给定一个非负整数数组 <code>nums</code>，你最初位于数组的第一个下标。数组中的每个元素代表你在该位置可以跳跃的最大长度。</li>
+<li>判断你是否能够到达最后一个下标</li>
+</ul>
+</li>
+<li>
+<p>遍历数组，并实时维护「最远可以到达的位置」</p>
+<div class="code-block" data-language="go"><div class="code-header"><span class="code-language">go</span></div><pre><code class="hljs language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">canJump</span><span class="hljs-params">(nums []<span class="hljs-type">int</span>)</span></span> <span class="hljs-type">bool</span> {
+    mostIndex := <span class="hljs-number">0</span>
+    <span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; <span class="hljs-built_in">len</span>(nums); i++ {
+        <span class="hljs-keyword">if</span> i &lt;= mostIndex {
+            mostIndex = max(mostIndex, i+nums[i])
+            <span class="hljs-keyword">if</span> mostIndex &gt;= <span class="hljs-built_in">len</span>(nums)<span class="hljs-number">-1</span> {
+                <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>
+            }
+        } <span class="hljs-keyword">else</span> {
+            <span class="hljs-keyword">break</span>
+        }
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>
+}
+</code></pre></div>
+</li>
+<li>
+<p><a href="https://leetcode.cn/problems/jump-game-ii/description/">45. 跳跃游戏 II</a></p>
+<ul>
+<li>计算到达最后一个位置的最小跳跃次数</li>
+</ul>
+</li>
+<li>
+<p><strong>贪心 + 正向查找「可达的最远位置」</strong></p>
+<ul>
+<li>每次在当前跳跃的范围内，选择可以跳得最远的位置，作为下一跳的终点</li>
+</ul>
+</li>
+<li>
+<p><strong>贪心策略的正确性：</strong></p>
+<ul>
+<li>在当前跳跃范围内尽量跳得远，可以最大化下一跳的「选择空间」</li>
+<li>避免走回头路或多跳一次的情况</li>
+</ul>
+</li>
+<li>
+<p><strong>为什么不遍历到最后一个元素？</strong></p>
+<ul>
+<li>
+<p>跳到最后一个位置时，必然是在前一步完成跳跃</p>
+</li>
+<li>
+<p>如果访问 <code>i == len(nums) - 1</code>，可能导致「多跳一步」</p>
+<div class="code-block" data-language="go"><div class="code-header"><span class="code-language">go</span></div><pre><code class="hljs language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">jump</span><span class="hljs-params">(nums []<span class="hljs-type">int</span>)</span></span> <span class="hljs-type">int</span> {
+    end, farthest := <span class="hljs-number">0</span>, <span class="hljs-number">0</span>
+    steps := <span class="hljs-number">0</span>
+
+    <span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; <span class="hljs-built_in">len</span>(nums)<span class="hljs-number">-1</span>; i++ {
+        farthest = max(farthest, i+nums[i])
+        <span class="hljs-keyword">if</span> i == end {
+            steps++
+            end = farthest
+        }
+    }
+
+    <span class="hljs-keyword">return</span> steps
+}
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">max</span><span class="hljs-params">(a, b <span class="hljs-type">int</span>)</span></span> <span class="hljs-type">int</span> {
+    <span class="hljs-keyword">if</span> a &gt; b {
+        <span class="hljs-keyword">return</span> a
+    }
+    <span class="hljs-keyword">return</span> b
+}
+</code></pre></div>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="dynamic-programming" data-heading-text="动态规划（Dynamic Programming）">动态规划（Dynamic Programming）</h1>
+<ul>
+<li>
+<p><strong>动态规划的本质</strong>：通过<strong>穷举所有可能解法</strong>来寻找最优解。</p>
+<ul>
+<li>常见的穷举方式有两种：<strong>回溯算法</strong>和<strong>动态规划</strong>。回溯是暴力尝试每种可能，动态规划则利用<strong>状态转移方程</strong>推导各个状态。</li>
+<li>动态规划相比暴力穷举更高效，其核心优势在于：<strong>利用状态转移 + 记忆</strong>，<strong>消除重复计算的子问题（重叠子问题）</strong>。</li>
+</ul>
+</li>
+<li>
+<p>动态规划问题通常具有大量<strong>重叠子问题</strong>，直接穷举效率极低，因此需借助以下两种优化方式：</p>
+<ul>
+<li>使用 <strong>备忘录（记忆化递归）</strong> 或 <strong>DP table（递推表格）</strong> 来<strong>避免重复计算</strong>；</li>
+<li>其中，<strong>记忆化递归为自顶向下</strong>，<strong>DP table 为自底向上</strong>。</li>
+</ul>
+</li>
+<li>
+<p><strong>动态规划 = 穷举 + 剪枝</strong></p>
+</li>
+<li>
+<p>动态规划的标准解题流程：</p>
+<ol>
+<li>明确“<strong>状态</strong>”和“<strong>选择</strong>”；</li>
+<li>定义 <code>dp</code> 数组或函数的含义；</li>
+<li>写出<strong>状态转移方程（递推关系）</strong>。</li>
+</ol>
+</li>
+<li>
+<p>常通过<strong>状态压缩</strong>优化空间复杂度，例如将 <code>O(N^2)</code> 降为 <code>O(N)</code>。</p>
+</li>
+</ul>
+<h2 id="knapsack" data-heading-text="背包问题（Knapsack）">背包问题（Knapsack）</h2>
+<h3 id="section-42" data-heading-text="✅ 分类依据：**每个物品的使用次数是否受限**">✅ 分类依据：<strong>每个物品的使用次数是否受限</strong></h3>
+<table>
+<thead>
+<tr>
+<th>问题类型</th>
+<th>每种物品使用次数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>0-1 背包问题</strong></td>
+<td>最多使用一次</td>
+<td>每件物品要么选，要么不选，不能重复使用。</td>
+</tr>
+<tr>
+<td><strong>子集和问题</strong></td>
+<td>最多使用一次</td>
+<td>0-1 背包的特例：目标是恰好凑出某个和，而非最大价值。</td>
+</tr>
+<tr>
+<td><strong>完全背包问题</strong></td>
+<td>可无限次使用</td>
+<td>每种物品可选多次，适用于硬币兑换、无限供给的资源选择等场景。</td>
+</tr>
+</tbody>
+</table>
+<h3 id="section-43" data-heading-text="🎯 拓展理解：">🎯 拓展理解：</h3>
+<ul>
+<li><strong>0-1 背包</strong> = 最经典模型，用于资源受限问题。</li>
+<li><strong>子集和问题</strong> = 判断“是否可以凑出某个值”，不关心价值。</li>
+<li><strong>完全背包</strong> = 每种物品无限可选，常见于无限物品、找零等问题。</li>
+</ul>
+<h3 id="0-1" data-heading-text="0-1 背包问题">0-1 背包问题</h3>
+<ul>
+<li>
+<p><strong>题目描述</strong></p>
+<ul>
+<li>给定一个容量为 <code>W</code> 的背包，以及 <code>N</code> 个物品，每个物品有：重量 <code>wt[i]</code> 和价值 <code>val[i]</code></li>
+<li>每种物品只能选择一次，求在不超过总容量 <code>W</code> 的前提下，最大可获得的总价值。</li>
+</ul>
+</li>
+<li>
+<p><strong>解题思路</strong></p>
+<ul>
+<li>
+<p>状态定义：<code>dp[i][w]</code> 表示前 <code>i</code> 个物品中，容量为 <code>w</code> 的背包所能达到的最大价值。</p>
+</li>
+<li>
+<p>状态转移：</p>
+<div class="code-block" data-language="go"><div class="code-header"><span class="code-language">go</span></div><pre><code class="hljs language-go"><span class="hljs-keyword">if</span> w &lt; wt[i<span class="hljs-number">-1</span>]:
+    dp[i][w] = dp[i<span class="hljs-number">-1</span>][w]
+<span class="hljs-keyword">else</span>:
+    dp[i][w] = max(dp[i<span class="hljs-number">-1</span>][w], dp[i<span class="hljs-number">-1</span>][w - wt[i<span class="hljs-number">-1</span>]] + val[i<span class="hljs-number">-1</span>])
+</code></pre></div>
+</li>
+<li>
+<p>初始化：</p>
+<ul>
+<li><code>dp[0][..] = 0</code>：没有物品可选，价值为 0；</li>
+<li><code>dp[..][0] = 0</code>：背包容量为 0，价值也为 0。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>代码实现</strong></p>
+</li>
+</ul>
+<div class="code-block" data-language="go"><div class="code-header"><span class="code-language">go</span></div><pre><code class="hljs language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">knapsack</span><span class="hljs-params">(W <span class="hljs-type">int</span>, wt, val []<span class="hljs-type">int</span>)</span></span> <span class="hljs-type">int</span> {
+    N := <span class="hljs-built_in">len</span>(wt)
+    dp := <span class="hljs-built_in">make</span>([][]<span class="hljs-type">int</span>, N+<span class="hljs-number">1</span>)
+    <span class="hljs-keyword">for</span> i := <span class="hljs-keyword">range</span> dp {
+        dp[i] = <span class="hljs-built_in">make</span>([]<span class="hljs-type">int</span>, W+<span class="hljs-number">1</span>)
+    }
+
+    <span class="hljs-keyword">for</span> i := <span class="hljs-number">1</span>; i &lt;= N; i++ {
+        <span class="hljs-keyword">for</span> w := <span class="hljs-number">1</span>; w &lt;= W; w++ {
+            <span class="hljs-keyword">if</span> w &lt; wt[i<span class="hljs-number">-1</span>] {
+                dp[i][w] = dp[i<span class="hljs-number">-1</span>][w]
+            } <span class="hljs-keyword">else</span> {
+                dp[i][w] = max(dp[i<span class="hljs-number">-1</span>][w], dp[i<span class="hljs-number">-1</span>][w - wt[i<span class="hljs-number">-1</span>]] + val[i<span class="hljs-number">-1</span>])
+            }
+        }
+    }
+    <span class="hljs-keyword">return</span> dp[N][W]
+}
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">max</span><span class="hljs-params">(a, b <span class="hljs-type">int</span>)</span></span> <span class="hljs-type">int</span> {
+    <span class="hljs-keyword">if</span> a &gt; b {
+        <span class="hljs-keyword">return</span> a
+    }
+    <span class="hljs-keyword">return</span> b
+}
+</code></pre></div>
+<h3 id="subset-sum" data-heading-text="子集背包问题（Subset Sum）">子集背包问题（Subset Sum）</h3>
+<ul>
+<li>
+<p><strong>Leetcode 416. <a href="https://leetcode.cn/problems/partition-equal-subset-sum/description/">分割等和子集</a></strong></p>
+<ul>
+<li>给定一个只包含正整数的非空数组 <code>nums</code>，判断是否可以将其分割为两个子集，且两个子集的元素和相等。</li>
+<li>转换为背包问题：给一个容量为 <code>sum / 2</code> 的背包，判断是否可以从数组中选出若干数字恰好装满它。</li>
+</ul>
+</li>
+<li>
+<p><strong>解题思路</strong></p>
+<ul>
+<li>状态定义：<code>dp[i][j]</code> 表示前 <code>i</code> 个数中，是否存在子集和为 <code>j</code>。</li>
+<li>状态转移：</li>
+</ul>
+<div class="code-block" data-language="go"><div class="code-header"><span class="code-language">go</span></div><pre><code class="hljs language-go"><span class="hljs-keyword">if</span> j &lt; nums[i]:
+    dp[i][j] = dp[i<span class="hljs-number">-1</span>][j]
+<span class="hljs-keyword">else</span>:
+    dp[i][j] = dp[i<span class="hljs-number">-1</span>][j] || dp[i<span class="hljs-number">-1</span>][j - nums[i]]
+</code></pre></div>
+<ul>
+<li>
+<p>初始化：</p>
+<ul>
+<li><code>dp[..][0] = true</code>：背包容量为 0，总能装满；</li>
+<li><code>dp[0][nums[0]] = true</code>：只有一个数且恰好等于容量；</li>
+</ul>
+</li>
+<li>
+<p>剪枝条件：</p>
+<ul>
+<li>若 <code>sum</code> 为奇数，直接返回 <code>false</code>；</li>
+<li>若某元素大于 <code>sum / 2</code>，可提前跳过。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>二维数组实现</strong></p>
+</li>
+</ul>
+<div class="code-block" data-language="go"><div class="code-header"><span class="code-language">go</span></div><pre><code class="hljs language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">canPartition</span><span class="hljs-params">(nums []<span class="hljs-type">int</span>)</span></span> <span class="hljs-type">bool</span> {
+    sum := <span class="hljs-number">0</span>
+    <span class="hljs-keyword">for</span> _, num := <span class="hljs-keyword">range</span> nums {
+        sum += num
+    }
+    <span class="hljs-keyword">if</span> sum%<span class="hljs-number">2</span> != <span class="hljs-number">0</span> {
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>
+    }
+    target := sum / <span class="hljs-number">2</span>
+    N := <span class="hljs-built_in">len</span>(nums)
+
+    dp := <span class="hljs-built_in">make</span>([][]<span class="hljs-type">bool</span>, N)
+    <span class="hljs-keyword">for</span> i := <span class="hljs-keyword">range</span> dp {
+        dp[i] = <span class="hljs-built_in">make</span>([]<span class="hljs-type">bool</span>, target+<span class="hljs-number">1</span>)
+    }
+
+    <span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; N; i++ {
+        dp[i][<span class="hljs-number">0</span>] = <span class="hljs-literal">true</span>
+    }
+    <span class="hljs-keyword">if</span> nums[<span class="hljs-number">0</span>] &lt;= target {
+        dp[<span class="hljs-number">0</span>][nums[<span class="hljs-number">0</span>]] = <span class="hljs-literal">true</span>
+    }
+
+    <span class="hljs-keyword">for</span> i := <span class="hljs-number">1</span>; i &lt; N; i++ {
+        <span class="hljs-keyword">for</span> j := <span class="hljs-number">1</span>; j &lt;= target; j++ {
+            <span class="hljs-keyword">if</span> j &lt; nums[i] {
+                dp[i][j] = dp[i<span class="hljs-number">-1</span>][j]
+            } <span class="hljs-keyword">else</span> {
+                dp[i][j] = dp[i<span class="hljs-number">-1</span>][j] || dp[i<span class="hljs-number">-1</span>][j - nums[i]]
+            }
+        }
+    }
+
+    <span class="hljs-keyword">return</span> dp[N<span class="hljs-number">-1</span>][target]
+}
+</code></pre></div>
+<ul>
+<li><strong>状态压缩：一维优化版本（倒序）</strong></li>
+</ul>
+<div class="code-block" data-language="go"><div class="code-header"><span class="code-language">go</span></div><pre><code class="hljs language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">canPartition</span><span class="hljs-params">(nums []<span class="hljs-type">int</span>)</span></span> <span class="hljs-type">bool</span> {
+    sum := <span class="hljs-number">0</span>
+    <span class="hljs-keyword">for</span> _, num := <span class="hljs-keyword">range</span> nums {
+        sum += num
+    }
+    <span class="hljs-keyword">if</span> sum%<span class="hljs-number">2</span> != <span class="hljs-number">0</span> {
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>
+    }
+    target := sum / <span class="hljs-number">2</span>
+
+    dp := <span class="hljs-built_in">make</span>([]<span class="hljs-type">bool</span>, target+<span class="hljs-number">1</span>)
+    dp[<span class="hljs-number">0</span>] = <span class="hljs-literal">true</span>
+
+    <span class="hljs-keyword">for</span> _, num := <span class="hljs-keyword">range</span> nums {
+        <span class="hljs-keyword">for</span> j := target; j &gt;= num; j-- {
+            dp[j] = dp[j] || dp[j - num]
+        }
+    }
+
+    <span class="hljs-keyword">return</span> dp[target]
+}
+</code></pre></div>
+<h3 id="unbounded-knapsack" data-heading-text="完全背包问题（Unbounded Knapsack）">完全背包问题（Unbounded Knapsack）</h3>
+<ul>
+<li>
+<p><strong>Leetcode 518. <a href="https://leetcode.cn/problems/coin-change-ii/description/">零钱兑换 II</a></strong></p>
+<ul>
+<li>给定一个背包容量为 <code>amount</code>，以及一个物品数组 <code>coins</code>（可重复使用），求有多少种不同的方法可以凑出该金额。</li>
+</ul>
+</li>
+<li>
+<p><strong>解题思路</strong></p>
+<ul>
+<li>
+<p>状态定义：<code>dp[i][j]</code> 表示使用前 <code>i</code> 种硬币，凑出金额 <code>j</code> 的方法数。</p>
+</li>
+<li>
+<p>状态转移：</p>
+<div class="code-block" data-language="go"><div class="code-header"><span class="code-language">go</span></div><pre><code class="hljs language-go"><span class="hljs-keyword">if</span> j &lt; coins[i<span class="hljs-number">-1</span>]:
+    dp[i][j] = dp[i<span class="hljs-number">-1</span>][j]
+<span class="hljs-keyword">else</span>:
+    dp[i][j] = dp[i<span class="hljs-number">-1</span>][j] + dp[i][j - coins[i<span class="hljs-number">-1</span>]]
+</code></pre></div>
+</li>
+<li>
+<p>初始化：</p>
+<ul>
+<li><code>dp[0][..] = 0</code>：没有硬币无法组成正金额；</li>
+<li><code>dp[..][0] = 1</code>：金额为 0，只有 1 种凑法（什么都不选）。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>二维数组实现</strong></p>
+</li>
+</ul>
+<div class="code-block" data-language="go"><div class="code-header"><span class="code-language">go</span></div><pre><code class="hljs language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">change</span><span class="hljs-params">(amount <span class="hljs-type">int</span>, coins []<span class="hljs-type">int</span>)</span></span> <span class="hljs-type">int</span> {
+    n := <span class="hljs-built_in">len</span>(coins)
+    dp := <span class="hljs-built_in">make</span>([][]<span class="hljs-type">int</span>, n+<span class="hljs-number">1</span>)
+    <span class="hljs-keyword">for</span> i := <span class="hljs-keyword">range</span> dp {
+        dp[i] = <span class="hljs-built_in">make</span>([]<span class="hljs-type">int</span>, amount+<span class="hljs-number">1</span>)
+        dp[i][<span class="hljs-number">0</span>] = <span class="hljs-number">1</span>
+    }
+
+    <span class="hljs-keyword">for</span> i := <span class="hljs-number">1</span>; i &lt;= n; i++ {
+        <span class="hljs-keyword">for</span> j := <span class="hljs-number">0</span>; j &lt;= amount; j++ {
+            <span class="hljs-keyword">if</span> j &lt; coins[i<span class="hljs-number">-1</span>] {
+                dp[i][j] = dp[i<span class="hljs-number">-1</span>][j]
+            } <span class="hljs-keyword">else</span> {
+                dp[i][j] = dp[i<span class="hljs-number">-1</span>][j] + dp[i][j - coins[i<span class="hljs-number">-1</span>]]
+            }
+        }
+    }
+    <span class="hljs-keyword">return</span> dp[n][amount]
+}
+</code></pre></div>
+<ul>
+<li><strong>一维数组优化（正序遍历）</strong></li>
+</ul>
+<div class="code-block" data-language="go"><div class="code-header"><span class="code-language">go</span></div><pre><code class="hljs language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">change</span><span class="hljs-params">(amount <span class="hljs-type">int</span>, coins []<span class="hljs-type">int</span>)</span></span> <span class="hljs-type">int</span> {
+    dp := <span class="hljs-built_in">make</span>([]<span class="hljs-type">int</span>, amount+<span class="hljs-number">1</span>)
+    dp[<span class="hljs-number">0</span>] = <span class="hljs-number">1</span>
+
+    <span class="hljs-keyword">for</span> _, coin := <span class="hljs-keyword">range</span> coins {
+        <span class="hljs-keyword">for</span> j := coin; j &lt;= amount; j++ {
+            dp[j] += dp[j - coin]
+        }
+    }
+
+    <span class="hljs-keyword">return</span> dp[amount]
+}
+</code></pre></div>
+<h1 id="section-47" data-heading-text="回溯">回溯</h1>
+<ul>
+<li>适用于排列、组合、子集等构造类枚举问题</li>
+</ul>
+<h3 id="section-48" data-heading-text="通用回溯模板总结">通用回溯模板总结</h3>
+<table>
+<thead>
+<tr>
+<th>题型</th>
+<th>递归参数</th>
+<th>关键点</th>
+<th>重复处理策略</th>
+<th>代码模板示例（Go 伪码简化）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>排列（Permutation）</strong></td>
+<td>无需起点</td>
+<td>需要标记已使用元素 <code>used[]</code></td>
+<td>排序 + <code>used</code> + 跳过相邻重复元素</td>
+<td>见 <em>排列 II</em> 模板</td>
+</tr>
+<tr>
+<td><strong>组合 / 子集（Combination / Subset）</strong></td>
+<td>需要起点</td>
+<td>控制遍历起点，防止重复使用前面元素</td>
+<td>排序 + 跳过同层相邻重复元素</td>
+<td>见 <em>组合 II / 子集 II</em> 模板</td>
+</tr>
+</tbody>
+</table>
+<h2 id="1-permutation" data-heading-text="1. 排列（Permutation）">1. 排列（Permutation）</h2>
+<h3 id="1-1-46-https-leetcode-cn-problems-permutations-description" data-heading-text="1.1 无重复元素 — 基础排列（[46. 全排列](https://leetcode.cn/problems/permutations/description/)）">1.1 无重复元素 — 基础排列（<a href="https://leetcode.cn/problems/permutations/description/">46. 全排列</a>）</h3>
+<div class="code-block" data-language="go"><div class="code-header"><span class="code-language">go</span></div><pre><code class="hljs language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">permute</span><span class="hljs-params">(nums []<span class="hljs-type">int</span>)</span></span> [][]<span class="hljs-type">int</span> {
+    <span class="hljs-keyword">var</span> res [][]<span class="hljs-type">int</span>
+    <span class="hljs-keyword">var</span> path []<span class="hljs-type">int</span>
+    used := <span class="hljs-built_in">make</span>([]<span class="hljs-type">bool</span>, <span class="hljs-built_in">len</span>(nums))
+
+    <span class="hljs-keyword">var</span> dfs <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span>
+    dfs = <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> {
+        <span class="hljs-keyword">if</span> <span class="hljs-built_in">len</span>(path) == <span class="hljs-built_in">len</span>(nums) {
+            res = <span class="hljs-built_in">append</span>(res, <span class="hljs-built_in">append</span>([]<span class="hljs-type">int</span>(<span class="hljs-literal">nil</span>), path...))
+            <span class="hljs-keyword">return</span>
+        }
+        <span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; <span class="hljs-built_in">len</span>(nums); i++ {
+            <span class="hljs-keyword">if</span> used[i] {
+                <span class="hljs-keyword">continue</span>
+            }
+            used[i] = <span class="hljs-literal">true</span>
+            path = <span class="hljs-built_in">append</span>(path, nums[i])
+            dfs()
+            path = path[:<span class="hljs-built_in">len</span>(path)<span class="hljs-number">-1</span>]
+            used[i] = <span class="hljs-literal">false</span>
+        }
+    }
+    dfs()
+    <span class="hljs-keyword">return</span> res
+}
+</code></pre></div>
+<h3 id="1-2-ii-47-ii-https-leetcode-cn-problems-permutations-ii" data-heading-text="1.2 有重复元素 — 排列 II（[47. 全排列 II](https://leetcode.cn/problems/permutations-ii/)）">1.2 有重复元素 — 排列 II（<a href="https://leetcode.cn/problems/permutations-ii/">47. 全排列 II</a>）</h3>
+<ul>
+<li>
+<p>相较于 46，需增加：</p>
+<ul>
+<li>排序以便判断相邻重复</li>
+<li>重复剪枝：跳过已访问前一个相同元素</li>
+</ul>
+</li>
+</ul>
+<div class="code-block" data-language="go"><div class="code-header"><span class="code-language">go</span></div><pre><code class="hljs language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">permuteUnique</span><span class="hljs-params">(nums []<span class="hljs-type">int</span>)</span></span> [][]<span class="hljs-type">int</span> {
+    sort.Ints(nums)
+    <span class="hljs-keyword">var</span> res [][]<span class="hljs-type">int</span>
+    <span class="hljs-keyword">var</span> path []<span class="hljs-type">int</span>
+    used := <span class="hljs-built_in">make</span>([]<span class="hljs-type">bool</span>, <span class="hljs-built_in">len</span>(nums))
+
+    <span class="hljs-keyword">var</span> dfs <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span>
+    dfs = <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">()</span></span> {
+        <span class="hljs-keyword">if</span> <span class="hljs-built_in">len</span>(path) == <span class="hljs-built_in">len</span>(nums) {
+            res = <span class="hljs-built_in">append</span>(res, <span class="hljs-built_in">append</span>([]<span class="hljs-type">int</span>(<span class="hljs-literal">nil</span>), path...))
+            <span class="hljs-keyword">return</span>
+        }
+        <span class="hljs-keyword">for</span> i := <span class="hljs-number">0</span>; i &lt; <span class="hljs-built_in">len</span>(nums); i++ {
+            <span class="hljs-keyword">if</span> used[i] {
+                <span class="hljs-keyword">continue</span>
+            }
+            <span class="hljs-comment">//只能先用同一组重复数字的“第一个”，不能先用后面的。</span>
+			<span class="hljs-comment">//如果现在选择了后一个重复元素，就会导致重复排列。</span>
+			<span class="hljs-comment">//!used[i-1]表明前一个相同的还没用，所以你这边就别先用了</span>
+            <span class="hljs-keyword">if</span> i &gt; <span class="hljs-number">0</span> &amp;&amp; nums[i] == nums[i<span class="hljs-number">-1</span>] &amp;&amp; !used[i<span class="hljs-number">-1</span>] {
+                <span class="hljs-keyword">continue</span>
+            }
+            used[i] = <span class="hljs-literal">true</span>
+            path = <span class="hljs-built_in">append</span>(path, nums[i])
+            dfs()
+            path = path[:<span class="hljs-built_in">len</span>(path)<span class="hljs-number">-1</span>]
+            used[i] = <span class="hljs-literal">false</span>
+        }
+    }
+    dfs()
+    <span class="hljs-keyword">return</span> res
+}
+</code></pre></div>
+<h2 id="2-combination-subset" data-heading-text="2. 组合 / 子集（Combination / Subset）">2. 组合 / 子集（Combination / Subset）</h2>
+<blockquote>
+<p>本质都是选取元素的子集，区别主要在题意和输出要求。</p>
+</blockquote>
+<h3 id="2-1-i-78-https-leetcode-cn-problems-subsets" data-heading-text="2.1 无重复元素 — 子集 I（[78. 子集](https://leetcode.cn/problems/subsets/)）">2.1 无重复元素 — 子集 I（<a href="https://leetcode.cn/problems/subsets/">78. 子集</a>）</h3>
+<div class="code-block" data-language="go"><div class="code-header"><span class="code-language">go</span></div><pre><code class="hljs language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">subsets</span><span class="hljs-params">(nums []<span class="hljs-type">int</span>)</span></span> [][]<span class="hljs-type">int</span> {
+    <span class="hljs-keyword">var</span> res [][]<span class="hljs-type">int</span>
+    <span class="hljs-keyword">var</span> path []<span class="hljs-type">int</span>
+
+    <span class="hljs-keyword">var</span> dfs <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(start <span class="hljs-type">int</span>)</span></span>
+    dfs = <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(start <span class="hljs-type">int</span>)</span></span> {
+        res = <span class="hljs-built_in">append</span>(res, <span class="hljs-built_in">append</span>([]<span class="hljs-type">int</span>(<span class="hljs-literal">nil</span>), path...))
+        <span class="hljs-keyword">for</span> i := start; i &lt; <span class="hljs-built_in">len</span>(nums); i++ {
+            path = <span class="hljs-built_in">append</span>(path, nums[i])
+            dfs(i + <span class="hljs-number">1</span>)
+            path = path[:<span class="hljs-built_in">len</span>(path)<span class="hljs-number">-1</span>]
+        }
+    }
+    dfs(<span class="hljs-number">0</span>)
+    <span class="hljs-keyword">return</span> res
+}
+</code></pre></div>
+<h3 id="2-2-ii-90-ii-https-leetcode-cn-problems-subsets-ii" data-heading-text="2.2 有重复元素 — 子集 II（[90. 子集 II](https://leetcode.cn/problems/subsets-ii/)）">2.2 有重复元素 — 子集 II（<a href="https://leetcode.cn/problems/subsets-ii/">90. 子集 II</a>）</h3>
+<div class="code-block" data-language="go"><div class="code-header"><span class="code-language">go</span></div><pre><code class="hljs language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">subsetsWithDup</span><span class="hljs-params">(nums []<span class="hljs-type">int</span>)</span></span> [][]<span class="hljs-type">int</span> {
+    sort.Ints(nums)
+    <span class="hljs-keyword">var</span> res [][]<span class="hljs-type">int</span>
+    <span class="hljs-keyword">var</span> path []<span class="hljs-type">int</span>
+
+    <span class="hljs-keyword">var</span> dfs <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(start <span class="hljs-type">int</span>)</span></span>
+    dfs = <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(start <span class="hljs-type">int</span>)</span></span> {
+        res = <span class="hljs-built_in">append</span>(res, <span class="hljs-built_in">append</span>([]<span class="hljs-type">int</span>(<span class="hljs-literal">nil</span>), path...))
+        <span class="hljs-keyword">for</span> i := start; i &lt; <span class="hljs-built_in">len</span>(nums); i++ {
+            <span class="hljs-keyword">if</span> i &gt; start &amp;&amp; nums[i] == nums[i<span class="hljs-number">-1</span>] {
+                <span class="hljs-keyword">continue</span>
+            }
+            path = <span class="hljs-built_in">append</span>(path, nums[i])
+            dfs(i + <span class="hljs-number">1</span>)
+            path = path[:<span class="hljs-built_in">len</span>(path)<span class="hljs-number">-1</span>]
+        }
+    }
+    dfs(<span class="hljs-number">0</span>)
+    <span class="hljs-keyword">return</span> res
+}
+</code></pre></div>
+<h3 id="for" data-heading-text="子集的另一种方式：不使用 for 循环（显式选与不选）">子集的另一种方式：不使用 for 循环（显式选与不选）</h3>
+<div class="code-block" data-language="go"><div class="code-header"><span class="code-language">go</span></div><pre><code class="hljs language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">subsetsDfs</span><span class="hljs-params">(nums []<span class="hljs-type">int</span>)</span></span> [][]<span class="hljs-type">int</span> {
+    <span class="hljs-keyword">var</span> res [][]<span class="hljs-type">int</span>
+    <span class="hljs-keyword">var</span> set []<span class="hljs-type">int</span>
+
+    <span class="hljs-keyword">var</span> dfs <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(<span class="hljs-type">int</span>)</span></span>
+    dfs = <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(cur <span class="hljs-type">int</span>)</span></span> {
+        <span class="hljs-keyword">if</span> cur == <span class="hljs-built_in">len</span>(nums) {
+            res = <span class="hljs-built_in">append</span>(res, <span class="hljs-built_in">append</span>([]<span class="hljs-type">int</span>(<span class="hljs-literal">nil</span>), set...))
+            <span class="hljs-keyword">return</span>
+        }
+        <span class="hljs-comment">// 选择当前</span>
+        set = <span class="hljs-built_in">append</span>(set, nums[cur])
+        dfs(cur + <span class="hljs-number">1</span>)
+        <span class="hljs-comment">// 撤销选择</span>
+        set = set[:<span class="hljs-built_in">len</span>(set)<span class="hljs-number">-1</span>]
+        <span class="hljs-comment">// 不选择当前</span>
+        dfs(cur + <span class="hljs-number">1</span>)
+    }
+    dfs(<span class="hljs-number">0</span>)
+    <span class="hljs-keyword">return</span> res
+}
+</code></pre></div>
+<h2 id="section-56" data-heading-text="总结要点">总结要点</h2>
+<table>
+<thead>
+<tr>
+<th>特征</th>
+<th>排列（Permutation）</th>
+<th>组合 / 子集（Combination / Subset）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>是否用 <code>used</code></td>
+<td>是</td>
+<td>否（一般）</td>
+</tr>
+<tr>
+<td>是否排序</td>
+<td>有重复元素时必须排序</td>
+<td>同左</td>
+</tr>
+<tr>
+<td>是否有起点参数</td>
+<td>无需（但可选）</td>
+<td>必须有，通常为 <code>start</code></td>
+</tr>
+<tr>
+<td>去重策略</td>
+<td><code>i &gt; 0 &amp;&amp; nums[i]==nums[i-1] &amp;&amp; !used[i-1]</code></td>
+<td><code>i &gt; start &amp;&amp; nums[i]==nums[i-1]</code> 跳过</td>
+</tr>
+<tr>
+<td>递归形式</td>
+<td><code>dfs()</code> / <code>dfs(index)</code></td>
+<td><code>dfs(start int)</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="section-57" data-heading-text="扩展说明">扩展说明</h2>
+<ul>
+<li>
+<p><strong>全局变量 vs 参数传递：</strong></p>
+<ul>
+<li>全局变量：书写更简洁，多个函数共享更方便。</li>
+<li>参数传递：封装更清晰，递归状态更独立，减少副作用。</li>
+</ul>
+</li>
+<li>
+<p><strong>for 循环的角色：</strong></p>
+<ul>
+<li>回溯中 for 循环用于枚举“选项”。</li>
+<li>不要在 for 中处理“不选”的逻辑，不然会重复或乱序。</li>
+</ul>
+</li>
+</ul>
+<h2 id="39-combination-sum-https-leetcode-cn-problems-combination-sum" data-heading-text="举例：组合总和（[39. Combination Sum](https://leetcode.cn/problems/combination-sum/)）">举例：组合总和（<a href="https://leetcode.cn/problems/combination-sum/">39. Combination Sum</a>）</h2>
+<ul>
+<li>元素可重复使用，需遍历所有可行组合</li>
+</ul>
+<h4 id="for-2" data-heading-text="✅ 推荐写法：for 中只做“选”的动作">✅ 推荐写法：for 中只做“选”的动作</h4>
+<div class="code-block" data-language="go"><div class="code-header"><span class="code-language">go</span></div><pre><code class="hljs language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">combinationSum</span><span class="hljs-params">(candidates []<span class="hljs-type">int</span>, target <span class="hljs-type">int</span>)</span></span> [][]<span class="hljs-type">int</span> {
+    <span class="hljs-keyword">var</span> res [][]<span class="hljs-type">int</span>
+    <span class="hljs-keyword">var</span> path []<span class="hljs-type">int</span>
+
+    <span class="hljs-keyword">var</span> dfs <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(start, target <span class="hljs-type">int</span>)</span></span>
+    dfs = <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(start, target <span class="hljs-type">int</span>)</span></span> {
+        <span class="hljs-keyword">if</span> target == <span class="hljs-number">0</span> {
+            res = <span class="hljs-built_in">append</span>(res, <span class="hljs-built_in">append</span>([]<span class="hljs-type">int</span>(<span class="hljs-literal">nil</span>), path...))
+            <span class="hljs-keyword">return</span>
+        }
+        <span class="hljs-keyword">for</span> i := start; i &lt; <span class="hljs-built_in">len</span>(candidates); i++ {
+            <span class="hljs-keyword">if</span> target &gt;= candidates[i] {
+                path = <span class="hljs-built_in">append</span>(path, candidates[i])
+                dfs(i, target - candidates[i])
+                path = path[:<span class="hljs-built_in">len</span>(path)<span class="hljs-number">-1</span>]
+            }
+        }
+    }
+    dfs(<span class="hljs-number">0</span>, target)
+    <span class="hljs-keyword">return</span> res
+}
+</code></pre></div>
+<h4 id="section-60" data-heading-text="🚫 不推荐写法：用“选/不选”逻辑递归（逻辑复杂，易错）">🚫 不推荐写法：用“选/不选”逻辑递归（逻辑复杂，易错）</h4>
+<div class="code-block" data-language="go"><div class="code-header"><span class="code-language">go</span></div><pre><code class="hljs language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">combinationSum</span><span class="hljs-params">(candidates []<span class="hljs-type">int</span>, target <span class="hljs-type">int</span>)</span></span> [][]<span class="hljs-type">int</span> {
+    <span class="hljs-keyword">var</span> res [][]<span class="hljs-type">int</span>
+    <span class="hljs-keyword">var</span> path []<span class="hljs-type">int</span>
+
+    <span class="hljs-keyword">var</span> dfs <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(index, target <span class="hljs-type">int</span>)</span></span>
+    dfs = <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(index, target <span class="hljs-type">int</span>)</span></span> {
+        <span class="hljs-keyword">if</span> target == <span class="hljs-number">0</span> {
+            res = <span class="hljs-built_in">append</span>(res, <span class="hljs-built_in">append</span>([]<span class="hljs-type">int</span>(<span class="hljs-literal">nil</span>), path...))
+            <span class="hljs-keyword">return</span>
+        }
+        <span class="hljs-keyword">if</span> index == <span class="hljs-built_in">len</span>(candidates) || target &lt; <span class="hljs-number">0</span> {
+            <span class="hljs-keyword">return</span>
+        }
+        <span class="hljs-comment">// 选当前</span>
+        path = <span class="hljs-built_in">append</span>(path, candidates[index])
+        dfs(index, target - candidates[index])
+        path = path[:<span class="hljs-built_in">len</span>(path)<span class="hljs-number">-1</span>]
+        <span class="hljs-comment">// 不选当前</span>
+        dfs(index + <span class="hljs-number">1</span>, target)
+    }
+    dfs(<span class="hljs-number">0</span>, target)
+    <span class="hljs-keyword">return</span> res
+}
+</code></pre></div>
+<h2 id="dfs" data-heading-text="DFS 模板的两种核心模式">DFS 模板的两种核心模式</h2>
+<h3 id="for-3" data-heading-text="模式一：**组合型问题（需 for 循环）**">模式一：<strong>组合型问题（需 for 循环）</strong></h3>
+<ul>
+<li>子集、组合、排列等</li>
+<li>每一步从当前位置开始向后枚举选项</li>
+</ul>
+<div class="code-block" data-language="go"><div class="code-header"><span class="code-language">go</span></div><pre><code class="hljs language-go"><span class="hljs-keyword">for</span> i := start; i &lt; <span class="hljs-built_in">len</span>(nums); i++ {
+    path = <span class="hljs-built_in">append</span>(path, nums[i])
+    dfs(i + <span class="hljs-number">1</span>)
+    path = path[:<span class="hljs-built_in">len</span>(path)<span class="hljs-number">-1</span>]
+}
+</code></pre></div>
+<h3 id="for-4" data-heading-text="模式二：**构造型问题（不需 for 循环）**">模式二：<strong>构造型问题（不需 for 循环）</strong></h3>
+<ul>
+<li>例如：电话号码字母组合、迷宫路径、树遍历等</li>
+<li>每层只能处理一个“位置”的合法选项，当前层不枚举后面</li>
+</ul>
+<h4 id="17-https-leetcode-cn-problems-letter-combinations-phone-number" data-heading-text="示例：[17. 电话号码的字母组合](https://leetcode.cn/problems/letter-combinations-of-a-phone-number/)">示例：<a href="https://leetcode.cn/problems/letter-combinations-of-a-phone-number/">17. 电话号码的字母组合</a></h4>
+<div class="code-block" data-language="go"><div class="code-header"><span class="code-language">go</span></div><pre><code class="hljs language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">letterCombinations</span><span class="hljs-params">(digits <span class="hljs-type">string</span>)</span></span> []<span class="hljs-type">string</span> {
+    <span class="hljs-keyword">if</span> <span class="hljs-built_in">len</span>(digits) == <span class="hljs-number">0</span> {
+        <span class="hljs-keyword">return</span> []<span class="hljs-type">string</span>{}
+    }
+    phoneMap := <span class="hljs-keyword">map</span>[<span class="hljs-type">rune</span>]<span class="hljs-type">string</span>{
+        <span class="hljs-string">&#x27;2&#x27;</span>: <span class="hljs-string">&quot;abc&quot;</span>, <span class="hljs-string">&#x27;3&#x27;</span>: <span class="hljs-string">&quot;def&quot;</span>, <span class="hljs-string">&#x27;4&#x27;</span>: <span class="hljs-string">&quot;ghi&quot;</span>, <span class="hljs-string">&#x27;5&#x27;</span>: <span class="hljs-string">&quot;jkl&quot;</span>,
+        <span class="hljs-string">&#x27;6&#x27;</span>: <span class="hljs-string">&quot;mno&quot;</span>, <span class="hljs-string">&#x27;7&#x27;</span>: <span class="hljs-string">&quot;pqrs&quot;</span>, <span class="hljs-string">&#x27;8&#x27;</span>: <span class="hljs-string">&quot;tuv&quot;</span>, <span class="hljs-string">&#x27;9&#x27;</span>: <span class="hljs-string">&quot;wxyz&quot;</span>,
+    }
+    <span class="hljs-keyword">var</span> res []<span class="hljs-type">string</span>
+    <span class="hljs-keyword">var</span> dfs <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(index <span class="hljs-type">int</span>, str <span class="hljs-type">string</span>)</span></span>
+    dfs = <span class="hljs-function"><span class="hljs-keyword">func</span><span class="hljs-params">(index <span class="hljs-type">int</span>, str <span class="hljs-type">string</span>)</span></span> {
+        <span class="hljs-keyword">if</span> index == <span class="hljs-built_in">len</span>(digits) {
+            res = <span class="hljs-built_in">append</span>(res, str)
+            <span class="hljs-keyword">return</span>
+        }
+        <span class="hljs-keyword">for</span> _, ch := <span class="hljs-keyword">range</span> phoneMap[<span class="hljs-type">rune</span>(digits[index])] {
+            dfs(index + <span class="hljs-number">1</span>, str + <span class="hljs-type">string</span>(ch))
+        }
+    }
+    dfs(<span class="hljs-number">0</span>, <span class="hljs-string">&quot;&quot;</span>)
+    <span class="hljs-keyword">return</span> res
+}
+</code></pre></div>
+<h2 id="section-65" data-heading-text="总结结构图">总结结构图</h2>
+<div class="code-block"><pre><code class="hljs">回溯问题分类
+├── 排列类：顺序重要，used + path
+├── 组合类：顺序不重要，start 起点控制，元素不可重复
+├── 子集类：所有组合（选 or 不选）
+└── 构造类：必须填满所有位置，如数字组合/字符串构造等
+</code></pre></div>
+<blockquote>
+<p>✅ 判断是否需要 for：是否在当前层“枚举选项”</p>
+<ul>
+<li>有枚举（子集/组合/排列）：需要 <code>for</code></li>
+<li>无枚举（构造型）：不需要 <code>for</code></li>
+</ul>
+</blockquote>
+<hr>
+<h1 id="section-66" data-heading-text="典型问题">典型问题</h1>
+<h2 id="topk" data-heading-text="TopK">TopK</h2>
+<ul>
+<li>
+<p><strong>不要求有序</strong>：使用快速选择算法（基于快速排序思想）；也可以使用堆结构</p>
+</li>
+<li>
+<p><strong>要求有序</strong>：使用堆</p>
+<ul>
+<li>最大堆：用于求前 K 个最大值</li>
+<li>最小堆：用于求前 K 个最小值</li>
+</ul>
+</li>
+</ul>
+<h2 id="section-68" data-heading-text="快慢指针">快慢指针</h2>
+<ul>
+<li><strong>19. 删除链表的倒数第 N 个节点</strong>
+快指针先走 N 步，然后快慢指针一起前进，快指针到达末尾时，慢指针刚好指向待删除节点的前一个节点</li>
+<li><strong>141. 环形链表</strong>
+快慢指针，快指针每次走两步，慢指针每次走一步；若存在环，两者最终会相遇</li>
+<li><strong>142. 环形链表 II</strong>
+快慢指针相遇后，快指针从头开始，慢指针继续前进；再次相遇点即为入环点</li>
+<li><strong>234. 回文链表</strong>
+快慢指针找到链表中点，同时将前半部分链表原地反转；再从中点与反转后的链表逐一比较，判断是否回文</li>
+<li><strong>287. 寻找重复数</strong>
+使用 Floyd 判圈算法，将数组视为链表结构；第一次快慢指针相遇后，将其中一个指针重新指向起点，两个指针再次相遇时即为重复数字（环的入口）</li>
+</ul>
+<h2 id="section-69" data-heading-text="双指针">双指针</h2>
+<ul>
+<li><strong>160. 相交链表</strong>
+两指针分别从两个链表头出发，走到末尾后切换至对方链表头继续走；若相交，则最终会在交点相遇；若无交点，则会同时为 <code>null</code> 结束</li>
+</ul>
+<hr>
+<h1 id="section-70" data-heading-text="经典题目">经典题目</h1>
+<h2 id="section-71" data-heading-text="缓存">缓存</h2>
+<ul>
+<li>
+<p><strong>146. LRU 缓存</strong>（<code>HashMap + 双向链表</code>）</p>
+<div class="code-block" data-language="go"><div class="code-header"><span class="code-language">go</span></div><pre><code class="hljs language-go"><span class="hljs-keyword">type</span> LRUCache <span class="hljs-keyword">struct</span> {
+    data     <span class="hljs-keyword">map</span>[<span class="hljs-type">int</span>]*LinkedNode
+    head     *LinkedNode
+    tail     *LinkedNode
+    count    <span class="hljs-type">int</span>
+    capacity <span class="hljs-type">int</span>
+}
+
+<span class="hljs-keyword">type</span> LinkedNode <span class="hljs-keyword">struct</span> {
+    key  <span class="hljs-type">int</span>
+    val  <span class="hljs-type">int</span>
+    pre  *LinkedNode
+    next *LinkedNode
+}
+</code></pre></div>
+<ul>
+<li><code>data</code>: 使用 HashMap 存储 key 与节点指针的映射</li>
+<li><code>双向链表</code>: 头部表示最近访问节点，新加入或访问的节点会被移动到头部，尾部为最久未使用节点，便于淘汰</li>
+</ul>
+</li>
+<li>
+<p><strong>460. LFU 缓存</strong>（<code>双 Hash + 双向链表</code>）</p>
+<div class="code-block" data-language="go"><div class="code-header"><span class="code-language">go</span></div><pre><code class="hljs language-go"><span class="hljs-keyword">type</span> LFUCache <span class="hljs-keyword">struct</span> {
+    keyToValFreq   <span class="hljs-keyword">map</span>[<span class="hljs-type">int</span>]*LFUNode
+    freqToKeysHead <span class="hljs-keyword">map</span>[<span class="hljs-type">int</span>]*LFUNode
+    freqToKeysTail <span class="hljs-keyword">map</span>[<span class="hljs-type">int</span>]*LFUNode
+    minFreq        <span class="hljs-type">int</span>
+    capacity       <span class="hljs-type">int</span>
+    size           <span class="hljs-type">int</span>
+}
+
+<span class="hljs-keyword">type</span> LFUNode <span class="hljs-keyword">struct</span> {
+    key  <span class="hljs-type">int</span>
+    val  <span class="hljs-type">int</span>
+    freq <span class="hljs-type">int</span>
+    pre  *LFUNode
+    next *LFUNode
+}
+</code></pre></div>
+<ul>
+<li><code>keyToValFreq</code>: 记录每个 key 的值和频率</li>
+<li><code>freqToKeys</code>: 按照频率映射到对应频率的链表（内部按 LRU 顺序）</li>
+<li><code>minFreq</code>: 当前缓存中的最小访问频率</li>
+<li>注意 <code>put</code> 操作中若 key 已存在，需要更新其值和频率！</li>
+</ul>
+</li>
+</ul>
+<h2 id="section-72" data-heading-text="打家劫舍">打家劫舍</h2>
+<ul>
+<li>
+<p><strong>198. 打家劫舍</strong>（相邻房屋不能偷）</p>
+<ul>
+<li>动态规划</li>
+<li><code>dp[i]</code> 表示前 <code>i</code> 间房屋能偷到的最大金额</li>
+<li>状态转移方程：<code>dp[i] = max(dp[i-2] + nums[i], dp[i-1])</code></li>
+</ul>
+</li>
+<li>
+<p><strong>213. 打家劫舍 II</strong>（房屋围成一圈）</p>
+<ul>
+<li>环状结构，首尾不能同时选择</li>
+<li>拆分为两种情况：<code>(0, n-2)</code> 和 <code>(1, n-1)</code>，分别计算最大值，取较大者</li>
+</ul>
+</li>
+<li>
+<p><strong>2560. 打家劫舍 IV</strong>（给定偷 <code>k</code> 间房的条件，求最小窃取能力）</p>
+<ul>
+<li>题考的是：在不能偷相邻房子的条件下，选择至少 k 个房子，求所有方案中「最大金额最小」的那种偷法的最大单间金额（即窃取能力）的最小值。</li>
+<li>二分 + 贪心</li>
+<li>在 <code>[min(nums), max(nums)]</code> 范围内二分 <code>x</code>，判断是否存在方案在不相邻的前提下偷到 <code>k</code> 间房且每间 ≤ <code>x</code></li>
+<li>最小可行的 <code>x</code> 即为答案</li>
+</ul>
+</li>
+<li>
+<p><strong>337. 打家劫舍 III</strong>（树形结构）</p>
+<ul>
+<li>二叉树结构，不能偷父子节点</li>
+<li>返回两个值：偷当前节点与不偷当前节点的最大值</li>
+<li>后序遍历递归实现</li>
+</ul>
+</li>
+</ul>
+<h2 id="section-73" data-heading-text="课程表">课程表</h2>
+<ul>
+<li>
+<p><strong>207. 课程表</strong></p>
+<ul>
+<li>判断有向图是否存在环</li>
+<li>使用拓扑排序（Kahn 算法）</li>
+<li>若排序后的节点数 <code>== numCourses</code>，说明可完成全部课程</li>
+</ul>
+</li>
+</ul>
+<h2 id="section-74" data-heading-text="会议室">会议室</h2>
+<ul>
+<li>
+<p><strong>253. 会议室 II</strong>（计算最少需要多少间会议室）</p>
+<ul>
+<li>将所有会议按开始时间排序</li>
+<li>使用最小堆记录正在进行的会议的结束时间</li>
+<li>遇到新的会议时，检查是否能复用已结束的会议室</li>
+<li>最后堆的大小即为最少会议室数</li>
+</ul>
+</li>
+<li>
+<p><strong>2402. 会议室 III</strong>（找出被安排次数最多的会议室编号）（如果没有可用的会议室，会议将会延期，直到存在空闲的会议室。延期会议的持续时间和原会议持续时间 相同 ）</p>
+<ul>
+<li>
+<p>所有会议按开始时间排序</p>
+</li>
+<li>
+<p>构造两个最小堆：</p>
+<ul>
+<li>空闲会议室（按编号）</li>
+<li>占用会议室（按结束时间 + 编号）</li>
+</ul>
+</li>
+<li>
+<p>每轮会议安排时：</p>
+<ul>
+<li>如果无空闲会议室，则延期</li>
+<li>记录每个会议室的使用次数</li>
+</ul>
+</li>
+<li>
+<p>最终返回使用次数最多的会议室中编号最小者</p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="section-75" data-heading-text="买卖股票">买卖股票</h2>
+<ul>
+<li><strong>309. 最佳买卖股票时机含冷冻期</strong>
+<ul>
+<li>
+<p>卖出股票后，你无法在第二天买入股票 (即冷冻期为 1 天)。</p>
+</li>
+<li>
+<p>三种状态转移：</p>
+<ul>
+<li><code>f[i][0]</code>: 第 i 天持有股票</li>
+<li><code>f[i][1]</code>: 第 i 天卖出股票（进入冷冻期）</li>
+<li><code>f[i][2]</code>: 第 i 天未持股（非冷冻期）</li>
+</ul>
+</li>
+<li>
+<p>状态转移方程：</p>
+<ul>
+<li><code>f[i][0] = max(f[i-1][0], f[i-1][2] - prices[i])</code></li>
+<li><code>f[i][1] = f[i-1][0] + prices[i]</code></li>
+<li><code>f[i][2] = max(f[i-1][1], f[i-1][2])</code></li>
+</ul>
+</li>
+<li>
+<p>最终答案：<code>max(f[n-1][1], f[n-1][2])</code></p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="section-76" data-heading-text="高楼扔鸡蛋">高楼扔鸡蛋</h2>
+<ul>
+<li>
+<p><strong>887. 鸡蛋掉落</strong></p>
+<ul>
+<li>
+<p>给定 <code>k</code> 个鸡蛋和 <code>n</code> 层楼，找出确定临界楼层所需的最少操作次数（最坏情况下）</p>
+</li>
+<li>
+<p>定义：<code>f(t, k)</code> 表示在最多尝试 <code>t</code> 次、拥有 <code>k</code> 个鸡蛋的情况下，最多能测试的楼层数</p>
+<ul>
+<li>转移方程：<code>f(t, k) = 1 + f(t-1, k-1) + f(t-1, k)</code></li>
+</ul>
+</li>
+<li>
+<p>最终寻找最小的 <code>t</code>，使得 <code>f(t, k) &gt;= n</code></p>
+</li>
+</ul>
+<div class="code-block" data-language="go"><div class="code-header"><span class="code-language">go</span></div><pre><code class="hljs language-go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">superEggDrop</span><span class="hljs-params">(k <span class="hljs-type">int</span>, n <span class="hljs-type">int</span>)</span></span> <span class="hljs-type">int</span> {
+    ans := math.MaxInt32
+    dp := <span class="hljs-built_in">make</span>([][]<span class="hljs-type">int</span>, n+<span class="hljs-number">1</span>)
+    <span class="hljs-keyword">for</span> i := <span class="hljs-number">1</span>; i &lt;= n; i++ {
+        dp[i] = <span class="hljs-built_in">make</span>([]<span class="hljs-type">int</span>, k+<span class="hljs-number">1</span>)
+    }
+    <span class="hljs-keyword">for</span> i := <span class="hljs-number">1</span>; i &lt;= n; i++ {
+        dp[i][<span class="hljs-number">1</span>] = i
+    }
+    <span class="hljs-keyword">for</span> j := <span class="hljs-number">1</span>; j &lt;= k; j++ {
+        dp[<span class="hljs-number">1</span>][j] = <span class="hljs-number">1</span>
+    }
+    <span class="hljs-keyword">if</span> n == <span class="hljs-number">1</span> {
+        <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>
+    }
+
+    i := <span class="hljs-number">2</span>
+    <span class="hljs-keyword">for</span> i &lt;= n {
+        <span class="hljs-keyword">for</span> j := <span class="hljs-number">1</span>; j &lt;= k; j++ {
+            dp[i][j] = <span class="hljs-number">1</span> + dp[i<span class="hljs-number">-1</span>][j<span class="hljs-number">-1</span>] + dp[i<span class="hljs-number">-1</span>][j]
+        }
+        <span class="hljs-keyword">if</span> dp[i][k] &gt;= n {
+            ans = i
+            <span class="hljs-keyword">break</span>
+        }
+        i++
+    }
+    <span class="hljs-keyword">return</span> ans
+}
+</code></pre></div>
+</li>
+</ul>
+<hr>
+<h1 id="section-77" data-heading-text="后记">后记</h1>
+<ul>
+<li>学习总被寄予理解的希望，现实却常逼我们回归重复与记忆的路径。掌握技巧、熟悉模板，也许并不光鲜，却是应对复杂世界最有效的方式之一。</li>
+<li>然而熟练，何尝不是另一种形式的“背”呢。</li>
+</ul>
+
+      </div>
+<div class="article-actions" aria-label="Article actions">
+      <a class="share-link" href="https://twitter.com/intent/tweet?text=%E5%88%B7LeetCode%E6%80%BB%E7%BB%93%E7%9A%84%E7%AE%97%E6%B3%95%E5%9F%BA%E7%A1%80%E5%92%8C%E5%A5%97%E8%B7%AF&amp;url=https%3A%2F%2Fkingson4wu.github.io%2Fzh%2Fposts%2F20250709%2F" target="_blank" rel="noopener noreferrer" aria-label="Share on X">
+        <span aria-hidden="true">X</span>
+        <span>Share</span>
+      </a>
+    </div>
+    </article>
+<aside class="article-toc" data-article-toc aria-label="目录">
+      <button class="article-toc-toggle" type="button" data-article-toc-toggle aria-expanded="false" aria-controls="article-toc-panel" aria-label="打开目录" data-open-label="打开目录" data-close-label="收起目录">
+        <svg aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M8 6h11"></path>
+          <path d="M8 12h11"></path>
+          <path d="M8 18h11"></path>
+          <path d="M4 6h.01"></path>
+          <path d="M4 12h.01"></path>
+          <path d="M4 18h.01"></path>
+        </svg>
+      </button>
+      <nav id="article-toc-panel" class="article-toc-panel" data-article-toc-panel aria-label="目录">
+        <div class="article-toc-heading">目录</div>
+        <ol class="article-toc-list">
+          <li class="article-toc-level-2"><a href="#section-2" data-article-toc-link>数据结构</a></li>
+          <li class="article-toc-level-2"><a href="#section-3" data-article-toc-link>算法</a></li>
+          <li class="article-toc-level-2"><a href="#section-6" data-article-toc-link>二叉树遍历</a></li>
+          <li class="article-toc-level-3"><a href="#section-7" data-article-toc-link>先序遍历（前序）</a></li>
+          <li class="article-toc-level-3"><a href="#section-8" data-article-toc-link>中序遍历</a></li>
+          <li class="article-toc-level-3"><a href="#section-9" data-article-toc-link>后序遍历</a></li>
+          <li class="article-toc-level-2"><a href="#section-10" data-article-toc-link>删除二叉搜索树中的节点</a></li>
+          <li class="article-toc-level-2"><a href="#section-11" data-article-toc-link>实现示例</a></li>
+          <li class="article-toc-level-2"><a href="#fenwick-tree-binary-indexed-tree" data-article-toc-link>树状数组（Fenwick Tree / Binary Indexed Tree）</a></li>
+          <li class="article-toc-level-3"><a href="#query-p" data-article-toc-link>query(p) 的跳跃计算示意</a></li>
+          <li class="article-toc-level-3"><a href="#x-x-x-1" data-article-toc-link>为什么 `x &amp; (-x)` 能取得 `x` 的最低位 1？</a></li>
+          <li class="article-toc-level-3"><a href="#section-15" data-article-toc-link>树状数组的安全构造方式</a></li>
+          <li class="article-toc-level-2"><a href="#315-https-leetcode-cn-problems-count-smaller-numbers-after-self-description" data-article-toc-link>例题：[315. 计算右侧小于当前元素的个数](https://leetcode.cn/problems/count-of-smaller-numbers-after-self/description/)</a></li>
+          <li class="article-toc-level-3"><a href="#section-17" data-article-toc-link>解题流程：</a></li>
+          <li class="article-toc-level-3"><a href="#section-18" data-article-toc-link>实现代码：</a></li>
+          <li class="article-toc-level-2"><a href="#segment-tree" data-article-toc-link>线段树（Segment Tree）</a></li>
+          <li class="article-toc-level-2"><a href="#699-https-leetcode-cn-problems-falling-squares-description" data-article-toc-link>例题：[699. 掉落的方块](https://leetcode.cn/problems/falling-squares/description/)</a></li>
+          <li class="article-toc-level-3"><a href="#section-21" data-article-toc-link>解题流程：</a></li>
+          <li class="article-toc-level-2"><a href="#section-22" data-article-toc-link>并查集</a></li>
+          <li class="article-toc-level-2"><a href="#684-https-leetcode-cn-problems-redundant-connection-description" data-article-toc-link>例题：[684. 冗余连接](https://leetcode.cn/problems/redundant-connection/description)</a></li>
+          <li class="article-toc-level-3"><a href="#section-24" data-article-toc-link>解题流程：</a></li>
+          <li class="article-toc-level-3"><a href="#section-25" data-article-toc-link>实现代码</a></li>
+          <li class="article-toc-level-3"><a href="#section-27" data-article-toc-link>基本性质与操作（以最大堆为例）</a></li>
+          <li class="article-toc-level-2"><a href="#section-29" data-article-toc-link>无向图</a></li>
+          <li class="article-toc-level-2"><a href="#section-30" data-article-toc-link>有向图</a></li>
+          <li class="article-toc-level-3"><a href="#section-31" data-article-toc-link>有向图的拓扑排序</a></li>
+          <li class="article-toc-level-3"><a href="#kahn-golang" data-article-toc-link>Kahn 算法（Golang 实现）：</a></li>
+          <li class="article-toc-level-3"><a href="#kahn-vs-bfs" data-article-toc-link>Kahn 算法 vs 广度优先搜索（BFS）</a></li>
+          <li class="article-toc-level-2"><a href="#section-34" data-article-toc-link>二分查找</a></li>
+          <li class="article-toc-level-2"><a href="#section-36" data-article-toc-link>冒泡排序</a></li>
+          <li class="article-toc-level-2"><a href="#section-37" data-article-toc-link>快速排序</a></li>
+          <li class="article-toc-level-2"><a href="#section-38" data-article-toc-link>堆排序</a></li>
+          <li class="article-toc-level-2"><a href="#knapsack" data-article-toc-link>背包问题（Knapsack）</a></li>
+          <li class="article-toc-level-3"><a href="#section-42" data-article-toc-link>✅ 分类依据：**每个物品的使用次数是否受限**</a></li>
+          <li class="article-toc-level-3"><a href="#section-43" data-article-toc-link>🎯 拓展理解：</a></li>
+          <li class="article-toc-level-3"><a href="#0-1" data-article-toc-link>0-1 背包问题</a></li>
+          <li class="article-toc-level-3"><a href="#subset-sum" data-article-toc-link>子集背包问题（Subset Sum）</a></li>
+          <li class="article-toc-level-3"><a href="#unbounded-knapsack" data-article-toc-link>完全背包问题（Unbounded Knapsack）</a></li>
+          <li class="article-toc-level-3"><a href="#section-48" data-article-toc-link>通用回溯模板总结</a></li>
+          <li class="article-toc-level-2"><a href="#1-permutation" data-article-toc-link>1. 排列（Permutation）</a></li>
+          <li class="article-toc-level-3"><a href="#1-1-46-https-leetcode-cn-problems-permutations-description" data-article-toc-link>1.1 无重复元素 — 基础排列（[46. 全排列](https://leetcode.cn/problems/permutations/description/)）</a></li>
+          <li class="article-toc-level-3"><a href="#1-2-ii-47-ii-https-leetcode-cn-problems-permutations-ii" data-article-toc-link>1.2 有重复元素 — 排列 II（[47. 全排列 II](https://leetcode.cn/problems/permutations-ii/)）</a></li>
+          <li class="article-toc-level-2"><a href="#2-combination-subset" data-article-toc-link>2. 组合 / 子集（Combination / Subset）</a></li>
+          <li class="article-toc-level-3"><a href="#2-1-i-78-https-leetcode-cn-problems-subsets" data-article-toc-link>2.1 无重复元素 — 子集 I（[78. 子集](https://leetcode.cn/problems/subsets/)）</a></li>
+          <li class="article-toc-level-3"><a href="#2-2-ii-90-ii-https-leetcode-cn-problems-subsets-ii" data-article-toc-link>2.2 有重复元素 — 子集 II（[90. 子集 II](https://leetcode.cn/problems/subsets-ii/)）</a></li>
+          <li class="article-toc-level-3"><a href="#for" data-article-toc-link>子集的另一种方式：不使用 for 循环（显式选与不选）</a></li>
+          <li class="article-toc-level-2"><a href="#section-56" data-article-toc-link>总结要点</a></li>
+          <li class="article-toc-level-2"><a href="#section-57" data-article-toc-link>扩展说明</a></li>
+          <li class="article-toc-level-2"><a href="#39-combination-sum-https-leetcode-cn-problems-combination-sum" data-article-toc-link>举例：组合总和（[39. Combination Sum](https://leetcode.cn/problems/combination-sum/)）</a></li>
+          <li class="article-toc-level-2"><a href="#dfs" data-article-toc-link>DFS 模板的两种核心模式</a></li>
+          <li class="article-toc-level-3"><a href="#for-3" data-article-toc-link>模式一：**组合型问题（需 for 循环）**</a></li>
+          <li class="article-toc-level-3"><a href="#for-4" data-article-toc-link>模式二：**构造型问题（不需 for 循环）**</a></li>
+          <li class="article-toc-level-2"><a href="#section-65" data-article-toc-link>总结结构图</a></li>
+          <li class="article-toc-level-2"><a href="#topk" data-article-toc-link>TopK</a></li>
+          <li class="article-toc-level-2"><a href="#section-68" data-article-toc-link>快慢指针</a></li>
+          <li class="article-toc-level-2"><a href="#section-69" data-article-toc-link>双指针</a></li>
+          <li class="article-toc-level-2"><a href="#section-71" data-article-toc-link>缓存</a></li>
+          <li class="article-toc-level-2"><a href="#section-72" data-article-toc-link>打家劫舍</a></li>
+          <li class="article-toc-level-2"><a href="#section-73" data-article-toc-link>课程表</a></li>
+          <li class="article-toc-level-2"><a href="#section-74" data-article-toc-link>会议室</a></li>
+          <li class="article-toc-level-2"><a href="#section-75" data-article-toc-link>买卖股票</a></li>
+          <li class="article-toc-level-2"><a href="#section-76" data-article-toc-link>高楼扔鸡蛋</a></li>
+        </ol>
+      </nav>
+    </aside>
+    <script src="/scripts/article-toc.js" defer></script>
+    <nav class="article-nav" aria-label="Adjacent posts">
+      <a href="/zh/posts/20250531/"><span>Previous</span>“人工智能”一词是否准确？一次关于AI本质的反思</a>
+      <a href="/zh/posts/20250716-quickit/"><span>Next</span>QuicKit：高效并发任务管理工具库详解</a>
+    </nav>
+<section class="comments" aria-labelledby="comments-heading">
+      <h2 id="comments-heading">评论</h2>
+      <div
+        data-comments
+        data-comments-repo="Kingson4Wu/kingson4wu.github.io"
+        data-comments-issue-term="pathname"
+        data-comments-label="comment"
+      ></div>
+    </section>
+    <script src="/scripts/comments.js" defer></script>
+  </main>
+  <footer class="site-footer">
+    <p>&copy; 2026 拉巴力的纸皮箱</p>
+  </footer>
+  <button class="reading-return" type="button" data-reading-return aria-label="回到开头" title="回到开头">
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <path d="M12 19V5"></path>
+      <path d="m6 11 6-6 6 6"></path>
+    </svg>
+  </button>
+  <script src="/scripts/theme.js"></script>
+  <script src="/scripts/image-viewer.js"></script>
+  <script src="/scripts/reading-tools.js"></script>
+</body>
+</html>

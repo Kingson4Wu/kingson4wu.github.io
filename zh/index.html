@@ -1,0 +1,2236 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>拉巴力的纸皮箱</title>
+  <meta name="description" content="技术、AI 系统、软件架构与学习笔记。">
+  <link rel="canonical" href="https://kingson4wu.github.io/zh/">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="alternate" type="application/rss+xml" title="拉巴力的纸皮箱" href="/zh/feed.xml">
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="/styles/main.css">
+  <script>
+    try {
+      var theme = localStorage.getItem('theme');
+      if (theme) document.documentElement.dataset.theme = theme;
+    } catch (_) {}
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="site-title" href="/zh/" aria-label="拉巴力的纸皮箱">
+      <span class="site-logo" aria-hidden="true">K</span>
+      <span>拉巴力的纸皮箱</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="/zh/posts/">文章</a>
+      <a href="/zh/notes/">笔记</a>
+      <a href="/zh/tags/">标签</a>
+      <a href="/zh/about/">关于</a>
+      <a href="/zh/search/">搜索</a>
+      <a href="/en/" lang="en">English</a>
+      <a class="feed-link" href="/zh/feed.xml" aria-label="订阅更新" title="订阅更新">
+        <svg class="feed-icon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M5 5.5A13.5 13.5 0 0 1 18.5 19"></path>
+          <path d="M5 11A8 8 0 0 1 13 19"></path>
+          <circle cx="6" cy="18" r="1.5"></circle>
+        </svg>
+      </a>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换明暗模式" title="切换明暗模式">
+        <svg class="theme-icon theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M21 14.2A8.5 8.5 0 0 1 9.8 3 7 7 0 1 0 21 14.2Z"></path>
+        </svg>
+        <svg class="theme-icon theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"></path>
+        </svg>
+      </button>
+    </nav>
+  </header>
+  <main class="site-main">
+    <section class="page-heading">
+      <p class="eyebrow">拉巴力的纸皮箱</p>
+      <h1>写清楚，才算想清楚。</h1>
+      <p>软件架构、AI 系统、工程经验与阅读笔记。</p>
+    </section>
+    <section aria-labelledby="latest-posts">
+      <h2 id="latest-posts" class="section-title">最近更新</h2>
+<ol class="post-list">
+    <li>
+      <div class="post-meta">
+        <time datetime="2026-04-19T09:10:00.000Z">2026年4月19日</time>
+        <span>AI</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20260419-skill-anthropic-vs-openai-agent-sdk/">Skill 机制与编排流程深度解析：Anthropic vs OpenAI Agent SDK 对比</a></h2>
+        <p>2026 年 4 月 15 日，OpenAI 发布 Agents SDK v0.14.0，引入了 SandboxAgent + Capabilities 架构。本地 Skill 加载（Skills Capability、LocalDirLazySkillSource、load_skill 工具）终于成为了 SDK 一等...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2026-03-31T07:55:21.000Z">2026年3月31日</time>
+        <span>AI</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20260331/">技术进步与分配失衡：AI时代的结构性矛盾</a></h2>
+        <p>AI替代认知劳动的边际成本趋近于零，导致经济增长与就业增长脱钩；AI是资本增强器而非劳动增强器，分配机制滞后于生产力发展，形成结构性失衡。</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2026-03-31T05:53:29.000Z">2026年3月31日</time>
+        <span>AI</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20260331-skill-ai/">从 Skill 化到控制权：AI 系统中的能力分层与资产保护</a></h2>
+        <p>当 AI 系统将任务封装为 Skills 交给外部执行时，哪些能力可以暴露，哪些必须留在内部？本文从数据暴露的三种形态出发，提出通用能力、业务能力、核心能力的三层划分框架，以及“最小输入而非脱敏”的数据策略。</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2026-03-29T02:30:00.000Z">2026年3月29日</time>
+        <span>AI</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/notes/20260329-skill-agent/">Skill 可能比 Agent 更像长期资产</a></h2>
+        <p>主流 AI 厂商或许正在趋同于一种模式：SDK 提供 Runtime，开发者负责 Skills。 Skill 本质是在做知识外化——把工作流、业务规则和验证过的处理逻辑，转成结构化、可复用的能力单元。从这个角度看，更具长期价值的，可能是 Skills，而不是 Agent。 同时，Agent Runtime 正在走向基础...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2026-03-28T09:35:28.000Z">2026年3月28日</time>
+        <span>AI</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20260328-agent-agent-runtime-skill-ai/">从自建 Agent 到 Agent Runtime + Skill：AI 系统架构的演进与收敛</a></h2>
+        <p>从系统分层视角梳理 AI 应用从自建 Agent 走向 Runtime 与 Skill 组合架构的演进逻辑。</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2026-03-28T06:10:00.000Z">2026年3月28日</time>
+        <span>AI</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/notes/20260328-harness-engineering/">从第一性原理看 Harness Engineering</a></h2>
+        <p>LLM 只做一件事：给定输入，生成输出。 模型是固定的。你能控制的，其实只有输入，以及围绕输入输出构建的系统。 由此派生出两个真实的工程问题域。 问题域 A：如何构造更好的输入 这是一个连续的复杂度谱系： 手工写指令 -&amp;gt; Prompt Engineering 动态检索、拼装、压缩信息 -&amp;gt; Context...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2026-03-27T06:05:00.000Z">2026年3月27日</time>
+        <span>AI</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/notes/20260327-mcp-skill-cli/">MCP、Skill 与 CLI 的分化与协同</a></h2>
+        <p>MCP 更像是一份“平台能力说明书”。 它定义了有哪些工具、怎么调用、权限边界在哪。 Skill 则是在回答另一类问题：具体怎么把事做完。它本质上是 prompt 加上工具使用策略的封装。 Skill 之所以更好用，是因为关键步骤、调用方式、甚至容错逻辑，都已经被提前写进去了。这本来就不是 MCP 要解决的问题。 至于...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2026-03-26T15:02:21.000Z">2026年3月26日</time>
+        <span>AI</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20260326-spotify-skill-ai/">将执行路径固化为资产：从一个 Spotify Skill 看长期运行的 AI 自动化系统</a></h2>
+        <p>以 labali-spotify-publish-episode 为例，拆解一个长期运行的 AI 自动化系统如何通过分层、快路径、自愈闭环与业务状态验证维持可维护性。</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2026-03-12T10:44:00.000Z">2026年3月12日</time>
+        <span>AI</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20260312-cdp-playwright-ai-agent/">浏览器自动化技术全景：CDP、Playwright 与 AI Agent 的架构关系</a></h2>
+        <p>系统梳理 CDP、Playwright、视觉自动化与 AI Agent 在浏览器自动化体系中的分层关系与适用边界。</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2026-03-08T06:42:30.000Z">2026年3月8日</time>
+        <span>AI</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20260308-ai/">大模型时代，中小公司如何寻找 AI 竞争空间</a></h2>
+        <p>分析中小公司在大模型时代应如何围绕行业数据、工作流与应用层产品建立差异化竞争力。</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2026-03-07T04:00:00.000Z">2026年3月7日</time>
+        <span>AI</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/notes/20260307/">让执行路径成为资产</a></h2>
+        <p>大多数 AI 系统还停留在“单次推理”形态。 任务来了重新规划，执行完毕即丢弃，成功经验从不沉淀。 真正面向长期运行的架构，得把“执行路径”变成资产。 核心是三层分离： 方法层：定义目标和策略 执行层：保存经过验证、可运行的代码或 Script 评估层：检测退化并触发修复 某条路径反复验证稳定后，就应该固化成 Scri...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2026-02-26T04:40:08.000Z">2026年2月26日</time>
+        <span>AI</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20260226-ai/">将执行路径固化为资产：一种面向长期运行的 AI 架构</a></h2>
+        <p>讨论如何把重复任务中的稳定执行路径沉淀为可复用资产，以构建能够长期运行的 AI 系统。</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2026-02-25T09:30:18.000Z">2026年2月25日</time>
+        <span>AI</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20260225/">生成式AI的概率本质与创新边界：从一个具体任务说起</a></h2>
+        <p>通过一个具体生成任务分析生成式 AI 的概率本质、自我解释局限与创新能力边界。</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2026-02-09T04:58:38.000Z">2026年2月9日</time>
+        <span>AI</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20260209-ai/">AI 与学习型人际关系的变化</a></h2>
+        <p>讨论 AI 普及后知识获取方式变化，以及它对学习型人际关系与思想交流模式的影响。</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2026-02-09T04:43:28.000Z">2026年2月9日</time>
+        <span>AI</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20260209/">AI生成内容时代：原创、作者与创作价值</a></h2>
+        <p>从原创性、作者身份与价值判断三个维度，讨论 AI 生成内容时代的创作定义如何变化。</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2026-02-04T08:49:19.000Z">2026年2月4日</time>
+        <span>AI</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20260204-ai/">AI 能否创造真正的新事物</a></h2>
+        <p>围绕生成式 AI 的概率生成机制，讨论它是否能够实现真正意义上的创新与概念跃迁。</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2026-02-04T08:15:39.000Z">2026年2月4日</time>
+        <span>AI</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20260204-prompt-agentic-rag-ai/">从 Prompt 到碳基 Agentic RAG：AI 时代的人类认知外化</a></h2>
+        <p>从 Prompt、Context 与协议出发，讨论 AI 应用背后的人类认知组织能力如何被外化与结构化。</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2026-02-04T05:38:34.000Z">2026年2月4日</time>
+        <span>AI</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20260204/">人类与模型的共同特征：直觉先行，解释在后</a></h2>
+        <p>对比人类与大模型在“先得出结果、后生成解释”这一共同特征上的相似性与局限。</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2026-02-03T03:40:32.000Z">2026年2月3日</time>
+        <span>AI</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20260203/">微调与蒸馏的本质：函数逼近视角下的机制解析</a></h2>
+        <p>从函数逼近视角解释微调与蒸馏分别在学什么，以及二者为何相似又不同。</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2026-02-03T02:51:13.000Z">2026年2月3日</time>
+        <span>AI</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20260203-transformer-sgd-adamw/">Transformer 训练中的优化器选择：从 SGD 到 AdamW 的演化逻辑</a></h2>
+        <p>梳理神经网络优化器从 SGD 到 AdamW 的演化路径，以及 Transformer 训练中常见选择的原因。</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2026-02-02T12:48:37.000Z">2026年2月2日</time>
+        <span>AI</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20260202-word2vec-transformer-embedding/">从 Word2Vec 到 Transformer：Embedding 在不同模型中的角色演化</a></h2>
+        <p>对比 Word2Vec 与 Transformer 中 embedding 的训练方式、参数角色与功能变化。</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2026-02-02T12:32:20.000Z">2026年2月2日</time>
+        <span>AI</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20260202-layernorm-transformer/">LayerNorm：从“为什么要归一化”到“为什么 Transformer 离不开它”</a></h2>
+        <p>从数值尺度控制与训练稳定性出发，解释 LayerNorm 的作用及 Transformer 对它的依赖。</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2026-02-02T08:25:29.000Z">2026年2月2日</time>
+        <span>AI</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20260202-transformer/">Transformer 架构笔记：组件、机制与设计思路</a></h2>
+        <p>从 Attention、FFN 与 Multi-Head 三个核心抽象出发，梳理 Transformer 的组件、机制与设计思路。</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2026-01-31T08:55:08.000Z">2026年1月31日</time>
+        <span>AI</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20260131-rnn-transformer/">从 RNN 到 Transformer:序列建模的结构性转变</a></h2>
+        <p>从序列建模需求出发，说明 RNN、CNN 到 Transformer 在结构设计上的关键转变。</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2026-01-31T07:15:27.000Z">2026年1月31日</time>
+        <span>AI</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20260131-one-hot-embedding/">从 One-hot 到 Embedding：词的分布式表示是如何从语料中学习得到的</a></h2>
+        <p>从 one-hot 表示讲到分布式表示，解释词向量如何通过语料、损失函数与梯度下降学习得到。</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2026-01-30T09:10:44.000Z">2026年1月30日</time>
+        <span>AI</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20260130-softmax/">为什么点积太大会导致 Softmax 梯度问题，以及这个问题是如何被解决的</a></h2>
+        <p>以下内容由AI辅助生成 一、问题背景：我们到底在担心什么？ 在 Transformer 的注意力机制中，有一个非常经典的公式： Attention(Q,K,V)=softmax(QK⊤dk)V\text{Attention}(Q,K,V) = \text{softmax}\left(\frac{QK^\top}{\sq...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2026-01-30T08:11:53.000Z">2026年1月30日</time>
+        <span>AI</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20260130-residual-connection/">残差连接（Residual Connection）：从直觉困境到现代神经网络的核心结构</a></h2>
+        <p>从深层网络退化问题出发，解释残差连接为何成为现代神经网络中的关键结构。</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2026-01-30T06:29:03.000Z">2026年1月30日</time>
+        <span>AI</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20260130-0/">从 0 理解梯度消失与梯度爆炸</a></h2>
+        <p>以下内容由AI辅助生成 一、训练神经网络到底在做什么 训练神经网络,本质只有一件事: 不断微调参数,使模型输出更接近真实目标。 参数该往哪个方向调、调多大力度,完全由梯度决定。 如果梯度能够稳定传播,模型就能学习; 如果梯度在传播过程中衰减或失控,训练就会失败。 二、什么是梯度(不涉及神经网络) 1. 变化率的直觉理解...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2026-01-30T05:22:57.000Z">2026年1月30日</time>
+        <span>AI</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20260130-2/">链式法则与反向传播：从直觉到结构理解</a></h2>
+        <p>从导数直觉出发，系统解释链式法则、偏导数与反向传播在计算图中的作用。</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2026-01-30T04:53:40.000Z">2026年1月30日</time>
+        <span>AI</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20260130/">感知机与神经网络如何学习并逼近复杂函数</a></h2>
+        <p>以下内容由AI辅助生成 ——从函数形式到分段线性逼近的机制说明 一、感知机与神经网络的基本函数形式 在深度学习中，感知机及其扩展的神经网络，并不是在使用人为指定的多项式函数形式，例如： y=x12+x22+x33y = x_1^2 + x_2^2 + x_3^3y=x12​+x22​+x33​ 其基本计算结构为： y=...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2026-01-29T07:36:54.000Z">2026年1月29日</time>
+        <span>AI</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20260129/">交叉熵损失与最大似然估计：完全理解指南</a></h2>
+        <p>以下内容由AI辅助生成 一、从最基本的问题开始 1.1 模型如何表达预测？ 假设你在训练一个图像分类模型： 任务：判断这张图是「猫」还是「狗」？ 模型不会直接给出“猫”或“狗”这样的硬答案，而是输出概率分布： “我认为是猫的概率是 0.8，是狗的概率是 0.2” 👉 核心理解：模型输出的是“置信度（概率）”，而不是确...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2026-01-28T08:08:31.000Z">2026年1月28日</time>
+        <span>AI</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20260128-softmax/">Softmax：从直觉到本质</a></h2>
+        <p>以下内容由AI辅助生成 Softmax 是多分类任务中最常见的输出层函数。它的任务表面上是“把 logits 变成概率”，但本质是：将一组可加的分数转换为可比较、可优化的相对强度，并与极大似然/交叉熵无缝对接，同时保证数值稳定和梯度友好。 1. 问题设定：从 logits 到概率 1.1 什么是 logits？ 神经网...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2026-01-27T07:18:34.000Z">2026年1月27日</time>
+        <span>AI</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20260127/">激活函数的本质原理与作用</a></h2>
+        <p>以下内容由AI辅助生成 ——从 XOR 出发理解非线性、表达能力与训练 一、从一个最小反例开始:XOR 与线性模型的根本局限 在讨论激活函数之前,有必要从一个最简单、却最具代表性的例子入手。 XOR(异或)问题以极低的维度,清晰地揭示了线性模型与深度神经网络在本质上的差异。 1. XOR 问题的定义 XOR 的规则如下...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2026-01-20T04:52:37.000Z">2026年1月20日</time>
+        <span>AI</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20260120-ai/">AI 数学精要速览</a></h2>
+        <p>一、人工智能的本质：数学建模 + 优化，而非算力魔法 人工智能并非神秘技术，其本质是： 数学：描述问题、刻画规律、定义目标 算法：在数学模型上进行搜索与优化 计算机：负责实现与加速计算 可以用一句话概括： 人工智能 = 数学模型 + 优化算法 + 工程实现 因此，真正决定 AI 能力上限的，不是算力本身，而是建模方式与...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2025-12-24T09:18:33.000Z">2025年12月24日</time>
+        <span>AI</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20251224/">从零开始理解：点积为什么能反映向量夹角？</a></h2>
+        <p>以下内容由AI辅助生成 当我们谈到词向量相似度时，总会用到“余弦相似度”这个概念。但你有没有想过：为什么两个向量的点积能反映它们的夹角？这背后的数学原理是什么？ 一、从投影说起：最直观的理解 投影的几何意义 看这个图： a /| / | / | |a|cos(θ) / | /_)θ | b————————————→ a...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2025-12-24T08:08:43.000Z">2025年12月24日</time>
+        <span>Python</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20251224-python-c/">Python 调用 C 扩展与库机制全解析</a></h2>
+        <p>以下内容有ChatGPT和Claude.ai辅助生成 系统梳理 Python C 扩展、动态库、ABI、多语言互操作及第三方库加载机制。 1️⃣ Python C 扩展基础 完整示例 c#include &amp;lt;Python.h&amp;gt; static PyObject* py_add(PyObject* self, P...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2025-12-23T05:50:20.000Z">2025年12月23日</time>
+        <span>Python</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20251223-python-web/">Python 运行内幕-深度解析底层执行机制与现代 Web 架构</a></h2>
+        <p>以下内容有ChatGPT和Claude.ai辅助生成 本文系统阐述 Python 的运行原理，从底层执行机制到高性能 Web 架构，重点关注“为什么”而非“怎么做”。 一、Python 执行模型 1.1 完整执行流程 源代码(.py) → 词法/语法分析 → AST → 字节码(.pyc) → 虚拟机解释执行 关键阶段...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2025-12-23T04:47:04.000Z">2025年12月23日</time>
+        <span>Python</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20251223-python/">Python 依赖与环境管理完全指南</a></h2>
+        <p>以下内容有ChatGPT和Claude.ai辅助生成 适用读者 本指南适合： 从其他语言转向 Python 的开发者 对 Python 依赖管理困惑的初中级开发者 需要在团队中统一工具链的技术负责人 希望了解现代 Python 工具生态的从业者 一、核心概念 1.1 Python 包管理的本质特点 Python 与其他...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2025-12-23T03:23:02.000Z">2025年12月23日</time>
+        <span>Rust</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20251223-rust/">Rust 为什么需要显式生命周期标注：从调用方契约到设计本质</a></h2>
+        <p>以下内容有ChatGPT和Claude.ai辅助生成 在学习 Rust 生命周期（lifetime）时，一个常见且合理的疑问是： 编译器既然能在生命周期标注错误时发现问题， 为什么不能直接自动推导出正确的生命周期声明？ 如果仅从“语法规则”或“编译器能力”层面回答这个问题，很容易得出“Rust 设计复杂”“生命周期是人...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2025-12-19T11:58:45.000Z">2025年12月19日</time>
+        <span>Distributed Systems</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20251219/">云原生数据库环境下的资金一致性问题分析</a></h2>
+        <p>以下内容有ChatGPT和Claude.ai辅助生成 在云原生环境中使用数据库服务时,高可用与自动故障切换往往被视为“基础能力”。对大多数业务而言,这些能力已经足够可靠;但在资金类业务中,系统设计需要面对更严格的约束条件。 本文围绕云原生数据库在主从复制、自动切换场景下可能引入的数据一致性风险进行分析,重点讨论在无法完...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2025-12-17T10:43:15.000Z">2025年12月17日</time>
+        <span>AI</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20251217/">大模型推理的不确定性：从浮点运算到工程实现</a></h2>
+        <p>以下文章由Claude.ai辅助生成 问题的提出 为什么大模型在设置 temperature=0 时，同样的输入仍然会产生不同的输出？这个看似违反直觉的现象，揭示了现代推理引擎在追求极致性能时做出的工程权衡。 问题的本质 浮点运算的不结合性 计算机中的浮点运算不满足结合律。在数学上，(a + b) + c = a +...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2025-12-12T04:18:27.000Z">2025年12月12日</time>
+        <span>AI</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20251212-function-calling/">大模型中的 Function Calling 与工具模式:机制、区别与本质</a></h2>
+        <p>本文由ChatGPT和Claude.ai辅助完成 大模型(LLM)在现代应用中的一个核心能力,是能够按照严格结构调用外部工具,例如数据库查询、Python 代码执行、HTTP 请求、存储系统等。围绕这一点,业界形成了“function calling”与“tools API”等概念。尽管二者在语义上相近,但其实现逻辑、...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2025-12-08T02:21:37.000Z">2025年12月8日</time>
+        <span>AI</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20251208/">生成式AI、解码约束与多模态架构：系统化原理解析</a></h2>
+        <p>以下内容有ChatGPT和Claude.ai辅助生成 生成式AI、解码约束与多模态架构：系统化原理解析 大语言模型从单纯的文本生成发展到多模态理解、结构化输出、工具调用等复杂能力,让许多人好奇:这些模型是否真的具备“理解”和“推理”能力?本文将系统梳理从基础生成原理到多模态融合、从解码器约束到专家混合(MoE)架构的完...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2025-11-28T07:03:27.000Z">2025年11月28日</time>
+        <span>Distributed Systems</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20251128-idl-sidecar/">构建统一前后端（与服务间）RPC体系：从 IDL 设计到多协议适配与 Sidecar 部署的工程实践</a></h2>
+        <p>本文使用AI优化 在现代应用中，前后端与微服务之间的接口往往涉及多种语言、复杂的文档、重复的代码维护，以及永远难以对齐的接口变更。随着业务演进，系统间的交互方式不断增多：从浏览器到移动端、从 Python 到 Java、从 REST 到 gRPC，各种协议和框架的混用使接口治理逐渐成为开发效率的瓶颈——对接繁琐、体验不...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2025-10-21T09:21:18.000Z">2025年10月21日</time>
+        <span>Architecture</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20251021-it/">生活中的 IT 哲学：从技术架构看人生智慧</a></h2>
+        <p>内容观点由 IT中的生活哲学启发 内容由AI生成 前言 在阅读《SRE：Google 运维解密》之后，我越来越觉得 IT 世界的许多技术方案、运维策略、系统设计，其实和生活的哲学息息相关。技术与生活并非简单的比喻关系，而是某种程度上互相借鉴的智慧结晶。 本文尝试将一些常见的 IT 架构和技术原理，用生活中的场景做类比，...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2025-10-16T07:18:11.000Z">2025年10月16日</time>
+        <span>Career</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20251016/">关于“卷”的理性分析与分类</a></h2>
+        <p>内容由AI生成 在现代职场和学业环境中，“卷”已成为普遍现象。然而，卷并非单一形态，而是包含多种类型。这些类型反映了个体在面对竞争压力时的心理态度、动机以及策略选择。理解不同类型的内卷，有助于我们在激烈竞争中保持理性，做出长期有效的职业和生活规划。 一、迫不得已型：被动卷的生存策略 特征 被动应对：卷的行为主要源于外部...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2025-10-15T04:54:21.000Z">2025年10月15日</time>
+        <span>Career</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20251015/">内部会议低效与对外宣讲价值的分析</a></h2>
+        <p>内容由AI生成 在职场和组织运作中，“开会效率低下”与“文档可替代会议”的现象非常普遍。与此同时，对外产品推广、宣讲会和培训会却仍被广泛采用，这反映了内部沟通与外部传播在效率和效果上的差异。 一、内部会议低效的原因 形式化文化 很多组织习惯性依赖会议传达信息和决策，会议成为一种流程化仪式，而非解决问题的工具。即便信息可...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2025-09-17T06:36:20.000Z">2025年9月17日</time>
+        <span>Distributed Systems</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20250917-seata/">Seata 与分布式事务的本质解析</a></h2>
+        <p>以前总结过分布式事务，最近又看到有人提Seata，让AI协助在简要总结补充一下 旧文：分布式事务简要总结 Seata 与分布式事务的本质解析 分布式事务一直是微服务架构中最棘手的问题之一：如何保证跨服务、跨库操作的一致性，又不让业务代码充斥各种回滚和补偿逻辑？Seata 的出现，就是为了解决这个问题。 本文以 Seat...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2025-09-15T13:53:59.000Z">2025年9月15日</time>
+        <span>Networking</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20250915-ip-ipv4-ipv6/">IP 归属与全球路由：从 IPv4 到 IPv6 的原理与实践</a></h2>
+        <p>个人提供问题和疑惑, 最终AI生成 在网络运维、网络安全和跨境加速等场景中，常见的问题是：一个 IP 属于哪个国家？能不能直接判断它的归属方？全球 IP、Anycast、IPv6 又在其中扮演什么角色？本文将系统性地梳理相关原理与实践，帮助读者全面理解 IP 地址的归属、解析与加速机制。 1. IP 地址与国家归属 首...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2025-09-15T13:41:02.000Z">2025年9月15日</time>
+        <span>Networking</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20250915-dns/">深入理解域名解析与管理：从 DNS 原理到注册商与注册局</a></h2>
+        <p>个人提供问题和疑惑, 最终AI生成 域名是互联网的入口。我们日常访问网站时，输入的是 example.com 这样的域名，而真正通信依赖的是 IP 地址。域名解析系统（DNS, Domain Name System）正是完成“人类友好名称 → 机器可识别地址”这一过程的基础设施。本文将从域名解析原理、运营商与公共 DN...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2025-09-02T13:44:21.000Z">2025年9月2日</time>
+        <span>AI</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20250902-ai/">用脚本+AI CLI半自动写代码：实践经验分享</a></h2>
+        <p>最近在折腾一个“半自动编程”项目，目标是让 AI 工具在一个相对可控的框架下持续编码，帮我实现一个个明确的开发任务。这里分享整个过程、思路和实践套路，算是一次探索性的工程笔记。 为什么要搞半自动 市面上的 AI 编程工具越来越多，比如：Claude Code、Gemini CLI、QWEN CODE 以及其他支持 CL...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2025-08-28T09:56:54.000Z">2025年8月28日</time>
+        <span>AI</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20250828-tmux/">用 tmux + 内网穿透，让出门也能指导编程任务</a></h2>
+        <p>以前写代码是个挺“重”的事情：开一堆 IDE、文档、调试窗口，在桌面环境里来回切换。要是人在外面，就算能远程登录，也常常因为手机输入不方便、网络不稳定而放弃。 但现在情况不一样了。很多时候，你并不需要全套开发环境。只要能接上家里的机器，就能让零碎时间发挥点价值：不管是写点脚手架代码，跑几个命令，还是做些前期准备工作，都...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2025-08-25T07:12:09.000Z">2025年8月25日</time>
+        <span>AI</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20250825-vs-code-dev-container-linux/">VS Code + Dev Container：打造丝滑的 Linux 开发调试体验</a></h2>
+        <p>最近在重新学习 Linux C++ 的过程中，发现了一种优雅的方式：借助 Docker + VS Code Dev Container 在任何系统上轻松获得一致的 Linux 开发调试环境。作为长期在 macOS 和 Windows 上开发的人，这种体验让我感受到前所未有的丝滑，真有点“相逢恨晚”。 从此，无论是 C+...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2025-08-17T05:10:04.000Z">2025年8月17日</time>
+        <span>Networking</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20250817-ip/">家庭宽带中的公网与内网 IP 分配机制解析</a></h2>
+        <p>以下内容由AI生成 在日常使用家庭宽带时，很多人会遇到“到底我家有没有独立公网 IP”的问题。这不仅关系到能否顺利访问外网，更影响到是否可以在家中搭建服务器、使用 P2P 应用等。本文将系统梳理家庭宽带 IP 的分配方式、运营商 NAT 的机制以及其对用户的实际影响。 1. 家庭宽带的几种典型 IP 分配方式 （1）独...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2025-08-17T04:59:59.000Z">2025年8月17日</time>
+        <span>Networking</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20250817-vpn/">VPN 与正向代理的原理与差异分析</a></h2>
+        <p>以下内容由AI生成，本人审阅 一、VPN 的基本原理 **VPN（Virtual Private Network，虚拟专用网络）**的核心思想是在 公网上（Internet） 建立一条 加密隧道，使用户的数据能够像在同一局域网中一样安全传输。其关键机制包括： 隧道封装（Tunneling） 将原始 IP 包或 TCP/...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2025-08-17T04:54:40.000Z">2025年8月17日</time>
+        <span>Networking</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20250817-socks5/">深入理解 SOCKS5 正向代理原理</a></h2>
+        <p>以下内容由AI生成，本人审阅 在网络代理领域，SOCKS5 是一种常用的正向代理协议。它不同于传统的 HTTP 代理，能够为各种应用层协议提供通用的转发支持。本文将从概念、协议机制、工作流程和应用场景几个层次，系统梳理 SOCKS5 的技术原理。 1. 正向代理的基本概念 正向代理是指客户端主动使用代理服务器，把请求先...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2025-08-16T16:41:19.000Z">2025年8月16日</time>
+        <span>Networking</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20250817-http-tcp/">深入理解正向代理与反向代理：HTTP 报文与 TCP 连接的区别</a></h2>
+        <p>发现之前的理解有一点小偏差，重新整理一下 以下内容由AI生成，本人审阅 在日常开发和运维中，“正向代理（Forward Proxy）”和“反向代理（Reverse Proxy）”是两个高频概念。但很多人容易混淆两者的请求格式和工作机制。本文将从 HTTP 报文格式、TCP 连接目标、历史规范 等角度，系统梳理这两种代理...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2025-08-07T04:14:48.000Z">2025年8月7日</time>
+        <span>AI</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20250807/">多语言大模型如何处理不同语言？是翻译成英语后再推理的吗？</a></h2>
+        <p>以下文章有ChatGPT生成 多语言大模型（Multilingual LLM）越来越普及，但一个常见的问题是：模型处理非英语语言时，是直接在原语言上推理，还是先翻译成英语再处理？ 简短回答：大多数主流模型并不会将输入翻译为英语后再推理，而是直接在原语言上进行理解与生成。 以下是详细解释。 1. 训练方式：直接多语言训练...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2025-08-04T05:55:52.000Z">2025年8月4日</time>
+        <span>Life</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20250804/">三种学习法核心精髓</a></h2>
+        <p>🧠 一、费曼学习法（Feynman Technique） 核心理念：用教别人的方式来教自己。 📌 关键步骤： 选择概念：挑选你想学的知识点。 解释给小白听：用简单、口语化的语言讲解，好像在教一个完全不懂的人（比如小学生）。 找出盲点：当你卡住或讲不清楚，说明你还没真正理解。 回顾补全：回到原材料查漏补缺，搞清楚所有...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2025-07-16T16:20:44.000Z">2025年7月16日</time>
+        <span>Go</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20250717-quick-worker-channel-cpu/">quick_worker 项目分析：基于 Channel 的高效异步批处理与 CPU 空转问题解析</a></h2>
+        <p>quick_worker 是一个用 Go 实现的轻量级异步批处理框架。它通过 channel 和 goroutine 构建了一个高效的生产者-消费者模型，支持按批量大小或超时触发数据处理，适合高并发、吞吐敏感的场景。 本文将围绕其核心并发模型进行分析，重点讨论： 是否存在 CPU 空转（Busy Waiting）问题...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2025-07-16T14:50:57.000Z">2025年7月16日</time>
+        <span>Reliability</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20250716-quickit/">QuicKit：高效并发任务管理工具库详解</a></h2>
+        <p>在现代软件开发中，高效的任务管理与并发处理是提升系统性能的关键。QuicKit 是一个基于 Java 的工具库，专注于并发任务调度、执行控制、重试机制等通用能力的封装。本文将深入介绍 QuicKit 的核心功能及其实现原理。 1. 延迟任务调度：DelayQueueUtils DelayQueueUtils 使用 Ha...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2025-07-09T07:20:22.000Z">2025年7月9日</time>
+        <span>Algorithms</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20250709/">刷LeetCode总结的算法基础和套路</a></h2>
+        <p>最近重新刷LeetCode，对一些算法基础和套路做下总结，以做备忘 简要分类总结 数据结构 数组（Array） 链表（Linked List） 哈希表（HashMap / HashSet） 堆（Heap） 最大堆 / 最小堆 常用于：优先队列、Top K、调度排序 栈 / 队列（Stack / Queue） DFS 通...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2025-05-30T16:22:28.000Z">2025年5月30日</time>
+        <span>AI</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20250531/">“人工智能”一词是否准确？一次关于AI本质的反思</a></h2>
+        <p>AI – “基于数据的规律发现系统” “人工智能（AI）”这个名字，其实是一种历史性命名，也是一种拟人化的表达。它给人一种错觉，仿佛机器在模仿或复制人类的智能。然而，从技术本质上看，今天的人工智能主要依赖于数据驱动的模式识别和规律学习，更准确地说，它是一种“基于数据的规律发现系统”。无论是人类还是机器，学习的对象都是客...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2025-03-23T06:41:37.000Z">2025年3月23日</time>
+        <span>Java</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20250323/">使用Java调用Rust构建的动态库</a></h2>
+        <p>近期帮朋友做一个需求，需要将某个Rust项目的一部分功能移植到Java中，使Java应用能使用 方案1: 直接将Rust翻译成Java代码 前置准备：将Rust项目跑通，方便通过debug对照执行细节，从而一步步翻译成Java代码 希望借助AI的力量帮忙完成 借助AI的方案如下： 首先，我已经跑通了需要抽取的功能的相关...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2025-02-26T14:22:04.000Z">2025年2月26日</time>
+        <span>AI</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20250226/">开源知识库系统试用</a></h2>
+        <p>帮助朋友的公司搭建内部知识库的原型 简单记录一下相关技术 目前看权限管理都很不精细，只在固定角色上进行控制，用于内部团队管理仍不是很方便 文档嵌入效果一般，可能要研究里面一些复杂的选项用法，或者寻求其他方案 除了dify，还有很多其他开源的知识库系统，比如 Cherry Studio、MaxKB、FastGPT、Any...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2025-02-25T13:48:37.000Z">2025年2月25日</time>
+        <span>AI</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20250225/">关于大模型的Prompt</a></h2>
+        <p>网上资料摘要 一些个人理解 大模型交互的核心：提示词工程 以下基于个人理解，并通过claude优化（2025-02-26） 提示词（Prompt）是大模型的输入，也是调用大模型能力的接口，用以激发或引导大模型生成特定类型的回答。 提示词工程的目的是尽量把任务说清楚，让大模型能充分理解我们的意图，以按照正确的方向回答问题...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2025-02-21T09:28:05.000Z">2025年2月21日</time>
+        <span>AI</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20250221/">大模型应用开发AI Agent要点记录</a></h2>
+        <p>本文总结了大模型应用开发中AI Agent的关键要点，包括其层级、核心技术及实现方法，帮助开发者更好地理解和应用AI Agent技术。</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2025-02-20T13:12:52.000Z">2025年2月20日</time>
+        <span>AI</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20250220/">基于大模型的RAG应用开发要点记录</a></h2>
+        <p>基于书籍简单记录要点 一种借助“外挂”的提示工程 最核心的思想：给大模型补充外部知识以提高生成质量 大模型的 RAG 应用中，最常见的检索方式是借助基于向量的语义检索来获得相关的数据块，并根据其相似度排序，最后输出最相关的前 K 个数据块（简称top_K） 自然语言处理中用于把各种形式的信息转换成向量表示的模型叫嵌入模...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2025-02-19T12:53:32.000Z">2025年2月19日</time>
+        <span>AI</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20250219/">LangChain要点记录</a></h2>
+        <p>基于书籍简单记录要点 LangChain 提供了多种模板供选择 LangChain 提供了以下格式化 SQL 提示词模板（翻译）： 1. 你是一个 PostgreSQL 专家。给定一个输人问题，首先创建一个语法正确的 PostgreSQL查询来运行，然后查看查询结果，扑返回针对输人问题的答案。 2. 除非用户明确指定了...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2025-02-17T03:08:39.000Z">2025年2月17日</time>
+        <span>AI</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20250217/">深度学习基础入门备忘</a></h2>
+        <p>简单粗略通读了解，先记录备忘 后续考虑结合相关视频深入理解 《深度学习人门：基于Python的理论与实现》：https://github.com/Kingson4Wu/Deep-Learning-from-Scratch 感知机是一种接收多个输入信号并输出一个信号的算法。它的工作原理基于权重和偏置这两个关键参数。 机器...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2025-02-13T07:05:23.000Z">2025年2月13日</time>
+        <span>AI</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20250213/">关于AI大语言模型替代人类工作的问题</a></h2>
+        <p>AI的局限性或缺点 难以预测与控制：AI的运行机制像黑箱，难以准确预知其行为，尤其在关键场景下可能会犯致命错误。 无法背锅：AI犯错时，责任归属难以明确，导致无法追究错误的责任，缺乏人类信誉体系的约束。 逻辑推理不严谨：AI的推理基于概率预测，不是绝对严谨的逻辑推理。训练数据如果有误，AI可能无法辨别。 无法创新：AI...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2025-02-13T06:14:52.000Z">2025年2月13日</time>
+        <span>AI</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20250213-2/">深度学习为什么能学习并做对</a></h2>
+        <p>我的理解 目前无法解释为什么深度学习可以给出答案，只能大概解释为什么它能学习 这就相当于：我不能解释为什么这个人是通过什么做对这道题的，我只能解释他有正常的学习能力以及合适的学习资料，所以他自己能学习并做对题目 所以深度学习是怎么给出答案的，后续或许应该由它本身来告诉我们。 依据不同人的认知水平，来告诉我们它通过学习所...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2025-02-12T11:17:14.000Z">2025年2月12日</time>
+        <span>AI</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20250212/">大语言模型对话记录与思考备忘录</a></h2>
+        <p>记录与大语言模型的对话，探索疑问与思考 内容可能持续更新，作为大模型演变的历史备忘 有些问题非原创，来源网络 大模型的推理能力 大模型能从训练数据中识别互相矛盾的逻辑吗？或者说，大模型具备逻辑推理能力，能发现逻辑错误吗？ From chatGPT (2025-02-12) 好的，按你给的格式调整后是这样： 大模型，如G...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2025-01-08T05:33:24.000Z">2025年1月8日</time>
+        <span>Architecture</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20250108/">算法在实际业务场景中并非完全无用</a></h2>
+        <p>从事业务开发的同学经常会抱怨经常面试要刷算法，实际上平常的开发99%以上的事情都不会用到。 实际情况确实是这样。平常在写业务逻辑代码时，几乎完全不需要。 当然有些技术原理在背八股文的时候，懂一点算法能帮助你更好的理解。 而有些特殊业务场景，懂一些算法，确实能帮助你很好的解决问题。 下面举两个业务中产品提出的需求作为例子...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2025-01-06T10:02:28.000Z">2025年1月6日</time>
+        <span>AI</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20250106/">简单研究一下人工智能和数学</a></h2>
+        <p>简单记录，未完善 内容基本来源书籍 ===== 初等数学 函数 函数的表示方法主要有三种：解析法（公式法）、图像法和表格法。在微积分中讨论的函数几乎都是用解析法表示的。 二项式定理 二项式定理又称为牛顿二项式定理，它可将两个数之和的整数次幂展开为相应项之和。 ===== 高等数学 微积分 ===== 人工智能数学 从发...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2024-12-31T16:29:21.000Z">2024年12月31日</time>
+        <span>AI</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20250101/">使用AI总结了这个网站的内容</a></h2>
+        <p>使用google的notebooklm总结目前该网站的所有文章内容 https://notebooklm.google.com/ 问题：全面阐述和总结一下这个博客网站的内容，涉及领域，博主风格等 该博客网站的内容主要涵盖了个人成长和职业发展两个方面，涉及领域包括： 自我营销: 如何打造个人品牌，提升影响力。 时间管理:...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2024-12-31T07:24:38.000Z">2024年12月31日</time>
+        <span>AI</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20241231/">AI工业革命下的若干思考</a></h2>
+        <p>随着AI工具变得日益智能，人们对自身可能被取代的担忧也在增加。 回顾以往工业革命带来的社会变迁，或许能从中推测出未来发展的趋势。 以下内容由ChatGPT辅助生成。 AI对就业的双重影响 AI技术对就业市场带来了创造效应和破坏效应： 创造效应：AI的普及将催生了许多潜在的新兴职业。这些新兴岗位对熟练掌握AI工具的专业人...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2024-12-30T13:31:14.000Z">2024年12月30日</time>
+        <span>Finance</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20241230/">Web3相关知识记录</a></h2>
+        <p>以下内容都来源于书籍 Web进化史 Web 1.0时代。Web 1.0时代的特点是重信息轻身份，多浏览少输出，因此也被人称为“只读网络” 相较于Web 1.0时代的内容创作者占少数，内容消费者占绝大多数的生态格局，Web 2.0更加以每个用户为中心，注重由用户生成内容(User Generated Content, U...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2024-12-26T10:48:22.000Z">2024年12月26日</time>
+        <span>AI</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20241226/">LLM相关技术简单了解</a></h2>
+        <p>以下内容基本都是从书籍中摘抄，用于个人记录 从AI得出的回答不一定正确或者只是现阶段暂时正确 增加部分个人理解 LLM（Large Language Model） 大语言模型的涌现能力被非形式化定义为“在小型模型中不存在但在大模型中出现的能力”，具体是指当模型扩展到一定规模时，模型的特定任务性能突然出现显著跃升的趋势，...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2024-12-03T13:37:02.000Z">2024年12月3日</time>
+        <span>AI</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20241203/">人工智能相关技术简要总结记录</a></h2>
+        <p>持续补充… 人工智能的三种形态 来自：人工智能是什么？——人工智能图谱 弱人工智能：弱人工智能 (Artificial Narrow Intelligence, ANI) 是擅长与单个方面的人工智能，比如有能战胜象棋世界冠军的人工智能，但是它只会下象棋，你要问它怎样更好地在硬盘上存储数据，它就不知道怎么回答你了； 强人...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2024-12-02T06:54:49.000Z">2024年12月2日</time>
+        <span>Networking</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20241202/">一个无中心节点的局域网通信工具</a></h2>
+        <p>通信协议 初始阶段：UDP广播发现 建立连接后：切换到TCP进行可靠通信（也可以使用 UDP）（增加接收完成确认机制） AI生成的需求文档 ===== 局域网去中心化点对点通信工具 iOS 应用需求文档 项目概述 开发一款完全去中心化的局域网点对点即时通信应用，无需中心服务器，通过UDP广播实现设备发现和通信。 核心设...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2024-11-29T15:34:32.000Z">2024年11月29日</time>
+        <span>AI</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20241129/">AI已经如此强大了，帮我写完所有代码</a></h2>
+        <p>今天使用Windsurf帮我写一个小工具。 全程没有写过一行代码和一个字，全靠一直给AI提需求，配合授权运行纠正；有时感觉偏离正确的道路时，结合git命令回退代码，再重新提需求。就这样一直重复，就帮我把这个小工具写好了，包括使用文档，构建脚本等，通通都包了。 自从两年前第一次用ChatGPT时一下子服气了，这次直接帮我...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2024-11-21T08:42:35.000Z">2024年11月21日</time>
+        <span>Java</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20241121-go/">对Java、Go、Rust之间的简单对比和总结</a></h2>
+        <p>工作中接触过多种编程语言，主要是 Java 和 Go，最近因个人兴趣简单学习了 Rust，在这里简单记录总结一下 编程语言的GC问题 一般来说，程序需要管理好运行中使用的内存空间，比如传统的C和C++则要求开发者手动管理内存，但这往往导致内存泄漏和安全隐患；而垃圾回收（GC）语言，比如Java和Go在运行时自动回收内存...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2024-10-25T06:43:45.000Z">2024年10月25日</time>
+        <span>Reading</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20241025/">《认知觉醒》-笔记</a></h2>
+        <p>无论在大脑构造、潜意识、元认知、刻意练习等基本概念的解读上，还是在自控力、专注力、行动力、学习力、情绪力等具体能力的使用策略（包括早起、冥想、阅读、写作、运动等必备习惯的养成）上，都有相对独到的原理呈现和具体可行的方法提供。 每日反思 记录时间对我最大的意义，就是让自己能够觉知到时间的存在，让自己过得更加踏实。 每天只...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2024-10-23T07:59:48.000Z">2024年10月23日</time>
+        <span>Finance</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20241023/">金钱业务数据库事务相关要点记录</a></h2>
+        <p>表结构 sqlCREATE TABLE `user_balance` ( `user_id` varchar(128) NOT NULL DEFAULT &amp;#x27;&amp;#x27; COMMENT &amp;#x27;用户ID&amp;#x27;, `coin` bigint(20) unsigned NOT NULL DEFAULT...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2024-10-22T06:36:03.000Z">2024年10月22日</time>
+        <span>Career</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20241022/">简单记录我在几家公司的经历</a></h2>
+        <p>经历了一次大家普遍觉得“没考好”的高考后，我补录进入了广州一家末流的一本学校。出身于广东四五线城市的普通家庭，在高考前我并没有认真研究自己想要选择的专业。经过简单的网上搜索就业率后，我选择了网络工程这个专业。当时我并不认为这个专业与编程有什么关联，甚至可以说我对编程一无所知。 进入大学后，习惯于自学的我感到如同置身地狱...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2024-07-24T08:27:09.000Z">2024年7月24日</time>
+        <span>Distributed Systems</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20240724/">谈谈接口调用中的序列化协议</a></h2>
+        <p>接口调用存在于内部服务之间，也存在于客户端和服务端之间 既然涉及接口调用，必然就涉及到数据的序列化 RPC 什么是 RPC？ RPC是“远程过程调用”(Remote Procedure Call)的缩写。这是一种计算机通信协议,允许程序调用另一个地址空间(通常是在其它计算机上)的子程序或过程,而程序员就像调用本地程序一...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2024-07-18T04:13:08.000Z">2024年7月18日</time>
+        <span>Career</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20240718/">高效会议的重要性</a></h2>
+        <p>生命是以时间为单位的，浪费别人的时间等于谋财害命；浪费自己的时间，等于慢性自杀。 - 鲁迅 平常在工作中，有些同事在没有提前发会议主题和相关资料前，突然就拉一群人一起开会，方便了自己，却浪费了别人的时间。 比如一些不专业的产品为了节省自己的时间，也不做充分的会前准备，拉一堆开发给自己做需求完善员，对别人的时间极其不尊重...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2024-07-17T09:07:49.000Z">2024年7月17日</time>
+        <span>Programming Languages</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20240717/">看似理科实则文科，看似文科实则理科</a></h2>
+        <p>前段时间在看Rust，所有权部分涉及到很多规则，让我重新反思了传统文科和理科的区别 学习一门编程语言，大家普遍会认为这是一门理科 但像Rust语言的所有权规则，让我想到了英语中的各种时态规则 大家基本会认为英语是文科 但我其实认为Rust中的规则和英语中的规则，其实没啥区别，都是逻辑规则，比较烧脑。 所以无论是学习文科...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2024-05-30T04:15:11.000Z">2024年5月30日</time>
+        <span>Networking</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20240530/">基于Saturn定时任务的客户端工具设计</a></h2>
+        <p>基于之前写的这篇谈谈定时任务的原理和应用继续聊。 由于业务进程不是Java编写的，无法使用Saturn提供的Java定时任务，只能使用Shell定时任务 这里选择用UDS实现Shell进程和服务进程之间的通信，实现和使用Java定时任务一样的效果 在上次的实现中，只考虑了如何触发定时任务执行，并没有考虑如何停止 实现对...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2024-05-28T05:56:23.000Z">2024年5月28日</time>
+        <span>Architecture</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20240528/">也谈谈feed流的设计</a></h2>
+        <p>几年前也做过feed流相关的服务，虽然网上相关的文章很多，这里也做个人的简要记录和总结 方案并非原创，当时是参考其他业务团队的设计 需求背景：做一个用户动态模块，可以发动态，可以关注别人动态，有推荐列表，有消息提醒（其实就是微博的基本功能） 实现逻辑流程 整个feed流设计都是强依赖Redis来实现的，以下列出key设...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2024-05-09T07:28:40.000Z">2024年5月9日</time>
+        <span>Distributed Systems</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20240509/">聊聊配置中心</a></h2>
+        <p>第一次接触配置中心，是快十年前了，那时的配置中心还没像现在那么多成熟的开源项目，很多公司都需要结合自身业务自研。 使用配置中心的好处 快速发布变更配置，实时生效 对于不复杂的系统或业务配置，可以避免写繁琐的后台，但又具备快速变更的功能 读取配置性能高，一般配置后，都是以内存变量的方式常驻在服务中，可以说读取配置几乎零成...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2024-05-07T09:43:26.000Z">2024年5月7日</time>
+        <span>Career</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20240507/">业务开发中的术与道</a></h2>
+        <p>从事IT行业若干年，有时回首，不禁感叹，很多技术方案和日常生活息息相关，可以相互借鉴。 以下只是草稿，以后有缘再整理 以下每项并不是独立，而是相互重叠的 从日常的工作中总结常用的套路，勤记录，提升后续的效率 多开发一些能提高效率的小工具，逐步优化，并可以给其他同事使用 抽时间回顾和总结 对用户的业务数据感兴趣，并思考哪...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2024-04-25T11:40:27.000Z">2024年4月25日</time>
+        <span>Architecture</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20240425/">业务开发中使用BI的海量数据处理能力</a></h2>
+        <p>BI的数据统计跑数结果一般是T+1生成的 实时性要求不高的功能，用于推荐等其他业务功能，可用于统计和监控等 对实时性要求高的功能，做后置的监控，及早发现逻辑错误</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2024-04-07T01:22:08.000Z">2024年4月7日</time>
+        <span>Java</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20240407/">从Java转Go的个人体会</a></h2>
+        <p>这里仅从一个业务开发的角度谈谈体会，格局较低，仅做个人记录 编程语言是程序员接触和使用最多的工具 后端技术基础的深度是快速学习和适应新语言的关键 基于对工作中接触过的几种编程语言及其部署架构的看法继续聊。 截至目前，职业生涯五分之四的时间都是在使用Java。出于个人意愿和兴趣，以及行业的发展形势，也系统的自学了Go语言...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2024-04-06T14:16:35.000Z">2024年4月6日</time>
+        <span>Architecture</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20240406/">记录限免业务的经验</a></h2>
+        <p>由于业务需要，比如歌曲，我们需要对部分歌曲开放限免的功能，而且需要限制开放限免的场景。比如这首歌在场景A免费，在场景B收费。 先说正确的做法，下发另外一个字段比如free_token，通过这个字段判断业务来源，和判断是否可以免费。free_token是随着对应的场景查询时下发的，是变化的。即同一个歌曲的free_tok...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2024-04-05T11:02:38.000Z">2024年4月5日</time>
+        <span>Career</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20240405/">职场中的“善于沟通”和“高情商”</a></h2>
+        <p>很多人普遍认为，不跟人起冲突，能得到别人满意的评价，那么就一定程度上证明他高情商以及沟通能力好。 然而，这种观点真的正确吗？在某些情况下，这样做是否必要呢？ 先说结论，在高人才密度的公司中，基本也应该确实是这样。因为大家能相互理解，目标是做正确的事，简明扼要节约时间提升沟通效率，尊重别人及尊重自己，对有能力的人表示钦佩...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2024-04-03T08:04:11.000Z">2024年4月3日</time>
+        <span>Career</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20240403/">这件事情你需要跟进吗？</a></h2>
+        <p>在工作中，大多数情况下，大家都喜欢积极跟进事情的人。但有时候，这事情你真的要跟进吗？ 关于这个问题，其实并不是0或1这么简单。很多时候取决于公司的工作氛围或者分工、以及你对自己的定位等情况。 在工作中，在相当长的时间里，我执行力特别强的人。我的原则是事事有结论（不给别人挖坑，不让事情烂尾）。所以我会很积极的跟进事情。...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2024-04-02T06:42:48.000Z">2024年4月2日</time>
+        <span>Security</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20240402/">再浅谈接口的安全性和回调机制</a></h2>
+        <p>最近的工作原因，涉及到接口充权益的接口安全性问题，这里趁热再说说个人看法 基于之前写的这篇使用回调机制提高接口安全性继续聊。上次扩展中提到是不是可以使用非对称加密，替换回调验证？目前我所负责的业务确实使用这种方式。 业务中要对接多个渠道，渠道需要调业务的接口来加权益，为了安全性，目前的做法是由渠道自己生成RSA私钥，提...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2024-04-02T06:11:15.000Z">2024年4月2日</time>
+        <span>Career</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20240402-2/">打工人心态应该是怎样的？</a></h2>
+        <p>先来两段经典的话: 一 为众人抱薪者，不可使其冻毙于风雪； 为大众谋福利者，不可使其孤军奋战； 为自由开路者，不可使其困顿于荆棘。 二 愿中国青年都摆脱冷气，只是向上走。 不要听自暴自弃者的话。 能做事的做事，能发声的发声。 有一份光，发一份热。 就令萤火一般，也可以在黑暗里发一点光。 不必等候炬火。 迫于由于现实的压...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2024-04-01T08:16:48.000Z">2024年4月1日</time>
+        <span>Architecture</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20240401/">ToB业务随便讲讲</a></h2>
+        <p>以下内容格局比较小，仅做个人记录 从我个人接触过的ToB和ToC业务讲，有以下特点（当然肯定不是一定对的，毕竟业务形态实在太多，我没真正接触过的，就不提了）： ToC的业务团队，一般只做若干个业务模块；不同的业务有不同的团队 ToB的业务团队，需要对接几乎所有业务，进而对外提供平台能力 关于ToB业务的规范 ToB的业...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2024-03-29T07:14:28.000Z">2024年3月29日</time>
+        <span>Career</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20240329/">提升自己职场中的“可替代性”</a></h2>
+        <p>怎么看待职场中的“业务壁垒”？ 在我的工作中，曾经发生过这样一件事：有一天我们在讨论，能不能实现一个业务通用组件，让各个业务接入，提升业务需求的开发效率等，这时候有一个同事就跟我说：‘那如果真的实现的话，那你这边的业务就啥都没了’，言外之意就是我这边“没事做了”。我给他的回答是：‘没关系，只要是有意义，有价值，对公司是...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2024-03-28T03:55:49.000Z">2024年3月28日</time>
+        <span>Architecture</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20240328/">对服务架构中的聚合层理解</a></h2>
+        <p>以前刚毕业的时候，进入一个组，叫中间层，那时候还懵懵懂懂不知道想表达啥意思 图来源网上，已未知出处 这个组是直接给app提供接口的，主要的职能大概有以下 业务适配 服务聚合 数据展示 安全隔离 聚合服务，简单的来说就是聚合底层的各个业务系统，给用户端应用提供接口 （直接对接用户前端的接口服务，手机app，网站，h5等用...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2024-03-27T02:22:47.000Z">2024年3月27日</time>
+        <span>Career</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20240327/">职场中“马后炮”现象</a></h2>
+        <p>职场中有一种奇怪又平常的现象：没出事就没人重视，出事了就各种马后炮。 以软件开发人员平常应对的事情为例，这里其实有一种无奈的解释： 需求这么多还没做完，有什么充分的理由去重视这个问题？ 你把事情做好了，完全不出事，怎么证明是你的功劳？ 普通的干实事的程序员，最讨厌跟行外人谈收益。就像把代码写好了，自然后续维护成本就低了...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2024-03-26T02:39:17.000Z">2024年3月26日</time>
+        <span>Career</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20240326/">小团队管理经验</a></h2>
+        <p>转眼工作十年了，从20年10月开始，断断续续做了近三年的小团队管理，这里作简要总结一下。 所谓小团队管理，其实就是现在说的虚线组长，需要写代码、给团队提供指导等，但是由于不是高级别大领导，不需要应付很多烦人的破事。从这层来看，挺适合我这种性格的人。 以下是以小团队为背景来总结的，格局显得较小；当然每个人的观点不一样，不...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2023-07-30T08:27:34.000Z">2023年7月30日</time>
+        <span>Database</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20230730/">如何在大量数据中判断给定的是否在其中</a></h2>
+        <p>1、 Bloom Filter 缺点：只能增不能减，且有误判场景需要单独处理 可以使用当前进程级的Bloom Filter，也可以使用Redis的Bloom Filter 2、 文件存储 可以使用类似Java的MappedByteBuffer来保存数据 缺点：只能保存连续的一定范围的数字对应的值 Java文件读写与Ma...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2023-07-30T05:03:45.000Z">2023年7月30日</time>
+        <span>Networking</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20230730-2/">记一次socket泄露问题排查记录</a></h2>
+        <p>结论先行 服务死锁导致大量请求hang住，进程无法提供服务且大量socket泄漏 具体过程 服务某些逻辑处理不当导致死锁 大量请求hang住没有响应 上层的nginx超时主动关闭连接 服务被关闭连接，导致大量CLOSE_WAIT 由于服务对连接处理不当（待分析原因TODO），导致大量socket泄漏 前置知识 TCP状...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2023-07-04T07:22:29.000Z">2023年7月4日</time>
+        <span>Distributed Systems</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20230704/">我接触过的几种服务发现和rpc</a></h2>
+        <p>公司V 主要Java语言 最原始 没有服务发现 通过域名调用，服务器ip配置在nginx 数据传输使用JSON协议 公司U 主要Java语言 公司基础团队自己实现服务发现机制 服务发现使用netty做tcp长链，用于服务注册等 服务sdk从服务中心获取所调用的对端服务的ip和端口 通过tcp长链通知服务上下线等 通过服...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2023-07-03T12:59:41.000Z">2023年7月3日</time>
+        <span>Networking</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20230703/">谈谈定时任务的原理和应用</a></h2>
+        <p>定时任务的原理 本质是开一个线程,无限循环,检查本地的当前时间,是否符合执行的条件 Redis: 比如redis-5.0.8，起了一个线程不停的循环检查，比对当前时间（gettimeofday）判断是否需要执行 Golang: 起一个goroutine无限循环,从最小堆中取符合时间的任务 Java: 单线程, 无限循环...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2023-07-02T14:15:20.000Z">2023年7月2日</time>
+        <span>Java</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20230702/">对工作中接触过的几种编程语言及其部署架构的看法</a></h2>
+        <p>公司V 使用Java作为编程语言 使用Spring-MVC框架 使用Tomcat作为Web容器 打包运行方式： 服务器预安装了Java和Tomcat 将代码打包成war包 将war包上传到服务器的Tomcat的web目录 重启tomcat更新服务 公司U 使用Java作为编程语言 使用二次开发的Play1.x作为web...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2023-03-02T03:24:44.000Z">2023年3月2日</time>
+        <span>Reading</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20230302-notes/">软技能_代码之外的生存指南_notes</a></h2>
+        <p>献言 谨以本书献给所有自强不息、孜孜不倦地持续自我改进的开发人员。他们具备下列素质： 永远不会对“不错”感到心满意足永远寻求每一个机会来拓展自己的视野，探索未知事物对知识的渴求永远不会熄灭笃信软件开发并不仅仅意味着编写代码。知道失败不是结束，失败只是人生旅程上的小小一步有过挣扎，有过失败，但仍然会爬起来继续战斗拥有强烈...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2023-01-28T04:22:40.000Z">2023年1月28日</time>
+        <span>Programming Languages</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20230128/">N年前的笔记备忘查阅</a></h2>
+        <p>正则表达式和Matcher,Pattern的简单用法 如何在同一台电脑使用不同的账号提交到同一个github仓库 Spring源码阅读之数据自动绑定 Hessian跨语言调用实例 关于Java权限控制SecurityManager的理解 关于系统间数据一致性（跨进程事务）的解决方案 wireshark抓包简单查看HTT...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2023-01-14T06:55:20.000Z">2023年1月14日</time>
+        <span>Reading</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20230114/">借《黑客与画家》记录一下想法</a></h2>
+        <p>借本书记录自己的想法(从前混乱的头脑，没能及时总结)，阅读这本书有种相逢恨晚的感觉，有相似或者认同的想法. “黑客精神”是这本书的核心理念所在。“黑客”本身具有各种各样的描述和象征意义。在不同场景下，人们对“黑客”的定义也不一样。在保罗的观念里，以及在YC和奇绩创坛的实践观察中，我们发现，黑客精神的真谛是动手去创造性地...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2022-11-18T05:59:51.000Z">2022年11月18日</time>
+        <span>Architecture</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20221118/">技术选型要注意什么?</a></h2>
+        <p>充分了解才能用，基本了解，大局实现， 充分测试，压测分析profile， 非核心业务试行， 业界选择，不是说别人牛，是因为别人拿业务来验证过 待整理</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2022-10-18T15:05:58.000Z">2022年10月18日</time>
+        <span>Architecture</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20221018/">我的重构（翻译）经历</a></h2>
+        <p>前言 这里的重构基本指的是：把用A语言写的服务，使用B语言重写 工作的大部分内容其实就是人肉代码翻译 当然，重构通常也伴随的架构的优化和调整 最后，为了保证工作的顺利进行和服务的稳定切换，也总结了一些经验 下面将简要讲述作者的三段重构经历，分别是将三种不同的语言重构成Java（本人公司的所在的业务的主要语言就是Java...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2022-09-08T06:16:54.000Z">2022年9月8日</time>
+        <span>Networking</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20220908/">我的几张TCP原理学习手绘图</a></h2>
+        <p>网络寻址原理 负载均衡模式</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2022-09-07T12:36:01.000Z">2022年9月7日</time>
+        <span>Networking</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20220907/">TCP连接中的各种状态</a></h2>
+        <p>状态说明 CLOSED：无连接是活动的或正在进行 LISTEN：服务器在等待进入呼叫 SYN_RECV：一个连接请求已经到达，等待确认 SYN_SENT：应用已经开始，打开一个连接 ESTABLISHED：正常数据传输状态 FIN_WAIT1：应用说它已经完成 FIN_WAIT2：另一边已同意释放 ITMED_WAIT...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2022-09-07T05:30:37.000Z">2022年9月7日</time>
+        <span>Networking</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20220907-time/">TIME_WAIT解析</a></h2>
+        <p>TIME_WAIT 通信双方建立TCP连接后，主动关闭(FIN)连接的一方就会进入TIME_WAIT状态 客户端主动关闭连接时，发送最后一个ack后，会进入TIME_WAIT状态，再停留2个MSL时间，进入CLOSED状态 TIME_WAIT状态存在的理由 可靠地实现TCP全双工连接的终止 TCP协议在关闭连接的四次握...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2022-09-07T05:26:22.000Z">2022年9月7日</time>
+        <span>Networking</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20220907-2/">你记得设置TCP_NODEPLAY吗？</a></h2>
+        <p>有接触过TCP服务器实现的同学都会知道，需要注意TCP_NODELAY参数，为什么呢？ 若没有开启TCP_NODELAY，那么在发送小包的时候，可能会出现这样的现象： 通过 TCP socket 分多次发送较少的数据时，比如小于 1460 或者 100 以内，对端可能会很长时间收不到数据，导致本端应用程序认为超时报错。...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2022-09-06T14:02:39.000Z">2022年9月6日</time>
+        <span>Networking</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20220906/">有了TCP的keepalive，应用层还需要实现保活逻辑吗？</a></h2>
+        <p>结论 对于实时性高的业务，基本都需要在应用层自行实现保活逻辑，应用层的心跳协议是必不可少的 TCP keepalive 的 问题 检测周期长，开启后默认是2h（系统内核参数 tcp_keepalive_time），这就意味着服务端可能维持着一个死连接； TCP keepalive 是由操作系统负责探查，即便进程死锁，或...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2022-09-05T14:01:12.000Z">2022年9月5日</time>
+        <span>Networking</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20220905/">关于HTTP相关协议的一些总结</a></h2>
+        <p>粗浅概括 HTTP - TCP HTTPS - TCP + TLS SPDY -&amp;gt; TCP + TLS + 多路复用、头部压缩等特性 --&amp;gt; 发展成 HTTP/2 SPDY是Speedy的音，是更快的意思 HTTP/2 - TCP + TLS(理论上可选) + 多路复用、头部压缩等特性 QUIC - UDP...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2022-08-30T04:02:05.000Z">2022年8月30日</time>
+        <span>Networking</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20220830/">Chrome下载文件时暂停和继续是什么原理？</a></h2>
+        <p>这个问题很久前就研究过了，觉得挺有意思，这里总结记录一下 所有的文字整理来源于: https://bbs.csdn.net/topics/392163074,感谢wjyiooo的耐心解答 Range Range，是在 HTTP/1.1（http://www.w3.org/Protocols/rfc2616/rfc261...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2022-08-05T13:57:59.000Z">2022年8月5日</time>
+        <span>Networking</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20220805/">推送技术总结</a></h2>
+        <p>概述 从客户端是手机APP的角度来理解推送（PUSH），展示的形式有两种： App 推送：消息内容通过手机通知栏（状态栏）展示 应用内消息：各种业务数据推送（通过定义模版或命令号等方式推送给APP内的业务使用） 从Web端角度看理解推送，一般只有网页内消息（跟手机APP的应用内消息是一样的类型） APP推送： 在线推送...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2022-08-02T13:54:30.000Z">2022年8月2日</time>
+        <span>Networking</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20220802/">说说CDN</a></h2>
+        <p>相关名词 CDN（Content Delivery Network）（内容分发网络）：提供内容给用户就近访问 CDN域名解析流程 浏览器发起HTTP请求到本地DNS服务器，本地DNS服务器使用CNAME的方式，将资源域名重定向到CDN服务 用户机器（比如浏览器）-&amp;gt; LocalDNS LocalDNS -&amp;gt;...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2022-08-01T09:00:30.000Z">2022年8月1日</time>
+        <span>Networking</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20220801/">DNS解惑</a></h2>
+        <p>相关名词 DNS（Domain Name System）域名系统: 域名和IP地址映射关系 LocalDNS : 本地DNS服务器，一般是ISP（Internet Service Provider）提供。ISP，即是互联网服务提供商(比如电信、联通和移动三大电信运营商)；对于不同运营商间的互联互通，一般是采用BGP p...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2022-07-20T13:50:26.000Z">2022年7月20日</time>
+        <span>Networking</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20220720/">谈谈跨域</a></h2>
+        <p>JQuery的jsonp的success与jsonpCallback的关系:https://www.cnblogs.com/non-clockwork-cheng/p/6637491.html, https://www.cnblogs.com/tapt/p/6524946.html js$.ajax({ type: &amp;...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2022-07-05T02:20:11.000Z">2022年7月5日</time>
+        <span>Java</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20220705/">Java跨平台能完全做到一次编写到处运行？</a></h2>
+        <p>最近定位一个问题，花了不少时间。事后回想起来挺低级的，在此记录一下。 问题 spring i18n, 在windows和mac生效，在linux不生效。 原因 资源文件的名字为小写（message_zh_hant.proprties） 而文件读取时包含大写（message_zh_Hant.proprties）（这里不得...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2022-06-01T03:44:05.000Z">2022年6月1日</time>
+        <span>Go</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20220601/">开发golang程序和进行内网穿透，作为微信公众号服务器</a></h2>
+        <p>一直想部署一个私有服务，平常在外的时候可以为自己提供服务。 私有服务的好处是，可以根据自己的需求，开发程序，提供个人定制化的服务 服务器的选择 阿里云、腾讯云等 优点：使用方便，只要有网络就可以连上 缺点：有持续产生的费用，对于个人服务来说，平常几乎都是闲置，性价比很低 自建服务器 优点：总体成本低，购买服务器后，后续...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2022-05-10T14:33:28.000Z">2022年5月10日</time>
+        <span>Algorithms</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20220510/">算法基础总结</a></h2>
+        <p>O这个符号的意思是“忽略重要项以外的内容”，读音同Order。O（n2）的含义就是“算法的运行时间最长也就是n2的常数倍”，准确的定义请参考相关专业书籍。重点在于，通过这种表示方法，我们可以直观地了解算法的时间复杂度 当我们知道选择排序的时间复杂度为O（n2）、快速排序的时间复杂度为O（nlogn）时，很快就能判断出快...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2022-05-07T01:41:15.000Z">2022年5月7日</time>
+        <span>Career</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20220507/">高效工作方法论总结</a></h2>
+        <p>思考维度 事前, 事中, 事后 从三个维度 预防，及时发现，止损 三个出发 what when why who how 5W3H(what、when、why、who、where、how、how much、how feel) 金字塔思维: 主治：思维混乱，分不清主次重点 - 提高逻辑性和条理性; 总-分-总 过去-现在-...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2022-05-06T07:43:39.000Z">2022年5月6日</time>
+        <span>Networking</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20220506/">长连接服务需注意什么？</a></h2>
+        <p>边缘服务 边缘服务的网络质量很重要，覆盖不好会有弱网问题 网络相关命令 dig命令 ： 一个域名可以有两种类型的指向，如果一个 域名指向 称为一个 记录 （Record）的话，那么就有两种 记录类型 （Record Type），分别是： A记录 ：指向一个IP地址 （地址记录） CNAME ：指向一个其他的域名（别名记...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2022-05-05T08:36:21.000Z">2022年5月5日</time>
+        <span>Networking</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20220505-2/">直播流媒体协议——笔记</a></h2>
+        <p>RTMP 协议:https://www.jianshu.com/p/d511d59b185c RTMP、RTSP、HTTP视频协议详解（附：直播流地址、播放软件）:https://www.hangge.com/blog/cache/detail_1325.html RTMP、HTTP-FLV、HLS，你了解常见的三大直...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2022-05-05T04:49:18.000Z">2022年5月5日</time>
+        <span>Media</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20220505/">FFmpeg笔记</a></h2>
+        <p>图片拼接成特效视频 FFmpeg MediaCodec OpenGL JavaCV JavaCV是对各种常用计算机视觉库的封装后的一组jar包，其中封装了ffmpeg、OpenCV、libdc1394、OpenKinect、videoInput和ARToolKitPlus等计算机视觉编程人员常用库的接口，可以通过其中的...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2022-05-04T15:47:04.000Z">2022年5月4日</time>
+        <span>Networking</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20220504/">直播相关技术梳理总结</a></h2>
+        <p>视频直播的实现原理 网络协议-流媒体协议 首先，网络协议将编码好的视频流，从主播端推送到服务器，在服务器上有个运行了同样协议的服务端来接收这些网络包，从而得到里面的视频流，这个过程称为接流。 服务端接到视频流之后，可以对视频流进行一定的处理，例如转码，也即从一个编码格式，转成另一种格式。因为观众使用的客户端千差万别，要...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2022-04-29T02:05:28.000Z">2022年4月29日</time>
+        <span>Architecture</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20220429/">后端技术思维导图</a></h2>
+        <p></p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2022-04-28T08:36:10.000Z">2022年4月28日</time>
+        <span>Database</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20220408/">elasticsearch学习记录</a></h2>
+        <p>基于ES 7.10下的简要总结 一、官方文档链接 文档主页：https://www.elastic.co/guide/en/elasticsearch/reference/7.10/index.html rest api: https://www.elastic.co/guide/en/elasticsearch/re...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2022-04-04T07:56:15.000Z">2022年4月4日</time>
+        <span>Reading</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20220404/">《驱动力》笔记</a></h2>
+        <p>行为的三种驱动力（drive） ①生物性驱动力：人类以及其他动物饮食以止饿，饮水以解渴，交配以满足性欲。 ②外在动机：做出特定行为时环境会带来的奖励或惩罚。 ③内在奖励：完成任务取得的成绩，获得的愉悦感。 传统的激励因素，也就是我所说的“如果–那么”型奖励（“如果你做这个，就能得到那个”），对于很多简单机械的推算型工作...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2022-04-03T05:30:21.000Z">2022年4月3日</time>
+        <span>Database</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20220403-index/">index_merge导致死锁问题</a></h2>
+        <p>死锁日志 log2021-09-02T17:29:31.339235+08:00 10137065 [Note] InnoDB: Transactions deadlock detected, dumping detailed information. 2021-09-02T17:29:31.339268+08:00...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2022-04-02T09:35:32.000Z">2022年4月2日</time>
+        <span>Career</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20220402/">Scrum笔记</a></h2>
+        <p>https://www.jianshu.com/p/7d3e2b86c737 Scrum是一个过程框架，自上世纪90年代初以来，它就已经被应用于管理复杂产品的开发上。Scrum并不是构建产品的一种过程或一项技术 Scrum的精髓在于小团队。 Scrum基于经验过程控制理论，或称之为经验主义。 Scrum规定了4个正式事...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2022-04-01T08:04:14.000Z">2022年4月1日</time>
+        <span>Java</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20220401/">Java代码段查阅</a></h2>
+        <p>集合处理 List集合拼接成以逗号分隔的字符串 list.stream().collect(Collectors.joining(&amp;quot;,&amp;quot;)); String.join(&amp;quot;,&amp;quot;, list) 两个List集合取交集 list1.retainAll(list2) 交集、并集、差集 j...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2022-03-22T08:58:14.000Z">2022年3月22日</time>
+        <span>Architecture</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20220322/">轻量级微服务公共库设计</a></h2>
+        <p>目的 减少拷贝代码，抽象公共业务组件和复用，快速支持产品需求 提升开发效率，增强排查能力 统一维护，提升代码质量，减少重复错误，提高服务可控性 公共嵌入式的sdk，其实有点类似一个轻量级的网关，sidecar，localproxy 为什么不使用API网关？ 有一定的机器和维护成本 跟组织架构有一定关系 启发式实现样例</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2022-03-12T06:03:08.000Z">2022年3月12日</time>
+        <span>Distributed Systems</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20220312/">关于轻量级分布式事件通知的思考</a></h2>
+        <p>有些业务场景，我们需要发出一个事件，通知到每一个进程。 比如数据变更，通知每个进程更新本地缓存。 使用MQ的话，以NSQ为例，将channel名设置为ip，那么每个进程都会收到这个事件；但是目前现在是k8s的时代，使用k8s部署进程，那么会导致某些旧ip的channel仍然存在，从而造成事件堆积。 redis虽然支持事...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2022-02-28T06:56:23.000Z">2022年2月28日</time>
+        <span>Algorithms</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20220228/">经典排序算法</a></h2>
+        <p>十大经典排序算法（动图演示） 排序算法分类 (一) 内部排序和外部排序 （二） 比较类排序：通过比较来决定元素间的相对次序，由于其时间复杂度不能突破O(nlogn)，因此也称为非线性时间比较类排序。(非线性时间) 非比较类排序：不通过比较来决定元素间的相对次序，它可以突破基于比较排序的时间下界，以线性时间运行，因此也称...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2022-02-23T05:42:47.000Z">2022年2月23日</time>
+        <span>Architecture</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20220223/">理解状态机原理及实践</a></h2>
+        <p>基本概念 有限状态机FSM 描述事物的有限状态机模型的元素由以下组成： 状态(State)：事物的状态，包括初始状态和所有事件触发后的状态 事件(Event)：触发状态变化或者保持原状态的事件 行为或转换(Action/Transition)：执行状态转换的过程 检测器(Guard)：检测某种状态要转换成另一种状态的条...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2022-02-20T12:26:21.000Z">2022年2月20日</time>
+        <span>Go</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20220220/">nba选秀抽签具体是如何操作的？</a></h2>
+        <p>nba选秀抽签具体是如何操作的？ 14个乒乓球分别贴上1-14数字，随机滚出4个，加起来是1001可能，其中11、12、13、14这个组合不算，剩下1000种可能。 闲来无事，使用Go粗暴模拟了一下 gopackage main import ( &amp;quot;fmt&amp;quot; &amp;quot;math/rand&amp;quot...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2022-02-07T16:08:24.000Z">2022年2月7日</time>
+        <span>Java</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20220208/">Java11基础原理和实践</a></h2>
+        <p>一、为什么选择java11 Java 11 是 Java 8 之后的首个 LTS 版本（Long-term support 长期支持版本），所以有不少开发者表示会选择升级至 Java 11。 1、目前相对来说，Java 8 太旧，Java 17 太新，Java11 刚刚好； 2、支持以类路径方式运行，适合过渡阶段升级；...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2022-01-17T06:55:32.000Z">2022年1月17日</time>
+        <span>Networking</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20220117/">NIO总结笔记</a></h2>
+        <p>Java I/O I/O NIO 面向流 面向缓冲 阻塞IO 非阻塞IO 无 选择器 I/O 与 NIO 一个比较重要的区别是我们使用 I/O 的时候往往会引入多线程，每个连接使用一个单独的线程，而 NIO 则是使用单线程或者只使用少量的多线程，每个连接共用一个线程。而由于 NIO 的非阻塞需要一直轮询，比较消耗系统资...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2022-01-14T03:26:02.000Z">2022年1月14日</time>
+        <span>Database</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20220114/">如何做数据库迁移</a></h2>
+        <p>先抛出以下问题： 把MHA-1集群的Database-C 迁到 MHA-2 集群中，有没有简单高效的方案? 方案1、在两个MHA集群，在建一套MHA3。MHA2的主作为MHA1的从？这样MH3切换的时候，应用服务就可以直接感知切到新库了； 方案2、先把C同步到2集群，然后做otter同步 方案1： 存在的问题： 中间再...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2021-10-27T02:42:07.000Z">2021年10月27日</time>
+        <span>Distributed Systems</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20211027/">raft学习笔记</a></h2>
+        <p>Raft将共识问题分解三个子问题： Leader election 领导选举：有且仅有一个leader节点，如果leader宕机，通过选举机制选出新的leader； Log replication 日志复制：leader从客户端接收数据更新/删除请求，然后日志复制到follower节点，从而保证集群数据的一致性； Sa...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2021-10-12T10:37:20.000Z">2021年10月12日</time>
+        <span>Distributed Systems</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20211012/">CQRS笔记</a></h2>
+        <p>后端开发实践系列——简单可用的CQRS编码实践 个人认为： 清除消息业务：写时只记录一个“清除时间”，读时只读取“清除时间”之后的数据，这是一种CQRS (避免写时操作太多数据，QPS不高，但单个请求需要操作多条数据的情况) 消息通知业务：写时只写在redis，定时任务从redis批量获取数据逐步写入的数据库（QPS高...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2021-10-12T09:46:33.000Z">2021年10月12日</time>
+        <span>Distributed Systems</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20211012-2/">分布式理论相关整理</a></h2>
+        <p>其他 分布式存储系统通常通过维护多个副本来进行容错，提高系统的可用性。要实现此目标，就必须要解决分布式存储系统的最核心问题：维护多个副本的一致性。 一致性（consensus）,它是构建具有容错性（fault-tolerant）的分布式系统的基础。 在一个具有一致性的性质的集群里面，同一时刻所有的结点对存储在其中的某个...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2021-09-17T09:17:35.000Z">2021年9月17日</time>
+        <span>Distributed Systems</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20210917-2/">通过判断订单状态是否可以避免并发导致的问题？</a></h2>
+        <p>首先重温一个问题：RPC可以和事务绑定吗？ 有以下业务场景： 用户扣钱成功之后，可以玩一局游戏；如果用户没成功玩游戏，需要将已扣的钱退回给用户。 服务架构：服务A(游戏服务)，服务B(用户资产服务)。 游戏订单状态：1（初始状态）；2（扣费成功）；3（退费成功）；4（不存在） 实现基本流程如下： 流程1: 玩游戏请求-...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2021-09-17T06:51:20.000Z">2021年9月17日</time>
+        <span>Architecture</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20210917/">多IDC下微服务数据如何同步</a></h2>
+        <p>最近公司出现跨机房调用redis超时导致的故障，借此简单记录一下微服务依赖的相关组件使用规范。 Redis 每个服务的每个IDC对应一套Redis集群，原则上： 不同服务不共用一套redis：避免业务相互影响，key定义冲突等问题； 不跨机房读写redis：避免不必要的时延等 同个服务不同IDC的redis数据怎么同步...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2021-08-17T05:57:00.000Z">2021年8月17日</time>
+        <span>Java</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20210817/">Java垃圾回收总结</a></h2>
+        <p>Java中成熟的垃圾回收器有串行垃圾回收器、并行垃圾回收器、并发标记回收器（Concurrent Mark Sweep, CMS）、垃圾优先回收器（Garbage First，也称为G1）。在JDK 11中引入了一款新的垃圾回收器ZGC，在JDK 12中又引入了另一款新的垃圾回收器Shenandoah。虽然新的垃圾回收...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2021-08-13T11:06:22.000Z">2021年8月13日</time>
+        <span>Reading</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20210813/">《小狗钱钱》-笔记</a></h2>
+        <p>前言 财务自由是今天每个人都可能实现的目标，当然这需要我们拥有追求自己真正想要的生活的勇气。正如一句名言所说：“并非困难使我们放弃，而是因为我们放弃，才显得如此困难。 什么都无法阻挡你将金钱的规律铭记在心，你就会发现自己的财务状况在日益改善。没有任何东西能够阻挡一个顺应时势的想法。这一点也适用于每一个人的生活。什么都无...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2021-08-13T03:08:23.000Z">2021年8月13日</time>
+        <span>Reading</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20210813-2/">《深度工作：如何有效使用每一点脑力》-笔记</a></h2>
+        <p>前言 深度工作（Deep Work）：在无干扰的状态下专注进行职业活动，使个人的认知能力达到极限。这种努力能够创造新价值，提升技能，而且难以复制。 浮浅工作（Shallow Work）：对认知要求不高的事务性任务，往往在受到干扰的情况下开展。此类工作通常不会为世界创造太多新价值，且容易复制。 深度工作假设（The De...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2021-08-13T01:48:07.000Z">2021年8月13日</time>
+        <span>Career</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20210813-3/">个人管理经验总结</a></h2>
+        <p>情商、基于别人的角度思考 以身作则 技术功底，才能令人信服 保证成员 免干扰、休息时间如无必要不打扰 情商，基于别人角度考虑 真诚、谦虚、透明 避免用“以为”作为借口，基于“对方角度”、“将心比心”的方式，思考问题； “将心比心”的方式不奏效？一般大公司都追求一定的人才密集性，基本不会出现这个问题； 注重沟通的有效性（...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2021-08-11T02:44:03.000Z">2021年8月11日</time>
+        <span>Reading</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20210811/">《不拘一格：网飞的自由与责任工作法》-笔记</a></h2>
+        <p>推荐序一 企业如何最大化地驱动创新 网飞文化的内核是人才，它的理论基础是我们大家必须关注的“人才效益现象”，即一个富有才华的人所产出的创新效果将数倍于一个能力中等的人，并且随着技术和创新发展，这种倍数还在不断增加。这里需要强调的是，这种人才效益现象针对的是创新能力起决定性作用的工作岗位，比如技术研究和产品开发等。针对这...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2021-08-09T15:12:25.000Z">2021年8月9日</time>
+        <span>Reading</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20210809/">《复盘网飞》-笔记</a></h2>
+        <p>网飞的创意来源 顿悟是极其罕见的。出现在创业故事中的所谓的顿悟往往是被过分简化的，甚至是伪造的。我们之所以爱听这些故事，是因为它们契合了有关灵感和天才的浪漫想象。我们想让我们这个时代的“牛顿们”在苹果掉下来的时候坐在苹果树下；我们想要这个时代的“阿基米德们”坐在浴缸里。但真相往往比这复杂许多。真相是，每一个好主意背后，...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2021-07-30T10:25:22.000Z">2021年7月30日</time>
+        <span>Architecture</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20210730/">方案设计时应该画什么图？</a></h2>
+        <p>思维导图 思维导图又叫脑图，使用一个中央关键词或想法引起形象化的构造和分类的想法，是一种结构化思维的树形发散图。 UML 基本上大多情况，类图、时序图、活动图、状态图 已经够用。 用例图 从用户角度描述系统功能，并指出各功能的操作者。 实际工作中，写功能说明，项目交接等情况可以使用。 类图 复杂数据结构，方便说明时可以...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2021-07-13T08:40:38.000Z">2021年7月13日</time>
+        <span>Reading</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20210713/">Kubernetes学习笔记</a></h2>
+        <p>整体架构 图来源：k8s-整体概述和架构 关键名词 CNCF（Cloud Native Computing Foundation，云原生计算基金会） 关键总结 自动化 Docker是其目前支持的底层容器技术之一 服务弹性扩容机制应对突发流量 Kubernetes视为云计算时代的操作系统 k8s解决进程（服务）部署、容器...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2021-07-06T03:25:12.000Z">2021年7月6日</time>
+        <span>Architecture</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20210706/">IT中的生活哲学</a></h2>
+        <p>前言 最近看完了《SRE：Google运维解密》之后，越来越觉得IT届的很多解决方案、流程设计、技术原理都来源于生活，或者说跟生活上的很多场景很类似。 本文的标题或许不太正确，并没字面上的包含关系，两者有时是相互借鉴的。 本文只是草稿，将持续记录个人认为的一些“生活哲学”。 生活哲学 混沌工程 在生活中总会出现一些小问...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2021-07-05T06:46:52.000Z">2021年7月5日</time>
+        <span>Reliability</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20210705-sre/">《SRE：Google运维解密》-笔记</a></h2>
+        <p>序言 可靠性就像安全性，越早关注越好。 这就意味着一些小型创业公司，在应付日常面临的种种挑战时，也应该抽出一部分精力来面对可靠性这个话题。这与盖房子有些类似，如果一开始将整个地基打好并保持继续修缮，要比盖好房子之后再重新修改设计要容易得多 Margaret 曾经说过：“无论对一个软件系统运行原理掌握得多么彻底，也不能阻...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2020-12-23T14:10:16.000Z">2020年12月23日</time>
+        <span>Architecture</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20201223/">开发阶段checklist</a></h2>
+        <p>方案补全 索引复查； 主库从库查询检查；事务检查；写语句死锁风险检查 (更新语句要注意index_merge问题，避免死锁) 缓存策略 降级检查 异常捕捉处理 使用代码扫描工具 错误码整理 灰度策略；是否可回滚；是否可监控 日志补全 考虑异步操作 监控数据状态，比如某些任务表，监控失败率及时发现异常 git仓库包含多模...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2020-12-19T09:59:28.000Z">2020年12月19日</time>
+        <span>Reading</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20201219/">《枪炮、病菌与钢铁：人类社会的命运》-笔记</a></h2>
+        <p>为什么最后带来枪炮、凶恶的病菌和钢铁的竟是欧洲人，而不是非洲人或印第安人？ 对本书来说，这样的一句话就是：“不同民族的历史遵循不同的道路前进，其原因是民族环境的差异，而不是民族自身在生物学上的差异。” 第一章 走上起跑线 随着人类在澳大利亚/新几内亚的定居，现在人类已占据了可以居住的5个大陆中的3个。（在本书中，我始终...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2020-11-11T13:02:48.000Z">2020年11月11日</time>
+        <span>Testing</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20201111/">单元测试使用总结</a></h2>
+        <p>mockito使用 mock实例 Test test = mock(Test.class); Test test = spy(new Test()); 在Spring中使用 @Mock Test test; @Spy Test test = new Test(); @MockBean Test test; (起spri...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2020-11-03T12:25:50.000Z">2020年11月3日</time>
+        <span>Reading</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20201103/">《我的第一本金融入门书》-笔记</a></h2>
+        <p>银行的生财之道——存款与贷款 银行的存款不可能全部贷放出去，按照法律规定，银行必须要留存一定比例的存款作为应对储户提款的准备金，并且贷款在很多时候存在不能及时收回的情况，甚至会出现坏账，这会对银行造成损失，此外，这笔钱还没有扣除税收等因素 货币创造的秘密——商业银行的派生存款 我们时常听到财经新闻报道说，中央银行上调法...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2020-11-02T14:21:58.000Z">2020年11月2日</time>
+        <span>Reading</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20201102/">《半小时漫画经济学》-笔记</a></h2>
+        <p>一、开篇：我们为什么要读经济学 历史上没有一场仗是因为爱和正义打起来的，所有的流血背后，深层次的原因都是经济 如果我们想搞明白人类是怎么活成这样的、世界是怎么运转起来的，就要先搞明白这个问题：经济是怎么来的？一、经济起源首先，经济是什么？简单地讲，就是资源最优化配置。比如一瓶水，只有到口渴的人手里，价值才能发挥到最大。...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2020-11-01T14:02:36.000Z">2020年11月1日</time>
+        <span>Reading</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20201101/">重构-改善既有代码的设计-摘要</a></h2>
+        <p></p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2020-10-24T07:15:53.000Z">2020年10月24日</time>
+        <span>Reading</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20201024/">《重新定义团队：谷歌如何工作》-笔记</a></h2>
+        <p>自序 韦尔奇和康纳迪采用了20-70-10的绩效排名体系，在这种体系下，他们将通用电气的员工分为三类：最优秀的20%，中间层的70%，末尾的10%。最优秀的员工得到赞扬，作为奖励可以选择工作任务，参加领导力培训项目和享有优先认股权。末尾的10%会遭到解雇。 清晰明了的“前20%”“中间70%”和“末尾10%”被更加委婉...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2020-10-18T14:35:36.000Z">2020年10月18日</time>
+        <span>Reading</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20201018/">【计算机科学速成课】笔记</a></h2>
+        <p>【计算机科学速成课】[40集全/精校] - Crash Course Computer Science</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2020-10-11T03:27:51.000Z">2020年10月11日</time>
+        <span>Database</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20201011/">Redis笔记</a></h2>
+        <p>脑图 命令 info memory 可查看Redis使用了jemalloc Redis Config Get 命令 - 获取指定配置参数的值：https://www.redis.net.cn/order/3667.html cluster nodes Redis 客户端 https://redis.io/clients...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2020-10-03T15:10:18.000Z">2020年10月3日</time>
+        <span>Database</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20201003/">MySQL笔记</a></h2>
+        <p>思维导图 InnoDB 事务隔离级别 隔离级别 脏读 不可重复读 幻读 未提交读(RUC) NO NO NO 已提交读(RC) YES NO NO 可重复读(RR) YES YES NO 可串行化 YES YES YES InnoDB 锁类型 共享/排它锁(Shared and Exclusive Locks) 在In...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2020-09-26T05:58:25.000Z">2020年9月26日</time>
+        <span>Networking</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20200926/">关于CLOSE_WAIT和HttpClient的使用</a></h2>
+        <p>ESTABLISHED 表示正在进行网络连接的数量 TIME_WAIT 表示表示等待系统主动关闭网络连接的数量 CLOSE_WAIT 表示被动等待程序关闭的网络连接数量 查看系统TCP状态的命令：netstat -n | awk &#39;/^tcp/ {++S[$NF]} END {for(a in S) print a,...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2020-09-12T13:30:00.000Z">2020年9月12日</time>
+        <span>Distributed Systems</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20200912/">分布式一致性协议概览</a></h2>
+        <p>本文内容基本来源：网上资料总结 共识（Consensus） 和 一致性（Consistency） 分布式一致性（共识）协议 (consensus protocol) Consensus != Consistency CAP 定理中的 C 和数据库 ACID 的 C 才是真正的“一致性”—— consistency 问题...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2020-09-12T06:41:45.000Z">2020年9月12日</time>
+        <span>Distributed Systems</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20200912-2/">分布式事务简要总结</a></h2>
+        <p>前言 本文涉及一些理论基础 业界目前的分布式事务的解决方案 简单的分类和总结 基本内容都来源网上 理论基础 事务 事务：事务是由一组操作构成的可靠的独立的工作单元，事务具备ACID的特性，即原子性、一致性、隔离性和持久性。 本地事务：当事务由资源管理器本地管理时被称作本地事务。本地事务的优点就是支持严格的ACID特性，...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2020-09-08T14:49:21.000Z">2020年9月8日</time>
+        <span>Reliability</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20200908-2/">金融业务容灾切换后监控和修正方案</a></h2>
+        <p>前言 接关于MHA_Consul_MySQL高可用方案的简单总结和思考 中所讲，该方案无法严格保证主从数据一致或者不丢数据，那么对数据准确性非常严格的业务，则需要在业务层面进行相应的对账和修正。 对账的前提当然是要有流水，可以是业务流水(跟余额表事务绑定)或者是binlog的变更流水。 既然是对准确性要求严格的业务，一...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2020-09-07T16:04:32.000Z">2020年9月7日</time>
+        <span>Reliability</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20200908/">金融业务容灾体系简述</a></h2>
+        <p>概述 本文针对金融类(如用户虚拟货币)这类对数据准确性很敏感的业务的容灾架构； 案例中的服务架构为同城主备架构； 内容包括：容灾架构、故障切换、故障恢复、演练方案等； 涉及技术点：MySQL、MHA、Consul等； 本文基于 关于MHA-Consul-MySQL高可用方案的简单总结和思考 如何解决脑裂问题 由于某种原...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2020-09-04T16:04:32.000Z">2020年9月4日</time>
+        <span>Distributed Systems</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20200905/">如何解决脑裂问题</a></h2>
+        <p>什么是“Split Brain”(脑裂)问题？ Split Brain 是指在同一时刻有两个认为自己处于 Active 状态的 NameNode。对于HA集群而言，确保同一时刻只有一个NameNode处于active状态是至关重要的。否则，两个NameNode的数据状态就会产生分歧，可能丢失数据，或者产生错误的结果。...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2020-08-31T13:39:33.000Z">2020年8月31日</time>
+        <span>Distributed Systems</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20200831-consul/">关于MHA_Consul_MySQL高可用方案的简单总结和思考</a></h2>
+        <p>概述 MHA + Consul + MySQL的高可用方案，网上已经有很多资料，这里只是做一下简要的总结和思考。文章部分文字摘自Reference中的链接。 直接先上一张图 图中的灾备架构适用于同城主备架构的业务，比如金钱业务； DB层是一主多从，主库至在其中一个机房，并在DB集群上搭建跨IDC的MHA；同样Consu...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2020-08-31T13:14:24.000Z">2020年8月31日</time>
+        <span>Architecture</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20200831/">使用Redis实现榜单</a></h2>
+        <p>一、前言 使用redis实现 基于直播间业务场景 不阐述详细实现细节 二、相关Redis数据结构和命令 Redis 集合(Set) Sismember 命令判断成员元素是否是集合的成员。 Redis 有序集合(sorted set) Zrevrank 命令返回有序集中成员的排名。其中有序集成员按分数值递减(从大到小)排...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2020-08-20T14:06:31.000Z">2020年8月20日</time>
+        <span>Networking</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20200820/">关于CDN缓存总结摘要</a></h2>
+        <p>CDN缓存的几点总结 CDN资源的标识: url 跟HTTP缓存无关的请求头不影响CDN缓存（亲测） 不仅是静态资源，接口的数据可以做CDN缓存（亲测） CDN服务一般都有默认的缓存配置（比如一分钟），服务端可以通过设置HTTP缓存相关的Header控制是否适用CDN缓存 HTTP缓存和CDN缓存分别作为客户端缓存和服...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2020-08-03T16:08:36.000Z">2020年8月3日</time>
+        <span>Architecture</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20200804/">打赏类业务货币体系简述</a></h2>
+        <p>在打赏类业务中，消费跟分成是紧紧挂钩的。比如在直播间送礼，用户通过花费虚拟货币给对方送礼，而对方则得到相应的分成。 定义：用户花费的是“金币”，接受者得到的是“银币”。 设计概要 一、用户货币类型组成 用户通过充值或活动赠币等方式得到“金币(coin)” 充值行为得到的是“充值金币(money)” 活动赠币等非充值行为...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2020-07-21T15:14:29.000Z">2020年7月21日</time>
+        <span>Reading</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20200721/">《程序员的职业素养》摘要</a></h2>
+        <p>6年前看的书，重新整理一下 前言 摘要 一 (专业主义) 专业主义的精髓就在于将公司的利益视同个人的利益。(这个呢，看情况吧) 不能忽略完整的测试环节，否则就交付软件是不负责任的。 为自己的不完美负责。代码难免出现bug，但这并不意味着你不用对它们负责。 让QA找不出任何问题。把自己没把握的代码发送给QA是不专业的，违...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2020-07-19T13:19:46.000Z">2020年7月19日</time>
+        <span>Reading</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20200719/">《人性的弱点》摘要</a></h2>
+        <p>十年前看过这本书，现在早就忘掉差不多了，重新整理一下。 与人相处的大秘窍：献出你真实，诚恳的赞赏。 如果这样做，你将到处受欢迎：真诚的对别人发生兴趣。 在辩论中，获得最大利益的唯一方法，就是避免辩论。 要真诚的以他人的观点去看事情。 在批评对方之前，不妨先谈谈你自己的错误。 请对方帮忙。 第一篇 待人的基本技巧 第一章...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2020-07-19T09:43:06.000Z">2020年7月19日</time>
+        <span>Career</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20200719-2/">如何预估开发时间</a></h2>
+        <p>大的需求应预留时间方案设计和评审 方案时间( 包括跟相关依赖方确认方案时间) 确定依赖方工作量和时间点 工作项拆分 需求细节确认预留 开发时间 联调时间 配合测试时间（改bug） 单元测试 产品验收（测试环境） 需求改动预留 代码审核时间 处理其他突发事情预留 上线跟进 记录延期原因（需求变更，需求优先级调整，方案改动...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2020-07-19T09:13:31.000Z">2020年7月19日</time>
+        <span>Career</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20200719-3/">职场生存小小总结</a></h2>
+        <p>不只局限于做需求本身 可以考虑把原本不合理的东西进行优化（当然要考虑分享和成本以及必要性）; 基于基础通用的角度设计方案； 只做需求本身和想同时做更多的事，时间成本肯定不一样，如何解决两者之间的矛盾： 透明！把方案抛出来，由团队共同决策选择； 提供短期方案和长期优化方案。 及时反馈 发生故障及时反馈，不独自默默处理，避...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2020-07-16T15:33:26.000Z">2020年7月16日</time>
+        <span>Reliability</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20200716-2/">监控告警要留意哪些点？</a></h2>
+        <p>告警信息要标明：机器、业务和环境等信息 制定合理的告警规则，梳理告警项，优化项目error日志等；避免大量无用的告警导致麻木 重要的特定业务可以单独配告警 是不是经常遇到临时打开某个开关，最后又忘记修改回来的事情？其实这种可以通过告警来解决，通过配置常规状态的固定值，定时检查告警即可。 扩展 对 Java 意义重大的...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2020-07-16T14:57:09.000Z">2020年7月16日</time>
+        <span>Architecture</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20200716/">使用“自旋”降低业务失败率</a></h2>
+        <p>业务场景描述 不说废话，直接描述以下两个业务场景 使用分布式锁控制并发 请求----------&gt; 服务A [1.尝试获取锁] [2.获取锁失败] [3.返回失败(提示操作太快)] 强依赖服务超时或“请求处理中” 请求----------&gt; 服务A [1.强依赖请求]----------&gt; 服务B [2.执行慢(网络抖...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2020-07-15T15:07:33.000Z">2020年7月15日</time>
+        <span>Database</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20200715/">canal使用总结</a></h2>
+        <p>前言 本文只讲自己在使用canal之后的一些总结，关于canal的基础用法和介绍，不在这里赘述。 原理 canal的原理是基于mysql binlog技术，所以这里一定需要开启mysql的binlog写入功能，建议配置binlog模式为row 原文：https://blog.csdn.net/liupeifeng351...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2020-07-14T13:57:47.000Z">2020年7月14日</time>
+        <span>Architecture</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20200714-3/">如何接手一个旧项目</a></h2>
+        <p>改变心态，以前会抱怨业务乱，但是业务在发展过程中乱是很正常的，也要有人来主动整理，同时也在考验和锻炼整理人的能力。 梳理现有业务文档，进行归类(如果有的话？) 拉代码，服务本地跑起来，并跑通单元测试 梳理服务现有的所有监控平台和数据 梳理服务的依赖关系和超时时间 梳理服务的依赖组件（MQ，Redis，DB等）和部署情况...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2020-07-14T13:42:41.000Z">2020年7月14日</time>
+        <span>Testing</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20200714-2/">单元测试的工具和技巧</a></h2>
+        <p>提高单元测试覆盖率 提高bean类的覆盖率 pojo-tester lombok [lɒmˈbɒk] kotlin 定义一些过滤规则 工具 mock神器：mockito sql模拟测试：h2 对测试进行参数化: JUnitParams Awaitility: 一个小型的Java领域专用语言（DSL），用于对异步的操作进...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2020-07-14T12:14:58.000Z">2020年7月14日</time>
+        <span>Architecture</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20200714/">业务重构实践总结</a></h2>
+        <p>业务重构似乎是必然且合理的过程。一个项目刚开始为了快速上线和试错，总会或多或少出现不合理的地方。当项目活下来了，为了寻求下一步的发展，服务的稳定和扩展性提升了优先级，自然就需要有人来重构了，这也是项目历史遗留的技术债务。 项目背景 公司原有的业务几乎都是PHP编写的，并且处于一个很大的项目里维护和运行，可以说是大杂烩。...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2020-07-13T15:31:30.000Z">2020年7月13日</time>
+        <span>Reliability</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20200713/">由灾备工作中引发的对“比例”的思考</a></h2>
+        <p>前言 关于文章的题目我想了很久，暂时没想到合适的题目，姑且先这样吧 之前在做灾备工作的时候，经常涉及服务的强弱依赖，超时时间，降级，以及业务折中方面的思考，下面将通过一些例子简要进行描述 场景描述 从服务所依赖的重要程度上来区分有“强依赖”和“弱依赖”。 通常上，针对“弱依赖”我们会设置较小的超时时间(比如100ms以...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2020-07-12T15:29:36.000Z">2020年7月12日</time>
+        <span>Security</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20200712/">使用回调机制提高接口安全性</a></h2>
+        <p>前言 接口回调在平常的业务开发中并不罕见。做过渠道推广业务，对接过广告平台接口的同学应该比较熟悉。 在业务的作用主要是两个 异步通知 业务查询 本文主要讲的第二种，并通过一个业务例子来展开描述 业务描述 有以下业务场景，用户通过充值加金币： 充值请求----------&gt; 服务A（充值服务） [1.验证用户已经支付成功...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2020-07-11T15:01:37.000Z">2020年7月11日</time>
+        <span>Reliability</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20200711-2/">分布式限流简单总结</a></h2>
+        <p>基本描述 限流分类 单机限流 分布式限流 限流的指标 每秒处理的事务数 (TPS)，每秒请求数 (hits per second) 使用 hits per second 作为限流指标 限流规则包含三个部分：时间粒度，接口粒度，最大限流值。 选择单机限流还是分布式限流 单机限流一般针对服务负载，防止突发流量压垮服务器 分...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2020-07-11T03:48:22.000Z">2020年7月11日</time>
+        <span>Distributed Systems</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20200711/">分布式锁简单总结</a></h2>
+        <p>实现方式 数据库的行级排它锁（如select * from x for update）； 基于zookeeper的瞬间顺序节点； 最小节点获得锁 基于 Redis 的 SETNX 命令。 使用lua脚本保证原子性 （Redisson 有封装实现 ） RedLock 红锁并非是一个工具，而是Redis官方提出的一种分布式...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2020-07-10T14:24:44.000Z">2020年7月10日</time>
+        <span>Architecture</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20200710/">缓存策略简单总结</a></h2>
+        <p>缓存的三座大山 以下内容摘自：翻越缓存的三座大山 缓存一致性 缓存一致性是指业务在引入分布式缓存系统后，业务对数据的更新除了要更新存储以外还需要同时更新缓存，对两个系统进行数据更新就要先解决分布式系统中的隔离性和原子性难题。 缓存击穿 缓存击穿是指查询请求没有在缓存层命中而将查询透传到存储 DB 的问题，当大量的请求发...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2020-07-09T15:21:53.000Z">2020年7月9日</time>
+        <span>Architecture</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20200710-2/">财务数据报表的跨天之苦</a></h2>
+        <p>数据报表，尤其是金钱相关的财务报表，对数据的准确性犹为敏感。而服务系统间的处理时间点的存在差异的客观事实（网络时延，失败重试等原因），导致在以天（或月/年）为维度的数据报表中，或对账中，常常出现数据不平的问题。 业务描述 以用户充值加金币的业务为例 充值请求----------------&gt; 充值服务A (支付成功的时...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2020-07-09T14:47:40.000Z">2020年7月9日</time>
+        <span>Reading</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20200709/">《一只特里独行的猪》摘要</a></h2>
+        <p>我的看法也许不值得别人重视，但对自己却很重要。这说明我有自己的好恶、爱憎等等。假如没有这些，做人也没什么味道。 我已经四十岁了，除了这只猪，还没见过谁敢于如此无视对生活的设置。相反，我倒见过很多想要设置别人生活的人，还有对被设置的生活安之若素的人。因为这个缘故，我一直怀念这只特立独行的猪。 真正有出息的人是对名人感兴趣...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2020-07-08T16:11:51.000Z">2020年7月8日</time>
+        <span>Architecture</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20200709-2/">关于幂等的若干问题</a></h2>
+        <p>请求已经处理成功，当业务调用方重试时，幂等id不变，但其他参数有变化时。 该返回成功的结果吗？或者说应该对所有的参数进行校验，判断和之前的参数是否一致？ 与幂等相关的不可变参数组成签名，并保存到数据库（同时保存当时参与签名的生成规则），后续可依据判断参数是否变化？ 个人看法最新更新 - 20240528 对于入参是否变...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2020-07-08T15:14:35.000Z">2020年7月8日</time>
+        <span>Reliability</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20200708-2/">程序异常时能返回50x吗？</a></h2>
+        <p>问题描述 内网nginx配置 proxy_next_upstream error timeout http_500 http_502 http_503 http_504; proxy_upstream_tries 5; 表示超时或50x(500,502,503,504)，nginx会进行重试，一共5次 2. 服务的程序...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2020-07-07T16:24:29.000Z">2020年7月7日</time>
+        <span>Architecture</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20200708/">外网请求如何保证幂等</a></h2>
+        <p>常见的外网请求，通常来自网页或app。一个不幂等的接口，可能会导致用户只点击一次，却产生多次点击的效果。 如果用户的请求只是修改昵称，那么基本没影响 但如果用户的请求是扣费，比如送礼，那就会产生多扣费的资金问题。 问题的原因 在互联网上，无论是内网还是外网，网络经常会有不稳定的情况。为应对这些网络问题，通常会有各种重试...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2020-07-07T15:15:24.000Z">2020年7月7日</time>
+        <span>Architecture</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20200707/">唯一ID的基因</a></h2>
+        <p>在互联网服务中，经常需要使用唯一ID。其中一个常见的应用场景是作为业务中请求的幂等ID。 分布式唯一ID生成方案 uuid snowflake 包含业务属性的唯一ID，如 timestamp+ uid（10-11位）+ 随机3位数字（或递增） 其他方案 优劣不在这里讨论 业务场景分析 结合目前工作中的现状进行分析 唯一...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2020-07-07T14:39:01.000Z">2020年7月7日</time>
+        <span>Architecture</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20200707-2/">如何处理RPC返回的错误码？</a></h2>
+        <p>RPC调用的返回结果 成功 失败 超时 超时情况是不确定的，需要调用方重试或查询等，根据业务情况进行处理 返回结果表示方法 使用http协议的状态码 使用业务错误码（在业务处理中比较常见） 0表示成功 1表示失败 其他错误码代表具体的失败业务场景 失败错误码类型 业务错误（参数错误，或业务场景校验限制，请求已经处理完成...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2020-07-06T12:12:16.000Z">2020年7月6日</time>
+        <span>Architecture</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20200706/">上线需要做哪些准备？</a></h2>
+        <p>一般常规的上线，需要做哪些准备，确保不会因为遗漏这种低级错误导致线上问题？ 开发中遇到问题标注TODO，避免遗漏，单元测试覆盖业务逻辑 准备上线checklist，验收方案 检查上线配置 是否需要配置定时任务 重新检查一遍变更的代码 扩展 涉及app的，需要考虑旧版本兼容和回归测试（重点回归若干个高流量的旧版本） 若上...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2020-07-06T11:44:20.000Z">2020年7月6日</time>
+        <span>Architecture</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20200706-2/">使用ThreadContext缓存RPC结果</a></h2>
+        <p>详细介绍如何使用ThreadContext缓存RPC结果以避免重复调用，提高系统性能，包含实际业务场景和解决方案分析。</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2020-07-05T14:26:48.000Z">2020年7月5日</time>
+        <span>Architecture</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20200705-2/">关于服务间一致性和前置校验的思考</a></h2>
+        <p>每个服务都有相应的前置校验，有些前置校验逻辑不统一，就会导致服务间数据的不一致。比如风控拦截，服务A未拦截，而服务B却拦截了，从而导致不一致。 业务描述 下面描述一个仓库送礼的场景 送礼请求----------&gt; 服务A(送礼服务) [1.出仓库礼物]------------&gt;服务B(仓库服务) [2.收礼者加分成]-...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2020-07-05T09:27:32.000Z">2020年7月5日</time>
+        <span>Architecture</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20200705/">RPC可以和事务绑定吗？</a></h2>
+        <p>在平常编码的时候，经常会看到很多人喜欢把一次RPC调用和数据库事务绑定在一起，RPC调用成功则提交事务，RPC调用失败或超时，则回滚事务。那么这样做是对的吗？ 业务场景描述 考虑以下一种业务场景：用户加入群聊需要花费200金币。 服务架构：服务A(群服务)，服务B(消费服务)，操作都是幂等的。 加群请求--------...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2020-03-29T05:35:18.000Z">2020年3月29日</time>
+        <span>Architecture</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20200329/">发版过程的兼容性考虑</a></h2>
+        <p>一般情况下，服务一般不是仅有一台服务器提供服务的，因此服务上线的过程中其实会经历一个灰度过程 如上所示，服务器A是新代码，走的是新逻辑，服务器B和C未发版，走的旧逻辑。 如果新上线的变更只涉及读逻辑的，那么这样的灰度上线是没问题的。 但如果上线的内容涉及写逻辑的变更，甚至还关联到异步处理的变更。那么这样的上线方式可能是...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2020-03-29T04:42:38.000Z">2020年3月29日</time>
+        <span>Architecture</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20200329-2/">表结构变更是否需要处理历史月表？</a></h2>
+        <p>目前针对历史流水表，历史订单表，采用的以月为维度的方式建表，如以下表结构所示 sqlCREATE TABLE `t_order_202002` ( `order_id` varchar(128) NOT NULL COMMENT &amp;#x27;订单id&amp;#x27;, `coin` decimal(32,2) NOT NU...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2020-03-25T16:36:38.000Z">2020年3月25日</time>
+        <span>Architecture</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20200326/">移动端下一种折中的分页方法</a></h2>
+        <p>移动互联网下微服务大行其道，服务之间按业务拆分精细，各司其职，通过服务发现rpc相互调用，实现各自的需求场景。 一个简单的列表，如果不依赖其他服务，只依赖自身的数据库，可以简单的通过sql即可查询出来。 而如果数据来源于其他服务，根据特定的需求场景，可能就需要调用多个服务，获取数据，判断属性，过滤数据，再展示，那么可能...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2020-01-01T09:21:30.000Z">2020年1月1日</time>
+        <span>Life</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20200101/">电影摘要</a></h2>
+        <p>《战争之王》 https://movie.douban.com/review/8808554/ Let me tell you what’s gonna happen.This way you can prepare yourself.Soon there’s gonna be a knock on that door...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2019-12-28T08:27:54.000Z">2019年12月28日</time>
+        <span>Life</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20191228/">《天下足球》曲目</a></h2>
+        <p>The Phoenix - Fall Out boy Love Runs Out - OneRepublic Empire of Angels Breath And Lift If I Could Fly Electric romeo Rise - John Dreamer Victory - Two Steps Fr...</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2019-07-06T02:33:54.000Z">2019年7月6日</time>
+        <span>Life</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20190706-warriors/">Warriors</a></h2>
+        <p>Goooooooooooo!</p>
+      </div>
+    </li>
+    <li>
+      <div class="post-meta">
+        <time datetime="2014-03-02T08:47:00.000Z">2014年3月2日</time>
+        <span>Reading</span>
+      </div>
+      <div class="post-summary">
+        <h2><a href="/zh/posts/20140302/">程序员的职业素养_摘要</a></h2>
+        <p>专业主义的精髓就在于将公司的利益视同个人的利益。 不能忽略完整的测试环节，否则就交付软件是不负责任的。 为自己的不完美负责。代码难免出现bug，但这并不意味着你不用对它们负责。 让QA找不出任何问题。把自己没把握的代码发送给QA是不专业的，违背了“不行损害之事”的原则。 有些代码很难测试，是因为设计时就没考虑如何测试。...</p>
+      </div>
+    </li>
+  </ol>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <p>&copy; 2026 拉巴力的纸皮箱</p>
+  </footer>
+  <button class="reading-return" type="button" data-reading-return aria-label="回到开头" title="回到开头">
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <path d="M12 19V5"></path>
+      <path d="m6 11 6-6 6 6"></path>
+    </svg>
+  </button>
+  <script src="/scripts/theme.js"></script>
+  <script src="/scripts/image-viewer.js"></script>
+  <script src="/scripts/reading-tools.js"></script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+# 单元测试的工具和技巧
+
+Canonical: https://kingson4wu.github.io/zh/posts/20200714-2/
+Markdown: https://kingson4wu.github.io/zh/posts/20200714-2/index.md
+Language: zh
+Type: post
+Date: 2020-07-14
+Tags: Testing
+
+提高单元测试覆盖率 提高bean类的覆盖率 pojo-tester lombok [lɒmˈbɒk] kotlin 定义一些过滤规则 工具 mock神器：mockito sql模拟测试：h2 对测试进行参数化: JUnitParams Awaitility: 一个小型的Java领域专用语言（DSL），用于对异步的操作进...
+
+---
+
+### 提高单元测试覆盖率
++ 提高bean类的覆盖率
+	1. pojo-tester
+	2. lombok [lɒmˈbɒk]
+	3. kotlin
+
++ 定义一些过滤规则
+
+### 工具
++ mock神器：mockito
++ sql模拟测试：h2
++ 对测试进行参数化: JUnitParams
++ Awaitility: 一个小型的Java领域专用语言（DSL），用于对异步的操作进行同步。
+https://www.ctolib.com/topics-109441.html
++ WireMock: 用于模拟HTTP服务的工具 （对外部服务打桩） 
++ Selenium：编写UI驱动的端到端测试 
+
+
+### 其他
++ 使用 集成测试 覆盖若干个完整的核心流程
+
++ [测试金字塔（深度好文）](https://mp.weixin.qq.com/s/2tBrkzjeufAP-CNrNcJb9A)

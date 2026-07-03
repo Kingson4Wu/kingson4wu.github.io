@@ -1,0 +1,353 @@
+# 单元测试使用总结
+
+Canonical: https://kingson4wu.github.io/zh/posts/20201111/
+Markdown: https://kingson4wu.github.io/zh/posts/20201111/index.md
+Language: zh
+Type: post
+Date: 2020-11-11
+Tags: Testing
+
+mockito使用 mock实例 Test test = mock(Test.class); Test test = spy(new Test()); 在Spring中使用 @Mock Test test; @Spy Test test = new Test(); @MockBean Test test; (起spri...
+
+---
+
+## mockito使用
+
+
+### mock实例
++ `Test test = mock(Test.class);`
++ `Test test = spy(new Test());`
+
+### 在Spring中使用
++ `@Mock Test test;`
++ `@Spy Test test = new Test();`
++ `@MockBean Test test;` (起spring容器时)
++ `@InjectMocks Test test;` (起mockito容器时的测试对象)
++ Spring boot使用@MockBean和@SpyBean来定义Mockito的mock和spy。
++ 使用@mockBean，未mock的方法可能会导致返回默认值，从而导致异常的逻辑造成脏数据（可能是代码本来不完善）；可以注意尽量@SpyBean
+
+### mock使用
++ `when().thenReturn()`模式 和 `doReturn().when()`模式
+两种模式都用于模拟对象方法，在mock实例下使用时，基本上是没有差别的。但是，在spy实例下使用时，`when().thenReturn()`模式会执行原方法，而`doReturn().when()`模式不会执行原方法。
++ `when(test.do(anyString())).thenReturn(true);`
++ 返回值为void： `doAnswer((Answer<Void>)invocation -> null).when(test).do(anyString(),anyLong(),anyString());`
++ 抛异常：`doThrow(new RuntimeException("error")).when(test).do(anyLong(), anyString());`
++ `doReturn(expected).when(spyList).get(100);` (使用spy时)
+      - `org.mockito.Mockito.doReturn;` 注意不要导入powermock的包
+      - `doReturn().when()`模式: 用于模拟对象方法，直接返回期望的值、异常、应答，或调用真实的方法，无需执行原始方法
++ 直接调用真实方法:`Mockito.doCallRealMethod().when(userService).getUser(userId);`, `Mockito.when(userService.getUser(userId)).thenCallRealMethod();`
++ 模拟可空参数方法: `Mockito.doReturn(user).when(userDAO).queryCompany(Mockito.anyLong(), Mockito.nullable(Long.class));`
++ 匹配null对象，可以使用isNull方法，或使用eq(null):`Mockito.doReturn(user).when(userDAO).queryCompany(Mockito.anyLong(), Mockito.isNull());`, `Mockito.when(userDAO.queryCompany(Mockito.anyLong(), Mockito.eq(null))).thenReturn(user);`
++ 模拟final方法: PowerMock提供对final方法的模拟，方法跟模拟普通方法一样。但是，需要把对应的模拟类添加到@PrepareForTest注解中。
++ 模拟私有方法: PowerMock提供提对私有方法的模拟，但是需要把私有方法所在的类放在@PrepareForTest注解中。
+```java
+PowerMockito.when(userService, "isSuperUser", userId).thenReturn(!expected);
+//通过模拟方法stub(存根)，也可以实现模拟私有方法。但是，只能模拟整个方法的返回值，而不能模拟指定参数的返回值。
+PowerMockito.stub(PowerMockito.method(UserService.class, "isSuperUser", Long.class)).toReturn(!expected);
+Method method = PowerMockito.method(UserService.class, "isSuperUser", Long.class);
+Object actual = method.invoke(userService, userId);
+```
+
++ 模拟构造方法: PowerMock提供PowerMockito.whenNew方法来模拟构造方法，但是需要把使用构造方法的类放在@PrepareForTest注解中。
+```java
+PowerMockito.whenNew(MockClass.class).withNoArguments().thenReturn(expectedObject);
+PowerMockito.whenNew(MockClass.class).withArguments(someArgs).thenReturn(expectedObject);
+```
++ 调用无访问权限的构造方法: 调用无访问权限的构造方法，可以使用PowerMock提供的Whitebox.invokeConstructor方法。
++ 调用无权限访问的普通方法: 调用无访问权限的普通方法，可以使用PowerMock提供的Whitebox.invokeMethod方法。
+
++ 附加匹配器
+Mockito的AdditionalMatchers类提供了一些很少使用的参数匹配器，我们可以进行参数大于(gt)、小于(lt)、大于等于(geq)、小于等于(leq)等比较操作，也可以进行参数与(and)、或(or)、非(not)等逻辑计算等。
+`PowerMockito.when(mockList.get(AdditionalMatchers.geq(0))).thenReturn(expected);`
++ Whitebox.setInternalState方法
+	现在使用PowerMock进行单元测试时，可以采用Whitebox.setInternalState方法设置私有属性值: `Whitebox.setInternalState(Foo.class, "FIELD_NAME", "value");`
+
+### mock静态方法
++ 返回值为void： `PowerMockito.doNothing().when(FileUtils.class, "writeStringToFile", any(File.class), anyString());`
++ `BDDMockito.given(FileUtils.readFileToString(eq(new File(file)))).willReturn(IOUtils.toString(getClass().getClassLoader().getResourceAsStream("test.json")));`
++ 前置初始化：
+```java
+@RunWith(PowerMockRunner.class)
+  @PrepareForTest({FileUtils.class})
+  @Before
+  {
+     MockitoAnnotations.initMocks(this)
+     PowerMockito.mockStatic(FileUtils.class);
+  }
+```
+
+#### 设置静态常量字段值
++ 有时候，我们需要对静态常量对象进行模拟，然后去验证是否执行了对应分支下的方法。比如：需要模拟Lombok的@Slf4j生成的log静态常量。但是，Whitebox.setInternalState方法和@InjectMocks注解并不支持设置静态常量，需要自己实现一个设置静态常量的方法：
+
+```java
+public final class FieldHelper {
+public static void setStaticFinalField(Class clazz, String fieldName, Object fieldValue) throws NoSuchFieldException, IllegalAccessException {
+Field field = clazz.getDeclaredField(fieldName);
+FieldUtils.removeFinalModifier(field);
+FieldUtils.writeStaticField(field, fieldValue, true);
+}
+}
+```
+
+### 使用Answer来生成期望的返回
+```java
+when(test.do(anyList())).thenAnswer(
+            (Answer)invocation -> {
+                Object[] args = invocation.getArguments();
+                //Object mock = invocation.getMock();
+                return list.stream().filter(v -> ((List<Integer>)args[0]).contains(v.getAid())).collect(
+                    Collectors.toList());
+            });
+doReturn(resp).when(test).do(argThat(new ArgumentMatcher<List<Long>>() {
+            @Override
+            public boolean matches(Object argument) {
+                return ((List<Long>)argument).size() == 1;
+            }
+        }));
+```
+
+### verify使用
++ 校验执行次数：Mockito提供vertify关键字来实现校验方法是否被调用，从未被调用never()，调用次数times(1), `verify(test).do(any());`
++ 验证私有方法
+`PowerMockito.verifyPrivate(userService).invoke("isSuperUser", userId);`
++ 验证方法调用并捕获参数值: Mockito提供ArgumentCaptor类来捕获参数值，通过调用forClass(Class clazz)方法来构建一个ArgumentCaptor对象，然后在验证方法调用时来捕获参数，最后获取到捕获的参数值并验证。如果一个方法有多个参数都要捕获并验证，那就需要创建多个ArgumentCaptor对象。
++ verify语句, 除times外，Mockito还支持atLeastOnce、atLeast、only、atMostOnce、atMost等次数验证器。
+
+```java
+
+public class ListTest {
+    @Test
+    public void testAdd() {
+           List<Integer> mockedList = PowerMockito.mock(List.class);
+        PowerMockito.doReturn(true).when(mockedList).add(Mockito.anyInt());
+        mockedList.add(1);
+        mockedList.add(2);
+        mockedList.add(3);
+        InOrder inOrder = Mockito.inOrder(mockedList);
+        inOrder.verify(mockedList).add(1);
+        inOrder.verify(mockedList).add(2);
+        inOrder.verify(mockedList).add(3);
+    }
+}
+```
+
++ 验证调用参数
+
+```java
+
+public class ListTest {
+    @Test
+    public void testArgumentCaptor() {
+        Integer[] expecteds = new Integer[] {1, 2, 3};
+        List<Integer> mockedList = PowerMockito.mock(List.class);
+        PowerMockito.doReturn(true).when(mockedList).add(Mockito.anyInt());
+        for (Integer expected : expecteds) {
+            mockedList.add(expected);
+        }
+        ArgumentCaptor<Integer> argumentCaptor = ArgumentCaptor.forClass(Integer.class);
+        Mockito.verify(mockedList, Mockito.times(3)).add(argumentCaptor.capture());
+        Integer[] actuals = argumentCaptor.getAllValues().toArray(new Integer[0]);
+        Assert.assertArrayEquals("返回值不相等", expecteds, actuals);
+    }
+}
+```
++ 确保验证完毕.
+Mockito提供Mockito.verifyNoMoreInteractions方法，在所有验证方法之后可以使用此方法，以确保所有调用都得到验证。如果模拟对象上存在任何未验证的调用
++ 验证静态方法。Mockito没有静态方法的验证方法，但是PowerMock提供这方面的支持。
+
+```java
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({StringUtils.class})
+public class StringUtilsTest {
+    @Test
+    public void testVerifyStatic() {
+        PowerMockito.mockStatic(StringUtils.class);
+        String expected = "abc";
+        StringUtils.isEmpty(expected);
+        PowerMockito.verifyStatic(StringUtils.class);
+        ArgumentCaptor<String> argumentCaptor = ArgumentCaptor.forClass(String.class);
+        StringUtils.isEmpty(argumentCaptor.capture());
+        Assert.assertEquals("参数不相等", argumentCaptor.getValue(), expected);
+    }
+}
+```
+
+
+### 其他
++ `ReflectionTestUtils.setField(config, "id", id);`
++ `Mockito.reset(test);`
++ `@VisibleForTesting`
++ Mocking a method in the same test class using - Mockito:<https://towardsdatascience.com/mocking-a-method-in-the-same-test-class-using-mockito-b8f997916109>
+
+```java
+  public class PersonTest{
+
+    @Test
+    public void playTest() {
+      Person person = new Person("name", 15, "23435678V");
+
+      Person person1 = Mockito.spy(person);
+
+      Mockito.doReturn(true).when(person1).runInGround("ground");
+
+      Assert.assertEquals(true, person1.isPlay());
+    }
+  }
+```
+一般不建议在同个类mock自己的方法，如果一定要，可以使用spy
++ @Captor注解在字段级别创建参数捕获器。但是，在测试方法启动前，必须调用`MockitoAnnotations.openMocks(this)`进行初始化。
++ @PowerMockIgnore注解
+为了解决使用PowerMock后，提示ClassLoader错误。
+
+
+## 异常测试
+```java
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
+    @Test
+    public void test() {
+        thrown.expect(new BizExceptionCodeMatches(ExceptionCodeEnum.FAIL_CODE.code()));
+        //do
+ }
+```
+
+```java
+@Test(expected = IndexOutOfBoundsException.class)
+```
+
+## 异步测试
++ 异步系统的两种测试方法:<https://mp.weixin.qq.com/s/ft7LDsLmJByxunPuqGUOuQ>
+
+```java
+public class ExampleTest {
+
+private final Object lock = new Object();
+
+@Before
+public void init() {
+     new Thread(new Runnable() {
+        public void run() {
+            synchronized
+                (lock) {
+                    //获得锁
+                            monitorEvent();
+                    //监听异步事件的到来
+                            lock.notifyAll();
+                    //事件到达，释放锁
+                        }
+                    }
+                }).start();
+    }
+
+@Test
+public void  testAsynchronousMethod() {
+     callAsynchronousMethod();
+    //调用异步方法，需要较长一段时间才能执行完，并触发事件通知
+    /**
+         * 事件未到达时由于init已经获得了锁而阻塞，事件到达后因init中的锁释放而获得锁，
+         * 此时异步任务已执行完成，可以放心的执行断言验证结果了
+         */
+    synchronized
+        (lock) {
+            assertTestResult();
+        }
+    }
+}
+```
+
+## 基于Spock的数据驱动测试
+
+```groovy
+class SpockTest  extends Specification{
+
+    // 初始化
+    def setupSpec() {
+        println ">>>>>>   setupSpec"
+    }
+    def setup() {
+        println ">>>>>>   setup"
+    }
+    def cleanup() {
+        println ">>>>>>   cleanup"
+    }
+    def cleanupSpec() {
+        println ">>>>>>   cleanupSpec"
+    }
+
+    def void testAdd(int a, int b, int expect) {
+
+        expect:
+        assert expect == a + b
+
+        where:
+        a | b | expect
+        1 | 1 | 2
+        2 | 2 | 4
+    }
+
+}
+```
+
+## 使用rest-assured进行接口层测试
+```java
+public class RestAssuredMockMvcTest {
+
+    @Before
+    public void before(){
+        RestAssured.registerParser("text/plain", Parser.JSON);
+    }
+
+    ///https://github.com/rest-assured/rest-assured/wiki/Usage#spring-mock-mvc-module
+    @Test
+    public void test(){
+
+        given().
+                standaloneSetup(new GreetingController()).
+                param("name", "Johan").
+                when().
+                get("/greeting").
+                then().
+                statusCode(200).
+                body("code", equalTo(0));
+                //body("data", equalTo("Hello, Johan!"));
+    }
+}
+```
+
+## 事务测试
++ TODO
+
+## 其他
++ 单元测试的运行速度重要吗？
+违背这个原则的典型反例，就是在单测中启动 Spring。
++ 数据驱动测试（Data Driven Test）
++ mockito只能用于纯逻辑的验证，涉及事务那些还是没办法。单个类的单元测试逻辑正确不代表逻辑就覆盖全了，所以针对重要的接口需要单独集成测试用例
++ ContiPerf:: 更为优雅和方便的单元压力测试工具。
+
+## 扩展
++ [JDK11下Mock框架进化：从PowerMockito到Mockito Only]<https://mp.weixin.qq.com/s/OsySrzocrMmJdk6C0_h60A>
+
+## Reference
++ <https://www.baeldung.com/mockito-void-methods>
++ <https://stackoverflow.com/questions/2276271/how-to-make-mock-to-void-methods-with-mockito>
++ <https://github.com/eugenp/tutorials/tree/master/testing-modules/mockito>
++ </https://stackoverflow.com/questions/9585323/how-do-i-mock-a-static-method-that-returns-void-with-powermock>
++ <https://www.cnblogs.com/Ming8006/p/6297333.html#c2.9>
++ <https://www.baeldung.com/mockito-annotations>
++ <https://javapointers.com/tutorial/difference-between-spy-and-mock-in-mockito/>
++ <https://github.com/eugenp/tutorials/tree/master/testing-modules/mockito>
++ <https://github.com/rest-assured/rest-assured/wiki/Usage#spring-mock-mvc-module>
++ [单元测试，只是测试吗？](https://mp.weixin.qq.com/s/nIntjcrhgLQMiNo0XqPyyg)
++ [单元测试难？来试试这些套路](https://mp.weixin.qq.com/s/TjJ31yWTMwr4szz1JqtKcQ)
++ [Spock单元测试框架以及在美团优选的实践](https://mp.weixin.qq.com/s/U1FArrcdFf3NKui6_Sf-qw)
++ [阿里开源的 Mock 工具：TestableMock]
++ [收藏！Java编程技巧之单元测试用例编写流程](https://mp.weixin.qq.com/s/hX_RIYs-nBnqVwdq5B4rhg) -- 这个很全了。。。
++ <https://stackoverflow.com/questions/30890011/whats-the-difference-between-mockito-matchers-isa-any-eq-and-same>
++ <https://stackoverflow.com/questions/24295197/is-there-mockito-eq-matcher-for-varargs-array>
++ <https://stackoverflow.com/questions/5385161/powermock-testing-set-static-field-of-class>
++ [Java单元测试技巧之PowerMock:](https://mp.weixin.qq.com/s/LSkTvpsTnBmdOB5nihkxng)
+
+---
+
++ 转：分享一个观点：区分集成测试和单元测试的最本质差别在于，单元测试没有不可控外部依赖，也就是不会因为外部的原因导致测试失败。其它差别都不是能有效区分单元测试和集成测试的。

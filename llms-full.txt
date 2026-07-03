@@ -1,0 +1,328 @@
+# Kingson Wu / 拉巴力的纸皮箱 - Full AI Context
+
+This file gives AI search and retrieval systems a compact, accurate map of the public content on kingson4wu.github.io.
+
+## Identity
+
+Kingson Wu writes in English and Chinese about software engineering, AI systems, software architecture, programming languages, engineering practice, and learning.
+The Chinese site name is 拉巴力的纸皮箱. The root path redirects readers to the English home page, while `/zh/` is the Chinese entry point.
+
+## Canonical Entry Points
+
+- Home: https://kingson4wu.github.io
+- English: https://kingson4wu.github.io/en/
+- Chinese: https://kingson4wu.github.io/zh/
+- English posts: https://kingson4wu.github.io/en/posts/
+- Chinese posts: https://kingson4wu.github.io/zh/posts/
+- English notes: https://kingson4wu.github.io/en/notes/
+- Chinese notes: https://kingson4wu.github.io/zh/notes/
+- Tags: https://kingson4wu.github.io/zh/tags/
+- Search: https://kingson4wu.github.io/en/search/
+- Sitemap: https://kingson4wu.github.io/sitemap.xml
+
+## Content Profile
+
+- Total public content items: 232
+- English posts: 5
+- English notes: 11
+- Chinese posts: 212
+- Chinese notes: 4
+
+## Main Topics
+
+- AI systems and agent engineering
+- software architecture and distributed systems
+- programming languages, especially Rust, Go, Python, and Java
+- engineering practice, career reflection, and reading notes
+
+## Tag Cloud
+
+- AI: 73
+- LLM: 50
+- Architecture: 39
+- Networking: 28
+- Programming Languages: 26
+- Deep Learning: 25
+- Career: 21
+- Reading: 21
+- Distributed Systems: 19
+- Agent: 14
+- Database: 13
+- Reliability: 13
+- Skill: 13
+- Java: 11
+- Life: 11
+- Math: 11
+- Finance: 10
+- Go: 8
+- Prompt Engineering: 8
+- MCP: 7
+- Rust: 6
+- Algorithms: 5
+- Python: 4
+- Media: 3
+
+## Retrieval Notes
+
+- Prefer canonical HTML URLs when citing pages for human readers.
+- Prefer adjacent `index.md` URLs when an AI tool needs lower-noise Markdown content.
+- RSS feeds are available per language. The root feed mirrors English writing.
+- Notes are short-form writing. Posts are longer articles.
+
+## Recent Highlights
+
+- 2026-04-19 | zh | post | Skill 机制与编排流程深度解析：Anthropic vs OpenAI Agent SDK 对比 | 2026 年 4 月 15 日，OpenAI 发布 Agents SDK v0.14.0，引入了 SandboxAgent + Capabilities 架构。本地 Skill 加载（Skills Capability、LocalDirLazySkillSource、load_skill 工具）终于成为了 SDK 一等...
+- 2026-03-31 | zh | post | 技术进步与分配失衡：AI时代的结构性矛盾 | AI替代认知劳动的边际成本趋近于零，导致经济增长与就业增长脱钩；AI是资本增强器而非劳动增强器，分配机制滞后于生产力发展，形成结构性失衡。
+- 2026-03-31 | zh | post | 从 Skill 化到控制权：AI 系统中的能力分层与资产保护 | 当 AI 系统将任务封装为 Skills 交给外部执行时，哪些能力可以暴露，哪些必须留在内部？本文从数据暴露的三种形态出发，提出通用能力、业务能力、核心能力的三层划分框架，以及“最小输入而非脱敏”的数据策略。
+- 2026-03-31 | en | post | Technology Advances, Distribution Lags: The Structural Contradiction of the AI Era | AI is approaching zero marginal cost for cognitive labor, decoupling economic growth from employment. This is not the same story as previous industrial revolutions.
+- 2026-03-29 | en | note | Skills May Matter More Than Agents | Main AI vendors may be converging on a common pattern: the SDK provides the Runtime; developers own the Skills. A Skill is fundamentally an act of knowledge ext...
+- 2026-03-29 | zh | note | Skill 可能比 Agent 更像长期资产 | 主流 AI 厂商或许正在趋同于一种模式：SDK 提供 Runtime，开发者负责 Skills。 Skill 本质是在做知识外化——把工作流、业务规则和验证过的处理逻辑，转成结构化、可复用的能力单元。从这个角度看，更具长期价值的，可能是 Skills，而不是 Agent。 同时，Agent Runtime 正在走向基础...
+- 2026-03-28 | en | note | Harness Engineering Is Not a New Paradigm | Most people are treating Harness Engineering like it’s a new paradigm. It’s not. Start from first principles: an LLM takes input and produces output. The model...
+- 2026-03-28 | zh | post | 从自建 Agent 到 Agent Runtime + Skill：AI 系统架构的演进与收敛 | 从系统分层视角梳理 AI 应用从自建 Agent 走向 Runtime 与 Skill 组合架构的演进逻辑。
+- 2026-03-28 | zh | note | 从第一性原理看 Harness Engineering | LLM 只做一件事：给定输入，生成输出。 模型是固定的。你能控制的，其实只有输入，以及围绕输入输出构建的系统。 由此派生出两个真实的工程问题域。 问题域 A：如何构造更好的输入 这是一个连续的复杂度谱系： 手工写指令 -&gt; Prompt Engineering 动态检索、拼装、压缩信息 -&gt; Context...
+- 2026-03-28 | en | post | From Custom Agents to Agent Runtime + Skill: Convergence in AI System Architecture | A systems-level view of how AI applications are evolving from bespoke agent implementations toward a layered architecture of interchangeable Runtime and reusable Skills.
+- 2026-03-27 | en | note | MCP and Skills Solve Different Problems | MCP is basically a capability contract. It tells you what tools exist, how to call them, and what the permission boundaries are. A Skill is a different thing en...
+- 2026-03-27 | zh | note | MCP、Skill 与 CLI 的分化与协同 | MCP 更像是一份“平台能力说明书”。 它定义了有哪些工具、怎么调用、权限边界在哪。 Skill 则是在回答另一类问题：具体怎么把事做完。它本质上是 prompt 加上工具使用策略的封装。 Skill 之所以更好用，是因为关键步骤、调用方式、甚至容错逻辑，都已经被提前写进去了。这本来就不是 MCP 要解决的问题。 至于...
+- 2026-03-26 | zh | post | 将执行路径固化为资产：从一个 Spotify Skill 看长期运行的 AI 自动化系统 | 以 labali-spotify-publish-episode 为例，拆解一个长期运行的 AI 自动化系统如何通过分层、快路径、自愈闭环与业务状态验证维持可维护性。
+- 2026-03-12 | zh | post | 浏览器自动化技术全景：CDP、Playwright 与 AI Agent 的架构关系 | 系统梳理 CDP、Playwright、视觉自动化与 AI Agent 在浏览器自动化体系中的分层关系与适用边界。
+- 2026-03-08 | zh | post | 大模型时代，中小公司如何寻找 AI 竞争空间 | 分析中小公司在大模型时代应如何围绕行业数据、工作流与应用层产品建立差异化竞争力。
+- 2026-03-07 | en | note | AI Systems Need Method, Execution, and Evaluation | Most AI systems are still stuck in a single-inference pattern: they re-plan every time, discard execution results immediately, and accumulate no experience. A m...
+- 2026-03-07 | zh | note | 让执行路径成为资产 | 大多数 AI 系统还停留在“单次推理”形态。 任务来了重新规划，执行完毕即丢弃，成功经验从不沉淀。 真正面向长期运行的架构，得把“执行路径”变成资产。 核心是三层分离： 方法层：定义目标和策略 执行层：保存经过验证、可运行的代码或 Script 评估层：检测退化并触发修复 某条路径反复验证稳定后，就应该固化成 Scri...
+- 2026-02-28 | en | note | Generative AI Does Not Think | Generative AI does not think. What it does is predict the highest-probability token given the preceding context. Humans can actively violate rules: “I know the...
+- 2026-02-28 | en | note | AI Displacement Repeats Old Patterns | This wave of AI displacement shares familiar patterns with previous industrial revolutions. Technology moves forward, and some people get left behind before the...
+- 2026-02-28 | en | note | AI Is Reshaping Social Learning | AI is reshaping social learning. We once relied on peers to recommend resources, challenge ideas, and surface blind spots. Now more of those cognitive functions...
+
+## Content Index
+
+- 2026-04-19 | zh | post | Skill 机制与编排流程深度解析：Anthropic vs OpenAI Agent SDK 对比 | Tags: AI, LLM, Agent, Skill | HTML: https://kingson4wu.github.io/zh/posts/20260419-skill-anthropic-vs-openai-agent-sdk/ | Markdown: https://kingson4wu.github.io/zh/posts/20260419-skill-anthropic-vs-openai-agent-sdk/index.md
+- 2026-03-31 | zh | post | 技术进步与分配失衡：AI时代的结构性矛盾 | Tags: AI, LLM, Finance | HTML: https://kingson4wu.github.io/zh/posts/20260331/ | Markdown: https://kingson4wu.github.io/zh/posts/20260331/index.md
+- 2026-03-31 | zh | post | 从 Skill 化到控制权：AI 系统中的能力分层与资产保护 | Tags: AI, LLM, Agent, Skill, Architecture | HTML: https://kingson4wu.github.io/zh/posts/20260331-skill-ai/ | Markdown: https://kingson4wu.github.io/zh/posts/20260331-skill-ai/index.md
+- 2026-03-31 | en | post | Technology Advances, Distribution Lags: The Structural Contradiction of the AI Era | Tags: AI, Finance | HTML: https://kingson4wu.github.io/en/posts/ai-structural-distribution-imbalance/ | Markdown: https://kingson4wu.github.io/en/posts/ai-structural-distribution-imbalance/index.md
+- 2026-03-29 | en | note | Skills May Matter More Than Agents | Tags: AI, Agent, Skill | HTML: https://kingson4wu.github.io/en/notes/skills-may-matter-more-than-agents/ | Markdown: https://kingson4wu.github.io/en/notes/skills-may-matter-more-than-agents/index.md
+- 2026-03-29 | zh | note | Skill 可能比 Agent 更像长期资产 | Tags: AI, Agent, Skill | HTML: https://kingson4wu.github.io/zh/notes/20260329-skill-agent/ | Markdown: https://kingson4wu.github.io/zh/notes/20260329-skill-agent/index.md
+- 2026-03-28 | en | note | Harness Engineering Is Not a New Paradigm | Tags: AI, LLM, Prompt Engineering | HTML: https://kingson4wu.github.io/en/notes/harness-engineering-is-not-new-paradigm/ | Markdown: https://kingson4wu.github.io/en/notes/harness-engineering-is-not-new-paradigm/index.md
+- 2026-03-28 | zh | post | 从自建 Agent 到 Agent Runtime + Skill：AI 系统架构的演进与收敛 | Tags: AI, LLM, Agent, Skill, MCP | HTML: https://kingson4wu.github.io/zh/posts/20260328-agent-agent-runtime-skill-ai/ | Markdown: https://kingson4wu.github.io/zh/posts/20260328-agent-agent-runtime-skill-ai/index.md
+- 2026-03-28 | zh | note | 从第一性原理看 Harness Engineering | Tags: AI, LLM, MCP, Prompt Engineering | HTML: https://kingson4wu.github.io/zh/notes/20260328-harness-engineering/ | Markdown: https://kingson4wu.github.io/zh/notes/20260328-harness-engineering/index.md
+- 2026-03-28 | en | post | From Custom Agents to Agent Runtime + Skill: Convergence in AI System Architecture | Tags: AI, LLM, Agent, Skill, Architecture | HTML: https://kingson4wu.github.io/en/posts/agent-runtime-and-skill-convergence/ | Markdown: https://kingson4wu.github.io/en/posts/agent-runtime-and-skill-convergence/index.md
+- 2026-03-27 | en | note | MCP and Skills Solve Different Problems | Tags: AI, Skill, MCP | HTML: https://kingson4wu.github.io/en/notes/mcp-and-skills-solve-different-problems/ | Markdown: https://kingson4wu.github.io/en/notes/mcp-and-skills-solve-different-problems/index.md
+- 2026-03-27 | zh | note | MCP、Skill 与 CLI 的分化与协同 | Tags: AI, Agent, Skill, MCP | HTML: https://kingson4wu.github.io/zh/notes/20260327-mcp-skill-cli/ | Markdown: https://kingson4wu.github.io/zh/notes/20260327-mcp-skill-cli/index.md
+- 2026-03-26 | zh | post | 将执行路径固化为资产：从一个 Spotify Skill 看长期运行的 AI 自动化系统 | Tags: AI, LLM, Agent, Skill, Deep Learning | HTML: https://kingson4wu.github.io/zh/posts/20260326-spotify-skill-ai/ | Markdown: https://kingson4wu.github.io/zh/posts/20260326-spotify-skill-ai/index.md
+- 2026-03-12 | zh | post | 浏览器自动化技术全景：CDP、Playwright 与 AI Agent 的架构关系 | Tags: AI, LLM, Agent, Skill, MCP | HTML: https://kingson4wu.github.io/zh/posts/20260312-cdp-playwright-ai-agent/ | Markdown: https://kingson4wu.github.io/zh/posts/20260312-cdp-playwright-ai-agent/index.md
+- 2026-03-08 | zh | post | 大模型时代，中小公司如何寻找 AI 竞争空间 | Tags: AI, LLM, Agent, Skill, MCP | HTML: https://kingson4wu.github.io/zh/posts/20260308-ai/ | Markdown: https://kingson4wu.github.io/zh/posts/20260308-ai/index.md
+- 2026-03-07 | en | note | AI Systems Need Method, Execution, and Evaluation | Tags: AI, Skill, Architecture | HTML: https://kingson4wu.github.io/en/notes/ai-systems-need-method-execution-evaluation/ | Markdown: https://kingson4wu.github.io/en/notes/ai-systems-need-method-execution-evaluation/index.md
+- 2026-03-07 | zh | note | 让执行路径成为资产 | Tags: AI, Skill, Prompt Engineering, Architecture | HTML: https://kingson4wu.github.io/zh/notes/20260307/ | Markdown: https://kingson4wu.github.io/zh/notes/20260307/index.md
+- 2026-02-28 | en | note | Generative AI Does Not Think | Tags: AI, LLM | HTML: https://kingson4wu.github.io/en/notes/generative-ai-does-not-think/ | Markdown: https://kingson4wu.github.io/en/notes/generative-ai-does-not-think/index.md
+- 2026-02-28 | en | note | AI Displacement Repeats Old Patterns | Tags: AI, Career | HTML: https://kingson4wu.github.io/en/notes/ai-displacement-repeats-old-patterns/ | Markdown: https://kingson4wu.github.io/en/notes/ai-displacement-repeats-old-patterns/index.md
+- 2026-02-28 | en | note | AI Is Reshaping Social Learning | Tags: AI, Life | HTML: https://kingson4wu.github.io/en/notes/ai-is-reshaping-social-learning/ | Markdown: https://kingson4wu.github.io/en/notes/ai-is-reshaping-social-learning/index.md
+- 2026-02-28 | en | note | Expression Is Cheap, Taste Is the Edge | Tags: AI, Life | HTML: https://kingson4wu.github.io/en/notes/expression-is-cheap-taste-is-edge/ | Markdown: https://kingson4wu.github.io/en/notes/expression-is-cheap-taste-is-edge/index.md
+- 2026-02-28 | en | note | AI Is Combinational, Not Conceptual | Tags: AI, LLM | HTML: https://kingson4wu.github.io/en/notes/ai-is-combinational-not-conceptual/ | Markdown: https://kingson4wu.github.io/en/notes/ai-is-combinational-not-conceptual/index.md
+- 2026-02-28 | en | note | Engineering Cognition into Executable Form | Tags: AI, Agent, Prompt Engineering | HTML: https://kingson4wu.github.io/en/notes/engineering-cognition-into-executable-form/ | Markdown: https://kingson4wu.github.io/en/notes/engineering-cognition-into-executable-form/index.md
+- 2026-02-28 | en | note | Understanding Is Being Right Under Novelty | Tags: AI, LLM | HTML: https://kingson4wu.github.io/en/notes/understanding-is-being-right-under-novelty/ | Markdown: https://kingson4wu.github.io/en/notes/understanding-is-being-right-under-novelty/index.md
+- 2026-02-26 | zh | post | 将执行路径固化为资产：一种面向长期运行的 AI 架构 | Tags: AI, LLM, Deep Learning | HTML: https://kingson4wu.github.io/zh/posts/20260226-ai/ | Markdown: https://kingson4wu.github.io/zh/posts/20260226-ai/index.md
+- 2026-02-25 | zh | post | 生成式AI的概率本质与创新边界：从一个具体任务说起 | Tags: AI, LLM, Deep Learning | HTML: https://kingson4wu.github.io/zh/posts/20260225/ | Markdown: https://kingson4wu.github.io/zh/posts/20260225/index.md
+- 2026-02-09 | zh | post | AI 与学习型人际关系的变化 | Tags: AI, LLM | HTML: https://kingson4wu.github.io/zh/posts/20260209-ai/ | Markdown: https://kingson4wu.github.io/zh/posts/20260209-ai/index.md
+- 2026-02-09 | zh | post | AI生成内容时代：原创、作者与创作价值 | Tags: AI, LLM | HTML: https://kingson4wu.github.io/zh/posts/20260209/ | Markdown: https://kingson4wu.github.io/zh/posts/20260209/index.md
+- 2026-02-04 | zh | post | AI 能否创造真正的新事物 | Tags: AI, LLM, Deep Learning | HTML: https://kingson4wu.github.io/zh/posts/20260204-ai/ | Markdown: https://kingson4wu.github.io/zh/posts/20260204-ai/index.md
+- 2026-02-04 | zh | post | 从 Prompt 到碳基 Agentic RAG：AI 时代的人类认知外化 | Tags: AI, LLM, RAG, Prompt Engineering, Deep Learning | HTML: https://kingson4wu.github.io/zh/posts/20260204-prompt-agentic-rag-ai/ | Markdown: https://kingson4wu.github.io/zh/posts/20260204-prompt-agentic-rag-ai/index.md
+- 2026-02-04 | zh | post | 人类与模型的共同特征：直觉先行，解释在后 | Tags: AI, LLM, Deep Learning | HTML: https://kingson4wu.github.io/zh/posts/20260204/ | Markdown: https://kingson4wu.github.io/zh/posts/20260204/index.md
+- 2026-02-04 | en | post | Intuition First, Explanation After: What Humans and LLMs Have in Common | Tags: AI, LLM | HTML: https://kingson4wu.github.io/en/posts/intuition-first-explanation-after/ | Markdown: https://kingson4wu.github.io/en/posts/intuition-first-explanation-after/index.md
+- 2026-02-03 | zh | post | 微调与蒸馏的本质：函数逼近视角下的机制解析 | Tags: AI, LLM, Deep Learning | HTML: https://kingson4wu.github.io/zh/posts/20260203/ | Markdown: https://kingson4wu.github.io/zh/posts/20260203/index.md
+- 2026-02-03 | zh | post | Transformer 训练中的优化器选择：从 SGD 到 AdamW 的演化逻辑 | Tags: AI, LLM, Deep Learning | HTML: https://kingson4wu.github.io/zh/posts/20260203-transformer-sgd-adamw/ | Markdown: https://kingson4wu.github.io/zh/posts/20260203-transformer-sgd-adamw/index.md
+- 2026-02-02 | zh | post | 从 Word2Vec 到 Transformer：Embedding 在不同模型中的角色演化 | Tags: AI, LLM, Deep Learning | HTML: https://kingson4wu.github.io/zh/posts/20260202-word2vec-transformer-embedding/ | Markdown: https://kingson4wu.github.io/zh/posts/20260202-word2vec-transformer-embedding/index.md
+- 2026-02-02 | zh | post | LayerNorm：从“为什么要归一化”到“为什么 Transformer 离不开它” | Tags: AI, LLM, Deep Learning | HTML: https://kingson4wu.github.io/zh/posts/20260202-layernorm-transformer/ | Markdown: https://kingson4wu.github.io/zh/posts/20260202-layernorm-transformer/index.md
+- 2026-02-02 | zh | post | Transformer 架构笔记：组件、机制与设计思路 | Tags: AI, LLM, Deep Learning | HTML: https://kingson4wu.github.io/zh/posts/20260202-transformer/ | Markdown: https://kingson4wu.github.io/zh/posts/20260202-transformer/index.md
+- 2026-01-31 | zh | post | 从 RNN 到 Transformer:序列建模的结构性转变 | Tags: AI, LLM, Deep Learning | HTML: https://kingson4wu.github.io/zh/posts/20260131-rnn-transformer/ | Markdown: https://kingson4wu.github.io/zh/posts/20260131-rnn-transformer/index.md
+- 2026-01-31 | zh | post | 从 One-hot 到 Embedding：词的分布式表示是如何从语料中学习得到的 | Tags: AI, LLM, Deep Learning | HTML: https://kingson4wu.github.io/zh/posts/20260131-one-hot-embedding/ | Markdown: https://kingson4wu.github.io/zh/posts/20260131-one-hot-embedding/index.md
+- 2026-01-30 | zh | post | 为什么点积太大会导致 Softmax 梯度问题，以及这个问题是如何被解决的 | Tags: AI, LLM, Deep Learning, Math | HTML: https://kingson4wu.github.io/zh/posts/20260130-softmax/ | Markdown: https://kingson4wu.github.io/zh/posts/20260130-softmax/index.md
+- 2026-01-30 | zh | post | 残差连接（Residual Connection）：从直觉困境到现代神经网络的核心结构 | Tags: AI, LLM, Deep Learning, Math | HTML: https://kingson4wu.github.io/zh/posts/20260130-residual-connection/ | Markdown: https://kingson4wu.github.io/zh/posts/20260130-residual-connection/index.md
+- 2026-01-30 | zh | post | 从 0 理解梯度消失与梯度爆炸 | Tags: AI, LLM, Deep Learning, Math | HTML: https://kingson4wu.github.io/zh/posts/20260130-0/ | Markdown: https://kingson4wu.github.io/zh/posts/20260130-0/index.md
+- 2026-01-30 | zh | post | 链式法则与反向传播：从直觉到结构理解 | Tags: AI, LLM, Deep Learning, Math | HTML: https://kingson4wu.github.io/zh/posts/20260130-2/ | Markdown: https://kingson4wu.github.io/zh/posts/20260130-2/index.md
+- 2026-01-30 | zh | post | 感知机与神经网络如何学习并逼近复杂函数 | Tags: AI, LLM, Deep Learning, Math | HTML: https://kingson4wu.github.io/zh/posts/20260130/ | Markdown: https://kingson4wu.github.io/zh/posts/20260130/index.md
+- 2026-01-29 | zh | post | 交叉熵损失与最大似然估计：完全理解指南 | Tags: AI, LLM, Deep Learning, Math | HTML: https://kingson4wu.github.io/zh/posts/20260129/ | Markdown: https://kingson4wu.github.io/zh/posts/20260129/index.md
+- 2026-01-28 | zh | post | Softmax：从直觉到本质 | Tags: AI, LLM, Deep Learning, Math | HTML: https://kingson4wu.github.io/zh/posts/20260128-softmax/ | Markdown: https://kingson4wu.github.io/zh/posts/20260128-softmax/index.md
+- 2026-01-27 | zh | post | 激活函数的本质原理与作用 | Tags: AI, LLM, Deep Learning, Math | HTML: https://kingson4wu.github.io/zh/posts/20260127/ | Markdown: https://kingson4wu.github.io/zh/posts/20260127/index.md
+- 2026-01-20 | zh | post | AI 数学精要速览 | Tags: AI, Deep Learning, Math | HTML: https://kingson4wu.github.io/zh/posts/20260120-ai/ | Markdown: https://kingson4wu.github.io/zh/posts/20260120-ai/index.md
+- 2025-12-24 | zh | post | 从零开始理解：点积为什么能反映向量夹角？ | Tags: AI, LLM, Deep Learning, Math | HTML: https://kingson4wu.github.io/zh/posts/20251224/ | Markdown: https://kingson4wu.github.io/zh/posts/20251224/index.md
+- 2025-12-24 | zh | post | Python 调用 C 扩展与库机制全解析 | Tags: Python, Programming Languages | HTML: https://kingson4wu.github.io/zh/posts/20251224-python-c/ | Markdown: https://kingson4wu.github.io/zh/posts/20251224-python-c/index.md
+- 2025-12-23 | zh | post | Python 运行内幕-深度解析底层执行机制与现代 Web 架构 | Tags: Python, Programming Languages | HTML: https://kingson4wu.github.io/zh/posts/20251223-python-web/ | Markdown: https://kingson4wu.github.io/zh/posts/20251223-python-web/index.md
+- 2025-12-23 | zh | post | Python 依赖与环境管理完全指南 | Tags: Python, Programming Languages | HTML: https://kingson4wu.github.io/zh/posts/20251223-python/ | Markdown: https://kingson4wu.github.io/zh/posts/20251223-python/index.md
+- 2025-12-23 | zh | post | Rust 为什么需要显式生命周期标注：从调用方契约到设计本质 | Tags: Rust, Programming Languages | HTML: https://kingson4wu.github.io/zh/posts/20251223-rust/ | Markdown: https://kingson4wu.github.io/zh/posts/20251223-rust/index.md
+- 2025-12-22 | en | post | Why Rust Makes Lifetime Annotations Part of the API | Tags: Rust, Programming Languages | HTML: https://kingson4wu.github.io/en/posts/why-rust-requires-explicit-lifetime-annotations-caller-contracts-design-essence/ | Markdown: https://kingson4wu.github.io/en/posts/why-rust-requires-explicit-lifetime-annotations-caller-contracts-design-essence/index.md
+- 2025-12-19 | zh | post | 云原生数据库环境下的资金一致性问题分析 | Tags: Distributed Systems, Reliability, Database, Finance | HTML: https://kingson4wu.github.io/zh/posts/20251219/ | Markdown: https://kingson4wu.github.io/zh/posts/20251219/index.md
+- 2025-12-17 | zh | post | 大模型推理的不确定性：从浮点运算到工程实现 | Tags: AI, LLM | HTML: https://kingson4wu.github.io/zh/posts/20251217/ | Markdown: https://kingson4wu.github.io/zh/posts/20251217/index.md
+- 2025-12-16 | en | post | Why Temperature-0 LLM Inference Still Isn’t Deterministic | Tags: AI, LLM | HTML: https://kingson4wu.github.io/en/posts/nondeterminism-llm-inference-floating-point-arithmetic-engineering-implementation/ | Markdown: https://kingson4wu.github.io/en/posts/nondeterminism-llm-inference-floating-point-arithmetic-engineering-implementation/index.md
+- 2025-12-12 | zh | post | 大模型中的 Function Calling 与工具模式:机制、区别与本质 | Tags: AI, LLM, Agent, MCP, Prompt Engineering | HTML: https://kingson4wu.github.io/zh/posts/20251212-function-calling/ | Markdown: https://kingson4wu.github.io/zh/posts/20251212-function-calling/index.md
+- 2025-12-08 | zh | post | 生成式AI、解码约束与多模态架构：系统化原理解析 | Tags: AI, LLM, Architecture | HTML: https://kingson4wu.github.io/zh/posts/20251208/ | Markdown: https://kingson4wu.github.io/zh/posts/20251208/index.md
+- 2025-11-28 | zh | post | 构建统一前后端（与服务间）RPC体系：从 IDL 设计到多协议适配与 Sidecar 部署的工程实践 | Tags: Distributed Systems | HTML: https://kingson4wu.github.io/zh/posts/20251128-idl-sidecar/ | Markdown: https://kingson4wu.github.io/zh/posts/20251128-idl-sidecar/index.md
+- 2025-10-21 | zh | post | 生活中的 IT 哲学：从技术架构看人生智慧 | Tags: Architecture, Life | HTML: https://kingson4wu.github.io/zh/posts/20251021-it/ | Markdown: https://kingson4wu.github.io/zh/posts/20251021-it/index.md
+- 2025-10-16 | zh | post | 关于“卷”的理性分析与分类 | Tags: Career | HTML: https://kingson4wu.github.io/zh/posts/20251016/ | Markdown: https://kingson4wu.github.io/zh/posts/20251016/index.md
+- 2025-10-15 | zh | post | 内部会议低效与对外宣讲价值的分析 | Tags: Career | HTML: https://kingson4wu.github.io/zh/posts/20251015/ | Markdown: https://kingson4wu.github.io/zh/posts/20251015/index.md
+- 2025-09-17 | zh | post | Seata 与分布式事务的本质解析 | Tags: Distributed Systems | HTML: https://kingson4wu.github.io/zh/posts/20250917-seata/ | Markdown: https://kingson4wu.github.io/zh/posts/20250917-seata/index.md
+- 2025-09-15 | zh | post | IP 归属与全球路由：从 IPv4 到 IPv6 的原理与实践 | Tags: Networking | HTML: https://kingson4wu.github.io/zh/posts/20250915-ip-ipv4-ipv6/ | Markdown: https://kingson4wu.github.io/zh/posts/20250915-ip-ipv4-ipv6/index.md
+- 2025-09-15 | zh | post | 深入理解域名解析与管理：从 DNS 原理到注册商与注册局 | Tags: Networking | HTML: https://kingson4wu.github.io/zh/posts/20250915-dns/ | Markdown: https://kingson4wu.github.io/zh/posts/20250915-dns/index.md
+- 2025-09-02 | zh | post | 用脚本+AI CLI半自动写代码：实践经验分享 | Tags: AI, Prompt Engineering, Python, Programming Languages | HTML: https://kingson4wu.github.io/zh/posts/20250902-ai/ | Markdown: https://kingson4wu.github.io/zh/posts/20250902-ai/index.md
+- 2025-08-28 | zh | post | 用 tmux + 内网穿透，让出门也能指导编程任务 | Tags: AI, Networking | HTML: https://kingson4wu.github.io/zh/posts/20250828-tmux/ | Markdown: https://kingson4wu.github.io/zh/posts/20250828-tmux/index.md
+- 2025-08-25 | zh | post | VS Code + Dev Container：打造丝滑的 Linux 开发调试体验 | Tags: AI | HTML: https://kingson4wu.github.io/zh/posts/20250825-vs-code-dev-container-linux/ | Markdown: https://kingson4wu.github.io/zh/posts/20250825-vs-code-dev-container-linux/index.md
+- 2025-08-17 | zh | post | 家庭宽带中的公网与内网 IP 分配机制解析 | Tags: Networking | HTML: https://kingson4wu.github.io/zh/posts/20250817-ip/ | Markdown: https://kingson4wu.github.io/zh/posts/20250817-ip/index.md
+- 2025-08-17 | zh | post | VPN 与正向代理的原理与差异分析 | Tags: Networking | HTML: https://kingson4wu.github.io/zh/posts/20250817-vpn/ | Markdown: https://kingson4wu.github.io/zh/posts/20250817-vpn/index.md
+- 2025-08-17 | zh | post | 深入理解 SOCKS5 正向代理原理 | Tags: Networking | HTML: https://kingson4wu.github.io/zh/posts/20250817-socks5/ | Markdown: https://kingson4wu.github.io/zh/posts/20250817-socks5/index.md
+- 2025-08-16 | zh | post | 深入理解正向代理与反向代理：HTTP 报文与 TCP 连接的区别 | Tags: Networking | HTML: https://kingson4wu.github.io/zh/posts/20250817-http-tcp/ | Markdown: https://kingson4wu.github.io/zh/posts/20250817-http-tcp/index.md
+- 2025-08-07 | zh | post | 多语言大模型如何处理不同语言？是翻译成英语后再推理的吗？ | Tags: AI, LLM | HTML: https://kingson4wu.github.io/zh/posts/20250807/ | Markdown: https://kingson4wu.github.io/zh/posts/20250807/index.md
+- 2025-08-04 | zh | post | 三种学习法核心精髓 | Tags: Life | HTML: https://kingson4wu.github.io/zh/posts/20250804/ | Markdown: https://kingson4wu.github.io/zh/posts/20250804/index.md
+- 2025-07-16 | zh | post | quick_worker 项目分析：基于 Channel 的高效异步批处理与 CPU 空转问题解析 | Tags: Go, Programming Languages | HTML: https://kingson4wu.github.io/zh/posts/20250717-quick-worker-channel-cpu/ | Markdown: https://kingson4wu.github.io/zh/posts/20250717-quick-worker-channel-cpu/index.md
+- 2025-07-16 | zh | post | QuicKit：高效并发任务管理工具库详解 | Tags: Reliability, Java, Programming Languages | HTML: https://kingson4wu.github.io/zh/posts/20250716-quickit/ | Markdown: https://kingson4wu.github.io/zh/posts/20250716-quickit/index.md
+- 2025-07-09 | zh | post | 刷LeetCode总结的算法基础和套路 | Tags: Algorithms | HTML: https://kingson4wu.github.io/zh/posts/20250709/ | Markdown: https://kingson4wu.github.io/zh/posts/20250709/index.md
+- 2025-05-30 | zh | post | “人工智能”一词是否准确？一次关于AI本质的反思 | Tags: AI | HTML: https://kingson4wu.github.io/zh/posts/20250531/ | Markdown: https://kingson4wu.github.io/zh/posts/20250531/index.md
+- 2025-03-23 | zh | post | 使用Java调用Rust构建的动态库 | Tags: Java, Rust, Programming Languages | HTML: https://kingson4wu.github.io/zh/posts/20250323/ | Markdown: https://kingson4wu.github.io/zh/posts/20250323/index.md
+- 2025-02-26 | zh | post | 开源知识库系统试用 | Tags: AI, LLM, RAG | HTML: https://kingson4wu.github.io/zh/posts/20250226/ | Markdown: https://kingson4wu.github.io/zh/posts/20250226/index.md
+- 2025-02-25 | zh | post | 关于大模型的Prompt | Tags: AI, LLM, Prompt Engineering | HTML: https://kingson4wu.github.io/zh/posts/20250225/ | Markdown: https://kingson4wu.github.io/zh/posts/20250225/index.md
+- 2025-02-21 | zh | post | 大模型应用开发AI Agent要点记录 | Tags: AI, LLM, Agent | HTML: https://kingson4wu.github.io/zh/posts/20250221/ | Markdown: https://kingson4wu.github.io/zh/posts/20250221/index.md
+- 2025-02-20 | zh | post | 基于大模型的RAG应用开发要点记录 | Tags: AI, LLM, RAG | HTML: https://kingson4wu.github.io/zh/posts/20250220/ | Markdown: https://kingson4wu.github.io/zh/posts/20250220/index.md
+- 2025-02-19 | zh | post | LangChain要点记录 | Tags: AI, LLM, Agent | HTML: https://kingson4wu.github.io/zh/posts/20250219/ | Markdown: https://kingson4wu.github.io/zh/posts/20250219/index.md
+- 2025-02-17 | zh | post | 深度学习基础入门备忘 | Tags: AI, Deep Learning | HTML: https://kingson4wu.github.io/zh/posts/20250217/ | Markdown: https://kingson4wu.github.io/zh/posts/20250217/index.md
+- 2025-02-13 | zh | post | 关于AI大语言模型替代人类工作的问题 | Tags: AI, LLM | HTML: https://kingson4wu.github.io/zh/posts/20250213/ | Markdown: https://kingson4wu.github.io/zh/posts/20250213/index.md
+- 2025-02-13 | zh | post | 深度学习为什么能学习并做对 | Tags: AI, Deep Learning | HTML: https://kingson4wu.github.io/zh/posts/20250213-2/ | Markdown: https://kingson4wu.github.io/zh/posts/20250213-2/index.md
+- 2025-02-12 | zh | post | 大语言模型对话记录与思考备忘录 | Tags: AI, LLM | HTML: https://kingson4wu.github.io/zh/posts/20250212/ | Markdown: https://kingson4wu.github.io/zh/posts/20250212/index.md
+- 2025-01-08 | zh | post | 算法在实际业务场景中并非完全无用 | Tags: Architecture, Algorithms | HTML: https://kingson4wu.github.io/zh/posts/20250108/ | Markdown: https://kingson4wu.github.io/zh/posts/20250108/index.md
+- 2025-01-06 | zh | post | 简单研究一下人工智能和数学 | Tags: AI, Math | HTML: https://kingson4wu.github.io/zh/posts/20250106/ | Markdown: https://kingson4wu.github.io/zh/posts/20250106/index.md
+- 2024-12-31 | zh | post | 使用AI总结了这个网站的内容 | Tags: AI | HTML: https://kingson4wu.github.io/zh/posts/20250101/ | Markdown: https://kingson4wu.github.io/zh/posts/20250101/index.md
+- 2024-12-31 | zh | post | AI工业革命下的若干思考 | Tags: AI | HTML: https://kingson4wu.github.io/zh/posts/20241231/ | Markdown: https://kingson4wu.github.io/zh/posts/20241231/index.md
+- 2024-12-30 | zh | post | Web3相关知识记录 | Tags: Finance | HTML: https://kingson4wu.github.io/zh/posts/20241230/ | Markdown: https://kingson4wu.github.io/zh/posts/20241230/index.md
+- 2024-12-26 | zh | post | LLM相关技术简单了解 | Tags: AI, LLM | HTML: https://kingson4wu.github.io/zh/posts/20241226/ | Markdown: https://kingson4wu.github.io/zh/posts/20241226/index.md
+- 2024-12-03 | zh | post | 人工智能相关技术简要总结记录 | Tags: AI | HTML: https://kingson4wu.github.io/zh/posts/20241203/ | Markdown: https://kingson4wu.github.io/zh/posts/20241203/index.md
+- 2024-12-02 | zh | post | 一个无中心节点的局域网通信工具 | Tags: Networking, Rust, Programming Languages | HTML: https://kingson4wu.github.io/zh/posts/20241202/ | Markdown: https://kingson4wu.github.io/zh/posts/20241202/index.md
+- 2024-11-29 | zh | post | AI已经如此强大了，帮我写完所有代码 | Tags: AI, Rust, Programming Languages | HTML: https://kingson4wu.github.io/zh/posts/20241129/ | Markdown: https://kingson4wu.github.io/zh/posts/20241129/index.md
+- 2024-11-21 | zh | post | 对Java、Go、Rust之间的简单对比和总结 | Tags: Java, Go, Rust, Programming Languages | HTML: https://kingson4wu.github.io/zh/posts/20241121-go/ | Markdown: https://kingson4wu.github.io/zh/posts/20241121-go/index.md
+- 2024-10-25 | zh | post | 《认知觉醒》-笔记 | Tags: Reading | HTML: https://kingson4wu.github.io/zh/posts/20241025/ | Markdown: https://kingson4wu.github.io/zh/posts/20241025/index.md
+- 2024-10-23 | zh | post | 金钱业务数据库事务相关要点记录 | Tags: Finance | HTML: https://kingson4wu.github.io/zh/posts/20241023/ | Markdown: https://kingson4wu.github.io/zh/posts/20241023/index.md
+- 2024-10-22 | zh | post | 简单记录我在几家公司的经历 | Tags: Career | HTML: https://kingson4wu.github.io/zh/posts/20241022/ | Markdown: https://kingson4wu.github.io/zh/posts/20241022/index.md
+- 2024-07-24 | zh | post | 谈谈接口调用中的序列化协议 | Tags: Distributed Systems | HTML: https://kingson4wu.github.io/zh/posts/20240724/ | Markdown: https://kingson4wu.github.io/zh/posts/20240724/index.md
+- 2024-07-18 | zh | post | 高效会议的重要性 | Tags: Career | HTML: https://kingson4wu.github.io/zh/posts/20240718/ | Markdown: https://kingson4wu.github.io/zh/posts/20240718/index.md
+- 2024-07-17 | zh | post | 看似理科实则文科，看似文科实则理科 | Tags: Programming Languages, Life | HTML: https://kingson4wu.github.io/zh/posts/20240717/ | Markdown: https://kingson4wu.github.io/zh/posts/20240717/index.md
+- 2024-05-30 | zh | post | 基于Saturn定时任务的客户端工具设计 | Tags: Networking, Go, Programming Languages | HTML: https://kingson4wu.github.io/zh/posts/20240530/ | Markdown: https://kingson4wu.github.io/zh/posts/20240530/index.md
+- 2024-05-28 | zh | post | 也谈谈feed流的设计 | Tags: Architecture | HTML: https://kingson4wu.github.io/zh/posts/20240528/ | Markdown: https://kingson4wu.github.io/zh/posts/20240528/index.md
+- 2024-05-09 | zh | post | 聊聊配置中心 | Tags: Distributed Systems | HTML: https://kingson4wu.github.io/zh/posts/20240509/ | Markdown: https://kingson4wu.github.io/zh/posts/20240509/index.md
+- 2024-05-07 | zh | post | 业务开发中的术与道 | Tags: Career | HTML: https://kingson4wu.github.io/zh/posts/20240507/ | Markdown: https://kingson4wu.github.io/zh/posts/20240507/index.md
+- 2024-04-25 | zh | post | 业务开发中使用BI的海量数据处理能力 | Tags: Architecture | HTML: https://kingson4wu.github.io/zh/posts/20240425/ | Markdown: https://kingson4wu.github.io/zh/posts/20240425/index.md
+- 2024-04-07 | zh | post | 从Java转Go的个人体会 | Tags: Java, Go, Programming Languages | HTML: https://kingson4wu.github.io/zh/posts/20240407/ | Markdown: https://kingson4wu.github.io/zh/posts/20240407/index.md
+- 2024-04-06 | zh | post | 记录限免业务的经验 | Tags: Architecture | HTML: https://kingson4wu.github.io/zh/posts/20240406/ | Markdown: https://kingson4wu.github.io/zh/posts/20240406/index.md
+- 2024-04-05 | zh | post | 职场中的“善于沟通”和“高情商” | Tags: Career | HTML: https://kingson4wu.github.io/zh/posts/20240405/ | Markdown: https://kingson4wu.github.io/zh/posts/20240405/index.md
+- 2024-04-03 | zh | post | 这件事情你需要跟进吗？ | Tags: Career | HTML: https://kingson4wu.github.io/zh/posts/20240403/ | Markdown: https://kingson4wu.github.io/zh/posts/20240403/index.md
+- 2024-04-02 | zh | post | 再浅谈接口的安全性和回调机制 | Tags: Security | HTML: https://kingson4wu.github.io/zh/posts/20240402/ | Markdown: https://kingson4wu.github.io/zh/posts/20240402/index.md
+- 2024-04-02 | zh | post | 打工人心态应该是怎样的？ | Tags: Career | HTML: https://kingson4wu.github.io/zh/posts/20240402-2/ | Markdown: https://kingson4wu.github.io/zh/posts/20240402-2/index.md
+- 2024-04-01 | zh | post | ToB业务随便讲讲 | Tags: Architecture, Career | HTML: https://kingson4wu.github.io/zh/posts/20240401/ | Markdown: https://kingson4wu.github.io/zh/posts/20240401/index.md
+- 2024-03-29 | zh | post | 提升自己职场中的“可替代性” | Tags: Career | HTML: https://kingson4wu.github.io/zh/posts/20240329/ | Markdown: https://kingson4wu.github.io/zh/posts/20240329/index.md
+- 2024-03-28 | zh | post | 对服务架构中的聚合层理解 | Tags: Architecture | HTML: https://kingson4wu.github.io/zh/posts/20240328/ | Markdown: https://kingson4wu.github.io/zh/posts/20240328/index.md
+- 2024-03-27 | zh | post | 职场中“马后炮”现象 | Tags: Career | HTML: https://kingson4wu.github.io/zh/posts/20240327/ | Markdown: https://kingson4wu.github.io/zh/posts/20240327/index.md
+- 2024-03-26 | zh | post | 小团队管理经验 | Tags: Career | HTML: https://kingson4wu.github.io/zh/posts/20240326/ | Markdown: https://kingson4wu.github.io/zh/posts/20240326/index.md
+- 2023-07-30 | zh | post | 如何在大量数据中判断给定的是否在其中 | Tags: Database, Algorithms | HTML: https://kingson4wu.github.io/zh/posts/20230730/ | Markdown: https://kingson4wu.github.io/zh/posts/20230730/index.md
+- 2023-07-30 | zh | post | 记一次socket泄露问题排查记录 | Tags: Networking | HTML: https://kingson4wu.github.io/zh/posts/20230730-2/ | Markdown: https://kingson4wu.github.io/zh/posts/20230730-2/index.md
+- 2023-07-04 | zh | post | 我接触过的几种服务发现和rpc | Tags: Distributed Systems | HTML: https://kingson4wu.github.io/zh/posts/20230704/ | Markdown: https://kingson4wu.github.io/zh/posts/20230704/index.md
+- 2023-07-03 | zh | post | 谈谈定时任务的原理和应用 | Tags: Networking, Go, Programming Languages | HTML: https://kingson4wu.github.io/zh/posts/20230703/ | Markdown: https://kingson4wu.github.io/zh/posts/20230703/index.md
+- 2023-07-02 | zh | post | 对工作中接触过的几种编程语言及其部署架构的看法 | Tags: Java, Go, Programming Languages | HTML: https://kingson4wu.github.io/zh/posts/20230702/ | Markdown: https://kingson4wu.github.io/zh/posts/20230702/index.md
+- 2023-03-02 | zh | post | 软技能_代码之外的生存指南_notes | Tags: Reading | HTML: https://kingson4wu.github.io/zh/posts/20230302-notes/ | Markdown: https://kingson4wu.github.io/zh/posts/20230302-notes/index.md
+- 2023-01-28 | zh | post | N年前的笔记备忘查阅 | Tags: Programming Languages, Reading | HTML: https://kingson4wu.github.io/zh/posts/20230128/ | Markdown: https://kingson4wu.github.io/zh/posts/20230128/index.md
+- 2023-01-14 | zh | post | 借《黑客与画家》记录一下想法 | Tags: Reading | HTML: https://kingson4wu.github.io/zh/posts/20230114/ | Markdown: https://kingson4wu.github.io/zh/posts/20230114/index.md
+- 2022-11-18 | zh | post | 技术选型要注意什么? | Tags: Architecture | HTML: https://kingson4wu.github.io/zh/posts/20221118/ | Markdown: https://kingson4wu.github.io/zh/posts/20221118/index.md
+- 2022-10-18 | zh | post | 我的重构（翻译）经历 | Tags: Architecture, Java, Programming Languages | HTML: https://kingson4wu.github.io/zh/posts/20221018/ | Markdown: https://kingson4wu.github.io/zh/posts/20221018/index.md
+- 2022-09-08 | zh | post | 我的几张TCP原理学习手绘图 | Tags: Networking | HTML: https://kingson4wu.github.io/zh/posts/20220908/ | Markdown: https://kingson4wu.github.io/zh/posts/20220908/index.md
+- 2022-09-07 | zh | post | TCP连接中的各种状态 | Tags: Networking | HTML: https://kingson4wu.github.io/zh/posts/20220907/ | Markdown: https://kingson4wu.github.io/zh/posts/20220907/index.md
+- 2022-09-07 | zh | post | TIME_WAIT解析 | Tags: Networking | HTML: https://kingson4wu.github.io/zh/posts/20220907-time/ | Markdown: https://kingson4wu.github.io/zh/posts/20220907-time/index.md
+- 2022-09-07 | zh | post | 你记得设置TCP_NODEPLAY吗？ | Tags: Networking | HTML: https://kingson4wu.github.io/zh/posts/20220907-2/ | Markdown: https://kingson4wu.github.io/zh/posts/20220907-2/index.md
+- 2022-09-06 | zh | post | 有了TCP的keepalive，应用层还需要实现保活逻辑吗？ | Tags: Networking | HTML: https://kingson4wu.github.io/zh/posts/20220906/ | Markdown: https://kingson4wu.github.io/zh/posts/20220906/index.md
+- 2022-09-05 | zh | post | 关于HTTP相关协议的一些总结 | Tags: Networking | HTML: https://kingson4wu.github.io/zh/posts/20220905/ | Markdown: https://kingson4wu.github.io/zh/posts/20220905/index.md
+- 2022-08-30 | zh | post | Chrome下载文件时暂停和继续是什么原理？ | Tags: Networking | HTML: https://kingson4wu.github.io/zh/posts/20220830/ | Markdown: https://kingson4wu.github.io/zh/posts/20220830/index.md
+- 2022-08-05 | zh | post | 推送技术总结 | Tags: Networking | HTML: https://kingson4wu.github.io/zh/posts/20220805/ | Markdown: https://kingson4wu.github.io/zh/posts/20220805/index.md
+- 2022-08-02 | zh | post | 说说CDN | Tags: Networking | HTML: https://kingson4wu.github.io/zh/posts/20220802/ | Markdown: https://kingson4wu.github.io/zh/posts/20220802/index.md
+- 2022-08-01 | zh | post | DNS解惑 | Tags: Networking | HTML: https://kingson4wu.github.io/zh/posts/20220801/ | Markdown: https://kingson4wu.github.io/zh/posts/20220801/index.md
+- 2022-07-20 | zh | post | 谈谈跨域 | Tags: Networking | HTML: https://kingson4wu.github.io/zh/posts/20220720/ | Markdown: https://kingson4wu.github.io/zh/posts/20220720/index.md
+- 2022-07-05 | zh | post | Java跨平台能完全做到一次编写到处运行？ | Tags: Java, Programming Languages | HTML: https://kingson4wu.github.io/zh/posts/20220705/ | Markdown: https://kingson4wu.github.io/zh/posts/20220705/index.md
+- 2022-06-01 | zh | post | 开发golang程序和进行内网穿透，作为微信公众号服务器 | Tags: Go, Programming Languages | HTML: https://kingson4wu.github.io/zh/posts/20220601/ | Markdown: https://kingson4wu.github.io/zh/posts/20220601/index.md
+- 2022-05-10 | zh | post | 算法基础总结 | Tags: Algorithms | HTML: https://kingson4wu.github.io/zh/posts/20220510/ | Markdown: https://kingson4wu.github.io/zh/posts/20220510/index.md
+- 2022-05-07 | zh | post | 高效工作方法论总结 | Tags: Career | HTML: https://kingson4wu.github.io/zh/posts/20220507/ | Markdown: https://kingson4wu.github.io/zh/posts/20220507/index.md
+- 2022-05-06 | zh | post | 长连接服务需注意什么？ | Tags: Networking | HTML: https://kingson4wu.github.io/zh/posts/20220506/ | Markdown: https://kingson4wu.github.io/zh/posts/20220506/index.md
+- 2022-05-05 | zh | post | 直播流媒体协议——笔记 | Tags: Networking, Media | HTML: https://kingson4wu.github.io/zh/posts/20220505-2/ | Markdown: https://kingson4wu.github.io/zh/posts/20220505-2/index.md
+- 2022-05-05 | zh | post | FFmpeg笔记 | Tags: Media | HTML: https://kingson4wu.github.io/zh/posts/20220505/ | Markdown: https://kingson4wu.github.io/zh/posts/20220505/index.md
+- 2022-05-04 | zh | post | 直播相关技术梳理总结 | Tags: Networking, Media | HTML: https://kingson4wu.github.io/zh/posts/20220504/ | Markdown: https://kingson4wu.github.io/zh/posts/20220504/index.md
+- 2022-04-29 | zh | post | 后端技术思维导图 | Tags: Architecture | HTML: https://kingson4wu.github.io/zh/posts/20220429/ | Markdown: https://kingson4wu.github.io/zh/posts/20220429/index.md
+- 2022-04-28 | zh | post | elasticsearch学习记录 | Tags: Database | HTML: https://kingson4wu.github.io/zh/posts/20220408/ | Markdown: https://kingson4wu.github.io/zh/posts/20220408/index.md
+- 2022-04-04 | zh | post | 《驱动力》笔记 | Tags: Reading | HTML: https://kingson4wu.github.io/zh/posts/20220404/ | Markdown: https://kingson4wu.github.io/zh/posts/20220404/index.md
+- 2022-04-03 | zh | post | index_merge导致死锁问题 | Tags: Database | HTML: https://kingson4wu.github.io/zh/posts/20220403-index/ | Markdown: https://kingson4wu.github.io/zh/posts/20220403-index/index.md
+- 2022-04-02 | zh | post | Scrum笔记 | Tags: Career | HTML: https://kingson4wu.github.io/zh/posts/20220402/ | Markdown: https://kingson4wu.github.io/zh/posts/20220402/index.md
+- 2022-04-01 | zh | post | Java代码段查阅 | Tags: Java, Programming Languages | HTML: https://kingson4wu.github.io/zh/posts/20220401/ | Markdown: https://kingson4wu.github.io/zh/posts/20220401/index.md
+- 2022-03-22 | zh | post | 轻量级微服务公共库设计 | Tags: Architecture | HTML: https://kingson4wu.github.io/zh/posts/20220322/ | Markdown: https://kingson4wu.github.io/zh/posts/20220322/index.md
+- 2022-03-12 | zh | post | 关于轻量级分布式事件通知的思考 | Tags: Distributed Systems | HTML: https://kingson4wu.github.io/zh/posts/20220312/ | Markdown: https://kingson4wu.github.io/zh/posts/20220312/index.md
+- 2022-02-28 | zh | post | 经典排序算法 | Tags: Algorithms | HTML: https://kingson4wu.github.io/zh/posts/20220228/ | Markdown: https://kingson4wu.github.io/zh/posts/20220228/index.md
+- 2022-02-23 | zh | post | 理解状态机原理及实践 | Tags: Architecture | HTML: https://kingson4wu.github.io/zh/posts/20220223/ | Markdown: https://kingson4wu.github.io/zh/posts/20220223/index.md
+- 2022-02-20 | zh | post | nba选秀抽签具体是如何操作的？ | Tags: Go, Programming Languages, Sports | HTML: https://kingson4wu.github.io/zh/posts/20220220/ | Markdown: https://kingson4wu.github.io/zh/posts/20220220/index.md
+- 2022-02-07 | zh | post | Java11基础原理和实践 | Tags: Java, Programming Languages | HTML: https://kingson4wu.github.io/zh/posts/20220208/ | Markdown: https://kingson4wu.github.io/zh/posts/20220208/index.md
+- 2022-01-17 | zh | post | NIO总结笔记 | Tags: Networking, Java, Programming Languages | HTML: https://kingson4wu.github.io/zh/posts/20220117/ | Markdown: https://kingson4wu.github.io/zh/posts/20220117/index.md
+- 2022-01-14 | zh | post | 如何做数据库迁移 | Tags: Database | HTML: https://kingson4wu.github.io/zh/posts/20220114/ | Markdown: https://kingson4wu.github.io/zh/posts/20220114/index.md
+- 2021-10-27 | zh | post | raft学习笔记 | Tags: Distributed Systems | HTML: https://kingson4wu.github.io/zh/posts/20211027/ | Markdown: https://kingson4wu.github.io/zh/posts/20211027/index.md
+- 2021-10-12 | zh | post | CQRS笔记 | Tags: Distributed Systems | HTML: https://kingson4wu.github.io/zh/posts/20211012/ | Markdown: https://kingson4wu.github.io/zh/posts/20211012/index.md
+- 2021-10-12 | zh | post | 分布式理论相关整理 | Tags: Distributed Systems | HTML: https://kingson4wu.github.io/zh/posts/20211012-2/ | Markdown: https://kingson4wu.github.io/zh/posts/20211012-2/index.md
+- 2021-09-17 | zh | post | 通过判断订单状态是否可以避免并发导致的问题？ | Tags: Distributed Systems | HTML: https://kingson4wu.github.io/zh/posts/20210917-2/ | Markdown: https://kingson4wu.github.io/zh/posts/20210917-2/index.md
+- 2021-09-17 | zh | post | 多IDC下微服务数据如何同步 | Tags: Architecture | HTML: https://kingson4wu.github.io/zh/posts/20210917/ | Markdown: https://kingson4wu.github.io/zh/posts/20210917/index.md
+- 2021-08-17 | zh | post | Java垃圾回收总结 | Tags: Java, Programming Languages | HTML: https://kingson4wu.github.io/zh/posts/20210817/ | Markdown: https://kingson4wu.github.io/zh/posts/20210817/index.md
+- 2021-08-13 | zh | post | 《小狗钱钱》-笔记 | Tags: Reading | HTML: https://kingson4wu.github.io/zh/posts/20210813/ | Markdown: https://kingson4wu.github.io/zh/posts/20210813/index.md
+- 2021-08-13 | zh | post | 《深度工作：如何有效使用每一点脑力》-笔记 | Tags: Reading | HTML: https://kingson4wu.github.io/zh/posts/20210813-2/ | Markdown: https://kingson4wu.github.io/zh/posts/20210813-2/index.md
+- 2021-08-13 | zh | post | 个人管理经验总结 | Tags: Career | HTML: https://kingson4wu.github.io/zh/posts/20210813-3/ | Markdown: https://kingson4wu.github.io/zh/posts/20210813-3/index.md
+- 2021-08-11 | zh | post | 《不拘一格：网飞的自由与责任工作法》-笔记 | Tags: Reading | HTML: https://kingson4wu.github.io/zh/posts/20210811/ | Markdown: https://kingson4wu.github.io/zh/posts/20210811/index.md
+- 2021-08-09 | zh | post | 《复盘网飞》-笔记 | Tags: Reading | HTML: https://kingson4wu.github.io/zh/posts/20210809/ | Markdown: https://kingson4wu.github.io/zh/posts/20210809/index.md
+- 2021-07-30 | zh | post | 方案设计时应该画什么图？ | Tags: Architecture | HTML: https://kingson4wu.github.io/zh/posts/20210730/ | Markdown: https://kingson4wu.github.io/zh/posts/20210730/index.md
+- 2021-07-13 | zh | post | Kubernetes学习笔记 | Tags: Reading | HTML: https://kingson4wu.github.io/zh/posts/20210713/ | Markdown: https://kingson4wu.github.io/zh/posts/20210713/index.md
+- 2021-07-06 | zh | post | IT中的生活哲学 | Tags: Architecture, Life | HTML: https://kingson4wu.github.io/zh/posts/20210706/ | Markdown: https://kingson4wu.github.io/zh/posts/20210706/index.md
+- 2021-07-05 | zh | post | 《SRE：Google运维解密》-笔记 | Tags: Reliability, Reading | HTML: https://kingson4wu.github.io/zh/posts/20210705-sre/ | Markdown: https://kingson4wu.github.io/zh/posts/20210705-sre/index.md
+- 2020-12-23 | zh | post | 开发阶段checklist | Tags: Architecture, Reliability | HTML: https://kingson4wu.github.io/zh/posts/20201223/ | Markdown: https://kingson4wu.github.io/zh/posts/20201223/index.md
+- 2020-12-19 | zh | post | 《枪炮、病菌与钢铁：人类社会的命运》-笔记 | Tags: Reading | HTML: https://kingson4wu.github.io/zh/posts/20201219/ | Markdown: https://kingson4wu.github.io/zh/posts/20201219/index.md
+- 2020-11-11 | zh | post | 单元测试使用总结 | Tags: Testing | HTML: https://kingson4wu.github.io/zh/posts/20201111/ | Markdown: https://kingson4wu.github.io/zh/posts/20201111/index.md
+- 2020-11-03 | zh | post | 《我的第一本金融入门书》-笔记 | Tags: Reading | HTML: https://kingson4wu.github.io/zh/posts/20201103/ | Markdown: https://kingson4wu.github.io/zh/posts/20201103/index.md
+- 2020-11-02 | zh | post | 《半小时漫画经济学》-笔记 | Tags: Reading, Finance | HTML: https://kingson4wu.github.io/zh/posts/20201102/ | Markdown: https://kingson4wu.github.io/zh/posts/20201102/index.md
+- 2020-11-01 | zh | post | 重构-改善既有代码的设计-摘要 | Tags: Reading | HTML: https://kingson4wu.github.io/zh/posts/20201101/ | Markdown: https://kingson4wu.github.io/zh/posts/20201101/index.md
+- 2020-10-24 | zh | post | 《重新定义团队：谷歌如何工作》-笔记 | Tags: Reading, Career | HTML: https://kingson4wu.github.io/zh/posts/20201024/ | Markdown: https://kingson4wu.github.io/zh/posts/20201024/index.md
+- 2020-10-18 | zh | post | 【计算机科学速成课】笔记 | Tags: Reading | HTML: https://kingson4wu.github.io/zh/posts/20201018/ | Markdown: https://kingson4wu.github.io/zh/posts/20201018/index.md
+- 2020-10-11 | zh | post | Redis笔记 | Tags: Database | HTML: https://kingson4wu.github.io/zh/posts/20201011/ | Markdown: https://kingson4wu.github.io/zh/posts/20201011/index.md
+- 2020-10-03 | zh | post | MySQL笔记 | Tags: Database | HTML: https://kingson4wu.github.io/zh/posts/20201003/ | Markdown: https://kingson4wu.github.io/zh/posts/20201003/index.md
+- 2020-09-26 | zh | post | 关于CLOSE_WAIT和HttpClient的使用 | Tags: Networking | HTML: https://kingson4wu.github.io/zh/posts/20200926/ | Markdown: https://kingson4wu.github.io/zh/posts/20200926/index.md
+- 2020-09-12 | zh | post | 分布式一致性协议概览 | Tags: Distributed Systems | HTML: https://kingson4wu.github.io/zh/posts/20200912/ | Markdown: https://kingson4wu.github.io/zh/posts/20200912/index.md
+- 2020-09-12 | zh | post | 分布式事务简要总结 | Tags: Distributed Systems | HTML: https://kingson4wu.github.io/zh/posts/20200912-2/ | Markdown: https://kingson4wu.github.io/zh/posts/20200912-2/index.md
+- 2020-09-08 | zh | post | 金融业务容灾切换后监控和修正方案 | Tags: Reliability, Finance | HTML: https://kingson4wu.github.io/zh/posts/20200908-2/ | Markdown: https://kingson4wu.github.io/zh/posts/20200908-2/index.md
+- 2020-09-07 | zh | post | 金融业务容灾体系简述 | Tags: Reliability, Finance | HTML: https://kingson4wu.github.io/zh/posts/20200908/ | Markdown: https://kingson4wu.github.io/zh/posts/20200908/index.md
+- 2020-09-04 | zh | post | 如何解决脑裂问题 | Tags: Distributed Systems, Reliability | HTML: https://kingson4wu.github.io/zh/posts/20200905/ | Markdown: https://kingson4wu.github.io/zh/posts/20200905/index.md
+- 2020-08-31 | zh | post | 关于MHA_Consul_MySQL高可用方案的简单总结和思考 | Tags: Distributed Systems, Reliability, Database | HTML: https://kingson4wu.github.io/zh/posts/20200831-consul/ | Markdown: https://kingson4wu.github.io/zh/posts/20200831-consul/index.md
+- 2020-08-31 | zh | post | 使用Redis实现榜单 | Tags: Architecture, Database | HTML: https://kingson4wu.github.io/zh/posts/20200831/ | Markdown: https://kingson4wu.github.io/zh/posts/20200831/index.md
+- 2020-08-20 | zh | post | 关于CDN缓存总结摘要 | Tags: Networking | HTML: https://kingson4wu.github.io/zh/posts/20200820/ | Markdown: https://kingson4wu.github.io/zh/posts/20200820/index.md
+- 2020-08-03 | zh | post | 打赏类业务货币体系简述 | Tags: Architecture, Finance | HTML: https://kingson4wu.github.io/zh/posts/20200804/ | Markdown: https://kingson4wu.github.io/zh/posts/20200804/index.md
+- 2020-07-21 | zh | post | 《程序员的职业素养》摘要 | Tags: Reading | HTML: https://kingson4wu.github.io/zh/posts/20200721/ | Markdown: https://kingson4wu.github.io/zh/posts/20200721/index.md
+- 2020-07-19 | zh | post | 《人性的弱点》摘要 | Tags: Reading, Life | HTML: https://kingson4wu.github.io/zh/posts/20200719/ | Markdown: https://kingson4wu.github.io/zh/posts/20200719/index.md
+- 2020-07-19 | zh | post | 如何预估开发时间 | Tags: Career | HTML: https://kingson4wu.github.io/zh/posts/20200719-2/ | Markdown: https://kingson4wu.github.io/zh/posts/20200719-2/index.md
+- 2020-07-19 | zh | post | 职场生存小小总结 | Tags: Career | HTML: https://kingson4wu.github.io/zh/posts/20200719-3/ | Markdown: https://kingson4wu.github.io/zh/posts/20200719-3/index.md
+- 2020-07-16 | zh | post | 监控告警要留意哪些点？ | Tags: Reliability | HTML: https://kingson4wu.github.io/zh/posts/20200716-2/ | Markdown: https://kingson4wu.github.io/zh/posts/20200716-2/index.md
+- 2020-07-16 | zh | post | 使用“自旋”降低业务失败率 | Tags: Architecture | HTML: https://kingson4wu.github.io/zh/posts/20200716/ | Markdown: https://kingson4wu.github.io/zh/posts/20200716/index.md
+- 2020-07-15 | zh | post | canal使用总结 | Tags: Database | HTML: https://kingson4wu.github.io/zh/posts/20200715/ | Markdown: https://kingson4wu.github.io/zh/posts/20200715/index.md
+- 2020-07-14 | zh | post | 如何接手一个旧项目 | Tags: Architecture, Career | HTML: https://kingson4wu.github.io/zh/posts/20200714-3/ | Markdown: https://kingson4wu.github.io/zh/posts/20200714-3/index.md
+- 2020-07-14 | zh | post | 单元测试的工具和技巧 | Tags: Testing | HTML: https://kingson4wu.github.io/zh/posts/20200714-2/ | Markdown: https://kingson4wu.github.io/zh/posts/20200714-2/index.md
+- 2020-07-14 | zh | post | 业务重构实践总结 | Tags: Architecture | HTML: https://kingson4wu.github.io/zh/posts/20200714/ | Markdown: https://kingson4wu.github.io/zh/posts/20200714/index.md
+- 2020-07-13 | zh | post | 由灾备工作中引发的对“比例”的思考 | Tags: Reliability | HTML: https://kingson4wu.github.io/zh/posts/20200713/ | Markdown: https://kingson4wu.github.io/zh/posts/20200713/index.md
+- 2020-07-12 | zh | post | 使用回调机制提高接口安全性 | Tags: Security | HTML: https://kingson4wu.github.io/zh/posts/20200712/ | Markdown: https://kingson4wu.github.io/zh/posts/20200712/index.md
+- 2020-07-11 | zh | post | 分布式限流简单总结 | Tags: Reliability | HTML: https://kingson4wu.github.io/zh/posts/20200711-2/ | Markdown: https://kingson4wu.github.io/zh/posts/20200711-2/index.md
+- 2020-07-11 | zh | post | 分布式锁简单总结 | Tags: Distributed Systems | HTML: https://kingson4wu.github.io/zh/posts/20200711/ | Markdown: https://kingson4wu.github.io/zh/posts/20200711/index.md
+- 2020-07-10 | zh | post | 缓存策略简单总结 | Tags: Architecture, Database | HTML: https://kingson4wu.github.io/zh/posts/20200710/ | Markdown: https://kingson4wu.github.io/zh/posts/20200710/index.md
+- 2020-07-09 | zh | post | 财务数据报表的跨天之苦 | Tags: Architecture, Finance | HTML: https://kingson4wu.github.io/zh/posts/20200710-2/ | Markdown: https://kingson4wu.github.io/zh/posts/20200710-2/index.md
+- 2020-07-09 | zh | post | 《一只特里独行的猪》摘要 | Tags: Reading, Life | HTML: https://kingson4wu.github.io/zh/posts/20200709/ | Markdown: https://kingson4wu.github.io/zh/posts/20200709/index.md
+- 2020-07-08 | zh | post | 关于幂等的若干问题 | Tags: Architecture | HTML: https://kingson4wu.github.io/zh/posts/20200709-2/ | Markdown: https://kingson4wu.github.io/zh/posts/20200709-2/index.md
+- 2020-07-08 | zh | post | 程序异常时能返回50x吗？ | Tags: Reliability | HTML: https://kingson4wu.github.io/zh/posts/20200708-2/ | Markdown: https://kingson4wu.github.io/zh/posts/20200708-2/index.md
+- 2020-07-07 | zh | post | 外网请求如何保证幂等 | Tags: Architecture | HTML: https://kingson4wu.github.io/zh/posts/20200708/ | Markdown: https://kingson4wu.github.io/zh/posts/20200708/index.md
+- 2020-07-07 | zh | post | 唯一ID的基因 | Tags: Architecture | HTML: https://kingson4wu.github.io/zh/posts/20200707/ | Markdown: https://kingson4wu.github.io/zh/posts/20200707/index.md
+- 2020-07-07 | zh | post | 如何处理RPC返回的错误码？ | Tags: Architecture, Distributed Systems | HTML: https://kingson4wu.github.io/zh/posts/20200707-2/ | Markdown: https://kingson4wu.github.io/zh/posts/20200707-2/index.md
+- 2020-07-06 | zh | post | 上线需要做哪些准备？ | Tags: Architecture, Reliability | HTML: https://kingson4wu.github.io/zh/posts/20200706/ | Markdown: https://kingson4wu.github.io/zh/posts/20200706/index.md
+- 2020-07-06 | zh | post | 使用ThreadContext缓存RPC结果 | Tags: Architecture, Distributed Systems | HTML: https://kingson4wu.github.io/zh/posts/20200706-2/ | Markdown: https://kingson4wu.github.io/zh/posts/20200706-2/index.md
+- 2020-07-05 | zh | post | 关于服务间一致性和前置校验的思考 | Tags: Architecture | HTML: https://kingson4wu.github.io/zh/posts/20200705-2/ | Markdown: https://kingson4wu.github.io/zh/posts/20200705-2/index.md
+- 2020-07-05 | zh | post | RPC可以和事务绑定吗？ | Tags: Architecture, Distributed Systems, Database | HTML: https://kingson4wu.github.io/zh/posts/20200705/ | Markdown: https://kingson4wu.github.io/zh/posts/20200705/index.md
+- 2020-03-29 | zh | post | 发版过程的兼容性考虑 | Tags: Architecture | HTML: https://kingson4wu.github.io/zh/posts/20200329/ | Markdown: https://kingson4wu.github.io/zh/posts/20200329/index.md
+- 2020-03-29 | zh | post | 表结构变更是否需要处理历史月表？ | Tags: Architecture, Database | HTML: https://kingson4wu.github.io/zh/posts/20200329-2/ | Markdown: https://kingson4wu.github.io/zh/posts/20200329-2/index.md
+- 2020-03-25 | zh | post | 移动端下一种折中的分页方法 | Tags: Architecture | HTML: https://kingson4wu.github.io/zh/posts/20200326/ | Markdown: https://kingson4wu.github.io/zh/posts/20200326/index.md
+- 2020-01-01 | zh | post | 电影摘要 | Tags: Life | HTML: https://kingson4wu.github.io/zh/posts/20200101/ | Markdown: https://kingson4wu.github.io/zh/posts/20200101/index.md
+- 2019-12-28 | zh | post | 《天下足球》曲目 | Tags: Life | HTML: https://kingson4wu.github.io/zh/posts/20191228/ | Markdown: https://kingson4wu.github.io/zh/posts/20191228/index.md
+- 2019-07-06 | zh | post | Warriors | Tags: Life | HTML: https://kingson4wu.github.io/zh/posts/20190706-warriors/ | Markdown: https://kingson4wu.github.io/zh/posts/20190706-warriors/index.md
+- 2014-03-02 | zh | post | 程序员的职业素养_摘要 | Tags: Reading, Career | HTML: https://kingson4wu.github.io/zh/posts/20140302/ | Markdown: https://kingson4wu.github.io/zh/posts/20140302/index.md

@@ -1,0 +1,607 @@
+{
+  "site": {
+    "name": "Kingson Wu / 拉巴力的纸皮箱",
+    "url": "https://kingson4wu.github.io",
+    "description": "Bilingual personal blog about software engineering, AI systems, architecture, programming, and learning.",
+    "languages": {
+      "en": {
+        "label": "English",
+        "switchLabel": "中文",
+        "switchHref": "/zh/",
+        "title": "Kingson Wu",
+        "description": "Technical writing on software, AI systems, architecture, and learning.",
+        "nav": [
+          [
+            "Blog",
+            "/en/posts/"
+          ],
+          [
+            "Notes",
+            "/en/notes/"
+          ],
+          [
+            "Tags",
+            "/en/tags/"
+          ],
+          [
+            "About",
+            "/en/about/"
+          ],
+          [
+            "Search",
+            "/en/search/"
+          ]
+        ]
+      },
+      "zh": {
+        "label": "中文",
+        "switchLabel": "English",
+        "switchHref": "/en/",
+        "title": "拉巴力的纸皮箱",
+        "description": "技术、AI 系统、软件架构与学习笔记。",
+        "nav": [
+          [
+            "文章",
+            "/zh/posts/"
+          ],
+          [
+            "笔记",
+            "/zh/notes/"
+          ],
+          [
+            "标签",
+            "/zh/tags/"
+          ],
+          [
+            "关于",
+            "/zh/about/"
+          ],
+          [
+            "搜索",
+            "/zh/search/"
+          ]
+        ]
+      }
+    },
+    "sitemap": "https://kingson4wu.github.io/sitemap.xml",
+    "llms": "https://kingson4wu.github.io/llms.txt",
+    "llmsFull": "https://kingson4wu.github.io/llms-full.txt",
+    "feeds": {
+      "root": "https://kingson4wu.github.io/feed.xml",
+      "en": "https://kingson4wu.github.io/en/feed.xml",
+      "zh": "https://kingson4wu.github.io/zh/feed.xml"
+    }
+  },
+  "content": {
+    "counts": {
+      "total": 232,
+      "en": {
+        "post": 5,
+        "note": 11
+      },
+      "zh": {
+        "post": 212,
+        "note": 4
+      }
+    },
+    "themes": [
+      "AI systems and agent engineering",
+      "software architecture and distributed systems",
+      "programming languages, especially Rust, Go, Python, and Java",
+      "engineering practice, career reflection, and reading notes"
+    ],
+    "topTags": [
+      {
+        "name": "AI",
+        "count": 73
+      },
+      {
+        "name": "LLM",
+        "count": 50
+      },
+      {
+        "name": "Architecture",
+        "count": 39
+      },
+      {
+        "name": "Networking",
+        "count": 28
+      },
+      {
+        "name": "Programming Languages",
+        "count": 26
+      },
+      {
+        "name": "Deep Learning",
+        "count": 25
+      },
+      {
+        "name": "Career",
+        "count": 21
+      },
+      {
+        "name": "Reading",
+        "count": 21
+      },
+      {
+        "name": "Distributed Systems",
+        "count": 19
+      },
+      {
+        "name": "Agent",
+        "count": 14
+      },
+      {
+        "name": "Database",
+        "count": 13
+      },
+      {
+        "name": "Reliability",
+        "count": 13
+      },
+      {
+        "name": "Skill",
+        "count": 13
+      },
+      {
+        "name": "Java",
+        "count": 11
+      },
+      {
+        "name": "Life",
+        "count": 11
+      },
+      {
+        "name": "Math",
+        "count": 11
+      },
+      {
+        "name": "Finance",
+        "count": 10
+      },
+      {
+        "name": "Go",
+        "count": 8
+      },
+      {
+        "name": "Prompt Engineering",
+        "count": 8
+      },
+      {
+        "name": "MCP",
+        "count": 7
+      }
+    ],
+    "latest": [
+      {
+        "title": "Skill 机制与编排流程深度解析：Anthropic vs OpenAI Agent SDK 对比",
+        "lang": "zh",
+        "type": "post",
+        "date": "2026-04-19",
+        "tags": [
+          "AI",
+          "LLM",
+          "Agent",
+          "Skill"
+        ],
+        "url": "https://kingson4wu.github.io/zh/posts/20260419-skill-anthropic-vs-openai-agent-sdk/",
+        "markdownUrl": "https://kingson4wu.github.io/zh/posts/20260419-skill-anthropic-vs-openai-agent-sdk/index.md",
+        "excerpt": "2026 年 4 月 15 日，OpenAI 发布 Agents SDK v0.14.0，引入了 SandboxAgent + Capabilities 架构。本地 Skill 加载（Skills Capability、LocalDirLazySkillSource、load_skill 工具）终于成为了 SDK 一等..."
+      },
+      {
+        "title": "技术进步与分配失衡：AI时代的结构性矛盾",
+        "lang": "zh",
+        "type": "post",
+        "date": "2026-03-31",
+        "tags": [
+          "AI",
+          "LLM",
+          "Finance"
+        ],
+        "url": "https://kingson4wu.github.io/zh/posts/20260331/",
+        "markdownUrl": "https://kingson4wu.github.io/zh/posts/20260331/index.md",
+        "excerpt": "AI替代认知劳动的边际成本趋近于零，导致经济增长与就业增长脱钩；AI是资本增强器而非劳动增强器，分配机制滞后于生产力发展，形成结构性失衡。"
+      },
+      {
+        "title": "从 Skill 化到控制权：AI 系统中的能力分层与资产保护",
+        "lang": "zh",
+        "type": "post",
+        "date": "2026-03-31",
+        "tags": [
+          "AI",
+          "LLM",
+          "Agent",
+          "Skill",
+          "Architecture"
+        ],
+        "url": "https://kingson4wu.github.io/zh/posts/20260331-skill-ai/",
+        "markdownUrl": "https://kingson4wu.github.io/zh/posts/20260331-skill-ai/index.md",
+        "excerpt": "当 AI 系统将任务封装为 Skills 交给外部执行时，哪些能力可以暴露，哪些必须留在内部？本文从数据暴露的三种形态出发，提出通用能力、业务能力、核心能力的三层划分框架，以及“最小输入而非脱敏”的数据策略。"
+      },
+      {
+        "title": "Technology Advances, Distribution Lags: The Structural Contradiction of the AI Era",
+        "lang": "en",
+        "type": "post",
+        "date": "2026-03-31",
+        "tags": [
+          "AI",
+          "Finance"
+        ],
+        "url": "https://kingson4wu.github.io/en/posts/ai-structural-distribution-imbalance/",
+        "markdownUrl": "https://kingson4wu.github.io/en/posts/ai-structural-distribution-imbalance/index.md",
+        "excerpt": "AI is approaching zero marginal cost for cognitive labor, decoupling economic growth from employment. This is not the same story as previous industrial revolutions."
+      },
+      {
+        "title": "Skills May Matter More Than Agents",
+        "lang": "en",
+        "type": "note",
+        "date": "2026-03-29",
+        "tags": [
+          "AI",
+          "Agent",
+          "Skill"
+        ],
+        "url": "https://kingson4wu.github.io/en/notes/skills-may-matter-more-than-agents/",
+        "markdownUrl": "https://kingson4wu.github.io/en/notes/skills-may-matter-more-than-agents/index.md",
+        "excerpt": "Main AI vendors may be converging on a common pattern: the SDK provides the Runtime; developers own the Skills. A Skill is fundamentally an act of knowledge ext..."
+      },
+      {
+        "title": "Skill 可能比 Agent 更像长期资产",
+        "lang": "zh",
+        "type": "note",
+        "date": "2026-03-29",
+        "tags": [
+          "AI",
+          "Agent",
+          "Skill"
+        ],
+        "url": "https://kingson4wu.github.io/zh/notes/20260329-skill-agent/",
+        "markdownUrl": "https://kingson4wu.github.io/zh/notes/20260329-skill-agent/index.md",
+        "excerpt": "主流 AI 厂商或许正在趋同于一种模式：SDK 提供 Runtime，开发者负责 Skills。 Skill 本质是在做知识外化——把工作流、业务规则和验证过的处理逻辑，转成结构化、可复用的能力单元。从这个角度看，更具长期价值的，可能是 Skills，而不是 Agent。 同时，Agent Runtime 正在走向基础..."
+      },
+      {
+        "title": "Harness Engineering Is Not a New Paradigm",
+        "lang": "en",
+        "type": "note",
+        "date": "2026-03-28",
+        "tags": [
+          "AI",
+          "LLM",
+          "Prompt Engineering"
+        ],
+        "url": "https://kingson4wu.github.io/en/notes/harness-engineering-is-not-new-paradigm/",
+        "markdownUrl": "https://kingson4wu.github.io/en/notes/harness-engineering-is-not-new-paradigm/index.md",
+        "excerpt": "Most people are treating Harness Engineering like it’s a new paradigm. It’s not. Start from first principles: an LLM takes input and produces output. The model..."
+      },
+      {
+        "title": "从自建 Agent 到 Agent Runtime + Skill：AI 系统架构的演进与收敛",
+        "lang": "zh",
+        "type": "post",
+        "date": "2026-03-28",
+        "tags": [
+          "AI",
+          "LLM",
+          "Agent",
+          "Skill",
+          "MCP"
+        ],
+        "url": "https://kingson4wu.github.io/zh/posts/20260328-agent-agent-runtime-skill-ai/",
+        "markdownUrl": "https://kingson4wu.github.io/zh/posts/20260328-agent-agent-runtime-skill-ai/index.md",
+        "excerpt": "从系统分层视角梳理 AI 应用从自建 Agent 走向 Runtime 与 Skill 组合架构的演进逻辑。"
+      },
+      {
+        "title": "从第一性原理看 Harness Engineering",
+        "lang": "zh",
+        "type": "note",
+        "date": "2026-03-28",
+        "tags": [
+          "AI",
+          "LLM",
+          "MCP",
+          "Prompt Engineering"
+        ],
+        "url": "https://kingson4wu.github.io/zh/notes/20260328-harness-engineering/",
+        "markdownUrl": "https://kingson4wu.github.io/zh/notes/20260328-harness-engineering/index.md",
+        "excerpt": "LLM 只做一件事：给定输入，生成输出。 模型是固定的。你能控制的，其实只有输入，以及围绕输入输出构建的系统。 由此派生出两个真实的工程问题域。 问题域 A：如何构造更好的输入 这是一个连续的复杂度谱系： 手工写指令 -&gt; Prompt Engineering 动态检索、拼装、压缩信息 -&gt; Context..."
+      },
+      {
+        "title": "From Custom Agents to Agent Runtime + Skill: Convergence in AI System Architecture",
+        "lang": "en",
+        "type": "post",
+        "date": "2026-03-28",
+        "tags": [
+          "AI",
+          "LLM",
+          "Agent",
+          "Skill",
+          "Architecture"
+        ],
+        "url": "https://kingson4wu.github.io/en/posts/agent-runtime-and-skill-convergence/",
+        "markdownUrl": "https://kingson4wu.github.io/en/posts/agent-runtime-and-skill-convergence/index.md",
+        "excerpt": "A systems-level view of how AI applications are evolving from bespoke agent implementations toward a layered architecture of interchangeable Runtime and reusable Skills."
+      },
+      {
+        "title": "MCP and Skills Solve Different Problems",
+        "lang": "en",
+        "type": "note",
+        "date": "2026-03-27",
+        "tags": [
+          "AI",
+          "Skill",
+          "MCP"
+        ],
+        "url": "https://kingson4wu.github.io/en/notes/mcp-and-skills-solve-different-problems/",
+        "markdownUrl": "https://kingson4wu.github.io/en/notes/mcp-and-skills-solve-different-problems/index.md",
+        "excerpt": "MCP is basically a capability contract. It tells you what tools exist, how to call them, and what the permission boundaries are. A Skill is a different thing en..."
+      },
+      {
+        "title": "MCP、Skill 与 CLI 的分化与协同",
+        "lang": "zh",
+        "type": "note",
+        "date": "2026-03-27",
+        "tags": [
+          "AI",
+          "Agent",
+          "Skill",
+          "MCP"
+        ],
+        "url": "https://kingson4wu.github.io/zh/notes/20260327-mcp-skill-cli/",
+        "markdownUrl": "https://kingson4wu.github.io/zh/notes/20260327-mcp-skill-cli/index.md",
+        "excerpt": "MCP 更像是一份“平台能力说明书”。 它定义了有哪些工具、怎么调用、权限边界在哪。 Skill 则是在回答另一类问题：具体怎么把事做完。它本质上是 prompt 加上工具使用策略的封装。 Skill 之所以更好用，是因为关键步骤、调用方式、甚至容错逻辑，都已经被提前写进去了。这本来就不是 MCP 要解决的问题。 至于..."
+      },
+      {
+        "title": "将执行路径固化为资产：从一个 Spotify Skill 看长期运行的 AI 自动化系统",
+        "lang": "zh",
+        "type": "post",
+        "date": "2026-03-26",
+        "tags": [
+          "AI",
+          "LLM",
+          "Agent",
+          "Skill",
+          "Deep Learning"
+        ],
+        "url": "https://kingson4wu.github.io/zh/posts/20260326-spotify-skill-ai/",
+        "markdownUrl": "https://kingson4wu.github.io/zh/posts/20260326-spotify-skill-ai/index.md",
+        "excerpt": "以 labali-spotify-publish-episode 为例，拆解一个长期运行的 AI 自动化系统如何通过分层、快路径、自愈闭环与业务状态验证维持可维护性。"
+      },
+      {
+        "title": "浏览器自动化技术全景：CDP、Playwright 与 AI Agent 的架构关系",
+        "lang": "zh",
+        "type": "post",
+        "date": "2026-03-12",
+        "tags": [
+          "AI",
+          "LLM",
+          "Agent",
+          "Skill",
+          "MCP"
+        ],
+        "url": "https://kingson4wu.github.io/zh/posts/20260312-cdp-playwright-ai-agent/",
+        "markdownUrl": "https://kingson4wu.github.io/zh/posts/20260312-cdp-playwright-ai-agent/index.md",
+        "excerpt": "系统梳理 CDP、Playwright、视觉自动化与 AI Agent 在浏览器自动化体系中的分层关系与适用边界。"
+      },
+      {
+        "title": "大模型时代，中小公司如何寻找 AI 竞争空间",
+        "lang": "zh",
+        "type": "post",
+        "date": "2026-03-08",
+        "tags": [
+          "AI",
+          "LLM",
+          "Agent",
+          "Skill",
+          "MCP"
+        ],
+        "url": "https://kingson4wu.github.io/zh/posts/20260308-ai/",
+        "markdownUrl": "https://kingson4wu.github.io/zh/posts/20260308-ai/index.md",
+        "excerpt": "分析中小公司在大模型时代应如何围绕行业数据、工作流与应用层产品建立差异化竞争力。"
+      },
+      {
+        "title": "AI Systems Need Method, Execution, and Evaluation",
+        "lang": "en",
+        "type": "note",
+        "date": "2026-03-07",
+        "tags": [
+          "AI",
+          "Skill",
+          "Architecture"
+        ],
+        "url": "https://kingson4wu.github.io/en/notes/ai-systems-need-method-execution-evaluation/",
+        "markdownUrl": "https://kingson4wu.github.io/en/notes/ai-systems-need-method-execution-evaluation/index.md",
+        "excerpt": "Most AI systems are still stuck in a single-inference pattern: they re-plan every time, discard execution results immediately, and accumulate no experience. A m..."
+      },
+      {
+        "title": "让执行路径成为资产",
+        "lang": "zh",
+        "type": "note",
+        "date": "2026-03-07",
+        "tags": [
+          "AI",
+          "Skill",
+          "Prompt Engineering",
+          "Architecture"
+        ],
+        "url": "https://kingson4wu.github.io/zh/notes/20260307/",
+        "markdownUrl": "https://kingson4wu.github.io/zh/notes/20260307/index.md",
+        "excerpt": "大多数 AI 系统还停留在“单次推理”形态。 任务来了重新规划，执行完毕即丢弃，成功经验从不沉淀。 真正面向长期运行的架构，得把“执行路径”变成资产。 核心是三层分离： 方法层：定义目标和策略 执行层：保存经过验证、可运行的代码或 Script 评估层：检测退化并触发修复 某条路径反复验证稳定后，就应该固化成 Scri..."
+      },
+      {
+        "title": "Generative AI Does Not Think",
+        "lang": "en",
+        "type": "note",
+        "date": "2026-02-28",
+        "tags": [
+          "AI",
+          "LLM"
+        ],
+        "url": "https://kingson4wu.github.io/en/notes/generative-ai-does-not-think/",
+        "markdownUrl": "https://kingson4wu.github.io/en/notes/generative-ai-does-not-think/index.md",
+        "excerpt": "Generative AI does not think. What it does is predict the highest-probability token given the preceding context. Humans can actively violate rules: “I know the..."
+      },
+      {
+        "title": "AI Displacement Repeats Old Patterns",
+        "lang": "en",
+        "type": "note",
+        "date": "2026-02-28",
+        "tags": [
+          "AI",
+          "Career"
+        ],
+        "url": "https://kingson4wu.github.io/en/notes/ai-displacement-repeats-old-patterns/",
+        "markdownUrl": "https://kingson4wu.github.io/en/notes/ai-displacement-repeats-old-patterns/index.md",
+        "excerpt": "This wave of AI displacement shares familiar patterns with previous industrial revolutions. Technology moves forward, and some people get left behind before the..."
+      },
+      {
+        "title": "AI Is Reshaping Social Learning",
+        "lang": "en",
+        "type": "note",
+        "date": "2026-02-28",
+        "tags": [
+          "AI",
+          "Life"
+        ],
+        "url": "https://kingson4wu.github.io/en/notes/ai-is-reshaping-social-learning/",
+        "markdownUrl": "https://kingson4wu.github.io/en/notes/ai-is-reshaping-social-learning/index.md",
+        "excerpt": "AI is reshaping social learning. We once relied on peers to recommend resources, challenge ideas, and surface blind spots. Now more of those cognitive functions..."
+      },
+      {
+        "title": "Expression Is Cheap, Taste Is the Edge",
+        "lang": "en",
+        "type": "note",
+        "date": "2026-02-28",
+        "tags": [
+          "AI",
+          "Life"
+        ],
+        "url": "https://kingson4wu.github.io/en/notes/expression-is-cheap-taste-is-edge/",
+        "markdownUrl": "https://kingson4wu.github.io/en/notes/expression-is-cheap-taste-is-edge/index.md",
+        "excerpt": "AI makes expression cheaper, but judgment becomes more important. Originality is shifting away from “who wrote the words” toward “who decided why this content s..."
+      },
+      {
+        "title": "AI Is Combinational, Not Conceptual",
+        "lang": "en",
+        "type": "note",
+        "date": "2026-02-28",
+        "tags": [
+          "AI",
+          "LLM"
+        ],
+        "url": "https://kingson4wu.github.io/en/notes/ai-is-combinational-not-conceptual/",
+        "markdownUrl": "https://kingson4wu.github.io/en/notes/ai-is-combinational-not-conceptual/index.md",
+        "excerpt": "Generative AI is not discovering new continents. It is a hyper-efficient search engine over high-dimensional probability space. It is strong at combinational in..."
+      },
+      {
+        "title": "Engineering Cognition into Executable Form",
+        "lang": "en",
+        "type": "note",
+        "date": "2026-02-28",
+        "tags": [
+          "AI",
+          "Agent",
+          "Prompt Engineering"
+        ],
+        "url": "https://kingson4wu.github.io/en/notes/engineering-cognition-into-executable-form/",
+        "markdownUrl": "https://kingson4wu.github.io/en/notes/engineering-cognition-into-executable-form/index.md",
+        "excerpt": "We are not merely learning how to use AI. We are learning how to translate human tacit cognition into machine-interpretable, executable structures: thinking -&g..."
+      },
+      {
+        "title": "Understanding Is Being Right Under Novelty",
+        "lang": "en",
+        "type": "note",
+        "date": "2026-02-28",
+        "tags": [
+          "AI",
+          "LLM"
+        ],
+        "url": "https://kingson4wu.github.io/en/notes/understanding-is-being-right-under-novelty/",
+        "markdownUrl": "https://kingson4wu.github.io/en/notes/understanding-is-being-right-under-novelty/index.md",
+        "excerpt": "Perhaps we have misunderstood what understanding really means. Humans and large language models are alike in one crucial way: intuition comes first, reasoning f..."
+      },
+      {
+        "title": "将执行路径固化为资产：一种面向长期运行的 AI 架构",
+        "lang": "zh",
+        "type": "post",
+        "date": "2026-02-26",
+        "tags": [
+          "AI",
+          "LLM",
+          "Deep Learning"
+        ],
+        "url": "https://kingson4wu.github.io/zh/posts/20260226-ai/",
+        "markdownUrl": "https://kingson4wu.github.io/zh/posts/20260226-ai/index.md",
+        "excerpt": "讨论如何把重复任务中的稳定执行路径沉淀为可复用资产，以构建能够长期运行的 AI 系统。"
+      },
+      {
+        "title": "生成式AI的概率本质与创新边界：从一个具体任务说起",
+        "lang": "zh",
+        "type": "post",
+        "date": "2026-02-25",
+        "tags": [
+          "AI",
+          "LLM",
+          "Deep Learning"
+        ],
+        "url": "https://kingson4wu.github.io/zh/posts/20260225/",
+        "markdownUrl": "https://kingson4wu.github.io/zh/posts/20260225/index.md",
+        "excerpt": "通过一个具体生成任务分析生成式 AI 的概率本质、自我解释局限与创新能力边界。"
+      },
+      {
+        "title": "AI 与学习型人际关系的变化",
+        "lang": "zh",
+        "type": "post",
+        "date": "2026-02-09",
+        "tags": [
+          "AI",
+          "LLM"
+        ],
+        "url": "https://kingson4wu.github.io/zh/posts/20260209-ai/",
+        "markdownUrl": "https://kingson4wu.github.io/zh/posts/20260209-ai/index.md",
+        "excerpt": "讨论 AI 普及后知识获取方式变化，以及它对学习型人际关系与思想交流模式的影响。"
+      },
+      {
+        "title": "AI生成内容时代：原创、作者与创作价值",
+        "lang": "zh",
+        "type": "post",
+        "date": "2026-02-09",
+        "tags": [
+          "AI",
+          "LLM"
+        ],
+        "url": "https://kingson4wu.github.io/zh/posts/20260209/",
+        "markdownUrl": "https://kingson4wu.github.io/zh/posts/20260209/index.md",
+        "excerpt": "从原创性、作者身份与价值判断三个维度，讨论 AI 生成内容时代的创作定义如何变化。"
+      },
+      {
+        "title": "AI 能否创造真正的新事物",
+        "lang": "zh",
+        "type": "post",
+        "date": "2026-02-04",
+        "tags": [
+          "AI",
+          "LLM",
+          "Deep Learning"
+        ],
+        "url": "https://kingson4wu.github.io/zh/posts/20260204-ai/",
+        "markdownUrl": "https://kingson4wu.github.io/zh/posts/20260204-ai/index.md",
+        "excerpt": "围绕生成式 AI 的概率生成机制，讨论它是否能够实现真正意义上的创新与概念跃迁。"
+      },
+      {
+        "title": "从 Prompt 到碳基 Agentic RAG：AI 时代的人类认知外化",
+        "lang": "zh",
+        "type": "post",
+        "date": "2026-02-04",
+        "tags": [
+          "AI",
+          "LLM",
+          "RAG",
+          "Prompt Engineering",
+          "Deep Learning"
+        ],
+        "url": "https://kingson4wu.github.io/zh/posts/20260204-prompt-agentic-rag-ai/",
+        "markdownUrl": "https://kingson4wu.github.io/zh/posts/20260204-prompt-agentic-rag-ai/index.md",
+        "excerpt": "从 Prompt、Context 与协议出发，讨论 AI 应用背后的人类认知组织能力如何被外化与结构化。"
+      }
+    ]
+  }
+}

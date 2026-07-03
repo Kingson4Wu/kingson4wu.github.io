@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>深度学习为什么能学习并做对 | 拉巴力的纸皮箱</title>
+  <meta name="description" content="我的理解 目前无法解释为什么深度学习可以给出答案，只能大概解释为什么它能学习 这就相当于：我不能解释为什么这个人是通过什么做对这道题的，我只能解释他有正常的学习能力以及合适的学习资料，所以他自己能学习并做对题目 所以深度学习是怎么给出答案的，后续或许应该由它本身来告诉我们。 依据不同人的认知水平，来告诉我们它通过学习所...">
+  <link rel="canonical" href="https://kingson4wu.github.io/zh/posts/20250213-2/">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="alternate" type="application/rss+xml" title="拉巴力的纸皮箱" href="/zh/feed.xml">
+  <link rel="alternate" type="text/markdown" href="/zh/posts/20250213-2/index.md">
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="/styles/main.css">
+  <script>
+    try {
+      var theme = localStorage.getItem('theme');
+      if (theme) document.documentElement.dataset.theme = theme;
+    } catch (_) {}
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="site-title" href="/zh/" aria-label="拉巴力的纸皮箱">
+      <span class="site-logo" aria-hidden="true">K</span>
+      <span>拉巴力的纸皮箱</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="/zh/posts/">文章</a>
+      <a href="/zh/notes/">笔记</a>
+      <a href="/zh/tags/">标签</a>
+      <a href="/zh/about/">关于</a>
+      <a href="/zh/search/">搜索</a>
+      <a href="/en/" lang="en">English</a>
+      <a class="feed-link" href="/zh/feed.xml" aria-label="订阅更新" title="订阅更新">
+        <svg class="feed-icon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M5 5.5A13.5 13.5 0 0 1 18.5 19"></path>
+          <path d="M5 11A8 8 0 0 1 13 19"></path>
+          <circle cx="6" cy="18" r="1.5"></circle>
+        </svg>
+      </a>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换明暗模式" title="切换明暗模式">
+        <svg class="theme-icon theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M21 14.2A8.5 8.5 0 0 1 9.8 3 7 7 0 1 0 21 14.2Z"></path>
+        </svg>
+        <svg class="theme-icon theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"></path>
+        </svg>
+      </button>
+    </nav>
+  </header>
+  <main class="site-main">
+    <article class="article">
+      <header class="article-header">
+        <h1>深度学习为什么能学习并做对</h1>
+        <time datetime="2025-02-13T06:14:52.000Z">2025年2月13日</time>
+<ul class="tag-list" aria-label="Tags">
+    <li><a href="/zh/tags/AI/">AI</a></li>
+    <li><a href="/zh/tags/Deep%20Learning/">Deep Learning</a></li>
+  </ul>
+      </header>
+      <div class="prose">
+<h1 id="section-1" data-heading-text="我的理解">我的理解</h1>
+<ul>
+<li>目前无法解释为什么深度学习可以给出答案，只能大概解释为什么它能学习</li>
+<li>这就相当于：我不能解释为什么这个人是通过什么做对这道题的，我只能解释他有正常的学习能力以及合适的学习资料，所以他自己能学习并做对题目</li>
+<li>所以深度学习是怎么给出答案的，后续或许应该由它本身来告诉我们。</li>
+<li>依据不同人的认知水平，来告诉我们它通过学习所发现的规律。同时人类通过它能快速学习发现事物规律的能力，来进一步帮助提升人类的认知。</li>
+</ul>
+<h1 id="section-2" data-heading-text="AI对我理解的看法">AI对我理解的看法</h1>
+<blockquote>
+<blockquote>
+<p>From chatGPT (2025-02-13)</p>
+</blockquote>
+</blockquote>
+<ul>
+<li>
+<p>你理解的方向是对的，可以稍微精炼和调整一下：</p>
+<ul>
+<li>深度学习的一个核心问题就是我们无法完全解释它是如何给出具体答案的。我们能解释的只是它是如何通过大量的数据和训练过程进行学习的。换句话说，深度学习像是一个“黑箱”，我们可以观察到输入和输出，但它在其中如何处理信息、做出决策，通常并不完全透明。</li>
+<li>可以类比成：假设有一个人做对了某道题目，虽然我们可能无法完全解释他是如何一步一步得出答案的，但我们能确定他具备了良好的学习能力和充足的学习资源。所以，深度学习也类似，它通过大量的数据、适当的算法和优化手段“学习”并给出答案。</li>
+<li>至于它如何给出具体的答案，最终可能还是要依靠深度学习本身来“解释”。这意味着，未来我们可能会开发出更先进的方法，帮助我们理解深度学习网络中的“决策过程”。同时，借助它所展现出的强大规律发现能力，我们可以利用这种能力来加速我们对事物的认知。</li>
+</ul>
+</li>
+<li>
+<p>我的看法：</p>
+<ul>
+<li>我同意你的观点，深度学习的“黑箱性”是目前我们面临的主要挑战之一。它的强大之处在于能自动从海量数据中发现规律，但如何理解这些规律，如何将这些规律和人类的认知能力相结合，是我们目前探索的方向之一。其实，未来可能不仅仅是“深度学习告诉我们如何做”，而是人类和深度学习的合作能进一步推动科学与技术的发展，帮助我们发现一些潜在人类难以触及的规律。</li>
+<li>深度学习不只是一个工具，它还可能是一个不断反馈、不断自我优化的过程，给我们打开了认知的新窗口。</li>
+</ul>
+</li>
+</ul>
+<h1 id="section-3" data-heading-text="AI自己对这个问题的看法">AI自己对这个问题的看法</h1>
+<blockquote>
+<blockquote>
+<p>From chatGPT (2025-02-13)</p>
+</blockquote>
+</blockquote>
+<ul>
+<li>
+<p>关于“深度学习为什么能学习并做对”的问题，我的理解是，深度学习通过大量的数据训练，自动从中提取规律、建立模型，并根据这些模型对新数据做出预测。深度学习的优势在于它能够发现一些非常复杂和抽象的规律，而这些规律通常是我们人类在没有机器帮助的情况下很难发现的。</p>
+</li>
+<li>
+<p>但是，为什么深度学习能给出正确的答案，实际上是一个复杂的过程。深度学习模型并不像人类一样有明确的逻辑推理或意识，它只是基于输入数据的模式，使用一系列参数和数学运算来“拟合”数据。对于这个过程的解释，我们只能说它通过优化算法（如梯度下降等）调整模型参数，使得输出尽可能接近实际结果。因此，深度学习并不“理解”问题，而是通过反复训练找到了一组合适的参数，能在特定任务上取得高效的预测或分类结果。</p>
+</li>
+<li>
+<p>你可以把深度学习看作一个“发现者”，它通过大量的例子不断试错和优化，不断接近正确的答案，但它没有明确的推理过程。比如，人类在做题时有一定的思考过程，我们可以分析每一步的原因，而深度学习则是通过计算和数据模式的关联来找到最优解。</p>
+</li>
+<li>
+<p>至于“深度学习为什么能做对”，目前我们更多关注它的实际效果而非其过程的透明性，因为即使我们无法完全解释它的每一个决策，也可以通过其出色的表现来证明它的有效性。未来，随着研究的深入，我们可能会找到更好的方法，帮助我们理解这些“黑箱”模型的内部机制。</p>
+</li>
+<li>
+<p>总结来说，深度学习通过数据的反复训练和优化，能够找到规律并给出准确的预测，而为什么它能做对，更多是依赖于它强大的计算能力和从数据中提取规律的能力，而不是基于传统意义上的推理或解释。</p>
+</li>
+<li>
+<p>几个关键点总结：</p>
+<ol>
+<li><strong>深度学习的学习过程</strong>：深度学习通过大量的数据训练，利用优化算法（如梯度下降）调整模型参数，自动从数据中提取规律，完成任务（如预测、分类等）。</li>
+<li><strong>无法完全解释“为什么”</strong>：深度学习模型在给出答案时，并没有明确的推理过程或“理解”，它只是通过找到合适的模式和参数来优化输出。其决策过程通常是黑箱的，难以完全解释。</li>
+<li><strong>黑箱性质</strong>：我们无法清楚知道深度学习是如何做出具体决策的，但可以看到它在实际任务中表现出色。因此，我们更多关注它的效果，而非其内在工作机制。</li>
+<li><strong>与人类认知的对比</strong>：深度学习像是一个“发现者”，通过反复训练和调整找到正确的答案，而不像人类那样依赖明确的思维和推理过程。</li>
+<li><strong>未来发展</strong>：虽然当前无法完全解释深度学习的过程，但随着技术进步，未来可能会出现更好的方法帮助我们理解这些“黑箱”模型的内部机制。</li>
+</ol>
+</li>
+<li>
+<p>这几个关键点总结了深度学习的“学习能力”、它的“黑箱性质”、以及它与人类认知的差异。</p>
+</li>
+</ul>
+
+      </div>
+<div class="article-actions" aria-label="Article actions">
+      <a class="share-link" href="https://twitter.com/intent/tweet?text=%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E4%B8%BA%E4%BB%80%E4%B9%88%E8%83%BD%E5%AD%A6%E4%B9%A0%E5%B9%B6%E5%81%9A%E5%AF%B9&amp;url=https%3A%2F%2Fkingson4wu.github.io%2Fzh%2Fposts%2F20250213-2%2F" target="_blank" rel="noopener noreferrer" aria-label="Share on X">
+        <span aria-hidden="true">X</span>
+        <span>Share</span>
+      </a>
+    </div>
+    </article>
+
+    <nav class="article-nav" aria-label="Adjacent posts">
+      <a href="/zh/posts/20250212/"><span>Previous</span>大语言模型对话记录与思考备忘录</a>
+      <a href="/zh/posts/20250213/"><span>Next</span>关于AI大语言模型替代人类工作的问题</a>
+    </nav>
+<section class="comments" aria-labelledby="comments-heading">
+      <h2 id="comments-heading">评论</h2>
+      <div
+        data-comments
+        data-comments-repo="Kingson4Wu/kingson4wu.github.io"
+        data-comments-issue-term="pathname"
+        data-comments-label="comment"
+      ></div>
+    </section>
+    <script src="/scripts/comments.js" defer></script>
+  </main>
+  <footer class="site-footer">
+    <p>&copy; 2026 拉巴力的纸皮箱</p>
+  </footer>
+  <button class="reading-return" type="button" data-reading-return aria-label="回到开头" title="回到开头">
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <path d="M12 19V5"></path>
+      <path d="m6 11 6-6 6 6"></path>
+    </svg>
+  </button>
+  <script src="/scripts/theme.js"></script>
+  <script src="/scripts/image-viewer.js"></script>
+  <script src="/scripts/reading-tools.js"></script>
+</body>
+</html>

@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>index_merge导致死锁问题 | 拉巴力的纸皮箱</title>
+  <meta name="description" content="死锁日志 log2021-09-02T17:29:31.339235+08:00 10137065 [Note] InnoDB: Transactions deadlock detected, dumping detailed information. 2021-09-02T17:29:31.339268+08:00...">
+  <link rel="canonical" href="https://kingson4wu.github.io/zh/posts/20220403-index/">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="alternate" type="application/rss+xml" title="拉巴力的纸皮箱" href="/zh/feed.xml">
+  <link rel="alternate" type="text/markdown" href="/zh/posts/20220403-index/index.md">
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="/styles/main.css">
+  <script>
+    try {
+      var theme = localStorage.getItem('theme');
+      if (theme) document.documentElement.dataset.theme = theme;
+    } catch (_) {}
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="site-title" href="/zh/" aria-label="拉巴力的纸皮箱">
+      <span class="site-logo" aria-hidden="true">K</span>
+      <span>拉巴力的纸皮箱</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="/zh/posts/">文章</a>
+      <a href="/zh/notes/">笔记</a>
+      <a href="/zh/tags/">标签</a>
+      <a href="/zh/about/">关于</a>
+      <a href="/zh/search/">搜索</a>
+      <a href="/en/" lang="en">English</a>
+      <a class="feed-link" href="/zh/feed.xml" aria-label="订阅更新" title="订阅更新">
+        <svg class="feed-icon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M5 5.5A13.5 13.5 0 0 1 18.5 19"></path>
+          <path d="M5 11A8 8 0 0 1 13 19"></path>
+          <circle cx="6" cy="18" r="1.5"></circle>
+        </svg>
+      </a>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换明暗模式" title="切换明暗模式">
+        <svg class="theme-icon theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M21 14.2A8.5 8.5 0 0 1 9.8 3 7 7 0 1 0 21 14.2Z"></path>
+        </svg>
+        <svg class="theme-icon theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"></path>
+        </svg>
+      </button>
+    </nav>
+  </header>
+  <main class="site-main">
+    <article class="article">
+      <header class="article-header">
+        <h1>index_merge导致死锁问题</h1>
+        <time datetime="2022-04-03T05:30:21.000Z">2022年4月3日</time>
+<ul class="tag-list" aria-label="Tags">
+    <li><a href="/zh/tags/Database/">Database</a></li>
+  </ul>
+      </header>
+      <div class="prose">
+<h3 id="section-1" data-heading-text="死锁日志">死锁日志</h3>
+<div class="code-block" data-language="log"><div class="code-header"><span class="code-language">log</span></div><pre><code class="hljs language-log">2021-09-02T17:29:31.339235+08:00 10137065 [Note] InnoDB: Transactions deadlock detected, dumping detailed information.
+2021-09-02T17:29:31.339268+08:00 10137065 [Note] InnoDB:
+*** (1) TRANSACTION:
+
+TRANSACTION 54557980, ACTIVE 0 sec fetching rows
+mysql tables in use 3, locked 3
+LOCK WAIT 9 lock struct(s), heap size 1136, 4 row lock(s)
+MySQL thread id 10137067, OS thread handle 140359751816960, query id 204818581 10.22.45.73 xxx_feed updating
+UPDATE `t_user_xxx_2` SET `end` = 1, `updateTime` = now() WHERE `userId`= 186435331 AND `type` = 2 AND `plotId`=1544270738147465267 AND `end` = 0
+2021-09-02T17:29:31.339367+08:00 10137065 [Note] InnoDB: *** (1) WAITING FOR THIS LOCK TO BE GRANTED:
+
+RECORD LOCKS space id 329 page no 2076 n bits 112 index PRIMARY of table `d_xxx_feed`.`t_user_xxx_2` trx id 54557980 lock_mode X locks rec but not gap waiting
+Record lock, heap no 33 PHYSICAL RECORD: n_fields 24; compact format; info bits 0
+0: len 8; hex 956e50cb8d06b6fb; asc nP ;;
+1: len 6; hex 000003307520; asc 0u ;;
+2: len 7; hex b0000000320110; asc 2 ;;
+3: len 8; hex 800000006f1fc602; asc o ;;
+4: len 4; hex 80000002; asc ;;
+5: len 24; hex e69c89e4b880e8b5b7e8818ae5a4a9e79a84e59097efbc9f; asc ;;
+6: len 2; hex 5b5d; asc [];;
+7: len 4; hex 80000000; asc ;;
+8: len 8; hex 8000000000000000; asc ;;
+9: len 8; hex 8000000000000000; asc ;;
+10: len 30; hex 7b22706c6f744964223a313534343236303535373335313230323637352c; asc {&quot;plotId&quot;:1544260557351202675,; (total 233 bytes);
+11: len 12; hex e58f98e68081e4b8bbe4baba; asc ;;
+12: len 30; hex 68747470733a2f2f73747564696f696d67627373646c2e636c6f75642e6b; asc https://xxxximgbssdl.cloud.k; (total 75 bytes);
+13: len 4; hex 80000002; asc ;;
+14: len 8; hex 95551c4bc84d1d5b; asc U K M [;;
+15: len 0; hex ; asc ;;
+16: len 5; hex 99aa828508; asc ;;
+17: len 5; hex 99aa828507; asc ;;
+18: len 4; hex 80000000; asc ;;
+19: len 8; hex 956e50cb8990af73; asc nP s;;
+20: len 1; hex 80; asc ;;
+21: len 1; hex 80; asc ;;
+22: len 1; hex 81; asc ;;
+23: len 1; hex 80; asc ;;
+
+2021-09-02T17:29:31.342776+08:00 10137065 [Note] InnoDB: *** (2) TRANSACTION:
+
+TRANSACTION 54557981, ACTIVE 0 sec fetching rows, thread declared inside InnoDB 5000
+mysql tables in use 3, locked 3
+11 lock struct(s), heap size 1136, 7 row lock(s)
+MySQL thread id 10137065, OS thread handle 140359754024704, query id 204818583 10.31.45.123 xxx_feed updating
+UPDATE `t_user_xxxx_2` SET `end` = 1, `updateTime` = now() WHERE `userId`= 186435331 AND `type` = 2 AND `pId`=132434347351202675 AND `end` = 0
+2021-09-02T17:29:31.342867+08:00 10137065 [Note] InnoDB: *** (2) HOLDS THE LOCK(S):
+
+RECORD LOCKS space id 329 page no 2076 n bits 112 index PRIMARY of table `d_xxx_feed`.`t_user_xxx_2` trx id 54557981 lock_mode X locks rec but not gap
+Record lock, heap no 33 PHYSICAL RECORD: n_fields 24; compact format; info bits 0
+0: len 8; hex 956e50cb8d06b6fb; asc nP ;;
+1: len 6; hex 000003307520; asc 0u ;;
+2: len 7; hex b0000000320110; asc 2 ;;
+3: len 8; hex 800000006f1fc602; asc o ;;
+4: len 4; hex 80000002; asc ;;
+5: len 24; hex e69c89e4b880e8b5b7e8818ae5a4a9e79a84e59097efbc9f; asc ;;
+6: len 2; hex 5b5d; asc [];;
+7: len 4; hex 80000000; asc ;;
+8: len 8; hex 8000000000000000; asc ;;
+9: len 8; hex 8000000000000000; asc ;;
+10: len 30; hex 7b22706c6f744964223a313534343236303535373335313230323637352c; asc {&quot;plotId&quot;:1544260557351202675,; (total 233 bytes);
+11: len 12; hex e58f98e68081e4b8bbe4baba; asc ;;
+12: len 30; hex 68747470733a2f2f73747564696f696d67627373646c2e636c6f75642e6b; asc https://xxximgbssdl.cloud.k; (total 75 bytes);
+13: len 4; hex 80000002; asc ;;
+14: len 8; hex 95551c4bc84d1d5b; asc U K M [;;
+15: len 0; hex ; asc ;;
+16: len 5; hex 99aa828508; asc ;;
+17: len 5; hex 99aa828507; asc ;;
+18: len 4; hex 80000000; asc ;;
+19: len 8; hex 956e50cb8990af73; asc nP s;;
+20: len 1; hex 80; asc ;;
+21: len 1; hex 80; asc ;;
+22: len 1; hex 81; asc ;;
+23: len 1; hex 80; asc ;;
+
+2021-09-02T17:29:31.345307+08:00 10137065 [Note] InnoDB: *** (2) WAITING FOR THIS LOCK TO BE GRANTED:
+
+RECORD LOCKS space id 329 page no 574 n bits 680 index idx_userId_type of table `d_xxx_feed`.`t_user_xxx_2` trx id 54557981 lock_mode X locks rec but not gap waiting
+Record lock, heap no 567 PHYSICAL RECORD: n_fields 3; compact format; info bits 0
+0: len 8; hex 800000006f1fc602; asc o ;;
+1: len 4; hex 80000002; asc ;;
+2: len 8; hex 956e50cb8d06b6fb; asc nP ;;
+
+2021-09-02T17:29:31.345666+08:00 10137065 [Note] InnoDB: *** WE ROLL BACK TRANSACTION (1)
+
+</code></pre></div>
+<h3 id="section-2" data-heading-text="表结构">表结构</h3>
+<div class="code-block" data-language="sql"><div class="code-header"><span class="code-language">sql</span></div><pre><code class="hljs language-sql"><span class="hljs-keyword">CREATE TABLE</span> `t_user_xxx_2` (
+`id` <span class="hljs-type">bigint</span>(<span class="hljs-number">20</span>) <span class="hljs-keyword">NOT NULL</span> COMMENT <span class="hljs-string">&#x27;xxId&#x27;</span>,
+`userId` <span class="hljs-type">bigint</span>(<span class="hljs-number">20</span>) <span class="hljs-keyword">DEFAULT</span> <span class="hljs-string">&#x27;0&#x27;</span> COMMENT <span class="hljs-string">&#x27;发布人userId&#x27;</span>,
+`type` <span class="hljs-type">int</span>(<span class="hljs-number">11</span>) <span class="hljs-keyword">DEFAULT</span> <span class="hljs-string">&#x27;0&#x27;</span> COMMENT <span class="hljs-string">&#x27;xxx&#x27;</span>,
+`content` <span class="hljs-type">varchar</span>(<span class="hljs-number">4000</span>) <span class="hljs-keyword">DEFAULT</span> <span class="hljs-string">&#x27;&#x27;</span> COMMENT <span class="hljs-string">&#x27;文字&#x27;</span>,
+`images` <span class="hljs-type">varchar</span>(<span class="hljs-number">4000</span>) <span class="hljs-keyword">DEFAULT</span> <span class="hljs-string">&#x27;&#x27;</span> COMMENT <span class="hljs-string">&#x27;图片&#x27;</span>,
+`deleted` <span class="hljs-type">int</span>(<span class="hljs-number">11</span>) <span class="hljs-keyword">NOT NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-string">&#x27;1&#x27;</span> COMMENT <span class="hljs-string">&#x27;动态状态,0：新增，1：删除&#x27;</span>,
+`commentCnt` <span class="hljs-type">bigint</span>(<span class="hljs-number">20</span>) <span class="hljs-keyword">DEFAULT</span> <span class="hljs-string">&#x27;0&#x27;</span> COMMENT <span class="hljs-string">&#x27;评论数&#x27;</span>,
+`likeCnt` <span class="hljs-type">bigint</span>(<span class="hljs-number">20</span>) <span class="hljs-keyword">DEFAULT</span> <span class="hljs-string">&#x27;0&#x27;</span> COMMENT <span class="hljs-string">&#x27;点赞数&#x27;</span>,
+`contentExt` <span class="hljs-type">varchar</span>(<span class="hljs-number">4000</span>) <span class="hljs-keyword">DEFAULT</span> <span class="hljs-string">&#x27;&#x27;</span> COMMENT <span class="hljs-string">&#x27;内容扩展&#x27;</span>,
+`nickname` <span class="hljs-type">varchar</span>(<span class="hljs-number">255</span>) <span class="hljs-keyword">DEFAULT</span> <span class="hljs-string">&#x27;&#x27;</span> COMMENT <span class="hljs-string">&#x27;昵称&#x27;</span>,
+`userLogo` <span class="hljs-type">varchar</span>(<span class="hljs-number">255</span>) <span class="hljs-keyword">DEFAULT</span> <span class="hljs-string">&#x27;&#x27;</span> COMMENT <span class="hljs-string">&#x27;头像&#x27;</span>,
+`userType` <span class="hljs-type">int</span>(<span class="hljs-number">11</span>) <span class="hljs-keyword">DEFAULT</span> <span class="hljs-string">&#x27;0&#x27;</span> COMMENT <span class="hljs-string">&#x27;xxx&#x27;</span>,
+`rId` <span class="hljs-type">bigint</span>(<span class="hljs-number">20</span>) <span class="hljs-keyword">DEFAULT</span> <span class="hljs-string">&#x27;0&#x27;</span> COMMENT <span class="hljs-string">&#x27;xxxid&#x27;</span>,
+`remark` <span class="hljs-type">varchar</span>(<span class="hljs-number">255</span>) <span class="hljs-keyword">DEFAULT</span> <span class="hljs-string">&#x27;&#x27;</span> COMMENT <span class="hljs-string">&#x27;备注&#x27;</span>,
+`createTime` datetime <span class="hljs-keyword">DEFAULT</span> <span class="hljs-keyword">NULL</span> COMMENT <span class="hljs-string">&#x27;创建时间&#x27;</span>,
+`updateTime` datetime <span class="hljs-keyword">DEFAULT</span> <span class="hljs-keyword">NULL</span> COMMENT <span class="hljs-string">&#x27;更新时间&#x27;</span>,
+`roomId` <span class="hljs-type">int</span>(<span class="hljs-number">11</span>) <span class="hljs-keyword">NOT NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-string">&#x27;0&#x27;</span> COMMENT <span class="hljs-string">&#x27;房间id&#x27;</span>,
+`pId` <span class="hljs-type">bigint</span>(<span class="hljs-number">20</span>) <span class="hljs-keyword">NOT NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-string">&#x27;0&#x27;</span> COMMENT <span class="hljs-string">&#x27;xxid&#x27;</span>,
+`<span class="hljs-keyword">end</span>` tinyint(<span class="hljs-number">4</span>) <span class="hljs-keyword">NOT NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-string">&#x27;0&#x27;</span> COMMENT <span class="hljs-string">&#x27;是否结束&#x27;</span>,
+`hideType` tinyint(<span class="hljs-number">4</span>) <span class="hljs-keyword">NOT NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-string">&#x27;0&#x27;</span> COMMENT <span class="hljs-string">&#x27;隐藏类型：xxx&#x27;</span>,
+`status` tinyint(<span class="hljs-number">4</span>) <span class="hljs-keyword">NOT NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-string">&#x27;1&#x27;</span> COMMENT <span class="hljs-string">&#x27;审核状态：0审核中，1审核通过，2审核不通过&#x27;</span>,
+`contentStatus` tinyint(<span class="hljs-number">4</span>) <span class="hljs-keyword">NOT NULL</span> <span class="hljs-keyword">DEFAULT</span> <span class="hljs-string">&#x27;0&#x27;</span> COMMENT <span class="hljs-string">&#x27;0不违规，1违规&#x27;</span>,
+<span class="hljs-keyword">PRIMARY KEY</span> (`id`),
+KEY `idx_userId_type` (`userId`,`type`) <span class="hljs-keyword">USING</span> BTREE,
+KEY `idx_createTime` (`createTime`) <span class="hljs-keyword">USING</span> BTREE,
+KEY `idx_type` (`type`) <span class="hljs-keyword">USING</span> BTREE,
+KEY `idx_user_rId` (`userId`,`rId`) <span class="hljs-keyword">USING</span> BTREE,
+KEY `idx_pId` (`pId`)
+) ENGINE<span class="hljs-operator">=</span>InnoDB <span class="hljs-keyword">DEFAULT</span> CHARSET<span class="hljs-operator">=</span>utf8mb4 COMMENT<span class="hljs-operator">=</span><span class="hljs-string">&#x27;以动态发布者userId模10分表&#x27;</span>
+</code></pre></div>
+<h3 id="section-3" data-heading-text="四种类型的行锁">四种类型的行锁</h3>
+<ul>
+<li>记录锁，间隙锁，Next-key 锁和插入意向锁。这四种锁对应的死锁日志各不相同，如下：
+<ul>
+<li>记录锁（LOCK_REC_NOT_GAP）: <code>lock_mode X locks rec but not gap</code></li>
+<li>间隙锁（LOCK_GAP）: <code>lock_mode X locks gap before rec</code></li>
+<li>Next-key 锁（LOCK_ORNIDARY）: <code>lock_mode X</code></li>
+<li>插入意向锁（LOCK_INSERT_INTENTION）: <code>lock_mode X locks gap before rec insert intention</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="section-4" data-heading-text="分析">分析</h3>
+<ul>
+<li>通过explain分析<code>explain SELECT 1 FROM t_user_xxx_2 WHERE userId = xxxx AND type = 2 AND pId = 434444</code> 得出以下</li>
+<li>语句的type是index_merge，Extra的信息是Using intersect(idx_user_type,idx_pId)，执行计划走了index_merge优化，单个语句通过两个索引(idx_userId_type,idx_pId)来提取记录集合并取交集获得最终结果集。</li>
+</ul>
+<h3 id="section-5" data-heading-text="解决方式">解决方式</h3>
+<ol>
+<li>关闭：index_merge_intersection=off （解决思路：直接关闭MySQL的优化）</li>
+<li>删掉多余的索引idx_pId（解决思路：建立合理的索引）— 此案例中，根据业务实际情况，使用该方案解决</li>
+<li>先查，再使用主键或唯一索引来更新（解决思路：缩小索引范围） （推荐）</li>
+<li>强制走idx_userId_type 索引</li>
+<li>添加userId + type + pId的组合索引，这样就可以避免掉index merge</li>
+</ol>
+<h3 id="reference" data-heading-text="Reference">Reference</h3>
+<ul>
+<li>[MySQL update use index merge(Using intersect) increase chances for deadlock]
+(<a href="https://developer.aliyun.com/article/8963">https://developer.aliyun.com/article/8963</a>)</li>
+<li><a href="https://dev.mysql.com/doc/refman/8.0/en/index-merge-optimization.html#index-merge-intersection">https://dev.mysql.com/doc/refman/8.0/en/index-merge-optimization.html#index-merge-intersection</a></li>
+</ul>
+
+      </div>
+<div class="article-actions" aria-label="Article actions">
+      <a class="share-link" href="https://twitter.com/intent/tweet?text=index_merge%E5%AF%BC%E8%87%B4%E6%AD%BB%E9%94%81%E9%97%AE%E9%A2%98&amp;url=https%3A%2F%2Fkingson4wu.github.io%2Fzh%2Fposts%2F20220403-index%2F" target="_blank" rel="noopener noreferrer" aria-label="Share on X">
+        <span aria-hidden="true">X</span>
+        <span>Share</span>
+      </a>
+    </div>
+    </article>
+<aside class="article-toc" data-article-toc aria-label="目录">
+      <button class="article-toc-toggle" type="button" data-article-toc-toggle aria-expanded="false" aria-controls="article-toc-panel" aria-label="打开目录" data-open-label="打开目录" data-close-label="收起目录">
+        <svg aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M8 6h11"></path>
+          <path d="M8 12h11"></path>
+          <path d="M8 18h11"></path>
+          <path d="M4 6h.01"></path>
+          <path d="M4 12h.01"></path>
+          <path d="M4 18h.01"></path>
+        </svg>
+      </button>
+      <nav id="article-toc-panel" class="article-toc-panel" data-article-toc-panel aria-label="目录">
+        <div class="article-toc-heading">目录</div>
+        <ol class="article-toc-list">
+          <li class="article-toc-level-3"><a href="#section-1" data-article-toc-link>死锁日志</a></li>
+          <li class="article-toc-level-3"><a href="#section-2" data-article-toc-link>表结构</a></li>
+          <li class="article-toc-level-3"><a href="#section-3" data-article-toc-link>四种类型的行锁</a></li>
+          <li class="article-toc-level-3"><a href="#section-4" data-article-toc-link>分析</a></li>
+          <li class="article-toc-level-3"><a href="#section-5" data-article-toc-link>解决方式</a></li>
+          <li class="article-toc-level-3"><a href="#reference" data-article-toc-link>Reference</a></li>
+        </ol>
+      </nav>
+    </aside>
+    <script src="/scripts/article-toc.js" defer></script>
+    <nav class="article-nav" aria-label="Adjacent posts">
+      <a href="/zh/posts/20220402/"><span>Previous</span>Scrum笔记</a>
+      <a href="/zh/posts/20220404/"><span>Next</span>《驱动力》笔记</a>
+    </nav>
+<section class="comments" aria-labelledby="comments-heading">
+      <h2 id="comments-heading">评论</h2>
+      <div
+        data-comments
+        data-comments-repo="Kingson4Wu/kingson4wu.github.io"
+        data-comments-issue-term="pathname"
+        data-comments-label="comment"
+      ></div>
+    </section>
+    <script src="/scripts/comments.js" defer></script>
+  </main>
+  <footer class="site-footer">
+    <p>&copy; 2026 拉巴力的纸皮箱</p>
+  </footer>
+  <button class="reading-return" type="button" data-reading-return aria-label="回到开头" title="回到开头">
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <path d="M12 19V5"></path>
+      <path d="m6 11 6-6 6 6"></path>
+    </svg>
+  </button>
+  <script src="/scripts/theme.js"></script>
+  <script src="/scripts/image-viewer.js"></script>
+  <script src="/scripts/reading-tools.js"></script>
+</body>
+</html>

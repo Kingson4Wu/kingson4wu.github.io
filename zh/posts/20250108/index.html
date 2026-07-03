@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>算法在实际业务场景中并非完全无用 | 拉巴力的纸皮箱</title>
+  <meta name="description" content="从事业务开发的同学经常会抱怨经常面试要刷算法，实际上平常的开发99%以上的事情都不会用到。 实际情况确实是这样。平常在写业务逻辑代码时，几乎完全不需要。 当然有些技术原理在背八股文的时候，懂一点算法能帮助你更好的理解。 而有些特殊业务场景，懂一些算法，确实能帮助你很好的解决问题。 下面举两个业务中产品提出的需求作为例子...">
+  <link rel="canonical" href="https://kingson4wu.github.io/zh/posts/20250108/">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="alternate" type="application/rss+xml" title="拉巴力的纸皮箱" href="/zh/feed.xml">
+  <link rel="alternate" type="text/markdown" href="/zh/posts/20250108/index.md">
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="/styles/main.css">
+  <script>
+    try {
+      var theme = localStorage.getItem('theme');
+      if (theme) document.documentElement.dataset.theme = theme;
+    } catch (_) {}
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="site-title" href="/zh/" aria-label="拉巴力的纸皮箱">
+      <span class="site-logo" aria-hidden="true">K</span>
+      <span>拉巴力的纸皮箱</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="/zh/posts/">文章</a>
+      <a href="/zh/notes/">笔记</a>
+      <a href="/zh/tags/">标签</a>
+      <a href="/zh/about/">关于</a>
+      <a href="/zh/search/">搜索</a>
+      <a href="/en/" lang="en">English</a>
+      <a class="feed-link" href="/zh/feed.xml" aria-label="订阅更新" title="订阅更新">
+        <svg class="feed-icon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M5 5.5A13.5 13.5 0 0 1 18.5 19"></path>
+          <path d="M5 11A8 8 0 0 1 13 19"></path>
+          <circle cx="6" cy="18" r="1.5"></circle>
+        </svg>
+      </a>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换明暗模式" title="切换明暗模式">
+        <svg class="theme-icon theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M21 14.2A8.5 8.5 0 0 1 9.8 3 7 7 0 1 0 21 14.2Z"></path>
+        </svg>
+        <svg class="theme-icon theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"></path>
+        </svg>
+      </button>
+    </nav>
+  </header>
+  <main class="site-main">
+    <article class="article">
+      <header class="article-header">
+        <h1>算法在实际业务场景中并非完全无用</h1>
+        <time datetime="2025-01-08T05:33:24.000Z">2025年1月8日</time>
+<ul class="tag-list" aria-label="Tags">
+    <li><a href="/zh/tags/Architecture/">Architecture</a></li>
+    <li><a href="/zh/tags/Algorithms/">Algorithms</a></li>
+  </ul>
+      </header>
+      <div class="prose">
+<blockquote>
+<blockquote>
+<p>从事业务开发的同学经常会抱怨经常面试要刷算法，实际上平常的开发99%以上的事情都不会用到。
+实际情况确实是这样。平常在写业务逻辑代码时，几乎完全不需要。
+当然有些技术原理在背八股文的时候，懂一点算法能帮助你更好的理解。
+而有些特殊业务场景，懂一些算法，确实能帮助你很好的解决问题。
+下面举两个业务中产品提出的需求作为例子，简单描述如何利用算法有效解决。</p>
+</blockquote>
+</blockquote>
+<h2 id="section-1" data-heading-text="一、从题库（50道题）中随机抽出10道题,且不能重复">一、从题库（50道题）中随机抽出10道题,且不能重复</h2>
+<ul>
+<li>
+<p>最简单的思路：</p>
+<ul>
+<li>循环10次，每次取50以内的随机数</li>
+<li>创建一个hashmap，判断生成的随机数是否在map存在，存在则重新生成</li>
+<li>这个方法的缺点时，极端情况下，会多次生成重复的随机数导致要不断重新生成</li>
+</ul>
+</li>
+<li>
+<p>经过一番思考，我设计了一下从m个数中取n个数的算法(m&gt;n), 保证算法只会循环n次</p>
+</li>
+<li>
+<p>那时我还是使用Java进行开发</p>
+</li>
+</ul>
+<div class="code-block" data-language="java"><div class="code-header"><span class="code-language">java</span></div><pre><code class="hljs language-java">    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-type">int</span>[] randomArr(<span class="hljs-type">int</span> m, <span class="hljs-type">int</span> n) {
+
+        <span class="hljs-keyword">if</span> (m &lt; n) {
+            <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">int</span>[]{};
+        }
+        <span class="hljs-type">int</span>[] result = <span class="hljs-keyword">new</span> <span class="hljs-title class_">int</span>[n];
+        <span class="hljs-type">int</span>[] data = <span class="hljs-keyword">new</span> <span class="hljs-title class_">int</span>[m];
+
+        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; m; i++) {
+            data[i] = i;
+        }
+
+        <span class="hljs-type">int</span> <span class="hljs-variable">end</span> <span class="hljs-operator">=</span> m;
+
+        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">j</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; j &lt; n; j++) {
+            <span class="hljs-type">int</span> <span class="hljs-variable">y</span> <span class="hljs-operator">=</span> ThreadLocalRandom.current().nextInt(end);
+            result[j] = data[y];
+            data[y] = data[end - <span class="hljs-number">1</span>];
+            data[end - <span class="hljs-number">1</span>] = result[j];
+            end--;
+        }
+
+        <span class="hljs-keyword">return</span> result;
+    }
+</code></pre></div>
+<ul>
+<li>后面我才发现原来这个算法叫 洗牌算法（Shuffle Algorithm），或者叫随机乱置算法。</li>
+</ul>
+<h2 id="section-2" data-heading-text="通过搜索关键字匹配对应的标签id">通过搜索关键字匹配对应的标签id</h2>
+<ul>
+<li>
+<p>产品提供了400个标签名称以及对应的标签id，希望能通过搜索的方式找到最相似的标签id，希望能支持模糊匹配</p>
+</li>
+<li>
+<p>一般思路：</p>
+<ul>
+<li>方案1:
+<ol>
+<li>将400条数据一次性加载的程序内存</li>
+<li>遍历数据400条使用字符串的contains方法，找到第一条匹配数据就跳出，否则继续</li>
+</ol>
+</li>
+<li>方案2:
+<ol>
+<li>直接将数据导入到ES搜索引擎，利用ES自带的分词等搜索功能</li>
+<li>通过调ES，搜索得到标签id</li>
+</ol>
+</li>
+</ul>
+</li>
+<li>
+<p>简单分析方案：</p>
+<ul>
+<li>方案1，性能太差，极端情况需要遍历所有数据</li>
+<li>方案2，需要新搭建ES集群，实现代价比较高</li>
+</ul>
+</li>
+<li>
+<p>经过一番思考，以及从产品本身实际需求上出发，我涉及出以下的方案</p>
+<ol>
+<li>将数据的标签名字使用中文分词库<a href="https://github.com/go-ego/gse">gse</a>进行分词</li>
+<li>将分词和对应的标签数据，构建前缀匹配树</li>
+<li>当搜索时，使用提前构建好的前缀匹配树，即可快速找到对应的标签id</li>
+</ol>
+</li>
+<li>
+<p>这时我已经转使用Go来开发了</p>
+</li>
+</ul>
+<div class="code-block" data-language="go"><div class="code-header"><span class="code-language">go</span></div><pre><code class="hljs language-go">
+<span class="hljs-keyword">type</span> TrieNode <span class="hljs-keyword">struct</span> {
+	children <span class="hljs-keyword">map</span>[<span class="hljs-type">rune</span>]*TrieNode
+	isEnd    <span class="hljs-type">bool</span>
+}
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">NewTrieNode</span><span class="hljs-params">()</span></span> *TrieNode {
+	<span class="hljs-keyword">return</span> &amp;TrieNode{
+		children: <span class="hljs-built_in">make</span>(<span class="hljs-keyword">map</span>[<span class="hljs-type">rune</span>]*TrieNode),
+		isEnd:    <span class="hljs-literal">false</span>,
+	}
+}
+
+<span class="hljs-keyword">type</span> Trie <span class="hljs-keyword">struct</span> {
+	root *TrieNode
+}
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">NewTrie</span><span class="hljs-params">()</span></span> *Trie {
+	<span class="hljs-keyword">return</span> &amp;Trie{
+		root: NewTrieNode(),
+	}
+}
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(t *Trie)</span></span> Insert(word <span class="hljs-type">string</span>) {
+	node := t.root
+	<span class="hljs-keyword">for</span> _, char := <span class="hljs-keyword">range</span> word {
+		<span class="hljs-keyword">if</span> _, ok := node.children[char]; !ok {
+			node.children[char] = NewTrieNode()
+		}
+		node = node.children[char]
+	}
+	node.isEnd = <span class="hljs-literal">true</span>
+}
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(t *Trie)</span></span> Search(word <span class="hljs-type">string</span>) <span class="hljs-type">bool</span> {
+	node := t.root
+	<span class="hljs-keyword">for</span> _, char := <span class="hljs-keyword">range</span> word {
+		<span class="hljs-keyword">if</span> _, ok := node.children[char]; !ok {
+			<span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>
+		}
+		node = node.children[char]
+	}
+	<span class="hljs-keyword">return</span> node.isEnd
+}
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(t *Trie)</span></span> FuzzySearch(prefix <span class="hljs-type">string</span>) []<span class="hljs-type">string</span> {
+	<span class="hljs-keyword">var</span> result []<span class="hljs-type">string</span>
+	node := t.root
+	<span class="hljs-keyword">for</span> _, char := <span class="hljs-keyword">range</span> prefix {
+		<span class="hljs-keyword">if</span> _, ok := node.children[char]; !ok {
+			<span class="hljs-keyword">return</span> result
+		}
+		node = node.children[char]
+	}
+	t.collectWords(node, prefix, &amp;result)
+	<span class="hljs-keyword">return</span> result
+}
+
+<span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-params">(t *Trie)</span></span> collectWords(node *TrieNode, prefix <span class="hljs-type">string</span>, result *[]<span class="hljs-type">string</span>) {
+	<span class="hljs-keyword">if</span> node.isEnd {
+		*result = <span class="hljs-built_in">append</span>(*result, prefix)
+	}
+
+	<span class="hljs-keyword">for</span> char, child := <span class="hljs-keyword">range</span> node.children {
+		t.collectWords(child, prefix+<span class="hljs-type">string</span>(char), result)
+	}
+}
+</code></pre></div>
+<ul>
+<li>这个算法就是经典的Trie字典树（前缀树），如果我之前没了解过这些算法，可能一时间没那么快能想到用这个方式高效完成这个需求。</li>
+</ul>
+<h1 id="section-3" data-heading-text="总结">总结</h1>
+<ul>
+<li>了解一些算法，在实际业务开发，有时候也能运用到。</li>
+<li>另外，现在处于AI时代，即时不了解算法，善于组织语言和上下文，向AI提问，基本它也能引导你找到合适的解决方案。</li>
+</ul>
+
+      </div>
+<div class="article-actions" aria-label="Article actions">
+      <a class="share-link" href="https://twitter.com/intent/tweet?text=%E7%AE%97%E6%B3%95%E5%9C%A8%E5%AE%9E%E9%99%85%E4%B8%9A%E5%8A%A1%E5%9C%BA%E6%99%AF%E4%B8%AD%E5%B9%B6%E9%9D%9E%E5%AE%8C%E5%85%A8%E6%97%A0%E7%94%A8&amp;url=https%3A%2F%2Fkingson4wu.github.io%2Fzh%2Fposts%2F20250108%2F" target="_blank" rel="noopener noreferrer" aria-label="Share on X">
+        <span aria-hidden="true">X</span>
+        <span>Share</span>
+      </a>
+    </div>
+    </article>
+<aside class="article-toc" data-article-toc aria-label="目录">
+      <button class="article-toc-toggle" type="button" data-article-toc-toggle aria-expanded="false" aria-controls="article-toc-panel" aria-label="打开目录" data-open-label="打开目录" data-close-label="收起目录">
+        <svg aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M8 6h11"></path>
+          <path d="M8 12h11"></path>
+          <path d="M8 18h11"></path>
+          <path d="M4 6h.01"></path>
+          <path d="M4 12h.01"></path>
+          <path d="M4 18h.01"></path>
+        </svg>
+      </button>
+      <nav id="article-toc-panel" class="article-toc-panel" data-article-toc-panel aria-label="目录">
+        <div class="article-toc-heading">目录</div>
+        <ol class="article-toc-list">
+          <li class="article-toc-level-2"><a href="#section-1" data-article-toc-link>一、从题库（50道题）中随机抽出10道题,且不能重复</a></li>
+          <li class="article-toc-level-2"><a href="#section-2" data-article-toc-link>通过搜索关键字匹配对应的标签id</a></li>
+        </ol>
+      </nav>
+    </aside>
+    <script src="/scripts/article-toc.js" defer></script>
+    <nav class="article-nav" aria-label="Adjacent posts">
+      <a href="/zh/posts/20250106/"><span>Previous</span>简单研究一下人工智能和数学</a>
+      <a href="/zh/posts/20250212/"><span>Next</span>大语言模型对话记录与思考备忘录</a>
+    </nav>
+<section class="comments" aria-labelledby="comments-heading">
+      <h2 id="comments-heading">评论</h2>
+      <div
+        data-comments
+        data-comments-repo="Kingson4Wu/kingson4wu.github.io"
+        data-comments-issue-term="pathname"
+        data-comments-label="comment"
+      ></div>
+    </section>
+    <script src="/scripts/comments.js" defer></script>
+  </main>
+  <footer class="site-footer">
+    <p>&copy; 2026 拉巴力的纸皮箱</p>
+  </footer>
+  <button class="reading-return" type="button" data-reading-return aria-label="回到开头" title="回到开头">
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <path d="M12 19V5"></path>
+      <path d="m6 11 6-6 6 6"></path>
+    </svg>
+  </button>
+  <script src="/scripts/theme.js"></script>
+  <script src="/scripts/image-viewer.js"></script>
+  <script src="/scripts/reading-tools.js"></script>
+</body>
+</html>

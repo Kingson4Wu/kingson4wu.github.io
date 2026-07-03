@@ -1,0 +1,558 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>大模型中的 Function Calling 与工具模式:机制、区别与本质 | 拉巴力的纸皮箱</title>
+  <meta name="description" content="本文由ChatGPT和Claude.ai辅助完成 大模型(LLM)在现代应用中的一个核心能力,是能够按照严格结构调用外部工具,例如数据库查询、Python 代码执行、HTTP 请求、存储系统等。围绕这一点,业界形成了“function calling”与“tools API”等概念。尽管二者在语义上相近,但其实现逻辑、...">
+  <link rel="canonical" href="https://kingson4wu.github.io/zh/posts/20251212-function-calling/">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="alternate" type="application/rss+xml" title="拉巴力的纸皮箱" href="/zh/feed.xml">
+  <link rel="alternate" type="text/markdown" href="/zh/posts/20251212-function-calling/index.md">
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="/styles/main.css">
+  <script>
+    try {
+      var theme = localStorage.getItem('theme');
+      if (theme) document.documentElement.dataset.theme = theme;
+    } catch (_) {}
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="site-title" href="/zh/" aria-label="拉巴力的纸皮箱">
+      <span class="site-logo" aria-hidden="true">K</span>
+      <span>拉巴力的纸皮箱</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="/zh/posts/">文章</a>
+      <a href="/zh/notes/">笔记</a>
+      <a href="/zh/tags/">标签</a>
+      <a href="/zh/about/">关于</a>
+      <a href="/zh/search/">搜索</a>
+      <a href="/en/" lang="en">English</a>
+      <a class="feed-link" href="/zh/feed.xml" aria-label="订阅更新" title="订阅更新">
+        <svg class="feed-icon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M5 5.5A13.5 13.5 0 0 1 18.5 19"></path>
+          <path d="M5 11A8 8 0 0 1 13 19"></path>
+          <circle cx="6" cy="18" r="1.5"></circle>
+        </svg>
+      </a>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换明暗模式" title="切换明暗模式">
+        <svg class="theme-icon theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M21 14.2A8.5 8.5 0 0 1 9.8 3 7 7 0 1 0 21 14.2Z"></path>
+        </svg>
+        <svg class="theme-icon theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"></path>
+        </svg>
+      </button>
+    </nav>
+  </header>
+  <main class="site-main">
+    <article class="article">
+      <header class="article-header">
+        <h1>大模型中的 Function Calling 与工具模式:机制、区别与本质</h1>
+        <time datetime="2025-12-12T04:18:27.000Z">2025年12月12日</time>
+<ul class="tag-list" aria-label="Tags">
+    <li><a href="/zh/tags/AI/">AI</a></li>
+    <li><a href="/zh/tags/LLM/">LLM</a></li>
+    <li><a href="/zh/tags/Agent/">Agent</a></li>
+    <li><a href="/zh/tags/MCP/">MCP</a></li>
+    <li><a href="/zh/tags/Prompt%20Engineering/">Prompt Engineering</a></li>
+  </ul>
+      </header>
+      <div class="prose">
+<blockquote>
+<blockquote>
+<p>本文由ChatGPT和Claude.ai辅助完成</p>
+</blockquote>
+</blockquote>
+<p>大模型(LLM)在现代应用中的一个核心能力,是能够按照严格结构调用外部工具,例如数据库查询、Python 代码执行、HTTP 请求、存储系统等。围绕这一点,业界形成了“function calling”与“tools API”等概念。尽管二者在语义上相近,但其实现逻辑、系统结构与应用接口存在明显差异。</p>
+<p>本文围绕以下主题展开:</p>
+<ol>
+<li>Function calling 与 tools 的定义与区别</li>
+<li>Function calling 是否只是一种“更严格的格式输出”</li>
+<li>如何指定 function calling 模式</li>
+<li>为什么大模型能够进入工具模式(tool mode)</li>
+<li>工具模式是概率行为,不是硬编码逻辑</li>
+<li>工具模式的本质:训练、API 与提示词的协同机制</li>
+<li>MCP 协议:Function Calling 的标准化实践</li>
+</ol>
+<hr>
+<h2 id="1-function-calling-tools" data-heading-text="1. Function Calling 与 Tools:定义与本质区别">1. Function Calling 与 Tools:定义与本质区别</h2>
+<h3 id="1-1-function-calling" data-heading-text="1.1 Function calling 是“结构化调用能力”">1.1 Function calling 是“结构化调用能力”</h3>
+<p>在 OpenAI、Google、Anthropic 等厂商的 API 语境里，“function calling”更准确地说是<strong>模型在工具可用上下文中生成结构化工具调用的能力</strong>。其常见特征是:</p>
+<ul>
+<li>应用侧会先声明可用工具及其参数 schema</li>
+<li>模型会在合适时生成结构化的工具调用信息</li>
+<li>参数通常需要与预定义 schema 对齐</li>
+<li>工具调用结果再由应用侧执行并回填给模型</li>
+</ul>
+<p>它是<strong>对大模型输出格式的一种能力层面的约束</strong>。</p>
+<h3 id="1-2-tools" data-heading-text="1.2 Tools 是“可调用的工具清单”">1.2 Tools 是“可调用的工具清单”</h3>
+<p>Tools 则是 API 层提供给模型的<strong>工具定义集合</strong>,包括:</p>
+<ul>
+<li>函数名称</li>
+<li>输入参数 schema</li>
+<li>参数类型与约束</li>
+<li>功能描述(让模型理解工具用途)</li>
+</ul>
+<p>它是系统告诉模型:“你现在可以调用哪些工具”。</p>
+<h3 id="1-3" data-heading-text="1.3 区别总结">1.3 区别总结</h3>
+<p>两者关系可以这样理解:</p>
+<ul>
+<li><strong>Tools 是系统提供给模型的工具目录</strong></li>
+<li><strong>Function calling 是模型执行工具调用的能力与方式</strong></li>
+<li><strong>API 层负责定义结构;模型负责决策与生成调用</strong></li>
+</ul>
+<p>换句话说:</p>
+<p><strong>Tools = 可用工具清单<br>
+Function calling = 选择并正确调用工具的能力</strong></p>
+<hr>
+<h2 id="2-function-calling" data-heading-text="2. Function Calling 与普通格式化输出的本质差异">2. Function Calling 与普通格式化输出的本质差异</h2>
+<h3 id="2-1" data-heading-text="2.1 普通提示词格式要求:基于概率,无强制保证">2.1 普通提示词格式要求:基于概率,无强制保证</h3>
+<p>当你通过提示词要求模型输出 JSON:</p>
+<div class="code-block"><pre><code class="hljs">请以 JSON 格式输出,包含 name 和 age 字段
+</code></pre></div>
+<p>模型可能会:</p>
+<ul>
+<li>输出不合法的 JSON</li>
+<li>混入注释或说明文字</li>
+<li>结构不完整或嵌套错误</li>
+<li>使用错误的引号或缺失逗号</li>
+</ul>
+<p>它<strong>只是较高概率地</strong>遵循要求,但没有强制保证。</p>
+<h3 id="2-2-function-calling" data-heading-text="2.2 Function calling 是训练赋予的专门能力">2.2 Function calling 是训练赋予的专门能力</h3>
+<p>Function calling 模式下:</p>
+<ul>
+<li>模型通常在训练中学习过工具调用相关模式</li>
+<li>API 也会通过 <code>tools</code>、<code>tool_choice</code>、schema 等结构化信号约束输出</li>
+<li>在部分平台上，如启用严格 schema 约束，参数格式可靠性会更高</li>
+<li>相比纯提示词 JSON 输出，结构化调用通常更稳定</li>
+<li>但具体返回形式和严格程度，仍取决于不同厂商的 API 设计</li>
+</ul>
+<h3 id="2-3" data-heading-text="2.3 本质差异总结">2.3 本质差异总结</h3>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>普通格式化</th>
+<th>Function Calling</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>控制方式</td>
+<td>纯提示词引导</td>
+<td>训练能力 + API 结构</td>
+</tr>
+<tr>
+<td>可靠性</td>
+<td>概率性,误差较大</td>
+<td>高可靠,误差极小</td>
+</tr>
+<tr>
+<td>实现机制</td>
+<td>模型对自然语言的理解</td>
+<td>专门训练的结构化输出能力</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="3-function-calling" data-heading-text="3. 如何指定 Function Calling 模式">3. 如何指定 Function Calling 模式</h2>
+<h3 id="3-1-api" data-heading-text="3.1 API 中的工具定义">3.1 API 中的工具定义</h3>
+<p>以 OpenAI API 为例:</p>
+<div class="code-block" data-language="json"><div class="code-header"><span class="code-language">json</span></div><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">&quot;model&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;gpt-4-turbo&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;messages&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>...<span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;tools&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-punctuation">{</span>
+    <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;function&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;function&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+      <span class="hljs-attr">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;get_weather&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;description&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;获取指定城市的天气信息&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;parameters&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+        <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;object&quot;</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;properties&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+          <span class="hljs-attr">&quot;city&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+            <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;string&quot;</span><span class="hljs-punctuation">,</span>
+            <span class="hljs-attr">&quot;description&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;城市名称&quot;</span>
+          <span class="hljs-punctuation">}</span>
+        <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;required&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">&quot;city&quot;</span><span class="hljs-punctuation">]</span>
+      <span class="hljs-punctuation">}</span>
+    <span class="hljs-punctuation">}</span>
+  <span class="hljs-punctuation">}</span><span class="hljs-punctuation">]</span>
+<span class="hljs-punctuation">}</span>
+</code></pre></div>
+<h3 id="3-2" data-heading-text="3.2 调用模式控制">3.2 调用模式控制</h3>
+<h4 id="section-12" data-heading-text="A. 自动模式(模型决策)">A. 自动模式(模型决策)</h4>
+<div class="code-block" data-language="json"><div class="code-header"><span class="code-language">json</span></div><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">&quot;tool_choice&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;auto&quot;</span>
+<span class="hljs-punctuation">}</span>
+</code></pre></div>
+<p>模型根据对话内容判断是否需要调用工具。</p>
+<h4 id="b" data-heading-text="B. 强制调用特定工具">B. 强制调用特定工具</h4>
+<div class="code-block" data-language="json"><div class="code-header"><span class="code-language">json</span></div><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">&quot;tool_choice&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;function&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;function&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span><span class="hljs-attr">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;get_weather&quot;</span><span class="hljs-punctuation">}</span>
+  <span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">}</span>
+</code></pre></div>
+<h4 id="c" data-heading-text="C. 禁用工具调用">C. 禁用工具调用</h4>
+<div class="code-block" data-language="json"><div class="code-header"><span class="code-language">json</span></div><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">&quot;tool_choice&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;none&quot;</span>
+<span class="hljs-punctuation">}</span>
+</code></pre></div>
+<h3 id="3-3-api" data-heading-text="3.3 这是 API 层面的声明式控制">3.3 这是 API 层面的声明式控制</h3>
+<p>与纯提示词不同,这是结构化的控制信号,模型在训练中已学会如何响应这些信号。</p>
+<hr>
+<h2 id="4" data-heading-text="4. 大模型为什么能够进入“工具模式”">4. 大模型为什么能够进入“工具模式”</h2>
+<p><strong>核心原因通常是:模型训练、API 结构化约束以及上下文提示共同作用。</strong></p>
+<p>现代大模型(GPT、Gemini、Claude)通常会通过训练和后续对齐，让模型学会在工具可用时更稳定地进入结构化调用模式。下面的分解更适合作为一种工作机制理解，而不是厂商公开披露的统一训练细节:</p>
+<h3 id="4-1" data-heading-text="4.1 数据收集">4.1 数据收集</h3>
+<ul>
+<li>收集大量工具调用示例数据</li>
+<li>包含完整的调用流程:
+<ul>
+<li>用户请求</li>
+<li>模型决策(是否调用工具)</li>
+<li>工具调用的 JSON 格式</li>
+<li>工具返回结果</li>
+<li>模型整合结果生成最终回复</li>
+</ul>
+</li>
+</ul>
+<h3 id="4-2-sft" data-heading-text="4.2 监督微调(SFT)">4.2 监督微调(SFT)</h3>
+<ul>
+<li>让模型学习正确的工具调用格式</li>
+<li>强化参数提取与 JSON 生成能力</li>
+<li>学习何时应该调用工具</li>
+</ul>
+<h3 id="4-3" data-heading-text="4.3 强化学习或其他对齐手段">4.3 强化学习或其他对齐手段</h3>
+<ul>
+<li>优化工具调用的时机判断</li>
+<li>提高格式准确性</li>
+<li>改进多工具协作能力</li>
+</ul>
+<h3 id="4-4" data-heading-text="4.4 触发机制">4.4 触发机制</h3>
+<p>当 API 请求包含 <code>tools</code> 字段时:</p>
+<ol>
+<li>模型识别到这是一个工具可用的上下文</li>
+<li>激活训练时学习的工具调用行为模式</li>
+<li>输出空间偏向于工具调用格式</li>
+<li>根据对话内容决策是否调用及调用哪个工具</li>
+</ol>
+<p><strong>这不是规则系统,而是模型的学习能力。</strong></p>
+<hr>
+<h2 id="5" data-heading-text="5. 工具模式是概率性的,非确定性逻辑">5. 工具模式是概率性的,非确定性逻辑</h2>
+<h3 id="5-1-if-else" data-heading-text="5.1 不是硬编码的 if-else">5.1 不是硬编码的 if-else</h3>
+<p>模型进入工具模式<strong>不是</strong>因为:</p>
+<div class="code-block" data-language="python"><div class="code-header"><span class="code-language">python</span></div><pre><code class="hljs language-python"><span class="hljs-keyword">if</span> api_has_tools:
+    output_format = <span class="hljs-string">&quot;function_call&quot;</span>
+</code></pre></div>
+<h3 id="5-2" data-heading-text="5.2 而是概率模型的高概率行为">5.2 而是概率模型的高概率行为</h3>
+<p>实际机制:</p>
+<ul>
+<li>模型在训练中形成了对工具调用的强偏好</li>
+<li>当上下文信号(messages + tools schema)出现时</li>
+<li>输出工具调用格式的概率变得极高</li>
+<li>但仍然是概率分布,不是绝对规则</li>
+<li>因此存在微小概率的格式错误或拒绝调用</li>
+</ul>
+<h3 id="5-3" data-heading-text="5.3 为什么可靠性很高">5.3 为什么可靠性很高</h3>
+<ul>
+<li>大量高质量训练数据</li>
+<li>专门的损失函数优化</li>
+<li>RLHF 阶段的强化</li>
+<li>在工程实践中，成功率通常会明显高于纯提示词约束</li>
+</ul>
+<p>但这仍然是<strong>概率模型的表现</strong>,而非确定性系统。</p>
+<hr>
+<h2 id="6-api" data-heading-text="6. 工具模式的本质:训练、API 与提示词的协同">6. 工具模式的本质:训练、API 与提示词的协同</h2>
+<h3 id="6-1" data-heading-text="6.1 “本质是提示词工程”这个说法的对与错">6.1 “本质是提示词工程”这个说法的对与错</h3>
+<p><strong>部分正确之处:</strong></p>
+<ul>
+<li>API 中的 tools schema 确实是给模型的“上下文提示”</li>
+<li>System prompt 也会包含工具使用指南</li>
+<li>从信息论角度,这些都是“输入控制输出概率空间”</li>
+</ul>
+<p><strong>不完全准确之处:</strong></p>
+<ul>
+<li>API 的 tools 字段不是纯自然语言,而是结构化控制信号</li>
+<li>模型对 tools 的响应不仅靠“理解提示词”,更靠<strong>训练出的专门能力</strong></li>
+<li>这种能力不是通过提示词现场“告诉”模型的,而是预先训练好的</li>
+</ul>
+<h3 id="6-2" data-heading-text="6.2 更准确的理解">6.2 更准确的理解</h3>
+<p>Function calling 是以下三者的协同机制:</p>
+<ol>
+<li><strong>模型能力层</strong>(训练获得的结构化输出能力)</li>
+<li><strong>API 控制层</strong>(tools 定义与 tool_choice 参数)</li>
+<li><strong>上下文层</strong>(system prompt 与对话历史)</li>
+</ol>
+<p>公式化表达:</p>
+<div class="code-block"><pre><code class="hljs">工具调用成功 = 模型训练能力 × API结构化控制 × 上下文引导
+</code></pre></div>
+<p>任何一项缺失,可靠性都会大幅下降。</p>
+<hr>
+<h2 id="7-mcp-function-calling" data-heading-text="7. MCP 协议:Function Calling 的标准化实践">7. MCP 协议:Function Calling 的标准化实践</h2>
+<p>在理解了 function calling 的本质后,我们可以进一步探讨业界如何将工具接入和上下文交换标准化。<strong>MCP (Model Context Protocol)</strong> 是由 Anthropic 发起并开放出来的一套协议,用于标准化应用如何向模型提供工具、资源与上下文。</p>
+<h3 id="7-1-mcp" data-heading-text="7.1 从能力到协议:为什么需要 MCP">7.1 从能力到协议:为什么需要 MCP</h3>
+<p>虽然各大模型提供商都支持 function calling,但在实际应用中面临以下问题:</p>
+<p><strong>碎片化的工具定义:</strong></p>
+<ul>
+<li>每个开发者自定义工具格式</li>
+<li>相同功能的工具在不同项目中重复开发</li>
+<li>工具无法跨应用、跨平台复用</li>
+</ul>
+<p><strong>缺乏统一标准:</strong></p>
+<ul>
+<li>没有工具发现机制</li>
+<li>权限和安全管理各自实现</li>
+<li>集成成本高,维护困难</li>
+</ul>
+<p>MCP 的出现就是为了解决这些问题,将 function calling 能力从“单点技术”提升为“生态标准”。</p>
+<h3 id="7-2-mcp" data-heading-text="7.2 MCP 的技术定位">7.2 MCP 的技术定位</h3>
+<p><strong>MCP 可以理解为工具与上下文集成层的一种开放协议。</strong> 在很多实现中,它会与 function calling 或其他工具调用机制配合使用,但两者不是严格的一一依赖关系。可以用技术栈来粗略理解它们的关系:</p>
+<div class="code-block"><pre><code class="hljs">┌─────────────────────────────────────┐
+│  应用层: Claude.ai, AI 应用          │  ← 用户交互
+├─────────────────────────────────────┤
+│  协议/集成层: MCP                    │  ← 标准化上下文与工具接入
+├─────────────────────────────────────┤
+│  能力层: Function Calling            │  ← 模型核心能力
+├─────────────────────────────────────┤
+│  模型层: Claude/GPT/Gemini           │  ← 基础大模型
+└─────────────────────────────────────┘
+</code></pre></div>
+<p>这种分层架构类似于网络协议栈:</p>
+<ul>
+<li><strong>Function calling</strong> 更像模型侧的结构化工具调用能力</li>
+<li><strong>MCP</strong> 更像应用和工具之间的标准化接入协议</li>
+<li><strong>具体工具</strong> 则是在该协议之上暴露能力的实现</li>
+</ul>
+<h3 id="7-3-mcp" data-heading-text="7.3 MCP 的核心价值">7.3 MCP 的核心价值</h3>
+<p><strong>1. 统一的工具定义标准</strong></p>
+<p>MCP 规范了工具、资源等能力的描述与交互方式。实践中,只要客户端和服务端都支持同一版本的 MCP,跨应用复用会更容易:</p>
+<div class="code-block" data-language="json"><div class="code-header"><span class="code-language">json</span></div><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;read_file&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;description&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;读取文件内容&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;inputSchema&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;object&quot;</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;properties&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+      <span class="hljs-attr">&quot;path&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span><span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;string&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-attr">&quot;description&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;文件路径&quot;</span><span class="hljs-punctuation">}</span>
+    <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;required&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">&quot;path&quot;</span><span class="hljs-punctuation">]</span>
+  <span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">}</span>
+</code></pre></div>
+<p><strong>2. 标准化的通信协议</strong></p>
+<p>MCP 当前规范采用 JSON-RPC 消息格式,并定义了客户端与服务器之间的标准通信方式,以提升不同实现之间的互操作性。</p>
+<p><strong>3. 可复用的工具生态</strong></p>
+<p>开发者可以将工具打包为 MCP 服务器,发布到社区供他人使用。用户可以像安装浏览器插件一样,为 AI 应用添加新能力,而无需修改应用代码。</p>
+<h3 id="7-4-mcp" data-heading-text="7.4 MCP 的实际应用场景">7.4 MCP 的实际应用场景</h3>
+<p>基于 function calling 能力,MCP 让以下场景变得标准化和简单化:</p>
+<ul>
+<li><strong>文件系统访问</strong>: 通过 filesystem MCP 服务器,AI 可以读写本地文件</li>
+<li><strong>数据库操作</strong>: 通过 database MCP 服务器,AI 可以查询和修改数据</li>
+<li><strong>云服务集成</strong>: 通过 Google Drive、Slack 等 MCP 服务器,AI 可以访问云端资源</li>
+<li><strong>开发工具</strong>: 通过 Git MCP 服务器,AI 可以执行版本控制操作</li>
+</ul>
+<p>这些能力在很多 AI 应用里会结合模型的工具调用能力一起使用,但 MCP 关注的是“应用如何把工具和上下文标准化地接给模型”,而不是替代各家模型自身的调用机制。</p>
+<h3 id="7-5-mcp-function-calling" data-heading-text="7.5 类比理解 MCP 与 Function Calling">7.5 类比理解 MCP 与 Function Calling</h3>
+<table>
+<thead>
+<tr>
+<th>概念</th>
+<th>网络技术类比</th>
+<th>角色</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Function Calling</td>
+<td>应用中的结构化调用能力</td>
+<td>让模型生成工具调用</td>
+</tr>
+<tr>
+<td>MCP</td>
+<td>接入协议/标准</td>
+<td>定义工具与上下文如何暴露</td>
+</tr>
+<tr>
+<td>MCP Servers</td>
+<td>具体服务实现</td>
+<td>提供具体功能</td>
+</tr>
+</tbody>
+</table>
+<p>或者用移动应用生态来理解:</p>
+<ul>
+<li><strong>Function calling</strong> = 手机的应用安装和运行能力</li>
+<li><strong>MCP</strong> = 应用商店的标准(如何打包、分发、安装应用)</li>
+<li><strong>MCP Servers</strong> = 商店中的各个应用</li>
+</ul>
+<h3 id="7-6" data-heading-text="7.6 从孤立能力到开放生态">7.6 从孤立能力到开放生态</h3>
+<p>MCP 的意义在于将 function calling 从“每个项目自己实现”转变为“整个生态共享复用”:</p>
+<p><strong>没有 MCP:</strong></p>
+<div class="code-block"><pre><code class="hljs">项目A → 自己实现文件读取工具
+项目B → 重复实现文件读取工具
+项目C → 又一次实现文件读取工具
+</code></pre></div>
+<p><strong>有了 MCP:</strong></p>
+<div class="code-block"><pre><code class="hljs">filesystem-mcp-server (统一实现,开源共享)
+    ↓
+项目A、B、C 都直接使用,无需重复开发
+</code></pre></div>
+<p>这种标准化让 AI 应用的开发效率大幅提升,同时也让工具质量更有保障(社区验证和维护)。</p>
+<hr>
+<h2 id="section-35" data-heading-text="总结:从能力到生态的完整图景">总结:从能力到生态的完整图景</h2>
+<h3 id="section-36" data-heading-text="核心要点">核心要点</h3>
+<ol>
+<li>
+<p><strong>Function calling 是基础能力</strong></p>
+<ul>
+<li>模型通过专门训练获得的结构化调用能力</li>
+<li>高可靠性来自训练优化,而非硬编码逻辑</li>
+</ul>
+</li>
+<li>
+<p><strong>工具模式是概率行为</strong></p>
+<ul>
+<li>基于训练数据形成的高概率输出模式</li>
+<li>需要 API 控制、训练能力、上下文提示三者协同</li>
+</ul>
+</li>
+<li>
+<p><strong>MCP 是能力的标准化和生态化</strong></p>
+<ul>
+<li>基于 function calling 构建的应用层协议</li>
+<li>解决了工具定义、发现、复用的问题</li>
+<li>类似于 HTTP 之上的 RESTful 规范</li>
+</ul>
+</li>
+<li>
+<p><strong>技术演进的三个阶段</strong></p>
+<ul>
+<li>阶段1: 模型具备 function calling 能力</li>
+<li>阶段2: 各家自定义工具调用格式</li>
+<li>阶段3: MCP 统一标准,建立开放生态</li>
+</ul>
+</li>
+<li>
+<p><strong>理解层次关系至关重要</strong></p>
+<div class="code-block"><pre><code class="hljs">应用产品 (用户体验)
+   ↓
+MCP 协议 (标准化)
+   ↓
+Function Calling (核心能力)
+   ↓
+模型训练 (能力来源)
+</code></pre></div>
+</li>
+</ol>
+<h3 id="section-37" data-heading-text="实践启示">实践启示</h3>
+<p><strong>设计工具调用时:</strong></p>
+<ul>
+<li>Schema 描述要清晰准确,这是模型理解的基础</li>
+<li>利用 system prompt 补充使用指南和约束</li>
+<li>实现错误处理和边界情况的降级方案</li>
+<li>理解概率系统的特性,做好监控和兜底</li>
+</ul>
+<p><strong>采用 MCP 生态时:</strong></p>
+<ul>
+<li>优先使用成熟的 MCP 服务器,避免重复造轮子</li>
+<li>关注权限和安全配置,保护敏感数据</li>
+<li>开发自定义工具时遵循 MCP 规范,便于分享和维护</li>
+<li>将工具逻辑与业务逻辑分离,提高系统可扩展性</li>
+</ul>
+
+      </div>
+<div class="article-actions" aria-label="Article actions">
+      <a class="share-link" href="https://twitter.com/intent/tweet?text=%E5%A4%A7%E6%A8%A1%E5%9E%8B%E4%B8%AD%E7%9A%84+Function+Calling+%E4%B8%8E%E5%B7%A5%E5%85%B7%E6%A8%A1%E5%BC%8F%3A%E6%9C%BA%E5%88%B6%E3%80%81%E5%8C%BA%E5%88%AB%E4%B8%8E%E6%9C%AC%E8%B4%A8&amp;url=https%3A%2F%2Fkingson4wu.github.io%2Fzh%2Fposts%2F20251212-function-calling%2F" target="_blank" rel="noopener noreferrer" aria-label="Share on X">
+        <span aria-hidden="true">X</span>
+        <span>Share</span>
+      </a>
+    </div>
+    </article>
+<aside class="article-toc" data-article-toc aria-label="目录">
+      <button class="article-toc-toggle" type="button" data-article-toc-toggle aria-expanded="false" aria-controls="article-toc-panel" aria-label="打开目录" data-open-label="打开目录" data-close-label="收起目录">
+        <svg aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M8 6h11"></path>
+          <path d="M8 12h11"></path>
+          <path d="M8 18h11"></path>
+          <path d="M4 6h.01"></path>
+          <path d="M4 12h.01"></path>
+          <path d="M4 18h.01"></path>
+        </svg>
+      </button>
+      <nav id="article-toc-panel" class="article-toc-panel" data-article-toc-panel aria-label="目录">
+        <div class="article-toc-heading">目录</div>
+        <ol class="article-toc-list">
+          <li class="article-toc-level-2"><a href="#1-function-calling-tools" data-article-toc-link>1. Function Calling 与 Tools:定义与本质区别</a></li>
+          <li class="article-toc-level-3"><a href="#1-1-function-calling" data-article-toc-link>1.1 Function calling 是“结构化调用能力”</a></li>
+          <li class="article-toc-level-3"><a href="#1-2-tools" data-article-toc-link>1.2 Tools 是“可调用的工具清单”</a></li>
+          <li class="article-toc-level-3"><a href="#1-3" data-article-toc-link>1.3 区别总结</a></li>
+          <li class="article-toc-level-2"><a href="#2-function-calling" data-article-toc-link>2. Function Calling 与普通格式化输出的本质差异</a></li>
+          <li class="article-toc-level-3"><a href="#2-1" data-article-toc-link>2.1 普通提示词格式要求:基于概率,无强制保证</a></li>
+          <li class="article-toc-level-3"><a href="#2-2-function-calling" data-article-toc-link>2.2 Function calling 是训练赋予的专门能力</a></li>
+          <li class="article-toc-level-3"><a href="#2-3" data-article-toc-link>2.3 本质差异总结</a></li>
+          <li class="article-toc-level-2"><a href="#3-function-calling" data-article-toc-link>3. 如何指定 Function Calling 模式</a></li>
+          <li class="article-toc-level-3"><a href="#3-1-api" data-article-toc-link>3.1 API 中的工具定义</a></li>
+          <li class="article-toc-level-3"><a href="#3-2" data-article-toc-link>3.2 调用模式控制</a></li>
+          <li class="article-toc-level-3"><a href="#3-3-api" data-article-toc-link>3.3 这是 API 层面的声明式控制</a></li>
+          <li class="article-toc-level-2"><a href="#4" data-article-toc-link>4. 大模型为什么能够进入“工具模式”</a></li>
+          <li class="article-toc-level-3"><a href="#4-1" data-article-toc-link>4.1 数据收集</a></li>
+          <li class="article-toc-level-3"><a href="#4-2-sft" data-article-toc-link>4.2 监督微调(SFT)</a></li>
+          <li class="article-toc-level-3"><a href="#4-3" data-article-toc-link>4.3 强化学习或其他对齐手段</a></li>
+          <li class="article-toc-level-3"><a href="#4-4" data-article-toc-link>4.4 触发机制</a></li>
+          <li class="article-toc-level-2"><a href="#5" data-article-toc-link>5. 工具模式是概率性的,非确定性逻辑</a></li>
+          <li class="article-toc-level-3"><a href="#5-1-if-else" data-article-toc-link>5.1 不是硬编码的 if-else</a></li>
+          <li class="article-toc-level-3"><a href="#5-2" data-article-toc-link>5.2 而是概率模型的高概率行为</a></li>
+          <li class="article-toc-level-3"><a href="#5-3" data-article-toc-link>5.3 为什么可靠性很高</a></li>
+          <li class="article-toc-level-2"><a href="#6-api" data-article-toc-link>6. 工具模式的本质:训练、API 与提示词的协同</a></li>
+          <li class="article-toc-level-3"><a href="#6-1" data-article-toc-link>6.1 “本质是提示词工程”这个说法的对与错</a></li>
+          <li class="article-toc-level-3"><a href="#6-2" data-article-toc-link>6.2 更准确的理解</a></li>
+          <li class="article-toc-level-2"><a href="#7-mcp-function-calling" data-article-toc-link>7. MCP 协议:Function Calling 的标准化实践</a></li>
+          <li class="article-toc-level-3"><a href="#7-1-mcp" data-article-toc-link>7.1 从能力到协议:为什么需要 MCP</a></li>
+          <li class="article-toc-level-3"><a href="#7-2-mcp" data-article-toc-link>7.2 MCP 的技术定位</a></li>
+          <li class="article-toc-level-3"><a href="#7-3-mcp" data-article-toc-link>7.3 MCP 的核心价值</a></li>
+          <li class="article-toc-level-3"><a href="#7-4-mcp" data-article-toc-link>7.4 MCP 的实际应用场景</a></li>
+          <li class="article-toc-level-3"><a href="#7-5-mcp-function-calling" data-article-toc-link>7.5 类比理解 MCP 与 Function Calling</a></li>
+          <li class="article-toc-level-3"><a href="#7-6" data-article-toc-link>7.6 从孤立能力到开放生态</a></li>
+          <li class="article-toc-level-2"><a href="#section-35" data-article-toc-link>总结:从能力到生态的完整图景</a></li>
+          <li class="article-toc-level-3"><a href="#section-36" data-article-toc-link>核心要点</a></li>
+          <li class="article-toc-level-3"><a href="#section-37" data-article-toc-link>实践启示</a></li>
+        </ol>
+      </nav>
+    </aside>
+    <script src="/scripts/article-toc.js" defer></script>
+    <nav class="article-nav" aria-label="Adjacent posts">
+      <a href="/zh/posts/20251208/"><span>Previous</span>生成式AI、解码约束与多模态架构：系统化原理解析</a>
+      <a href="/zh/posts/20251217/"><span>Next</span>大模型推理的不确定性：从浮点运算到工程实现</a>
+    </nav>
+<section class="comments" aria-labelledby="comments-heading">
+      <h2 id="comments-heading">评论</h2>
+      <div
+        data-comments
+        data-comments-repo="Kingson4Wu/kingson4wu.github.io"
+        data-comments-issue-term="pathname"
+        data-comments-label="comment"
+      ></div>
+    </section>
+    <script src="/scripts/comments.js" defer></script>
+  </main>
+  <footer class="site-footer">
+    <p>&copy; 2026 拉巴力的纸皮箱</p>
+  </footer>
+  <button class="reading-return" type="button" data-reading-return aria-label="回到开头" title="回到开头">
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <path d="M12 19V5"></path>
+      <path d="m6 11 6-6 6 6"></path>
+    </svg>
+  </button>
+  <script src="/scripts/theme.js"></script>
+  <script src="/scripts/image-viewer.js"></script>
+  <script src="/scripts/reading-tools.js"></script>
+</body>
+</html>

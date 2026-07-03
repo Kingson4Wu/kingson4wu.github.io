@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>再浅谈接口的安全性和回调机制 | 拉巴力的纸皮箱</title>
+  <meta name="description" content="最近的工作原因，涉及到接口充权益的接口安全性问题，这里趁热再说说个人看法 基于之前写的这篇使用回调机制提高接口安全性继续聊。上次扩展中提到是不是可以使用非对称加密，替换回调验证？目前我所负责的业务确实使用这种方式。 业务中要对接多个渠道，渠道需要调业务的接口来加权益，为了安全性，目前的做法是由渠道自己生成RSA私钥，提...">
+  <link rel="canonical" href="https://kingson4wu.github.io/zh/posts/20240402/">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="alternate" type="application/rss+xml" title="拉巴力的纸皮箱" href="/zh/feed.xml">
+  <link rel="alternate" type="text/markdown" href="/zh/posts/20240402/index.md">
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="/styles/main.css">
+  <script>
+    try {
+      var theme = localStorage.getItem('theme');
+      if (theme) document.documentElement.dataset.theme = theme;
+    } catch (_) {}
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="site-title" href="/zh/" aria-label="拉巴力的纸皮箱">
+      <span class="site-logo" aria-hidden="true">K</span>
+      <span>拉巴力的纸皮箱</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="/zh/posts/">文章</a>
+      <a href="/zh/notes/">笔记</a>
+      <a href="/zh/tags/">标签</a>
+      <a href="/zh/about/">关于</a>
+      <a href="/zh/search/">搜索</a>
+      <a href="/en/" lang="en">English</a>
+      <a class="feed-link" href="/zh/feed.xml" aria-label="订阅更新" title="订阅更新">
+        <svg class="feed-icon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M5 5.5A13.5 13.5 0 0 1 18.5 19"></path>
+          <path d="M5 11A8 8 0 0 1 13 19"></path>
+          <circle cx="6" cy="18" r="1.5"></circle>
+        </svg>
+      </a>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换明暗模式" title="切换明暗模式">
+        <svg class="theme-icon theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M21 14.2A8.5 8.5 0 0 1 9.8 3 7 7 0 1 0 21 14.2Z"></path>
+        </svg>
+        <svg class="theme-icon theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"></path>
+        </svg>
+      </button>
+    </nav>
+  </header>
+  <main class="site-main">
+    <article class="article">
+      <header class="article-header">
+        <h1>再浅谈接口的安全性和回调机制</h1>
+        <time datetime="2024-04-02T06:42:48.000Z">2024年4月2日</time>
+<ul class="tag-list" aria-label="Tags">
+    <li><a href="/zh/tags/Security/">Security</a></li>
+  </ul>
+      </header>
+      <div class="prose">
+<blockquote>
+<blockquote>
+<p>最近的工作原因，涉及到接口充权益的接口安全性问题，这里趁热再说说个人看法</p>
+</blockquote>
+</blockquote>
+<ul>
+<li>
+<p>基于之前写的这篇<a href="https://kingson4wu.github.io/2020/07/12/20200712-shi-yong-hui-diao-ji-zhi-ti-gao-jie-kou-an-quan-xing/">使用回调机制提高接口安全性</a>继续聊。上次扩展中提到是不是可以使用非对称加密，替换回调验证？目前我所负责的业务确实使用这种方式。</p>
+</li>
+<li>
+<p>业务中要对接多个渠道，渠道需要调业务的接口来加权益，为了安全性，目前的做法是由渠道自己生成RSA私钥，提供RSA公钥到业务这边。渠道使用私钥生成签名，业务这边则使用公钥解密验证，从而保证请求是合法的。</p>
+</li>
+<li>
+<p>其实这里还是有潜在漏洞，之前的文章也提到过，如何保证私钥不泄漏？虽然说保证私钥不泄漏是渠道自己的问题，但是多年的经验告诉我，大多数公司并没有很好的保存这些私钥的方法。按照我的猜想，这些私钥在公司内部会被经常拷贝发送，至少开发人员基本都有办法知道的。万一知道私钥的人后续离职了作恶呢？</p>
+</li>
+<li>
+<p>而我们经常对接一下小渠道，参差不齐。尽可能保证渠道的安全也是我们作为平台要积极考虑的问题。</p>
+</li>
+<li>
+<p>所以个人的看法，即使使用RSA保证签名的合法，还是要提供回调的能力，提供给渠道，通过二次校验保证知道私钥的人也无法直接从自己的私人客户端发起请求并成功加权益。毕竟回调的请求是到达渠道方的正式服务器，要在正式服务器上线恶意代码，靠谱的公司都有一定的限制和管控。</p>
+</li>
+</ul>
+<h2 id="section-1" data-heading-text="扩展">扩展</h2>
+<ul>
+<li>接口一般都会分外网访问和内网访问，我们平常要注意避免只能内网访问的接口暴露给外网访问，因为大多数情况下，我们的内网接口会安全性低一点。</li>
+</ul>
+
+      </div>
+<div class="article-actions" aria-label="Article actions">
+      <a class="share-link" href="https://twitter.com/intent/tweet?text=%E5%86%8D%E6%B5%85%E8%B0%88%E6%8E%A5%E5%8F%A3%E7%9A%84%E5%AE%89%E5%85%A8%E6%80%A7%E5%92%8C%E5%9B%9E%E8%B0%83%E6%9C%BA%E5%88%B6&amp;url=https%3A%2F%2Fkingson4wu.github.io%2Fzh%2Fposts%2F20240402%2F" target="_blank" rel="noopener noreferrer" aria-label="Share on X">
+        <span aria-hidden="true">X</span>
+        <span>Share</span>
+      </a>
+    </div>
+    </article>
+
+    <nav class="article-nav" aria-label="Adjacent posts">
+      <a href="/zh/posts/20240402-2/"><span>Previous</span>打工人心态应该是怎样的？</a>
+      <a href="/zh/posts/20240403/"><span>Next</span>这件事情你需要跟进吗？</a>
+    </nav>
+<section class="comments" aria-labelledby="comments-heading">
+      <h2 id="comments-heading">评论</h2>
+      <div
+        data-comments
+        data-comments-repo="Kingson4Wu/kingson4wu.github.io"
+        data-comments-issue-term="pathname"
+        data-comments-label="comment"
+      ></div>
+    </section>
+    <script src="/scripts/comments.js" defer></script>
+  </main>
+  <footer class="site-footer">
+    <p>&copy; 2026 拉巴力的纸皮箱</p>
+  </footer>
+  <button class="reading-return" type="button" data-reading-return aria-label="回到开头" title="回到开头">
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <path d="M12 19V5"></path>
+      <path d="m6 11 6-6 6 6"></path>
+    </svg>
+  </button>
+  <script src="/scripts/theme.js"></script>
+  <script src="/scripts/image-viewer.js"></script>
+  <script src="/scripts/reading-tools.js"></script>
+</body>
+</html>

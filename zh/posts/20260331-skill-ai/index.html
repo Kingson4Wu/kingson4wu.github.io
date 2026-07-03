@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>从 Skill 化到控制权：AI 系统中的能力分层与资产保护 | 拉巴力的纸皮箱</title>
+  <meta name="description" content="当 AI 系统将任务封装为 Skills 交给外部执行时，哪些能力可以暴露，哪些必须留在内部？本文从数据暴露的三种形态出发，提出通用能力、业务能力、核心能力的三层划分框架，以及“最小输入而非脱敏”的数据策略。">
+  <link rel="canonical" href="https://kingson4wu.github.io/zh/posts/20260331-skill-ai/">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="alternate" type="application/rss+xml" title="拉巴力的纸皮箱" href="/zh/feed.xml">
+  <link rel="alternate" type="text/markdown" href="/zh/posts/20260331-skill-ai/index.md">
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="/styles/main.css">
+  <script>
+    try {
+      var theme = localStorage.getItem('theme');
+      if (theme) document.documentElement.dataset.theme = theme;
+    } catch (_) {}
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="site-title" href="/zh/" aria-label="拉巴力的纸皮箱">
+      <span class="site-logo" aria-hidden="true">K</span>
+      <span>拉巴力的纸皮箱</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="/zh/posts/">文章</a>
+      <a href="/zh/notes/">笔记</a>
+      <a href="/zh/tags/">标签</a>
+      <a href="/zh/about/">关于</a>
+      <a href="/zh/search/">搜索</a>
+      <a href="/en/" lang="en">English</a>
+      <a class="feed-link" href="/zh/feed.xml" aria-label="订阅更新" title="订阅更新">
+        <svg class="feed-icon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M5 5.5A13.5 13.5 0 0 1 18.5 19"></path>
+          <path d="M5 11A8 8 0 0 1 13 19"></path>
+          <circle cx="6" cy="18" r="1.5"></circle>
+        </svg>
+      </a>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换明暗模式" title="切换明暗模式">
+        <svg class="theme-icon theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M21 14.2A8.5 8.5 0 0 1 9.8 3 7 7 0 1 0 21 14.2Z"></path>
+        </svg>
+        <svg class="theme-icon theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"></path>
+        </svg>
+      </button>
+    </nav>
+  </header>
+  <main class="site-main">
+    <article class="article">
+      <header class="article-header">
+        <h1>从 Skill 化到控制权：AI 系统中的能力分层与资产保护</h1>
+        <time datetime="2026-03-31T05:53:29.000Z">2026年3月31日</time>
+<ul class="tag-list" aria-label="Tags">
+    <li><a href="/zh/tags/AI/">AI</a></li>
+    <li><a href="/zh/tags/LLM/">LLM</a></li>
+    <li><a href="/zh/tags/Agent/">Agent</a></li>
+    <li><a href="/zh/tags/Skill/">Skill</a></li>
+    <li><a href="/zh/tags/Architecture/">Architecture</a></li>
+  </ul>
+      </header>
+      <div class="prose">
+<blockquote>
+<blockquote>
+<p>以下根据个人观点及网络资料，并由AI辅助整理</p>
+</blockquote>
+</blockquote>
+<h2 id="section-1" data-heading-text="一、核心问题：能力分层与执行边界">一、核心问题：能力分层与执行边界</h2>
+<p>在一些 AI 系统中，正在出现这样一种趋势：用 SDK + Runtime 提供执行环境，将任务拆解为 Skills，Runtime 负责编排，模型负责推理。这套模式提升了开发效率，但也引出一个更本质的问题：</p>
+<blockquote>
+<p><strong>哪些能力可以交给 Runtime 执行，哪些必须留在系统内部？</strong></p>
+</blockquote>
+<p>这不是“用不用大模型”的问题，而是能力分层与执行边界的划分问题。</p>
+<hr>
+<h2 id="section-2" data-heading-text="二、这个问题的前提">二、这个问题的前提</h2>
+<p>这里讨论的风险，有一个明确的前提：<strong>你在使用外部系统</strong>——无论是直接调用外部大模型、接入第三方 Agent，还是通过 SDK 对接外部服务，数据和上下文都需要离开你的系统边界。</p>
+<p>如果你有能力自己部署本地模型，或者业务足够简单、本地轻量模型就能满足需求，数据根本不出去，Skill 化暂时可能也没有泄露风险需要考虑。</p>
+<p>所以，分层不是普遍原则，而是<strong>使用外部系统时的边界管理问题</strong>。</p>
+<hr>
+<h2 id="section-3" data-heading-text="三、进入外部系统意味着什么">三、进入外部系统意味着什么</h2>
+<p>使用外部系统时，所有传出去的内容本质上都一样：作为 prompt 的一部分明文传入模型参与推理。举几个典型的例子：</p>
+<p><strong>数据</strong>：用户数据、业务数据、RAG 检索内容，作为上下文直接传入，访问路径不再受控。</p>
+<p><strong>策略</strong>：prompt 模板、system prompt、参数配置，决定模型如何理解和执行任务，同样随请求传出。</p>
+<p><strong>结构</strong>：这类暴露更隐蔽。即使你没有把业务逻辑直接写进 prompt，外部也可以通过观察大量的输入输出反推出你的设计——调用顺序可以还原 workflow，结果分布可以逼近业务策略。</p>
+<p>前两类是直接暴露，数据和策略作为 prompt 明文传出；第三类是间接暴露，通过观察大量输入输出来反推设计。两者的性质不同，但方向一致：<strong>核心能力都存在被还原的可能</strong>。</p>
+<hr>
+<h2 id="section-4" data-heading-text="四、能力分层：三种典型情形">四、能力分层：三种典型情形</h2>
+<p>有效的应对方式不是加密，而是从源头控制哪些内容可以传出去，哪些不能。这需要对 Skill 做分层处理——以下不是严格的分类，更像是三种典型情形，用来说明“进不进外部系统”的判断逻辑。</p>
+<p><strong>通用能力</strong>不依赖私有数据，没有业务逻辑，文本总结、改写翻译、信息抽取都属于这类。这类 Skill 可以直接交给外部系统执行，暴露了也无妨。</p>
+<p>从这里开始，判断逻辑就不再是“能不能暴露”，而是“暴露到什么程度”。</p>
+<p><strong>业务能力</strong>包含逻辑，但关键在于：结果对外暴露是可以接受的，不可接受的只是“怎么算出来的”。与其把数据传出去让外部处理，不如反过来——在你的系统内部封装为 API，让外部系统调用这个接口、接收返回结果。数据的计算和处理全程留在你的系统内部，对外部不可见。风控判断、推荐候选、用户标签这类都适用这个模式。</p>
+<p><strong>核心能力</strong>的情况更进一步：不只是逻辑不能暴露，连结果本身都会泄露设计。比如 RAG 的切分与检索方式，光看输出的召回内容，就能反推出你的索引结构和排序策略。这类能力唯一的保护方式，是让它根本不出现在外部系统的执行链上。</p>
+<p>三类的本质区别只有一个维度：<strong>暴露结果是否可以接受</strong>。可以接受的，封装逻辑即可；不可以接受的，整个从外部执行链移走。</p>
+<hr>
+<h2 id="section-5" data-heading-text="五、数据策略：最小输入，而非脱敏">五、数据策略：最小输入，而非脱敏</h2>
+<p>许多系统选择对数据脱敏（替换姓名、隐藏手机号），但这只减少了识别风险，并没有减少信息暴露本身。更有效的策略是只提供完成任务所需的最小信息。</p>
+<p>以“判断是否推荐某产品”为例：</p>
+<p>❌ 直接传原始数据，暴露完整数据结构：</p>
+<div class="code-block" data-language="json"><div class="code-header"><span class="code-language">json</span></div><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;张三&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;age&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">32</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;income&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">50000</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;loan_history&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>...<span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;credit_score&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">0.82</span>
+<span class="hljs-punctuation">}</span>
+</code></pre></div>
+<p>✅ 只传决策所需特征，不暴露来源与结构：</p>
+<div class="code-block" data-language="json"><div class="code-header"><span class="code-language">json</span></div><pre><code class="hljs language-json"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">&quot;risk_level&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;high&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;repayment_stability&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;low&quot;</span>
+<span class="hljs-punctuation">}</span>
+</code></pre></div>
+<p>本质上是从“给数据”变成“给结论所需的最小条件”。这一原则适用于所有需要向外部系统传递信息的场景。</p>
+<hr>
+<h2 id="section-6" data-heading-text="六、设计原则：核心能力不可被还原">六、设计原则：核心能力不可被还原</h2>
+<p>整篇收敛为一个判断框架：</p>
+<table>
+<thead>
+<tr>
+<th>能力类型</th>
+<th>处理方式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>通用能力</td>
+<td>直接 Skill 化，交给外部系统</td>
+</tr>
+<tr>
+<td>业务能力</td>
+<td>工具化封装，接口调用</td>
+</tr>
+<tr>
+<td>核心能力</td>
+<td>内收，不进入外部执行链</td>
+</tr>
+</tbody>
+</table>
+<p>最终目标不是“完全不暴露”，而是：</p>
+<blockquote>
+<p><strong>即使外部系统可以观测所有调用，也无法还原你的核心逻辑与数据结构。</strong></p>
+</blockquote>
+
+      </div>
+<div class="article-actions" aria-label="Article actions">
+      <a class="share-link" href="https://twitter.com/intent/tweet?text=%E4%BB%8E+Skill+%E5%8C%96%E5%88%B0%E6%8E%A7%E5%88%B6%E6%9D%83%EF%BC%9AAI+%E7%B3%BB%E7%BB%9F%E4%B8%AD%E7%9A%84%E8%83%BD%E5%8A%9B%E5%88%86%E5%B1%82%E4%B8%8E%E8%B5%84%E4%BA%A7%E4%BF%9D%E6%8A%A4&amp;url=https%3A%2F%2Fkingson4wu.github.io%2Fzh%2Fposts%2F20260331-skill-ai%2F" target="_blank" rel="noopener noreferrer" aria-label="Share on X">
+        <span aria-hidden="true">X</span>
+        <span>Share</span>
+      </a>
+    </div>
+    </article>
+<aside class="article-toc" data-article-toc aria-label="目录">
+      <button class="article-toc-toggle" type="button" data-article-toc-toggle aria-expanded="false" aria-controls="article-toc-panel" aria-label="打开目录" data-open-label="打开目录" data-close-label="收起目录">
+        <svg aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M8 6h11"></path>
+          <path d="M8 12h11"></path>
+          <path d="M8 18h11"></path>
+          <path d="M4 6h.01"></path>
+          <path d="M4 12h.01"></path>
+          <path d="M4 18h.01"></path>
+        </svg>
+      </button>
+      <nav id="article-toc-panel" class="article-toc-panel" data-article-toc-panel aria-label="目录">
+        <div class="article-toc-heading">目录</div>
+        <ol class="article-toc-list">
+          <li class="article-toc-level-2"><a href="#section-1" data-article-toc-link>一、核心问题：能力分层与执行边界</a></li>
+          <li class="article-toc-level-2"><a href="#section-2" data-article-toc-link>二、这个问题的前提</a></li>
+          <li class="article-toc-level-2"><a href="#section-3" data-article-toc-link>三、进入外部系统意味着什么</a></li>
+          <li class="article-toc-level-2"><a href="#section-4" data-article-toc-link>四、能力分层：三种典型情形</a></li>
+          <li class="article-toc-level-2"><a href="#section-5" data-article-toc-link>五、数据策略：最小输入，而非脱敏</a></li>
+          <li class="article-toc-level-2"><a href="#section-6" data-article-toc-link>六、设计原则：核心能力不可被还原</a></li>
+        </ol>
+      </nav>
+    </aside>
+    <script src="/scripts/article-toc.js" defer></script>
+    <nav class="article-nav" aria-label="Adjacent posts">
+      <a href="/zh/posts/20260328-agent-agent-runtime-skill-ai/"><span>Previous</span>从自建 Agent 到 Agent Runtime + Skill：AI 系统架构的演进与收敛</a>
+      <a href="/zh/posts/20260331/"><span>Next</span>技术进步与分配失衡：AI时代的结构性矛盾</a>
+    </nav>
+<section class="comments" aria-labelledby="comments-heading">
+      <h2 id="comments-heading">评论</h2>
+      <div
+        data-comments
+        data-comments-repo="Kingson4Wu/kingson4wu.github.io"
+        data-comments-issue-term="pathname"
+        data-comments-label="comment"
+      ></div>
+    </section>
+    <script src="/scripts/comments.js" defer></script>
+  </main>
+  <footer class="site-footer">
+    <p>&copy; 2026 拉巴力的纸皮箱</p>
+  </footer>
+  <button class="reading-return" type="button" data-reading-return aria-label="回到开头" title="回到开头">
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <path d="M12 19V5"></path>
+      <path d="m6 11 6-6 6 6"></path>
+    </svg>
+  </button>
+  <script src="/scripts/theme.js"></script>
+  <script src="/scripts/image-viewer.js"></script>
+  <script src="/scripts/reading-tools.js"></script>
+</body>
+</html>

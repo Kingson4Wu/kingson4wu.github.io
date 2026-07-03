@@ -1,0 +1,418 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>激活函数的本质原理与作用 | 拉巴力的纸皮箱</title>
+  <meta name="description" content="以下内容由AI辅助生成 ——从 XOR 出发理解非线性、表达能力与训练 一、从一个最小反例开始:XOR 与线性模型的根本局限 在讨论激活函数之前,有必要从一个最简单、却最具代表性的例子入手。 XOR(异或)问题以极低的维度,清晰地揭示了线性模型与深度神经网络在本质上的差异。 1. XOR 问题的定义 XOR 的规则如下...">
+  <link rel="canonical" href="https://kingson4wu.github.io/zh/posts/20260127/">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="alternate" type="application/rss+xml" title="拉巴力的纸皮箱" href="/zh/feed.xml">
+  <link rel="alternate" type="text/markdown" href="/zh/posts/20260127/index.md">
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="/styles/main.css">
+  <script>
+    try {
+      var theme = localStorage.getItem('theme');
+      if (theme) document.documentElement.dataset.theme = theme;
+    } catch (_) {}
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="site-title" href="/zh/" aria-label="拉巴力的纸皮箱">
+      <span class="site-logo" aria-hidden="true">K</span>
+      <span>拉巴力的纸皮箱</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="/zh/posts/">文章</a>
+      <a href="/zh/notes/">笔记</a>
+      <a href="/zh/tags/">标签</a>
+      <a href="/zh/about/">关于</a>
+      <a href="/zh/search/">搜索</a>
+      <a href="/en/" lang="en">English</a>
+      <a class="feed-link" href="/zh/feed.xml" aria-label="订阅更新" title="订阅更新">
+        <svg class="feed-icon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M5 5.5A13.5 13.5 0 0 1 18.5 19"></path>
+          <path d="M5 11A8 8 0 0 1 13 19"></path>
+          <circle cx="6" cy="18" r="1.5"></circle>
+        </svg>
+      </a>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换明暗模式" title="切换明暗模式">
+        <svg class="theme-icon theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M21 14.2A8.5 8.5 0 0 1 9.8 3 7 7 0 1 0 21 14.2Z"></path>
+        </svg>
+        <svg class="theme-icon theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"></path>
+        </svg>
+      </button>
+    </nav>
+  </header>
+  <main class="site-main">
+    <article class="article">
+      <header class="article-header">
+        <h1>激活函数的本质原理与作用</h1>
+        <time datetime="2026-01-27T07:18:34.000Z">2026年1月27日</time>
+<ul class="tag-list" aria-label="Tags">
+    <li><a href="/zh/tags/AI/">AI</a></li>
+    <li><a href="/zh/tags/LLM/">LLM</a></li>
+    <li><a href="/zh/tags/Deep%20Learning/">Deep Learning</a></li>
+    <li><a href="/zh/tags/Math/">Math</a></li>
+  </ul>
+      </header>
+      <div class="prose">
+<blockquote>
+<blockquote>
+<p>以下内容由AI辅助生成</p>
+</blockquote>
+</blockquote>
+<p>——从 XOR 出发理解非线性、表达能力与训练</p>
+<hr>
+<h2 id="xor" data-heading-text="一、从一个最小反例开始:XOR 与线性模型的根本局限">一、从一个最小反例开始:XOR 与线性模型的根本局限</h2>
+<p>在讨论激活函数之前,有必要从一个最简单、却最具代表性的例子入手。
+XOR(异或)问题以极低的维度,清晰地揭示了<strong>线性模型与深度神经网络在本质上的差异</strong>。</p>
+<h3 id="1-xor" data-heading-text="1. XOR 问题的定义">1. XOR 问题的定义</h3>
+<p>XOR 的规则如下:</p>
+<table>
+<thead>
+<tr>
+<th>x₁</th>
+<th>x₂</th>
+<th>XOR</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p>在二维平面中表示为:</p>
+<div class="code-block"><pre><code class="hljs">x₂ ↑
+   |
+ 1 |   ○       ●
+   |
+   |
+ 0 |   ●       ○
+   +----------------→ x₁
+       0       1
+● 表示输出为 1
+○ 表示输出为 0
+</code></pre></div>
+<p>正类与负类分布在对角位置。</p>
+<h3 id="2-xor" data-heading-text="2. 线性模型为何无法解决 XOR">2. 线性模型为何无法解决 XOR</h3>
+<p>任何不包含非线性激活的神经网络,无论堆叠多少层,其整体形式都可以合并为一次线性变换:</p>
+<div class="math math-display"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>y</mi><mo>=</mo><mi>W</mi><mi>x</mi><mo>+</mo><mi>b</mi></mrow><annotation encoding="application/x-tex">y = Wx + b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">W</span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">b</span></span></span></span></span></div>
+<p>在二维空间中,这意味着其决策边界只能是一条直线:</p>
+<div class="code-block"><pre><code class="hljs">x₂ ↑
+   |
+ 1 |   ○   |   ●
+   |       |
+   |       |
+ 0 |   ●   |   ○
+   +----------------→ x₁
+</code></pre></div>
+<p>无论如何调整这条直线,都无法将 XOR 的正负样本完全分开。</p>
+<p>这是一个严格的数学事实:
+<strong>线性函数在复合运算下是封闭的,多层线性网络在表达能力上等价于单层线性模型。</strong></p>
+<hr>
+<h2 id="relu-xor" data-heading-text="二、引入 ReLU 后发生了什么:XOR 被分开的全过程">二、引入 ReLU 后发生了什么:XOR 被分开的全过程</h2>
+<p>XOR 的关键意义在于:
+<strong>只要引入非线性,问题的几何结构就会发生根本变化。</strong></p>
+<h3 id="1-relu" data-heading-text="1. 一个最小的两层 ReLU 网络">1. 一个最小的两层 ReLU 网络</h3>
+<div class="code-block"><pre><code class="hljs">输入: x₁, x₂
+
+隐藏层:
+h₁ = ReLU(x₁ - x₂)
+h₂ = ReLU(x₂ - x₁)
+
+输出层:
+y = h₁ + h₂
+</code></pre></div>
+<p>其中:</p>
+<div class="math math-display"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mtext>ReLU</mtext><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo><mo>=</mo><mi>max</mi><mo>⁡</mo><mo stretchy="false">(</mo><mn>0</mn><mo separator="true">,</mo><mi>x</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\text{ReLU}(x) = \max(0, x)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">ReLU</span></span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop">max</span><span class="mopen">(</span><span class="mord">0</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">x</span><span class="mclose">)</span></span></span></span></span></div>
+<h3 id="2" data-heading-text="2. 逐点计算">2. 逐点计算</h3>
+<ul>
+<li>(0,0): h₁ = 0, h₂ = 0 → y = 0</li>
+<li>(1,1): h₁ = 0, h₂ = 0 → y = 0</li>
+<li>(1,0): h₁ = 1, h₂ = 0 → y = 1</li>
+<li>(0,1): h₁ = 0, h₂ = 1 → y = 1</li>
+</ul>
+<p>XOR 被完全正确地区分。</p>
+<h3 id="3" data-heading-text="3. 几何解释:空间是如何被切分并重组的">3. 几何解释:空间是如何被切分并重组的</h3>
+<ul>
+<li>(x₁ - x₂ = 0)、(x₂ - x₁ = 0) 是两条对角线</li>
+<li>ReLU 在每条直线处将空间一分为二</li>
+<li>一侧被整体压缩为 0,另一侧保持线性结构</li>
+</ul>
+<p>叠加后,空间被划分为四个区域:</p>
+<div class="code-block"><pre><code class="hljs">x₂ ↑
+   |
+ 1 |   ○   |   ●
+   |-------+-------
+   |   ●   |   ○
+ 0 |
+   +----------------→ x₁
+</code></pre></div>
+<p>最终形成的是 <strong>X 形的分段线性决策边界</strong>,而不是一条直线。</p>
+<hr>
+<h2 id="xor-2" data-heading-text="三、从 XOR 抽象出的第一性原理:激活函数究竟在做什么">三、从 XOR 抽象出的第一性原理:激活函数究竟在做什么</h2>
+<h3 id="1" data-heading-text="1. 激活函数并不是“画曲线”">1. 激活函数并不是“画曲线”</h3>
+<p>一个常见但不准确的说法是:
+<em>激活函数把线性模型变成了曲线模型</em>。</p>
+<p>事实上,以 ReLU 为代表的现代激活函数并不会直接生成光滑曲线。</p>
+<p>它们真正做的是:</p>
+<ul>
+<li>用线性超平面切分空间</li>
+<li>对部分区域进行门控(压缩、屏蔽)</li>
+<li>将多个线性区域以条件方式组合</li>
+</ul>
+<p>因此,ReLU 网络本质上是<strong>分段线性模型</strong>。
+非线性并不来自单次变换,而来自<strong>多次空间切分与重组的叠加效果</strong>。</p>
+<h3 id="2-2" data-heading-text="2. 非线性存在的根本原因">2. 非线性存在的根本原因</h3>
+<p>非线性激活的首要作用不是增强模型能力,而是:</p>
+<blockquote>
+<p><strong>打破线性函数在复合运算下的封闭性,防止深度网络在数学上退化为线性模型。</strong></p>
+</blockquote>
+<p>这是激活函数存在的第一性原因。</p>
+<hr>
+<h2 id="section-11" data-heading-text="四、表达能力与表达准确性:两个必须区分的层面">四、表达能力与表达准确性:两个必须区分的层面</h2>
+<p>在理解激活函数的作用时,一个至关重要、却常被忽略的问题是:
+<strong>表达能力与表达准确性并不是同一个概念。</strong></p>
+<ul>
+<li><strong>表达能力</strong>:模型是否具备表示复杂函数的可能性</li>
+<li><strong>表达准确性</strong>:模型是否通过训练学到了合适的函数</li>
+</ul>
+<p>激活函数解决的是前者的问题。
+它并不直接提高预测准确率,而是为后续训练提供必要的表达前提。</p>
+<hr>
+<h2 id="section-12" data-heading-text="五、不同激活函数的本质角色、形态与使用场景">五、不同激活函数的本质角色、形态与使用场景</h2>
+<p>虽然所有激活函数都引入了非线性,但它们的<strong>设计目标和承担的角色并不相同</strong>。</p>
+<hr>
+<h3 id="1-relu-2" data-heading-text="1. ReLU:结构型非线性(隐藏层主力)">1. ReLU:结构型非线性(隐藏层主力)</h3>
+<div class="math math-display"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mtext>ReLU</mtext><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo><mo>=</mo><mi>max</mi><mo>⁡</mo><mo stretchy="false">(</mo><mn>0</mn><mo separator="true">,</mo><mi>x</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\text{ReLU}(x) = \max(0, x)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">ReLU</span></span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop">max</span><span class="mopen">(</span><span class="mord">0</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">x</span><span class="mclose">)</span></span></span></span></span></div>
+<p>函数形态:</p>
+<div class="code-block"><pre><code class="hljs">y
+│        /
+│       /
+│      /
+│_____/________ x
+      0
+</code></pre></div>
+<p>ReLU 的核心特性是:</p>
+<ul>
+<li><strong>分段线性</strong>:将复杂函数拆解为可组合的局部线性结构</li>
+<li><strong>局部结构偏好</strong>:适合刻画分块、层级关系</li>
+<li><strong>稀疏激活</strong>:部分神经元在给定输入下完全关闭</li>
+<li><strong>梯度稳定</strong>:正区间不饱和,使深层网络可训练</li>
+</ul>
+<p>因此,ReLU 及其变体成为现代深度网络隐藏层的默认选择。</p>
+<hr>
+<h3 id="2-sigmoid" data-heading-text="2. sigmoid:概率型非线性(输出语义)">2. sigmoid:概率型非线性(输出语义)</h3>
+<div class="math math-display"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>σ</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo><mo>=</mo><mfrac><mn>1</mn><mrow><mn>1</mn><mo>+</mo><msup><mi>e</mi><mrow><mo>−</mo><mi>x</mi></mrow></msup></mrow></mfrac></mrow><annotation encoding="application/x-tex">\sigma(x) = \frac{1}{1 + e^{-x}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">σ</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.0908em;vertical-align:-0.7693em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3214em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mord mathnormal">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6973em;"><span style="top:-2.989em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mathnormal mtight">x</span></span></span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.7693em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></div>
+<p>函数形态:</p>
+<div class="code-block"><pre><code class="hljs">y
+1 |        ______
+  |       /
+  |      /
+0 |_____/________ x
+        0
+</code></pre></div>
+<p>sigmoid 的核心作用在于:</p>
+<ul>
+<li>将实数映射到 (0,1)</li>
+<li>自然对应概率含义</li>
+</ul>
+<p>其局限在于两端饱和、梯度易消失,因此:</p>
+<ul>
+<li><strong>不适合深层隐藏层</strong></li>
+<li>主要用于 <strong>二分类输出层</strong> 或 <strong>门控结构</strong>(如 LSTM 的门)</li>
+</ul>
+<hr>
+<h3 id="3-tanh" data-heading-text="3. tanh:对称信号非线性(历史与特定场景)">3. tanh:对称信号非线性(历史与特定场景)</h3>
+<div class="math math-display"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>tanh</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo><mo>=</mo><mfrac><mrow><msup><mi>e</mi><mi>x</mi></msup><mo>−</mo><msup><mi>e</mi><mrow><mo>−</mo><mi>x</mi></mrow></msup></mrow><mrow><msup><mi>e</mi><mi>x</mi></msup><mo>+</mo><msup><mi>e</mi><mrow><mo>−</mo><mi>x</mi></mrow></msup></mrow></mfrac><mo>∈</mo><mo stretchy="false">(</mo><mo>−</mo><mn>1</mn><mo separator="true">,</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\tanh(x) = \frac{e^x - e^{-x}}{e^x + e^{-x}} \in (-1, 1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop">tanh</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.2177em;vertical-align:-0.7693em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.4483em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.5904em;"><span style="top:-2.989em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">x</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mord mathnormal">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6973em;"><span style="top:-2.989em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mathnormal mtight">x</span></span></span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6644em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">x</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mord mathnormal">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7713em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mathnormal mtight">x</span></span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.7693em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">−</span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">1</span><span class="mclose">)</span></span></span></span></span></div>
+<p>函数形态:</p>
+<div class="code-block"><pre><code class="hljs">y
+ 1 |      ______
+   |     /
+ 0 |____/______
+   |    \
+-1 |     \_____
+            x
+</code></pre></div>
+<p>tanh 可以视为 sigmoid 的零中心版本:</p>
+<ul>
+<li>输出对称,值域为 (-1, 1)</li>
+<li>梯度分布更均衡</li>
+</ul>
+<p>但它仍然存在饱和问题。
+在现代深度网络中,tanh 多出现在:</p>
+<ul>
+<li>早期 RNN</li>
+<li>少数需要对称连续状态建模的场景</li>
+</ul>
+<hr>
+<h3 id="4-softmax" data-heading-text="4. softmax:归一化与竞争机制(非表达型非线性)">4. softmax:归一化与竞争机制(非表达型非线性)</h3>
+<div class="math math-display"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mtext>softmax</mtext><mo stretchy="false">(</mo><msub><mi>z</mi><mi>i</mi></msub><mo stretchy="false">)</mo><mo>=</mo><mfrac><msup><mi>e</mi><msub><mi>z</mi><mi>i</mi></msub></msup><mrow><munder><mo>∑</mo><mi>j</mi></munder><msup><mi>e</mi><msub><mi>z</mi><mi>j</mi></msub></msup></mrow></mfrac></mrow><annotation encoding="application/x-tex">\text{softmax}(z_i) = \frac{e^{z_i}}{\sum_j e^{z_j}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">softmax</span></span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.044em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.044em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.4632em;vertical-align:-1.1218em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3414em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mop"><span class="mop op-symbol small-op" style="position:relative;top:0em;">∑</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.162em;"><span style="top:-2.4003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0572em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.4358em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6065em;"><span style="top:-3.0051em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.044em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3281em;"><span style="top:-2.357em;margin-left:-0.044em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0572em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2819em;"><span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6644em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.044em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3281em;"><span style="top:-2.357em;margin-left:-0.044em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.1218em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></div>
+<p>以三分类为例,输入向量到概率分布的映射:</p>
+<div class="code-block"><pre><code class="hljs">输入 z = [z₁, z₂, z₃]  →  输出 p = [p₁, p₂, p₃]
+
+例如:
+z = [2.0, 1.0, 0.1]
+    ↓ softmax
+p = [0.659, 0.242, 0.099]  (和为 1)
+
+特性:
+• 最大值被强化: z₁最大 → p₁最大
+• 保持顺序: z₁ &gt; z₂ &gt; z₃  →  p₁ &gt; p₂ &gt; p₃
+• 归一化: Σpᵢ = 1
+• 竞争性: 增大z₁会压低p₂、p₃
+</code></pre></div>
+<p>softmax 作用在<strong>向量</strong>上,其本质是:</p>
+<ul>
+<li>将一组分数映射为概率分布</li>
+<li>强制类别之间产生竞争关系</li>
+</ul>
+<p>典型使用场景包括:</p>
+<ul>
+<li>多分类输出层</li>
+<li>注意力权重归一化</li>
+</ul>
+<p>softmax 并不用于构建复杂表示,而属于<strong>输出语义与选择机制</strong>。</p>
+<hr>
+<h2 id="section-17" data-heading-text="六、激活函数的本质总结与选择逻辑">六、激活函数的本质总结与选择逻辑</h2>
+<p>综合前文讨论,可以将激活函数的作用概括为:</p>
+<blockquote>
+<p><strong>在不破坏梯度传播的前提下,引入必要的非线性,</strong>
+<strong>防止深度网络退化为线性模型,</strong>
+<strong>为模型提供足够但可控的函数表达空间。</strong></p>
+</blockquote>
+<p>在此基础上:</p>
+<ul>
+<li>通过数据、损失函数与优化算法</li>
+<li>训练参数以逼近目标函数</li>
+<li>从而提高最终预测准确性与泛化能力</li>
+</ul>
+<p>进一步概括为:</p>
+<blockquote>
+<p>激活函数必须是非线性的,
+不是为了无限增强表达能力,
+而是为了防止深度网络退化为线性模型,
+并在可训练的前提下,引入与任务结构匹配的非线性归纳偏置。</p>
+</blockquote>
+<p>至于选哪种激活函数、使用多少层,本质上是:</p>
+<ul>
+<li>对数据分布的假设</li>
+<li>对优化可行性的权衡</li>
+<li>在大量经验与失败中逐步形成的工程共识</li>
+</ul>
+<hr>
+<h2 id="section-18" data-heading-text="七、结语">七、结语</h2>
+<p>通过 XOR 这一最小反例,可以清晰地看到:</p>
+<ul>
+<li>非线性是深度神经网络成立的必要条件</li>
+<li>激活函数并不是装饰,而是结构性组件</li>
+<li>不同激活函数承担着不同角色,而非优劣竞争</li>
+</ul>
+<p>激活函数的意义,不在于“让模型更强”,
+而在于<strong>让深度模型在数学上成立、在优化上可行、在表达上有效</strong>。</p>
+<hr>
+<p><strong>延伸思考方向</strong>:</p>
+<ul>
+<li>ReLU 网络线性区域数量随层数增长的直观解释</li>
+<li>激活函数如何塑造优化景观(loss landscape)</li>
+<li>现代激活函数变体(Leaky ReLU、GELU、Swish 等)的设计动机</li>
+<li>激活函数与归纳偏置的关系</li>
+</ul>
+
+      </div>
+<div class="article-actions" aria-label="Article actions">
+      <a class="share-link" href="https://twitter.com/intent/tweet?text=%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0%E7%9A%84%E6%9C%AC%E8%B4%A8%E5%8E%9F%E7%90%86%E4%B8%8E%E4%BD%9C%E7%94%A8&amp;url=https%3A%2F%2Fkingson4wu.github.io%2Fzh%2Fposts%2F20260127%2F" target="_blank" rel="noopener noreferrer" aria-label="Share on X">
+        <span aria-hidden="true">X</span>
+        <span>Share</span>
+      </a>
+    </div>
+    </article>
+<aside class="article-toc" data-article-toc aria-label="目录">
+      <button class="article-toc-toggle" type="button" data-article-toc-toggle aria-expanded="false" aria-controls="article-toc-panel" aria-label="打开目录" data-open-label="打开目录" data-close-label="收起目录">
+        <svg aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M8 6h11"></path>
+          <path d="M8 12h11"></path>
+          <path d="M8 18h11"></path>
+          <path d="M4 6h.01"></path>
+          <path d="M4 12h.01"></path>
+          <path d="M4 18h.01"></path>
+        </svg>
+      </button>
+      <nav id="article-toc-panel" class="article-toc-panel" data-article-toc-panel aria-label="目录">
+        <div class="article-toc-heading">目录</div>
+        <ol class="article-toc-list">
+          <li class="article-toc-level-2"><a href="#xor" data-article-toc-link>一、从一个最小反例开始:XOR 与线性模型的根本局限</a></li>
+          <li class="article-toc-level-3"><a href="#1-xor" data-article-toc-link>1. XOR 问题的定义</a></li>
+          <li class="article-toc-level-3"><a href="#2-xor" data-article-toc-link>2. 线性模型为何无法解决 XOR</a></li>
+          <li class="article-toc-level-2"><a href="#relu-xor" data-article-toc-link>二、引入 ReLU 后发生了什么:XOR 被分开的全过程</a></li>
+          <li class="article-toc-level-3"><a href="#1-relu" data-article-toc-link>1. 一个最小的两层 ReLU 网络</a></li>
+          <li class="article-toc-level-3"><a href="#2" data-article-toc-link>2. 逐点计算</a></li>
+          <li class="article-toc-level-3"><a href="#3" data-article-toc-link>3. 几何解释:空间是如何被切分并重组的</a></li>
+          <li class="article-toc-level-2"><a href="#xor-2" data-article-toc-link>三、从 XOR 抽象出的第一性原理:激活函数究竟在做什么</a></li>
+          <li class="article-toc-level-3"><a href="#1" data-article-toc-link>1. 激活函数并不是“画曲线”</a></li>
+          <li class="article-toc-level-3"><a href="#2-2" data-article-toc-link>2. 非线性存在的根本原因</a></li>
+          <li class="article-toc-level-2"><a href="#section-11" data-article-toc-link>四、表达能力与表达准确性:两个必须区分的层面</a></li>
+          <li class="article-toc-level-2"><a href="#section-12" data-article-toc-link>五、不同激活函数的本质角色、形态与使用场景</a></li>
+          <li class="article-toc-level-3"><a href="#1-relu-2" data-article-toc-link>1. ReLU:结构型非线性(隐藏层主力)</a></li>
+          <li class="article-toc-level-3"><a href="#2-sigmoid" data-article-toc-link>2. sigmoid:概率型非线性(输出语义)</a></li>
+          <li class="article-toc-level-3"><a href="#3-tanh" data-article-toc-link>3. tanh:对称信号非线性(历史与特定场景)</a></li>
+          <li class="article-toc-level-3"><a href="#4-softmax" data-article-toc-link>4. softmax:归一化与竞争机制(非表达型非线性)</a></li>
+          <li class="article-toc-level-2"><a href="#section-17" data-article-toc-link>六、激活函数的本质总结与选择逻辑</a></li>
+          <li class="article-toc-level-2"><a href="#section-18" data-article-toc-link>七、结语</a></li>
+        </ol>
+      </nav>
+    </aside>
+    <script src="/scripts/article-toc.js" defer></script>
+    <nav class="article-nav" aria-label="Adjacent posts">
+      <a href="/zh/posts/20260120-ai/"><span>Previous</span>AI 数学精要速览</a>
+      <a href="/zh/posts/20260128-softmax/"><span>Next</span>Softmax：从直觉到本质</a>
+    </nav>
+<section class="comments" aria-labelledby="comments-heading">
+      <h2 id="comments-heading">评论</h2>
+      <div
+        data-comments
+        data-comments-repo="Kingson4Wu/kingson4wu.github.io"
+        data-comments-issue-term="pathname"
+        data-comments-label="comment"
+      ></div>
+    </section>
+    <script src="/scripts/comments.js" defer></script>
+  </main>
+  <footer class="site-footer">
+    <p>&copy; 2026 拉巴力的纸皮箱</p>
+  </footer>
+  <button class="reading-return" type="button" data-reading-return aria-label="回到开头" title="回到开头">
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <path d="M12 19V5"></path>
+      <path d="m6 11 6-6 6 6"></path>
+    </svg>
+  </button>
+  <script src="/scripts/theme.js"></script>
+  <script src="/scripts/image-viewer.js"></script>
+  <script src="/scripts/reading-tools.js"></script>
+</body>
+</html>

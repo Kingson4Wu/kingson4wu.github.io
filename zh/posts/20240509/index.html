@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>聊聊配置中心 | 拉巴力的纸皮箱</title>
+  <meta name="description" content="第一次接触配置中心，是快十年前了，那时的配置中心还没像现在那么多成熟的开源项目，很多公司都需要结合自身业务自研。 使用配置中心的好处 快速发布变更配置，实时生效 对于不复杂的系统或业务配置，可以避免写繁琐的后台，但又具备快速变更的功能 读取配置性能高，一般配置后，都是以内存变量的方式常驻在服务中，可以说读取配置几乎零成...">
+  <link rel="canonical" href="https://kingson4wu.github.io/zh/posts/20240509/">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="alternate" type="application/rss+xml" title="拉巴力的纸皮箱" href="/zh/feed.xml">
+  <link rel="alternate" type="text/markdown" href="/zh/posts/20240509/index.md">
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="/styles/main.css">
+  <script>
+    try {
+      var theme = localStorage.getItem('theme');
+      if (theme) document.documentElement.dataset.theme = theme;
+    } catch (_) {}
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="site-title" href="/zh/" aria-label="拉巴力的纸皮箱">
+      <span class="site-logo" aria-hidden="true">K</span>
+      <span>拉巴力的纸皮箱</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="/zh/posts/">文章</a>
+      <a href="/zh/notes/">笔记</a>
+      <a href="/zh/tags/">标签</a>
+      <a href="/zh/about/">关于</a>
+      <a href="/zh/search/">搜索</a>
+      <a href="/en/" lang="en">English</a>
+      <a class="feed-link" href="/zh/feed.xml" aria-label="订阅更新" title="订阅更新">
+        <svg class="feed-icon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M5 5.5A13.5 13.5 0 0 1 18.5 19"></path>
+          <path d="M5 11A8 8 0 0 1 13 19"></path>
+          <circle cx="6" cy="18" r="1.5"></circle>
+        </svg>
+      </a>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换明暗模式" title="切换明暗模式">
+        <svg class="theme-icon theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M21 14.2A8.5 8.5 0 0 1 9.8 3 7 7 0 1 0 21 14.2Z"></path>
+        </svg>
+        <svg class="theme-icon theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"></path>
+        </svg>
+      </button>
+    </nav>
+  </header>
+  <main class="site-main">
+    <article class="article">
+      <header class="article-header">
+        <h1>聊聊配置中心</h1>
+        <time datetime="2024-05-09T07:28:40.000Z">2024年5月9日</time>
+<ul class="tag-list" aria-label="Tags">
+    <li><a href="/zh/tags/Distributed%20Systems/">Distributed Systems</a></li>
+  </ul>
+      </header>
+      <div class="prose">
+<blockquote>
+<blockquote>
+<p>第一次接触配置中心，是快十年前了，那时的配置中心还没像现在那么多成熟的开源项目，很多公司都需要结合自身业务自研。</p>
+</blockquote>
+</blockquote>
+<h2 id="section-1" data-heading-text="使用配置中心的好处">使用配置中心的好处</h2>
+<ol>
+<li>快速发布变更配置，实时生效</li>
+<li>对于不复杂的系统或业务配置，可以避免写繁琐的后台，但又具备快速变更的功能</li>
+<li>读取配置性能高，一般配置后，都是以内存变量的方式常驻在服务中，可以说读取配置几乎零成本</li>
+</ol>
+<h2 id="section-2" data-heading-text="配置中心的核心-推送原理">配置中心的核心-推送原理</h2>
+<blockquote>
+<blockquote>
+<p>这里主要讲一下个人实际接触的三种原理，其实从宏观本质上看，三种方案原理是一致的</p>
+</blockquote>
+</blockquote>
+<ol>
+<li>第一家公司的配置中心自研方案，借助ZooKeeper的临时节点变更事件，从而实现实时推送</li>
+</ol>
+<p><img src="/assets/zh/posts/20240509/zookeeper_config_center.png" alt=""></p>
+<ol start="2">
+<li>
+<p>第二家公司的服务治理中心的实现方案，使用Netty使服务中心和各服务之间建立TCP长链接，从而实现配置推送</p>
+</li>
+<li>
+<p>第三家公司使用Apollo开源项目作为配置中心，原理是使用HTTP的Long polling方案</p>
+</li>
+</ol>
+<ul>
+<li>从原理的本质上看，三者都是通过保持TCP连接不断开，从而复用这个通道进行数据推送</li>
+<li>除了推送的实现很重要之外，后台管理系统的设计和客户端的SDK也很重要。因为光能实时推送是不够的，要让接入配置中心方便，以及能方便管理和发布配置也是很关键的。在这一点上，Apollo这个开源项目是很不错的。</li>
+</ul>
+
+      </div>
+<div class="article-actions" aria-label="Article actions">
+      <a class="share-link" href="https://twitter.com/intent/tweet?text=%E8%81%8A%E8%81%8A%E9%85%8D%E7%BD%AE%E4%B8%AD%E5%BF%83&amp;url=https%3A%2F%2Fkingson4wu.github.io%2Fzh%2Fposts%2F20240509%2F" target="_blank" rel="noopener noreferrer" aria-label="Share on X">
+        <span aria-hidden="true">X</span>
+        <span>Share</span>
+      </a>
+    </div>
+    </article>
+<aside class="article-toc" data-article-toc aria-label="目录">
+      <button class="article-toc-toggle" type="button" data-article-toc-toggle aria-expanded="false" aria-controls="article-toc-panel" aria-label="打开目录" data-open-label="打开目录" data-close-label="收起目录">
+        <svg aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M8 6h11"></path>
+          <path d="M8 12h11"></path>
+          <path d="M8 18h11"></path>
+          <path d="M4 6h.01"></path>
+          <path d="M4 12h.01"></path>
+          <path d="M4 18h.01"></path>
+        </svg>
+      </button>
+      <nav id="article-toc-panel" class="article-toc-panel" data-article-toc-panel aria-label="目录">
+        <div class="article-toc-heading">目录</div>
+        <ol class="article-toc-list">
+          <li class="article-toc-level-2"><a href="#section-1" data-article-toc-link>使用配置中心的好处</a></li>
+          <li class="article-toc-level-2"><a href="#section-2" data-article-toc-link>配置中心的核心-推送原理</a></li>
+        </ol>
+      </nav>
+    </aside>
+    <script src="/scripts/article-toc.js" defer></script>
+    <nav class="article-nav" aria-label="Adjacent posts">
+      <a href="/zh/posts/20240507/"><span>Previous</span>业务开发中的术与道</a>
+      <a href="/zh/posts/20240528/"><span>Next</span>也谈谈feed流的设计</a>
+    </nav>
+<section class="comments" aria-labelledby="comments-heading">
+      <h2 id="comments-heading">评论</h2>
+      <div
+        data-comments
+        data-comments-repo="Kingson4Wu/kingson4wu.github.io"
+        data-comments-issue-term="pathname"
+        data-comments-label="comment"
+      ></div>
+    </section>
+    <script src="/scripts/comments.js" defer></script>
+  </main>
+  <footer class="site-footer">
+    <p>&copy; 2026 拉巴力的纸皮箱</p>
+  </footer>
+  <button class="reading-return" type="button" data-reading-return aria-label="回到开头" title="回到开头">
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <path d="M12 19V5"></path>
+      <path d="m6 11 6-6 6 6"></path>
+    </svg>
+  </button>
+  <script src="/scripts/theme.js"></script>
+  <script src="/scripts/image-viewer.js"></script>
+  <script src="/scripts/reading-tools.js"></script>
+</body>
+</html>

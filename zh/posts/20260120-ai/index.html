@@ -1,0 +1,420 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI 数学精要速览 | 拉巴力的纸皮箱</title>
+  <meta name="description" content="一、人工智能的本质：数学建模 + 优化，而非算力魔法 人工智能并非神秘技术，其本质是： 数学：描述问题、刻画规律、定义目标 算法：在数学模型上进行搜索与优化 计算机：负责实现与加速计算 可以用一句话概括： 人工智能 = 数学模型 + 优化算法 + 工程实现 因此，真正决定 AI 能力上限的，不是算力本身，而是建模方式与...">
+  <link rel="canonical" href="https://kingson4wu.github.io/zh/posts/20260120-ai/">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="alternate" type="application/rss+xml" title="拉巴力的纸皮箱" href="/zh/feed.xml">
+  <link rel="alternate" type="text/markdown" href="/zh/posts/20260120-ai/index.md">
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="/styles/main.css">
+  <script>
+    try {
+      var theme = localStorage.getItem('theme');
+      if (theme) document.documentElement.dataset.theme = theme;
+    } catch (_) {}
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="site-title" href="/zh/" aria-label="拉巴力的纸皮箱">
+      <span class="site-logo" aria-hidden="true">K</span>
+      <span>拉巴力的纸皮箱</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="/zh/posts/">文章</a>
+      <a href="/zh/notes/">笔记</a>
+      <a href="/zh/tags/">标签</a>
+      <a href="/zh/about/">关于</a>
+      <a href="/zh/search/">搜索</a>
+      <a href="/en/" lang="en">English</a>
+      <a class="feed-link" href="/zh/feed.xml" aria-label="订阅更新" title="订阅更新">
+        <svg class="feed-icon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M5 5.5A13.5 13.5 0 0 1 18.5 19"></path>
+          <path d="M5 11A8 8 0 0 1 13 19"></path>
+          <circle cx="6" cy="18" r="1.5"></circle>
+        </svg>
+      </a>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换明暗模式" title="切换明暗模式">
+        <svg class="theme-icon theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M21 14.2A8.5 8.5 0 0 1 9.8 3 7 7 0 1 0 21 14.2Z"></path>
+        </svg>
+        <svg class="theme-icon theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"></path>
+        </svg>
+      </button>
+    </nav>
+  </header>
+  <main class="site-main">
+    <article class="article">
+      <header class="article-header">
+        <h1>AI 数学精要速览</h1>
+        <time datetime="2026-01-20T04:52:37.000Z">2026年1月20日</time>
+<ul class="tag-list" aria-label="Tags">
+    <li><a href="/zh/tags/AI/">AI</a></li>
+    <li><a href="/zh/tags/Deep%20Learning/">Deep Learning</a></li>
+    <li><a href="/zh/tags/Math/">Math</a></li>
+  </ul>
+      </header>
+      <div class="prose">
+<h2 id="section-1" data-heading-text="一、人工智能的本质：数学建模 + 优化，而非算力魔法">一、人工智能的本质：数学建模 + 优化，而非算力魔法</h2>
+<p>人工智能并非神秘技术，其本质是：</p>
+<ul>
+<li><strong>数学</strong>：描述问题、刻画规律、定义目标</li>
+<li><strong>算法</strong>：在数学模型上进行搜索与优化</li>
+<li><strong>计算机</strong>：负责实现与加速计算</li>
+</ul>
+<p>可以用一句话概括：</p>
+<blockquote>
+<p>人工智能 = 数学模型 + 优化算法 + 工程实现</p>
+</blockquote>
+<p>因此，真正决定 AI 能力上限的，不是算力本身，而是<strong>建模方式与优化思想</strong>。</p>
+<hr>
+<h2 id="section-2" data-heading-text="二、机器学习的本质：函数估计与函数逼近">二、机器学习的本质：函数估计与函数逼近</h2>
+<h3 id="1" data-heading-text="1. 从数据到映射关系">1. 从数据到映射关系</h3>
+<p>在机器学习中：</p>
+<ul>
+<li>数据最终都会被表示为<strong>数值向量</strong></li>
+<li>模型的作用是学习一个映射关系：</li>
+</ul>
+<div class="math math-display"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mtext>输入向量</mtext><mo>→</mo><mtext>输出向量</mtext></mrow><annotation encoding="application/x-tex">\text{输入向量} \rightarrow \text{输出向量}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord text"><span class="mord cjk_fallback">输入向量</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord text"><span class="mord cjk_fallback">输出向量</span></span></span></span></span></span></div>
+<p>这本质上就是在学习一个函数：</p>
+<div class="math math-display"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mover accent="true"><mi>y</mi><mo>^</mo></mover><mo>=</mo><msub><mi>f</mi><mi>θ</mi></msub><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\hat{y} = f_\theta(x)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord accent"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.6944em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.1944em;"><span class="mord">^</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1944em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0278em;">θ</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">)</span></span></span></span></span></div>
+<p>其中 <span class="math math-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>θ</mi></mrow><annotation encoding="application/x-tex">\theta</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">θ</span></span></span></span></span> 是模型参数。</p>
+<h3 id="2" data-heading-text="2. 函数逼近视角（核心）">2. 函数逼近视角（核心）</h3>
+<p>真实世界的规律函数通常未知，只能通过有限样本观察。</p>
+<p>机器学习做的事情是：</p>
+<ul>
+<li>定义损失函数</li>
+<li>选定模型形式（线性、神经网络等）</li>
+<li>通过数据训练参数</li>
+</ul>
+<p>最终得到：</p>
+<blockquote>
+<p>一个对真实函数的近似</p>
+</blockquote>
+<p>因此可以准确地说：</p>
+<blockquote>
+<p>机器学习问题，本质是函数估计/函数逼近问题</p>
+</blockquote>
+<hr>
+<h2 id="section-5" data-heading-text="三、损失函数与目标函数：从单点误差到整体准则">三、损失函数与目标函数：从单点误差到整体准则</h2>
+<p>这是整个体系中最容易混淆、但也最关键的一层。</p>
+<h3 id="1-loss-function" data-heading-text="1. 损失函数（Loss Function）">1. 损失函数（Loss Function）</h3>
+<p>损失函数衡量的是：</p>
+<blockquote>
+<p>模型在单个样本上的预测误差</p>
+</blockquote>
+<p>例如平方误差：</p>
+<div class="math math-display"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi mathvariant="normal">ℓ</mi><mo stretchy="false">(</mo><mi>y</mi><mo separator="true">,</mo><mover accent="true"><mi>y</mi><mo>^</mo></mover><mo stretchy="false">)</mo><mo>=</mo><mo stretchy="false">(</mo><mi>y</mi><mo>−</mo><mover accent="true"><mi>y</mi><mo>^</mo></mover><msup><mo stretchy="false">)</mo><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">\ell(y, \hat{y}) = (y - \hat{y})^2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">ℓ</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord accent"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.6944em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.1944em;"><span class="mord">^</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1944em;"><span></span></span></span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.1141em;vertical-align:-0.25em;"></span><span class="mord accent"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.6944em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.1944em;"><span class="mord">^</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1944em;"><span></span></span></span></span></span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span></span></div>
+<p>它回答的问题是：</p>
+<blockquote>
+<p>这一次预测错得有多严重？</p>
+</blockquote>
+<h3 id="2-objective-function" data-heading-text="2. 目标函数（Objective Function）">2. 目标函数（Objective Function）</h3>
+<p>训练时真正被优化的，是一个<strong>全局函数</strong>：</p>
+<div class="math math-display"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>J</mi><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo><mo>=</mo><mfrac><mn>1</mn><mi>N</mi></mfrac><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>N</mi></munderover><msub><mi mathvariant="normal">ℓ</mi><mi>i</mi></msub><mo>+</mo><mi>λ</mi><mi mathvariant="normal">Ω</mi><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">J(\theta) = \frac{1}{N}\sum_{i=1}^N \ell_i + \lambda \Omega(\theta)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0962em;">J</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0278em;">θ</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:3.106em;vertical-align:-1.2777em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3214em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.8283em;"><span style="top:-1.8723em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mrel mtight">=</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.05em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∑</span></span></span><span style="top:-4.3em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.109em;">N</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.2777em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord">ℓ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">λ</span><span class="mord">Ω</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0278em;">θ</span><span class="mclose">)</span></span></span></span></span></div>
+<p>其中：</p>
+<ul>
+<li>第一项：平均损失（经验风险），用于拟合数据</li>
+<li>第二项：正则项，用于限制模型复杂度</li>
+</ul>
+<p><strong>结论（非常重要）：</strong></p>
+<blockquote>
+<p>损失函数是局部误差，目标函数是训练时真正被最小化的整体准则</p>
+</blockquote>
+<p>在最简单的情况下，目标函数可以等于平均损失；在真实问题中，目标函数<strong>几乎总是平均损失加上正则约束</strong>。</p>
+<hr>
+<h2 id="section-8" data-heading-text="四、统一视角：人工智能 = 优化问题">四、统一视角：人工智能 = 优化问题</h2>
+<p>无论是机器学习还是深度学习，核心任务都可以统一为：</p>
+<blockquote>
+<p>在参数空间中，最小化（或最大化）一个目标函数</p>
+</blockquote>
+<h3 id="1-vs" data-heading-text="1. 全局最优 vs 局部最优">1. 全局最优 vs 局部最优</h3>
+<ul>
+<li><strong>全局最小值</strong>：整个空间中最小</li>
+<li><strong>局部极小值</strong>：某个邻域内最小</li>
+</ul>
+<p>在高维参数空间中：</p>
+<ul>
+<li>全局搜索不可行</li>
+<li>实用算法通常只能找到足够好的解</li>
+</ul>
+<p>工程上接受的标准是：</p>
+<blockquote>
+<p>目标函数足够小 + 泛化性能可接受</p>
+</blockquote>
+<hr>
+<h2 id="section-10" data-heading-text="五、微积分：优化算法的数学基础">五、微积分：优化算法的数学基础</h2>
+<h3 id="1-2" data-heading-text="1. 导数与梯度">1. 导数与梯度</h3>
+<ul>
+<li>导数：函数变化率</li>
+<li>梯度：多变量函数的一阶导数向量</li>
+</ul>
+<p>梯度方向表示：</p>
+<blockquote>
+<p>函数上升最快的方向</p>
+</blockquote>
+<p>因此，<strong>负梯度方向</strong>就是下降最快的方向。</p>
+<h3 id="2-2" data-heading-text="2. 核心优化算法">2. 核心优化算法</h3>
+<p>所有主流训练算法，底层都依赖导数和矩阵运算：</p>
+<ul>
+<li>梯度下降（GD）</li>
+<li>随机梯度下降（SGD）</li>
+<li>牛顿法、拟牛顿法（BFGS/L-BFGS）</li>
+</ul>
+<hr>
+<h2 id="section-13" data-heading-text="六、凸函数：为什么理论上好解，工程上难找">六、凸函数：为什么理论上好解，工程上难找</h2>
+<h3 id="1-3" data-heading-text="1. 凸性的决定性作用">1. 凸性的决定性作用</h3>
+<p>如果目标函数是凸的：</p>
+<ul>
+<li>任意局部最小值 = 全局最小值</li>
+<li>优化是干净的</li>
+</ul>
+<p>这在传统机器学习中非常常见：</p>
+<table>
+<thead>
+<tr>
+<th>模型</th>
+<th>损失</th>
+<th>目标函数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>线性回归</td>
+<td>平方误差</td>
+<td>凸</td>
+</tr>
+<tr>
+<td>逻辑回归</td>
+<td>对数损失</td>
+<td>凸</td>
+</tr>
+<tr>
+<td>SVM</td>
+<td>Hinge loss</td>
+<td>凸</td>
+</tr>
+</tbody>
+</table>
+<h3 id="2-3" data-heading-text="2. 深度学习为什么是非凸的">2. 深度学习为什么是非凸的</h3>
+<p>在神经网络中：</p>
+<ul>
+<li>模型是高度非线性的</li>
+<li>参数强耦合</li>
+<li>多层激活叠加</li>
+</ul>
+<p>结果是：</p>
+<blockquote>
+<p>即使损失函数形式是凸的，目标函数关于参数仍然是非凸的</p>
+</blockquote>
+<hr>
+<h2 id="section-16" data-heading-text="七、为什么深度学习还能工作？">七、为什么深度学习还能工作？</h2>
+<p>关键不在理论保证，而在工程现实：</p>
+<ol>
+<li>
+<p><strong>不追求全局最优</strong><br>
+只要性能足够好即可</p>
+</li>
+<li>
+<p><strong>高维空间的性质</strong><br>
+坏的局部极小值很少，更多是鞍点</p>
+</li>
+<li>
+<p><strong>SGD 的随机性</strong><br>
+噪声反而有助于跳出鞍点</p>
+</li>
+<li>
+<p><strong>工程手段</strong><br>
+初始化、正则化、BatchNorm、残差结构等</p>
+</li>
+</ol>
+<p>一句话总结：</p>
+<blockquote>
+<p>非凸优化在理论上困难，在工程上可控</p>
+</blockquote>
+<hr>
+<h2 id="section-17" data-heading-text="八、线性代数：深度学习的骨架系统">八、线性代数：深度学习的骨架系统</h2>
+<p>现代深度学习几乎完全建立在线性代数之上：</p>
+<ul>
+<li>向量表示与嵌入</li>
+<li>神经网络前向传播</li>
+<li>CNN、Attention、Transformer</li>
+</ul>
+<p>可以直接断言：</p>
+<blockquote>
+<p>没有线性代数，就没有现代深度学习</p>
+</blockquote>
+<hr>
+<h2 id="section-18" data-heading-text="九、感知机、激活函数与偏置项">九、感知机、激活函数与偏置项</h2>
+<h3 id="1-4" data-heading-text="1. 感知机模型">1. 感知机模型</h3>
+<div class="math math-display"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>y</mi><mo>=</mo><mi>f</mi><mo stretchy="false">(</mo><mi>w</mi><mo>⋅</mo><mi>x</mi><mo>+</mo><mi>b</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">y = f(w \cdot x + b)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.1076em;">f</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0269em;">w</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">b</span><span class="mclose">)</span></span></span></span></span></div>
+<ul>
+<li><span class="math math-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>w</mi></mrow><annotation encoding="application/x-tex">w</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0269em;">w</span></span></span></span></span>：权重，决定方向与敏感度</li>
+<li><span class="math math-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>b</mi></mrow><annotation encoding="application/x-tex">b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">b</span></span></span></span></span>：偏置，决定阈值/平移</li>
+</ul>
+<h3 id="2-4" data-heading-text="2. 偏置项的本质">2. 偏置项的本质</h3>
+<p>偏置项的作用是：</p>
+<blockquote>
+<p>让决策边界不被强制经过原点</p>
+</blockquote>
+<p>几何上：</p>
+<ul>
+<li>权重决定方向与斜率</li>
+<li>偏置决定起始位置</li>
+</ul>
+<p>没有偏置项，模型表达能力会严重受限。</p>
+<h3 id="3" data-heading-text="3. 激活函数的意义">3. 激活函数的意义</h3>
+<p>早期阶跃函数不可导，无法优化；现代网络使用可导函数（Sigmoid、ReLU、Tanh），以支持梯度下降。</p>
+<hr>
+<h2 id="section-22" data-heading-text="十、训练机制：参数不是写出来的，而是学出来的">十、训练机制：参数不是写出来的，而是学出来的</h2>
+<p>程序员负责：</p>
+<ul>
+<li>模型结构</li>
+<li>损失函数</li>
+<li>数据准备</li>
+</ul>
+<p><strong>参数的具体数值：</strong></p>
+<blockquote>
+<p>完全由训练过程自动学习得到</p>
+</blockquote>
+<p>即使模型结构相同，只要数据不同，学到的模型也会不同。</p>
+<hr>
+<h2 id="section-23" data-heading-text="十一、过拟合：模型记住了题目，但没学会规律">十一、过拟合：模型记住了题目，但没学会规律</h2>
+<p>典型特征：</p>
+<ul>
+<li>训练集表现很好</li>
+<li>测试集表现很差</li>
+</ul>
+<p>本质原因：</p>
+<blockquote>
+<p>模型复杂度 &gt; 数据所能支撑的复杂度</p>
+</blockquote>
+<p>解决思路：</p>
+<ul>
+<li>正则化</li>
+<li>数据增强</li>
+<li>控制模型规模</li>
+<li>Dropout、早停等技术</li>
+</ul>
+<hr>
+<h2 id="section-24" data-heading-text="十二、神经网络与深度学习">十二、神经网络与深度学习</h2>
+<ul>
+<li>神经网络：多层可导感知机的组合</li>
+<li>深度学习：更深的神经网络</li>
+</ul>
+<p>加深的效果是：</p>
+<blockquote>
+<p>在参数规模相近的情况下，逼近更复杂的函数</p>
+</blockquote>
+<p>理论解释仍在研究中，但工程效果已被反复验证。</p>
+<hr>
+<h2 id="section-25" data-heading-text="十三、强化学习：从监督学习到交互学习">十三、强化学习：从监督学习到交互学习</h2>
+<p>强化学习的目标不是最小化预测误差，而是：</p>
+<blockquote>
+<p>最大化长期累积回报</p>
+</blockquote>
+<p>特点：</p>
+<ul>
+<li>没有标准答案</li>
+<li>通过试错学习</li>
+<li>奖励信号驱动参数更新</li>
+</ul>
+<hr>
+<h2 id="section-26" data-heading-text="总纲（高度压缩版）">总纲（高度压缩版）</h2>
+<blockquote>
+<p>人工智能是在用数学定义目标，用优化寻找参数，用数据逼近未知函数；理论上关心凸性与最优性，工程上关心效果、稳定性与泛化能力。</p>
+</blockquote>
+<hr>
+<h2 id="reference" data-heading-text="Reference">Reference</h2>
+<ul>
+<li><a href="https://kingson4wu.github.io/2025/01/06/20250106-jian-dan-yan-jiu-yi-xia-ren-gong-zhi-neng-he-shu-xue/">简单研究一下人工智能和数学</a></li>
+</ul>
+
+      </div>
+<div class="article-actions" aria-label="Article actions">
+      <a class="share-link" href="https://twitter.com/intent/tweet?text=AI+%E6%95%B0%E5%AD%A6%E7%B2%BE%E8%A6%81%E9%80%9F%E8%A7%88&amp;url=https%3A%2F%2Fkingson4wu.github.io%2Fzh%2Fposts%2F20260120-ai%2F" target="_blank" rel="noopener noreferrer" aria-label="Share on X">
+        <span aria-hidden="true">X</span>
+        <span>Share</span>
+      </a>
+    </div>
+    </article>
+<aside class="article-toc" data-article-toc aria-label="目录">
+      <button class="article-toc-toggle" type="button" data-article-toc-toggle aria-expanded="false" aria-controls="article-toc-panel" aria-label="打开目录" data-open-label="打开目录" data-close-label="收起目录">
+        <svg aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M8 6h11"></path>
+          <path d="M8 12h11"></path>
+          <path d="M8 18h11"></path>
+          <path d="M4 6h.01"></path>
+          <path d="M4 12h.01"></path>
+          <path d="M4 18h.01"></path>
+        </svg>
+      </button>
+      <nav id="article-toc-panel" class="article-toc-panel" data-article-toc-panel aria-label="目录">
+        <div class="article-toc-heading">目录</div>
+        <ol class="article-toc-list">
+          <li class="article-toc-level-2"><a href="#section-1" data-article-toc-link>一、人工智能的本质：数学建模 + 优化，而非算力魔法</a></li>
+          <li class="article-toc-level-2"><a href="#section-2" data-article-toc-link>二、机器学习的本质：函数估计与函数逼近</a></li>
+          <li class="article-toc-level-3"><a href="#1" data-article-toc-link>1. 从数据到映射关系</a></li>
+          <li class="article-toc-level-3"><a href="#2" data-article-toc-link>2. 函数逼近视角（核心）</a></li>
+          <li class="article-toc-level-2"><a href="#section-5" data-article-toc-link>三、损失函数与目标函数：从单点误差到整体准则</a></li>
+          <li class="article-toc-level-3"><a href="#1-loss-function" data-article-toc-link>1. 损失函数（Loss Function）</a></li>
+          <li class="article-toc-level-3"><a href="#2-objective-function" data-article-toc-link>2. 目标函数（Objective Function）</a></li>
+          <li class="article-toc-level-2"><a href="#section-8" data-article-toc-link>四、统一视角：人工智能 = 优化问题</a></li>
+          <li class="article-toc-level-3"><a href="#1-vs" data-article-toc-link>1. 全局最优 vs 局部最优</a></li>
+          <li class="article-toc-level-2"><a href="#section-10" data-article-toc-link>五、微积分：优化算法的数学基础</a></li>
+          <li class="article-toc-level-3"><a href="#1-2" data-article-toc-link>1. 导数与梯度</a></li>
+          <li class="article-toc-level-3"><a href="#2-2" data-article-toc-link>2. 核心优化算法</a></li>
+          <li class="article-toc-level-2"><a href="#section-13" data-article-toc-link>六、凸函数：为什么理论上好解，工程上难找</a></li>
+          <li class="article-toc-level-3"><a href="#1-3" data-article-toc-link>1. 凸性的决定性作用</a></li>
+          <li class="article-toc-level-3"><a href="#2-3" data-article-toc-link>2. 深度学习为什么是非凸的</a></li>
+          <li class="article-toc-level-2"><a href="#section-16" data-article-toc-link>七、为什么深度学习还能工作？</a></li>
+          <li class="article-toc-level-2"><a href="#section-17" data-article-toc-link>八、线性代数：深度学习的骨架系统</a></li>
+          <li class="article-toc-level-2"><a href="#section-18" data-article-toc-link>九、感知机、激活函数与偏置项</a></li>
+          <li class="article-toc-level-3"><a href="#1-4" data-article-toc-link>1. 感知机模型</a></li>
+          <li class="article-toc-level-3"><a href="#2-4" data-article-toc-link>2. 偏置项的本质</a></li>
+          <li class="article-toc-level-3"><a href="#3" data-article-toc-link>3. 激活函数的意义</a></li>
+          <li class="article-toc-level-2"><a href="#section-22" data-article-toc-link>十、训练机制：参数不是写出来的，而是学出来的</a></li>
+          <li class="article-toc-level-2"><a href="#section-23" data-article-toc-link>十一、过拟合：模型记住了题目，但没学会规律</a></li>
+          <li class="article-toc-level-2"><a href="#section-24" data-article-toc-link>十二、神经网络与深度学习</a></li>
+          <li class="article-toc-level-2"><a href="#section-25" data-article-toc-link>十三、强化学习：从监督学习到交互学习</a></li>
+          <li class="article-toc-level-2"><a href="#section-26" data-article-toc-link>总纲（高度压缩版）</a></li>
+          <li class="article-toc-level-2"><a href="#reference" data-article-toc-link>Reference</a></li>
+        </ol>
+      </nav>
+    </aside>
+    <script src="/scripts/article-toc.js" defer></script>
+    <nav class="article-nav" aria-label="Adjacent posts">
+      <a href="/zh/posts/20251224/"><span>Previous</span>从零开始理解：点积为什么能反映向量夹角？</a>
+      <a href="/zh/posts/20260127/"><span>Next</span>激活函数的本质原理与作用</a>
+    </nav>
+<section class="comments" aria-labelledby="comments-heading">
+      <h2 id="comments-heading">评论</h2>
+      <div
+        data-comments
+        data-comments-repo="Kingson4Wu/kingson4wu.github.io"
+        data-comments-issue-term="pathname"
+        data-comments-label="comment"
+      ></div>
+    </section>
+    <script src="/scripts/comments.js" defer></script>
+  </main>
+  <footer class="site-footer">
+    <p>&copy; 2026 拉巴力的纸皮箱</p>
+  </footer>
+  <button class="reading-return" type="button" data-reading-return aria-label="回到开头" title="回到开头">
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <path d="M12 19V5"></path>
+      <path d="m6 11 6-6 6 6"></path>
+    </svg>
+  </button>
+  <script src="/scripts/theme.js"></script>
+  <script src="/scripts/image-viewer.js"></script>
+  <script src="/scripts/reading-tools.js"></script>
+</body>
+</html>

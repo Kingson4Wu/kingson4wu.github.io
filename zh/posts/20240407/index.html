@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>从Java转Go的个人体会 | 拉巴力的纸皮箱</title>
+  <meta name="description" content="这里仅从一个业务开发的角度谈谈体会，格局较低，仅做个人记录 编程语言是程序员接触和使用最多的工具 后端技术基础的深度是快速学习和适应新语言的关键 基于对工作中接触过的几种编程语言及其部署架构的看法继续聊。 截至目前，职业生涯五分之四的时间都是在使用Java。出于个人意愿和兴趣，以及行业的发展形势，也系统的自学了Go语言...">
+  <link rel="canonical" href="https://kingson4wu.github.io/zh/posts/20240407/">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="alternate" type="application/rss+xml" title="拉巴力的纸皮箱" href="/zh/feed.xml">
+  <link rel="alternate" type="text/markdown" href="/zh/posts/20240407/index.md">
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="/styles/main.css">
+  <script>
+    try {
+      var theme = localStorage.getItem('theme');
+      if (theme) document.documentElement.dataset.theme = theme;
+    } catch (_) {}
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="site-title" href="/zh/" aria-label="拉巴力的纸皮箱">
+      <span class="site-logo" aria-hidden="true">K</span>
+      <span>拉巴力的纸皮箱</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="/zh/posts/">文章</a>
+      <a href="/zh/notes/">笔记</a>
+      <a href="/zh/tags/">标签</a>
+      <a href="/zh/about/">关于</a>
+      <a href="/zh/search/">搜索</a>
+      <a href="/en/" lang="en">English</a>
+      <a class="feed-link" href="/zh/feed.xml" aria-label="订阅更新" title="订阅更新">
+        <svg class="feed-icon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M5 5.5A13.5 13.5 0 0 1 18.5 19"></path>
+          <path d="M5 11A8 8 0 0 1 13 19"></path>
+          <circle cx="6" cy="18" r="1.5"></circle>
+        </svg>
+      </a>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换明暗模式" title="切换明暗模式">
+        <svg class="theme-icon theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M21 14.2A8.5 8.5 0 0 1 9.8 3 7 7 0 1 0 21 14.2Z"></path>
+        </svg>
+        <svg class="theme-icon theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"></path>
+        </svg>
+      </button>
+    </nav>
+  </header>
+  <main class="site-main">
+    <article class="article">
+      <header class="article-header">
+        <h1>从Java转Go的个人体会</h1>
+        <time datetime="2024-04-07T01:22:08.000Z">2024年4月7日</time>
+<ul class="tag-list" aria-label="Tags">
+    <li><a href="/zh/tags/Java/">Java</a></li>
+    <li><a href="/zh/tags/Go/">Go</a></li>
+    <li><a href="/zh/tags/Programming%20Languages/">Programming Languages</a></li>
+  </ul>
+      </header>
+      <div class="prose">
+<blockquote>
+<blockquote>
+<p>这里仅从一个业务开发的角度谈谈体会，格局较低，仅做个人记录
+编程语言是程序员接触和使用最多的工具
+后端技术基础的深度是快速学习和适应新语言的关键</p>
+</blockquote>
+</blockquote>
+<ul>
+<li>
+<p>基于<a href="https://kingson4wu.github.io/2023/07/02/20230702-dui-gong-zuo-zhong-jie-hong-guo-de-ji-chong-bian-cheng-yu-yan-ji-qi-bu-shu-jia-gou-de-kan-fa/">对工作中接触过的几种编程语言及其部署架构的看法</a>继续聊。</p>
+</li>
+<li>
+<p>截至目前，职业生涯五分之四的时间都是在使用Java。出于个人意愿和兴趣，以及行业的发展形势，也系统的自学了Go语言，并在个人的小项目实践。在一次意外的组织变动中，我转岗到了新团队，并开始使用Go，由于之前自己的自学基础，基本是无缝切换到新语言。可能是由于团队人员大部分是从Lua或PHP开始转Go的，在那里甚至感觉自己稍稍领先。</p>
+</li>
+<li>
+<p>Go抽象业务比Java麻烦，代码不美观，但是它原生高并发，而且微服务下很多时候就一个后端服务，业务足够小，不需要复杂的设计模式等，并不需要像以前写大型Java应用这样做非常多的抽象，还能打二进制包，甚至还能保证一个团队所有人代码都是相同风格</p>
+</li>
+<li>
+<p>以下讲一些个人看法，比较乱甚至不正确，仅做个人记录</p>
+<ol>
+<li>小型项目省内存</li>
+<li>写命令行程序方便简单</li>
+<li>现在绝大部分功能都有相应的官方库和开源库</li>
+<li>运行无需环境依赖，直接打包成二进制可执行程序（Java现在也可以了，可能大部分业务场景下体积还较大）</li>
+<li>支持交叉编译，不要特定平台</li>
+<li>打包体积小（根据代码实际使用情况打包-这点是我一直苦苦寻找的）
+<ul>
+<li>Go语言中有未用代码消除和可执行文件瘦身机制。只有在程序执行路径上被调用的函数才会进入最终的可执行文件，未被调用的函数会被消除</li>
+<li><a href="https://mp.weixin.qq.com/s/s60J4eA_d0hqrXj-XMPpXA">Go未用代码消除与可执行文件瘦身</a></li>
+</ul>
+</li>
+</ol>
+</li>
+<li>
+<p>为什么现在大多数人都会认为Java启动慢占内存呢？</p>
+<ul>
+<li>首先不是Java自身的原因，而是跟实际使用场景有关</li>
+<li>使用Java大多数用来做业务开发，也习惯引入很多依赖库，首当其冲就是SpringBoot等框架</li>
+<li>多数都是spring相关类、proxy/cglib，以及各种bean配置</li>
+<li>而且很多类都是在启动的时候初始化的</li>
+</ul>
+</li>
+<li>
+<p>微服务下的编程语言</p>
+<ul>
+<li>在K8S流行之前，Java通常是使用SpringCloud</li>
+<li>其实微服务相关技术，在K8S已经实现了</li>
+<li>无论是使用Go还是Java，目前都应该向K8S靠近</li>
+<li>还有一点，K8S本身就是用Go实现的</li>
+</ul>
+</li>
+</ul>
+<h2 id="section-1" data-heading-text="扩展">扩展</h2>
+<ul>
+<li>
+<p><a href="https://github.com/Kingson4Wu/graalvm_demo">体验Graalvm+SpringBoot+Java21构建原生程序</a></p>
+</li>
+<li>
+<p>在内存利用效率上，Go语言确实比Java做得更好，在4个不同的角度来总结</p>
+<ul>
+<li><a href="https://mp.weixin.qq.com/s/-N4eqdXb9a93uvOWfE4ScQ">Golang与Java全方位对比总结</a></li>
+</ul>
+<ol>
+<li>Java的JIT策略比Golang的AOT策略
+<ul>
+<li>Java在运行时相比Golang多占用了一些内存。原因在于：
+<ul>
+<li>Java运行态中包含了一个完整的解释器、一个JIT编译期以及一个垃圾回收器，这会显著地增加内存。</li>
+<li>Golang语言直接编译到机器码，运行态只包含机器码和一个垃圾回收器。</li>
+</ul>
+</li>
+<li>因此Golang的运行态相对消耗内存较少。</li>
+</ul>
+</li>
+<li>内存分配和垃圾回收器
+<ul>
+<li>Java确实在起步占用上偏多，毕竟jvm需要更多内存做jit，默认的gc算法对内存要求偏高，但这不能代表后续占用仍然线性增长。如果目标是启动成百上千个内存需求较少的进程，那Java确实不擅长。</li>
+</ul>
+</li>
+<li>并发
+<ul>
+<li>协程模型比线程模型更加节省内存。</li>
+</ul>
+</li>
+<li>反射
+<ul>
+<li>Golang的反射更加简单，导致框架的内存消耗Golang程序比Java程序优秀。主要是因为： Java的框架实现中大量使用反射，并使用hashmap缓存信息，这2个都是极度消耗内存的行为。 Golang的框架中也使用reflect、map。但是Golang是面向interface和值类型的，这导致Golang的反射模型要比Java的反射模型简单非常多，反射过程要产生的对象数量也少非常多。</li>
+</ul>
+</li>
+</ol>
+</li>
+<li>
+<p>为什么一些已经选择 Java 的公司，现在又开始考虑使用 Go？</p>
+<ul>
+<li><a href="https://mp.weixin.qq.com/s/ZKL-M54IBx9CSkYKoLdsUA">为什么要用Go重写Dubbo？</a></li>
+<li>相较于 Java，Go 在启动速度、编译速度、内存使用和高并发（如协程）方面都有明显优势。所以，那些已经采用 Java 的公司现在也在考虑引入 Go。但要注意的是，目前这样的公司仍然是少数。另外，一些公司并没有严格规定技术栈的选择，因此新成立的部门或新业务团队可以自由选择，而他们可能更倾向于选择 Go 作为开发语言。</li>
+<li>小结: 总的来说，无论是选择 Java 还是 Go，都是有其合理性的。一家公司同时选择这两种语言也同样合理。尽管这样的公司占比不大，但 Java 与 Go 之间的交流需求仍然存在。</li>
+</ul>
+</li>
+</ul>
+
+      </div>
+<div class="article-actions" aria-label="Article actions">
+      <a class="share-link" href="https://twitter.com/intent/tweet?text=%E4%BB%8EJava%E8%BD%ACGo%E7%9A%84%E4%B8%AA%E4%BA%BA%E4%BD%93%E4%BC%9A&amp;url=https%3A%2F%2Fkingson4wu.github.io%2Fzh%2Fposts%2F20240407%2F" target="_blank" rel="noopener noreferrer" aria-label="Share on X">
+        <span aria-hidden="true">X</span>
+        <span>Share</span>
+      </a>
+    </div>
+    </article>
+
+    <nav class="article-nav" aria-label="Adjacent posts">
+      <a href="/zh/posts/20240406/"><span>Previous</span>记录限免业务的经验</a>
+      <a href="/zh/posts/20240425/"><span>Next</span>业务开发中使用BI的海量数据处理能力</a>
+    </nav>
+<section class="comments" aria-labelledby="comments-heading">
+      <h2 id="comments-heading">评论</h2>
+      <div
+        data-comments
+        data-comments-repo="Kingson4Wu/kingson4wu.github.io"
+        data-comments-issue-term="pathname"
+        data-comments-label="comment"
+      ></div>
+    </section>
+    <script src="/scripts/comments.js" defer></script>
+  </main>
+  <footer class="site-footer">
+    <p>&copy; 2026 拉巴力的纸皮箱</p>
+  </footer>
+  <button class="reading-return" type="button" data-reading-return aria-label="回到开头" title="回到开头">
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <path d="M12 19V5"></path>
+      <path d="m6 11 6-6 6 6"></path>
+    </svg>
+  </button>
+  <script src="/scripts/theme.js"></script>
+  <script src="/scripts/image-viewer.js"></script>
+  <script src="/scripts/reading-tools.js"></script>
+</body>
+</html>

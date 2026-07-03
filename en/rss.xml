@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Kingson Wu</title>
+    <link>https://kingson4wu.github.io/en/</link>
+    <description>Technical writing on software, AI systems, architecture, and learning.</description>
+    <language>en</language>
+    <lastBuildDate>Tue, 31 Mar 2026 00:00:00 GMT</lastBuildDate>
+    <item>
+      <title>Technology Advances, Distribution Lags: The Structural Contradiction of the AI Era</title>
+      <link>https://kingson4wu.github.io/en/posts/ai-structural-distribution-imbalance/</link>
+      <guid>https://kingson4wu.github.io/en/posts/ai-structural-distribution-imbalance/</guid>
+      <pubDate>Tue, 31 Mar 2026 00:00:00 GMT</pubDate>
+      <description>AI is approaching zero marginal cost for cognitive labor, decoupling economic growth from employment. This is not the same story as previous industrial revolutions.</description>
+    </item>
+    <item>
+      <title>Skills May Matter More Than Agents</title>
+      <link>https://kingson4wu.github.io/en/notes/skills-may-matter-more-than-agents/</link>
+      <guid>https://kingson4wu.github.io/en/notes/skills-may-matter-more-than-agents/</guid>
+      <pubDate>Sun, 29 Mar 2026 12:00:00 GMT</pubDate>
+      <description>Main AI vendors may be converging on a common pattern: the SDK provides the Runtime; developers own the Skills. A Skill is fundamentally an act of knowledge ext...</description>
+    </item>
+    <item>
+      <title>Harness Engineering Is Not a New Paradigm</title>
+      <link>https://kingson4wu.github.io/en/notes/harness-engineering-is-not-new-paradigm/</link>
+      <guid>https://kingson4wu.github.io/en/notes/harness-engineering-is-not-new-paradigm/</guid>
+      <pubDate>Sat, 28 Mar 2026 15:00:00 GMT</pubDate>
+      <description>Most people are treating Harness Engineering like it’s a new paradigm. It’s not. Start from first principles: an LLM takes input and produces output. The model...</description>
+    </item>
+    <item>
+      <title>From Custom Agents to Agent Runtime + Skill: Convergence in AI System Architecture</title>
+      <link>https://kingson4wu.github.io/en/posts/agent-runtime-and-skill-convergence/</link>
+      <guid>https://kingson4wu.github.io/en/posts/agent-runtime-and-skill-convergence/</guid>
+      <pubDate>Sat, 28 Mar 2026 00:00:00 GMT</pubDate>
+      <description>A systems-level view of how AI applications are evolving from bespoke agent implementations toward a layered architecture of interchangeable Runtime and reusable Skills.</description>
+    </item>
+    <item>
+      <title>MCP and Skills Solve Different Problems</title>
+      <link>https://kingson4wu.github.io/en/notes/mcp-and-skills-solve-different-problems/</link>
+      <guid>https://kingson4wu.github.io/en/notes/mcp-and-skills-solve-different-problems/</guid>
+      <pubDate>Fri, 27 Mar 2026 12:00:00 GMT</pubDate>
+      <description>MCP is basically a capability contract. It tells you what tools exist, how to call them, and what the permission boundaries are. A Skill is a different thing en...</description>
+    </item>
+    <item>
+      <title>AI Systems Need Method, Execution, and Evaluation</title>
+      <link>https://kingson4wu.github.io/en/notes/ai-systems-need-method-execution-evaluation/</link>
+      <guid>https://kingson4wu.github.io/en/notes/ai-systems-need-method-execution-evaluation/</guid>
+      <pubDate>Sat, 07 Mar 2026 12:00:00 GMT</pubDate>
+      <description>Most AI systems are still stuck in a single-inference pattern: they re-plan every time, discard execution results immediately, and accumulate no experience. A m...</description>
+    </item>
+    <item>
+      <title>Generative AI Does Not Think</title>
+      <link>https://kingson4wu.github.io/en/notes/generative-ai-does-not-think/</link>
+      <guid>https://kingson4wu.github.io/en/notes/generative-ai-does-not-think/</guid>
+      <pubDate>Sat, 28 Feb 2026 15:00:00 GMT</pubDate>
+      <description>Generative AI does not think. What it does is predict the highest-probability token given the preceding context. Humans can actively violate rules: “I know the...</description>
+    </item>
+    <item>
+      <title>AI Displacement Repeats Old Patterns</title>
+      <link>https://kingson4wu.github.io/en/notes/ai-displacement-repeats-old-patterns/</link>
+      <guid>https://kingson4wu.github.io/en/notes/ai-displacement-repeats-old-patterns/</guid>
+      <pubDate>Sat, 28 Feb 2026 14:00:00 GMT</pubDate>
+      <description>This wave of AI displacement shares familiar patterns with previous industrial revolutions. Technology moves forward, and some people get left behind before the...</description>
+    </item>
+    <item>
+      <title>AI Is Reshaping Social Learning</title>
+      <link>https://kingson4wu.github.io/en/notes/ai-is-reshaping-social-learning/</link>
+      <guid>https://kingson4wu.github.io/en/notes/ai-is-reshaping-social-learning/</guid>
+      <pubDate>Sat, 28 Feb 2026 13:00:00 GMT</pubDate>
+      <description>AI is reshaping social learning. We once relied on peers to recommend resources, challenge ideas, and surface blind spots. Now more of those cognitive functions...</description>
+    </item>
+    <item>
+      <title>Expression Is Cheap, Taste Is the Edge</title>
+      <link>https://kingson4wu.github.io/en/notes/expression-is-cheap-taste-is-edge/</link>
+      <guid>https://kingson4wu.github.io/en/notes/expression-is-cheap-taste-is-edge/</guid>
+      <pubDate>Sat, 28 Feb 2026 12:00:00 GMT</pubDate>
+      <description>AI makes expression cheaper, but judgment becomes more important. Originality is shifting away from “who wrote the words” toward “who decided why this content s...</description>
+    </item>
+    <item>
+      <title>AI Is Combinational, Not Conceptual</title>
+      <link>https://kingson4wu.github.io/en/notes/ai-is-combinational-not-conceptual/</link>
+      <guid>https://kingson4wu.github.io/en/notes/ai-is-combinational-not-conceptual/</guid>
+      <pubDate>Sat, 28 Feb 2026 11:00:00 GMT</pubDate>
+      <description>Generative AI is not discovering new continents. It is a hyper-efficient search engine over high-dimensional probability space. It is strong at combinational in...</description>
+    </item>
+    <item>
+      <title>Engineering Cognition into Executable Form</title>
+      <link>https://kingson4wu.github.io/en/notes/engineering-cognition-into-executable-form/</link>
+      <guid>https://kingson4wu.github.io/en/notes/engineering-cognition-into-executable-form/</guid>
+      <pubDate>Sat, 28 Feb 2026 10:00:00 GMT</pubDate>
+      <description>We are not merely learning how to use AI. We are learning how to translate human tacit cognition into machine-interpretable, executable structures: thinking -&amp;g...</description>
+    </item>
+    <item>
+      <title>Understanding Is Being Right Under Novelty</title>
+      <link>https://kingson4wu.github.io/en/notes/understanding-is-being-right-under-novelty/</link>
+      <guid>https://kingson4wu.github.io/en/notes/understanding-is-being-right-under-novelty/</guid>
+      <pubDate>Sat, 28 Feb 2026 09:00:00 GMT</pubDate>
+      <description>Perhaps we have misunderstood what understanding really means. Humans and large language models are alike in one crucial way: intuition comes first, reasoning f...</description>
+    </item>
+    <item>
+      <title>Intuition First, Explanation After: What Humans and LLMs Have in Common</title>
+      <link>https://kingson4wu.github.io/en/posts/intuition-first-explanation-after/</link>
+      <guid>https://kingson4wu.github.io/en/posts/intuition-first-explanation-after/</guid>
+      <pubDate>Wed, 04 Feb 2026 00:00:00 GMT</pubDate>
+      <description>A closer look at the shared tendency of humans and large language models to arrive at conclusions before generating plausible justifications — and what this means for how we understand &quot;understanding.&quot;</description>
+    </item>
+    <item>
+      <title>Why Rust Makes Lifetime Annotations Part of the API</title>
+      <link>https://kingson4wu.github.io/en/posts/why-rust-requires-explicit-lifetime-annotations-caller-contracts-design-essence/</link>
+      <guid>https://kingson4wu.github.io/en/posts/why-rust-requires-explicit-lifetime-annotations-caller-contracts-design-essence/</guid>
+      <pubDate>Mon, 22 Dec 2025 16:00:00 GMT</pubDate>
+      <description>Rust lifetime annotations are not just compiler hints. They are part of the function contract, which is why explicit lifetimes matter for callers, traits, and API stability.</description>
+    </item>
+    <item>
+      <title>Why Temperature-0 LLM Inference Still Isn’t Deterministic</title>
+      <link>https://kingson4wu.github.io/en/posts/nondeterminism-llm-inference-floating-point-arithmetic-engineering-implementation/</link>
+      <guid>https://kingson4wu.github.io/en/posts/nondeterminism-llm-inference-floating-point-arithmetic-engineering-implementation/</guid>
+      <pubDate>Tue, 16 Dec 2025 16:00:00 GMT</pubDate>
+      <description>A practical look at why identical prompts can diverge under temperature=0, how batch-variant kernels create that behavior, and why batch-invariant operators matter for RL and reproducible experiments.</description>
+    </item>
+  </channel>
+</rss>

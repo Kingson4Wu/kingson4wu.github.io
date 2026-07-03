@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>如何在大量数据中判断给定的是否在其中 | 拉巴力的纸皮箱</title>
+  <meta name="description" content="1、 Bloom Filter 缺点：只能增不能减，且有误判场景需要单独处理 可以使用当前进程级的Bloom Filter，也可以使用Redis的Bloom Filter 2、 文件存储 可以使用类似Java的MappedByteBuffer来保存数据 缺点：只能保存连续的一定范围的数字对应的值 Java文件读写与Ma...">
+  <link rel="canonical" href="https://kingson4wu.github.io/zh/posts/20230730/">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="alternate" type="application/rss+xml" title="拉巴力的纸皮箱" href="/zh/feed.xml">
+  <link rel="alternate" type="text/markdown" href="/zh/posts/20230730/index.md">
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="/styles/main.css">
+  <script>
+    try {
+      var theme = localStorage.getItem('theme');
+      if (theme) document.documentElement.dataset.theme = theme;
+    } catch (_) {}
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="site-title" href="/zh/" aria-label="拉巴力的纸皮箱">
+      <span class="site-logo" aria-hidden="true">K</span>
+      <span>拉巴力的纸皮箱</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="/zh/posts/">文章</a>
+      <a href="/zh/notes/">笔记</a>
+      <a href="/zh/tags/">标签</a>
+      <a href="/zh/about/">关于</a>
+      <a href="/zh/search/">搜索</a>
+      <a href="/en/" lang="en">English</a>
+      <a class="feed-link" href="/zh/feed.xml" aria-label="订阅更新" title="订阅更新">
+        <svg class="feed-icon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M5 5.5A13.5 13.5 0 0 1 18.5 19"></path>
+          <path d="M5 11A8 8 0 0 1 13 19"></path>
+          <circle cx="6" cy="18" r="1.5"></circle>
+        </svg>
+      </a>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换明暗模式" title="切换明暗模式">
+        <svg class="theme-icon theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M21 14.2A8.5 8.5 0 0 1 9.8 3 7 7 0 1 0 21 14.2Z"></path>
+        </svg>
+        <svg class="theme-icon theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"></path>
+        </svg>
+      </button>
+    </nav>
+  </header>
+  <main class="site-main">
+    <article class="article">
+      <header class="article-header">
+        <h1>如何在大量数据中判断给定的是否在其中</h1>
+        <time datetime="2023-07-30T08:27:34.000Z">2023年7月30日</time>
+<ul class="tag-list" aria-label="Tags">
+    <li><a href="/zh/tags/Database/">Database</a></li>
+    <li><a href="/zh/tags/Algorithms/">Algorithms</a></li>
+  </ul>
+      </header>
+      <div class="prose">
+<h2 id="1-bloom-filter" data-heading-text="1、 Bloom Filter">1、 Bloom Filter</h2>
+<ul>
+<li>缺点：只能增不能减，且有误判场景需要单独处理</li>
+<li>可以使用当前进程级的Bloom Filter，也可以使用Redis的Bloom Filter</li>
+</ul>
+<h2 id="2" data-heading-text="2、 文件存储">2、 文件存储</h2>
+<ul>
+<li>
+<p>可以使用类似Java的MappedByteBuffer来保存数据</p>
+</li>
+<li>
+<p>缺点：只能保存连续的一定范围的数字对应的值</p>
+</li>
+<li>
+<p><a href="https://zhuanlan.zhihu.com/p/353988136">Java文件读写与MappedByteBuffer</a></p>
+</li>
+<li>
+<p>使用示例：</p>
+</li>
+</ul>
+<div class="code-block" data-language="java"><div class="code-header"><span class="code-language">java</span></div><pre><code class="hljs language-java"><span class="hljs-keyword">import</span> org.junit.Test;
+
+<span class="hljs-keyword">import</span> java.io.File;
+<span class="hljs-keyword">import</span> java.io.IOException;
+<span class="hljs-keyword">import</span> java.net.URI;
+<span class="hljs-keyword">import</span> java.nio.MappedByteBuffer;
+<span class="hljs-keyword">import</span> java.nio.channels.FileChannel;
+<span class="hljs-keyword">import</span> java.nio.file.Paths;
+<span class="hljs-keyword">import</span> java.nio.file.StandardOpenOption;
+
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MappedByteBufferTest</span> {
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> {
+        System.out.println(<span class="hljs-string">&quot;==&quot;</span>+ ID_SIZE);
+        System.out.println(<span class="hljs-string">&quot;==&quot;</span>+ getBufferIndex(<span class="hljs-number">1032387525</span>));
+        System.out.println(<span class="hljs-string">&quot;==&quot;</span>+ getBufferIndex(<span class="hljs-number">227081157</span>));
+        <span class="hljs-comment">// 两个数字模结果冲突</span>
+        <span class="hljs-comment">// 这种方案只能保存连续的一定范围的数字对应的值</span>
+    }
+
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">ID_SIZE</span> <span class="hljs-operator">=</span> <span class="hljs-number">1024</span> * <span class="hljs-number">1024</span> * <span class="hljs-number">32</span> * <span class="hljs-number">8</span>;
+
+    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">getBufferIndex</span><span class="hljs-params">(<span class="hljs-type">long</span> idx)</span> {
+        <span class="hljs-comment">//每个id占用8个字节</span>
+        <span class="hljs-keyword">return</span> (<span class="hljs-type">int</span>) ((idx % ID_SIZE) * <span class="hljs-number">8</span>);
+    }
+
+    <span class="hljs-comment">/**
+     *
+     * 写入：mappedByteBuffer.putLong(int index, long value);
+     * 读取：mappedByteBuffer.getLong(int index);
+     * 注：MappedByteBuffer对index的最大范围是Int.MaxValue()
+     */</span>
+
+    <span class="hljs-comment">// 上面的表述计算有问题</span>
+    <span class="hljs-comment">/**
+     * 2G = 2^31 字节
+     * ==&gt; 1b= 2^3 ; 1k = 2^10 b ; 1M = 2^20 b ; 1G = 2^30 b; 2G = 2^31 字节
+     * long 64 位，即 2^3 字节 = 2^3
+     * 2G = 2^31 字节 能存储多少个，应该是 2^31 / 2^3 = 2^28
+     */</span>
+
+    <span class="hljs-comment">// 31 - 3 = 28 = 10 + 10 + 5 = 1024 * 1024 * 32 * 8</span>
+    <span class="hljs-comment">// 根据每个模之后的倍数放在不通的文件，所以不会冲突</span>
+    <span class="hljs-comment">//如果分文件，比如10个，那么78在第8个文件的低第七个； 78%10、78/10</span>
+
+    <span class="hljs-comment">/**
+     * https://zhuanlan.zhihu.com/p/353988136
+     * <span class="hljs-doctag">@throws</span> IOException
+     */</span>
+    <span class="hljs-meta">@Test</span>
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">testMappedByteBuffer</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> IOException {
+        <span class="hljs-type">File</span> <span class="hljs-variable">file</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">File</span>(<span class="hljs-string">&quot;/Users/kingsonwu/downloads/test.log&quot;</span>);
+        <span class="hljs-keyword">if</span>(!file.exists()){
+            file.createNewFile();
+        }
+        <span class="hljs-type">FileChannel</span> <span class="hljs-variable">fileChannel</span> <span class="hljs-operator">=</span> FileChannel.open(Paths.get(URI.create(<span class="hljs-string">&quot;file:/Users/kingsonwu/downloads/test.log&quot;</span>)),
+                StandardOpenOption.WRITE, StandardOpenOption.READ);
+        <span class="hljs-type">MappedByteBuffer</span> <span class="hljs-variable">mappedByteBuffer</span> <span class="hljs-operator">=</span> fileChannel.map(FileChannel.MapMode.READ_WRITE, <span class="hljs-number">0</span>, Integer.MAX_VALUE);
+        <span class="hljs-comment">//fileChannel.close();</span>
+        <span class="hljs-comment">//mappedByteBuffer.position(1024);</span>
+        <span class="hljs-comment">//mappedByteBuffer.putLong(10000L);</span>
+
+        mappedByteBuffer.putLong(getBufferIndex(<span class="hljs-number">1032387525</span>), <span class="hljs-number">1032387528111L</span>);
+        mappedByteBuffer.putLong(getBufferIndex(<span class="hljs-number">1032387526</span>), <span class="hljs-number">1032387529567L</span>);
+        mappedByteBuffer.putLong((ID_SIZE - <span class="hljs-number">2</span>)*<span class="hljs-number">8</span>, <span class="hljs-number">4032387529569443654L</span>);
+        <span class="hljs-comment">//mappedByteBuffer.putLong((ID_SIZE_2)*8, 1032387529569L);</span>
+
+        mappedByteBuffer.force();
+
+        System.out.println(mappedByteBuffer.getLong(getBufferIndex(<span class="hljs-number">1032387525</span>)));
+        System.out.println(mappedByteBuffer.getLong(getBufferIndex(<span class="hljs-number">1032387526</span>)));
+        System.out.println(mappedByteBuffer.getLong((ID_SIZE - <span class="hljs-number">2</span>)*<span class="hljs-number">8</span>));
+        <span class="hljs-comment">//System.out.println(mappedByteBuffer.getLong((ID_SIZE_2 )*8));</span>
+
+    }
+}
+
+</code></pre></div>
+<h2 id="3-tendis" data-heading-text="3、Tendis">3、Tendis</h2>
+<ul>
+<li>使用tendis可以将数据存储到磁盘，避免全部数据都保存在内存，从而节约内存</li>
+<li>Redis的痛点之一就是内存成本高，访问频率(QPS)没那么高, 依然占用大量机器, 维护成本很高</li>
+<li><a href="https://blog.csdn.net/Tencent_TEG/article/details/115878121">Redis vs Tendis：冷热混合存储版架构揭秘</a></li>
+<li>使用 rocksdb 作为存储引擎, LSM Tree</li>
+</ul>
+
+      </div>
+<div class="article-actions" aria-label="Article actions">
+      <a class="share-link" href="https://twitter.com/intent/tweet?text=%E5%A6%82%E4%BD%95%E5%9C%A8%E5%A4%A7%E9%87%8F%E6%95%B0%E6%8D%AE%E4%B8%AD%E5%88%A4%E6%96%AD%E7%BB%99%E5%AE%9A%E7%9A%84%E6%98%AF%E5%90%A6%E5%9C%A8%E5%85%B6%E4%B8%AD&amp;url=https%3A%2F%2Fkingson4wu.github.io%2Fzh%2Fposts%2F20230730%2F" target="_blank" rel="noopener noreferrer" aria-label="Share on X">
+        <span aria-hidden="true">X</span>
+        <span>Share</span>
+      </a>
+    </div>
+    </article>
+<aside class="article-toc" data-article-toc aria-label="目录">
+      <button class="article-toc-toggle" type="button" data-article-toc-toggle aria-expanded="false" aria-controls="article-toc-panel" aria-label="打开目录" data-open-label="打开目录" data-close-label="收起目录">
+        <svg aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M8 6h11"></path>
+          <path d="M8 12h11"></path>
+          <path d="M8 18h11"></path>
+          <path d="M4 6h.01"></path>
+          <path d="M4 12h.01"></path>
+          <path d="M4 18h.01"></path>
+        </svg>
+      </button>
+      <nav id="article-toc-panel" class="article-toc-panel" data-article-toc-panel aria-label="目录">
+        <div class="article-toc-heading">目录</div>
+        <ol class="article-toc-list">
+          <li class="article-toc-level-2"><a href="#1-bloom-filter" data-article-toc-link>1、 Bloom Filter</a></li>
+          <li class="article-toc-level-2"><a href="#2" data-article-toc-link>2、 文件存储</a></li>
+          <li class="article-toc-level-2"><a href="#3-tendis" data-article-toc-link>3、Tendis</a></li>
+        </ol>
+      </nav>
+    </aside>
+    <script src="/scripts/article-toc.js" defer></script>
+    <nav class="article-nav" aria-label="Adjacent posts">
+      <a href="/zh/posts/20230730-2/"><span>Previous</span>记一次socket泄露问题排查记录</a>
+      <a href="/zh/posts/20240326/"><span>Next</span>小团队管理经验</a>
+    </nav>
+<section class="comments" aria-labelledby="comments-heading">
+      <h2 id="comments-heading">评论</h2>
+      <div
+        data-comments
+        data-comments-repo="Kingson4Wu/kingson4wu.github.io"
+        data-comments-issue-term="pathname"
+        data-comments-label="comment"
+      ></div>
+    </section>
+    <script src="/scripts/comments.js" defer></script>
+  </main>
+  <footer class="site-footer">
+    <p>&copy; 2026 拉巴力的纸皮箱</p>
+  </footer>
+  <button class="reading-return" type="button" data-reading-return aria-label="回到开头" title="回到开头">
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <path d="M12 19V5"></path>
+      <path d="m6 11 6-6 6 6"></path>
+    </svg>
+  </button>
+  <script src="/scripts/theme.js"></script>
+  <script src="/scripts/image-viewer.js"></script>
+  <script src="/scripts/reading-tools.js"></script>
+</body>
+</html>

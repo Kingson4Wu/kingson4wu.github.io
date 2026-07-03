@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Java跨平台能完全做到一次编写到处运行？ | 拉巴力的纸皮箱</title>
+  <meta name="description" content="最近定位一个问题，花了不少时间。事后回想起来挺低级的，在此记录一下。 问题 spring i18n, 在windows和mac生效，在linux不生效。 原因 资源文件的名字为小写（message_zh_hant.proprties） 而文件读取时包含大写（message_zh_Hant.proprties）（这里不得...">
+  <link rel="canonical" href="https://kingson4wu.github.io/zh/posts/20220705/">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="alternate" type="application/rss+xml" title="拉巴力的纸皮箱" href="/zh/feed.xml">
+  <link rel="alternate" type="text/markdown" href="/zh/posts/20220705/index.md">
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="/styles/main.css">
+  <script>
+    try {
+      var theme = localStorage.getItem('theme');
+      if (theme) document.documentElement.dataset.theme = theme;
+    } catch (_) {}
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="site-title" href="/zh/" aria-label="拉巴力的纸皮箱">
+      <span class="site-logo" aria-hidden="true">K</span>
+      <span>拉巴力的纸皮箱</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="/zh/posts/">文章</a>
+      <a href="/zh/notes/">笔记</a>
+      <a href="/zh/tags/">标签</a>
+      <a href="/zh/about/">关于</a>
+      <a href="/zh/search/">搜索</a>
+      <a href="/en/" lang="en">English</a>
+      <a class="feed-link" href="/zh/feed.xml" aria-label="订阅更新" title="订阅更新">
+        <svg class="feed-icon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M5 5.5A13.5 13.5 0 0 1 18.5 19"></path>
+          <path d="M5 11A8 8 0 0 1 13 19"></path>
+          <circle cx="6" cy="18" r="1.5"></circle>
+        </svg>
+      </a>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换明暗模式" title="切换明暗模式">
+        <svg class="theme-icon theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M21 14.2A8.5 8.5 0 0 1 9.8 3 7 7 0 1 0 21 14.2Z"></path>
+        </svg>
+        <svg class="theme-icon theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"></path>
+        </svg>
+      </button>
+    </nav>
+  </header>
+  <main class="site-main">
+    <article class="article">
+      <header class="article-header">
+        <h1>Java跨平台能完全做到一次编写到处运行？</h1>
+        <time datetime="2022-07-05T02:20:11.000Z">2022年7月5日</time>
+<ul class="tag-list" aria-label="Tags">
+    <li><a href="/zh/tags/Java/">Java</a></li>
+    <li><a href="/zh/tags/Programming%20Languages/">Programming Languages</a></li>
+  </ul>
+      </header>
+      <div class="prose">
+<p><img src="/assets/zh/posts/20220705/lionel-messi.jpg" alt=""></p>
+<ul>
+<li>最近定位一个问题，花了不少时间。事后回想起来挺低级的，在此记录一下。</li>
+</ul>
+<h2 id="section-1" data-heading-text="问题">问题</h2>
+<ul>
+<li>spring i18n, 在windows和mac生效，在linux不生效。</li>
+</ul>
+<h2 id="section-2" data-heading-text="原因">原因</h2>
+<ol>
+<li>资源文件的名字为小写（message_zh_hant.proprties）</li>
+<li>而文件读取时包含大写（message_zh_Hant.proprties）（这里不得不吐槽一下，spring无论请求参数传的是大写还是小写，最终都会转成大写去读文件，而且这么简单的功能，代码写得及其复杂，浪费了不少时间去debug）</li>
+<li>windows和mac大小写不敏感，所以能读取文件成功，而linux则大小写敏感，则读取不成功（说好的Java跨平台呢？但跨平台包括处理这种不兼容的问题？似乎很难界定。）</li>
+</ol>
+<h2 id="section-3" data-heading-text="总结">总结</h2>
+<ul>
+<li>windows和mac文件名对大小写不敏感，而linux则大小写敏感；</li>
+<li>即使使用Java编写代码，特殊的场景还是需要考虑各平台的兼容问题。</li>
+</ul>
+
+      </div>
+<div class="article-actions" aria-label="Article actions">
+      <a class="share-link" href="https://twitter.com/intent/tweet?text=Java%E8%B7%A8%E5%B9%B3%E5%8F%B0%E8%83%BD%E5%AE%8C%E5%85%A8%E5%81%9A%E5%88%B0%E4%B8%80%E6%AC%A1%E7%BC%96%E5%86%99%E5%88%B0%E5%A4%84%E8%BF%90%E8%A1%8C%EF%BC%9F&amp;url=https%3A%2F%2Fkingson4wu.github.io%2Fzh%2Fposts%2F20220705%2F" target="_blank" rel="noopener noreferrer" aria-label="Share on X">
+        <span aria-hidden="true">X</span>
+        <span>Share</span>
+      </a>
+    </div>
+    </article>
+<aside class="article-toc" data-article-toc aria-label="目录">
+      <button class="article-toc-toggle" type="button" data-article-toc-toggle aria-expanded="false" aria-controls="article-toc-panel" aria-label="打开目录" data-open-label="打开目录" data-close-label="收起目录">
+        <svg aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M8 6h11"></path>
+          <path d="M8 12h11"></path>
+          <path d="M8 18h11"></path>
+          <path d="M4 6h.01"></path>
+          <path d="M4 12h.01"></path>
+          <path d="M4 18h.01"></path>
+        </svg>
+      </button>
+      <nav id="article-toc-panel" class="article-toc-panel" data-article-toc-panel aria-label="目录">
+        <div class="article-toc-heading">目录</div>
+        <ol class="article-toc-list">
+          <li class="article-toc-level-2"><a href="#section-1" data-article-toc-link>问题</a></li>
+          <li class="article-toc-level-2"><a href="#section-2" data-article-toc-link>原因</a></li>
+          <li class="article-toc-level-2"><a href="#section-3" data-article-toc-link>总结</a></li>
+        </ol>
+      </nav>
+    </aside>
+    <script src="/scripts/article-toc.js" defer></script>
+    <nav class="article-nav" aria-label="Adjacent posts">
+      <a href="/zh/posts/20220601/"><span>Previous</span>开发golang程序和进行内网穿透，作为微信公众号服务器</a>
+      <a href="/zh/posts/20220720/"><span>Next</span>谈谈跨域</a>
+    </nav>
+<section class="comments" aria-labelledby="comments-heading">
+      <h2 id="comments-heading">评论</h2>
+      <div
+        data-comments
+        data-comments-repo="Kingson4Wu/kingson4wu.github.io"
+        data-comments-issue-term="pathname"
+        data-comments-label="comment"
+      ></div>
+    </section>
+    <script src="/scripts/comments.js" defer></script>
+  </main>
+  <footer class="site-footer">
+    <p>&copy; 2026 拉巴力的纸皮箱</p>
+  </footer>
+  <button class="reading-return" type="button" data-reading-return aria-label="回到开头" title="回到开头">
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <path d="M12 19V5"></path>
+      <path d="m6 11 6-6 6 6"></path>
+    </svg>
+  </button>
+  <script src="/scripts/theme.js"></script>
+  <script src="/scripts/image-viewer.js"></script>
+  <script src="/scripts/reading-tools.js"></script>
+</body>
+</html>

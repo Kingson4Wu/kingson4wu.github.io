@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>推送技术总结 | 拉巴力的纸皮箱</title>
+  <meta name="description" content="概述 从客户端是手机APP的角度来理解推送（PUSH），展示的形式有两种： App 推送：消息内容通过手机通知栏（状态栏）展示 应用内消息：各种业务数据推送（通过定义模版或命令号等方式推送给APP内的业务使用） 从Web端角度看理解推送，一般只有网页内消息（跟手机APP的应用内消息是一样的类型） APP推送： 在线推送...">
+  <link rel="canonical" href="https://kingson4wu.github.io/zh/posts/20220805/">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="alternate" type="application/rss+xml" title="拉巴力的纸皮箱" href="/zh/feed.xml">
+  <link rel="alternate" type="text/markdown" href="/zh/posts/20220805/index.md">
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="/styles/main.css">
+  <script>
+    try {
+      var theme = localStorage.getItem('theme');
+      if (theme) document.documentElement.dataset.theme = theme;
+    } catch (_) {}
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="site-title" href="/zh/" aria-label="拉巴力的纸皮箱">
+      <span class="site-logo" aria-hidden="true">K</span>
+      <span>拉巴力的纸皮箱</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="/zh/posts/">文章</a>
+      <a href="/zh/notes/">笔记</a>
+      <a href="/zh/tags/">标签</a>
+      <a href="/zh/about/">关于</a>
+      <a href="/zh/search/">搜索</a>
+      <a href="/en/" lang="en">English</a>
+      <a class="feed-link" href="/zh/feed.xml" aria-label="订阅更新" title="订阅更新">
+        <svg class="feed-icon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M5 5.5A13.5 13.5 0 0 1 18.5 19"></path>
+          <path d="M5 11A8 8 0 0 1 13 19"></path>
+          <circle cx="6" cy="18" r="1.5"></circle>
+        </svg>
+      </a>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换明暗模式" title="切换明暗模式">
+        <svg class="theme-icon theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M21 14.2A8.5 8.5 0 0 1 9.8 3 7 7 0 1 0 21 14.2Z"></path>
+        </svg>
+        <svg class="theme-icon theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"></path>
+        </svg>
+      </button>
+    </nav>
+  </header>
+  <main class="site-main">
+    <article class="article">
+      <header class="article-header">
+        <h1>推送技术总结</h1>
+        <time datetime="2022-08-05T13:57:59.000Z">2022年8月5日</time>
+<ul class="tag-list" aria-label="Tags">
+    <li><a href="/zh/tags/Networking/">Networking</a></li>
+  </ul>
+      </header>
+      <div class="prose">
+<h2 id="section-1" data-heading-text="概述">概述</h2>
+<ul>
+<li>
+<p>从客户端是手机APP的角度来理解推送（PUSH），展示的形式有两种：</p>
+<ol>
+<li>App 推送：消息内容通过手机通知栏（状态栏）展示</li>
+<li>应用内消息：各种业务数据推送（通过定义模版或命令号等方式推送给APP内的业务使用）</li>
+</ol>
+</li>
+<li>
+<p>从Web端角度看理解推送，一般只有网页内消息（跟手机APP的应用内消息是一样的类型）</p>
+</li>
+<li>
+<p>APP推送：</p>
+<ol>
+<li>在线推送（应用级方案）：APP进程控制推送消息，理论上只要APP要获得“手机通知栏”的权限（一般通过在APP内维持长连接来进行推送，但前提是APP已经启动和运行，并且能常驻）</li>
+<li>离线推送（系统级方案）：通过手机操作系统或手机厂商提供的通道进行推送。这种推送方式可以在APP未启动的情况下，推送APP的消息。</li>
+<li>APP进程运行时，应该优先走在线推送，自己的推送系统更快、更有保障。</li>
+</ol>
+</li>
+<li>
+<p>应用场景</p>
+<ul>
+<li>APP推送：电商内APP（推送促销消息）</li>
+<li>应用内消息：直播类APP（推送送礼特效消息）</li>
+<li>APP推送和应用内消息都需要：IM类APP（推送用户聊天信息）</li>
+</ul>
+</li>
+<li>
+<p>从推送的实现角度看，基本可以概括为两种：主动轮询（pull 拉）和长连接 （push 推）</p>
+</li>
+</ul>
+<h2 id="section-2" data-heading-text="实现方式">实现方式</h2>
+<ul>
+<li>以下实现方式没有进行严格分类，从原理上看存在相互联系</li>
+</ul>
+<ol>
+<li>
+<p>HTTP轮询</p>
+<ol>
+<li>短轮询（Polling）</li>
+<li>长轮询（Long-polling）(Nacos和apollo配置中心也是用这种)</li>
+</ol>
+<ul>
+<li>从TCP的角度看HTTP长轮询：HTTP开启keepalive，服务端保持连接并不需要发额外数据包，有数据时可以立刻推送，跟TCP长连推送无异。展示服务端有点费连接的相关资源，数据包是HTTP相比较大而已。</li>
+</ul>
+</li>
+<li>
+<p>SSE (Server Sent Event 服务器发送事件)</p>
+<ul>
+<li>sse 单通道，只能服务端向客户端发消息； webscoket 是双通道</li>
+<li>实现成本较低</li>
+<li>http 协议，服务端响应的是text/event-stream类型的数据流信息</li>
+<li>场景：站内信、未读消息数、状态更新、股票行情、监控数量等场景</li>
+</ul>
+</li>
+<li>
+<p>WebSocket</p>
+</li>
+<li>
+<p>MQTT （通常结合TCP长连接一起使用）</p>
+</li>
+<li>
+<p>TCP长连接（自定义消息或protobuf等格式）</p>
+</li>
+<li>
+<p>系统级方案</p>
+<ul>
+<li>Android和IOS本身的消息推送（Android的C2DM和IOS的APNS，系统与服务器建立连接，APP向系统注册关注的消息，实现系统级消息推送）</li>
+<li>国内Android无法访问Google服务器，所以国内的手机厂商比如小米、OPPO、华为等，都实现来各自的系统级推送。</li>
+<li>避免维持长连接而导致的过多资源消耗，IM类要求即时的更应该接系统级推送</li>
+</ul>
+</li>
+<li>
+<p>第三方推送平台</p>
+<ul>
+<li>集成各种手机平台，各种推送类型，甚至短信等推送</li>
+<li>简单来说：由专业的平台做专业的事（太麻烦了，我只是想推送了消息，帮我搞定吧。。。）</li>
+</ul>
+</li>
+</ol>
+<h2 id="reference" data-heading-text="Reference">Reference</h2>
+<ul>
+<li><a href="https://mp.weixin.qq.com/s/wIs5wi7rf0RFFGl7sR3J8g">7种 实现web实时消息推送的方案</a></li>
+<li><a href="https://www.cnblogs.com/yihuihui/p/12622729.html">SSE 服务器发送事件详解</a></li>
+</ul>
+
+      </div>
+<div class="article-actions" aria-label="Article actions">
+      <a class="share-link" href="https://twitter.com/intent/tweet?text=%E6%8E%A8%E9%80%81%E6%8A%80%E6%9C%AF%E6%80%BB%E7%BB%93&amp;url=https%3A%2F%2Fkingson4wu.github.io%2Fzh%2Fposts%2F20220805%2F" target="_blank" rel="noopener noreferrer" aria-label="Share on X">
+        <span aria-hidden="true">X</span>
+        <span>Share</span>
+      </a>
+    </div>
+    </article>
+<aside class="article-toc" data-article-toc aria-label="目录">
+      <button class="article-toc-toggle" type="button" data-article-toc-toggle aria-expanded="false" aria-controls="article-toc-panel" aria-label="打开目录" data-open-label="打开目录" data-close-label="收起目录">
+        <svg aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M8 6h11"></path>
+          <path d="M8 12h11"></path>
+          <path d="M8 18h11"></path>
+          <path d="M4 6h.01"></path>
+          <path d="M4 12h.01"></path>
+          <path d="M4 18h.01"></path>
+        </svg>
+      </button>
+      <nav id="article-toc-panel" class="article-toc-panel" data-article-toc-panel aria-label="目录">
+        <div class="article-toc-heading">目录</div>
+        <ol class="article-toc-list">
+          <li class="article-toc-level-2"><a href="#section-1" data-article-toc-link>概述</a></li>
+          <li class="article-toc-level-2"><a href="#section-2" data-article-toc-link>实现方式</a></li>
+          <li class="article-toc-level-2"><a href="#reference" data-article-toc-link>Reference</a></li>
+        </ol>
+      </nav>
+    </aside>
+    <script src="/scripts/article-toc.js" defer></script>
+    <nav class="article-nav" aria-label="Adjacent posts">
+      <a href="/zh/posts/20220802/"><span>Previous</span>说说CDN</a>
+      <a href="/zh/posts/20220830/"><span>Next</span>Chrome下载文件时暂停和继续是什么原理？</a>
+    </nav>
+<section class="comments" aria-labelledby="comments-heading">
+      <h2 id="comments-heading">评论</h2>
+      <div
+        data-comments
+        data-comments-repo="Kingson4Wu/kingson4wu.github.io"
+        data-comments-issue-term="pathname"
+        data-comments-label="comment"
+      ></div>
+    </section>
+    <script src="/scripts/comments.js" defer></script>
+  </main>
+  <footer class="site-footer">
+    <p>&copy; 2026 拉巴力的纸皮箱</p>
+  </footer>
+  <button class="reading-return" type="button" data-reading-return aria-label="回到开头" title="回到开头">
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <path d="M12 19V5"></path>
+      <path d="m6 11 6-6 6 6"></path>
+    </svg>
+  </button>
+  <script src="/scripts/theme.js"></script>
+  <script src="/scripts/image-viewer.js"></script>
+  <script src="/scripts/reading-tools.js"></script>
+</body>
+</html>

@@ -1,0 +1,446 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>生成式AI、解码约束与多模态架构：系统化原理解析 | 拉巴力的纸皮箱</title>
+  <meta name="description" content="以下内容有ChatGPT和Claude.ai辅助生成 生成式AI、解码约束与多模态架构：系统化原理解析 大语言模型从单纯的文本生成发展到多模态理解、结构化输出、工具调用等复杂能力,让许多人好奇:这些模型是否真的具备“理解”和“推理”能力?本文将系统梳理从基础生成原理到多模态融合、从解码器约束到专家混合(MoE)架构的完...">
+  <link rel="canonical" href="https://kingson4wu.github.io/zh/posts/20251208/">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="alternate" type="application/rss+xml" title="拉巴力的纸皮箱" href="/zh/feed.xml">
+  <link rel="alternate" type="text/markdown" href="/zh/posts/20251208/index.md">
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="/styles/main.css">
+  <script>
+    try {
+      var theme = localStorage.getItem('theme');
+      if (theme) document.documentElement.dataset.theme = theme;
+    } catch (_) {}
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="site-title" href="/zh/" aria-label="拉巴力的纸皮箱">
+      <span class="site-logo" aria-hidden="true">K</span>
+      <span>拉巴力的纸皮箱</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="/zh/posts/">文章</a>
+      <a href="/zh/notes/">笔记</a>
+      <a href="/zh/tags/">标签</a>
+      <a href="/zh/about/">关于</a>
+      <a href="/zh/search/">搜索</a>
+      <a href="/en/" lang="en">English</a>
+      <a class="feed-link" href="/zh/feed.xml" aria-label="订阅更新" title="订阅更新">
+        <svg class="feed-icon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M5 5.5A13.5 13.5 0 0 1 18.5 19"></path>
+          <path d="M5 11A8 8 0 0 1 13 19"></path>
+          <circle cx="6" cy="18" r="1.5"></circle>
+        </svg>
+      </a>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换明暗模式" title="切换明暗模式">
+        <svg class="theme-icon theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M21 14.2A8.5 8.5 0 0 1 9.8 3 7 7 0 1 0 21 14.2Z"></path>
+        </svg>
+        <svg class="theme-icon theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"></path>
+        </svg>
+      </button>
+    </nav>
+  </header>
+  <main class="site-main">
+    <article class="article">
+      <header class="article-header">
+        <h1>生成式AI、解码约束与多模态架构：系统化原理解析</h1>
+        <time datetime="2025-12-08T02:21:37.000Z">2025年12月8日</time>
+<ul class="tag-list" aria-label="Tags">
+    <li><a href="/zh/tags/AI/">AI</a></li>
+    <li><a href="/zh/tags/LLM/">LLM</a></li>
+    <li><a href="/zh/tags/Architecture/">Architecture</a></li>
+  </ul>
+      </header>
+      <div class="prose">
+<blockquote>
+<blockquote>
+<p>以下内容有ChatGPT和Claude.ai辅助生成</p>
+</blockquote>
+</blockquote>
+<h1 id="section-1" data-heading-text="生成式AI、解码约束与多模态架构：系统化原理解析">生成式AI、解码约束与多模态架构：系统化原理解析</h1>
+<p>大语言模型从单纯的文本生成发展到多模态理解、结构化输出、工具调用等复杂能力,让许多人好奇:这些模型是否真的具备“理解”和“推理”能力?本文将系统梳理从基础生成原理到多模态融合、从解码器约束到专家混合(MoE)架构的完整技术链路。</p>
+<hr>
+<h2 id="section-2" data-heading-text="一、基础:自回归语言模型的生成机制">一、基础:自回归语言模型的生成机制</h2>
+<p>当前主流大模型(如GPT系列、Claude、Llama等)采用<strong>自回归Transformer架构</strong>,核心机制是:</p>
+<blockquote>
+<p><strong>基于已有上下文,预测下一个token的概率分布</strong></p>
+</blockquote>
+<p>这个过程可以表示为:</p>
+<div class="code-block"><pre><code class="hljs">P(token_t | token_1, token_2, ..., token_{t-1})
+</code></pre></div>
+<p>重要认知:</p>
+<ul>
+<li>模型没有显式的“任务理解”模块</li>
+<li>不存在预定义的“意图识别”流程</li>
+<li>所有能力都通过大规模预训练中的统计模式学习获得</li>
+<li>“推理”能力是在高维表示空间中复杂模式匹配的涌现结果</li>
+</ul>
+<hr>
+<h2 id="section-3" data-heading-text="二、解码策略:从概率分布到实际输出">二、解码策略:从概率分布到实际输出</h2>
+<p>模型计算出概率分布后,需要通过**解码器(decoder)**选择实际输出的token。</p>
+<h3 id="section-4" data-heading-text="常见解码策略">常见解码策略</h3>
+<table>
+<thead>
+<tr>
+<th>策略</th>
+<th>特点</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Greedy Decoding</td>
+<td>总是选择概率最高的token</td>
+<td>确定性任务</td>
+</tr>
+<tr>
+<td>Beam Search</td>
+<td>维护多个候选序列</td>
+<td>翻译等需要全局最优的任务</td>
+</tr>
+<tr>
+<td>Top-k/Top-p Sampling</td>
+<td>从高概率token中随机采样</td>
+<td>创意写作等需要多样性的场景</td>
+</tr>
+<tr>
+<td>Temperature Sampling</td>
+<td>调节概率分布的“锐度”</td>
+<td>平衡创造性和准确性</td>
+</tr>
+</tbody>
+</table>
+<p>关键洞察:</p>
+<blockquote>
+<p>最终输出什么内容,不仅取决于模型,也取决于解码策略的选择</p>
+</blockquote>
+<hr>
+<h2 id="section-5" data-heading-text="三、结构化输出:约束解码的实现原理">三、结构化输出:约束解码的实现原理</h2>
+<h3 id="vs" data-heading-text="提示词工程 vs 约束解码">提示词工程 vs 约束解码</h3>
+<p><strong>传统方法</strong>(提示词):</p>
+<div class="code-block"><pre><code class="hljs">请以JSON格式输出,包含name和age字段
+</code></pre></div>
+<ul>
+<li>依赖模型理解和遵循指令</li>
+<li>无法保证100%符合格式</li>
+<li>可能出现语法错误或字段缺失</li>
+</ul>
+<p><strong>约束解码</strong>(如JSON Schema):</p>
+<div class="code-block" data-language="python"><div class="code-header"><span class="code-language">python</span></div><pre><code class="hljs language-python">schema = {
+  <span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;object&quot;</span>,
+  <span class="hljs-string">&quot;properties&quot;</span>: {
+    <span class="hljs-string">&quot;name&quot;</span>: {<span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>},
+    <span class="hljs-string">&quot;age&quot;</span>: {<span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;integer&quot;</span>}
+  }
+}
+</code></pre></div>
+<h3 id="section-7" data-heading-text="工作机制">工作机制</h3>
+<ol>
+<li><strong>模型阶段</strong>:正常计算下一个token的概率分布</li>
+<li><strong>约束阶段</strong>:解码器根据schema判断哪些token合法</li>
+<li><strong>过滤阶段</strong>:将不合法token的概率设为0(或极小值)</li>
+<li><strong>采样阶段</strong>:从剩余合法token中选择</li>
+</ol>
+<div class="code-block"><pre><code class="hljs">原始分布: {&quot;hello&quot;: 0.3, &quot;{&quot;: 0.25, &quot;the&quot;: 0.2, ...}
+         ↓ (JSON要求必须以&quot;{&quot;开始)
+过滤后:   {&quot;{&quot;: 0.25} → 归一化 → {&quot;{&quot;: 1.0}
+</code></pre></div>
+<h3 id="section-8" data-heading-text="会不会“无token可选”?">会不会“无token可选”?</h3>
+<p>理论上可能,但实际极少发生:</p>
+<ul>
+<li>JSON schema只限制<strong>结构</strong>,不限制<strong>内容</strong></li>
+<li>在字符串值、数字范围内,模型有大量合法选项</li>
+<li>现代实现会在无合法token时回退到宽松策略</li>
+</ul>
+<p>类比:</p>
+<blockquote>
+<p>这不是让模型“学会输出JSON”,而是在它输出时“只允许走JSON轨道”</p>
+</blockquote>
+<hr>
+<h2 id="section-9" data-heading-text="四、多模态融合:统一表示空间的设计">四、多模态融合:统一表示空间的设计</h2>
+<h3 id="section-10" data-heading-text="为什么能“看懂图、听懂话、说人话”?">为什么能“看懂图、听懂话、说人话”?</h3>
+<p>多模态大模型(GPT-4V、Gemini、Qwen-VL等)并非通过“意图识别→选择处理模块”的流程,而是:</p>
+<blockquote>
+<p><strong>将不同模态投影到共享的语义表示空间,用统一的Transformer处理</strong></p>
+</blockquote>
+<h3 id="section-11" data-heading-text="技术架构">技术架构</h3>
+<div class="code-block"><pre><code class="hljs">文本输入 → Token Embedding ────┐
+                               ├→ 统一表示空间 → Transformer → 输出
+图像输入 → Vision Encoder ──────┤
+                               │
+音频输入 → Audio Encoder ───────┘
+</code></pre></div>
+<h3 id="section-12" data-heading-text="关键组件">关键组件</h3>
+<ol>
+<li>
+<p><strong>模态编码器</strong></p>
+<ul>
+<li>文本: token embedding + positional encoding</li>
+<li>图像: Vision Transformer (ViT) / CNN特征提取</li>
+<li>音频: Wav2Vec / Whisper等编码器</li>
+</ul>
+</li>
+<li>
+<p><strong>投影层(Projection Layer)</strong></p>
+<ul>
+<li>将不同模态的表示映射到相同维度</li>
+<li>通常是可学习的线性变换或MLP</li>
+</ul>
+</li>
+<li>
+<p><strong>统一Transformer</strong></p>
+<ul>
+<li>处理混合模态的token序列</li>
+<li>通过注意力机制自动学习跨模态关联</li>
+</ul>
+</li>
+</ol>
+<h3 id="section-13" data-heading-text="为什么这样设计?">为什么这样设计?</h3>
+<p>对比两种方案:</p>
+<p><strong>方案A: 模块化路由</strong></p>
+<div class="code-block"><pre><code class="hljs">用户输入 → 意图识别 → [文本模型 | 图像模型 | 多模态模型]
+</code></pre></div>
+<p>问题:</p>
+<ul>
+<li>意图识别错误会导致整个链路失败</li>
+<li>不同模块之间信息无法共享</li>
+<li>难以处理复杂的跨模态任务(如“图中的文字是什么意思?”)</li>
+<li>增加系统延迟和工程复杂度</li>
+</ul>
+<p><strong>方案B: 统一表示</strong></p>
+<div class="code-block"><pre><code class="hljs">多模态输入 → 统一编码 → Transformer → 自动完成所有任务
+</code></pre></div>
+<p>优势:</p>
+<ul>
+<li>单一模型端到端处理</li>
+<li>跨模态信息自然融合</li>
+<li>涌现复杂推理能力</li>
+<li>部署和维护简单</li>
+</ul>
+<p>这就是为什么主流方案选择统一模型而非模块化路由。</p>
+<hr>
+<h2 id="moe" data-heading-text="五、专家混合(MoE):稀疏激活的高效架构">五、专家混合(MoE):稀疏激活的高效架构</h2>
+<h3 id="moe-vs" data-heading-text="MoE vs 模块化路由的区别">MoE vs 模块化路由的区别</h3>
+<p>您提出的“意图识别→选模型”思路与MoE相似但有本质区别:</p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>外部模块化路由</th>
+<th>MoE (Mixture of Experts)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>决策粒度</strong></td>
+<td>整个请求级别</td>
+<td>每个token级别</td>
+</tr>
+<tr>
+<td><strong>路由机制</strong></td>
+<td>规则或分类器</td>
+<td>可学习的gating network</td>
+</tr>
+<tr>
+<td><strong>专家类型</strong></td>
+<td>独立完整模型</td>
+<td>共享架构的FFN子网络</td>
+</tr>
+<tr>
+<td><strong>发生位置</strong></td>
+<td>模型外部</td>
+<td>Transformer层内部</td>
+</tr>
+<tr>
+<td><strong>训练方式</strong></td>
+<td>专家独立训练</td>
+<td>端到端联合训练</td>
+</tr>
+<tr>
+<td><strong>失败模式</strong></td>
+<td>意图识别错误导致全错</td>
+<td>软路由,多专家加权组合</td>
+</tr>
+</tbody>
+</table>
+<h3 id="section-16" data-heading-text="MoE工作原理">MoE工作原理</h3>
+<div class="code-block"><pre><code class="hljs">输入token → Gating Network(路由器)
+                ↓
+         选择Top-K个专家(如8选2)
+                ↓
+         [Expert 1] [Expert 2] ... [Expert 8]
+                ↓
+         加权聚合输出
+</code></pre></div>
+<p><strong>关键特性</strong>:</p>
+<ul>
+<li><strong>稀疏激活</strong>: 每个token只激活少数专家(节省计算)</li>
+<li><strong>动态路由</strong>: 根据输入内容自动选择合适专家</li>
+<li><strong>负载均衡</strong>: 确保各专家得到充分训练</li>
+<li><strong>专业化</strong>: 不同专家自动学习不同领域/模式</li>
+</ul>
+<p><strong>典型应用</strong>:</p>
+<ul>
+<li>Mixtral 8x7B: 8个专家,每次激活2个</li>
+<li>GPT-4传闻使用大规模MoE</li>
+<li>Switch Transformer: 每个FFN层替换为MoE</li>
+</ul>
+<hr>
+<h2 id="section-17" data-heading-text="六、现代AI架构的演进趋势">六、现代AI架构的演进趋势</h2>
+<p>当前大模型不是单一技术路线,而是多种机制的协同:</p>
+<h3 id="moe-2" data-heading-text="核心架构 = 多模态统一模型 + MoE + 工具调用">核心架构 = 多模态统一模型 + MoE + 工具调用</h3>
+<div class="code-block"><pre><code class="hljs">┌─────────────────────────────────────┐
+│   多模态输入(文本/图像/音频)         │
+└──────────────┬──────────────────────┘
+               ↓
+      ┌────────────────┐
+      │  统一编码层    │
+      └────────┬───────┘
+               ↓
+      ┌────────────────┐
+      │ Transformer +  │
+      │  MoE层(可选)   │ ← 内部专家路由
+      └────────┬───────┘
+               ↓
+      ┌────────────────┐
+      │   输出头       │
+      └────────┬───────┘
+               ↓
+         ┌────┴────┐
+         ↓         ↓
+    文本输出   工具调用 → [搜索/计算器/代码执行...] ← 外部专业模块
+</code></pre></div>
+<h3 id="section-19" data-heading-text="三层协同机制">三层协同机制</h3>
+<ol>
+<li><strong>统一表示层</strong>: 处理多模态输入</li>
+<li><strong>内部专家层</strong>: MoE实现高效专业化</li>
+<li><strong>外部工具层</strong>: 调用专业系统补充能力边界</li>
+</ol>
+<p><strong>实例</strong>: Claude 3.5 Sonnet</p>
+<ul>
+<li>多模态理解(文本+图像)</li>
+<li>内部可能使用MoE(未公开)</li>
+<li>工具调用(搜索、代码执行、文件读取)</li>
+</ul>
+<hr>
+<h2 id="section-20" data-heading-text="七、核心洞察总结">七、核心洞察总结</h2>
+<h3 id="section-21" data-heading-text="关于“理解”和“智能”">关于“理解”和“智能”</h3>
+<p>大模型并非真正“理解”任务或“识别”意图,而是:</p>
+<ul>
+<li>通过大规模预训练学习统计规律</li>
+<li>在高维表示空间中进行复杂模式匹配</li>
+<li>通过解码器约束和提示工程引导输出</li>
+<li>利用架构设计(如MoE)提升效率和专业性</li>
+</ul>
+<h3 id="section-22" data-heading-text="关于架构选择">关于架构选择</h3>
+<ul>
+<li><strong>统一模型</strong> ≠ 低效: Transformer的并行性和MoE的稀疏性保证效率</li>
+<li><strong>模块化</strong> ≠ 高效: 意图识别失败、信息割裂、工程复杂度都是代价</li>
+<li><strong>最优方案</strong>: 统一主模型 + 内部MoE + 外部工具调用</li>
+</ul>
+<h3 id="section-23" data-heading-text="关于未来发展">关于未来发展</h3>
+<p>AI系统正在向“操作系统”演进:</p>
+<ul>
+<li><strong>主模型</strong>: 通用推理和任务理解</li>
+<li><strong>内部专家</strong>: 领域专业化和效率优化</li>
+<li><strong>外部插件</strong>: 专业工具和实时数据</li>
+</ul>
+<p>这是工程设计、数学优化和大规模训练共同构建的复杂系统,而非单一的“魔法”突破。</p>
+<hr>
+<h2 id="section-24" data-heading-text="延伸阅读建议">延伸阅读建议</h2>
+<p>如果您想深入了解:</p>
+<ul>
+<li><strong>约束解码细节</strong>: 研究grammar-based decoding和CFG解析器</li>
+<li><strong>多模态融合</strong>: 阅读CLIP、Flamingo、LLaVA等论文</li>
+<li><strong>MoE架构</strong>: 了解Switch Transformer、Mixtral的设计</li>
+<li><strong>工具调用</strong>: 研究function calling和ReAct框架</li>
+</ul>
+<p>每个方向都有丰富的技术细节值得探索。</p>
+
+      </div>
+<div class="article-actions" aria-label="Article actions">
+      <a class="share-link" href="https://twitter.com/intent/tweet?text=%E7%94%9F%E6%88%90%E5%BC%8FAI%E3%80%81%E8%A7%A3%E7%A0%81%E7%BA%A6%E6%9D%9F%E4%B8%8E%E5%A4%9A%E6%A8%A1%E6%80%81%E6%9E%B6%E6%9E%84%EF%BC%9A%E7%B3%BB%E7%BB%9F%E5%8C%96%E5%8E%9F%E7%90%86%E8%A7%A3%E6%9E%90&amp;url=https%3A%2F%2Fkingson4wu.github.io%2Fzh%2Fposts%2F20251208%2F" target="_blank" rel="noopener noreferrer" aria-label="Share on X">
+        <span aria-hidden="true">X</span>
+        <span>Share</span>
+      </a>
+    </div>
+    </article>
+<aside class="article-toc" data-article-toc aria-label="目录">
+      <button class="article-toc-toggle" type="button" data-article-toc-toggle aria-expanded="false" aria-controls="article-toc-panel" aria-label="打开目录" data-open-label="打开目录" data-close-label="收起目录">
+        <svg aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M8 6h11"></path>
+          <path d="M8 12h11"></path>
+          <path d="M8 18h11"></path>
+          <path d="M4 6h.01"></path>
+          <path d="M4 12h.01"></path>
+          <path d="M4 18h.01"></path>
+        </svg>
+      </button>
+      <nav id="article-toc-panel" class="article-toc-panel" data-article-toc-panel aria-label="目录">
+        <div class="article-toc-heading">目录</div>
+        <ol class="article-toc-list">
+          <li class="article-toc-level-2"><a href="#section-2" data-article-toc-link>一、基础:自回归语言模型的生成机制</a></li>
+          <li class="article-toc-level-2"><a href="#section-3" data-article-toc-link>二、解码策略:从概率分布到实际输出</a></li>
+          <li class="article-toc-level-3"><a href="#section-4" data-article-toc-link>常见解码策略</a></li>
+          <li class="article-toc-level-2"><a href="#section-5" data-article-toc-link>三、结构化输出:约束解码的实现原理</a></li>
+          <li class="article-toc-level-3"><a href="#vs" data-article-toc-link>提示词工程 vs 约束解码</a></li>
+          <li class="article-toc-level-3"><a href="#section-7" data-article-toc-link>工作机制</a></li>
+          <li class="article-toc-level-3"><a href="#section-8" data-article-toc-link>会不会“无token可选”?</a></li>
+          <li class="article-toc-level-2"><a href="#section-9" data-article-toc-link>四、多模态融合:统一表示空间的设计</a></li>
+          <li class="article-toc-level-3"><a href="#section-10" data-article-toc-link>为什么能“看懂图、听懂话、说人话”?</a></li>
+          <li class="article-toc-level-3"><a href="#section-11" data-article-toc-link>技术架构</a></li>
+          <li class="article-toc-level-3"><a href="#section-12" data-article-toc-link>关键组件</a></li>
+          <li class="article-toc-level-3"><a href="#section-13" data-article-toc-link>为什么这样设计?</a></li>
+          <li class="article-toc-level-2"><a href="#moe" data-article-toc-link>五、专家混合(MoE):稀疏激活的高效架构</a></li>
+          <li class="article-toc-level-3"><a href="#moe-vs" data-article-toc-link>MoE vs 模块化路由的区别</a></li>
+          <li class="article-toc-level-3"><a href="#section-16" data-article-toc-link>MoE工作原理</a></li>
+          <li class="article-toc-level-2"><a href="#section-17" data-article-toc-link>六、现代AI架构的演进趋势</a></li>
+          <li class="article-toc-level-3"><a href="#moe-2" data-article-toc-link>核心架构 = 多模态统一模型 + MoE + 工具调用</a></li>
+          <li class="article-toc-level-3"><a href="#section-19" data-article-toc-link>三层协同机制</a></li>
+          <li class="article-toc-level-2"><a href="#section-20" data-article-toc-link>七、核心洞察总结</a></li>
+          <li class="article-toc-level-3"><a href="#section-21" data-article-toc-link>关于“理解”和“智能”</a></li>
+          <li class="article-toc-level-3"><a href="#section-22" data-article-toc-link>关于架构选择</a></li>
+          <li class="article-toc-level-3"><a href="#section-23" data-article-toc-link>关于未来发展</a></li>
+          <li class="article-toc-level-2"><a href="#section-24" data-article-toc-link>延伸阅读建议</a></li>
+        </ol>
+      </nav>
+    </aside>
+    <script src="/scripts/article-toc.js" defer></script>
+    <nav class="article-nav" aria-label="Adjacent posts">
+      <a href="/zh/posts/20251128-idl-sidecar/"><span>Previous</span>构建统一前后端（与服务间）RPC体系：从 IDL 设计到多协议适配与 Sidecar 部署的工程实践</a>
+      <a href="/zh/posts/20251212-function-calling/"><span>Next</span>大模型中的 Function Calling 与工具模式:机制、区别与本质</a>
+    </nav>
+<section class="comments" aria-labelledby="comments-heading">
+      <h2 id="comments-heading">评论</h2>
+      <div
+        data-comments
+        data-comments-repo="Kingson4Wu/kingson4wu.github.io"
+        data-comments-issue-term="pathname"
+        data-comments-label="comment"
+      ></div>
+    </section>
+    <script src="/scripts/comments.js" defer></script>
+  </main>
+  <footer class="site-footer">
+    <p>&copy; 2026 拉巴力的纸皮箱</p>
+  </footer>
+  <button class="reading-return" type="button" data-reading-return aria-label="回到开头" title="回到开头">
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <path d="M12 19V5"></path>
+      <path d="m6 11 6-6 6 6"></path>
+    </svg>
+  </button>
+  <script src="/scripts/theme.js"></script>
+  <script src="/scripts/image-viewer.js"></script>
+  <script src="/scripts/reading-tools.js"></script>
+</body>
+</html>

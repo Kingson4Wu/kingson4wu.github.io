@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>深入理解域名解析与管理：从 DNS 原理到注册商与注册局 | 拉巴力的纸皮箱</title>
+  <meta name="description" content="个人提供问题和疑惑, 最终AI生成 域名是互联网的入口。我们日常访问网站时，输入的是 example.com 这样的域名，而真正通信依赖的是 IP 地址。域名解析系统（DNS, Domain Name System）正是完成“人类友好名称 → 机器可识别地址”这一过程的基础设施。本文将从域名解析原理、运营商与公共 DN...">
+  <link rel="canonical" href="https://kingson4wu.github.io/zh/posts/20250915-dns/">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="alternate" type="application/rss+xml" title="拉巴力的纸皮箱" href="/zh/feed.xml">
+  <link rel="alternate" type="text/markdown" href="/zh/posts/20250915-dns/index.md">
+  <link rel="stylesheet" href="/vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="/styles/main.css">
+  <script>
+    try {
+      var theme = localStorage.getItem('theme');
+      if (theme) document.documentElement.dataset.theme = theme;
+    } catch (_) {}
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="site-title" href="/zh/" aria-label="拉巴力的纸皮箱">
+      <span class="site-logo" aria-hidden="true">K</span>
+      <span>拉巴力的纸皮箱</span>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="/zh/posts/">文章</a>
+      <a href="/zh/notes/">笔记</a>
+      <a href="/zh/tags/">标签</a>
+      <a href="/zh/about/">关于</a>
+      <a href="/zh/search/">搜索</a>
+      <a href="/en/" lang="en">English</a>
+      <a class="feed-link" href="/zh/feed.xml" aria-label="订阅更新" title="订阅更新">
+        <svg class="feed-icon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M5 5.5A13.5 13.5 0 0 1 18.5 19"></path>
+          <path d="M5 11A8 8 0 0 1 13 19"></path>
+          <circle cx="6" cy="18" r="1.5"></circle>
+        </svg>
+      </a>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="切换明暗模式" title="切换明暗模式">
+        <svg class="theme-icon theme-icon-moon" aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M21 14.2A8.5 8.5 0 0 1 9.8 3 7 7 0 1 0 21 14.2Z"></path>
+        </svg>
+        <svg class="theme-icon theme-icon-sun" aria-hidden="true" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"></path>
+        </svg>
+      </button>
+    </nav>
+  </header>
+  <main class="site-main">
+    <article class="article">
+      <header class="article-header">
+        <h1>深入理解域名解析与管理：从 DNS 原理到注册商与注册局</h1>
+        <time datetime="2025-09-15T13:41:02.000Z">2025年9月15日</time>
+<ul class="tag-list" aria-label="Tags">
+    <li><a href="/zh/tags/Networking/">Networking</a></li>
+  </ul>
+      </header>
+      <div class="prose">
+<blockquote>
+<blockquote>
+<p>个人提供问题和疑惑, 最终AI生成</p>
+</blockquote>
+</blockquote>
+<p>域名是互联网的入口。我们日常访问网站时，输入的是 <code>example.com</code> 这样的域名，而真正通信依赖的是 IP 地址。域名解析系统（DNS, Domain Name System）正是完成“人类友好名称 → 机器可识别地址”这一过程的基础设施。本文将从域名解析原理、运营商与公共 DNS 的关系、域名管理机制、注册商与注册局的角色，到域名定价和续费规则，全面梳理这一体系。</p>
+<hr>
+<h2 id="section-1" data-heading-text="一、域名解析的基本原理">一、域名解析的基本原理</h2>
+<p>域名解析（DNS 解析）的目标是：<strong>把域名解析为 IP 地址</strong>。它依赖一个全球分布式、分层级的系统，通过递归查询来完成。</p>
+<h3 id="section-2" data-heading-text="解析流程">解析流程</h3>
+<ol>
+<li><strong>本地缓存</strong>：操作系统或浏览器先查缓存。</li>
+<li><strong>递归解析器</strong>：通常由运营商或公共 DNS 提供。</li>
+<li><strong>根服务器</strong>：告诉解析器某个顶级域（如 <code>.com</code>）由哪个 TLD 服务器负责。</li>
+<li><strong>TLD 服务器</strong>：返回该域名的权威 DNS 信息。</li>
+<li><strong>权威 DNS</strong>：存放最终解析记录（如 A 记录指向 IP）。</li>
+<li><strong>返回结果并缓存</strong>：递归解析器返回给用户，并按 TTL（缓存时间）存储。</li>
+</ol>
+<h3 id="section-3" data-heading-text="运营商的角色">运营商的角色</h3>
+<ul>
+<li>运营商一般只提供 <strong>递归解析器</strong>。</li>
+<li>在理论上，他们不能决定权威答案，但可以<strong>干预</strong>（例如 DNS 劫持或污染）。</li>
+<li>用户可改用公共 DNS（如 8.8.8.8、1.1.1.1、9.9.9.9）来规避运营商干预。</li>
+</ul>
+<hr>
+<h2 id="section-4" data-heading-text="二、域名所有者如何修改解析">二、域名所有者如何修改解析</h2>
+<p>如果你是域名所有者，需要修改域名 IP，流程如下：</p>
+<ol>
+<li><strong>登录注册商控制台</strong>（阿里云、腾讯云、GoDaddy、Namecheap 等）。</li>
+<li><strong>修改 DNS 记录</strong>：例如修改 A 记录指向新的 IP。</li>
+<li><strong>注册商更新权威 DNS</strong>：你的修改会同步到托管的权威服务器。</li>
+<li><strong>等待缓存刷新</strong>：全球的递归解析器会在 TTL 过期后重新查询。</li>
+</ol>
+<p>💡 建议：</p>
+<ul>
+<li>在迁移前先降低 TTL（如 300 秒），确保切换快。</li>
+<li>修改完成后再调回较长 TTL。</li>
+<li>无法强制清理他人缓存，但可手动清理本机缓存。</li>
+</ul>
+<hr>
+<h2 id="ip" data-heading-text="三、IP 如何传播与信任机制">三、IP 如何传播与信任机制</h2>
+<p>很多人以为“IP 变更后会主动推送到全球”，实际上并不是。</p>
+<ul>
+<li>
+<p><strong>传播机制</strong>：不是推送，而是“递归解析器查询后再缓存”；缓存过期再查新值。</p>
+</li>
+<li>
+<p><strong>信任链</strong>：</p>
+<ul>
+<li>注册商验证域名所有者身份 → 更新权威 DNS</li>
+<li>注册局更新该域名的 NS 信息</li>
+<li>全球递归解析器依据 NS 去权威服务器查询</li>
+<li>最终信任权威答案</li>
+</ul>
+</li>
+</ul>
+<p>注册商与注册局之间通过 <strong>EPP 协议</strong>安全同步，根服务器和 TLD 确保查询链条可信。</p>
+<hr>
+<h2 id="section-6" data-heading-text="四、权威服务器与去中心化架构">四、权威服务器与去中心化架构</h2>
+<ul>
+<li>每个域名都可以指定自己的 <strong>权威服务器</strong>（NS 记录）。</li>
+<li>根服务器仅提供“目录”，不会存具体解析。</li>
+<li>这种设计的优势：<strong>去中心化、可扩展、容错强</strong>。</li>
+</ul>
+<h3 id="dns" data-heading-text="切换权威 DNS 的流程">切换权威 DNS 的流程</h3>
+<p>例如从阿里云迁移到腾讯云：</p>
+<ol>
+<li>在新托管商（如腾讯云 DNSPod）添加域名并配置记录。</li>
+<li>在注册商后台修改 NS（如 <code>ns1.dnspod.net</code>、<code>ns2.dnspod.net</code>）。</li>
+<li>注册商将 NS 改动提交注册局。</li>
+<li>全球解析器按新 NS 查询，约 24–48 小时内生效。</li>
+</ol>
+<p>大多数基础 DNS 托管服务（阿里云、腾讯云、Cloudflare）都是免费的。</p>
+<hr>
+<h2 id="section-8" data-heading-text="五、自建权威服务器的风险与转移">五、自建权威服务器的风险与转移</h2>
+<p>如果自建权威服务器宕机，解析会失败，但域名不会“废掉”。</p>
+<ul>
+<li>你可以随时登录注册商，把 NS 改到新的托管商。</li>
+<li>修改不依赖旧权威在线，只要新权威已配置好解析记录即可。</li>
+<li>风险主要来自：账号被盗、域名过期、法律下架。</li>
+</ul>
+<p>👉 建议：</p>
+<ul>
+<li>自建时至少两台分布式 NS，并做好备份与监控。</li>
+<li>如果不想长期维护，直接用托管 DNS。</li>
+</ul>
+<hr>
+<h2 id="section-9" data-heading-text="六、注册商与所有权确认">六、注册商与所有权确认</h2>
+<p>注册商怎么知道你是域名所有者？</p>
+<ul>
+<li>依据注册局的官方数据库（注册人信息、状态、注册商绑定）。</li>
+<li>注册商账号体系（用户名 + 2FA）验证操作权限。</li>
+</ul>
+<p>注册商并非固定不变：</p>
+<ul>
+<li>你可以通过 <strong>转移码（EPP/Auth Code）</strong> 转到新注册商。</li>
+<li>转移不会改变所有权与解析，只是管理入口变更（通常赠送 1 年续费）。</li>
+</ul>
+<hr>
+<h2 id="section-10" data-heading-text="七、注册商与注册局的分工">七、注册商与注册局的分工</h2>
+<ul>
+<li>
+<p><strong>注册商</strong>：面向用户，负责登记、修改、续费、转移。</p>
+</li>
+<li>
+<p><strong>注册局</strong>：维护某个顶级域（TLD）的数据库，不直接零售。</p>
+</li>
+<li>
+<p>例如：</p>
+<ul>
+<li><code>.com</code> / <code>.net</code> → Verisign（美国）</li>
+<li><code>.org</code> → PIR（美国非营利）</li>
+<li><code>.app</code> → Google Registry（美国）</li>
+<li><code>.io</code> → ICB/Afilias（英国/国际）</li>
+<li><code>.cn</code> → CNNIC（中国）</li>
+<li><code>.top</code> → 中国机构</li>
+</ul>
+</li>
+</ul>
+<p>注册商必须绑定注册局，用户不能绕过注册商直接操作。</p>
+<hr>
+<h2 id="section-11" data-heading-text="八、域名费用与所有权">八、域名费用与所有权</h2>
+<h3 id="section-12" data-heading-text="费用构成">费用构成</h3>
+<ul>
+<li>
+<p>注册与续费的钱支付给 <strong>注册商</strong>。</p>
+</li>
+<li>
+<p>注册商再向注册局支付批发费。</p>
+</li>
+<li>
+<p>费用包含：</p>
+<ul>
+<li>注册局成本</li>
+<li>注册商的管理服务（更新 NS、转移、防抢注）</li>
+<li>DNS 托管、隐私保护、SSL、邮箱等增值服务</li>
+</ul>
+</li>
+</ul>
+<h3 id="section-13" data-heading-text="为什么不同注册商价格不同？">为什么不同注册商价格不同？</h3>
+<p>虽然底层注册局批发价是统一的，但实际到用户手里的价格差异很常见，原因包括：</p>
+<ol>
+<li>
+<p><strong>注册局只规定批发价</strong></p>
+<ul>
+<li>例如 <code>.com</code> 的注册局是 Verisign，目前批发价约 $10/年。</li>
+<li>各注册商在此基础上加利润与服务费再零售。</li>
+</ul>
+</li>
+<li>
+<p><strong>注册商定价策略不同</strong></p>
+<ul>
+<li>有的走低价策略（如 Cloudflare Registrar、NameSilo），接近批发价。</li>
+<li>有的走高价+捆绑服务（GoDaddy、国内部分厂商），可能送邮箱、主机等。</li>
+<li>有的搞促销：首年极便宜（几块钱甚至 1 元），后续续费回到正常价。</li>
+</ul>
+</li>
+<li>
+<p><strong>地区差异与税收</strong></p>
+<ul>
+<li>国内注册商价格通常含税，国外注册商显示的价格未必含增值税。</li>
+</ul>
+</li>
+</ol>
+<h4 id="section-14" data-heading-text="示例价格差异">示例价格差异</h4>
+<table>
+<thead>
+<tr>
+<th>注册商</th>
+<th><code>.com</code> 首年</th>
+<th><code>.com</code> 续费</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cloudflare Registrar</td>
+<td>$9.15（接近批发价）</td>
+<td>$9.15</td>
+</tr>
+<tr>
+<td>Namecheap</td>
+<td>$6.98（促销）</td>
+<td>$15.98</td>
+</tr>
+<tr>
+<td>阿里云</td>
+<td>¥55 左右</td>
+<td>¥69 左右</td>
+</tr>
+<tr>
+<td>GoDaddy</td>
+<td>$12.99</td>
+<td>$21.99</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>🔑 无论在哪个注册商注册，最终记录都存放在 Verisign 的注册局数据库里。价格差异只是注册商的加价和服务差异。</p>
+</blockquote>
+<h3 id="section-15" data-heading-text="域名的所有权">域名的所有权</h3>
+<ul>
+<li>“买域名”并不是买断，而是<strong>按年租用</strong>。</li>
+<li>注册商只是代理，最终归属以注册局数据库为准（WHOIS 可查）。</li>
+<li>若启用隐私保护，对外显示的是代理信息。</li>
+</ul>
+<hr>
+<h2 id="section-16" data-heading-text="九、价格机制与溢价域名">九、价格机制与溢价域名</h2>
+<ul>
+<li>域名价格 = 注册局批发价 + 注册商定价策略 + 市场供需。</li>
+<li>Premium 域名（短、热门、单词域名）价格更高。</li>
+<li>普通 <code>.com</code> 批发价约 7–10 美元/年，零售价 10–15 美元/年。</li>
+<li><code>.app</code>、<code>.io</code> 等批发价更高，因此零售价也贵。</li>
+<li>Premium 域名不仅首年贵，续费也可能长期溢价。</li>
+</ul>
+<hr>
+<h2 id="section-17" data-heading-text="十、为什么要分层治理？">十、为什么要分层治理？</h2>
+<p>有人疑惑：注册局和注册商是不是“白赚”？其实不然。</p>
+<ul>
+<li>注册局负责顶级域数据库、根/权威运维、安全合规，收取批发费。</li>
+<li>注册商面向用户，提供控制台、账户体系、隐私服务、解析面板。</li>
+<li>分层设计保证了互联网的规模化和稳定性。</li>
+</ul>
+<hr>
+<h2 id="section-18" data-heading-text="总结">总结</h2>
+<ul>
+<li><strong>DNS 是全球分布式系统</strong>，通过递归查询找到权威答案。</li>
+<li><strong>运营商</strong>通常只提供递归解析器，权威答案存放在权威 DNS。</li>
+<li><strong>域名所有者</strong>通过注册商修改 DNS 记录，变更逐级传播。</li>
+<li><strong>注册商</strong>是用户入口，<strong>注册局</strong>是顶级域数据库，二者分工明确。</li>
+<li><strong>费用机制</strong>透明：批发价由注册局定，零售价由注册商定，不同注册商价格差异源于策略与市场。</li>
+<li><strong>安全与稳定</strong>依赖去中心化架构、EPP 协议、分布式 NS 与全球缓存机制。</li>
+</ul>
+<p>域名解析不仅仅是一个“把名字变成 IP”的过程，而是一整套跨国、跨机构的分布式治理体系。理解这套机制，有助于我们更好地管理域名、保障业务稳定。</p>
+
+      </div>
+<div class="article-actions" aria-label="Article actions">
+      <a class="share-link" href="https://twitter.com/intent/tweet?text=%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E5%9F%9F%E5%90%8D%E8%A7%A3%E6%9E%90%E4%B8%8E%E7%AE%A1%E7%90%86%EF%BC%9A%E4%BB%8E+DNS+%E5%8E%9F%E7%90%86%E5%88%B0%E6%B3%A8%E5%86%8C%E5%95%86%E4%B8%8E%E6%B3%A8%E5%86%8C%E5%B1%80&amp;url=https%3A%2F%2Fkingson4wu.github.io%2Fzh%2Fposts%2F20250915-dns%2F" target="_blank" rel="noopener noreferrer" aria-label="Share on X">
+        <span aria-hidden="true">X</span>
+        <span>Share</span>
+      </a>
+    </div>
+    </article>
+<aside class="article-toc" data-article-toc aria-label="目录">
+      <button class="article-toc-toggle" type="button" data-article-toc-toggle aria-expanded="false" aria-controls="article-toc-panel" aria-label="打开目录" data-open-label="打开目录" data-close-label="收起目录">
+        <svg aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M8 6h11"></path>
+          <path d="M8 12h11"></path>
+          <path d="M8 18h11"></path>
+          <path d="M4 6h.01"></path>
+          <path d="M4 12h.01"></path>
+          <path d="M4 18h.01"></path>
+        </svg>
+      </button>
+      <nav id="article-toc-panel" class="article-toc-panel" data-article-toc-panel aria-label="目录">
+        <div class="article-toc-heading">目录</div>
+        <ol class="article-toc-list">
+          <li class="article-toc-level-2"><a href="#section-1" data-article-toc-link>一、域名解析的基本原理</a></li>
+          <li class="article-toc-level-3"><a href="#section-2" data-article-toc-link>解析流程</a></li>
+          <li class="article-toc-level-3"><a href="#section-3" data-article-toc-link>运营商的角色</a></li>
+          <li class="article-toc-level-2"><a href="#section-4" data-article-toc-link>二、域名所有者如何修改解析</a></li>
+          <li class="article-toc-level-2"><a href="#ip" data-article-toc-link>三、IP 如何传播与信任机制</a></li>
+          <li class="article-toc-level-2"><a href="#section-6" data-article-toc-link>四、权威服务器与去中心化架构</a></li>
+          <li class="article-toc-level-3"><a href="#dns" data-article-toc-link>切换权威 DNS 的流程</a></li>
+          <li class="article-toc-level-2"><a href="#section-8" data-article-toc-link>五、自建权威服务器的风险与转移</a></li>
+          <li class="article-toc-level-2"><a href="#section-9" data-article-toc-link>六、注册商与所有权确认</a></li>
+          <li class="article-toc-level-2"><a href="#section-10" data-article-toc-link>七、注册商与注册局的分工</a></li>
+          <li class="article-toc-level-2"><a href="#section-11" data-article-toc-link>八、域名费用与所有权</a></li>
+          <li class="article-toc-level-3"><a href="#section-12" data-article-toc-link>费用构成</a></li>
+          <li class="article-toc-level-3"><a href="#section-13" data-article-toc-link>为什么不同注册商价格不同？</a></li>
+          <li class="article-toc-level-3"><a href="#section-15" data-article-toc-link>域名的所有权</a></li>
+          <li class="article-toc-level-2"><a href="#section-16" data-article-toc-link>九、价格机制与溢价域名</a></li>
+          <li class="article-toc-level-2"><a href="#section-17" data-article-toc-link>十、为什么要分层治理？</a></li>
+          <li class="article-toc-level-2"><a href="#section-18" data-article-toc-link>总结</a></li>
+        </ol>
+      </nav>
+    </aside>
+    <script src="/scripts/article-toc.js" defer></script>
+    <nav class="article-nav" aria-label="Adjacent posts">
+      <a href="/zh/posts/20250902-ai/"><span>Previous</span>用脚本+AI CLI半自动写代码：实践经验分享</a>
+      <a href="/zh/posts/20250915-ip-ipv4-ipv6/"><span>Next</span>IP 归属与全球路由：从 IPv4 到 IPv6 的原理与实践</a>
+    </nav>
+<section class="comments" aria-labelledby="comments-heading">
+      <h2 id="comments-heading">评论</h2>
+      <div
+        data-comments
+        data-comments-repo="Kingson4Wu/kingson4wu.github.io"
+        data-comments-issue-term="pathname"
+        data-comments-label="comment"
+      ></div>
+    </section>
+    <script src="/scripts/comments.js" defer></script>
+  </main>
+  <footer class="site-footer">
+    <p>&copy; 2026 拉巴力的纸皮箱</p>
+  </footer>
+  <button class="reading-return" type="button" data-reading-return aria-label="回到开头" title="回到开头">
+    <svg aria-hidden="true" viewBox="0 0 24 24">
+      <path d="M12 19V5"></path>
+      <path d="m6 11 6-6 6 6"></path>
+    </svg>
+  </button>
+  <script src="/scripts/theme.js"></script>
+  <script src="/scripts/image-viewer.js"></script>
+  <script src="/scripts/reading-tools.js"></script>
+</body>
+</html>

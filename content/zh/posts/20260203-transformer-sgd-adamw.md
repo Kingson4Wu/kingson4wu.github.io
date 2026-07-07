@@ -13,7 +13,6 @@ source:
   repo: zh
   path: source/_posts/20260203-Transformer-训练中的优化器选择：从-SGD-到-AdamW-的演化逻辑.md
 ---
->> 以下内容由AI辅助生成
 
 
 > 围绕“梯度如何被正确使用”的完整演化路径

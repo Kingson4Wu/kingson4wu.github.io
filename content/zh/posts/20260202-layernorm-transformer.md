@@ -13,7 +13,6 @@ source:
   repo: zh
   path: source/_posts/20260202-LayerNorm：从“为什么要归一化”到“为什么-Transformer-离不开它”.md
 ---
->> 以下内容由AI辅助生成
 
 
 神经网络训练的过程，看起来是在“学习语义”或“理解结构”，但在更底层，它其实是一件非常朴素的事情：

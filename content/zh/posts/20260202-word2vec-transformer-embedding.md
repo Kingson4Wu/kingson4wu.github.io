@@ -13,7 +13,6 @@ source:
   repo: zh
   path: source/_posts/20260202-从-Word2Vec-到-Transformer：Embedding-在不同模型中的角色演化.md
 ---
->> 以下内容由AI辅助生成
 
 
 在前文中，我们已经看到：在 Skip-gram + Negative Sampling 中，embedding 是通过一个明确的预测任务（预测上下文）和损失函数，从语料中逐步学习得到的。那么在 Transformer 模型中，embedding 是否还是同一件事？是否还在「学习词向量」？如果是，学习机制发生了哪些变化？

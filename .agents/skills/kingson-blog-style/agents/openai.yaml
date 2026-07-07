@@ -1,0 +1,4 @@
+interface:
+  display_name: "Kingson Blog Style"
+  short_description: "Write and rewrite blog posts in Kingson Wu style"
+  default_prompt: "Use $kingson-blog-style to rewrite this blog post with less AI tone while preserving my viewpoint."

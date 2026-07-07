@@ -35,13 +35,14 @@ export function normalizeFrontmatter(input: NormalizeInput): NormalizedFrontmatt
     repo: input.sourceRepo,
     path: input.sourcePath,
   });
+  const slug = normalizeSlug(input.raw.slug, input.fallbackSlug);
 
   return {
     title,
     date,
     lang: input.lang,
     type: input.type,
-    slug: input.fallbackSlug,
+    slug,
     ...(description ? { description } : {}),
     ...(updatedDateValue == null
       ? {}
@@ -66,6 +67,22 @@ function normalizeOptionalString(value: unknown): string | undefined {
 
   const trimmed = value.trim();
   return trimmed.length > 0 ? trimmed : undefined;
+}
+
+function normalizeSlug(value: unknown, fallbackSlug: string): string {
+  const raw = value == null ? fallbackSlug : String(value);
+  const slug = raw
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9-]+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '');
+
+  if (!slug) {
+    throw new Error('Frontmatter field "slug" must be a valid slug when provided');
+  }
+
+  return slug;
 }
 
 function normalizeTags(value: unknown): string[] {

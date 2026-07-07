@@ -25,6 +25,23 @@ describe('normalizeFrontmatter', () => {
     expect(result.date.toISOString()).toBe('2020-07-11T15:01:37.000Z');
   });
 
+  it('uses frontmatter slug when it differs from the file name', () => {
+    const result = normalizeFrontmatter({
+      raw: {
+        title: '旧链接保留',
+        date: '2025-01-01',
+        slug: '20250101',
+      },
+      lang: 'zh',
+      type: 'post',
+      fallbackSlug: '20250101-ai-site-content-summary',
+      sourcePath: 'zh/posts/20250101-ai-site-content-summary.md',
+      sourceRepo: 'zh',
+    });
+
+    expect(result.slug).toBe('20250101');
+  });
+
   it('normalizes Astro-style English metadata', () => {
     const result = normalizeFrontmatter({
       raw: {

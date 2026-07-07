@@ -2,6 +2,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { siteConfig } from '../config.js';
 import type { Lang } from '../types.js';
+import { auditPostImages } from './imageAudit.js';
 import type { LoadedContent } from './loadContent.js';
 
 export interface CheckResult {
@@ -44,6 +45,12 @@ export async function checkContent(content: LoadedContent, contentDir = siteConf
         errors.push(`Missing asset for ${post.inputPath}: ${assetUrl} -> ${assetPath}`);
       }
     }
+
+    warnings.push(...await auditPostImages({
+      inputPath: post.inputPath,
+      body: post.body,
+      contentDir,
+    }));
   }
 
   return { errors, warnings };

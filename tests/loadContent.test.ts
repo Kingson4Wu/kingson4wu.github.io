@@ -26,7 +26,7 @@ describe('loadContent', () => {
     await fs.writeFile(path.join(root, 'zh/assets/posts/sample/identify protocol.png'), 'image');
     await fs.writeFile(
       path.join(root, 'zh/posts/sample.md'),
-      '---\ntitle: Sample\ndate: 2021-01-01T00:00:00.000Z\nlang: zh\ntype: post\nslug: sample\ntags: []\n---\n\n![](/assets/zh/posts/sample/identify%20protocol.png)',
+      '---\ntitle: Sample\ndate: 2021-01-01T00:00:00.000Z\nlang: zh\ntype: post\nslug: sample\ntags: []\n---\n\n<figure><img src="/assets/zh/posts/sample/identify%20protocol.png" alt="Identify protocol"><figcaption>Identify protocol.</figcaption></figure>',
     );
 
     const content = await loadContent(root);
@@ -41,7 +41,7 @@ describe('loadContent', () => {
     await fs.mkdir(path.join(root, 'zh/posts'), { recursive: true });
     await fs.writeFile(
       path.join(root, 'zh/posts/sample.md'),
-      '---\ntitle: Sample\ndate: 2021-01-01T00:00:00.000Z\nlang: zh\ntype: post\nslug: sample\ntags: []\n---\n\n![](/assets/zh/posts/sample/missing%20image.png)',
+      '---\ntitle: Sample\ndate: 2021-01-01T00:00:00.000Z\nlang: zh\ntype: post\nslug: sample\ntags: []\n---\n\n<figure><img src="/assets/zh/posts/sample/missing%20image.png" alt="Missing image"><figcaption>Missing image.</figcaption></figure>',
     );
 
     const content = await loadContent(root);
@@ -78,7 +78,9 @@ describe('loadContent', () => {
     const result = await checkContent(content, root);
 
     expect(result.errors).toEqual([]);
-    expect(result.warnings).toEqual([]);
+    expect(result.warnings).toEqual([
+      'Bare article image should use <figure> with <figcaption> in ' + path.join(root, 'zh/posts/sample.md') + ': /assets/zh/posts/sample/images/foo%20(1).png',
+    ]);
   });
 
   it('rejects asset URLs that traverse outside the language asset root', async () => {
@@ -87,7 +89,7 @@ describe('loadContent', () => {
     await fs.writeFile(path.join(root, 'package.json'), '{}');
     await fs.writeFile(
       path.join(root, 'zh/posts/sample.md'),
-      '---\ntitle: Sample\ndate: 2021-01-01T00:00:00.000Z\nlang: zh\ntype: post\nslug: sample\ntags: []\n---\n\n![](/assets/zh/%2e%2e/%2e%2e/package.json)',
+      '---\ntitle: Sample\ndate: 2021-01-01T00:00:00.000Z\nlang: zh\ntype: post\nslug: sample\ntags: []\n---\n\n<figure><img src="/assets/zh/%2e%2e/%2e%2e/package.json" alt="Package"><figcaption>Package.</figcaption></figure>',
     );
 
     const content = await loadContent(root);
@@ -104,7 +106,7 @@ describe('loadContent', () => {
     await fs.writeFile(path.join(root, 'zh/assets/posts/sample/foo/bar.png'), 'image');
     await fs.writeFile(
       path.join(root, 'zh/posts/sample.md'),
-      '---\ntitle: Sample\ndate: 2021-01-01T00:00:00.000Z\nlang: zh\ntype: post\nslug: sample\ntags: []\n---\n\n![](/assets/zh/posts/sample/foo%2Fbar.png)',
+      '---\ntitle: Sample\ndate: 2021-01-01T00:00:00.000Z\nlang: zh\ntype: post\nslug: sample\ntags: []\n---\n\n<figure><img src="/assets/zh/posts/sample/foo%2Fbar.png" alt="Foo bar"><figcaption>Foo bar.</figcaption></figure>',
     );
 
     const content = await loadContent(root);
@@ -112,5 +114,25 @@ describe('loadContent', () => {
 
     expect(result.errors).toEqual([expect.stringContaining('/assets/zh/posts/sample/foo%2Fbar.png')]);
     expect(result.warnings).toEqual([]);
+  });
+
+  it('warns about empty alt text and bare local images without failing content checks', async () => {
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), 'content-'));
+    await fs.mkdir(path.join(root, 'zh/posts'), { recursive: true });
+    await fs.mkdir(path.join(root, 'zh/assets/posts/sample'), { recursive: true });
+    await fs.writeFile(path.join(root, 'zh/assets/posts/sample/diagram.png'), 'image');
+    await fs.writeFile(
+      path.join(root, 'zh/posts/sample.md'),
+      '---\ntitle: Sample\ndate: 2021-01-01T00:00:00.000Z\nlang: zh\ntype: post\nslug: sample\ntags: []\n---\n\n![](/assets/zh/posts/sample/diagram.png)',
+    );
+
+    const content = await loadContent(root);
+    const result = await checkContent(content, root);
+
+    expect(result.errors).toEqual([]);
+    expect(result.warnings).toEqual([
+      'Empty image alt text in ' + path.join(root, 'zh/posts/sample.md') + ': /assets/zh/posts/sample/diagram.png',
+      'Bare article image should use <figure> with <figcaption> in ' + path.join(root, 'zh/posts/sample.md') + ': /assets/zh/posts/sample/diagram.png',
+    ]);
   });
 });

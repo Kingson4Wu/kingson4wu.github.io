@@ -77,6 +77,21 @@ describe('page rendering', () => {
     expect(html).toContain('<link rel="alternate" type="text/markdown" href="/en/posts/hello/index.md">');
   });
 
+  it('renders trusted figure markup for article illustrations', () => {
+    const html = renderArticlePage({
+      post: {
+        ...post,
+        html: '<figure><img src="/assets/zh/posts/sample/diagram.svg" alt="Pipeline"><figcaption>Pipeline caption.</figcaption></figure>',
+      },
+      previous: undefined,
+      next: undefined,
+    });
+
+    expect(html).toContain('<figure>');
+    expect(html).toContain('alt="Pipeline"');
+    expect(html).toContain('<figcaption>Pipeline caption.</figcaption>');
+  });
+
   it('does not render the article table of contents for notes', () => {
     const html = renderArticlePage({
       post: {

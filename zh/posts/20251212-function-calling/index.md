@@ -7,12 +7,9 @@ Type: post
 Date: 2025-12-12
 Tags: AI, LLM, Agent, MCP, Prompt Engineering
 
-本文由ChatGPT和Claude.ai辅助完成 大模型(LLM)在现代应用中的一个核心能力,是能够按照严格结构调用外部工具,例如数据库查询、Python 代码执行、HTTP 请求、存储系统等。围绕这一点,业界形成了“function calling”与“tools API”等概念。尽管二者在语义上相近,但其实现逻辑、...
+大模型(LLM)在现代应用中的一个核心能力,是能够按照严格结构调用外部工具,例如数据库查询、Python 代码执行、HTTP 请求、存储系统等。围绕这一点,业界形成了“function calling”与“tools API”等概念。尽管二者在语义上相近,但其实现逻辑、系统结构与应用接口存在明显差异。 本文围绕以下主题...
 
 ---
-
->> 本文由ChatGPT和Claude.ai辅助完成
-
 
 大模型(LLM)在现代应用中的一个核心能力,是能够按照严格结构调用外部工具,例如数据库查询、Python 代码执行、HTTP 请求、存储系统等。围绕这一点,业界形成了“function calling”与“tools API”等概念。尽管二者在语义上相近,但其实现逻辑、系统结构与应用接口存在明显差异。
 

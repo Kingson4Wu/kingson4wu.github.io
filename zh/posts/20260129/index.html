@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>交叉熵损失与最大似然估计：完全理解指南 | 拉巴力的纸皮箱</title>
-  <meta name="description" content="以下内容由AI辅助生成 一、从最基本的问题开始 1.1 模型如何表达预测？ 假设你在训练一个图像分类模型： 任务：判断这张图是「猫」还是「狗」？ 模型不会直接给出“猫”或“狗”这样的硬答案，而是输出概率分布： “我认为是猫的概率是 0.8，是狗的概率是 0.2” 👉 核心理解：模型输出的是“置信度（概率）”，而不是确...">
+  <meta name="description" content="一、从最基本的问题开始 1.1 模型如何表达预测？ 假设你在训练一个图像分类模型： 任务：判断这张图是「猫」还是「狗」？ 模型不会直接给出“猫”或“狗”这样的硬答案，而是输出概率分布： “我认为是猫的概率是 0.8，是狗的概率是 0.2” 👉 核心理解：模型输出的是“置信度（概率）”，而不是确定的答案。 1.2 如何...">
   <link rel="canonical" href="https://kingson4wu.github.io/zh/posts/20260129/">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="alternate" type="application/rss+xml" title="拉巴力的纸皮箱" href="/zh/feed.xml">
@@ -63,11 +63,6 @@
   </ul>
       </header>
       <div class="prose">
-<blockquote>
-<blockquote>
-<p>以下内容由AI辅助生成</p>
-</blockquote>
-</blockquote>
 <h2 id="section-1" data-heading-text="一、从最基本的问题开始">一、从最基本的问题开始</h2>
 <h3 id="1-1" data-heading-text="1.1 模型如何表达预测？">1.1 模型如何表达预测？</h3>
 <p>假设你在训练一个图像分类模型：</p>

@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>深入理解 SOCKS5 正向代理原理 | 拉巴力的纸皮箱</title>
-  <meta name="description" content="以下内容由AI生成，本人审阅 在网络代理领域，SOCKS5 是一种常用的正向代理协议。它不同于传统的 HTTP 代理，能够为各种应用层协议提供通用的转发支持。本文将从概念、协议机制、工作流程和应用场景几个层次，系统梳理 SOCKS5 的技术原理。 1. 正向代理的基本概念 正向代理是指客户端主动使用代理服务器，把请求先...">
+  <meta name="description" content="SOCKS5 是一种常见的正向代理协议。它和 HTTP 代理最大的区别是：它不关心上层到底是 HTTP、SSH、DNS 还是别的协议，核心工作就是帮客户端转发 TCP/UDP 数据。 这里简单整理一下 SOCKS5 的流程和几个容易混淆的点。 1. 正向代理的基本概念 正向代理是指客户端主动使用代理服务器，把请求先发给...">
   <link rel="canonical" href="https://kingson4wu.github.io/zh/posts/20250817-socks5/">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="alternate" type="application/rss+xml" title="拉巴力的纸皮箱" href="/zh/feed.xml">
@@ -60,12 +60,8 @@
   </ul>
       </header>
       <div class="prose">
-<blockquote>
-<blockquote>
-<p>以下内容由AI生成，本人审阅</p>
-</blockquote>
-</blockquote>
-<p>在网络代理领域，<strong>SOCKS5</strong> 是一种常用的正向代理协议。它不同于传统的 HTTP 代理，能够为各种应用层协议提供通用的转发支持。本文将从概念、协议机制、工作流程和应用场景几个层次，系统梳理 SOCKS5 的技术原理。</p>
+<p>SOCKS5 是一种常见的正向代理协议。它和 HTTP 代理最大的区别是：它不关心上层到底是 HTTP、SSH、DNS 还是别的协议，核心工作就是帮客户端转发 TCP/UDP 数据。</p>
+<p>这里简单整理一下 SOCKS5 的流程和几个容易混淆的点。</p>
 <hr>
 <h2 id="1" data-heading-text="1. 正向代理的基本概念">1. 正向代理的基本概念</h2>
 <p><strong>正向代理</strong>是指客户端主动使用代理服务器，把请求先发给代理，再由代理去访问目标服务器，并把结果返回客户端。</p>
@@ -88,7 +84,7 @@
 </ul>
 </li>
 </ul>
-<p>👉 与 HTTP 代理相比，SOCKS5 并不解析上层应用协议，只做数据字节的透明转发，因此适用范围更广。</p>
+<p>与 HTTP 代理相比，SOCKS5 并不解析上层应用协议，只做数据字节的透明转发，因此适用范围更广。</p>
 <hr>
 <h2 id="3-socks5" data-heading-text="3. SOCKS5 的工作流程">3. SOCKS5 的工作流程</h2>
 <p>假设客户端配置了一个 SOCKS5 代理，整个交互过程如下：</p>
@@ -155,7 +151,7 @@
 </ul>
 </li>
 </ol>
-<p>👉 简单比喻：</p>
+<p>简单比喻：</p>
 <ul>
 <li>TCP 就像一条“电话线”，你先打电话告诉代理你要去哪</li>
 <li>如果是 TCP 业务，代理帮你中继对话</li>
@@ -173,10 +169,10 @@
 </ul>
 <hr>
 <h2 id="7" data-heading-text="7. 总结">7. 总结</h2>
-<p>一句话概括：
+<p>简单说：
 <strong>SOCKS5 正向代理的原理是——客户端和代理建立 TCP 会话，告诉代理要访问的目标地址，代理再代表客户端发起连接，并负责转发所有 TCP/UDP 数据。代理本身不理解应用层协议，只是透明转发。</strong></p>
 <hr>
-<p>⚡关键点回顾：</p>
+<p>关键点回顾：</p>
 <ul>
 <li>SOCKS5 协议本身基于 TCP</li>
 <li>可代理 TCP 与 UDP 流量</li>

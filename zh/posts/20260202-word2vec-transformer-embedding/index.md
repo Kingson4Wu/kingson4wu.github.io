@@ -11,9 +11,6 @@ Tags: AI, LLM, Deep Learning
 
 ---
 
->> 以下内容由AI辅助生成
-
-
 在前文中，我们已经看到：在 Skip-gram + Negative Sampling 中，embedding 是通过一个明确的预测任务（预测上下文）和损失函数，从语料中逐步学习得到的。那么在 Transformer 模型中，embedding 是否还是同一件事？是否还在「学习词向量」？如果是，学习机制发生了哪些变化？
 
 要回答这些问题，**关键不是看模型结构有多复杂，而是看 embedding 在优化目标中处于什么位置、承担什么功能**。

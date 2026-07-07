@@ -7,12 +7,9 @@ Type: post
 Date: 2026-01-30
 Tags: AI, LLM, Deep Learning, Math
 
-以下内容由AI辅助生成 一、问题背景：我们到底在担心什么？ 在 Transformer 的注意力机制中，有一个非常经典的公式： Attention(Q,K,V)=softmax(QK⊤dk)V\text{Attention}(Q,K,V) = \text{softmax}\left(\frac{QK^\top}{\sq...
+一、问题背景：我们到底在担心什么？ 在 Transformer 的注意力机制中，有一个非常经典的公式： Attention(Q,K,V)=softmax(QK⊤dk)V\text{Attention}(Q,K,V) = \text{softmax}\left(\frac{QK^\top}{\sqrt{d_k}}\rig...
 
 ---
-
->> 以下内容由AI辅助生成
-
 
 ## 一、问题背景：我们到底在担心什么？
 

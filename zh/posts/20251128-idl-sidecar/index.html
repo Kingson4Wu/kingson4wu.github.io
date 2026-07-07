@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>构建统一前后端（与服务间）RPC体系：从 IDL 设计到多协议适配与 Sidecar 部署的工程实践 | 拉巴力的纸皮箱</title>
-  <meta name="description" content="本文使用AI优化 在现代应用中，前后端与微服务之间的接口往往涉及多种语言、复杂的文档、重复的代码维护，以及永远难以对齐的接口变更。随着业务演进，系统间的交互方式不断增多：从浏览器到移动端、从 Python 到 Java、从 REST 到 gRPC，各种协议和框架的混用使接口治理逐渐成为开发效率的瓶颈——对接繁琐、体验不...">
+  <meta name="description" content="在现代应用中，前后端与微服务之间的接口往往涉及多种语言、复杂的文档、重复的代码维护，以及永远难以对齐的接口变更。随着业务演进，系统间的交互方式不断增多：从浏览器到移动端、从 Python 到 Java、从 REST 到 gRPC，各种协议和框架的混用使接口治理逐渐成为开发效率的瓶颈——对接繁琐、体验不佳、重复劳动多、沟...">
   <link rel="canonical" href="https://kingson4wu.github.io/zh/posts/20251128-idl-sidecar/">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="alternate" type="application/rss+xml" title="拉巴力的纸皮箱" href="/zh/feed.xml">
@@ -60,11 +60,6 @@
   </ul>
       </header>
       <div class="prose">
-<blockquote>
-<blockquote>
-<p>本文使用AI优化</p>
-</blockquote>
-</blockquote>
 <p>在现代应用中，前后端与微服务之间的接口往往涉及多种语言、复杂的文档、重复的代码维护，以及永远难以对齐的接口变更。随着业务演进，系统间的交互方式不断增多：从浏览器到移动端、从 Python 到 Java、从 REST 到 gRPC，各种协议和框架的混用使接口治理逐渐成为开发效率的瓶颈——对接繁琐、体验不佳、重复劳动多、沟通成本高，整体效率显著下降。</p>
 <p>为彻底解决这些痛点，尝试构建了一套基于 <strong>统一 IDL（Interface Definition Language）+ 自动代码生成 + 多协议适配（gRPC / gRPC-Web / REST）+ Sidecar 部署模式</strong> 的 RPC 体系。这套体系能够显著提升团队开发效率、降低沟通与维护成本、提升跨语言一致性，同时兼容现代前端与传统客户端。</p>
 <p>本文将从架构理念、工具选型、测试体系、部署方式到文档管理，全面展示如何落地一套实战可用的 RPC 体系。</p>

@@ -7,11 +7,9 @@ Type: post
 Date: 2025-12-24
 Tags: Python, Programming Languages
 
-以下内容有ChatGPT和Claude.ai辅助生成 系统梳理 Python C 扩展、动态库、ABI、多语言互操作及第三方库加载机制。 1️⃣ Python C 扩展基础 完整示例 c#include &lt;Python.h&gt; static PyObject* py_add(PyObject* self, P...
+系统梳理 Python C 扩展、动态库、ABI、多语言互操作及第三方库加载机制。 1️⃣ Python C 扩展基础 完整示例 c#include &lt;Python.h&gt; static PyObject* py_add(PyObject* self, PyObject* args) { int a, b;...
 
 ---
-
->> 以下内容有ChatGPT和Claude.ai辅助生成
 
 系统梳理 Python C 扩展、动态库、ABI、多语言互操作及第三方库加载机制。
 

@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>家庭宽带中的公网与内网 IP 分配机制解析 | 拉巴力的纸皮箱</title>
-  <meta name="description" content="以下内容由AI生成 在日常使用家庭宽带时，很多人会遇到“到底我家有没有独立公网 IP”的问题。这不仅关系到能否顺利访问外网，更影响到是否可以在家中搭建服务器、使用 P2P 应用等。本文将系统梳理家庭宽带 IP 的分配方式、运营商 NAT 的机制以及其对用户的实际影响。 1. 家庭宽带的几种典型 IP 分配方式 （1）独...">
+  <meta name="description" content="家庭宽带里经常会遇到一个问题：我家到底有没有独立公网 IP？ 这个问题会直接影响端口映射、P2P、家庭服务器、远程访问等场景。这里简单整理一下家庭宽带常见的 IP 分配方式，以及 CGNAT 对实际使用的影响。 1. 家庭宽带的几种典型 IP 分配方式 （1）独立公网 IP 家庭路由器的 WAN 口直接获取公网 IPv...">
   <link rel="canonical" href="https://kingson4wu.github.io/zh/posts/20250817-ip/">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="alternate" type="application/rss+xml" title="拉巴力的纸皮箱" href="/zh/feed.xml">
@@ -60,12 +60,8 @@
   </ul>
       </header>
       <div class="prose">
-<blockquote>
-<blockquote>
-<p>以下内容由AI生成</p>
-</blockquote>
-</blockquote>
-<p>在日常使用家庭宽带时，很多人会遇到“到底我家有没有独立公网 IP”的问题。这不仅关系到能否顺利访问外网，更影响到是否可以在家中搭建服务器、使用 P2P 应用等。本文将系统梳理家庭宽带 IP 的分配方式、运营商 NAT 的机制以及其对用户的实际影响。</p>
+<p>家庭宽带里经常会遇到一个问题：我家到底有没有独立公网 IP？</p>
+<p>这个问题会直接影响端口映射、P2P、家庭服务器、远程访问等场景。这里简单整理一下家庭宽带常见的 IP 分配方式，以及 CGNAT 对实际使用的影响。</p>
 <hr>
 <h2 id="1-ip" data-heading-text="1. 家庭宽带的几种典型 IP 分配方式">1. 家庭宽带的几种典型 IP 分配方式</h2>
 <h3 id="1-ip-2" data-heading-text="（1）独立公网 IP">（1）独立公网 IP</h3>
@@ -168,7 +164,7 @@ WAN: 100.64.1.2  ← 运营商私有地址
 <li><strong>核心差异</strong>：家庭内网数量不受限制，但共享公网时外网访问受阻。</li>
 </ol>
 <hr>
-<p>📌 <strong>一句话总结</strong>：
+<p><strong>一句话总结</strong>：
 大多数家庭宽带并没有独立公网 IPv4，而是通过 CGNAT 与他人共享出口。要想获得真正独立的公网地址，需要向运营商申请“公网 IP 服务”或使用企业宽带。</p>
 
       </div>

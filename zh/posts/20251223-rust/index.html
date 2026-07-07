@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Rust 为什么需要显式生命周期标注：从调用方契约到设计本质 | 拉巴力的纸皮箱</title>
-  <meta name="description" content="以下内容有ChatGPT和Claude.ai辅助生成 在学习 Rust 生命周期（lifetime）时，一个常见且合理的疑问是： 编译器既然能在生命周期标注错误时发现问题， 为什么不能直接自动推导出正确的生命周期声明？ 如果仅从“语法规则”或“编译器能力”层面回答这个问题，很容易得出“Rust 设计复杂”“生命周期是人...">
+  <meta name="description" content="在学习 Rust 生命周期（lifetime）时，一个常见且合理的疑问是： 编译器既然能在生命周期标注错误时发现问题， 为什么不能直接自动推导出正确的生命周期声明？ 如果仅从“语法规则”或“编译器能力”层面回答这个问题，很容易得出“Rust 设计复杂”“生命周期是人为负担”这样的结论。但这实际上是从结果反推原因，忽略了...">
   <link rel="canonical" href="https://kingson4wu.github.io/zh/posts/20251223-rust/">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="alternate" type="application/rss+xml" title="拉巴力的纸皮箱" href="/zh/feed.xml">
@@ -61,11 +61,6 @@
   </ul>
       </header>
       <div class="prose">
-<blockquote>
-<blockquote>
-<p>以下内容有ChatGPT和Claude.ai辅助生成</p>
-</blockquote>
-</blockquote>
 <p>在学习 Rust 生命周期（lifetime）时，一个常见且合理的疑问是：</p>
 <blockquote>
 <p>编译器既然能在生命周期标注错误时发现问题，

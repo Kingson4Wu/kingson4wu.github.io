@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>VPN 与正向代理的原理与差异分析 | 拉巴力的纸皮箱</title>
-  <meta name="description" content="以下内容由AI生成，本人审阅 一、VPN 的基本原理 **VPN（Virtual Private Network，虚拟专用网络）**的核心思想是在 公网上（Internet） 建立一条 加密隧道，使用户的数据能够像在同一局域网中一样安全传输。其关键机制包括： 隧道封装（Tunneling） 将原始 IP 包或 TCP/...">
+  <meta name="description" content="一、VPN 的基本原理 **VPN（Virtual Private Network，虚拟专用网络）**的核心思想是在 公网上（Internet） 建立一条 加密隧道，使用户的数据能够像在同一局域网中一样安全传输。其关键机制包括： 隧道封装（Tunneling） 将原始 IP 包或 TCP/UDP 流量再次封装后发送至...">
   <link rel="canonical" href="https://kingson4wu.github.io/zh/posts/20250817-vpn/">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="alternate" type="application/rss+xml" title="拉巴力的纸皮箱" href="/zh/feed.xml">
@@ -60,11 +60,6 @@
   </ul>
       </header>
       <div class="prose">
-<blockquote>
-<blockquote>
-<p>以下内容由AI生成，本人审阅</p>
-</blockquote>
-</blockquote>
 <h2 id="vpn" data-heading-text="一、VPN 的基本原理">一、VPN 的基本原理</h2>
 <p>**VPN（Virtual Private Network，虚拟专用网络）**的核心思想是在 <strong>公网上（Internet）</strong> 建立一条 <strong>加密隧道</strong>，使用户的数据能够像在同一局域网中一样安全传输。其关键机制包括：</p>
 <ol>
@@ -126,7 +121,7 @@
 </ul>
 </li>
 </ol>
-<p>✅ 准确的表述是：</p>
+<p>准确的表述是：</p>
 <blockquote>
 <p><strong>VPN 是一种在网络层实现的“全流量加密隧道代理”；而机场协议（如 Shadowsocks/V2Ray/Trojan）是工作在传输层或应用层的“加密正向代理”。</strong></p>
 </blockquote>
@@ -180,7 +175,7 @@
 <li><strong>共同点</strong>：都加密、都代理、都能突破限制。</li>
 <li><strong>差异点</strong>：VPN 更底层、统一接管；机场代理更灵活、支持分流。</li>
 </ul>
-<p>👉 一句话概括：
+<p>一句话概括：
 <strong>VPN 与机场协议都是“加密正向代理”，区别只在于工作层级和使用方式。</strong></p>
 
       </div>

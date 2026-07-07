@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Seata 与分布式事务的本质解析 | 拉巴力的纸皮箱</title>
-  <meta name="description" content="以前总结过分布式事务，最近又看到有人提Seata，让AI协助在简要总结补充一下 旧文：分布式事务简要总结 Seata 与分布式事务的本质解析 分布式事务一直是微服务架构中最棘手的问题之一：如何保证跨服务、跨库操作的一致性，又不让业务代码充斥各种回滚和补偿逻辑？Seata 的出现，就是为了解决这个问题。 本文以 Seat...">
+  <meta name="description" content="旧文：分布式事务简要总结 Seata 与分布式事务的本质解析 分布式事务一直是微服务架构中最棘手的问题之一：如何保证跨服务、跨库操作的一致性，又不让业务代码充斥各种回滚和补偿逻辑？Seata 的出现，就是为了解决这个问题。 本文以 Seata 为例，梳理分布式事务的核心思想、适用边界和设计要点。 1. 分布式事务的本质...">
   <link rel="canonical" href="https://kingson4wu.github.io/zh/posts/20250917-seata/">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="alternate" type="application/rss+xml" title="拉巴力的纸皮箱" href="/zh/feed.xml">
@@ -60,11 +60,6 @@
   </ul>
       </header>
       <div class="prose">
-<blockquote>
-<blockquote>
-<p>以前总结过分布式事务，最近又看到有人提Seata，让AI协助在简要总结补充一下</p>
-</blockquote>
-</blockquote>
 <blockquote>
 <blockquote>
 <p>旧文：<a href="https://kingson4wu.github.io/2020/09/12/20200912-fen-bu-shi-shi-wu-jian-yao-zong-jie/">分布式事务简要总结</a></p>

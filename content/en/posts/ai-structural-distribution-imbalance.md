@@ -37,7 +37,7 @@ AI behaves more like a "super software": serving one more user adds almost nothi
 
 **Third: the "one-person company" narrative is popular but doesn't solve the core problem.**
 
-One person plus AI can theoretically do what a ten-person team used to do. This story circulates widely. But the implicit assumptions are rarely examined: can you find customers? When everyone can be a "one-person company," the nature of competition quietly shifts from capability to visibility.channels, trust, and attention become the real scarce resources — and these are structurally concentrated. Distribution power sits with platforms. Attention is algorithmically allocated. Ordinary people have a hard time getting in.
+One person plus AI can theoretically do what a ten-person team used to do. This story circulates widely. But the implicit assumptions are rarely examined: can you find customers? When everyone can be a "one-person company," the nature of competition quietly shifts from capability to visibility. Channels, trust, and attention become the real scarce resources — and these are structurally concentrated. Distribution power sits with platforms. Attention is algorithmically allocated. Ordinary people have a hard time getting in.
 
 ## The Fracture Between Efficiency and Distribution
 

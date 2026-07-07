@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>从 0 理解梯度消失与梯度爆炸 | 拉巴力的纸皮箱</title>
-  <meta name="description" content="以下内容由AI辅助生成 一、训练神经网络到底在做什么 训练神经网络,本质只有一件事: 不断微调参数,使模型输出更接近真实目标。 参数该往哪个方向调、调多大力度,完全由梯度决定。 如果梯度能够稳定传播,模型就能学习; 如果梯度在传播过程中衰减或失控,训练就会失败。 二、什么是梯度(不涉及神经网络) 1. 变化率的直觉理解...">
+  <meta name="description" content="一、训练神经网络到底在做什么 训练神经网络,本质只有一件事: 不断微调参数,使模型输出更接近真实目标。 参数该往哪个方向调、调多大力度,完全由梯度决定。 如果梯度能够稳定传播,模型就能学习; 如果梯度在传播过程中衰减或失控,训练就会失败。 二、什么是梯度(不涉及神经网络) 1. 变化率的直觉理解 考虑函数: y=x2y...">
   <link rel="canonical" href="https://kingson4wu.github.io/zh/posts/20260130-0/">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="alternate" type="application/rss+xml" title="拉巴力的纸皮箱" href="/zh/feed.xml">
@@ -63,11 +63,6 @@
   </ul>
       </header>
       <div class="prose">
-<blockquote>
-<blockquote>
-<p>以下内容由AI辅助生成</p>
-</blockquote>
-</blockquote>
 <h2 id="section-1" data-heading-text="一、训练神经网络到底在做什么">一、训练神经网络到底在做什么</h2>
 <p>训练神经网络,本质只有一件事:</p>
 <p><strong>不断微调参数,使模型输出更接近真实目标。</strong></p>

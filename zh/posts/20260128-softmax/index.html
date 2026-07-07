@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Softmax：从直觉到本质 | 拉巴力的纸皮箱</title>
-  <meta name="description" content="以下内容由AI辅助生成 Softmax 是多分类任务中最常见的输出层函数。它的任务表面上是“把 logits 变成概率”，但本质是：将一组可加的分数转换为可比较、可优化的相对强度，并与极大似然/交叉熵无缝对接，同时保证数值稳定和梯度友好。 1. 问题设定：从 logits 到概率 1.1 什么是 logits？ 神经网...">
+  <meta name="description" content="Softmax 是多分类任务中最常见的输出层函数。它的任务表面上是“把 logits 变成概率”，但本质是：将一组可加的分数转换为可比较、可优化的相对强度，并与极大似然/交叉熵无缝对接，同时保证数值稳定和梯度友好。 1. 问题设定：从 logits 到概率 1.1 什么是 logits？ 神经网络最后一层通常输出一组实...">
   <link rel="canonical" href="https://kingson4wu.github.io/zh/posts/20260128-softmax/">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="alternate" type="application/rss+xml" title="拉巴力的纸皮箱" href="/zh/feed.xml">
@@ -63,11 +63,6 @@
   </ul>
       </header>
       <div class="prose">
-<blockquote>
-<blockquote>
-<p>以下内容由AI辅助生成</p>
-</blockquote>
-</blockquote>
 <p>Softmax 是多分类任务中最常见的输出层函数。它的任务表面上是“把 logits 变成概率”，但本质是：<strong>将一组可加的分数转换为可比较、可优化的相对强度</strong>，并与极大似然/交叉熵无缝对接，同时保证数值稳定和梯度友好。</p>
 <hr>
 <h2 id="1-logits" data-heading-text="1. 问题设定：从 logits 到概率">1. 问题设定：从 logits 到概率</h2>

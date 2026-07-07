@@ -7,11 +7,9 @@ Type: post
 Date: 2025-12-23
 Tags: Python, Programming Languages
 
-以下内容有ChatGPT和Claude.ai辅助生成 适用读者 本指南适合： 从其他语言转向 Python 的开发者 对 Python 依赖管理困惑的初中级开发者 需要在团队中统一工具链的技术负责人 希望了解现代 Python 工具生态的从业者 一、核心概念 1.1 Python 包管理的本质特点 Python 与其他...
+适用读者 本指南适合： 从其他语言转向 Python 的开发者 对 Python 依赖管理困惑的初中级开发者 需要在团队中统一工具链的技术负责人 希望了解现代 Python 工具生态的从业者 一、核心概念 1.1 Python 包管理的本质特点 Python 与其他语言（Java/Go）的根本差异： 运行时加载：Pyt...
 
 ---
-
->> 以下内容有ChatGPT和Claude.ai辅助生成
 
 ## 适用读者
 

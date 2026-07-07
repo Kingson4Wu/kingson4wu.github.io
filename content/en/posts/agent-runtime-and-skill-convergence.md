@@ -34,7 +34,7 @@ It takes in text, generates text. That's the whole scope. It doesn't manage stat
 
 > **An LLM alone does not constitute a runnable system.**
 
-## Agent: Orchestrator, Not Intelligence本体
+## Agent: Orchestrator, Not Intelligence Itself
 
 In engineering terms, an Agent is more accurately described as:
 

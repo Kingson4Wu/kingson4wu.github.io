@@ -11,9 +11,6 @@ Tags: AI, LLM, Deep Learning
 
 ---
 
->> 以下内容由AI辅助生成
-
-
 ## 引言：三个核心抽象
 
 在理解 Transformer 之前,可以先记住三句话：

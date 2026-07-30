@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700" role="img" aria-labelledby="title desc">
+  <title id="title">MoE sparse activation</title>
+  <desc id="desc">A token hidden state is routed to a small number of experts, while inactive experts are skipped.</desc>
+  <rect width="1200" height="700" fill="#f8fafc"/>
+  <rect x="64" y="58" width="1072" height="584" rx="24" fill="#ffffff" stroke="#d8dee9" stroke-width="2"/>
+  <text x="600" y="118" text-anchor="middle" font-family="Arial, sans-serif" font-size="32" font-weight="700" fill="#18212f">Sparse Activation in MoE</text>
+
+  <rect x="118" y="280" width="210" height="72" rx="18" fill="#edf2f7" stroke="#aab4c3" stroke-width="2"/>
+  <text x="223" y="324" text-anchor="middle" font-family="Arial, sans-serif" font-size="21" font-weight="700" fill="#253044">Token State</text>
+
+  <path d="M328 316 H430" stroke="#8a94a6" stroke-width="4" stroke-linecap="round"/>
+  <path d="M416 298 L440 316 L416 334" fill="none" stroke="#8a94a6" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <rect x="440" y="250" width="220" height="132" rx="20" fill="#e8f2ff" stroke="#6b9bd8" stroke-width="2"/>
+  <text x="550" y="302" text-anchor="middle" font-family="Arial, sans-serif" font-size="27" font-weight="700" fill="#1f4f82">Router</text>
+  <text x="550" y="338" text-anchor="middle" font-family="Arial, sans-serif" font-size="17" fill="#365f86">Linear + Softmax + Top-K</text>
+
+  <path d="M660 316 H760" stroke="#8a94a6" stroke-width="4" stroke-linecap="round"/>
+  <path d="M746 298 L770 316 L746 334" fill="none" stroke="#8a94a6" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <rect x="790" y="155" width="260" height="58" rx="14" fill="#e9f7ef" stroke="#5ca879" stroke-width="2"/>
+  <text x="920" y="191" text-anchor="middle" font-family="Arial, sans-serif" font-size="19" font-weight="700" fill="#25643d">Expert 1 active</text>
+
+  <rect x="790" y="238" width="260" height="58" rx="14" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="2" stroke-dasharray="8 8"/>
+  <text x="920" y="274" text-anchor="middle" font-family="Arial, sans-serif" font-size="19" fill="#64748b">Expert 2 skipped</text>
+
+  <rect x="790" y="321" width="260" height="58" rx="14" fill="#e9f7ef" stroke="#5ca879" stroke-width="2"/>
+  <text x="920" y="357" text-anchor="middle" font-family="Arial, sans-serif" font-size="19" font-weight="700" fill="#25643d">Expert 3 active</text>
+
+  <rect x="790" y="404" width="260" height="58" rx="14" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="2" stroke-dasharray="8 8"/>
+  <text x="920" y="440" text-anchor="middle" font-family="Arial, sans-serif" font-size="19" fill="#64748b">Expert 4 skipped</text>
+
+  <path d="M770 316 C730 205, 760 184, 790 184" stroke="#5ca879" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <path d="M770 316 C750 350, 760 350, 790 350" stroke="#5ca879" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <path d="M770 316 C750 267, 760 267, 790 267" stroke="#cbd5e1" stroke-width="3" fill="none" stroke-linecap="round" stroke-dasharray="7 7"/>
+  <path d="M770 316 C735 435, 760 433, 790 433" stroke="#cbd5e1" stroke-width="3" fill="none" stroke-linecap="round" stroke-dasharray="7 7"/>
+
+  <rect x="374" y="505" width="452" height="58" rx="29" fill="#fff4df" stroke="#d69d42" stroke-width="2"/>
+  <text x="600" y="542" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#895d16">Large capacity, smaller per-token compute</text>
+</svg>

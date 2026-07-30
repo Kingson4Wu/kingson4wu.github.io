@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" role="img" aria-labelledby="title desc">
+  <title id="title">Hybrid retrieval flow</title>
+  <desc id="desc">A user query is sent to dense retrieval and sparse retrieval, then the scores are fused before top documents are sent to the LLM.</desc>
+  <rect width="1200" height="720" fill="#f8fafc"/>
+  <rect x="64" y="62" width="1072" height="596" rx="24" fill="#ffffff" stroke="#d8dee9" stroke-width="2"/>
+  <text x="600" y="122" text-anchor="middle" font-family="Arial, sans-serif" font-size="32" font-weight="700" fill="#18212f">Hybrid Retrieval in RAG</text>
+
+  <rect x="450" y="170" width="300" height="62" rx="16" fill="#edf2f7" stroke="#aab4c3" stroke-width="2"/>
+  <text x="600" y="209" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#253044">User Query</text>
+
+  <path d="M600 232 V282" stroke="#8a94a6" stroke-width="3" stroke-linecap="round"/>
+  <path d="M600 282 H310 V322" stroke="#8a94a6" stroke-width="3" stroke-linecap="round" fill="none"/>
+  <path d="M600 282 H890 V322" stroke="#8a94a6" stroke-width="3" stroke-linecap="round" fill="none"/>
+
+  <rect x="150" y="322" width="320" height="160" rx="18" fill="#e8f2ff" stroke="#6b9bd8" stroke-width="2"/>
+  <text x="310" y="372" text-anchor="middle" font-family="Arial, sans-serif" font-size="25" font-weight="700" fill="#1f4f82">Dense Retrieval</text>
+  <text x="310" y="410" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" fill="#365f86">embedding similarity</text>
+  <text x="310" y="442" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" fill="#365f86">find semantic matches</text>
+
+  <rect x="730" y="322" width="320" height="160" rx="18" fill="#fff4df" stroke="#d69d42" stroke-width="2"/>
+  <text x="890" y="372" text-anchor="middle" font-family="Arial, sans-serif" font-size="25" font-weight="700" fill="#895d16">Sparse Retrieval</text>
+  <text x="890" y="410" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" fill="#7b5a24">BM25 / neural sparse</text>
+  <text x="890" y="442" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" fill="#7b5a24">keep exact entities</text>
+
+  <path d="M310 482 V532 H520" stroke="#8a94a6" stroke-width="3" stroke-linecap="round" fill="none"/>
+  <path d="M890 482 V532 H680" stroke="#8a94a6" stroke-width="3" stroke-linecap="round" fill="none"/>
+
+  <rect x="520" y="502" width="160" height="62" rx="16" fill="#e9f7ef" stroke="#5ca879" stroke-width="2"/>
+  <text x="600" y="541" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#25643d">Score Fusion</text>
+
+  <path d="M600 564 V602" stroke="#8a94a6" stroke-width="3" stroke-linecap="round"/>
+  <path d="M585 588 L600 606 L615 588" fill="none" stroke="#8a94a6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <rect x="420" y="606" width="360" height="52" rx="16" fill="#f1f5f9" stroke="#aab4c3" stroke-width="2"/>
+  <text x="600" y="640" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#253044">Top-K Documents -> LLM</text>
+</svg>

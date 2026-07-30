@@ -15,8 +15,10 @@ source:
 >> 帮助朋友的公司搭建内部知识库的原型
 >> 简单记录一下相关技术
 
-
-![](/assets/zh/posts/20250226/dify.drawio.png)
+<figure>
+  <img src="/assets/zh/posts/20250226/dify.drawio.png" alt="dify">
+  <figcaption>图：dify</figcaption>
+</figure>
 
 + 目前看权限管理都很不精细，只在固定角色上进行控制，用于内部团队管理仍不是很方便
 + 文档嵌入效果一般，可能要研究里面一些复杂的选项用法，或者寻求其他方案

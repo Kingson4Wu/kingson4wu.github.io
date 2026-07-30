@@ -17,7 +17,10 @@ source:
 
 + 公共嵌入式的sdk，其实有点类似一个轻量级的网关，sidecar，localproxy
 
-![](/assets/zh/posts/20220322/common.png)
+<figure>
+  <img src="/assets/zh/posts/20220322/common.png" alt="common">
+  <figcaption>图：common</figcaption>
+</figure>
 
 + 为什么不使用API网关？
 	1. 有一定的机器和维护成本

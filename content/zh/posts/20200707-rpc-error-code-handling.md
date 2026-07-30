@@ -11,7 +11,11 @@ source:
   repo: zh
   path: source/_posts/20200707-如何处理RPC返回的错误码？.md
 ---
-![](/assets/zh/shared/photo/Zlatan.jpeg)
+
+<figure>
+  <img src="/assets/zh/shared/photo/Zlatan.jpeg" alt="Zlatan">
+  <figcaption>图：Zlatan</figcaption>
+</figure>
 
 #### RPC调用的返回结果
 

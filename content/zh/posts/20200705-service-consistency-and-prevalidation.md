@@ -10,7 +10,11 @@ source:
   repo: zh
   path: source/_posts/20200705-关于服务间一致性和前置校验的思考.md
 ---
-![](/assets/zh/shared/photo/Zidane.jpeg)
+
+<figure>
+  <img src="/assets/zh/shared/photo/Zidane.jpeg" alt="Zidane">
+  <figcaption>图：Zidane</figcaption>
+</figure>
 
 每个服务都有相应的前置校验，有些前置校验逻辑不统一，就会导致服务间数据的不一致。比如风控拦截，服务A未拦截，而服务B却拦截了，从而导致不一致。
 

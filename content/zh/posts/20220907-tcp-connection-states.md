@@ -10,10 +10,16 @@ source:
   repo: zh
   path: source/_posts/20220907-TCP连接中的各种状态.md
 ---
-![](/assets/zh/posts/20220907/TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B.png)
 
-![](/assets/zh/posts/20220907/TCP%E7%8A%B6%E6%80%81%E5%8F%98%E5%8C%96.png)
+<figure>
+  <img src="/assets/zh/posts/20220907/TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B.png" alt="TCP三次握手四次挥手">
+  <figcaption>图：TCP三次握手四次挥手</figcaption>
+</figure>
 
+<figure>
+  <img src="/assets/zh/posts/20220907/TCP%E7%8A%B6%E6%80%81%E5%8F%98%E5%8C%96.png" alt="TCP状态变化">
+  <figcaption>图：TCP状态变化</figcaption>
+</figure>
 
 ## 状态说明
 + CLOSED：无连接是活动的或正在进行

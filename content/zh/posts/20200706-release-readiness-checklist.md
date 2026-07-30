@@ -11,7 +11,11 @@ source:
   repo: zh
   path: source/_posts/20200706-上线需要做哪些准备？.md
 ---
-![](/assets/zh/shared/photo/Carlos.jpg)
+
+<figure>
+  <img src="/assets/zh/shared/photo/Carlos.jpg" alt="Carlos">
+  <figcaption>图：Carlos</figcaption>
+</figure>
 
 一般常规的上线，需要做哪些准备，确保不会因为遗漏这种低级错误导致线上问题？
 

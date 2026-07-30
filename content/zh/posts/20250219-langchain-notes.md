@@ -14,8 +14,10 @@ source:
 ---
 >> 基于书籍简单记录要点
 
-![](/assets/zh/posts/20250219/LangChain.png)
-
+<figure>
+  <img src="/assets/zh/posts/20250219/LangChain.png" alt="LangChain">
+  <figcaption>图：LangChain</figcaption>
+</figure>
 
 # LangChain 提供了多种模板供选择
 

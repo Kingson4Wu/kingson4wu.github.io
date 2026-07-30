@@ -11,7 +11,11 @@ source:
   repo: zh
   path: source/_posts/20220705-Java跨平台能完全做到一次编写到处运行？.md
 ---
-![](/assets/zh/posts/20220705/lionel-messi.jpg)
+
+<figure>
+  <img src="/assets/zh/posts/20220705/lionel-messi.jpg" alt="lionel messi">
+  <figcaption>图：lionel messi</figcaption>
+</figure>
 
 + 最近定位一个问题，花了不少时间。事后回想起来挺低级的，在此记录一下。
 

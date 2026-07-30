@@ -14,8 +14,25 @@ source:
 ---
 >> 基于书籍简单记录要点
 
+<figure>
+  <img src="/assets/zh/posts/20250220/RAG-1.png" alt="RAG 应用开发要点图第 1 部分">
+  <figcaption>图：RAG 应用开发要点第 1 部分</figcaption>
+</figure>
 
-![](/assets/zh/posts/20250220/RAG.png)
+<figure>
+  <img src="/assets/zh/posts/20250220/RAG-2.png" alt="RAG 应用开发要点图第 2 部分">
+  <figcaption>图：RAG 应用开发要点第 2 部分</figcaption>
+</figure>
+
+<figure>
+  <img src="/assets/zh/posts/20250220/RAG-3.png" alt="RAG 应用开发要点图第 3 部分">
+  <figcaption>图：RAG 应用开发要点第 3 部分</figcaption>
+</figure>
+
+<figure>
+  <img src="/assets/zh/posts/20250220/RAG-4.png" alt="RAG 应用开发要点图第 4 部分">
+  <figcaption>图：RAG 应用开发要点第 4 部分</figcaption>
+</figure>
 
 ---
 

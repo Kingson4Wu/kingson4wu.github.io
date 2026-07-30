@@ -49,7 +49,10 @@ source:
 
 ## 服务架构
 
-![](/assets/zh/posts/20220601/golang_project_3.png)
+<figure>
+  <img src="/assets/zh/posts/20220601/golang_project_3.png" alt="golang project 3">
+  <figcaption>图：golang project 3</figcaption>
+</figure>
 
 ## 外网环境下如何进行服务部署更新
 + 平常在家庭网络下，开发Go程序，本地编译打包成二进制文件，上传到服务器更新程序即可
@@ -57,7 +60,10 @@ source:
 
 ## 部署流程
 
-![](/assets/zh/posts/20220601/golang_deploy_2.png)
+<figure>
+  <img src="/assets/zh/posts/20220601/golang_deploy_2.png" alt="golang deploy 2">
+  <figcaption>图：golang deploy 2</figcaption>
+</figure>
 
 ## 结论总结
 + 家庭网络 + 小型服务器 + Go程序 + ngrok + 微信公众号 + 邮箱通知 + 花生壳

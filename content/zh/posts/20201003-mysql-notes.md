@@ -11,7 +11,11 @@ source:
   path: source/_posts/20201003-MySQL笔记.md
 ---
 ## 思维导图
-![](/assets/zh/posts/20201003/MySQL.png)
+
+<figure>
+  <img src="/assets/zh/posts/20201003/MySQL.png" alt="MySQL">
+  <figcaption>图：MySQL</figcaption>
+</figure>
 
 ## InnoDB 事务隔离级别
 

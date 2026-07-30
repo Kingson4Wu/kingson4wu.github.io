@@ -12,7 +12,11 @@ source:
 ---
 >> 以前刚毕业的时候，进入一个组，叫中间层，那时候还懵懵懂懂不知道想表达啥意思
 
-![](/assets/zh/posts/20240328/%E8%81%9A%E5%90%88%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84.jpeg)
+<figure>
+  <img src="/assets/zh/posts/20240328/%E8%81%9A%E5%90%88%E6%9C%8D%E5%8A%A1%E6%9E%B6%E6%9E%84.jpeg" alt="聚合服务架构">
+  <figcaption>图：聚合服务架构</figcaption>
+</figure>
+
 + 图来源网上，已未知出处
 
 

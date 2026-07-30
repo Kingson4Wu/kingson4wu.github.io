@@ -10,7 +10,11 @@ source:
   repo: zh
   path: source/_posts/20221118-技术选型要注意什么.md
 ---
-![](/assets/zh/posts/20221118/messi3.png)
+
+<figure>
+  <img src="/assets/zh/posts/20221118/messi3.png" alt="messi3">
+  <figcaption>图：messi3</figcaption>
+</figure>
 
 + 充分了解才能用，基本了解，大局实现，
 + 充分测试，压测分析profile，

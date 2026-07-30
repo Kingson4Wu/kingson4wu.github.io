@@ -23,4 +23,7 @@ source:
 
 + 项目地址：https://github.com/Kingson4Wu/magic-converter
 
-![](/assets/zh/posts/20241129/Windsurf.jpeg)
+<figure>
+  <img src="/assets/zh/posts/20241129/Windsurf.jpeg" alt="Windsurf">
+  <figcaption>图：Windsurf</figcaption>
+</figure>

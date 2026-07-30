@@ -16,7 +16,10 @@ source:
 
 ## UML
 
-![](/assets/zh/posts/20210730/UML%E5%88%86%E7%B1%BB.png)
+<figure>
+  <img src="/assets/zh/posts/20210730/UML%E5%88%86%E7%B1%BB.png" alt="UML分类">
+  <figcaption>图：UML分类</figcaption>
+</figure>
 
 + 基本上大多情况，类图、时序图、活动图、状态图 已经够用。
 
@@ -58,7 +61,10 @@ source:
 
 + 架构图是为了抽象地表示软件系统的整体轮廓和各个组件之间的相互关系和约束边界，以及软件系统的物理部署和软件系统的演进方向的整体视图。
 
-![](/assets/zh/posts/20210730/%E6%9E%B6%E6%9E%84%E5%9B%BE.png)
+<figure>
+  <img src="/assets/zh/posts/20210730/%E6%9E%B6%E6%9E%84%E5%9B%BE.png" alt="架构图">
+  <figcaption>图：架构图</figcaption>
+</figure>
 
 ### 业务架构
 

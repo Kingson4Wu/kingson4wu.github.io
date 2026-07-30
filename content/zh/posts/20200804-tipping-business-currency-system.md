@@ -16,7 +16,10 @@ source:
 
 ### 设计概要
 
-![](/assets/zh/posts/20200804/%E9%87%91%E9%92%B1%E6%9C%8D%E5%8A%A1%E4%BD%93%E7%B3%BB.png)
+<figure>
+  <img src="/assets/zh/posts/20200804/%E9%87%91%E9%92%B1%E6%9C%8D%E5%8A%A1%E4%BD%93%E7%B3%BB.png" alt="金钱服务体系">
+  <figcaption>图：金钱服务体系</figcaption>
+</figure>
 
 #### 一、用户货币类型组成
 
@@ -45,7 +48,10 @@ source:
 2. 延迟消费(比如申请上麦)
 	- 先对用户的“金币”进行冻结，根据最终的结果，对用户冻结的金币进行结算或退回；用户的消费时间为实际结算的时间（不是冻结时的时间）。
 
-![](/assets/zh/posts/20200804/%E9%87%91%E9%92%B1%E5%86%BB%E7%BB%93%E8%B4%A6%E6%88%B7%E8%AE%BE%E8%AE%A1.png)
+<figure>
+  <img src="/assets/zh/posts/20200804/%E9%87%91%E9%92%B1%E5%86%BB%E7%BB%93%E8%B4%A6%E6%88%B7%E8%AE%BE%E8%AE%A1.png" alt="金钱冻结账户设计">
+  <figcaption>图：金钱冻结账户设计</figcaption>
+</figure>
 
 + 冻结&结算 和 消费&退款 在技术实现设计上的差异：
 	1. 前者两次RPC，后者一次RPC

@@ -12,7 +12,11 @@ source:
 ---
 先抛出以下问题：
 把MHA-1集群的Database-C 迁到 MHA-2 集群中，有没有简单高效的方案?
-![](/assets/zh/posts/20220114/migration.png)
+
+<figure>
+  <img src="/assets/zh/posts/20220114/migration.png" alt="migration">
+  <figcaption>图：migration</figcaption>
+</figure>
 
 ---
 

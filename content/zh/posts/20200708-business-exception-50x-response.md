@@ -10,7 +10,11 @@ source:
   repo: zh
   path: source/_posts/20200708-程序异常时能返回50x吗？.md
 ---
-![](/assets/zh/shared/photo/Gerrard_2.jpeg)
+
+<figure>
+  <img src="/assets/zh/shared/photo/Gerrard_2.jpeg" alt="Gerrard 2">
+  <figcaption>图：Gerrard 2</figcaption>
+</figure>
 
 ### 问题描述
 

@@ -15,7 +15,10 @@ source:
 
 Java 11 是 Java 8 之后的首个 LTS 版本（Long-term support 长期支持版本），所以有不少开发者表示会选择升级至 Java 11。
 
-![](/assets/zh/posts/20220208/java11.png)
+<figure>
+  <img src="/assets/zh/posts/20220208/java11.png" alt="java11">
+  <figcaption>图：java11</figcaption>
+</figure>
 
 1、目前相对来说，Java 8 太旧，Java 17 太新，Java11 刚刚好；
 2、支持以类路径方式运行，适合过渡阶段升级；
@@ -366,7 +369,10 @@ TODO
 
 ## 3、类加载器的加载流程
 
-![](/assets/zh/posts/20220208/java11_classloader.png)
+<figure>
+  <img src="/assets/zh/posts/20220208/java11_classloader.png" alt="java11 classloader">
+  <figcaption>图：java11 classloader</figcaption>
+</figure>
 
 ### 在JDK 9之前
 

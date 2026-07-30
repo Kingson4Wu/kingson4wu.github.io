@@ -11,7 +11,11 @@ source:
   repo: zh
   path: source/_posts/20230128-n年前的笔记备忘查阅.md
 ---
-![](/assets/zh/posts/20230128/messi_ronaldo.jpg)
+
+<figure>
+  <img src="/assets/zh/posts/20230128/messi_ronaldo.jpg" alt="messi ronaldo">
+  <figcaption>图：messi ronaldo</figcaption>
+</figure>
 
 + [正则表达式和Matcher,Pattern的简单用法](https://blog.csdn.net/kingson_wu/article/details/22665155)
 + [如何在同一台电脑使用不同的账号提交到同一个github仓库](https://blog.csdn.net/kingson_wu/article/details/38960559)

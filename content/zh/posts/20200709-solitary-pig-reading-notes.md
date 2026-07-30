@@ -11,7 +11,11 @@ source:
   repo: zh
   path: source/_posts/20200709-《一只特里独行的猪》摘要.md
 ---
-![](/assets/zh/shared/photo/Shanghai_Beach.png)
+
+<figure>
+  <img src="/assets/zh/shared/photo/Shanghai_Beach.png" alt="Shanghai Beach">
+  <figcaption>图：Shanghai Beach</figcaption>
+</figure>
 
 + 我的看法也许不值得别人重视，但对自己却很重要。这说明我有自己的好恶、爱憎等等。假如没有这些，做人也没什么味道。
 
@@ -39,6 +43,7 @@ source:
 
   那些永远不肯或不能越出自己限度的人是平庸的人。
 
-
-
-![](/assets/zh/posts/20200709/MSN.jpg)
+<figure>
+  <img src="/assets/zh/posts/20200709/MSN.jpg" alt="MSN">
+  <figcaption>图：MSN</figcaption>
+</figure>

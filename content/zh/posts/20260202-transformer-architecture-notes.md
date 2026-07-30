@@ -29,7 +29,10 @@ Transformer 的重要性不在于它「发明了什么全新的思想」,而在�
 
 ### 整体架构概览
 
-![](/assets/zh/posts/20260202-transformer/The_Transformer-model_architecture.png)
+<figure>
+  <img src="/assets/zh/posts/20260202-transformer/The_Transformer-model_architecture.png" alt="The Transformer model architecture">
+  <figcaption>图：The Transformer model architecture</figcaption>
+</figure>
 
 ```
 输入序列: [x₁, x₂, ..., xₙ]
@@ -163,7 +166,10 @@ Attention 的核心计算基于内容相似度,本身**不关心顺序**。如�
 
 ## 三、Attention：可学习的信息路由机制
 
-![](/assets/zh/posts/20260202-transformer/Scaled_Dot-Product_Attention.png)
+<figure>
+  <img src="/assets/zh/posts/20260202-transformer/Scaled_Dot-Product_Attention.png" alt="Scaled Dot Product Attention">
+  <figcaption>图：Scaled Dot Product Attention</figcaption>
+</figure>
 
 ### 1. Q / K / V 的定义
 
@@ -331,7 +337,10 @@ Decoder 中使用的 **Masked Self-Attention** 仍是 Self-Attention,只是增�
 
 ## 四、Multi-Head：并行的关系子空间
 
-![](/assets/zh/posts/20260202-transformer/Multi-Head_Attention.png)
+<figure>
+  <img src="/assets/zh/posts/20260202-transformer/Multi-Head_Attention.png" alt="Multi Head Attention">
+  <figcaption>图：Multi Head Attention</figcaption>
+</figure>
 
 ### 基本原理
 

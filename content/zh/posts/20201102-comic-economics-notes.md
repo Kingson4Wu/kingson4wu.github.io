@@ -11,7 +11,11 @@ source:
   repo: zh
   path: source/_posts/20201102-《半小时漫画经济学》-笔记.md
 ---
-![](/assets/zh/shared/photo/Shanghai_Beach_4.png)
+
+<figure>
+  <img src="/assets/zh/shared/photo/Shanghai_Beach_4.png" alt="Shanghai Beach 4">
+  <figcaption>图：Shanghai Beach 4</figcaption>
+</figure>
 
 ### 一、开篇：我们为什么要读经济学
 

@@ -15,8 +15,15 @@ source:
 >> 从AI得出的回答不一定正确或者只是现阶段暂时正确
 >> 增加部分个人理解
 
-![](/assets/zh/posts/20241226/LLM_position.png)
-![](/assets/zh/posts/20241226/LLM.png)
+<figure>
+  <img src="/assets/zh/posts/20241226/LLM_position.png" alt="LLM position">
+  <figcaption>图：LLM position</figcaption>
+</figure>
+
+<figure>
+  <img src="/assets/zh/posts/20241226/LLM.png" alt="LLM">
+  <figcaption>图：LLM</figcaption>
+</figure>
 
 ## LLM（Large Language Model）
 

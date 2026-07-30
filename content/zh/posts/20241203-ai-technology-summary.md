@@ -12,8 +12,10 @@ source:
 ---
 >> 持续补充...
 
-
-![](/assets/zh/posts/20241203/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD.jpg)
+<figure>
+  <img src="/assets/zh/posts/20241203/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD.jpg" alt="人工智能">
+  <figcaption>图：人工智能</figcaption>
+</figure>
 
 ## 人工智能的三种形态
 + 来自：[人工智能是什么？——人工智能图谱](https://zhuanlan.zhihu.com/p/64467701)

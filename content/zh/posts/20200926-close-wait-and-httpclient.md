@@ -10,8 +10,16 @@ source:
   repo: zh
   path: source/_posts/20200926-关于CLOSE-WAIT和HttpClient的使用.md
 ---
-![](/assets/zh/posts/20200926/TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B.png)
-![](/assets/zh/posts/20200926/tcp_normal_close.png)
+
+<figure>
+  <img src="/assets/zh/posts/20200926/TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B.png" alt="TCP三次握手四次挥手">
+  <figcaption>图：TCP三次握手四次挥手</figcaption>
+</figure>
+
+<figure>
+  <img src="/assets/zh/posts/20200926/tcp_normal_close.png" alt="tcp normal close">
+  <figcaption>图：tcp normal close</figcaption>
+</figure>
 
 ESTABLISHED 表示正在进行网络连接的数量 
 TIME_WAIT 表示表示等待系统主动关闭网络连接的数量 

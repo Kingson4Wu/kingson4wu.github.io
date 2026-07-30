@@ -12,8 +12,11 @@ source:
   repo: zh
   path: source/_posts/20200705-RPC可以和事务绑定吗.md
 ---
-![](/assets/zh/shared/photo/MSN.jpg)
 
+<figure>
+  <img src="/assets/zh/shared/photo/MSN.jpg" alt="MSN">
+  <figcaption>图：MSN</figcaption>
+</figure>
 
 在平常编码的时候，经常会看到很多人喜欢把一次RPC调用和数据库事务绑定在一起，RPC调用成功则提交事务，RPC调用失败或超时，则回滚事务。那么这样做是对的吗？
 

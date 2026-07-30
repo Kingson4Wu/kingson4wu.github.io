@@ -12,11 +12,30 @@ source:
 ---
 ## 整体架构
 
-![](/assets/zh/posts/20210713/Kubernetes%E7%9A%84%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%840.png)
-![](/assets/zh/posts/20210713/Kubernetes%E7%9A%84%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%841.jpg)
-![](/assets/zh/posts/20210713/Kubernetes%E7%9A%84%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%842.png)
-![](/assets/zh/posts/20210713/Kubernetes%E5%8F%8A%E5%AE%B9%E5%99%A8%E7%94%9F%E6%80%81%E7%B3%BB%E7%BB%9F.png)
-![](/assets/zh/posts/20210713/Kubernetes%E5%8F%8A%E5%AE%B9%E5%99%A8%E7%94%9F%E6%80%81%E7%B3%BB%E7%BB%9F2.png)
+<figure>
+  <img src="/assets/zh/posts/20210713/Kubernetes%E7%9A%84%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%840.png" alt="Kubernetes的整体架构0">
+  <figcaption>图：Kubernetes的整体架构0</figcaption>
+</figure>
+
+<figure>
+  <img src="/assets/zh/posts/20210713/Kubernetes%E7%9A%84%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%841.jpg" alt="Kubernetes的整体架构1">
+  <figcaption>图：Kubernetes的整体架构1</figcaption>
+</figure>
+
+<figure>
+  <img src="/assets/zh/posts/20210713/Kubernetes%E7%9A%84%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%842.png" alt="Kubernetes的整体架构2">
+  <figcaption>图：Kubernetes的整体架构2</figcaption>
+</figure>
+
+<figure>
+  <img src="/assets/zh/posts/20210713/Kubernetes%E5%8F%8A%E5%AE%B9%E5%99%A8%E7%94%9F%E6%80%81%E7%B3%BB%E7%BB%9F.png" alt="Kubernetes及容器生态系统">
+  <figcaption>图：Kubernetes及容器生态系统</figcaption>
+</figure>
+
+<figure>
+  <img src="/assets/zh/posts/20210713/Kubernetes%E5%8F%8A%E5%AE%B9%E5%99%A8%E7%94%9F%E6%80%81%E7%B3%BB%E7%BB%9F2.png" alt="Kubernetes及容器生态系统2">
+  <figcaption>图：Kubernetes及容器生态系统2</figcaption>
+</figure>
 
 + 图来源：[k8s-整体概述和架构](https://www.cnblogs.com/wwchihiro/p/9261607.html)
 
@@ -625,7 +644,10 @@ iptables与IPVS虽然都是基于Netfilter实现的，但因为定位不同，�
 + 与CRI之于Kubernetes的runtime类似，Kubernetes使用CNI作为Pod网络配置的标准接口。需要注意的是，CNI并不支持Docker网络，也就是说，docker0网桥会被大部分CNI插件“视而不见”。
 + 当然也有例外，Weave就是一个会处理docker0的CNI插件。
 
-![](/assets/zh/posts/20210713/Kubernetes%E7%BD%91%E7%BB%9C%E6%80%BB%E4%BD%93%E6%9E%B6%E6%9E%84.jpg)
+<figure>
+  <img src="/assets/zh/posts/20210713/Kubernetes%E7%BD%91%E7%BB%9C%E6%80%BB%E4%BD%93%E6%9E%B6%E6%9E%84.jpg" alt="Kubernetes网络总体架构">
+  <figcaption>图：Kubernetes网络总体架构</figcaption>
+</figure>
 
 + 图中描绘了当用户在Kubernetes里创建了一个Pod后，CRI和CNI协同创建Pod所属容器，并为它们初始化网络协议栈的全过程。具体过程如下：
 	1. 当用户在Kubernetes的Master里创建了一个Pod后，Kubelet观察到新Pod的创建，于是首先调用CRI（后面的runtime实现，比如dockershim、containerd等）创建Pod内的若干个容器。
@@ -638,10 +660,17 @@ iptables与IPVS虽然都是基于Netfilter实现的，但因为定位不同，�
 + 当Kubernetes调度Pod在某个节点上运行时，它会在该节点的Linux内核中为Pod创建network namespace，供Pod内所有运行的容器使用。从容器的角度看，Pod是具有一个网络接口的物理机器，Pod中的所有容器都会看到此网络接口。因此，每个容器通过localhost就能访问同一个Pod内的其他容器。
 + Kubernetes使用veth pair将容器与主机的网络协议栈连接起来，从而使数据包可以进出Pod。容器放在主机根network namespace中veth pair的一端连接到Linux网桥，可让同一节点上的各Pod之间相互通信。
 
-![](/assets/zh/posts/20210713/Kubernetes_bridge%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B.jpg)
+<figure>
+  <img src="/assets/zh/posts/20210713/Kubernetes_bridge%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B.jpg" alt="Kubernetes bridge网络模型">
+  <figcaption>图：Kubernetes bridge网络模型</figcaption>
+</figure>
+
 + 如果Kubernetes集群发生节点升级、修改Pod声明式配置、更新容器镜像或节点不可用，那么Kubernetes就会删除并重新创建Pod。在大部分情况下，Pod创建会导致容器IP发生变化。也有一些CNI插件提供Pod固定IP的解决方案，例如Weave、Calico等。
 
-![](/assets/zh/posts/20210713/CNI_Bridge.png)
+<figure>
+  <img src="/assets/zh/posts/20210713/CNI_Bridge.png" alt="CNI Bridge">
+  <figcaption>图：CNI Bridge</figcaption>
+</figure>
 
 + 使用新建的bridge网桥（CNI bridge）代替docker0网桥（docker0也可以继续保留，常规容器还是用docker0，而需要互通的容器可以借助于这个工具给docker容器新建虚拟网卡并绑定IP桥接到bridge）
 + bridge和主机eth0之间是也是利用veth pair这个技术。
@@ -766,8 +795,11 @@ iptables与IPVS虽然都是基于Netfilter实现的，但因为定位不同，�
 + 每一个新部署的容器都将使用这个Node（docker0的网桥IP）作为它的默认网关。而这些Node（类似路由器）都有其他docker0的路由信息，这样它们就能够相互连通了。
 + 首先，一个Pod内的所有容器都需要共用同一个IP地址，这就意味着一定要使用网络的容器映射模式（container模式）。然而，为什么不能只启动第1个Pod中的容器，而将第2个Pod中的容器关联到第1个容器呢？我们认为Kubernetes是从两方面来考虑这个问题的：首先，如果在Pod内有多个容器的话，则可能很难连接这些容器；其次，后面的容器还要依赖第1个被关联的容器，如果第2个容器关联到第1个容器，且第1个容器死掉的话，第2个容器也将死掉。启动一个基础容器（pause容器），然后将Pod内的所有容器都连接到它上面会更容易一些。
 + Kubernetes的kube-proxy作为一个全功能的代理服务器管理了两个独立的TCP连接：一个是从容器到kube-proxy：另一个是从kube-proxy到负载均衡的目标Pod。总结：跨node的pod到pod请求，经过自身node的kube-proxy（因为要通过etcd定位目标pod属于到哪个node），不经过目标node的kube-proxy，因为连接是直接通过目标node的eth0的（是否NAT方式，看k8s具体使用的组网实现）。
-![](/assets/zh/posts/20210713/%E8%B7%A8Node%E7%9A%84Pod%E9%80%9A%E4%BF%A1.jpg)
 
+<figure>
+  <img src="/assets/zh/posts/20210713/%E8%B7%A8Node%E7%9A%84Pod%E9%80%9A%E4%BF%A1.jpg" alt="跨Node的Pod通信">
+  <figcaption>图：跨Node的Pod通信</figcaption>
+</figure>
 
 ### 容器网络模型
 + 随着容器技术在企业生产系统中的逐步落地，用户对容器云的网络特性要求也越来越高。跨主机容器间的网络互通已经成为基本要求，更高的要求包括容器固定IP地址、一个容器多个IP地址、多个子网隔离、ACL控制策略、与SDN集成等。目前主流的容器网络模型主要有Docker公司提出的Container Network Model（CNM）模型和CoreOS公司提出的Container Network Interface（CNI）模型。
@@ -920,7 +952,12 @@ Istio提供了真正可供操作、非侵入式的方案，相对于Spring Cloud
 + 云原生（Cloud Native）概念是由Pivotal的Matt Stine在2013年首次提出的。这个概念得到了社区的不断完善，内容越来越丰富，目前已经包括了DevOps（Development和Operations的组合）、持续交付（Continuous Delivery，CD）、微服务（MicroServices）、敏捷基础设施（Agile Infrastructure）和十二要素（The Twelve-Factor App）等几大主题。这个概念不但包括根据业务能力对企业（高校）进行文化、组织架构的重组与建设，也包括方法论和原则，以及具体的操作工具。采用基于云原生的技术和管理方法，可以更好地从云中诞生业务，也可以把业务迁移到不同的云中，从而享受云的高效与持续服务的能力。
 + 2015年云原生计算基金会（CNCF）成立，对云原生定义进行了修改，认为云原生需要包含应用容器化、面向微服务架构以及支持容器编排调度等方面的内容。
 + 云三层模型与云原生架构的对比图所示，原先的IaaS层升级为敏捷基础设施，而PaaS和SaaS层则合并为微服务架构。敏捷基础设施和微服务都属于技术范畴的架构。在整个云原生架构中，也少不了自动化的持续交付和DevOps等管理措施。
-![](/assets/zh/posts/20210713/%E4%BA%91%E5%8E%9F%E7%94%9F%E6%9E%B6%E6%9E%84.jpg)
+
+<figure>
+  <img src="/assets/zh/posts/20210713/%E4%BA%91%E5%8E%9F%E7%94%9F%E6%9E%B6%E6%9E%84.jpg" alt="云原生架构">
+  <figcaption>图：云原生架构</figcaption>
+</figure>
+
 + 在传统的应用系统开发过程中，软件开发商喜欢聚焦在业务系统，专注于系统如何开发、如何闭源成一个独立的整体系统。但是随着开源软件的盛行，全球合作背景下的分工细化，再加之GitHub的影响力越来越大，一个软件开发商很难在短时间内处理所有问题。软件开发商应该充分利用第三方开源或不开源的组件，自己仅仅实现必要的代码，再借助敏捷基础架构进行灵活多变的必要集成，从而节省大量人力、物力和时间，以便更加聚焦业务开发，同时又能利用整体协作快速部署业务。云原生的意义就在于此，按照云原生的理念进行顶层架构设计、实施、部署，即可实现快速迭代，投入生产使用。云原生主要包括两部分内容：云原生基础架构和云原生应用。
 
 ### 云原生基础架构

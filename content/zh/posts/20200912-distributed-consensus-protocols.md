@@ -91,7 +91,11 @@ Tolerance也可以翻译为容错，分区容忍性具体指“the system contin
 + 在互联网实践中，可用性又是极其重要的，因此大部分是通过损失一致性(C)来保障AP，当然也非完全牺牲一致性，使用弱一致性，即一定时间后一致的弱一致性，当数据还在同步时(WRITE之后)，使用上一次的数据。
 
 + Google 2009年 在Transaction Across DataCenter 的分享中，对一致性协议在业内的实践做了一简单的总结，如下图所示，这是 CAP 理论在工业界应用的实践经验。
-![](/assets/zh/posts/20200912/cap-sumarry.png)
+
+<figure>
+  <img src="/assets/zh/posts/20200912/cap-sumarry.png" alt="cap sumarry">
+  <figcaption>图：cap sumarry</figcaption>
+</figure>
 
 ### BASE 理论
 - Basically Available（基本可用）

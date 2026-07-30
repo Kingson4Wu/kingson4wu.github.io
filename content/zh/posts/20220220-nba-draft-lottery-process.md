@@ -15,8 +15,10 @@ source:
 [nba选秀抽签具体是如何操作的？](https://www.zhihu.com/question/52895544)
 + 14个乒乓球分别贴上1-14数字，随机滚出4个，加起来是1001可能，其中11、12、13、14这个组合不算，剩下1000种可能。
 
-![](/assets/zh/posts/20220220/nba%E9%80%89%E7%A7%80%E6%8A%BD%E7%AD%BE.jpg)
-
+<figure>
+  <img src="/assets/zh/posts/20220220/nba%E9%80%89%E7%A7%80%E6%8A%BD%E7%AD%BE.jpg" alt="nba选秀抽签">
+  <figcaption>图：nba选秀抽签</figcaption>
+</figure>
 
 + 闲来无事，使用Go粗暴模拟了一下
 

@@ -10,11 +10,18 @@ source:
   repo: zh
   path: source/_posts/20200329-发版过程的兼容性考虑.md
 ---
-![](/assets/zh/shared/photo/Torres.jpg)
+
+<figure>
+  <img src="/assets/zh/shared/photo/Torres.jpg" alt="Torres">
+  <figcaption>图：Torres</figcaption>
+</figure>
 
 + 一般情况下，服务一般不是仅有一台服务器提供服务的，因此服务上线的过程中其实会经历一个灰度过程
 
-![](/assets/zh/posts/20200329/mermaid-diagram-20200329140016.png)
+<figure>
+  <img src="/assets/zh/posts/20200329/mermaid-diagram-20200329140016.png" alt="mermaid diagram 20200329140016">
+  <figcaption>图：mermaid diagram 20200329140016</figcaption>
+</figure>
 
 如上所示，服务器A是新代码，走的是新逻辑，服务器B和C未发版，走的旧逻辑。
 

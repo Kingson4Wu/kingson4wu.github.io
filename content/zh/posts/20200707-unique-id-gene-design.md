@@ -10,7 +10,11 @@ source:
   repo: zh
   path: source/_posts/20200707-唯一ID的基因.md
 ---
-![](/assets/zh/shared/photo/Zidane_2.jpeg)
+
+<figure>
+  <img src="/assets/zh/shared/photo/Zidane_2.jpeg" alt="Zidane 2">
+  <figcaption>图：Zidane 2</figcaption>
+</figure>
 
 在互联网服务中，经常需要使用唯一ID。其中一个常见的应用场景是作为业务中请求的幂等ID。
 

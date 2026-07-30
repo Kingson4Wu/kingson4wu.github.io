@@ -36,7 +36,10 @@ source:
 
 ## 01.feed流 构建 整体流程
 
-![](/assets/zh/posts/20240528/01.feed%E6%B5%81%E6%9E%84%E5%BB%BA.drawio.png)
+<figure>
+  <img src="/assets/zh/posts/20240528/01.feed%E6%B5%81%E6%9E%84%E5%BB%BA.drawio.png" alt="01.feed流构建">
+  <figcaption>图：01.feed流构建</figcaption>
+</figure>
 
 + 用户发动态、删动态、关注和取关事件，都会对feed流有相应操作
 + 通过发布事件的设计进行业务逻辑解耦
@@ -55,19 +58,31 @@ source:
 5. 成为活跃用户（Redis）
 
 ## 02.动态消息交互
-![](/assets/zh/posts/20240528/02.%E5%8A%A8%E6%80%81%E6%B6%88%E6%81%AF%E4%BA%A4%E4%BA%92.drawio.png)
+
+<figure>
+  <img src="/assets/zh/posts/20240528/02.%E5%8A%A8%E6%80%81%E6%B6%88%E6%81%AF%E4%BA%A4%E4%BA%92.drawio.png" alt="02.动态消息交互">
+  <figcaption>图：02.动态消息交互</figcaption>
+</figure>
 
 + 消息表 和 消息读取时间表（用于控制用户红点提示和读取消息列表的范围）
 + 消息表保存7天定时清除
 
 ## 03.feed流预加载策略（pull模式）
-![](/assets/zh/posts/20240528/03.feed%E6%B5%81%E9%A2%84%E5%8A%A0%E8%BD%BD%E7%AD%96%E7%95%A5%EF%BC%88pull%E6%A8%A1%E5%BC%8F%EF%BC%89.drawio.png)
+
+<figure>
+  <img src="/assets/zh/posts/20240528/03.feed%E6%B5%81%E9%A2%84%E5%8A%A0%E8%BD%BD%E7%AD%96%E7%95%A5%EF%BC%88pull%E6%A8%A1%E5%BC%8F%EF%BC%89.drawio.png" alt="03.feed流预加载策略（pull模式）">
+  <figcaption>图：03.feed流预加载策略（pull模式）</figcaption>
+</figure>
 
 + 。。。。
 + 将用户加入为活跃粉丝
 
 ## 04.动态新增、删除（push模式），活跃粉丝处理
-![](/assets/zh/posts/20240528/04.%E5%8A%A8%E6%80%81%E6%96%B0%E5%A2%9E%E3%80%81%E5%88%A0%E9%99%A4%EF%BC%88push%E6%A8%A1%E5%BC%8F%EF%BC%89%EF%BC%8C%E6%B4%BB%E8%B7%83%E7%B2%89%E4%B8%9D%E5%A4%84%E7%90%86.drawio.png)
+
+<figure>
+  <img src="/assets/zh/posts/20240528/04.%E5%8A%A8%E6%80%81%E6%96%B0%E5%A2%9E%E3%80%81%E5%88%A0%E9%99%A4%EF%BC%88push%E6%A8%A1%E5%BC%8F%EF%BC%89%EF%BC%8C%E6%B4%BB%E8%B7%83%E7%B2%89%E4%B8%9D%E5%A4%84%E7%90%86.drawio.png" alt="04.动态新增、删除（push模式），活跃粉丝处理">
+  <figcaption>图：04.动态新增、删除（push模式），活跃粉丝处理</figcaption>
+</figure>
 
 + 用户的活跃粉丝列表逻辑
     1. 拉取过feed流或发布过动态等操作的用户，都会设置成有活跃粉丝属性的用户
@@ -75,15 +90,27 @@ source:
     3. 关注和取关事件，也更新活跃粉丝列表
 
 ## 05.关注、取关 事件 对feed流的处理
-![](/assets/zh/posts/20240528/05.%E5%85%B3%E6%B3%A8%E3%80%81%E5%8F%96%E5%85%B3%E4%BA%8B%E4%BB%B6%E5%AF%B9feed%E6%B5%81%E7%9A%84%E5%A4%84%E7%90%86.drawio.png)
+
+<figure>
+  <img src="/assets/zh/posts/20240528/05.%E5%85%B3%E6%B3%A8%E3%80%81%E5%8F%96%E5%85%B3%E4%BA%8B%E4%BB%B6%E5%AF%B9feed%E6%B5%81%E7%9A%84%E5%A4%84%E7%90%86.drawio.png" alt="05.关注、取关事件对feed流的处理">
+  <figcaption>图：05.关注、取关事件对feed流的处理</figcaption>
+</figure>
 
 ## 06.获取feed流
-![](/assets/zh/posts/20240528/06.%E8%8E%B7%E5%8F%96feed%E6%B5%81.drawio.png)
+
+<figure>
+  <img src="/assets/zh/posts/20240528/06.%E8%8E%B7%E5%8F%96feed%E6%B5%81.drawio.png" alt="06.获取feed流">
+  <figcaption>图：06.获取feed流</figcaption>
+</figure>
 
 + 有了前面的推拉模式，用户直接从redis获取feed流即可
 
 ## 07.动态类型版本设计
-![](/assets/zh/posts/20240528/07.%E5%8A%A8%E6%80%81%E7%B1%BB%E5%9E%8B%E7%89%88%E6%9C%AC%E8%AE%BE%E8%AE%A1.drawio.png)
+
+<figure>
+  <img src="/assets/zh/posts/20240528/07.%E5%8A%A8%E6%80%81%E7%B1%BB%E5%9E%8B%E7%89%88%E6%9C%AC%E8%AE%BE%E8%AE%A1.drawio.png" alt="07.动态类型版本设计">
+  <figcaption>图：07.动态类型版本设计</figcaption>
+</figure>
 
 + 随着动态类型的新增，客户端旧版本不支持新类型动态，需要过滤；
 + 目前feed流是存在redis的，直接过滤可能会导致旧版本数据为空，可以通过多版本动态来区分

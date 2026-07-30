@@ -10,8 +10,11 @@ source:
   repo: zh
   path: source/_posts/20241025-《认知觉醒》-笔记.md
 ---
-![](/assets/zh/posts/20241025/%E8%AE%A4%E7%9F%A5%E8%A7%89%E9%86%92.jpg)
 
+<figure>
+  <img src="/assets/zh/posts/20241025/%E8%AE%A4%E7%9F%A5%E8%A7%89%E9%86%92.jpg" alt="认知觉醒">
+  <figcaption>图：认知觉醒</figcaption>
+</figure>
 
 ---
 

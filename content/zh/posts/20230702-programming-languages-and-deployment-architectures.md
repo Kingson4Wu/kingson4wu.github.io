@@ -13,7 +13,11 @@ source:
   path: source/_posts/20230702-对工作中接触过的几种编程语言及其部署架构的看法.md
 ---
 ## 公司V
-![](/assets/zh/posts/20230702/01.V_Java.drawio.png)
+
+<figure>
+  <img src="/assets/zh/posts/20230702/01.V_Java.drawio.png" alt="01.V Java">
+  <figcaption>图：01.V Java</figcaption>
+</figure>
 
 + 使用Java作为编程语言
 + 使用Spring-MVC框架
@@ -27,7 +31,10 @@ source:
 
 ## 公司U
 
-![](/assets/zh/posts/20230702/02.U_Java.drawio.png)
+<figure>
+  <img src="/assets/zh/posts/20230702/02.U_Java.drawio.png" alt="02.U Java">
+  <figcaption>图：02.U Java</figcaption>
+</figure>
 
 + 使用Java作为编程语言
 + 使用二次开发的Play1.x作为web框架（底层基于Netty）
@@ -41,7 +48,10 @@ source:
 
 ## 公司B
 
-![](/assets/zh/posts/20230702/03.D_Java.drawio.png)
+<figure>
+  <img src="/assets/zh/posts/20230702/03.D_Java.drawio.png" alt="03.D Java">
+  <figcaption>图：03.D Java</figcaption>
+</figure>
 
 + 使用Java作为编程语言
 + 使用Spring-Boot框架
@@ -56,7 +66,11 @@ source:
 ## 公司K
 
 ### Java
-![](/assets/zh/posts/20230702/04.K_Java.drawio.png)
+
+<figure>
+  <img src="/assets/zh/posts/20230702/04.K_Java.drawio.png" alt="04.K Java">
+  <figcaption>图：04.K Java</figcaption>
+</figure>
 
 + 使用Java作为编程语言
 + 使用二次开发的Spring-Boot和Spring-Cloud作为web框架
@@ -71,7 +85,10 @@ source:
 
 ### Lua
 
-![](/assets/zh/posts/20230702/04.K_Lua.drawio.png)
+<figure>
+  <img src="/assets/zh/posts/20230702/04.K_Lua.drawio.png" alt="04.K Lua">
+  <figcaption>图：04.K Lua</figcaption>
+</figure>
 
 + 使用Lua作为编程语言
 + 使用OpenResty作为服务器
@@ -84,7 +101,10 @@ source:
 
 ### PHP    
 
-![](/assets/zh/posts/20230702/04.K_PHP.drawio.png)
+<figure>
+  <img src="/assets/zh/posts/20230702/04.K_PHP.drawio.png" alt="04.K PHP">
+  <figcaption>图：04.K PHP</figcaption>
+</figure>
 
 + 使用PHP作为编程语言
 + 使用OpenResty作为服务器
@@ -96,7 +116,10 @@ source:
 
 ### Go
 
-![](/assets/zh/posts/20230702/04.K_Go.drawio.png)
+<figure>
+  <img src="/assets/zh/posts/20230702/04.K_Go.drawio.png" alt="04.K Go">
+  <figcaption>图：04.K Go</figcaption>
+</figure>
 
 + 使用Go作为编程语言
 

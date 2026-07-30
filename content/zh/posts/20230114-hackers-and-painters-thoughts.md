@@ -10,7 +10,11 @@ source:
   repo: zh
   path: source/_posts/20230114-借《黑客与画家》记录一下想法.md
 ---
-![](/assets/zh/posts/20230114/messi2.jpg)
+
+<figure>
+  <img src="/assets/zh/posts/20230114/messi2.jpg" alt="messi2">
+  <figcaption>图：messi2</figcaption>
+</figure>
 
 借本书记录自己的想法(从前混乱的头脑，没能及时总结)，阅读这本书有种相逢恨晚的感觉，有相似或者认同的想法.
 

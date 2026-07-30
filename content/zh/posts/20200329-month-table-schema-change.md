@@ -11,7 +11,11 @@ source:
   repo: zh
   path: source/_posts/20200329-表结构变更是否需要处理历史月表？.md
 ---
-![](/assets/zh/shared/photo/Henry.jpeg)
+
+<figure>
+  <img src="/assets/zh/shared/photo/Henry.jpeg" alt="Henry">
+  <figcaption>图：Henry</figcaption>
+</figure>
 
 + 目前针对历史流水表，历史订单表，采用的以月为维度的方式建表，如以下表结构所示
 ```sql

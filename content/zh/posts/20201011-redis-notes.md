@@ -12,7 +12,10 @@ source:
 ---
 ## 脑图
 
-![](/assets/zh/posts/20201011/Redis.png)
+<figure>
+  <img src="/assets/zh/posts/20201011/Redis.png" alt="Redis">
+  <figcaption>图：Redis</figcaption>
+</figure>
 
 ## 命令
 + info memory 可查看Redis使用了jemalloc

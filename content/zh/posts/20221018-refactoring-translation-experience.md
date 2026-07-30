@@ -12,7 +12,11 @@ source:
   repo: zh
   path: source/_posts/20221018-我的重构（翻译）经历.md
 ---
-![](/assets/zh/posts/20221018/messi4.png)
+
+<figure>
+  <img src="/assets/zh/posts/20221018/messi4.png" alt="messi4">
+  <figcaption>图：messi4</figcaption>
+</figure>
 
 ## 前言
 

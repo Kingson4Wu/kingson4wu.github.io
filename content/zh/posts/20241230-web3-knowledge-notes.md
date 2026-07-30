@@ -12,7 +12,10 @@ source:
 ---
 >> 以下内容都来源于书籍
 
-![](/assets/zh/posts/20241230/Web3.png)
+<figure>
+  <img src="/assets/zh/posts/20241230/Web3.png" alt="Web3">
+  <figcaption>图：Web3</figcaption>
+</figure>
 
 ## Web进化史
 +  Web 1.0时代。Web 1.0时代的特点是重信息轻身份，多浏览少输出，因此也被人称为“只读网络”

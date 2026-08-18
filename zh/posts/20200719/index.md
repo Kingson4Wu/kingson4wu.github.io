@@ -7,11 +7,14 @@ Type: post
 Date: 2020-07-19
 Tags: Reading, Life
 
-十年前看过这本书，现在早就忘掉差不多了，重新整理一下。 与人相处的大秘窍：献出你真实，诚恳的赞赏。 如果这样做，你将到处受欢迎：真诚的对别人发生兴趣。 在辩论中，获得最大利益的唯一方法，就是避免辩论。 要真诚的以他人的观点去看事情。 在批评对方之前，不妨先谈谈你自己的错误。 请对方帮忙。 第一篇 待人的基本技巧 第一章...
+图：Shanghai Beach 2 十年前看过这本书，现在早就忘掉差不多了，重新整理一下。 与人相处的大秘窍：献出你真实，诚恳的赞赏。 如果这样做，你将到处受欢迎：真诚的对别人发生兴趣。 在辩论中，获得最大利益的唯一方法，就是避免辩论。 要真诚的以他人的观点去看事情。 在批评对方之前，不妨先谈谈你自己的错误。 请对方...
 
 ---
 
-![](/assets/zh/shared/photo/Shanghai_Beach_2.png)
+<figure>
+  <img src="/assets/zh/shared/photo/Shanghai_Beach_2.png" alt="Shanghai Beach 2">
+  <figcaption>图：Shanghai Beach 2</figcaption>
+</figure>
 
 十年前看过这本书，现在早就忘掉差不多了，重新整理一下。
 
@@ -243,6 +246,7 @@ Tags: Reading, Life
 必需记住：我们每一个人，都是希望如何被人欣赏、如何被人重视……甚至会不顾一切的去达到这个目的。可是，没有人会接受不诚恳的、虚伪的奉承。
 我愿意再说一遍：这书中所告诉你的原则，必需出自由衷才会有效果出现。
 
-
-
-![](/assets/zh/posts/20200719/WULEI_Barcelona.jpg)
+<figure>
+  <img src="/assets/zh/posts/20200719/WULEI_Barcelona.jpg" alt="WULEI Barcelona">
+  <figcaption>图：WULEI Barcelona</figcaption>
+</figure>

@@ -142,7 +142,7 @@
       </div>
       <div class="post-summary">
         <h2><a href="/zh/posts/20240530/">基于Saturn定时任务的客户端工具设计</a></h2>
-        <p>基于之前写的这篇谈谈定时任务的原理和应用继续聊。 由于业务进程不是Java编写的，无法使用Saturn提供的Java定时任务，只能使用Shell定时任务 这里选择用UDS实现Shell进程和服务进程之间的通信，实现和使用Java定时任务一样的效果 在上次的实现中，只考虑了如何触发定时任务执行，并没有考虑如何停止 实现对...</p>
+        <p>基于之前写的这篇谈谈定时任务的原理和应用继续聊。 图：saturn uds 由于业务进程不是Java编写的，无法使用Saturn提供的Java定时任务，只能使用Shell定时任务 这里选择用UDS实现Shell进程和服务进程之间的通信，实现和使用Java定时任务一样的效果 在上次的实现中，只考虑了如何触发定时任务执行，...</p>
       </div>
     </li>
     <li>
@@ -172,7 +172,7 @@
       </div>
       <div class="post-summary">
         <h2><a href="/zh/posts/20220908/">我的几张TCP原理学习手绘图</a></h2>
-        <p>网络寻址原理 负载均衡模式</p>
+        <p>网络寻址原理 图：网络寻址原理 负载均衡模式 图：负载均衡模式</p>
       </div>
     </li>
     <li>
@@ -182,7 +182,7 @@
       </div>
       <div class="post-summary">
         <h2><a href="/zh/posts/20220907/">TCP连接中的各种状态</a></h2>
-        <p>状态说明 CLOSED：无连接是活动的或正在进行 LISTEN：服务器在等待进入呼叫 SYN_RECV：一个连接请求已经到达，等待确认 SYN_SENT：应用已经开始，打开一个连接 ESTABLISHED：正常数据传输状态 FIN_WAIT1：应用说它已经完成 FIN_WAIT2：另一边已同意释放 ITMED_WAIT...</p>
+        <p>图：TCP三次握手四次挥手 图：TCP状态变化 状态说明 CLOSED：无连接是活动的或正在进行 LISTEN：服务器在等待进入呼叫 SYN_RECV：一个连接请求已经到达，等待确认 SYN_SENT：应用已经开始，打开一个连接 ESTABLISHED：正常数据传输状态 FIN_WAIT1：应用说它已经完成 FIN_W...</p>
       </div>
     </li>
     <li>
@@ -192,7 +192,7 @@
       </div>
       <div class="post-summary">
         <h2><a href="/zh/posts/20220907-time/">TIME_WAIT解析</a></h2>
-        <p>TIME_WAIT 通信双方建立TCP连接后，主动关闭(FIN)连接的一方就会进入TIME_WAIT状态 客户端主动关闭连接时，发送最后一个ack后，会进入TIME_WAIT状态，再停留2个MSL时间，进入CLOSED状态 TIME_WAIT状态存在的理由 可靠地实现TCP全双工连接的终止 TCP协议在关闭连接的四次握...</p>
+        <p>图：四次挥手 TIME_WAIT 通信双方建立TCP连接后，主动关闭(FIN)连接的一方就会进入TIME_WAIT状态 客户端主动关闭连接时，发送最后一个ack后，会进入TIME_WAIT状态，再停留2个MSL时间，进入CLOSED状态 TIME_WAIT状态存在的理由 可靠地实现TCP全双工连接的终止 TCP协议在关...</p>
       </div>
     </li>
     <li>
@@ -322,7 +322,7 @@
       </div>
       <div class="post-summary">
         <h2><a href="/zh/posts/20200926/">关于CLOSE_WAIT和HttpClient的使用</a></h2>
-        <p>ESTABLISHED 表示正在进行网络连接的数量 TIME_WAIT 表示表示等待系统主动关闭网络连接的数量 CLOSE_WAIT 表示被动等待程序关闭的网络连接数量 查看系统TCP状态的命令：netstat -n | awk &#39;/^tcp/ {++S[$NF]} END {for(a in S) print a,...</p>
+        <p>图：TCP三次握手四次挥手 图：tcp normal close ESTABLISHED 表示正在进行网络连接的数量 TIME_WAIT 表示表示等待系统主动关闭网络连接的数量 CLOSE_WAIT 表示被动等待程序关闭的网络连接数量 查看系统TCP状态的命令：netstat -n | awk &#39;/^tcp/ {++S...</p>
       </div>
     </li>
     <li>

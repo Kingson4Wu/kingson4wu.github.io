@@ -7,11 +7,14 @@ Type: post
 Date: 2022-11-18
 Tags: Architecture
 
-充分了解才能用，基本了解，大局实现， 充分测试，压测分析profile， 非核心业务试行， 业界选择，不是说别人牛，是因为别人拿业务来验证过 待整理
+图：messi3 充分了解才能用，基本了解，大局实现， 充分测试，压测分析profile， 非核心业务试行， 业界选择，不是说别人牛，是因为别人拿业务来验证过 待整理
 
 ---
 
-![](/assets/zh/posts/20221118/messi3.png)
+<figure>
+  <img src="/assets/zh/posts/20221118/messi3.png" alt="messi3">
+  <figcaption>图：messi3</figcaption>
+</figure>
 
 + 充分了解才能用，基本了解，大局实现，
 + 充分测试，压测分析profile，

@@ -7,9 +7,13 @@ Type: post
 Date: 2019-07-06
 Tags: Life
 
-Goooooooooooo!
+Goooooooooooo! 图：Warriors
 
 ---
 
 + Goooooooooooo!
-![](/assets/zh/posts/20190706-warriors/Warriors.jpg)
+
+<figure>
+  <img src="/assets/zh/posts/20190706-warriors/Warriors.jpg" alt="Warriors">
+  <figcaption>图：Warriors</figcaption>
+</figure>

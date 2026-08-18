@@ -48,7 +48,12 @@ Tags: Distributed Systems
 
 ### DTP(Distributed Transaction Processing)
 + DTP（Distributed Transaction Processing Reference Model）：分布式事务处理模型。TM、RM、AP等角色的分布式事务的模型。
-![](/assets/zh/posts/20200912-2/DTP.png)
+
+<figure>
+  <img src="/assets/zh/posts/20200912-2/DTP.png" alt="DTP">
+  <figcaption>图：DTP</figcaption>
+</figure>
+
 + AP（Application Program，应用程序）
 + TM（Transaction Manager，事务管理器）
 + RM（Resource Manager，资源管理器）
@@ -70,7 +75,10 @@ Tags: Distributed Systems
 
 + 基于业务补偿的Saga满足1.2；TCC满足2.3；Seata（AT模式）满足1.3 
 
-![](/assets/zh/posts/20200912-2/Saga_TCC_AT.png)
+<figure>
+  <img src="/assets/zh/posts/20200912-2/Saga_TCC_AT.png" alt="Saga TCC AT">
+  <figcaption>图：Saga TCC AT</figcaption>
+</figure>
 
 ### 分布式事务的4种模式
 1. AT - (无侵入的分布式事务解决方案)
@@ -81,14 +89,22 @@ Tags: Distributed Systems
 + 阿里seata框架 实现了这四种模式。
 + [分布式事务的4种模式](https://zhuanlan.zhihu.com/p/78599954) 
 
-![](/assets/zh/posts/20200912-2/Seata.jpg)
+<figure>
+  <img src="/assets/zh/posts/20200912-2/Seata.jpg" alt="Seata">
+  <figcaption>图：Seata</figcaption>
+</figure>
+
 + 性能最高的是Saga，其次是TCC。
 + 隔离性最好的是XA（资源层），最差的是Saga。
 + 除了XA，其他三个为柔性事务，补偿式事务。
 
 ### 补偿型事务
 补偿型事务处理机制构建在 事务资源 之上（要么在中间件层面，要么在应用层面），事务资源 本身对分布式事务是无感知的。
-![](/assets/zh/posts/20200912-2/%E8%A1%A5%E5%81%BF%E5%9E%8B%E4%BA%8B%E5%8A%A1.png)
+
+<figure>
+  <img src="/assets/zh/posts/20200912-2/%E8%A1%A5%E5%81%BF%E5%9E%8B%E4%BA%8B%E5%8A%A1.png" alt="补偿型事务">
+  <figcaption>图：补偿型事务</figcaption>
+</figure>
 
 ### 分类
 + 分布式事务实现方案从ACID的角度上，分刚性事务、柔型事务。
@@ -174,8 +190,15 @@ TCC 是将资源层的二阶段提交协议转换到业务层，成为业务模�
 
 + MQ（事务消息）(notify-两阶段提交加回调机制)－ RocketMQ
 
-![](/assets/zh/posts/20200912-2/%E6%AD%A3%E5%B8%B8%E6%83%85%E5%86%B5_%E4%BA%8B%E5%8A%A1%E4%B8%BB%E5%8A%A8%E6%96%B9%E5%8F%91%E6%B6%88%E6%81%AF.png)
-![](/assets/zh/posts/20200912-2/%E5%BC%82%E5%B8%B8%E6%83%85%E5%86%B5_%E4%BA%8B%E5%8A%A1%E4%B8%BB%E5%8A%A8%E6%96%B9%E6%B6%88%E6%81%AF%E6%81%A2%E5%A4%8D.jpeg)
+<figure>
+  <img src="/assets/zh/posts/20200912-2/%E6%AD%A3%E5%B8%B8%E6%83%85%E5%86%B5_%E4%BA%8B%E5%8A%A1%E4%B8%BB%E5%8A%A8%E6%96%B9%E5%8F%91%E6%B6%88%E6%81%AF.png" alt="正常情况 事务主动方发消息">
+  <figcaption>图：正常情况 事务主动方发消息</figcaption>
+</figure>
+
+<figure>
+  <img src="/assets/zh/posts/20200912-2/%E5%BC%82%E5%B8%B8%E6%83%85%E5%86%B5_%E4%BA%8B%E5%8A%A1%E4%B8%BB%E5%8A%A8%E6%96%B9%E6%B6%88%E6%81%AF%E6%81%A2%E5%A4%8D.jpeg" alt="异常情况 事务主动方消息恢复">
+  <figcaption>图：异常情况 事务主动方消息恢复</figcaption>
+</figure>
 
 #### RocketMQ 
 + 很像阿里的notify
@@ -191,7 +214,10 @@ Consumer 端的消费成功机制有 MQ 保证。
 
 + RocketMQ 阿里开源的消息中间件,原来叫做MetaQ; RocketMQ的各个环节,包括生产者,消费者,broker都是分布式的,所以基本可以保障由于网络原因丢掉,且RocketMQ存在重复消费的问题,所以文档明确表明了应该业务方自己实现幂等性.
 
-![](/assets/zh/posts/20200912-2/RocketMQ.png)
+<figure>
+  <img src="/assets/zh/posts/20200912-2/RocketMQ.png" alt="RocketMQ">
+  <figcaption>图：RocketMQ</figcaption>
+</figure>
 
 + Pulsar、RocketMQ、NSQ、RabbitMQ、Kafka TODO
 
@@ -259,12 +285,19 @@ A:
 1. 允许空回滚
 	- Cancel 接口设计时需要允许空回滚。在 Try 接口因为丢包时没有收到，事务管理器会触发回滚，这时会触发 Cancel 接口，这时 Cancel 执行时发现没有对应的事务 xid 或主键时，需要返回回滚成功。让事务服务管理器认为已回滚，否则会不断重试，而 Cancel 又没有对应的业务数据可以进行回滚。
 
-![](/assets/zh/posts/20200912-2/%E5%85%81%E8%AE%B8%E7%A9%BA%E5%9B%9E%E6%BB%9A.png)
+<figure>
+  <img src="/assets/zh/posts/20200912-2/%E5%85%81%E8%AE%B8%E7%A9%BA%E5%9B%9E%E6%BB%9A.png" alt="允许空回滚">
+  <figcaption>图：允许空回滚</figcaption>
+</figure>
+
 	
 2. 防悬挂控制
 	- 悬挂的意思是：Cancel 比 Try 接口先执行，出现的原因是 Try 由于网络拥堵而超时，事务管理器生成回滚，触发 Cancel 接口，而最终又收到了 Try 接口调用，但是 Cancel 比 Try 先到。按照前面允许空回滚的逻辑，回滚会返回成功，事务管理器认为事务已回滚成功，则此时的 Try 接口不应该执行，否则会产生数据不一致，所以我们在 Cancel 空回滚返回成功之前先记录该条事务 xid 或业务主键，标识这条记录已经回滚过，Try 接口先检查这条事务xid或业务主键如果已经标记为回滚成功过，则不执行 Try 的业务操作。
 
-![](/assets/zh/posts/20200912-2/%E9%98%B2%E6%82%AC%E6%8C%82%E6%8E%A7%E5%88%B6.png)
+<figure>
+  <img src="/assets/zh/posts/20200912-2/%E9%98%B2%E6%82%AC%E6%8C%82%E6%8E%A7%E5%88%B6.png" alt="防悬挂控制">
+  <figcaption>图：防悬挂控制</figcaption>
+</figure>
 
 ### Saga ['sɑɡə]
 
@@ -374,7 +407,10 @@ A:
 
 + 从编程模型上，XA 模式与 AT 模式保持完全一致。上层编程模型与 AT 模式完全相同。只需要修改数据源代理，即可实现 XA 模式与 AT 模式之间的切换。
 
-![](/assets/zh/posts/20200912-2/Seata.jpg)
+<figure>
+  <img src="/assets/zh/posts/20200912-2/Seata.jpg" alt="Seata">
+  <figcaption>图：Seata</figcaption>
+</figure>
 
 ### 最大努力通知型
 + 回调客户端确认：支付宝会每间隔一段时间后，再向客户方发起回调请求，直到输出成功标识为止。
@@ -438,7 +474,10 @@ A:
 1. XA是数据库的分布式事务，强一致性，在整个过程中，数据一张锁住状态，即从prepare到commit、rollback的整个过程中，TM一直把持着数据库的锁，如果有其他人要修改数据库的该条数据，就必须等待锁的释放，存在长事务风险。
 2. TCC是业务的分布式事务，最终一致性，不会出现长事务的锁风险，try是本地事务，锁定资源后就提交事务，confirm／cancel也是本地事务，可以直接提交事务，所以多个短事务不会出现长事务的风险。
 
-![](/assets/zh/posts/20200912-2/XA_TCC.png)
+<figure>
+  <img src="/assets/zh/posts/20200912-2/XA_TCC.png" alt="XA TCC">
+  <figcaption>图：XA TCC</figcaption>
+</figure>
 
 ### XA如何在分布式事务中如何保证隔离性？
 1. 由RM直接连接各个数据源(支持XA协议)，RM一般是个单独的服务？

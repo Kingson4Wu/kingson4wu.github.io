@@ -7,11 +7,14 @@ Type: post
 Date: 2020-11-02
 Tags: Reading, Finance
 
-一、开篇：我们为什么要读经济学 历史上没有一场仗是因为爱和正义打起来的，所有的流血背后，深层次的原因都是经济 如果我们想搞明白人类是怎么活成这样的、世界是怎么运转起来的，就要先搞明白这个问题：经济是怎么来的？一、经济起源首先，经济是什么？简单地讲，就是资源最优化配置。比如一瓶水，只有到口渴的人手里，价值才能发挥到最大。...
+图：Shanghai Beach 4 一、开篇：我们为什么要读经济学 历史上没有一场仗是因为爱和正义打起来的，所有的流血背后，深层次的原因都是经济 如果我们想搞明白人类是怎么活成这样的、世界是怎么运转起来的，就要先搞明白这个问题：经济是怎么来的？一、经济起源首先，经济是什么？简单地讲，就是资源最优化配置。比如一瓶水，只...
 
 ---
 
-![](/assets/zh/shared/photo/Shanghai_Beach_4.png)
+<figure>
+  <img src="/assets/zh/shared/photo/Shanghai_Beach_4.png" alt="Shanghai Beach 4">
+  <figcaption>图：Shanghai Beach 4</figcaption>
+</figure>
 
 ### 一、开篇：我们为什么要读经济学
 

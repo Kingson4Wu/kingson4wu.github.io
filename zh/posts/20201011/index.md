@@ -7,13 +7,16 @@ Type: post
 Date: 2020-10-11
 Tags: Database
 
-脑图 命令 info memory 可查看Redis使用了jemalloc Redis Config Get 命令 - 获取指定配置参数的值：https://www.redis.net.cn/order/3667.html cluster nodes Redis 客户端 https://redis.io/clients...
+脑图 图：Redis 命令 info memory 可查看Redis使用了jemalloc Redis Config Get 命令 - 获取指定配置参数的值：https://www.redis.net.cn/order/3667.html cluster nodes Redis 客户端 https://redis.io...
 
 ---
 
 ## 脑图
 
-![](/assets/zh/posts/20201011/Redis.png)
+<figure>
+  <img src="/assets/zh/posts/20201011/Redis.png" alt="Redis">
+  <figcaption>图：Redis</figcaption>
+</figure>
 
 ## 命令
 + info memory 可查看Redis使用了jemalloc

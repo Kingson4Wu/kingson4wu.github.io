@@ -7,13 +7,16 @@ Type: post
 Date: 2024-12-30
 Tags: Finance
 
-以下内容都来源于书籍 Web进化史 Web 1.0时代。Web 1.0时代的特点是重信息轻身份，多浏览少输出，因此也被人称为“只读网络” 相较于Web 1.0时代的内容创作者占少数，内容消费者占绝大多数的生态格局，Web 2.0更加以每个用户为中心，注重由用户生成内容(User Generated Content, U...
+以下内容都来源于书籍 图：Web3 Web进化史 Web 1.0时代。Web 1.0时代的特点是重信息轻身份，多浏览少输出，因此也被人称为“只读网络” 相较于Web 1.0时代的内容创作者占少数，内容消费者占绝大多数的生态格局，Web 2.0更加以每个用户为中心，注重由用户生成内容(User Generated Con...
 
 ---
 
 >> 以下内容都来源于书籍
 
-![](/assets/zh/posts/20241230/Web3.png)
+<figure>
+  <img src="/assets/zh/posts/20241230/Web3.png" alt="Web3">
+  <figcaption>图：Web3</figcaption>
+</figure>
 
 ## Web进化史
 +  Web 1.0时代。Web 1.0时代的特点是重信息轻身份，多浏览少输出，因此也被人称为“只读网络”

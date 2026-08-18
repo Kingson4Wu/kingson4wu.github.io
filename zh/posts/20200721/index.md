@@ -7,18 +7,28 @@ Type: post
 Date: 2020-07-21
 Tags: Reading
 
-6年前看的书，重新整理一下 前言 摘要 一 (专业主义) 专业主义的精髓就在于将公司的利益视同个人的利益。(这个呢，看情况吧) 不能忽略完整的测试环节，否则就交付软件是不负责任的。 为自己的不完美负责。代码难免出现bug，但这并不意味着你不用对它们负责。 让QA找不出任何问题。把自己没把握的代码发送给QA是不专业的，违...
+图：Shanghai Beach 3 6年前看的书，重新整理一下 图：程序员的职业素养 前言 图：程序员的职业素养前言 摘要 一 (专业主义) 专业主义的精髓就在于将公司的利益视同个人的利益。(这个呢，看情况吧) 不能忽略完整的测试环节，否则就交付软件是不负责任的。 为自己的不完美负责。代码难免出现bug，但这并不意味...
 
 ---
 
-![](/assets/zh/shared/photo/Shanghai_Beach_3.png)
+<figure>
+  <img src="/assets/zh/shared/photo/Shanghai_Beach_3.png" alt="Shanghai Beach 3">
+  <figcaption>图：Shanghai Beach 3</figcaption>
+</figure>
 
 6年前看的书，重新整理一下
 
-![](/assets/zh/posts/20200721/%E7%A8%8B%E5%BA%8F%E5%91%98%E7%9A%84%E8%81%8C%E4%B8%9A%E7%B4%A0%E5%85%BB.jpeg)
+<figure>
+  <img src="/assets/zh/posts/20200721/%E7%A8%8B%E5%BA%8F%E5%91%98%E7%9A%84%E8%81%8C%E4%B8%9A%E7%B4%A0%E5%85%BB.jpeg" alt="程序员的职业素养">
+  <figcaption>图：程序员的职业素养</figcaption>
+</figure>
 
 ### 前言
-![](/assets/zh/posts/20200721/%E7%A8%8B%E5%BA%8F%E5%91%98%E7%9A%84%E8%81%8C%E4%B8%9A%E7%B4%A0%E5%85%BB%E5%89%8D%E8%A8%80.jpeg)
+
+<figure>
+  <img src="/assets/zh/posts/20200721/%E7%A8%8B%E5%BA%8F%E5%91%98%E7%9A%84%E8%81%8C%E4%B8%9A%E7%B4%A0%E5%85%BB%E5%89%8D%E8%A8%80.jpeg" alt="程序员的职业素养前言">
+  <figcaption>图：程序员的职业素养前言</figcaption>
+</figure>
 
 ### 摘要
 
@@ -139,10 +149,10 @@ Tags: Reading
 观念上最大差别在于，专业主义价值观和技术敏锐度需要进行不断的传授，培育，滋养和文火慢炖，直至其深植入文化当中。
 我们当前的做法之所以传承无力， 主要是因为其中缺少了资深人士辅导新人向其传授技艺的环节。
 
-
-
-![](/assets/zh/posts/20200721/%E7%A8%8B%E5%BA%8F%E5%91%98%E7%9A%84%E8%81%8C%E4%B8%9A%E7%B4%A0%E5%85%BB%E6%80%BB%E7%BB%93.jpeg)
-
+<figure>
+  <img src="/assets/zh/posts/20200721/%E7%A8%8B%E5%BA%8F%E5%91%98%E7%9A%84%E8%81%8C%E4%B8%9A%E7%B4%A0%E5%85%BB%E6%80%BB%E7%BB%93.jpeg" alt="程序员的职业素养总结">
+  <figcaption>图：程序员的职业素养总结</figcaption>
+</figure>
 
 ---
 

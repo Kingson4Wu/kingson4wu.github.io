@@ -28,8 +28,11 @@ Tags: Networking
 
 ### TCP状态图
 + 从网上找的
-![](/assets/zh/posts/20230730-2/TCP%E7%8A%B6%E6%80%81%E5%9B%BE.jpg)
 
+<figure>
+  <img src="/assets/zh/posts/20230730-2/TCP%E7%8A%B6%E6%80%81%E5%9B%BE.jpg" alt="TCP状态图">
+  <figcaption>图：TCP状态图</figcaption>
+</figure>
 
 ### 相关排查命令
 
@@ -72,18 +75,29 @@ sudo netstat -anp|grep 'FIN_WAIT2'| awk '{print $7}'|sort |uniq -c | sort -nr
 
 ## 处理过程1
 
-
-![](/assets/zh/posts/20230730-2/socket%E6%95%B0%E9%87%8F%E6%9A%B4%E6%B6%A8.png)
+<figure>
+  <img src="/assets/zh/posts/20230730-2/socket%E6%95%B0%E9%87%8F%E6%9A%B4%E6%B6%A8.png" alt="socket数量暴涨">
+  <figcaption>图：socket数量暴涨</figcaption>
+</figure>
 
 + 紧急重启服务（业务Go服务）后socket数量下降
 
 + 在现场已经没了的情况下，分析发现机器上本身已经存在大量socket泄漏的情况
 
-![](/assets/zh/posts/20230730-2/identify%20protocol.png)
+<figure>
+  <img src="/assets/zh/posts/20230730-2/identify%20protocol.png" alt="identify protocol">
+  <figcaption>图：identify protocol</figcaption>
+</figure>
 
-![](/assets/zh/posts/20230730-2/process.png)
-![](/assets/zh/posts/20230730-2/process2.png)
+<figure>
+  <img src="/assets/zh/posts/20230730-2/process.png" alt="process">
+  <figcaption>图：process</figcaption>
+</figure>
 
+<figure>
+  <img src="/assets/zh/posts/20230730-2/process2.png" alt="process2">
+  <figcaption>图：process2</figcaption>
+</figure>
 
 + nginx和gateway都reload，那么nginx会产生新的worker进程，但是应该shutdown的老进程因为和gateway还有连接，所以也不会销毁，这样时间长了会有很多处于shutting状态的进程，这些进程都会占用资源。
 
@@ -96,15 +110,24 @@ sudo netstat -anp|grep 'FIN_WAIT2'| awk '{print $7}'|sort |uniq -c | sort -nr
 ## 处理过程2
 + 即使上次清理了所有有问题的nginx worker进程，释放了大量泄漏的socket，相同的问题后续还是发生了
 
-![](/assets/zh/posts/20230730-2/%E8%BF%87%E7%A8%8B2-1.png)
+<figure>
+  <img src="/assets/zh/posts/20230730-2/%E8%BF%87%E7%A8%8B2-1.png" alt="过程2 1">
+  <figcaption>图：过程2 1</figcaption>
+</figure>
 
 + 还是出现了大量的closed状态，已经大量的close_wait和fin_wait2状态
 
-![](/assets/zh/posts/20230730-2/%E8%BF%87%E7%A8%8B2-1.png)
+<figure>
+  <img src="/assets/zh/posts/20230730-2/%E8%BF%87%E7%A8%8B2-1.png" alt="过程2 1">
+  <figcaption>图：过程2 1</figcaption>
+</figure>
 
 + 通过lsof查看，确实是Go业务进程泄漏的socket
 
-![](/assets/zh/posts/20230730-2/%E8%BF%87%E7%A8%8B2-3.png)
+<figure>
+  <img src="/assets/zh/posts/20230730-2/%E8%BF%87%E7%A8%8B2-3.png" alt="过程2 3">
+  <figcaption>图：过程2 3</figcaption>
+</figure>
 
 + 上图的正常状态下，close_wait和fin_wait2状态的数量，并没那么多
 

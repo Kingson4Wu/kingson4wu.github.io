@@ -7,13 +7,17 @@ Type: post
 Date: 2022-01-14
 Tags: Database
 
-先抛出以下问题： 把MHA-1集群的Database-C 迁到 MHA-2 集群中，有没有简单高效的方案? 方案1、在两个MHA集群，在建一套MHA3。MHA2的主作为MHA1的从？这样MH3切换的时候，应用服务就可以直接感知切到新库了； 方案2、先把C同步到2集群，然后做otter同步 方案1： 存在的问题： 中间再...
+先抛出以下问题： 把MHA-1集群的Database-C 迁到 MHA-2 集群中，有没有简单高效的方案? 图：migration 方案1、在两个MHA集群，在建一套MHA3。MHA2的主作为MHA1的从？这样MH3切换的时候，应用服务就可以直接感知切到新库了； 方案2、先把C同步到2集群，然后做otter同步 方案1...
 
 ---
 
 先抛出以下问题：
 把MHA-1集群的Database-C 迁到 MHA-2 集群中，有没有简单高效的方案?
-![](/assets/zh/posts/20220114/migration.png)
+
+<figure>
+  <img src="/assets/zh/posts/20220114/migration.png" alt="migration">
+  <figcaption>图：migration</figcaption>
+</figure>
 
 ---
 

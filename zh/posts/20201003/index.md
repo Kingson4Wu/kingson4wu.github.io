@@ -7,12 +7,16 @@ Type: post
 Date: 2020-10-03
 Tags: Database
 
-思维导图 InnoDB 事务隔离级别 隔离级别 脏读 不可重复读 幻读 未提交读(RUC) NO NO NO 已提交读(RC) YES NO NO 可重复读(RR) YES YES NO 可串行化 YES YES YES InnoDB 锁类型 共享/排它锁(Shared and Exclusive Locks) 在In...
+思维导图 图：MySQL InnoDB 事务隔离级别 隔离级别 脏读 不可重复读 幻读 未提交读(RUC) NO NO NO 已提交读(RC) YES NO NO 可重复读(RR) YES YES NO 可串行化 YES YES YES InnoDB 锁类型 共享/排它锁(Shared and Exclusive Lo...
 
 ---
 
 ## 思维导图
-![](/assets/zh/posts/20201003/MySQL.png)
+
+<figure>
+  <img src="/assets/zh/posts/20201003/MySQL.png" alt="MySQL">
+  <figcaption>图：MySQL</figcaption>
+</figure>
 
 ## InnoDB 事务隔离级别
 

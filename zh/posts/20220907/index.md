@@ -7,14 +7,19 @@ Type: post
 Date: 2022-09-07
 Tags: Networking
 
-状态说明 CLOSED：无连接是活动的或正在进行 LISTEN：服务器在等待进入呼叫 SYN_RECV：一个连接请求已经到达，等待确认 SYN_SENT：应用已经开始，打开一个连接 ESTABLISHED：正常数据传输状态 FIN_WAIT1：应用说它已经完成 FIN_WAIT2：另一边已同意释放 ITMED_WAIT...
+图：TCP三次握手四次挥手 图：TCP状态变化 状态说明 CLOSED：无连接是活动的或正在进行 LISTEN：服务器在等待进入呼叫 SYN_RECV：一个连接请求已经到达，等待确认 SYN_SENT：应用已经开始，打开一个连接 ESTABLISHED：正常数据传输状态 FIN_WAIT1：应用说它已经完成 FIN_W...
 
 ---
 
-![](/assets/zh/posts/20220907/TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B.png)
+<figure>
+  <img src="/assets/zh/posts/20220907/TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B.png" alt="TCP三次握手四次挥手">
+  <figcaption>图：TCP三次握手四次挥手</figcaption>
+</figure>
 
-![](/assets/zh/posts/20220907/TCP%E7%8A%B6%E6%80%81%E5%8F%98%E5%8C%96.png)
-
+<figure>
+  <img src="/assets/zh/posts/20220907/TCP%E7%8A%B6%E6%80%81%E5%8F%98%E5%8C%96.png" alt="TCP状态变化">
+  <figcaption>图：TCP状态变化</figcaption>
+</figure>
 
 ## 状态说明
 + CLOSED：无连接是活动的或正在进行

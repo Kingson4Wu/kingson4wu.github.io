@@ -7,13 +7,16 @@ Type: post
 Date: 2024-05-30
 Tags: Networking, Go, Programming Languages
 
-基于之前写的这篇谈谈定时任务的原理和应用继续聊。 由于业务进程不是Java编写的，无法使用Saturn提供的Java定时任务，只能使用Shell定时任务 这里选择用UDS实现Shell进程和服务进程之间的通信，实现和使用Java定时任务一样的效果 在上次的实现中，只考虑了如何触发定时任务执行，并没有考虑如何停止 实现对...
+基于之前写的这篇谈谈定时任务的原理和应用继续聊。 图：saturn uds 由于业务进程不是Java编写的，无法使用Saturn提供的Java定时任务，只能使用Shell定时任务 这里选择用UDS实现Shell进程和服务进程之间的通信，实现和使用Java定时任务一样的效果 在上次的实现中，只考虑了如何触发定时任务执行，...
 
 ---
 
 + 基于之前写的这篇[谈谈定时任务的原理和应用](https://kingson4wu.github.io/2023/07/03/20230703-tan-tan-ding-shi-ren-wu-de-yuan-li-he-ying-yong/)继续聊。
 
-![](/assets/zh/posts/20240530/saturn_uds.drawio.png)
+<figure>
+  <img src="/assets/zh/posts/20240530/saturn_uds.drawio.png" alt="saturn uds">
+  <figcaption>图：saturn uds</figcaption>
+</figure>
 
 + 由于业务进程不是Java编写的，无法使用Saturn提供的Java定时任务，只能使用Shell定时任务
 
@@ -22,7 +25,10 @@ Tags: Networking, Go, Programming Languages
 
 ## 实现对执行中的任务进行停止
 
-![](/assets/zh/posts/20240530/saturn_signal.drawio.png)    
+<figure>
+  <img src="/assets/zh/posts/20240530/saturn_signal.drawio.png" alt="saturn signal">
+  <figcaption>图：saturn signal</figcaption>
+</figure>    
 
 + 通过测试可以知道，当在saturn控制台点击终止任务时，会对shell进程发出terminated信号
 + 如何不是通过saturn控制台触发，直接终端执行shell命令时，操作Crtl+C时，会对Shell进程发出interrupt信号

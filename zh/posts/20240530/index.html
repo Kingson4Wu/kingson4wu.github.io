@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>基于Saturn定时任务的客户端工具设计 | 拉巴力的纸皮箱</title>
-  <meta name="description" content="基于之前写的这篇谈谈定时任务的原理和应用继续聊。 由于业务进程不是Java编写的，无法使用Saturn提供的Java定时任务，只能使用Shell定时任务 这里选择用UDS实现Shell进程和服务进程之间的通信，实现和使用Java定时任务一样的效果 在上次的实现中，只考虑了如何触发定时任务执行，并没有考虑如何停止 实现对...">
+  <meta name="description" content="基于之前写的这篇谈谈定时任务的原理和应用继续聊。 图：saturn uds 由于业务进程不是Java编写的，无法使用Saturn提供的Java定时任务，只能使用Shell定时任务 这里选择用UDS实现Shell进程和服务进程之间的通信，实现和使用Java定时任务一样的效果 在上次的实现中，只考虑了如何触发定时任务执行，...">
   <link rel="canonical" href="https://kingson4wu.github.io/zh/posts/20240530/">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="alternate" type="application/rss+xml" title="拉巴力的纸皮箱" href="/zh/feed.xml">
@@ -65,7 +65,10 @@
 <ul>
 <li>基于之前写的这篇<a href="https://kingson4wu.github.io/2023/07/03/20230703-tan-tan-ding-shi-ren-wu-de-yuan-li-he-ying-yong/">谈谈定时任务的原理和应用</a>继续聊。</li>
 </ul>
-<p><img src="/assets/zh/posts/20240530/saturn_uds.drawio.png" alt=""></p>
+<figure>
+  <img src="/assets/zh/posts/20240530/saturn_uds.drawio.png" alt="saturn uds">
+  <figcaption>图：saturn uds</figcaption>
+</figure>
 <ul>
 <li>
 <p>由于业务进程不是Java编写的，无法使用Saturn提供的Java定时任务，只能使用Shell定时任务</p>
@@ -78,7 +81,10 @@
 </li>
 </ul>
 <h2 id="section-1" data-heading-text="实现对执行中的任务进行停止">实现对执行中的任务进行停止</h2>
-<p><img src="/assets/zh/posts/20240530/saturn_signal.drawio.png" alt=""></p>
+<figure>
+  <img src="/assets/zh/posts/20240530/saturn_signal.drawio.png" alt="saturn signal">
+  <figcaption>图：saturn signal</figcaption>
+</figure>    
 <ul>
 <li>
 <p>通过测试可以知道，当在saturn控制台点击终止任务时，会对shell进程发出terminated信号</p>

@@ -7,12 +7,16 @@ Type: post
 Date: 2023-07-02
 Tags: Java, Go, Programming Languages
 
-公司V 使用Java作为编程语言 使用Spring-MVC框架 使用Tomcat作为Web容器 打包运行方式： 服务器预安装了Java和Tomcat 将代码打包成war包 将war包上传到服务器的Tomcat的web目录 重启tomcat更新服务 公司U 使用Java作为编程语言 使用二次开发的Play1.x作为web...
+公司V 图：01.V Java 使用Java作为编程语言 使用Spring-MVC框架 使用Tomcat作为Web容器 打包运行方式： 服务器预安装了Java和Tomcat 将代码打包成war包 将war包上传到服务器的Tomcat的web目录 重启tomcat更新服务 公司U 图：02.U Java 使用Java作为...
 
 ---
 
 ## 公司V
-![](/assets/zh/posts/20230702/01.V_Java.drawio.png)
+
+<figure>
+  <img src="/assets/zh/posts/20230702/01.V_Java.drawio.png" alt="01.V Java">
+  <figcaption>图：01.V Java</figcaption>
+</figure>
 
 + 使用Java作为编程语言
 + 使用Spring-MVC框架
@@ -26,7 +30,10 @@ Tags: Java, Go, Programming Languages
 
 ## 公司U
 
-![](/assets/zh/posts/20230702/02.U_Java.drawio.png)
+<figure>
+  <img src="/assets/zh/posts/20230702/02.U_Java.drawio.png" alt="02.U Java">
+  <figcaption>图：02.U Java</figcaption>
+</figure>
 
 + 使用Java作为编程语言
 + 使用二次开发的Play1.x作为web框架（底层基于Netty）
@@ -40,7 +47,10 @@ Tags: Java, Go, Programming Languages
 
 ## 公司B
 
-![](/assets/zh/posts/20230702/03.D_Java.drawio.png)
+<figure>
+  <img src="/assets/zh/posts/20230702/03.D_Java.drawio.png" alt="03.D Java">
+  <figcaption>图：03.D Java</figcaption>
+</figure>
 
 + 使用Java作为编程语言
 + 使用Spring-Boot框架
@@ -55,7 +65,11 @@ Tags: Java, Go, Programming Languages
 ## 公司K
 
 ### Java
-![](/assets/zh/posts/20230702/04.K_Java.drawio.png)
+
+<figure>
+  <img src="/assets/zh/posts/20230702/04.K_Java.drawio.png" alt="04.K Java">
+  <figcaption>图：04.K Java</figcaption>
+</figure>
 
 + 使用Java作为编程语言
 + 使用二次开发的Spring-Boot和Spring-Cloud作为web框架
@@ -70,7 +84,10 @@ Tags: Java, Go, Programming Languages
 
 ### Lua
 
-![](/assets/zh/posts/20230702/04.K_Lua.drawio.png)
+<figure>
+  <img src="/assets/zh/posts/20230702/04.K_Lua.drawio.png" alt="04.K Lua">
+  <figcaption>图：04.K Lua</figcaption>
+</figure>
 
 + 使用Lua作为编程语言
 + 使用OpenResty作为服务器
@@ -83,7 +100,10 @@ Tags: Java, Go, Programming Languages
 
 ### PHP    
 
-![](/assets/zh/posts/20230702/04.K_PHP.drawio.png)
+<figure>
+  <img src="/assets/zh/posts/20230702/04.K_PHP.drawio.png" alt="04.K PHP">
+  <figcaption>图：04.K PHP</figcaption>
+</figure>
 
 + 使用PHP作为编程语言
 + 使用OpenResty作为服务器
@@ -95,7 +115,10 @@ Tags: Java, Go, Programming Languages
 
 ### Go
 
-![](/assets/zh/posts/20230702/04.K_Go.drawio.png)
+<figure>
+  <img src="/assets/zh/posts/20230702/04.K_Go.drawio.png" alt="04.K Go">
+  <figcaption>图：04.K Go</figcaption>
+</figure>
 
 + 使用Go作为编程语言
 

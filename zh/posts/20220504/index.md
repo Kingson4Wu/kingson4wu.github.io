@@ -164,7 +164,11 @@ Tags: Networking, Media
   - 为什么使用WebSocket不使用TCP呢？TODO
 
 ### 基于TCP长连接的通信架构
-![](/assets/zh/posts/20220504/%E5%9F%BA%E4%BA%8ETCP%E9%95%BF%E8%BF%9E%E6%8E%A5%E7%9A%84%E9%80%9A%E4%BF%A1%E6%9E%B6%E6%9E%84.png)
+
+<figure>
+  <img src="/assets/zh/posts/20220504/%E5%9F%BA%E4%BA%8ETCP%E9%95%BF%E8%BF%9E%E6%8E%A5%E7%9A%84%E9%80%9A%E4%BF%A1%E6%9E%B6%E6%9E%84.png" alt="基于TCP长连接的通信架构">
+  <figcaption>图：基于TCP长连接的通信架构</figcaption>
+</figure>
 
 + 上面的通信架构用于业务数据流的传输，流程如下：
   - 1、客户端使用websocket与服务端进行通讯，用户进入答题直播间时建立连接，退出直播间时断开连接。

@@ -18,9 +18,15 @@ Tags: AI, Networking
 
 ## 实际效果
 
-![](/assets/zh/posts/20250828-tmux/Chrome_Remote_Desktop.PNG)
+<figure>
+  <img src="/assets/zh/posts/20250828-tmux/Chrome_Remote_Desktop.PNG" alt="Chrome Remote Desktop">
+  <figcaption>图：Chrome Remote Desktop</figcaption>
+</figure>
 
-![](/assets/zh/posts/20250828-tmux/tmux.PNG)
+<figure>
+  <img src="/assets/zh/posts/20250828-tmux/tmux.PNG" alt="tmux">
+  <figcaption>图：tmux</figcaption>
+</figure>
 
 ---
 

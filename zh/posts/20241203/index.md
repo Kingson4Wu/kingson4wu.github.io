@@ -7,14 +7,16 @@ Type: post
 Date: 2024-12-03
 Tags: AI
 
-持续补充… 人工智能的三种形态 来自：人工智能是什么？——人工智能图谱 弱人工智能：弱人工智能 (Artificial Narrow Intelligence, ANI) 是擅长与单个方面的人工智能，比如有能战胜象棋世界冠军的人工智能，但是它只会下象棋，你要问它怎样更好地在硬盘上存储数据，它就不知道怎么回答你了； 强人...
+持续补充… 图：人工智能 人工智能的三种形态 来自：人工智能是什么？——人工智能图谱 弱人工智能：弱人工智能 (Artificial Narrow Intelligence, ANI) 是擅长与单个方面的人工智能，比如有能战胜象棋世界冠军的人工智能，但是它只会下象棋，你要问它怎样更好地在硬盘上存储数据，它就不知道怎么回...
 
 ---
 
 >> 持续补充...
 
-
-![](/assets/zh/posts/20241203/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD.jpg)
+<figure>
+  <img src="/assets/zh/posts/20241203/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD.jpg" alt="人工智能">
+  <figcaption>图：人工智能</figcaption>
+</figure>
 
 ## 人工智能的三种形态
 + 来自：[人工智能是什么？——人工智能图谱](https://zhuanlan.zhihu.com/p/64467701)

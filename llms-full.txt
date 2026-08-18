@@ -22,10 +22,10 @@ The Chinese site name is 拉巴力的纸皮箱. The root path redirects readers 
 
 ## Content Profile
 
-- Total public content items: 232
+- Total public content items: 236
 - English posts: 5
 - English notes: 11
-- Chinese posts: 212
+- Chinese posts: 216
 - Chinese notes: 4
 
 ## Main Topics
@@ -37,21 +37,21 @@ The Chinese site name is 拉巴力的纸皮箱. The root path redirects readers 
 
 ## Tag Cloud
 
-- AI: 73
-- LLM: 50
+- AI: 75
+- LLM: 52
 - Architecture: 39
 - Networking: 28
+- Deep Learning: 26
 - Programming Languages: 26
-- Deep Learning: 25
+- Reading: 22
 - Career: 21
-- Reading: 21
 - Distributed Systems: 19
-- Agent: 14
+- Agent: 15
 - Database: 13
+- Life: 13
 - Reliability: 13
 - Skill: 13
 - Java: 11
-- Life: 11
 - Math: 11
 - Finance: 10
 - Go: 8
@@ -60,7 +60,7 @@ The Chinese site name is 拉巴力的纸皮箱. The root path redirects readers 
 - Rust: 6
 - Algorithms: 5
 - Python: 4
-- Media: 3
+- RAG: 4
 
 ## Retrieval Notes
 
@@ -71,6 +71,10 @@ The Chinese site name is 拉巴力的纸皮箱. The root path redirects readers 
 
 ## Recent Highlights
 
+- 2026-08-18 | zh | post | 《西西弗神话》：在没有答案的世界里保持清醒 | 从《西西弗神话》的荒诞逻辑出发，梳理自杀、哲学跳跃、反抗、自由与创造，并记录关于宗教、痛苦、现实条件和个人生活策略的延伸思考。
+- 2026-08-08 | zh | post | 用信念安顿未知，让精神回到沿途风景 | 从许冠文谈死亡与《破·地狱》出发，整理“沿途风景”、宗教信念、临终选择与怎样活的问题：死亡提醒人提前表达爱、投入热爱、处理关系，并用能安顿自己的信念面对未知。
+- 2026-08-04 | zh | post | AI Agent Eval 的工程本质：从评测到业务质量系统 | 基于 Anthropic 几篇 agent eval 工程文章，整理 AI eval 的系统组成、grader、trace、工具设计、benchmark 噪声，以及它和传统业务质量体系之间的关系。
+- 2026-07-30 | zh | post | Dense + Sparse：从信息表示、RAG 检索到 LLM 架构的统一理解 | 从信息表示、RAG 检索、MoE、Sparse Attention 和推理计算几个角度，理解 Dense 与 Sparse 在现代 AI 系统里的统一思想。
 - 2026-04-19 | zh | post | Skill 机制与编排流程深度解析：Anthropic vs OpenAI Agent SDK 对比 | 2026 年 4 月 15 日，OpenAI 发布 Agents SDK v0.14.0，引入了 SandboxAgent + Capabilities 架构。本地 Skill 加载（Skills Capability、LocalDirLazySkillSource、load_skill 工具）终于成为了 SDK 一等...
 - 2026-03-31 | zh | post | 技术进步与分配失衡：AI时代的结构性矛盾 | AI替代认知劳动的边际成本趋近于零，导致经济增长与就业增长脱钩；AI是资本增强器而非劳动增强器，分配机制滞后于生产力发展，形成结构性失衡。
 - 2026-03-31 | zh | post | 从 Skill 化到控制权：AI 系统中的能力分层与资产保护 | 当 AI 系统将任务封装为 Skills 交给外部执行时，哪些能力可以暴露，哪些必须留在内部？本文从数据暴露的三种形态出发，提出通用能力、业务能力、核心能力的三层划分框架，以及“最小输入而非脱敏”的数据策略。
@@ -87,13 +91,13 @@ The Chinese site name is 拉巴力的纸皮箱. The root path redirects readers 
 - 2026-03-12 | zh | post | 浏览器自动化技术全景：CDP、Playwright 与 AI Agent 的架构关系 | 系统梳理 CDP、Playwright、视觉自动化与 AI Agent 在浏览器自动化体系中的分层关系与适用边界。
 - 2026-03-08 | zh | post | 大模型时代，中小公司如何寻找 AI 竞争空间 | 分析中小公司在大模型时代应如何围绕行业数据、工作流与应用层产品建立差异化竞争力。
 - 2026-03-07 | en | note | AI Systems Need Method, Execution, and Evaluation | Most AI systems are still stuck in a single-inference pattern: they re-plan every time, discard execution results immediately, and accumulate no experience. A m...
-- 2026-03-07 | zh | note | 让执行路径成为资产 | 大多数 AI 系统还停留在“单次推理”形态。 任务来了重新规划，执行完毕即丢弃，成功经验从不沉淀。 真正面向长期运行的架构，得把“执行路径”变成资产。 核心是三层分离： 方法层：定义目标和策略 执行层：保存经过验证、可运行的代码或 Script 评估层：检测退化并触发修复 某条路径反复验证稳定后，就应该固化成 Scri...
-- 2026-02-28 | en | note | Generative AI Does Not Think | Generative AI does not think. What it does is predict the highest-probability token given the preceding context. Humans can actively violate rules: “I know the...
-- 2026-02-28 | en | note | AI Displacement Repeats Old Patterns | This wave of AI displacement shares familiar patterns with previous industrial revolutions. Technology moves forward, and some people get left behind before the...
-- 2026-02-28 | en | note | AI Is Reshaping Social Learning | AI is reshaping social learning. We once relied on peers to recommend resources, challenge ideas, and surface blind spots. Now more of those cognitive functions...
 
 ## Content Index
 
+- 2026-08-18 | zh | post | 《西西弗神话》：在没有答案的世界里保持清醒 | Tags: Reading, Life | HTML: https://kingson4wu.github.io/zh/posts/20260818-myth-of-sisyphus/ | Markdown: https://kingson4wu.github.io/zh/posts/20260818-myth-of-sisyphus/index.md
+- 2026-08-08 | zh | post | 用信念安顿未知，让精神回到沿途风景 | Tags: Life | HTML: https://kingson4wu.github.io/zh/posts/20260808-belief-unknown-scenery/ | Markdown: https://kingson4wu.github.io/zh/posts/20260808-belief-unknown-scenery/index.md
+- 2026-08-04 | zh | post | AI Agent Eval 的工程本质：从评测到业务质量系统 | Tags: AI, LLM, Agent | HTML: https://kingson4wu.github.io/zh/posts/20260804-ai-agent-eval-business-quality-system/ | Markdown: https://kingson4wu.github.io/zh/posts/20260804-ai-agent-eval-business-quality-system/index.md
+- 2026-07-30 | zh | post | Dense + Sparse：从信息表示、RAG 检索到 LLM 架构的统一理解 | Tags: AI, LLM, RAG, Deep Learning | HTML: https://kingson4wu.github.io/zh/posts/20260730-dense-sparse-rag-llm/ | Markdown: https://kingson4wu.github.io/zh/posts/20260730-dense-sparse-rag-llm/index.md
 - 2026-04-19 | zh | post | Skill 机制与编排流程深度解析：Anthropic vs OpenAI Agent SDK 对比 | Tags: AI, LLM, Agent, Skill | HTML: https://kingson4wu.github.io/zh/posts/20260419-skill-anthropic-vs-openai-agent-sdk/ | Markdown: https://kingson4wu.github.io/zh/posts/20260419-skill-anthropic-vs-openai-agent-sdk/index.md
 - 2026-03-31 | zh | post | 技术进步与分配失衡：AI时代的结构性矛盾 | Tags: AI, LLM, Finance | HTML: https://kingson4wu.github.io/zh/posts/20260331/ | Markdown: https://kingson4wu.github.io/zh/posts/20260331/index.md
 - 2026-03-31 | zh | post | 从 Skill 化到控制权：AI 系统中的能力分层与资产保护 | Tags: AI, LLM, Agent, Skill, Architecture | HTML: https://kingson4wu.github.io/zh/posts/20260331-skill-ai/ | Markdown: https://kingson4wu.github.io/zh/posts/20260331-skill-ai/index.md

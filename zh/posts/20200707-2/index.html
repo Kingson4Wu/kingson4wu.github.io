@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>如何处理RPC返回的错误码？ | 拉巴力的纸皮箱</title>
-  <meta name="description" content="RPC调用的返回结果 成功 失败 超时 超时情况是不确定的，需要调用方重试或查询等，根据业务情况进行处理 返回结果表示方法 使用http协议的状态码 使用业务错误码（在业务处理中比较常见） 0表示成功 1表示失败 其他错误码代表具体的失败业务场景 失败错误码类型 业务错误（参数错误，或业务场景校验限制，请求已经处理完成...">
+  <meta name="description" content="图：Zlatan RPC调用的返回结果 成功 失败 超时 超时情况是不确定的，需要调用方重试或查询等，根据业务情况进行处理 返回结果表示方法 使用http协议的状态码 使用业务错误码（在业务处理中比较常见） 0表示成功 1表示失败 其他错误码代表具体的失败业务场景 失败错误码类型 业务错误（参数错误，或业务场景校验限制...">
   <link rel="canonical" href="https://kingson4wu.github.io/zh/posts/20200707-2/">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="alternate" type="application/rss+xml" title="拉巴力的纸皮箱" href="/zh/feed.xml">
@@ -61,7 +61,10 @@
   </ul>
       </header>
       <div class="prose">
-<p><img src="/assets/zh/shared/photo/Zlatan.jpeg" alt=""></p>
+<figure>
+  <img src="/assets/zh/shared/photo/Zlatan.jpeg" alt="Zlatan">
+  <figcaption>图：Zlatan</figcaption>
+</figure>
 <h4 id="section-1" data-heading-text="RPC调用的返回结果">RPC调用的返回结果</h4>
 <ol>
 <li>成功</li>

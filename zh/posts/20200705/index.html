@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>RPC可以和事务绑定吗？ | 拉巴力的纸皮箱</title>
-  <meta name="description" content="在平常编码的时候，经常会看到很多人喜欢把一次RPC调用和数据库事务绑定在一起，RPC调用成功则提交事务，RPC调用失败或超时，则回滚事务。那么这样做是对的吗？ 业务场景描述 考虑以下一种业务场景：用户加入群聊需要花费200金币。 服务架构：服务A(群服务)，服务B(消费服务)，操作都是幂等的。 加群请求--------...">
+  <meta name="description" content="图：MSN 在平常编码的时候，经常会看到很多人喜欢把一次RPC调用和数据库事务绑定在一起，RPC调用成功则提交事务，RPC调用失败或超时，则回滚事务。那么这样做是对的吗？ 业务场景描述 考虑以下一种业务场景：用户加入群聊需要花费200金币。 服务架构：服务A(群服务)，服务B(消费服务)，操作都是幂等的。 加群请求--...">
   <link rel="canonical" href="https://kingson4wu.github.io/zh/posts/20200705/">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="alternate" type="application/rss+xml" title="拉巴力的纸皮箱" href="/zh/feed.xml">
@@ -62,7 +62,10 @@
   </ul>
       </header>
       <div class="prose">
-<p><img src="/assets/zh/shared/photo/MSN.jpg" alt=""></p>
+<figure>
+  <img src="/assets/zh/shared/photo/MSN.jpg" alt="MSN">
+  <figcaption>图：MSN</figcaption>
+</figure>
 <p>在平常编码的时候，经常会看到很多人喜欢把一次RPC调用和数据库事务绑定在一起，RPC调用成功则提交事务，RPC调用失败或超时，则回滚事务。那么这样做是对的吗？</p>
 <h3 id="section-1" data-heading-text="业务场景描述">业务场景描述</h3>
 <p>考虑以下一种业务场景：用户加入群聊需要花费200金币。

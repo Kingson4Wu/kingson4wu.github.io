@@ -5,7 +5,35 @@
     <link>https://kingson4wu.github.io/zh/</link>
     <description>技术、AI 系统、软件架构与学习笔记。</description>
     <language>zh</language>
-    <lastBuildDate>Sun, 19 Apr 2026 09:10:00 GMT</lastBuildDate>
+    <lastBuildDate>Tue, 18 Aug 2026 10:45:00 GMT</lastBuildDate>
+    <item>
+      <title>《西西弗神话》：在没有答案的世界里保持清醒</title>
+      <link>https://kingson4wu.github.io/zh/posts/20260818-myth-of-sisyphus/</link>
+      <guid>https://kingson4wu.github.io/zh/posts/20260818-myth-of-sisyphus/</guid>
+      <pubDate>Tue, 18 Aug 2026 10:45:00 GMT</pubDate>
+      <description>从《西西弗神话》的荒诞逻辑出发，梳理自杀、哲学跳跃、反抗、自由与创造，并记录关于宗教、痛苦、现实条件和个人生活策略的延伸思考。</description>
+    </item>
+    <item>
+      <title>用信念安顿未知，让精神回到沿途风景</title>
+      <link>https://kingson4wu.github.io/zh/posts/20260808-belief-unknown-scenery/</link>
+      <guid>https://kingson4wu.github.io/zh/posts/20260808-belief-unknown-scenery/</guid>
+      <pubDate>Sat, 08 Aug 2026 06:39:15 GMT</pubDate>
+      <description>从许冠文谈死亡与《破·地狱》出发，整理“沿途风景”、宗教信念、临终选择与怎样活的问题：死亡提醒人提前表达爱、投入热爱、处理关系，并用能安顿自己的信念面对未知。</description>
+    </item>
+    <item>
+      <title>AI Agent Eval 的工程本质：从评测到业务质量系统</title>
+      <link>https://kingson4wu.github.io/zh/posts/20260804-ai-agent-eval-business-quality-system/</link>
+      <guid>https://kingson4wu.github.io/zh/posts/20260804-ai-agent-eval-business-quality-system/</guid>
+      <pubDate>Tue, 04 Aug 2026 00:00:00 GMT</pubDate>
+      <description>基于 Anthropic 几篇 agent eval 工程文章，整理 AI eval 的系统组成、grader、trace、工具设计、benchmark 噪声，以及它和传统业务质量体系之间的关系。</description>
+    </item>
+    <item>
+      <title>Dense + Sparse：从信息表示、RAG 检索到 LLM 架构的统一理解</title>
+      <link>https://kingson4wu.github.io/zh/posts/20260730-dense-sparse-rag-llm/</link>
+      <guid>https://kingson4wu.github.io/zh/posts/20260730-dense-sparse-rag-llm/</guid>
+      <pubDate>Thu, 30 Jul 2026 00:00:00 GMT</pubDate>
+      <description>从信息表示、RAG 检索、MoE、Sparse Attention 和推理计算几个角度，理解 Dense 与 Sparse 在现代 AI 系统里的统一思想。</description>
+    </item>
     <item>
       <title>Skill 机制与编排流程深度解析：Anthropic vs OpenAI Agent SDK 对比</title>
       <link>https://kingson4wu.github.io/zh/posts/20260419-skill-anthropic-vs-openai-agent-sdk/</link>
@@ -187,34 +215,6 @@
       <guid>https://kingson4wu.github.io/zh/posts/20260130-softmax/</guid>
       <pubDate>Fri, 30 Jan 2026 09:10:44 GMT</pubDate>
       <description>一、问题背景：我们到底在担心什么？ 在 Transformer 的注意力机制中，有一个非常经典的公式： Attention(Q,K,V)=softmax(QK⊤dk)V\text{Attention}(Q,K,V) = \text{softmax}\left(\frac{QK^\top}{\sqrt{d_k}}\rig...</description>
-    </item>
-    <item>
-      <title>残差连接（Residual Connection）：从直觉困境到现代神经网络的核心结构</title>
-      <link>https://kingson4wu.github.io/zh/posts/20260130-residual-connection/</link>
-      <guid>https://kingson4wu.github.io/zh/posts/20260130-residual-connection/</guid>
-      <pubDate>Fri, 30 Jan 2026 08:11:53 GMT</pubDate>
-      <description>从深层网络退化问题出发，解释残差连接为何成为现代神经网络中的关键结构。</description>
-    </item>
-    <item>
-      <title>从 0 理解梯度消失与梯度爆炸</title>
-      <link>https://kingson4wu.github.io/zh/posts/20260130-0/</link>
-      <guid>https://kingson4wu.github.io/zh/posts/20260130-0/</guid>
-      <pubDate>Fri, 30 Jan 2026 06:29:03 GMT</pubDate>
-      <description>一、训练神经网络到底在做什么 训练神经网络,本质只有一件事: 不断微调参数,使模型输出更接近真实目标。 参数该往哪个方向调、调多大力度,完全由梯度决定。 如果梯度能够稳定传播,模型就能学习; 如果梯度在传播过程中衰减或失控,训练就会失败。 二、什么是梯度(不涉及神经网络) 1. 变化率的直觉理解 考虑函数: y=x2y...</description>
-    </item>
-    <item>
-      <title>链式法则与反向传播：从直觉到结构理解</title>
-      <link>https://kingson4wu.github.io/zh/posts/20260130-2/</link>
-      <guid>https://kingson4wu.github.io/zh/posts/20260130-2/</guid>
-      <pubDate>Fri, 30 Jan 2026 05:22:57 GMT</pubDate>
-      <description>从导数直觉出发，系统解释链式法则、偏导数与反向传播在计算图中的作用。</description>
-    </item>
-    <item>
-      <title>感知机与神经网络如何学习并逼近复杂函数</title>
-      <link>https://kingson4wu.github.io/zh/posts/20260130/</link>
-      <guid>https://kingson4wu.github.io/zh/posts/20260130/</guid>
-      <pubDate>Fri, 30 Jan 2026 04:53:40 GMT</pubDate>
-      <description>——从函数形式到分段线性逼近的机制说明 一、感知机与神经网络的基本函数形式 在深度学习中，感知机及其扩展的神经网络，并不是在使用人为指定的多项式函数形式，例如： y=x12+x22+x33y = x_1^2 + x_2^2 + x_3^3y=x12​+x22​+x33​ 其基本计算结构为： y=f(w1x1+w2x2+...</description>
     </item>
   </channel>
 </rss>

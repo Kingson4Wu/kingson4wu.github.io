@@ -103,10 +103,13 @@
 </ul>
 <h3 id="dtp-distributed-transaction-processing" data-heading-text="DTP(Distributed Transaction Processing)">DTP(Distributed Transaction Processing)</h3>
 <ul>
-<li>
-<p>DTP（Distributed Transaction Processing Reference Model）：分布式事务处理模型。TM、RM、AP等角色的分布式事务的模型。
-<img src="/assets/zh/posts/20200912-2/DTP.png" alt=""></p>
-</li>
+<li>DTP（Distributed Transaction Processing Reference Model）：分布式事务处理模型。TM、RM、AP等角色的分布式事务的模型。</li>
+</ul>
+<figure>
+  <img src="/assets/zh/posts/20200912-2/DTP.png" alt="DTP">
+  <figcaption>图：DTP</figcaption>
+</figure>
+<ul>
 <li>
 <p>AP（Application Program，应用程序）</p>
 </li>
@@ -148,7 +151,10 @@
 <p>基于业务补偿的Saga满足1.2；TCC满足2.3；Seata（AT模式）满足1.3</p>
 </li>
 </ul>
-<p><img src="/assets/zh/posts/20200912-2/Saga_TCC_AT.png" alt=""></p>
+<figure>
+  <img src="/assets/zh/posts/20200912-2/Saga_TCC_AT.png" alt="Saga TCC AT">
+  <figcaption>图：Saga TCC AT</figcaption>
+</figure>
 <h3 id="section-9" data-heading-text="分布式事务的4种模式">分布式事务的4种模式</h3>
 <ol>
 <li>AT - (无侵入的分布式事务解决方案)</li>
@@ -160,15 +166,21 @@
 <li>阿里seata框架 实现了这四种模式。</li>
 <li><a href="https://zhuanlan.zhihu.com/p/78599954">分布式事务的4种模式</a></li>
 </ul>
-<p><img src="/assets/zh/posts/20200912-2/Seata.jpg" alt=""></p>
+<figure>
+  <img src="/assets/zh/posts/20200912-2/Seata.jpg" alt="Seata">
+  <figcaption>图：Seata</figcaption>
+</figure>
 <ul>
 <li>性能最高的是Saga，其次是TCC。</li>
 <li>隔离性最好的是XA（资源层），最差的是Saga。</li>
 <li>除了XA，其他三个为柔性事务，补偿式事务。</li>
 </ul>
 <h3 id="section-10" data-heading-text="补偿型事务">补偿型事务</h3>
-<p>补偿型事务处理机制构建在 事务资源 之上（要么在中间件层面，要么在应用层面），事务资源 本身对分布式事务是无感知的。
-<img src="/assets/zh/posts/20200912-2/%E8%A1%A5%E5%81%BF%E5%9E%8B%E4%BA%8B%E5%8A%A1.png" alt=""></p>
+<p>补偿型事务处理机制构建在 事务资源 之上（要么在中间件层面，要么在应用层面），事务资源 本身对分布式事务是无感知的。</p>
+<figure>
+  <img src="/assets/zh/posts/20200912-2/%E8%A1%A5%E5%81%BF%E5%9E%8B%E4%BA%8B%E5%8A%A1.png" alt="补偿型事务">
+  <figcaption>图：补偿型事务</figcaption>
+</figure>
 <h3 id="section-11" data-heading-text="分类">分类</h3>
 <ul>
 <li>分布式事务实现方案从ACID的角度上，分刚性事务、柔型事务。</li>
@@ -287,8 +299,14 @@ TCC 是将资源层的二阶段提交协议转换到业务层，成为业务模�
 <p>MQ（事务消息）(notify-两阶段提交加回调机制)－ RocketMQ</p>
 </li>
 </ul>
-<p><img src="/assets/zh/posts/20200912-2/%E6%AD%A3%E5%B8%B8%E6%83%85%E5%86%B5_%E4%BA%8B%E5%8A%A1%E4%B8%BB%E5%8A%A8%E6%96%B9%E5%8F%91%E6%B6%88%E6%81%AF.png" alt="">
-<img src="/assets/zh/posts/20200912-2/%E5%BC%82%E5%B8%B8%E6%83%85%E5%86%B5_%E4%BA%8B%E5%8A%A1%E4%B8%BB%E5%8A%A8%E6%96%B9%E6%B6%88%E6%81%AF%E6%81%A2%E5%A4%8D.jpeg" alt=""></p>
+<figure>
+  <img src="/assets/zh/posts/20200912-2/%E6%AD%A3%E5%B8%B8%E6%83%85%E5%86%B5_%E4%BA%8B%E5%8A%A1%E4%B8%BB%E5%8A%A8%E6%96%B9%E5%8F%91%E6%B6%88%E6%81%AF.png" alt="正常情况 事务主动方发消息">
+  <figcaption>图：正常情况 事务主动方发消息</figcaption>
+</figure>
+<figure>
+  <img src="/assets/zh/posts/20200912-2/%E5%BC%82%E5%B8%B8%E6%83%85%E5%86%B5_%E4%BA%8B%E5%8A%A1%E4%B8%BB%E5%8A%A8%E6%96%B9%E6%B6%88%E6%81%AF%E6%81%A2%E5%A4%8D.jpeg" alt="异常情况 事务主动方消息恢复">
+  <figcaption>图：异常情况 事务主动方消息恢复</figcaption>
+</figure>
 <h4 id="rocketmq" data-heading-text="RocketMQ">RocketMQ</h4>
 <ul>
 <li>
@@ -311,7 +329,10 @@ Consumer 端的消费成功机制有 MQ 保证。</p>
 <p>RocketMQ 阿里开源的消息中间件,原来叫做MetaQ; RocketMQ的各个环节,包括生产者,消费者,broker都是分布式的,所以基本可以保障由于网络原因丢掉,且RocketMQ存在重复消费的问题,所以文档明确表明了应该业务方自己实现幂等性.</p>
 </li>
 </ul>
-<p><img src="/assets/zh/posts/20200912-2/RocketMQ.png" alt=""></p>
+<figure>
+  <img src="/assets/zh/posts/20200912-2/RocketMQ.png" alt="RocketMQ">
+  <figcaption>图：RocketMQ</figcaption>
+</figure>
 <ul>
 <li>Pulsar、RocketMQ、NSQ、RabbitMQ、Kafka TODO</li>
 </ul>
@@ -409,7 +430,10 @@ A:
 </ul>
 </li>
 </ol>
-<p><img src="/assets/zh/posts/20200912-2/%E5%85%81%E8%AE%B8%E7%A9%BA%E5%9B%9E%E6%BB%9A.png" alt=""></p>
+<figure>
+  <img src="/assets/zh/posts/20200912-2/%E5%85%81%E8%AE%B8%E7%A9%BA%E5%9B%9E%E6%BB%9A.png" alt="允许空回滚">
+  <figcaption>图：允许空回滚</figcaption>
+</figure>
 <ol start="2">
 <li>防悬挂控制
 <ul>
@@ -417,7 +441,10 @@ A:
 </ul>
 </li>
 </ol>
-<p><img src="/assets/zh/posts/20200912-2/%E9%98%B2%E6%82%AC%E6%8C%82%E6%8E%A7%E5%88%B6.png" alt=""></p>
+<figure>
+  <img src="/assets/zh/posts/20200912-2/%E9%98%B2%E6%82%AC%E6%8C%82%E6%8E%A7%E5%88%B6.png" alt="防悬挂控制">
+  <figcaption>图：防悬挂控制</figcaption>
+</figure>
 <h3 id="saga" data-heading-text="Saga ['sɑɡə]">Saga [&#39;sɑɡə]</h3>
 <ul>
 <li>
@@ -598,7 +625,10 @@ A:
 <p>从编程模型上，XA 模式与 AT 模式保持完全一致。上层编程模型与 AT 模式完全相同。只需要修改数据源代理，即可实现 XA 模式与 AT 模式之间的切换。</p>
 </li>
 </ul>
-<p><img src="/assets/zh/posts/20200912-2/Seata.jpg" alt=""></p>
+<figure>
+  <img src="/assets/zh/posts/20200912-2/Seata.jpg" alt="Seata">
+  <figcaption>图：Seata</figcaption>
+</figure>
 <h3 id="section-37" data-heading-text="最大努力通知型">最大努力通知型</h3>
 <ul>
 <li>回调客户端确认：支付宝会每间隔一段时间后，再向客户方发起回调请求，直到输出成功标识为止。</li>
@@ -685,7 +715,10 @@ A:
 <li>XA是数据库的分布式事务，强一致性，在整个过程中，数据一张锁住状态，即从prepare到commit、rollback的整个过程中，TM一直把持着数据库的锁，如果有其他人要修改数据库的该条数据，就必须等待锁的释放，存在长事务风险。</li>
 <li>TCC是业务的分布式事务，最终一致性，不会出现长事务的锁风险，try是本地事务，锁定资源后就提交事务，confirm／cancel也是本地事务，可以直接提交事务，所以多个短事务不会出现长事务的风险。</li>
 </ol>
-<p><img src="/assets/zh/posts/20200912-2/XA_TCC.png" alt=""></p>
+<figure>
+  <img src="/assets/zh/posts/20200912-2/XA_TCC.png" alt="XA TCC">
+  <figcaption>图：XA TCC</figcaption>
+</figure>
 <h3 id="section-46" data-heading-text="XA如何在分布式事务中如何保证隔离性？">XA如何在分布式事务中如何保证隔离性？</h3>
 <ol>
 <li>由RM直接连接各个数据源(支持XA协议)，RM一般是个单独的服务？</li>

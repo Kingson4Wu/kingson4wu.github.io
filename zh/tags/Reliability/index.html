@@ -132,7 +132,7 @@
       </div>
       <div class="post-summary">
         <h2><a href="/zh/posts/20200831-consul/">关于MHA_Consul_MySQL高可用方案的简单总结和思考</a></h2>
-        <p>概述 MHA + Consul + MySQL的高可用方案，网上已经有很多资料，这里只是做一下简要的总结和思考。文章部分文字摘自Reference中的链接。 直接先上一张图 图中的灾备架构适用于同城主备架构的业务，比如金钱业务； DB层是一主多从，主库至在其中一个机房，并在DB集群上搭建跨IDC的MHA；同样Consu...</p>
+        <p>概述 MHA + Consul + MySQL的高可用方案，网上已经有很多资料，这里只是做一下简要的总结和思考。文章部分文字摘自Reference中的链接。 直接先上一张图 图：MHA Consul MySQL切换 图中的灾备架构适用于同城主备架构的业务，比如金钱业务； DB层是一主多从，主库至在其中一个机房，并在DB...</p>
       </div>
     </li>
     <li>
@@ -172,7 +172,7 @@
       </div>
       <div class="post-summary">
         <h2><a href="/zh/posts/20200708-2/">程序异常时能返回50x吗？</a></h2>
-        <p>问题描述 内网nginx配置 proxy_next_upstream error timeout http_500 http_502 http_503 http_504; proxy_upstream_tries 5; 表示超时或50x(500,502,503,504)，nginx会进行重试，一共5次 2. 服务的程序...</p>
+        <p>图：Gerrard 2 问题描述 内网nginx配置 proxy_next_upstream error timeout http_500 http_502 http_503 http_504; proxy_upstream_tries 5; 表示超时或50x(500,502,503,504)，nginx会进行重试，一...</p>
       </div>
     </li>
     <li>
@@ -182,7 +182,7 @@
       </div>
       <div class="post-summary">
         <h2><a href="/zh/posts/20200706/">上线需要做哪些准备？</a></h2>
-        <p>一般常规的上线，需要做哪些准备，确保不会因为遗漏这种低级错误导致线上问题？ 开发中遇到问题标注TODO，避免遗漏，单元测试覆盖业务逻辑 准备上线checklist，验收方案 检查上线配置 是否需要配置定时任务 重新检查一遍变更的代码 扩展 涉及app的，需要考虑旧版本兼容和回归测试（重点回归若干个高流量的旧版本） 若上...</p>
+        <p>图：Carlos 一般常规的上线，需要做哪些准备，确保不会因为遗漏这种低级错误导致线上问题？ 开发中遇到问题标注TODO，避免遗漏，单元测试覆盖业务逻辑 准备上线checklist，验收方案 检查上线配置 是否需要配置定时任务 重新检查一遍变更的代码 扩展 涉及app的，需要考虑旧版本兼容和回归测试（重点回归若干个高流...</p>
       </div>
     </li>
   </ol>

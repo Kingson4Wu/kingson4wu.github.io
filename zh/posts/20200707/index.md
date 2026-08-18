@@ -7,11 +7,14 @@ Type: post
 Date: 2020-07-07
 Tags: Architecture
 
-在互联网服务中，经常需要使用唯一ID。其中一个常见的应用场景是作为业务中请求的幂等ID。 分布式唯一ID生成方案 uuid snowflake 包含业务属性的唯一ID，如 timestamp+ uid（10-11位）+ 随机3位数字（或递增） 其他方案 优劣不在这里讨论 业务场景分析 结合目前工作中的现状进行分析 唯一...
+图：Zidane 2 在互联网服务中，经常需要使用唯一ID。其中一个常见的应用场景是作为业务中请求的幂等ID。 分布式唯一ID生成方案 uuid snowflake 包含业务属性的唯一ID，如 timestamp+ uid（10-11位）+ 随机3位数字（或递增） 其他方案 优劣不在这里讨论 业务场景分析 结合目前工作...
 
 ---
 
-![](/assets/zh/shared/photo/Zidane_2.jpeg)
+<figure>
+  <img src="/assets/zh/shared/photo/Zidane_2.jpeg" alt="Zidane 2">
+  <figcaption>图：Zidane 2</figcaption>
+</figure>
 
 在互联网服务中，经常需要使用唯一ID。其中一个常见的应用场景是作为业务中请求的幂等ID。
 

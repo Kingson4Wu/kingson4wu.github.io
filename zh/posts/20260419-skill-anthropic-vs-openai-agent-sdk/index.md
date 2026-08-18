@@ -43,7 +43,10 @@ CLI 启动时扫描 5 个来源（managed → user → project → additional �
 
 这个设计解释了为什么 `estimateSkillFrontmatterTokens()` 只算 frontmatter 的 token——因为完整内容本来就不是提前加载的。
 
-![Anthropic Skill System - Unified](/assets/zh/posts/20260419-skill-anthropic-vs-openai-agent-sdk/anthropic-skill-unified.png)
+<figure>
+  <img src="/assets/zh/posts/20260419-skill-anthropic-vs-openai-agent-sdk/anthropic-skill-unified.png" alt="Anthropic Skill System - Unified">
+  <figcaption>图：Anthropic Skill System - Unified</figcaption>
+</figure>
 
 > Phase 1: 5 sources scan → lazy registry (frontmatter only). Phase 2: model calls Skill → SkillTool.call() → contextModifier (dynamic permission) + newMessages (push to conversation). Key: contextModifier is Anthropic's unique runtime permission grant mechanism.
 
@@ -64,7 +67,10 @@ CLI 启动时扫描 5 个来源（managed → user → project → additional �
 
 循环终止条件很多：模型不再输出 tool_use、达到最大回合数、用户中断、hook 阻止、token budget 耗尽、API 错误等。
 
-![Anthropic Agent Orchestration Flow](/assets/zh/posts/20260419-skill-anthropic-vs-openai-agent-sdk/anthropic-agent-orchestration.png)
+<figure>
+  <img src="/assets/zh/posts/20260419-skill-anthropic-vs-openai-agent-sdk/anthropic-agent-orchestration.png" alt="Anthropic Agent Orchestration Flow">
+  <figcaption>图：Anthropic Agent Orchestration Flow</figcaption>
+</figure>
 
 > 上图展示 queryLoop() 流程：上下文准备 → 模型调用 → 响应解析 → tool_use 判断 → 工具执行 → 结果注入 → 循环。核心哲学：模型通过 system prompt + tool descriptions 自主决定行为，编排层是被动的 I/O 路由器。
 
@@ -97,7 +103,10 @@ agent = SandboxAgent(
 
 `Skills.instructions()` 把 skill 索引（名称 + 描述 + 路径）注入 system prompt。完整 SKILL.md 内容不在 system prompt 里——和 Anthropic 一样是延迟加载，只是触发机制不同。
 
-![OpenAI Skill System - Unified](/assets/zh/posts/20260419-skill-anthropic-vs-openai-agent-sdk/openai-skill-unified.png)
+<figure>
+  <img src="/assets/zh/posts/20260419-skill-anthropic-vs-openai-agent-sdk/openai-skill-unified.png" alt="OpenAI Skill System - Unified">
+  <figcaption>图：OpenAI Skill System - Unified</figcaption>
+</figure>
 
 > Phase 1: Capability plugin + lazy index (frontmatter only) + system prompt injection. Phase 2: model calls load_skill() → _LoadSkillTool copies files → returns {"status": "loaded"} → model explicitly calls Read() from sandbox workspace. Key: no contextModifier equivalent — content is model-pulled, permissions are static.
 
@@ -117,7 +126,10 @@ agent = SandboxAgent(
 
 `AgentRunner.run()` 的流程：准备 agent → 收集工具 → 调用模型 → 解析响应 → 执行工具 → 决定下一步（返回结果 / Handoff / 继续循环）。和 Anthropic 的 queryLoop 本质一样：检测到 tool_use 决定 → 执行 → 把结果塞回去 → 继续循环。
 
-![OpenAI Agent Orchestration Flow](/assets/zh/posts/20260419-skill-anthropic-vs-openai-agent-sdk/openai-agent-orchestration.png)
+<figure>
+  <img src="/assets/zh/posts/20260419-skill-anthropic-vs-openai-agent-sdk/openai-agent-orchestration.png" alt="OpenAI Agent Orchestration Flow">
+  <figcaption>图：OpenAI Agent Orchestration Flow</figcaption>
+</figure>
 
 > 上图展示 Runner.run() 流程：prepare_agent → get_all_tools → run_single_turn → process_model_response → 分支决策（FinalOutput / Handoff / RunAgain）。核心哲学：模型决定一切——调什么工具、何时 handoff、何时停止，SDK 只是被动路由器。
 

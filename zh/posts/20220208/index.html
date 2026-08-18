@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Java11基础原理和实践 | 拉巴力的纸皮箱</title>
-  <meta name="description" content="一、为什么选择java11 Java 11 是 Java 8 之后的首个 LTS 版本（Long-term support 长期支持版本），所以有不少开发者表示会选择升级至 Java 11。 1、目前相对来说，Java 8 太旧，Java 17 太新，Java11 刚刚好； 2、支持以类路径方式运行，适合过渡阶段升级；...">
+  <meta name="description" content="一、为什么选择java11 Java 11 是 Java 8 之后的首个 LTS 版本（Long-term support 长期支持版本），所以有不少开发者表示会选择升级至 Java 11。 图：java11 1、目前相对来说，Java 8 太旧，Java 17 太新，Java11 刚刚好； 2、支持以类路径方式运行，...">
   <link rel="canonical" href="https://kingson4wu.github.io/zh/posts/20220208/">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="alternate" type="application/rss+xml" title="拉巴力的纸皮箱" href="/zh/feed.xml">
@@ -63,7 +63,10 @@
       <div class="prose">
 <h1 id="section-1" data-heading-text="一、为什么选择java11">一、为什么选择java11</h1>
 <p>Java 11 是 Java 8 之后的首个 LTS 版本（Long-term support 长期支持版本），所以有不少开发者表示会选择升级至 Java 11。</p>
-<p><img src="/assets/zh/posts/20220208/java11.png" alt=""></p>
+<figure>
+  <img src="/assets/zh/posts/20220208/java11.png" alt="java11">
+  <figcaption>图：java11</figcaption>
+</figure>
 <p>1、目前相对来说，Java 8 太旧，Java 17 太新，Java11 刚刚好；
 2、支持以类路径方式运行，适合过渡阶段升级；
 3、其他原因（下文会说明）</p>
@@ -283,7 +286,10 @@ resolveClass(aClass);
 <p>（2）Java SE 9不支持扩展机制。 如果需要类似的功能，可以将这些JAR放在类路径的前面。 使用名为JAVA_HOME\lib\ext的目录或设置名为java.ext.dirs的系统属性会导致JDK 9中的错误。</p>
 <p>（3）在JDK 9之前，扩展类加载器和应用程序类加载器是java.net.URLClassLoader类的一个实例。 在JDK 9中，平台类加载器（以前的扩展类加载器）和应用程序类加载器是内部JDK类的实例。 如果你的代码依赖于URLClassLoader类的特定方法，代码可能会在JDK 9中崩溃。</p>
 <h2 id="3-2" data-heading-text="3、类加载器的加载流程">3、类加载器的加载流程</h2>
-<p><img src="/assets/zh/posts/20220208/java11_classloader.png" alt=""></p>
+<figure>
+  <img src="/assets/zh/posts/20220208/java11_classloader.png" alt="java11 classloader">
+  <figcaption>图：java11 classloader</figcaption>
+</figure>
 <h3 id="section-35" data-heading-text="在JDK 9之前">在JDK 9之前</h3>
 <p>a. JDK使用三个类加载器来加载类
 b. JDK类加载器以分层方式工作 —— 引导类加载器位于层次结构的顶部。 类加载器将类加载请求委托给上层类加载器。</p>

@@ -182,7 +182,7 @@
       </div>
       <div class="post-summary">
         <h2><a href="/zh/posts/20240530/">基于Saturn定时任务的客户端工具设计</a></h2>
-        <p>基于之前写的这篇谈谈定时任务的原理和应用继续聊。 由于业务进程不是Java编写的，无法使用Saturn提供的Java定时任务，只能使用Shell定时任务 这里选择用UDS实现Shell进程和服务进程之间的通信，实现和使用Java定时任务一样的效果 在上次的实现中，只考虑了如何触发定时任务执行，并没有考虑如何停止 实现对...</p>
+        <p>基于之前写的这篇谈谈定时任务的原理和应用继续聊。 图：saturn uds 由于业务进程不是Java编写的，无法使用Saturn提供的Java定时任务，只能使用Shell定时任务 这里选择用UDS实现Shell进程和服务进程之间的通信，实现和使用Java定时任务一样的效果 在上次的实现中，只考虑了如何触发定时任务执行，...</p>
       </div>
     </li>
     <li>
@@ -212,7 +212,7 @@
       </div>
       <div class="post-summary">
         <h2><a href="/zh/posts/20230702/">对工作中接触过的几种编程语言及其部署架构的看法</a></h2>
-        <p>公司V 使用Java作为编程语言 使用Spring-MVC框架 使用Tomcat作为Web容器 打包运行方式： 服务器预安装了Java和Tomcat 将代码打包成war包 将war包上传到服务器的Tomcat的web目录 重启tomcat更新服务 公司U 使用Java作为编程语言 使用二次开发的Play1.x作为web...</p>
+        <p>公司V 图：01.V Java 使用Java作为编程语言 使用Spring-MVC框架 使用Tomcat作为Web容器 打包运行方式： 服务器预安装了Java和Tomcat 将代码打包成war包 将war包上传到服务器的Tomcat的web目录 重启tomcat更新服务 公司U 图：02.U Java 使用Java作为...</p>
       </div>
     </li>
     <li>
@@ -222,7 +222,7 @@
       </div>
       <div class="post-summary">
         <h2><a href="/zh/posts/20230128/">N年前的笔记备忘查阅</a></h2>
-        <p>正则表达式和Matcher,Pattern的简单用法 如何在同一台电脑使用不同的账号提交到同一个github仓库 Spring源码阅读之数据自动绑定 Hessian跨语言调用实例 关于Java权限控制SecurityManager的理解 关于系统间数据一致性（跨进程事务）的解决方案 wireshark抓包简单查看HTT...</p>
+        <p>图：messi ronaldo 正则表达式和Matcher,Pattern的简单用法 如何在同一台电脑使用不同的账号提交到同一个github仓库 Spring源码阅读之数据自动绑定 Hessian跨语言调用实例 关于Java权限控制SecurityManager的理解 关于系统间数据一致性（跨进程事务）的解决方案 wi...</p>
       </div>
     </li>
     <li>
@@ -232,7 +232,7 @@
       </div>
       <div class="post-summary">
         <h2><a href="/zh/posts/20221018/">我的重构（翻译）经历</a></h2>
-        <p>前言 这里的重构基本指的是：把用A语言写的服务，使用B语言重写 工作的大部分内容其实就是人肉代码翻译 当然，重构通常也伴随的架构的优化和调整 最后，为了保证工作的顺利进行和服务的稳定切换，也总结了一些经验 下面将简要讲述作者的三段重构经历，分别是将三种不同的语言重构成Java（本人公司的所在的业务的主要语言就是Java...</p>
+        <p>图：messi4 前言 这里的重构基本指的是：把用A语言写的服务，使用B语言重写 工作的大部分内容其实就是人肉代码翻译 当然，重构通常也伴随的架构的优化和调整 最后，为了保证工作的顺利进行和服务的稳定切换，也总结了一些经验 下面将简要讲述作者的三段重构经历，分别是将三种不同的语言重构成Java（本人公司的所在的业务的主...</p>
       </div>
     </li>
     <li>
@@ -242,7 +242,7 @@
       </div>
       <div class="post-summary">
         <h2><a href="/zh/posts/20220705/">Java跨平台能完全做到一次编写到处运行？</a></h2>
-        <p>最近定位一个问题，花了不少时间。事后回想起来挺低级的，在此记录一下。 问题 spring i18n, 在windows和mac生效，在linux不生效。 原因 资源文件的名字为小写（message_zh_hant.proprties） 而文件读取时包含大写（message_zh_Hant.proprties）（这里不得...</p>
+        <p>图：lionel messi 最近定位一个问题，花了不少时间。事后回想起来挺低级的，在此记录一下。 问题 spring i18n, 在windows和mac生效，在linux不生效。 原因 资源文件的名字为小写（message_zh_hant.proprties） 而文件读取时包含大写（message_zh_Hant....</p>
       </div>
     </li>
     <li>
@@ -272,7 +272,7 @@
       </div>
       <div class="post-summary">
         <h2><a href="/zh/posts/20220220/">nba选秀抽签具体是如何操作的？</a></h2>
-        <p>nba选秀抽签具体是如何操作的？ 14个乒乓球分别贴上1-14数字，随机滚出4个，加起来是1001可能，其中11、12、13、14这个组合不算，剩下1000种可能。 闲来无事，使用Go粗暴模拟了一下 gopackage main import ( &amp;quot;fmt&amp;quot; &amp;quot;math/rand&amp;quot...</p>
+        <p>nba选秀抽签具体是如何操作的？ 14个乒乓球分别贴上1-14数字，随机滚出4个，加起来是1001可能，其中11、12、13、14这个组合不算，剩下1000种可能。 图：nba选秀抽签 闲来无事，使用Go粗暴模拟了一下 gopackage main import ( &amp;quot;fmt&amp;quot; &amp;quot;math...</p>
       </div>
     </li>
     <li>
@@ -282,7 +282,7 @@
       </div>
       <div class="post-summary">
         <h2><a href="/zh/posts/20220208/">Java11基础原理和实践</a></h2>
-        <p>一、为什么选择java11 Java 11 是 Java 8 之后的首个 LTS 版本（Long-term support 长期支持版本），所以有不少开发者表示会选择升级至 Java 11。 1、目前相对来说，Java 8 太旧，Java 17 太新，Java11 刚刚好； 2、支持以类路径方式运行，适合过渡阶段升级；...</p>
+        <p>一、为什么选择java11 Java 11 是 Java 8 之后的首个 LTS 版本（Long-term support 长期支持版本），所以有不少开发者表示会选择升级至 Java 11。 图：java11 1、目前相对来说，Java 8 太旧，Java 17 太新，Java11 刚刚好； 2、支持以类路径方式运行，...</p>
       </div>
     </li>
     <li>
@@ -302,7 +302,7 @@
       </div>
       <div class="post-summary">
         <h2><a href="/zh/posts/20210817/">Java垃圾回收总结</a></h2>
-        <p>Java中成熟的垃圾回收器有串行垃圾回收器、并行垃圾回收器、并发标记回收器（Concurrent Mark Sweep, CMS）、垃圾优先回收器（Garbage First，也称为G1）。在JDK 11中引入了一款新的垃圾回收器ZGC，在JDK 12中又引入了另一款新的垃圾回收器Shenandoah。虽然新的垃圾回收...</p>
+        <p>图：JVM GC Java中成熟的垃圾回收器有串行垃圾回收器、并行垃圾回收器、并发标记回收器（Concurrent Mark Sweep, CMS）、垃圾优先回收器（Garbage First，也称为G1）。在JDK 11中引入了一款新的垃圾回收器ZGC，在JDK 12中又引入了另一款新的垃圾回收器Shenandoah...</p>
       </div>
     </li>
   </ol>

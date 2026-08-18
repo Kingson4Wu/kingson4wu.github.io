@@ -7,11 +7,14 @@ Type: post
 Date: 2020-07-08
 Tags: Reliability
 
-问题描述 内网nginx配置 proxy_next_upstream error timeout http_500 http_502 http_503 http_504; proxy_upstream_tries 5; 表示超时或50x(500,502,503,504)，nginx会进行重试，一共5次 2. 服务的程序...
+图：Gerrard 2 问题描述 内网nginx配置 proxy_next_upstream error timeout http_500 http_502 http_503 http_504; proxy_upstream_tries 5; 表示超时或50x(500,502,503,504)，nginx会进行重试，一...
 
 ---
 
-![](/assets/zh/shared/photo/Gerrard_2.jpeg)
+<figure>
+  <img src="/assets/zh/shared/photo/Gerrard_2.jpeg" alt="Gerrard 2">
+  <figcaption>图：Gerrard 2</figcaption>
+</figure>
 
 ### 问题描述
 

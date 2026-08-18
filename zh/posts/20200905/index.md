@@ -64,7 +64,11 @@ Split Brain 是指在同一时刻有两个认为自己处于 Active 状态的 Na
 3. Chubby 分布式锁；[Google的锁，才是分布式锁？](https://mp.weixin.qq.com/s/R2FCLknar6bCvykJ1m7rJQ)
 
 ### 使用Consul解决脑裂问题
-+ ![](/assets/zh/posts/20200905/Consul_no_leader.png)
+
+<figure>
+  <img src="/assets/zh/posts/20200905/Consul_no_leader.png" alt="Consul no leader">
+  <figcaption>图：Consul no leader</figcaption>
+</figure>
 
 #### 如何判断“孤岛”？
 1. 在三个IDC部署一个Consul集群，该集群会存在一个leader，且每个IDC的service在网络正常的情况下，都能检测到哪个是leader；依赖Consul的raft协议选举判断网络孤岛；(为了后续描述简单，假设每个IDC只部署一个Consul结点)

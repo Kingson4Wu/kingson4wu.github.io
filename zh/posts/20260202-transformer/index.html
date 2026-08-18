@@ -72,7 +72,10 @@
 <p>这三句话不是对 Transformer 的技巧性总结,而是对其<strong>核心思想的抽象表达</strong>。它们并非 Transformer 独有的新概念,而是长期存在于神经网络中的通用思想,在 Transformer 中被系统化、模块化、工程化地组织在了一起。</p>
 <p>Transformer 的重要性不在于它「发明了什么全新的思想」,而在于它第一次把<strong>信息如何流动</strong>和<strong>状态如何更新</strong>这两件事彻底解耦,并用统一、可扩展的结构反复堆叠,从而构建出今天的大模型体系。</p>
 <h3 id="section-2" data-heading-text="整体架构概览">整体架构概览</h3>
-<p><img src="/assets/zh/posts/20260202-transformer/The_Transformer-model_architecture.png" alt=""></p>
+<figure>
+  <img src="/assets/zh/posts/20260202-transformer/The_Transformer-model_architecture.png" alt="The Transformer model architecture">
+  <figcaption>图：The Transformer model architecture</figcaption>
+</figure>
 <div class="code-block"><pre><code class="hljs">输入序列: [x₁, x₂, ..., xₙ]
     ↓
 [Token Embedding + Position Encoding]
@@ -177,7 +180,10 @@
 <p>位置编码不是「知识」,而是 Transformer 理解序列的<strong>坐标系</strong>。</p>
 <hr>
 <h2 id="attention" data-heading-text="三、Attention：可学习的信息路由机制">三、Attention：可学习的信息路由机制</h2>
-<p><img src="/assets/zh/posts/20260202-transformer/Scaled_Dot-Product_Attention.png" alt=""></p>
+<figure>
+  <img src="/assets/zh/posts/20260202-transformer/Scaled_Dot-Product_Attention.png" alt="Scaled Dot Product Attention">
+  <figcaption>图：Scaled Dot Product Attention</figcaption>
+</figure>
 <h3 id="1-q-k-v" data-heading-text="1. Q / K / V 的定义">1. Q / K / V 的定义</h3>
 <p>给定某一层的输入状态 <span class="math math-inline"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>X</mi></mrow><annotation encoding="application/x-tex">X</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.0785em;">X</span></span></span></span></span>：</p>
 <div class="math math-display"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>Q</mi><mo>=</mo><mi>X</mi><msub><mi>W</mi><mi>Q</mi></msub><mo separator="true">,</mo><mspace width="1em"/><mi>K</mi><mo>=</mo><mi>X</mi><msub><mi>W</mi><mi>K</mi></msub><mo separator="true">,</mo><mspace width="1em"/><mi>V</mi><mo>=</mo><mi>X</mi><msub><mi>W</mi><mi>V</mi></msub></mrow><annotation encoding="application/x-tex">Q = XW_Q,\quad K = XW_K,\quad V = XW_V</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8778em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">Q</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.9694em;vertical-align:-0.2861em;"></span><span class="mord mathnormal" style="margin-right:0.0785em;">X</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1389em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">Q</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:1em;"></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0715em;">K</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8778em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.0785em;">X</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1389em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0715em;">K</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:1em;"></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.2222em;">V</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord mathnormal" style="margin-right:0.0785em;">X</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1389em;">W</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.2222em;">V</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span></div>
@@ -363,7 +369,10 @@ M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
 <p>因此：Masked Self-Attention = 带因果约束的 Self-Attention</p>
 <hr>
 <h2 id="multi-head" data-heading-text="四、Multi-Head：并行的关系子空间">四、Multi-Head：并行的关系子空间</h2>
-<p><img src="/assets/zh/posts/20260202-transformer/Multi-Head_Attention.png" alt=""></p>
+<figure>
+  <img src="/assets/zh/posts/20260202-transformer/Multi-Head_Attention.png" alt="Multi Head Attention">
+  <figcaption>图：Multi Head Attention</figcaption>
+</figure>
 <h3 id="section-22" data-heading-text="基本原理">基本原理</h3>
 <p>Multi-Head Attention 不是「多算几次同样的 Attention」,而是：</p>
 <ul>

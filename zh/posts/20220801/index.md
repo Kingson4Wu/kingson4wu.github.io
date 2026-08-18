@@ -29,7 +29,11 @@ Tags: Networking
 5. 本地DNS服务器 -> 权限服务器（可选步骤，取决于上一步的返回）
 6. 用户机器（根据IP发送请求访问）
 
-![](/assets/zh/posts/20220801/dns-resolution-linux-1920x994.webp)
+<figure>
+  <img src="/assets/zh/posts/20220801/dns-resolution-linux-1920x994.webp" alt="dns resolution linux 1920x994">
+  <figcaption>图：dns resolution linux 1920x994</figcaption>
+</figure>
+
 + <https://devconnected.com/how-to-flush-dns-cache-on-linux/>
 
 + 浏览器等各个部分一般会缓存DNS记录一段时间

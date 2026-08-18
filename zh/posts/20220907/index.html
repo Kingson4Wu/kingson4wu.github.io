@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>TCP连接中的各种状态 | 拉巴力的纸皮箱</title>
-  <meta name="description" content="状态说明 CLOSED：无连接是活动的或正在进行 LISTEN：服务器在等待进入呼叫 SYN_RECV：一个连接请求已经到达，等待确认 SYN_SENT：应用已经开始，打开一个连接 ESTABLISHED：正常数据传输状态 FIN_WAIT1：应用说它已经完成 FIN_WAIT2：另一边已同意释放 ITMED_WAIT...">
+  <meta name="description" content="图：TCP三次握手四次挥手 图：TCP状态变化 状态说明 CLOSED：无连接是活动的或正在进行 LISTEN：服务器在等待进入呼叫 SYN_RECV：一个连接请求已经到达，等待确认 SYN_SENT：应用已经开始，打开一个连接 ESTABLISHED：正常数据传输状态 FIN_WAIT1：应用说它已经完成 FIN_W...">
   <link rel="canonical" href="https://kingson4wu.github.io/zh/posts/20220907/">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="alternate" type="application/rss+xml" title="拉巴力的纸皮箱" href="/zh/feed.xml">
@@ -60,8 +60,14 @@
   </ul>
       </header>
       <div class="prose">
-<p><img src="/assets/zh/posts/20220907/TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B.png" alt=""></p>
-<p><img src="/assets/zh/posts/20220907/TCP%E7%8A%B6%E6%80%81%E5%8F%98%E5%8C%96.png" alt=""></p>
+<figure>
+  <img src="/assets/zh/posts/20220907/TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B.png" alt="TCP三次握手四次挥手">
+  <figcaption>图：TCP三次握手四次挥手</figcaption>
+</figure>
+<figure>
+  <img src="/assets/zh/posts/20220907/TCP%E7%8A%B6%E6%80%81%E5%8F%98%E5%8C%96.png" alt="TCP状态变化">
+  <figcaption>图：TCP状态变化</figcaption>
+</figure>
 <h2 id="section-1" data-heading-text="状态说明">状态说明</h2>
 <ul>
 <li>CLOSED：无连接是活动的或正在进行</li>

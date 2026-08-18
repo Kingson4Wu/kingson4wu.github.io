@@ -7,11 +7,14 @@ Type: post
 Date: 2020-07-07
 Tags: Architecture, Distributed Systems
 
-RPC调用的返回结果 成功 失败 超时 超时情况是不确定的，需要调用方重试或查询等，根据业务情况进行处理 返回结果表示方法 使用http协议的状态码 使用业务错误码（在业务处理中比较常见） 0表示成功 1表示失败 其他错误码代表具体的失败业务场景 失败错误码类型 业务错误（参数错误，或业务场景校验限制，请求已经处理完成...
+图：Zlatan RPC调用的返回结果 成功 失败 超时 超时情况是不确定的，需要调用方重试或查询等，根据业务情况进行处理 返回结果表示方法 使用http协议的状态码 使用业务错误码（在业务处理中比较常见） 0表示成功 1表示失败 其他错误码代表具体的失败业务场景 失败错误码类型 业务错误（参数错误，或业务场景校验限制...
 
 ---
 
-![](/assets/zh/shared/photo/Zlatan.jpeg)
+<figure>
+  <img src="/assets/zh/shared/photo/Zlatan.jpeg" alt="Zlatan">
+  <figcaption>图：Zlatan</figcaption>
+</figure>
 
 #### RPC调用的返回结果
 

@@ -7,12 +7,14 @@ Type: post
 Date: 2022-09-07
 Tags: Networking
 
-TIME_WAIT 通信双方建立TCP连接后，主动关闭(FIN)连接的一方就会进入TIME_WAIT状态 客户端主动关闭连接时，发送最后一个ack后，会进入TIME_WAIT状态，再停留2个MSL时间，进入CLOSED状态 TIME_WAIT状态存在的理由 可靠地实现TCP全双工连接的终止 TCP协议在关闭连接的四次握...
+图：四次挥手 TIME_WAIT 通信双方建立TCP连接后，主动关闭(FIN)连接的一方就会进入TIME_WAIT状态 客户端主动关闭连接时，发送最后一个ack后，会进入TIME_WAIT状态，再停留2个MSL时间，进入CLOSED状态 TIME_WAIT状态存在的理由 可靠地实现TCP全双工连接的终止 TCP协议在关...
 
 ---
 
-![](/assets/zh/posts/20220907-time/%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B.jpeg)
-
+<figure>
+  <img src="/assets/zh/posts/20220907-time/%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B.jpeg" alt="四次挥手">
+  <figcaption>图：四次挥手</figcaption>
+</figure>
 
 ## TIME_WAIT
 + 通信双方建立TCP连接后，主动关闭(FIN)连接的一方就会进入TIME_WAIT状态

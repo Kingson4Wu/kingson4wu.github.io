@@ -27,4 +27,7 @@ The Phoenix - Fall Out boy Love Runs Out - OneRepublic Empire of Angels Breath A
 14. Because of You - Kelly Clarkson
 15. Now We Are Free - Hans Zimmer
 
-![](/assets/zh/posts/20191228/Cristiano_Ronaldo.jpeg)
+<figure>
+  <img src="/assets/zh/posts/20191228/Cristiano_Ronaldo.jpeg" alt="Cristiano Ronaldo">
+  <figcaption>图：Cristiano Ronaldo</figcaption>
+</figure>

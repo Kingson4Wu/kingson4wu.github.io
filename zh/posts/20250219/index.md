@@ -7,14 +7,16 @@ Type: post
 Date: 2025-02-19
 Tags: AI, LLM, Agent
 
-基于书籍简单记录要点 LangChain 提供了多种模板供选择 LangChain 提供了以下格式化 SQL 提示词模板（翻译）： 1. 你是一个 PostgreSQL 专家。给定一个输人问题，首先创建一个语法正确的 PostgreSQL查询来运行，然后查看查询结果，扑返回针对输人问题的答案。 2. 除非用户明确指定了...
+基于书籍简单记录要点 图：LangChain LangChain 提供了多种模板供选择 LangChain 提供了以下格式化 SQL 提示词模板（翻译）： 1. 你是一个 PostgreSQL 专家。给定一个输人问题，首先创建一个语法正确的 PostgreSQL查询来运行，然后查看查询结果，扑返回针对输人问题的答案。...
 
 ---
 
 >> 基于书籍简单记录要点
 
-![](/assets/zh/posts/20250219/LangChain.png)
-
+<figure>
+  <img src="/assets/zh/posts/20250219/LangChain.png" alt="LangChain">
+  <figcaption>图：LangChain</figcaption>
+</figure>
 
 # LangChain 提供了多种模板供选择
 

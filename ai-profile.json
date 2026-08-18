@@ -74,13 +74,13 @@
   },
   "content": {
     "counts": {
-      "total": 232,
+      "total": 236,
       "en": {
         "post": 5,
         "note": 11
       },
       "zh": {
-        "post": 212,
+        "post": 216,
         "note": 4
       }
     },
@@ -93,11 +93,11 @@
     "topTags": [
       {
         "name": "AI",
-        "count": 73
+        "count": 75
       },
       {
         "name": "LLM",
-        "count": 50
+        "count": 52
       },
       {
         "name": "Architecture",
@@ -108,19 +108,19 @@
         "count": 28
       },
       {
+        "name": "Deep Learning",
+        "count": 26
+      },
+      {
         "name": "Programming Languages",
         "count": 26
       },
       {
-        "name": "Deep Learning",
-        "count": 25
+        "name": "Reading",
+        "count": 22
       },
       {
         "name": "Career",
-        "count": 21
-      },
-      {
-        "name": "Reading",
         "count": 21
       },
       {
@@ -129,10 +129,14 @@
       },
       {
         "name": "Agent",
-        "count": 14
+        "count": 15
       },
       {
         "name": "Database",
+        "count": 13
+      },
+      {
+        "name": "Life",
         "count": 13
       },
       {
@@ -145,10 +149,6 @@
       },
       {
         "name": "Java",
-        "count": 11
-      },
-      {
-        "name": "Life",
         "count": 11
       },
       {
@@ -173,6 +173,60 @@
       }
     ],
     "latest": [
+      {
+        "title": "《西西弗神话》：在没有答案的世界里保持清醒",
+        "lang": "zh",
+        "type": "post",
+        "date": "2026-08-18",
+        "tags": [
+          "Reading",
+          "Life"
+        ],
+        "url": "https://kingson4wu.github.io/zh/posts/20260818-myth-of-sisyphus/",
+        "markdownUrl": "https://kingson4wu.github.io/zh/posts/20260818-myth-of-sisyphus/index.md",
+        "excerpt": "从《西西弗神话》的荒诞逻辑出发，梳理自杀、哲学跳跃、反抗、自由与创造，并记录关于宗教、痛苦、现实条件和个人生活策略的延伸思考。"
+      },
+      {
+        "title": "用信念安顿未知，让精神回到沿途风景",
+        "lang": "zh",
+        "type": "post",
+        "date": "2026-08-08",
+        "tags": [
+          "Life"
+        ],
+        "url": "https://kingson4wu.github.io/zh/posts/20260808-belief-unknown-scenery/",
+        "markdownUrl": "https://kingson4wu.github.io/zh/posts/20260808-belief-unknown-scenery/index.md",
+        "excerpt": "从许冠文谈死亡与《破·地狱》出发，整理“沿途风景”、宗教信念、临终选择与怎样活的问题：死亡提醒人提前表达爱、投入热爱、处理关系，并用能安顿自己的信念面对未知。"
+      },
+      {
+        "title": "AI Agent Eval 的工程本质：从评测到业务质量系统",
+        "lang": "zh",
+        "type": "post",
+        "date": "2026-08-04",
+        "tags": [
+          "AI",
+          "LLM",
+          "Agent"
+        ],
+        "url": "https://kingson4wu.github.io/zh/posts/20260804-ai-agent-eval-business-quality-system/",
+        "markdownUrl": "https://kingson4wu.github.io/zh/posts/20260804-ai-agent-eval-business-quality-system/index.md",
+        "excerpt": "基于 Anthropic 几篇 agent eval 工程文章，整理 AI eval 的系统组成、grader、trace、工具设计、benchmark 噪声，以及它和传统业务质量体系之间的关系。"
+      },
+      {
+        "title": "Dense + Sparse：从信息表示、RAG 检索到 LLM 架构的统一理解",
+        "lang": "zh",
+        "type": "post",
+        "date": "2026-07-30",
+        "tags": [
+          "AI",
+          "LLM",
+          "RAG",
+          "Deep Learning"
+        ],
+        "url": "https://kingson4wu.github.io/zh/posts/20260730-dense-sparse-rag-llm/",
+        "markdownUrl": "https://kingson4wu.github.io/zh/posts/20260730-dense-sparse-rag-llm/index.md",
+        "excerpt": "从信息表示、RAG 检索、MoE、Sparse Attention 和推理计算几个角度，理解 Dense 与 Sparse 在现代 AI 系统里的统一思想。"
+      },
       {
         "title": "Skill 机制与编排流程深度解析：Anthropic vs OpenAI Agent SDK 对比",
         "lang": "zh",
@@ -545,62 +599,6 @@
         "url": "https://kingson4wu.github.io/zh/posts/20260225/",
         "markdownUrl": "https://kingson4wu.github.io/zh/posts/20260225/index.md",
         "excerpt": "通过一个具体生成任务分析生成式 AI 的概率本质、自我解释局限与创新能力边界。"
-      },
-      {
-        "title": "AI 与学习型人际关系的变化",
-        "lang": "zh",
-        "type": "post",
-        "date": "2026-02-09",
-        "tags": [
-          "AI",
-          "LLM"
-        ],
-        "url": "https://kingson4wu.github.io/zh/posts/20260209-ai/",
-        "markdownUrl": "https://kingson4wu.github.io/zh/posts/20260209-ai/index.md",
-        "excerpt": "讨论 AI 普及后知识获取方式变化，以及它对学习型人际关系与思想交流模式的影响。"
-      },
-      {
-        "title": "AI生成内容时代：原创、作者与创作价值",
-        "lang": "zh",
-        "type": "post",
-        "date": "2026-02-09",
-        "tags": [
-          "AI",
-          "LLM"
-        ],
-        "url": "https://kingson4wu.github.io/zh/posts/20260209/",
-        "markdownUrl": "https://kingson4wu.github.io/zh/posts/20260209/index.md",
-        "excerpt": "从原创性、作者身份与价值判断三个维度，讨论 AI 生成内容时代的创作定义如何变化。"
-      },
-      {
-        "title": "AI 能否创造真正的新事物",
-        "lang": "zh",
-        "type": "post",
-        "date": "2026-02-04",
-        "tags": [
-          "AI",
-          "LLM",
-          "Deep Learning"
-        ],
-        "url": "https://kingson4wu.github.io/zh/posts/20260204-ai/",
-        "markdownUrl": "https://kingson4wu.github.io/zh/posts/20260204-ai/index.md",
-        "excerpt": "围绕生成式 AI 的概率生成机制，讨论它是否能够实现真正意义上的创新与概念跃迁。"
-      },
-      {
-        "title": "从 Prompt 到碳基 Agentic RAG：AI 时代的人类认知外化",
-        "lang": "zh",
-        "type": "post",
-        "date": "2026-02-04",
-        "tags": [
-          "AI",
-          "LLM",
-          "RAG",
-          "Prompt Engineering",
-          "Deep Learning"
-        ],
-        "url": "https://kingson4wu.github.io/zh/posts/20260204-prompt-agentic-rag-ai/",
-        "markdownUrl": "https://kingson4wu.github.io/zh/posts/20260204-prompt-agentic-rag-ai/index.md",
-        "excerpt": "从 Prompt、Context 与协议出发，讨论 AI 应用背后的人类认知组织能力如何被外化与结构化。"
       }
     ]
   }

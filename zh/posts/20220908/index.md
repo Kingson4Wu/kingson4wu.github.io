@@ -7,12 +7,20 @@ Type: post
 Date: 2022-09-08
 Tags: Networking
 
-网络寻址原理 负载均衡模式
+网络寻址原理 图：网络寻址原理 负载均衡模式 图：负载均衡模式
 
 ---
 
 ## 网络寻址原理
-![](/assets/zh/posts/20220908/%E7%BD%91%E7%BB%9C%E5%AF%BB%E5%9D%80%E5%8E%9F%E7%90%86.jpg)
+
+<figure>
+  <img src="/assets/zh/posts/20220908/%E7%BD%91%E7%BB%9C%E5%AF%BB%E5%9D%80%E5%8E%9F%E7%90%86.jpg" alt="网络寻址原理">
+  <figcaption>图：网络寻址原理</figcaption>
+</figure>
 
 ## 负载均衡模式
-![](/assets/zh/posts/20220908/%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E6%A8%A1%E5%BC%8F.jpg)
+
+<figure>
+  <img src="/assets/zh/posts/20220908/%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E6%A8%A1%E5%BC%8F.jpg" alt="负载均衡模式">
+  <figcaption>图：负载均衡模式</figcaption>
+</figure>

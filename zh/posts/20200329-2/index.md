@@ -7,11 +7,14 @@ Type: post
 Date: 2020-03-29
 Tags: Architecture, Database
 
-目前针对历史流水表，历史订单表，采用的以月为维度的方式建表，如以下表结构所示 sqlCREATE TABLE `t_order_202002` ( `order_id` varchar(128) NOT NULL COMMENT &#x27;订单id&#x27;, `coin` decimal(32,2) NOT NU...
+图：Henry 目前针对历史流水表，历史订单表，采用的以月为维度的方式建表，如以下表结构所示 sqlCREATE TABLE `t_order_202002` ( `order_id` varchar(128) NOT NULL COMMENT &#x27;订单id&#x27;, `coin` decimal(32,2...
 
 ---
 
-![](/assets/zh/shared/photo/Henry.jpeg)
+<figure>
+  <img src="/assets/zh/shared/photo/Henry.jpeg" alt="Henry">
+  <figcaption>图：Henry</figcaption>
+</figure>
 
 + 目前针对历史流水表，历史订单表，采用的以月为维度的方式建表，如以下表结构所示
 ```sql

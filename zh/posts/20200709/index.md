@@ -7,11 +7,14 @@ Type: post
 Date: 2020-07-09
 Tags: Reading, Life
 
-我的看法也许不值得别人重视，但对自己却很重要。这说明我有自己的好恶、爱憎等等。假如没有这些，做人也没什么味道。 我已经四十岁了，除了这只猪，还没见过谁敢于如此无视对生活的设置。相反，我倒见过很多想要设置别人生活的人，还有对被设置的生活安之若素的人。因为这个缘故，我一直怀念这只特立独行的猪。 真正有出息的人是对名人感兴趣...
+图：Shanghai Beach 我的看法也许不值得别人重视，但对自己却很重要。这说明我有自己的好恶、爱憎等等。假如没有这些，做人也没什么味道。 我已经四十岁了，除了这只猪，还没见过谁敢于如此无视对生活的设置。相反，我倒见过很多想要设置别人生活的人，还有对被设置的生活安之若素的人。因为这个缘故，我一直怀念这只特立独行的...
 
 ---
 
-![](/assets/zh/shared/photo/Shanghai_Beach.png)
+<figure>
+  <img src="/assets/zh/shared/photo/Shanghai_Beach.png" alt="Shanghai Beach">
+  <figcaption>图：Shanghai Beach</figcaption>
+</figure>
 
 + 我的看法也许不值得别人重视，但对自己却很重要。这说明我有自己的好恶、爱憎等等。假如没有这些，做人也没什么味道。
 
@@ -39,6 +42,7 @@ Tags: Reading, Life
 
   那些永远不肯或不能越出自己限度的人是平庸的人。
 
-
-
-![](/assets/zh/posts/20200709/MSN.jpg)
+<figure>
+  <img src="/assets/zh/posts/20200709/MSN.jpg" alt="MSN">
+  <figcaption>图：MSN</figcaption>
+</figure>

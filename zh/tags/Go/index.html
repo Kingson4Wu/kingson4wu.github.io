@@ -82,7 +82,7 @@
       </div>
       <div class="post-summary">
         <h2><a href="/zh/posts/20240530/">基于Saturn定时任务的客户端工具设计</a></h2>
-        <p>基于之前写的这篇谈谈定时任务的原理和应用继续聊。 由于业务进程不是Java编写的，无法使用Saturn提供的Java定时任务，只能使用Shell定时任务 这里选择用UDS实现Shell进程和服务进程之间的通信，实现和使用Java定时任务一样的效果 在上次的实现中，只考虑了如何触发定时任务执行，并没有考虑如何停止 实现对...</p>
+        <p>基于之前写的这篇谈谈定时任务的原理和应用继续聊。 图：saturn uds 由于业务进程不是Java编写的，无法使用Saturn提供的Java定时任务，只能使用Shell定时任务 这里选择用UDS实现Shell进程和服务进程之间的通信，实现和使用Java定时任务一样的效果 在上次的实现中，只考虑了如何触发定时任务执行，...</p>
       </div>
     </li>
     <li>
@@ -112,7 +112,7 @@
       </div>
       <div class="post-summary">
         <h2><a href="/zh/posts/20230702/">对工作中接触过的几种编程语言及其部署架构的看法</a></h2>
-        <p>公司V 使用Java作为编程语言 使用Spring-MVC框架 使用Tomcat作为Web容器 打包运行方式： 服务器预安装了Java和Tomcat 将代码打包成war包 将war包上传到服务器的Tomcat的web目录 重启tomcat更新服务 公司U 使用Java作为编程语言 使用二次开发的Play1.x作为web...</p>
+        <p>公司V 图：01.V Java 使用Java作为编程语言 使用Spring-MVC框架 使用Tomcat作为Web容器 打包运行方式： 服务器预安装了Java和Tomcat 将代码打包成war包 将war包上传到服务器的Tomcat的web目录 重启tomcat更新服务 公司U 图：02.U Java 使用Java作为...</p>
       </div>
     </li>
     <li>
@@ -132,7 +132,7 @@
       </div>
       <div class="post-summary">
         <h2><a href="/zh/posts/20220220/">nba选秀抽签具体是如何操作的？</a></h2>
-        <p>nba选秀抽签具体是如何操作的？ 14个乒乓球分别贴上1-14数字，随机滚出4个，加起来是1001可能，其中11、12、13、14这个组合不算，剩下1000种可能。 闲来无事，使用Go粗暴模拟了一下 gopackage main import ( &amp;quot;fmt&amp;quot; &amp;quot;math/rand&amp;quot...</p>
+        <p>nba选秀抽签具体是如何操作的？ 14个乒乓球分别贴上1-14数字，随机滚出4个，加起来是1001可能，其中11、12、13、14这个组合不算，剩下1000种可能。 图：nba选秀抽签 闲来无事，使用Go粗暴模拟了一下 gopackage main import ( &amp;quot;fmt&amp;quot; &amp;quot;math...</p>
       </div>
     </li>
   </ol>

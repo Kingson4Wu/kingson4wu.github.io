@@ -7,11 +7,14 @@ Type: post
 Date: 2021-08-17
 Tags: Java, Programming Languages
 
-Java中成熟的垃圾回收器有串行垃圾回收器、并行垃圾回收器、并发标记回收器（Concurrent Mark Sweep, CMS）、垃圾优先回收器（Garbage First，也称为G1）。在JDK 11中引入了一款新的垃圾回收器ZGC，在JDK 12中又引入了另一款新的垃圾回收器Shenandoah。虽然新的垃圾回收...
+图：JVM GC Java中成熟的垃圾回收器有串行垃圾回收器、并行垃圾回收器、并发标记回收器（Concurrent Mark Sweep, CMS）、垃圾优先回收器（Garbage First，也称为G1）。在JDK 11中引入了一款新的垃圾回收器ZGC，在JDK 12中又引入了另一款新的垃圾回收器Shenandoah...
 
 ---
 
-![](/assets/zh/posts/20210817/JVM_GC.png)
+<figure>
+  <img src="/assets/zh/posts/20210817/JVM_GC.png" alt="JVM GC">
+  <figcaption>图：JVM GC</figcaption>
+</figure>
 
 + Java中成熟的垃圾回收器有串行垃圾回收器、并行垃圾回收器、并发标记回收器（Concurrent Mark Sweep, CMS）、垃圾优先回收器（Garbage First，也称为G1）。在JDK 11中引入了一款新的垃圾回收器ZGC，在JDK 12中又引入了另一款新的垃圾回收器Shenandoah。虽然新的垃圾回收器不断地涌现，但是垃圾回收的基本算法变化并不大。简单来说，回收算法主要有复制、标记清除、标记压缩。JVM中不同的垃圾回收器都是基于这些基本算法实现的，不同的垃圾回收器区别在于：选择的算法不同，实现时后台线程采用的并行/并发方式不同。
 
@@ -32,7 +35,11 @@ Java中成熟的垃圾回收器有串行垃圾回收器、并行垃圾回收器�
 	- 串行执行：应用程序和垃圾回收器交替执行，垃圾回收器执行的时候应用程序暂停执行。串行执行指的是垃圾回收器有且仅有一个后台线程执行垃圾对象的识别和回收。
 	- 并行执行：应用程序和垃圾回收器交替执行，垃圾回收器执行的时候应用程序暂停执行。并行执行指的是垃圾回收器有多个后台线程执行垃圾对象的识别和回收，多个线程并行执行。
 	- 并发执行：应用程序和垃圾回收器同时运行，除了在某些必要的情况下垃圾回收器需要暂停应用程序的执行，其余的时候在应用程序运行的同时，垃圾回收器的后台线程也运行，如标识垃圾对象并回收垃圾对象所占的空间。
-![](/assets/zh/posts/20210817/%E4%B8%8D%E5%90%8C%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8%E7%9A%84%E5%B9%B6%E5%8F%91%E6%89%A7%E8%A1%8C.jpg)
+
+<figure>
+  <img src="/assets/zh/posts/20210817/%E4%B8%8D%E5%90%8C%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8%E7%9A%84%E5%B9%B6%E5%8F%91%E6%89%A7%E8%A1%8C.jpg" alt="不同垃圾回收器的并发执行">
+  <figcaption>图：不同垃圾回收器的并发执行</figcaption>
+</figure>
 
 + JKD7 默认垃圾收集器Parallel Scavenge（新生代）+Parallel Old（老年代）
 + JKD8 默认垃圾收集器Parallel Scavenge（新生代）+Parallel Old（老年代）
@@ -42,7 +49,10 @@ Java中成熟的垃圾回收器有串行垃圾回收器、并行垃圾回收器�
 + Minor GC：又称新生代GC
 + Full GC：又称为Major GC或老年代GC
 
-![](/assets/zh/posts/20210817/%E5%85%B3%E4%BA%8E%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8%E5%92%8C%E5%86%85%E5%AD%98%E5%A4%A7%E5%B0%8F%E7%9A%84%E5%8F%82%E8%80%83.png)
+<figure>
+  <img src="/assets/zh/posts/20210817/%E5%85%B3%E4%BA%8E%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8%E5%92%8C%E5%86%85%E5%AD%98%E5%A4%A7%E5%B0%8F%E7%9A%84%E5%8F%82%E8%80%83.png" alt="关于垃圾回收器和内存大小的参考">
+  <figcaption>图：关于垃圾回收器和内存大小的参考</figcaption>
+</figure>
 
 ### 垃圾收集器 种类
 1. Serial 垃圾收集器（单线程、复制算法）['sɪriəl]
@@ -114,11 +124,16 @@ Java中成熟的垃圾回收器有串行垃圾回收器、并行垃圾回收器�
 
 ### 新生代关系和组合关系
 + 当 CMS回收失败时, 备选 Serial Old GC
-![](/assets/zh/posts/20210817/HotSpot_%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%9A%84%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8.png)
 
-![](/assets/zh/posts/20210817/G1_ZGC_Shenandoah.jpg)
+<figure>
+  <img src="/assets/zh/posts/20210817/HotSpot_%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%9A%84%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8.png" alt="HotSpot 虚拟机的垃圾收集器">
+  <figcaption>图：HotSpot 虚拟机的垃圾收集器</figcaption>
+</figure>
 
-
+<figure>
+  <img src="/assets/zh/posts/20210817/G1_ZGC_Shenandoah.jpg" alt="G1 ZGC Shenandoah">
+  <figcaption>图：G1 ZGC Shenandoah</figcaption>
+</figure>
 
 ## Reference
 + 新一代垃圾回收器ZGC设计与实现

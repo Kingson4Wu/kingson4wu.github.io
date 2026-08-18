@@ -102,7 +102,7 @@
       </div>
       <div class="post-summary">
         <h2><a href="/zh/posts/20220114/">如何做数据库迁移</a></h2>
-        <p>先抛出以下问题： 把MHA-1集群的Database-C 迁到 MHA-2 集群中，有没有简单高效的方案? 方案1、在两个MHA集群，在建一套MHA3。MHA2的主作为MHA1的从？这样MH3切换的时候，应用服务就可以直接感知切到新库了； 方案2、先把C同步到2集群，然后做otter同步 方案1： 存在的问题： 中间再...</p>
+        <p>先抛出以下问题： 把MHA-1集群的Database-C 迁到 MHA-2 集群中，有没有简单高效的方案? 图：migration 方案1、在两个MHA集群，在建一套MHA3。MHA2的主作为MHA1的从？这样MH3切换的时候，应用服务就可以直接感知切到新库了； 方案2、先把C同步到2集群，然后做otter同步 方案1...</p>
       </div>
     </li>
     <li>
@@ -112,7 +112,7 @@
       </div>
       <div class="post-summary">
         <h2><a href="/zh/posts/20201011/">Redis笔记</a></h2>
-        <p>脑图 命令 info memory 可查看Redis使用了jemalloc Redis Config Get 命令 - 获取指定配置参数的值：https://www.redis.net.cn/order/3667.html cluster nodes Redis 客户端 https://redis.io/clients...</p>
+        <p>脑图 图：Redis 命令 info memory 可查看Redis使用了jemalloc Redis Config Get 命令 - 获取指定配置参数的值：https://www.redis.net.cn/order/3667.html cluster nodes Redis 客户端 https://redis.io...</p>
       </div>
     </li>
     <li>
@@ -122,7 +122,7 @@
       </div>
       <div class="post-summary">
         <h2><a href="/zh/posts/20201003/">MySQL笔记</a></h2>
-        <p>思维导图 InnoDB 事务隔离级别 隔离级别 脏读 不可重复读 幻读 未提交读(RUC) NO NO NO 已提交读(RC) YES NO NO 可重复读(RR) YES YES NO 可串行化 YES YES YES InnoDB 锁类型 共享/排它锁(Shared and Exclusive Locks) 在In...</p>
+        <p>思维导图 图：MySQL InnoDB 事务隔离级别 隔离级别 脏读 不可重复读 幻读 未提交读(RUC) NO NO NO 已提交读(RC) YES NO NO 可重复读(RR) YES YES NO 可串行化 YES YES YES InnoDB 锁类型 共享/排它锁(Shared and Exclusive Lo...</p>
       </div>
     </li>
     <li>
@@ -132,7 +132,7 @@
       </div>
       <div class="post-summary">
         <h2><a href="/zh/posts/20200831-consul/">关于MHA_Consul_MySQL高可用方案的简单总结和思考</a></h2>
-        <p>概述 MHA + Consul + MySQL的高可用方案，网上已经有很多资料，这里只是做一下简要的总结和思考。文章部分文字摘自Reference中的链接。 直接先上一张图 图中的灾备架构适用于同城主备架构的业务，比如金钱业务； DB层是一主多从，主库至在其中一个机房，并在DB集群上搭建跨IDC的MHA；同样Consu...</p>
+        <p>概述 MHA + Consul + MySQL的高可用方案，网上已经有很多资料，这里只是做一下简要的总结和思考。文章部分文字摘自Reference中的链接。 直接先上一张图 图：MHA Consul MySQL切换 图中的灾备架构适用于同城主备架构的业务，比如金钱业务； DB层是一主多从，主库至在其中一个机房，并在DB...</p>
       </div>
     </li>
     <li>
@@ -172,7 +172,7 @@
       </div>
       <div class="post-summary">
         <h2><a href="/zh/posts/20200705/">RPC可以和事务绑定吗？</a></h2>
-        <p>在平常编码的时候，经常会看到很多人喜欢把一次RPC调用和数据库事务绑定在一起，RPC调用成功则提交事务，RPC调用失败或超时，则回滚事务。那么这样做是对的吗？ 业务场景描述 考虑以下一种业务场景：用户加入群聊需要花费200金币。 服务架构：服务A(群服务)，服务B(消费服务)，操作都是幂等的。 加群请求--------...</p>
+        <p>图：MSN 在平常编码的时候，经常会看到很多人喜欢把一次RPC调用和数据库事务绑定在一起，RPC调用成功则提交事务，RPC调用失败或超时，则回滚事务。那么这样做是对的吗？ 业务场景描述 考虑以下一种业务场景：用户加入群聊需要花费200金币。 服务架构：服务A(群服务)，服务B(消费服务)，操作都是幂等的。 加群请求--...</p>
       </div>
     </li>
     <li>
@@ -182,7 +182,7 @@
       </div>
       <div class="post-summary">
         <h2><a href="/zh/posts/20200329-2/">表结构变更是否需要处理历史月表？</a></h2>
-        <p>目前针对历史流水表，历史订单表，采用的以月为维度的方式建表，如以下表结构所示 sqlCREATE TABLE `t_order_202002` ( `order_id` varchar(128) NOT NULL COMMENT &amp;#x27;订单id&amp;#x27;, `coin` decimal(32,2) NOT NU...</p>
+        <p>图：Henry 目前针对历史流水表，历史订单表，采用的以月为维度的方式建表，如以下表结构所示 sqlCREATE TABLE `t_order_202002` ( `order_id` varchar(128) NOT NULL COMMENT &amp;#x27;订单id&amp;#x27;, `coin` decimal(32,2...</p>
       </div>
     </li>
   </ol>

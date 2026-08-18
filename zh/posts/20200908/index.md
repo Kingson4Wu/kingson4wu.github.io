@@ -22,7 +22,12 @@ Tags: Reliability, Finance
 	2. [如何解决脑裂问题](https://kingson4wu.gitee.io/2020/09/05/20200905-%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%E8%84%91%E8%A3%82%E9%97%AE%E9%A2%98/)
 + 由于某种原因，某些细节不会描述。
 + 关于系统可用性，收藏了一张网图
-![](/assets/zh/posts/20200908/availability.png)
+
+<figure>
+  <img src="/assets/zh/posts/20200908/availability.png" alt="availability">
+  <figcaption>图：availability</figcaption>
+</figure>
+
 + MTTF 是 Mean Time To Failure，平均故障前的时间，即系统平均能够正常运行多长时间才发生一次故障。系统的可靠性越高，MTTF 越长。（注意：从字面上来说，看上去有 Failure 的字样，但其实是正常运行的时间。）
 + MTTR 是 Mean Time To Recovery，平均修复时间，即从故障出现到故障修复的这段时间，这段时间越短越好。
 + 故障是正常的，而且是常见的。
@@ -33,9 +38,15 @@ Tags: Reliability, Finance
 
 ## 容灾架构
 
-![](/assets/zh/posts/20200908/Network_Topology.png)
+<figure>
+  <img src="/assets/zh/posts/20200908/Network_Topology.png" alt="Network Topology">
+  <figcaption>图：Network Topology</figcaption>
+</figure>
 
-![](/assets/zh/posts/20200908/Architecture.png)
+<figure>
+  <img src="/assets/zh/posts/20200908/Architecture.png" alt="Architecture">
+  <figcaption>图：Architecture</figcaption>
+</figure>
 
 1. 红色线条为正常情况下的服务主链路；
 2. 同城主备架构： 主－IDC-A；从－IDC-B;

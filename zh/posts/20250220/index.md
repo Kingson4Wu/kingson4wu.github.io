@@ -7,14 +7,31 @@ Type: post
 Date: 2025-02-20
 Tags: AI, LLM, RAG
 
-基于书籍简单记录要点 一种借助“外挂”的提示工程 最核心的思想：给大模型补充外部知识以提高生成质量 大模型的 RAG 应用中，最常见的检索方式是借助基于向量的语义检索来获得相关的数据块，并根据其相似度排序，最后输出最相关的前 K 个数据块（简称top_K） 自然语言处理中用于把各种形式的信息转换成向量表示的模型叫嵌入模...
+基于书籍简单记录要点 图：RAG 应用开发要点第 1 部分 图：RAG 应用开发要点第 2 部分 图：RAG 应用开发要点第 3 部分 图：RAG 应用开发要点第 4 部分 一种借助“外挂”的提示工程 最核心的思想：给大模型补充外部知识以提高生成质量 大模型的 RAG 应用中，最常见的检索方式是借助基于向量的语义检索来...
 
 ---
 
 >> 基于书籍简单记录要点
 
+<figure>
+  <img src="/assets/zh/posts/20250220/RAG-1.png" alt="RAG 应用开发要点图第 1 部分">
+  <figcaption>图：RAG 应用开发要点第 1 部分</figcaption>
+</figure>
 
-![](/assets/zh/posts/20250220/RAG.png)
+<figure>
+  <img src="/assets/zh/posts/20250220/RAG-2.png" alt="RAG 应用开发要点图第 2 部分">
+  <figcaption>图：RAG 应用开发要点第 2 部分</figcaption>
+</figure>
+
+<figure>
+  <img src="/assets/zh/posts/20250220/RAG-3.png" alt="RAG 应用开发要点图第 3 部分">
+  <figcaption>图：RAG 应用开发要点第 3 部分</figcaption>
+</figure>
+
+<figure>
+  <img src="/assets/zh/posts/20250220/RAG-4.png" alt="RAG 应用开发要点图第 4 部分">
+  <figcaption>图：RAG 应用开发要点第 4 部分</figcaption>
+</figure>
 
 ---
 

@@ -11,7 +11,10 @@ Tags: Architecture, Distributed Systems
 
 ---
 
-![](/assets/zh/shared/photo/Gerrard.jpeg)
+<figure>
+  <img src="/assets/zh/shared/photo/Gerrard.jpeg" alt="Gerrard">
+  <figcaption>图：Gerrard</figcaption>
+</figure>
 
 在业务开发中，经常会使用RPC请求获取数据。有时候在同一条逻辑链路中，会多次使用RPC返回的数据。
 

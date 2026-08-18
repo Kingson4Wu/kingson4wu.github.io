@@ -115,13 +115,13 @@
     <loc>https://kingson4wu.github.io/zh/tags/Java/</loc>
   </url>
   <url>
+    <loc>https://kingson4wu.github.io/zh/tags/Life/</loc>
+  </url>
+  <url>
     <loc>https://kingson4wu.github.io/zh/tags/Math/</loc>
   </url>
   <url>
     <loc>https://kingson4wu.github.io/zh/tags/Finance/</loc>
-  </url>
-  <url>
-    <loc>https://kingson4wu.github.io/zh/tags/Life/</loc>
   </url>
   <url>
     <loc>https://kingson4wu.github.io/zh/tags/Skill/</loc>
@@ -145,10 +145,10 @@
     <loc>https://kingson4wu.github.io/zh/tags/Python/</loc>
   </url>
   <url>
-    <loc>https://kingson4wu.github.io/zh/tags/Media/</loc>
+    <loc>https://kingson4wu.github.io/zh/tags/RAG/</loc>
   </url>
   <url>
-    <loc>https://kingson4wu.github.io/zh/tags/RAG/</loc>
+    <loc>https://kingson4wu.github.io/zh/tags/Media/</loc>
   </url>
   <url>
     <loc>https://kingson4wu.github.io/zh/tags/Security/</loc>
@@ -167,6 +167,18 @@
   </url>
   <url>
     <loc>https://kingson4wu.github.io/ai-profile.json</loc>
+  </url>
+  <url>
+    <loc>https://kingson4wu.github.io/zh/posts/20260818-myth-of-sisyphus/</loc>
+  </url>
+  <url>
+    <loc>https://kingson4wu.github.io/zh/posts/20260808-belief-unknown-scenery/</loc>
+  </url>
+  <url>
+    <loc>https://kingson4wu.github.io/zh/posts/20260804-ai-agent-eval-business-quality-system/</loc>
+  </url>
+  <url>
+    <loc>https://kingson4wu.github.io/zh/posts/20260730-dense-sparse-rag-llm/</loc>
   </url>
   <url>
     <loc>https://kingson4wu.github.io/zh/posts/20260419-skill-anthropic-vs-openai-agent-sdk/</loc>

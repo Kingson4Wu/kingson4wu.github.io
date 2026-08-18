@@ -7,11 +7,14 @@ Type: post
 Date: 2022-07-05
 Tags: Java, Programming Languages
 
-最近定位一个问题，花了不少时间。事后回想起来挺低级的，在此记录一下。 问题 spring i18n, 在windows和mac生效，在linux不生效。 原因 资源文件的名字为小写（message_zh_hant.proprties） 而文件读取时包含大写（message_zh_Hant.proprties）（这里不得...
+图：lionel messi 最近定位一个问题，花了不少时间。事后回想起来挺低级的，在此记录一下。 问题 spring i18n, 在windows和mac生效，在linux不生效。 原因 资源文件的名字为小写（message_zh_hant.proprties） 而文件读取时包含大写（message_zh_Hant....
 
 ---
 
-![](/assets/zh/posts/20220705/lionel-messi.jpg)
+<figure>
+  <img src="/assets/zh/posts/20220705/lionel-messi.jpg" alt="lionel messi">
+  <figcaption>图：lionel messi</figcaption>
+</figure>
 
 + 最近定位一个问题，花了不少时间。事后回想起来挺低级的，在此记录一下。
 

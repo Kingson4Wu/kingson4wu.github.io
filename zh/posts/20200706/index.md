@@ -7,11 +7,14 @@ Type: post
 Date: 2020-07-06
 Tags: Architecture, Reliability
 
-一般常规的上线，需要做哪些准备，确保不会因为遗漏这种低级错误导致线上问题？ 开发中遇到问题标注TODO，避免遗漏，单元测试覆盖业务逻辑 准备上线checklist，验收方案 检查上线配置 是否需要配置定时任务 重新检查一遍变更的代码 扩展 涉及app的，需要考虑旧版本兼容和回归测试（重点回归若干个高流量的旧版本） 若上...
+图：Carlos 一般常规的上线，需要做哪些准备，确保不会因为遗漏这种低级错误导致线上问题？ 开发中遇到问题标注TODO，避免遗漏，单元测试覆盖业务逻辑 准备上线checklist，验收方案 检查上线配置 是否需要配置定时任务 重新检查一遍变更的代码 扩展 涉及app的，需要考虑旧版本兼容和回归测试（重点回归若干个高流...
 
 ---
 
-![](/assets/zh/shared/photo/Carlos.jpg)
+<figure>
+  <img src="/assets/zh/shared/photo/Carlos.jpg" alt="Carlos">
+  <figcaption>图：Carlos</figcaption>
+</figure>
 
 一般常规的上线，需要做哪些准备，确保不会因为遗漏这种低级错误导致线上问题？
 

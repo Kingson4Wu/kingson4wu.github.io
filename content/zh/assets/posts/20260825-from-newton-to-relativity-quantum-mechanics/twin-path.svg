@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 360" role="img" aria-labelledby="title desc">
+  <title id="title">双生子问题中的地球路径和飞船路径</title>
+  <desc id="desc">地球路径保持竖直，飞船路径离开后掉头再返回，二者在出发和重逢事件处相交。</desc>
+  <defs>
+    <marker id="axis-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#173f63"/>
+    </marker>
+  </defs>
+  <rect width="880" height="360" rx="16" fill="#fbf7ef"/>
+  <text x="440" y="46" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="25" font-weight="700" fill="#173f63">Proper time is measured along each path</text>
+  <line x1="122" y1="284" x2="770" y2="284" stroke="#173f63" stroke-width="1.5" marker-end="url(#axis-arrow)"/>
+  <line x1="122" y1="284" x2="122" y2="76" stroke="#173f63" stroke-width="1.5" marker-end="url(#axis-arrow)"/>
+  <text x="790" y="291" font-family="Georgia, 'Times New Roman', serif" font-size="15" fill="#173f63">空间</text>
+  <text x="94" y="78" text-anchor="end" font-family="Georgia, 'Times New Roman', serif" font-size="15" fill="#173f63">时间</text>
+  <path d="M 250 268 L 250 92" fill="none" stroke="#1f7a57" stroke-width="5" stroke-linecap="round"/>
+  <path d="M 250 268 L 575 112 L 250 92" fill="none" stroke="#173f63" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="250" cy="268" r="10" fill="#173f63"/>
+  <circle cx="250" cy="92" r="10" fill="#173f63"/>
+  <circle cx="575" cy="112" r="9" fill="#9a3b2f"/>
+  <text x="250" y="308" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="16" fill="#173f63">出发事件</text>
+  <text x="250" y="72" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="16" fill="#173f63">重逢事件</text>
+  <text x="166" y="184" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="17" font-weight="700" fill="#1f7a57">地球路径</text>
+  <text x="596" y="91" text-anchor="start" font-family="Georgia, 'Times New Roman', serif" font-size="16" font-weight="700" fill="#9a3b2f">掉头</text>
+  <text x="542" y="224" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="17" font-weight="700" fill="#173f63">飞船路径</text>
+</svg>

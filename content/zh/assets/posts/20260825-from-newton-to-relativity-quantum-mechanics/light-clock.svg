@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 360" role="img" aria-labelledby="title desc">
+  <title id="title">光钟在飞船和地面观察者视角下的路径差异</title>
+  <desc id="desc">左侧为飞船内看到的上下反射路径，右侧为地面观察者看到的斜线路径。</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#173f63"/>
+    </marker>
+    <marker id="arrow-warm" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9a3b2f"/>
+    </marker>
+  </defs>
+  <rect width="880" height="360" rx="16" fill="#fbf7ef"/>
+  <text x="440" y="48" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="25" font-weight="700" fill="#173f63">Light clock: same speed, different path length</text>
+  <rect x="56" y="82" width="330" height="206" rx="8" fill="#fffdf8" stroke="#173f63" stroke-width="1.4"/>
+  <rect x="494" y="82" width="330" height="206" rx="8" fill="#fffdf8" stroke="#173f63" stroke-width="1.4"/>
+  <text x="221" y="116" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="20" font-weight="700" fill="#173f63">飞船内观察</text>
+  <text x="659" y="116" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="20" font-weight="700" fill="#173f63">地面观察者</text>
+  <line x1="136" y1="150" x2="306" y2="150" stroke="#173f63" stroke-width="4" stroke-linecap="round"/>
+  <line x1="136" y1="236" x2="306" y2="236" stroke="#173f63" stroke-width="4" stroke-linecap="round"/>
+  <line x1="221" y1="224" x2="221" y2="162" stroke="#173f63" stroke-width="4" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+  <circle cx="221" cy="193" r="6" fill="#173f63"/>
+  <text x="221" y="270" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="15" fill="#173f63">上下反射</text>
+  <line x1="560" y1="150" x2="730" y2="150" stroke="#173f63" stroke-width="4" stroke-linecap="round"/>
+  <line x1="610" y1="236" x2="780" y2="236" stroke="#173f63" stroke-width="4" stroke-linecap="round"/>
+  <path d="M 640 224 L 700 162" fill="none" stroke="#9a3b2f" stroke-width="4" marker-start="url(#arrow-warm)" marker-end="url(#arrow-warm)"/>
+  <path d="M 555 251 C 630 269 715 269 790 251" fill="none" stroke="#173f63" stroke-width="1.6" stroke-dasharray="6 7" opacity="0.55"/>
+  <text x="734" y="199" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="15" font-weight="700" fill="#9a3b2f">路径更长</text>
+  <text x="659" y="270" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="15" fill="#173f63">斜线路径</text>
+</svg>

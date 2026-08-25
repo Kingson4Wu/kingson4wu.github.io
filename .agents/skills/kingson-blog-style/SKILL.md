@@ -33,6 +33,7 @@ Load references based on task mode:
 - For new posts or single-article rewrites, load `references/article-types.md`.
 - For batch rewrites, load `references/batch-rewrite.md`.
 - For AI-tone cleanup or old-post modernization, load `references/rewrite-rules.md`.
+- When creating or revising article diagrams, charts, SVGs, or explanatory images, load `references/visual-diagrams.md`.
 - When checking quality, load `examples/anti-patterns.md`.
 - When needing tone calibration, load `examples/good-patterns.md`.
 

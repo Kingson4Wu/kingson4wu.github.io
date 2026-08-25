@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 420" role="img" aria-labelledby="title desc">
+  <title id="title">双缝实验的粒子点和干涉条纹</title>
+  <desc id="desc">电子逐个到达屏幕，但大量事件累积后形成干涉条纹；若只是经典小球，则应形成两堆分布。</desc>
+  <rect width="900" height="420" rx="16" fill="#fbf7ef"/>
+  <text x="450" y="48" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="25" font-weight="700" fill="#173f63">One by one, yet an interference pattern</text>
+  <circle cx="92" cy="214" r="9" fill="#173f63"/>
+  <path d="M 92 214 C 130 182 176 182 226 206" fill="none" stroke="#173f63" stroke-width="3.2"/>
+  <path d="M 92 214 C 130 246 176 246 226 222" fill="none" stroke="#173f63" stroke-width="3.2"/>
+  <text x="92" y="252" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="15" fill="#173f63">单个电子</text>
+  <line x1="286" y1="96" x2="286" y2="160" stroke="#173f63" stroke-width="7" stroke-linecap="round"/>
+  <line x1="286" y1="184" x2="286" y2="236" stroke="#173f63" stroke-width="7" stroke-linecap="round"/>
+  <line x1="286" y1="260" x2="286" y2="324" stroke="#173f63" stroke-width="7" stroke-linecap="round"/>
+  <text x="286" y="352" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="15" fill="#173f63">双缝</text>
+  <path d="M 304 174 C 400 96 520 96 674 126" fill="none" stroke="#173f63" stroke-width="1.7" stroke-dasharray="5 8" opacity="0.55"/>
+  <path d="M 304 246 C 400 324 520 324 674 294" fill="none" stroke="#173f63" stroke-width="1.7" stroke-dasharray="5 8" opacity="0.55"/>
+  <line x1="694" y1="94" x2="694" y2="326" stroke="#173f63" stroke-width="7" stroke-linecap="round"/>
+  <text x="694" y="352" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="15" fill="#173f63">屏幕</text>
+  <g fill="#173f63" opacity="0.88">
+    <circle cx="694" cy="116" r="3.5"/><circle cx="694" cy="124" r="3.5"/><circle cx="694" cy="134" r="3.5"/>
+    <circle cx="694" cy="170" r="3.2"/><circle cx="694" cy="178" r="3.2"/>
+    <circle cx="694" cy="206" r="3.5"/><circle cx="694" cy="214" r="3.5"/><circle cx="694" cy="222" r="3.5"/><circle cx="694" cy="230" r="3.5"/>
+    <circle cx="694" cy="262" r="3.2"/><circle cx="694" cy="270" r="3.2"/>
+    <circle cx="694" cy="296" r="3.5"/><circle cx="694" cy="304" r="3.5"/>
+  </g>
+  <rect x="752" y="104" width="28" height="44" rx="5" fill="#173f63"/>
+  <rect x="752" y="168" width="28" height="18" rx="5" fill="#89a6bd"/>
+  <rect x="752" y="204" width="28" height="44" rx="5" fill="#173f63"/>
+  <rect x="752" y="268" width="28" height="18" rx="5" fill="#89a6bd"/>
+  <rect x="752" y="304" width="28" height="26" rx="5" fill="#173f63"/>
+  <text x="766" y="352" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="15" fill="#173f63">干涉条纹</text>
+  <rect x="94" y="302" width="86" height="42" rx="8" fill="#fffdf8" stroke="#173f63" stroke-width="1.1"/>
+  <rect x="108" y="316" width="20" height="14" rx="4" fill="#6f7f8d"/>
+  <rect x="146" y="316" width="20" height="14" rx="4" fill="#6f7f8d"/>
+  <text x="137" y="370" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="14" fill="#173f63">经典小球预期：两堆</text>
+</svg>

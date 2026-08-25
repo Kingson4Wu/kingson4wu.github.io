@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 420" role="img" aria-labelledby="title desc">
+  <title id="title">原子中离散能级示意</title>
+  <desc id="desc">三个离散能级之间有电子跃迁，向上吸收能量，向下释放能量。</desc>
+  <defs>
+    <marker id="arrow-up" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#173f63"/>
+    </marker>
+    <marker id="arrow-down" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9a3b2f"/>
+    </marker>
+  </defs>
+  <rect width="820" height="420" rx="16" fill="#fbf7ef"/>
+  <text x="410" y="50" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="25" font-weight="700" fill="#173f63">Energy levels are allowed states</text>
+  <rect x="96" y="84" width="628" height="220" rx="8" fill="#fffdf8" stroke="#173f63" stroke-width="1.4"/>
+  <line x1="190" y1="256" x2="650" y2="256" stroke="#173f63" stroke-width="3.5" stroke-linecap="round"/>
+  <line x1="190" y1="190" x2="650" y2="190" stroke="#173f63" stroke-width="3.5" stroke-linecap="round"/>
+  <line x1="190" y1="124" x2="650" y2="124" stroke="#173f63" stroke-width="3.5" stroke-linecap="round"/>
+  <text x="150" y="262" text-anchor="end" font-family="Georgia, 'Times New Roman', serif" font-size="18" font-weight="700" fill="#173f63">E1</text>
+  <text x="150" y="196" text-anchor="end" font-family="Georgia, 'Times New Roman', serif" font-size="18" font-weight="700" fill="#173f63">E2</text>
+  <text x="150" y="130" text-anchor="end" font-family="Georgia, 'Times New Roman', serif" font-size="18" font-weight="700" fill="#173f63">E3</text>
+  <circle cx="310" cy="256" r="9" fill="#173f63"/>
+  <path d="M 310 243 L 310 138" fill="none" stroke="#173f63" stroke-width="4" marker-end="url(#arrow-up)"/>
+  <circle cx="520" cy="124" r="9" fill="#9a3b2f"/>
+  <path d="M 520 138 L 520 243" fill="none" stroke="#9a3b2f" stroke-width="4" marker-end="url(#arrow-down)"/>
+  <rect x="204" y="334" width="236" height="46" rx="8" fill="#fffdf8" stroke="#173f63" stroke-width="1.2"/>
+  <circle cx="230" cy="357" r="6" fill="#173f63"/>
+  <text x="250" y="363" font-family="Georgia, 'Times New Roman', serif" font-size="16" font-weight="700" fill="#173f63">向上跃迁：吸收能量</text>
+  <rect x="464" y="334" width="236" height="46" rx="8" fill="#fffdf8" stroke="#9a3b2f" stroke-width="1.2"/>
+  <circle cx="490" cy="357" r="6" fill="#9a3b2f"/>
+  <text x="510" y="363" font-family="Georgia, 'Times New Roman', serif" font-size="16" font-weight="700" fill="#9a3b2f">向下跃迁：释放能量</text>
+</svg>

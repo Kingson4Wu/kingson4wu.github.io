@@ -8,7 +8,6 @@ description: 对比人类与大模型在“先得出结果、后生成解释”�
 tags:
   - AI
   - LLM
-  - Deep Learning
 source:
   repo: zh
   path: source/_posts/20260204-人类与模型的共同特征：直觉先行，解释在后.md

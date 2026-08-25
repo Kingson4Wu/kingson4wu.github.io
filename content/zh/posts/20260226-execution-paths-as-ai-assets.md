@@ -7,8 +7,9 @@ slug: 20260226-ai
 description: 讨论如何把重复任务中的稳定执行路径沉淀为可复用资产，以构建能够长期运行的 AI 系统。
 tags:
   - AI
-  - LLM
-  - Deep Learning
+  - Agent
+  - Skill
+  - Architecture
 source:
   repo: zh
   path: source/_posts/20260226-将执行路径固化为资产：一种面向长期运行的-AI-架构.md

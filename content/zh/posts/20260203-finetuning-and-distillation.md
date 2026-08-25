@@ -6,7 +6,6 @@ type: post
 slug: '20260203'
 description: 从函数逼近视角解释微调与蒸馏分别在学什么，以及二者为何相似又不同。
 tags:
-  - AI
   - LLM
   - Deep Learning
 source:

@@ -8,7 +8,6 @@ description: 围绕生成式 AI 的概率生成机制，讨论它是否能够实
 tags:
   - AI
   - LLM
-  - Deep Learning
 source:
   repo: zh
   path: source/_posts/20260204-AI-能否创造真正的新事物.md

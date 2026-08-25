@@ -9,8 +9,6 @@ tags:
   - AI
   - LLM
   - Agent
-  - Skill
-  - MCP
 source:
   repo: zh
   path: source/_posts/20260308-大模型时代，中小公司如何寻找-AI-竞争空间.md

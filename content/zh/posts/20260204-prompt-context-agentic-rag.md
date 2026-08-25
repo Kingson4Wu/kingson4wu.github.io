@@ -10,7 +10,7 @@ tags:
   - LLM
   - RAG
   - Prompt Engineering
-  - Deep Learning
+  - Agent
 source:
   repo: zh
   path: source/_posts/20260204-从-Prompt-到碳基-Agentic-RAG：AI-时代的人类认知外化.md

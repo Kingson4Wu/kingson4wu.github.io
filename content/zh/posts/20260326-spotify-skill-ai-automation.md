@@ -9,10 +9,9 @@ description: >-
   自动化系统如何通过分层、快路径、自愈闭环与业务状态验证维持可维护性。
 tags:
   - AI
-  - LLM
   - Agent
   - Skill
-  - Deep Learning
+  - Engineering
 source:
   repo: zh
   path: source/_posts/20260326-将执行路径固化为资产：从一个-Spotify-Skill-看长期运行的-AI-自动化系统.md

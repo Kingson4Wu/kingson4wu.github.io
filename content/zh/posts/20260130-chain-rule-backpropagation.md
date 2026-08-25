@@ -6,8 +6,6 @@ type: post
 slug: 20260130-2
 description: 从导数直觉出发，系统解释链式法则、偏导数与反向传播在计算图中的作用。
 tags:
-  - AI
-  - LLM
   - Deep Learning
   - Math
 source:

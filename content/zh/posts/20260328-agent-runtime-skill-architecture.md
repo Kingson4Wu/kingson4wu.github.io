@@ -7,10 +7,10 @@ slug: 20260328-agent-agent-runtime-skill-ai
 description: 从系统分层视角梳理 AI 应用从自建 Agent 走向 Runtime 与 Skill 组合架构的演进逻辑。
 tags:
   - AI
-  - LLM
   - Agent
   - Skill
   - MCP
+  - Architecture
 source:
   repo: zh
   path: source/_posts/20260328-从自建-Agent-到-Agent-Runtime-Skill：AI-系统架构的演进与收敛.md

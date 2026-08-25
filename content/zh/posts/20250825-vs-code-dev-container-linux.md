@@ -5,7 +5,9 @@ lang: zh
 type: post
 slug: 20250825-vs-code-dev-container-linux
 tags:
-  - AI
+  - Docker
+  - Linux
+  - Tooling
 source:
   repo: zh
   path: source/_posts/20250825-VS-Code-Dev-Container：打造丝滑的-Linux-开发调试体验.md

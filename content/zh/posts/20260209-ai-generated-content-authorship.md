@@ -7,7 +7,7 @@ slug: '20260209'
 description: 从原创性、作者身份与价值判断三个维度，讨论 AI 生成内容时代的创作定义如何变化。
 tags:
   - AI
-  - LLM
+  - Media
 source:
   repo: zh
   path: source/_posts/20260209-AI生成内容时代：原创性、作者身份与创作价值的再定义.md

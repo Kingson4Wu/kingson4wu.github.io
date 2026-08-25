@@ -6,9 +6,9 @@ type: post
 slug: 20260131-rnn-transformer
 description: 从序列建模需求出发，说明 RNN、CNN 到 Transformer 在结构设计上的关键转变。
 tags:
-  - AI
   - LLM
   - Deep Learning
+  - Transformer
 source:
   repo: zh
   path: source/_posts/20260131-从-RNN-到-Transformer-序列建模的结构性转变.md

@@ -6,9 +6,9 @@ type: post
 slug: 20260202-word2vec-transformer-embedding
 description: 对比 Word2Vec 与 Transformer 中 embedding 的训练方式、参数角色与功能变化。
 tags:
-  - AI
   - LLM
   - Deep Learning
+  - Transformer
 source:
   repo: zh
   path: source/_posts/20260202-从-Word2Vec-到-Transformer：Embedding-在不同模型中的角色演化.md

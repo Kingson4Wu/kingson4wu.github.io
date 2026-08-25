@@ -6,8 +6,6 @@ type: post
 slug: 20260130-residual-connection
 description: 从深层网络退化问题出发，解释残差连接为何成为现代神经网络中的关键结构。
 tags:
-  - AI
-  - LLM
   - Deep Learning
   - Math
 source:

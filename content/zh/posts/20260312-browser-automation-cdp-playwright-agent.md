@@ -7,10 +7,9 @@ slug: 20260312-cdp-playwright-ai-agent
 description: 系统梳理 CDP、Playwright、视觉自动化与 AI Agent 在浏览器自动化体系中的分层关系与适用边界。
 tags:
   - AI
-  - LLM
   - Agent
-  - Skill
   - MCP
+  - Architecture
 source:
   repo: zh
   path: source/_posts/20260312-浏览器自动化技术全景：CDP、Playwright-与-AI-Agent-的架构关系.md

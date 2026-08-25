@@ -6,9 +6,9 @@ type: post
 slug: 20260202-layernorm-transformer
 description: 从数值尺度控制与训练稳定性出发，解释 LayerNorm 的作用及 Transformer 对它的依赖。
 tags:
-  - AI
   - LLM
   - Deep Learning
+  - Transformer
 source:
   repo: zh
   path: source/_posts/20260202-LayerNorm：从“为什么要归一化”到“为什么-Transformer-离不开它”.md

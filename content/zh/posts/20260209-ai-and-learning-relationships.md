@@ -7,7 +7,7 @@ slug: 20260209-ai
 description: 讨论 AI 普及后知识获取方式变化，以及它对学习型人际关系与思想交流模式的影响。
 tags:
   - AI
-  - LLM
+  - Life
 source:
   repo: zh
   path: source/_posts/20260209-AI-与学习型人际关系的变化.md

@@ -21,6 +21,11 @@ export function renderLayout({ lang, title, description, canonicalPath, markdown
   const markdownAlternate = markdownPath
     ? `  <link rel="alternate" type="text/markdown" href="${escapeHtml(markdownPath)}">\n`
     : '';
+  const chineseFontPreloads = lang === 'zh'
+    ? [111, 114, 115, 116, 117, 118, 119]
+      .map((subset) => `  <link rel="preload" href="/vendor/lxgw-wenkai-screen-webfont/files/lxgwwenkaigbscreen-subset-${subset}.woff2" as="font" type="font/woff2" crossorigin>`)
+      .join('\n') + '\n'
+    : '';
 
   return `<!doctype html>
 <html lang="${escapeHtml(lang)}">
@@ -32,7 +37,7 @@ export function renderLayout({ lang, title, description, canonicalPath, markdown
   <link rel="canonical" href="${escapeHtml(canonical)}">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="alternate" type="application/rss+xml" title="${escapeHtml(language.title)}" href="/${escapeHtml(lang)}/feed.xml">
-${markdownAlternate}  <link rel="stylesheet" href="/vendor/katex/katex.min.css">
+${markdownAlternate}${chineseFontPreloads}  <link rel="stylesheet" href="/vendor/katex/katex.min.css">
   <link rel="stylesheet" href="/vendor/lxgw-wenkai-screen-webfont/lxgwwenkaigbscreen.css">
   <link rel="stylesheet" href="/styles/main.css">
   <script>

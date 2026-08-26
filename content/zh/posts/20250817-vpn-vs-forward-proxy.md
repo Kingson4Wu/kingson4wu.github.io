@@ -6,6 +6,9 @@ type: post
 slug: 20250817-vpn
 tags:
   - Networking
+  - HTTP
+  - TCP
+  - Proxy
 source:
   repo: zh
   path: source/_posts/20250817-VPN-与正向代理的原理与差异分析.md

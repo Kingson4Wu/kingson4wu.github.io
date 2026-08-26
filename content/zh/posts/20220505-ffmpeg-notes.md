@@ -5,7 +5,9 @@ lang: zh
 type: post
 slug: '20220505'
 tags:
+  - Tooling
   - Media
+  - Reading
 source:
   repo: zh
   path: source/_posts/20220505-ffmpeg笔记.md

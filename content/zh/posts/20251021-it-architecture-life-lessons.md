@@ -7,6 +7,7 @@ slug: 20251021-it
 tags:
   - Architecture
   - Life
+  - Philosophy
 source:
   repo: zh
   path: source/_posts/20251021-生活中的-IT-哲学：从技术架构看人生智慧.md

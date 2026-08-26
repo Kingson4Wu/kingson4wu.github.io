@@ -8,6 +8,7 @@ description: 从原创性、作者身份与价值判断三个维度，讨论 AI 
 tags:
   - AI
   - Media
+  - Life
 source:
   repo: zh
   path: source/_posts/20260209-AI生成内容时代：原创性、作者身份与创作价值的再定义.md

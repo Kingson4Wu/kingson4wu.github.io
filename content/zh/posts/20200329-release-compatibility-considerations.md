@@ -6,6 +6,8 @@ type: post
 slug: '20200329'
 tags:
   - Architecture
+  - Reliability
+  - DevOps
 source:
   repo: zh
   path: source/_posts/20200329-发版过程的兼容性考虑.md

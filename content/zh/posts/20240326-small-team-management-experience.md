@@ -6,6 +6,7 @@ type: post
 slug: '20240326'
 tags:
   - Career
+  - Management
 source:
   repo: zh
   path: source/_posts/20240326-小团队管理经验.md

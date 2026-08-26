@@ -6,6 +6,8 @@ type: post
 slug: '20220322'
 tags:
   - Architecture
+  - Microservices
+  - API Design
 source:
   repo: zh
   path: source/_posts/20220322-轻量级微服务公共库设计.md

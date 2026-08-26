@@ -5,6 +5,8 @@ lang: zh
 type: post
 slug: 20200711-2
 tags:
+  - Architecture
+  - Distributed Systems
   - Reliability
 source:
   repo: zh

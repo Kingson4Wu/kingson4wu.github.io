@@ -9,6 +9,7 @@ tags:
   - Philosophy
   - Science
   - Logic
+  - Thinking
   - Research
 ---
 

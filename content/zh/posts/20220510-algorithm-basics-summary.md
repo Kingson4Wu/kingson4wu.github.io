@@ -5,7 +5,9 @@ lang: zh
 type: post
 slug: '20220510'
 tags:
+  - Programming Languages
   - Algorithms
+  - Learning
 source:
   repo: zh
   path: source/_posts/20220510-算法基础总结.md

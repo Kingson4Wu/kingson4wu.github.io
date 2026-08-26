@@ -6,6 +6,9 @@ type: post
 slug: 20200705-2
 tags:
   - Architecture
+  - Distributed Systems
+  - Transactions
+  - API Design
 source:
   repo: zh
   path: source/_posts/20200705-关于服务间一致性和前置校验的思考.md

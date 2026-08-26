@@ -6,6 +6,8 @@ type: post
 slug: 20200708-2
 tags:
   - Reliability
+  - API Design
+  - HTTP
 source:
   repo: zh
   path: source/_posts/20200708-程序异常时能返回50x吗？.md

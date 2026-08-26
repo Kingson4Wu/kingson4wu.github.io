@@ -5,7 +5,9 @@ lang: zh
 type: post
 slug: 20200912-2
 tags:
+  - Architecture
   - Distributed Systems
+  - Transactions
 source:
   repo: zh
   path: source/_posts/20200912-分布式事务简要总结.md

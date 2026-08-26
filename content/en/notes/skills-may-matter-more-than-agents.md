@@ -8,6 +8,7 @@ tags:
   - AI
   - Agent
   - Skill
+  - Architecture
 source:
   repo: en
   path: src/content/notes/skills-may-matter-more-than-agents.md

@@ -5,7 +5,9 @@ lang: zh
 type: post
 slug: '20240509'
 tags:
+  - Architecture
   - Distributed Systems
+  - Microservices
 source:
   repo: zh
   path: source/_posts/20240509-聊聊配置中心.md

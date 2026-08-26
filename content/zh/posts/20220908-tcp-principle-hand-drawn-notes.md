@@ -6,6 +6,8 @@ type: post
 slug: '20220908'
 tags:
   - Networking
+  - TCP
+  - Learning
 source:
   repo: zh
   path: source/_posts/20220908-我的几张TCP原理学习手绘图.md

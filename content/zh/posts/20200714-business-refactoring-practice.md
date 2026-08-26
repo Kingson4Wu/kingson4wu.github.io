@@ -6,6 +6,8 @@ type: post
 slug: '20200714'
 tags:
   - Architecture
+  - Product
+  - Business
 source:
   repo: zh
   path: source/_posts/20200714-业务重构实践总结.md

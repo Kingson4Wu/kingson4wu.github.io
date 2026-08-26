@@ -6,6 +6,7 @@ type: post
 slug: '20230730'
 tags:
   - Database
+  - Cache
   - Algorithms
 source:
   repo: zh

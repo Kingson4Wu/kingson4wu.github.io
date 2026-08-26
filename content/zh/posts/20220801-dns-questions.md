@@ -6,6 +6,7 @@ type: post
 slug: '20220801'
 tags:
   - Networking
+  - DNS
 source:
   repo: zh
   path: source/_posts/20220801-DNS解惑.md

@@ -8,6 +8,8 @@ tags:
   - AI
   - LLM
   - Prompt Engineering
+  - Eval
+  - Architecture
 source:
   repo: en
   path: src/content/notes/harness-engineering-is-not-a-new-paradigm.md

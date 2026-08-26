@@ -6,6 +6,9 @@ type: post
 slug: '20240328'
 tags:
   - Architecture
+  - Microservices
+  - Product
+  - Business
 source:
   repo: zh
   path: source/_posts/20240328-对服务架构中的聚合层理解.md

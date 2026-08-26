@@ -7,6 +7,8 @@ slug: '20200804'
 tags:
   - Architecture
   - Finance
+  - Product
+  - Business
 source:
   repo: zh
   path: source/_posts/20200804-打赏类业务货币体系简述.md

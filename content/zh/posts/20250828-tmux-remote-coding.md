@@ -5,8 +5,12 @@ lang: zh
 type: post
 slug: 20250828-tmux
 tags:
-  - Networking
+  - Automation
+  - Reliability
+  - DevOps
   - Tooling
+  - Networking
+  - Linux
 source:
   repo: zh
   path: source/_posts/20250828-用-tmux-内网穿透，让出门也能指导编程任务.md

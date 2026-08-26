@@ -5,9 +5,10 @@ lang: zh
 type: post
 slug: '20240530'
 tags:
-  - Networking
-  - Go
+  - Architecture
+  - Scheduling
   - Programming Languages
+  - Go
 source:
   repo: zh
   path: source/_posts/20240530-基于Saturn定时任务的客户端工具设计.md
@@ -43,6 +44,4 @@ source:
 
 ## 扩展
 + 经过测试，saturn的调度不会因为设置的频率太快导致并发运行，只会执行完一个任务再执行下一个
-
-
 

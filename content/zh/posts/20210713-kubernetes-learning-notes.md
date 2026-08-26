@@ -5,7 +5,11 @@ lang: zh
 type: post
 slug: '20210713'
 tags:
+  - DevOps
+  - Kubernetes
+  - Docker
   - Reading
+  - Learning
 source:
   repo: zh
   path: source/_posts/20210713-Kubernetes学习笔记.md

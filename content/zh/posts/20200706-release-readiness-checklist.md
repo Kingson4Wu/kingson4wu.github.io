@@ -7,6 +7,7 @@ slug: '20200706'
 tags:
   - Architecture
   - Reliability
+  - DevOps
 source:
   repo: zh
   path: source/_posts/20200706-上线需要做哪些准备？.md

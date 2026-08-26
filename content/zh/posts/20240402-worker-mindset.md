@@ -6,6 +6,8 @@ type: post
 slug: 20240402-2
 tags:
   - Career
+  - Life
+  - Philosophy
 source:
   repo: zh
   path: source/_posts/20240402-打工人心态应该是怎样的？.md

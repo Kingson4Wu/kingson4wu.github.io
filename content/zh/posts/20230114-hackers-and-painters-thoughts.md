@@ -6,6 +6,8 @@ type: post
 slug: '20230114'
 tags:
   - Reading
+  - Life
+  - Thinking
 source:
   repo: zh
   path: source/_posts/20230114-借《黑客与画家》记录一下想法.md

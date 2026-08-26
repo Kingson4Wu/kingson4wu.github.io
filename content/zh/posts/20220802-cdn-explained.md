@@ -5,7 +5,10 @@ lang: zh
 type: post
 slug: '20220802'
 tags:
+  - Cache
   - Networking
+  - HTTP
+  - CDN
 source:
   repo: zh
   path: source/_posts/20220802-说说CDN.md

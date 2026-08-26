@@ -5,7 +5,9 @@ lang: zh
 type: post
 slug: '20200912'
 tags:
+  - Architecture
   - Distributed Systems
+  - Reliability
 source:
   repo: zh
   path: source/_posts/20200912-分布式一致性协议.md

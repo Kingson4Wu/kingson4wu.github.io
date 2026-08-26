@@ -5,8 +5,9 @@ lang: zh
 type: post
 slug: 20251223-python
 tags:
-  - Python
+  - DevOps
   - Programming Languages
+  - Python
 source:
   repo: zh
   path: source/_posts/20251223-Python-依赖与环境管理完全指南.md

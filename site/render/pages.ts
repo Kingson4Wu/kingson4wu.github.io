@@ -362,12 +362,18 @@ export function renderTagIndexPage({ lang, tags }: RenderTagIndexPageOptions): s
   const counts = tags.map((tag) => tag.count);
   const min = Math.min(...counts);
   const max = Math.max(...counts);
+  const tagColors = ['#8f4d34', '#536b5b', '#6f5f9a', '#9b5b3e', '#4f735a'];
   const body = `    <section class="page-heading">
       <h1>${escapeHtml(title)}</h1>
       <p>${escapeHtml(lang === 'zh' ? '按标签浏览文章和笔记。' : 'Browse posts and notes by tag.')}</p>
     </section>
     ${tags.length === 0 ? '<p class="muted">No tags yet.</p>' : `<ul class="tag-cloud">
-${tags.map((tag) => `      <li><a class="tag-size-${tagSize(tag.count, min, max)}" href="/${escapeHtml(lang)}/tags/${escapeHtml(encodeURIComponent(tag.name))}/">${escapeHtml(tag.name)} <span>${escapeHtml(String(tag.count))}</span></a></li>`).join('\n')}
+${tags.map((tag, index) => {
+  const color = tagColors[index % tagColors.length];
+  const delay = `-${(index % 12) * 110}ms`;
+  const duration = `${4600 + (index % 5) * 320}ms`;
+  return `      <li><a class="tag-size-${tagSize(tag.count, min, max)}" style="--tag-index: ${index}; --tag-color: ${color}; --tag-delay: ${delay}; --tag-duration: ${duration}" href="/${escapeHtml(lang)}/tags/${escapeHtml(encodeURIComponent(tag.name))}/">${escapeHtml(tag.name)} <span>${escapeHtml(String(tag.count))}</span></a></li>`;
+}).join('\n')}
     </ul>`}`;
 
   return renderLayout({

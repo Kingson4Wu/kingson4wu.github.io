@@ -6,6 +6,8 @@ type: post
 slug: '20241025'
 tags:
   - Reading
+  - Learning
+  - Life
 source:
   repo: zh
   path: source/_posts/20241025-《认知觉醒》-笔记.md

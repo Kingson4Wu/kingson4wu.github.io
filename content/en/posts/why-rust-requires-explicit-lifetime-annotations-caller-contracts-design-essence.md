@@ -11,8 +11,10 @@ description: >-
   and API stability.
 updatedDate: '2025-12-22T16:00:00.000Z'
 tags:
-  - Rust
+  - Architecture
+  - API Design
   - Programming Languages
+  - Rust
 source:
   repo: en
   path: >-

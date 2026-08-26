@@ -5,7 +5,9 @@ lang: zh
 type: post
 slug: '20220404'
 tags:
+  - Career
   - Reading
+  - Learning
 source:
   repo: zh
   path: source/_posts/20220404-《驱动力》笔记.md

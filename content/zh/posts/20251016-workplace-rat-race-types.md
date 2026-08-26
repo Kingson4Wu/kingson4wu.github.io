@@ -6,6 +6,8 @@ type: post
 slug: '20251016'
 tags:
   - Career
+  - Management
+  - Communication
 source:
   repo: zh
   path: source/_posts/20251016-关于“卷”的理性分析与分类.md

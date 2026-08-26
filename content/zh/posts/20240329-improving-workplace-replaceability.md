@@ -6,6 +6,8 @@ type: post
 slug: '20240329'
 tags:
   - Career
+  - Management
+  - Learning
 source:
   repo: zh
   path: source/_posts/20240329-提升自己职场中的“可替代性”.md

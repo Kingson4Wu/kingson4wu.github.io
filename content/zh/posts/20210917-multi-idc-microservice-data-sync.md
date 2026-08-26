@@ -6,6 +6,8 @@ type: post
 slug: '20210917'
 tags:
   - Architecture
+  - Distributed Systems
+  - Microservices
 source:
   repo: zh
   path: source/_posts/20210917-多IDC下微服务数据如何同步.md

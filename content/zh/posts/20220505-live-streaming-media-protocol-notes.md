@@ -5,8 +5,9 @@ lang: zh
 type: post
 slug: 20220505-2
 tags:
-  - Media
   - Networking
+  - HTTP
+  - Media
 source:
   repo: zh
   path: source/_posts/20220505-直播协议笔记.md

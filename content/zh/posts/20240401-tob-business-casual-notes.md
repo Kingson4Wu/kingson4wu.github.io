@@ -6,6 +6,8 @@ type: post
 slug: '20240401'
 tags:
   - Architecture
+  - Product
+  - Business
   - Career
 source:
   repo: zh

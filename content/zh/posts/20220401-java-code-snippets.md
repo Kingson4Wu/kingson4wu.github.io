@@ -5,8 +5,9 @@ lang: zh
 type: post
 slug: '20220401'
 tags:
-  - Java
+  - Tooling
   - Programming Languages
+  - Java
 source:
   repo: zh
   path: source/_posts/20220401-Java代码段查阅.md

@@ -7,8 +7,10 @@ slug: 20260821-philosophy-notes-questions
 description: 从休谟、维特根斯坦、波普尔、卢梭、密尔、康德、尼采和加缪出发，整理一条理解哲学问题的主线：先区分问题，再讨论答案。
 tags:
   - Reading
-  - Philosophy
   - Life
+  - Philosophy
+  - Logic
+  - Thinking
 source:
   repo: zh
   path: source/_posts/20260821-哲学笔记：先把问题问清楚.md

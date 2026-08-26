@@ -5,8 +5,9 @@ lang: zh
 type: post
 slug: 20251223-rust
 tags:
-  - Rust
+  - API Design
   - Programming Languages
+  - Rust
 source:
   repo: zh
   path: source/_posts/20251223-Rust-为什么需要显式生命周期标注：从调用方契约到设计本质.md

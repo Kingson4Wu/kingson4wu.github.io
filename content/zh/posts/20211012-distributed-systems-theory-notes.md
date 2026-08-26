@@ -5,7 +5,9 @@ lang: zh
 type: post
 slug: 20211012-2
 tags:
+  - Architecture
   - Distributed Systems
+  - Reliability
 source:
   repo: zh
   path: source/_posts/20211012-分布式理论相关整理.md

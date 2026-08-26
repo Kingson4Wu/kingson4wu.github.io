@@ -8,6 +8,7 @@ description: 从《西西弗神话》的荒诞逻辑出发，梳理自杀、哲�
 tags:
   - Reading
   - Life
+  - Philosophy
 source:
   repo: zh
   path: source/_posts/20260818-《西西弗神话》：在没有答案的世界里保持清醒.md

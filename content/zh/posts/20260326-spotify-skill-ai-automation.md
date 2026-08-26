@@ -11,6 +11,8 @@ tags:
   - AI
   - Agent
   - Skill
+  - Automation
+  - Tooling
   - Engineering
 source:
   repo: zh

@@ -6,6 +6,8 @@ type: post
 slug: 20250817-ip
 tags:
   - Networking
+  - DNS
+  - Proxy
 source:
   repo: zh
   path: source/_posts/20250817-家庭宽带中的公网与内网-IP-分配机制解析.md

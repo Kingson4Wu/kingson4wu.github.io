@@ -5,7 +5,9 @@ lang: zh
 type: post
 slug: '20220907'
 tags:
+  - Reliability
   - Networking
+  - TCP
 source:
   repo: zh
   path: source/_posts/20220907-TCP连接中的各种状态.md

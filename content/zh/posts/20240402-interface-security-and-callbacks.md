@@ -5,7 +5,9 @@ lang: zh
 type: post
 slug: '20240402'
 tags:
+  - Architecture
   - Security
+  - API Design
 source:
   repo: zh
   path: source/_posts/20240402-再浅谈接口的安全性和回调机制.md

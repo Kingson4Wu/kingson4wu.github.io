@@ -9,6 +9,8 @@ tags:
   - LLM
   - MCP
   - Prompt Engineering
+  - Eval
+  - Architecture
 source:
   repo: zh
   path: source/_posts/20260328-从第一性原理看-Harness-Engineering.md

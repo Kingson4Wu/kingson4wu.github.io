@@ -5,7 +5,9 @@ lang: zh
 type: post
 slug: '20200713'
 tags:
+  - Architecture
   - Reliability
+  - SRE
 source:
   repo: zh
   path: source/_posts/20200713-由灾备工作中引发的对“比例”的思考.md

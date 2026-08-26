@@ -6,6 +6,8 @@ type: post
 slug: '20240327'
 tags:
   - Career
+  - Communication
+  - Philosophy
 source:
   repo: zh
   path: source/_posts/20240327-职场中“马后炮”现象.md

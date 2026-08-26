@@ -6,6 +6,8 @@ type: post
 slug: '20200716'
 tags:
   - Architecture
+  - Reliability
+  - Business
 source:
   repo: zh
   path: source/_posts/20200716-使用“自旋”降低业务失败率.md

@@ -6,6 +6,8 @@ type: post
 slug: 20250915-ip-ipv4-ipv6
 tags:
   - Networking
+  - TCP
+  - DNS
 source:
   repo: zh
   path: source/_posts/20250915-IP-归属与全球路由：从-IPv4-到-IPv6-的原理与实践.md

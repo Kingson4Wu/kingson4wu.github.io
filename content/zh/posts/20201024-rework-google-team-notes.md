@@ -5,8 +5,9 @@ lang: zh
 type: post
 slug: '20201024'
 tags:
-  - Reading
   - Career
+  - Management
+  - Reading
 source:
   repo: zh
   path: source/_posts/20201024-《重新定义团队：谷歌如何工作》-笔记.md

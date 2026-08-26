@@ -6,9 +6,10 @@ type: post
 slug: 20260825-from-newton-to-relativity-quantum-mechanics
 description: "从牛顿力学、相对论和量子力学三条主线，整理现代物理最基本的概念骨架。"
 tags:
-  - Physics
-  - Science
+  - Math
   - Learning
+  - Science
+  - Physics
 ---
 
 现代物理入门时，最容易混乱的地方通常不是公式本身，而是世界观的切换。

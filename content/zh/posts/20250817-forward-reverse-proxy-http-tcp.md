@@ -6,6 +6,9 @@ type: post
 slug: 20250817-http-tcp
 tags:
   - Networking
+  - HTTP
+  - TCP
+  - Proxy
 source:
   repo: zh
   path: source/_posts/20250817-深入理解正向代理与反向代理：HTTP-报文与-TCP-连接的区别.md

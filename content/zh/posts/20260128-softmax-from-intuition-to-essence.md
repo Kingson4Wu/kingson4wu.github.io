@@ -5,6 +5,7 @@ lang: zh
 type: post
 slug: 20260128-softmax
 tags:
+  - AI
   - Deep Learning
   - Math
 source:

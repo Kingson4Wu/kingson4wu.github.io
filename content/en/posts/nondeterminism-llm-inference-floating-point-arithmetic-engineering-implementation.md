@@ -13,6 +13,8 @@ updatedDate: '2025-12-16T16:00:00.000Z'
 tags:
   - AI
   - LLM
+  - Eval
+  - Architecture
 source:
   repo: en
   path: >-

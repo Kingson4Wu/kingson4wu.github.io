@@ -5,7 +5,13 @@ lang: zh
 type: post
 slug: '20241023'
 tags:
+  - Architecture
+  - Distributed Systems
+  - Transactions
+  - Database
   - Finance
+  - Product
+  - Business
 source:
   repo: zh
   path: source/_posts/20241023-金钱业务数据库事务相关要点记录.md

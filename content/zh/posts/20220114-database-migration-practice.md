@@ -5,7 +5,9 @@ lang: zh
 type: post
 slug: '20220114'
 tags:
+  - Transactions
   - Database
+  - DevOps
 source:
   repo: zh
   path: source/_posts/20220114-如何做数据库迁移.md

@@ -6,10 +6,11 @@ type: post
 slug: 20260730-dense-sparse-rag-llm
 description: 从信息表示、RAG 检索、MoE、Sparse Attention 和推理计算几个角度，理解 Dense 与 Sparse 在现代 AI 系统里的统一思想。
 tags:
+  - AI
   - LLM
+  - Transformer
   - RAG
   - Retrieval
-  - Transformer
 ---
 
 最近在看 RAG、Embedding、MoE 和长上下文模型时，我发现 Dense 和 Sparse 这两个词会反复出现。

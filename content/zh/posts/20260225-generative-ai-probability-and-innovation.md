@@ -8,6 +8,8 @@ description: 通过一个具体生成任务分析生成式 AI 的概率本质、
 tags:
   - AI
   - LLM
+  - Math
+  - Philosophy
 source:
   repo: zh
   path: source/_posts/20260225-生成式AI的概率本质与创新边界：从一个具体任务说起.md

@@ -6,6 +6,9 @@ type: post
 slug: '20240724'
 tags:
   - Distributed Systems
+  - RPC
+  - API Design
+  - HTTP
 source:
   repo: zh
   path: source/_posts/20240724-谈谈接口调用中的序列化协议.md

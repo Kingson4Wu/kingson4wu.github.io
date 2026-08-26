@@ -5,6 +5,8 @@ lang: zh
 type: post
 slug: '20250804'
 tags:
+  - Career
+  - Learning
   - Life
 source:
   repo: zh

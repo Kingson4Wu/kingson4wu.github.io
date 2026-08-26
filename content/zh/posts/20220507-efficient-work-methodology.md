@@ -6,6 +6,8 @@ type: post
 slug: '20220507'
 tags:
   - Career
+  - Management
+  - Learning
 source:
   repo: zh
   path: source/_posts/20220507-高效工作方法论总结.md

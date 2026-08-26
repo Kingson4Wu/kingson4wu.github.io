@@ -5,8 +5,9 @@ lang: zh
 type: post
 slug: 20251224-python-c
 tags:
-  - Python
+  - Tooling
   - Programming Languages
+  - Python
 source:
   repo: zh
   path: source/_posts/20251224-Python-调用-C-扩展与库机制全解析.md

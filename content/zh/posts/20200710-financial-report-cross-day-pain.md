@@ -6,6 +6,8 @@ type: post
 slug: 20200710-2
 tags:
   - Architecture
+  - Reliability
+  - Database
   - Finance
 source:
   repo: zh

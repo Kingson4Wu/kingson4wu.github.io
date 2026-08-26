@@ -8,6 +8,8 @@ tags:
   - AI
   - LLM
   - RAG
+  - Retrieval
+  - Tooling
 source:
   repo: zh
   path: source/_posts/20250226-开源知识库系统试用.md

@@ -6,8 +6,9 @@ type: post
 slug: '20221018'
 tags:
   - Architecture
-  - Java
   - Programming Languages
+  - Java
+  - Career
 source:
   repo: zh
   path: source/_posts/20221018-我的重构（翻译）经历.md

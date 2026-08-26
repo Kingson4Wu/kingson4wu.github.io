@@ -5,7 +5,9 @@ lang: zh
 type: post
 slug: '20220408'
 tags:
+  - Retrieval
   - Database
+  - Learning
 source:
   repo: zh
   path: source/_posts/20220408-elasticsearch学习记录.md

@@ -6,6 +6,8 @@ type: post
 slug: '20200711'
 tags:
   - Distributed Systems
+  - Reliability
+  - Database
 source:
   repo: zh
   path: source/_posts/20200711-分布式锁简单总结.md

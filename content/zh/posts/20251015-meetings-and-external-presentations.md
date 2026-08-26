@@ -6,6 +6,8 @@ type: post
 slug: '20251015'
 tags:
   - Career
+  - Management
+  - Communication
 source:
   repo: zh
   path: source/_posts/20251015-内部会议低效与对外宣讲价值的分析.md

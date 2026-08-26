@@ -5,6 +5,8 @@ lang: zh
 type: post
 slug: '20210809'
 tags:
+  - Career
+  - Management
   - Reading
 source:
   repo: zh

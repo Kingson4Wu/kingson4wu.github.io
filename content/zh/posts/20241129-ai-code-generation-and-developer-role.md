@@ -6,8 +6,9 @@ type: post
 slug: '20241129'
 tags:
   - AI
-  - Rust
   - Programming Languages
+  - Rust
+  - Career
 source:
   repo: zh
   path: source/_posts/20241129-AI已经如此强大了，帮我写完所有代码.md

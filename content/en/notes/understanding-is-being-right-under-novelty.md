@@ -7,6 +7,7 @@ slug: understanding-is-being-right-under-novelty
 tags:
   - AI
   - LLM
+  - Thinking
 source:
   repo: en
   path: src/content/notes/understanding-is-being-right-under-novelty.md

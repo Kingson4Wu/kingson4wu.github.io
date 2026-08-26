@@ -5,7 +5,10 @@ lang: zh
 type: post
 slug: '20201011'
 tags:
+  - Distributed Systems
   - Database
+  - Cache
+  - Learning
 source:
   repo: zh
   path: source/_posts/20201011-Redis笔记.md

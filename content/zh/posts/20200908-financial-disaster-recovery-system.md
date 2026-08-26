@@ -5,7 +5,9 @@ lang: zh
 type: post
 slug: '20200908'
 tags:
+  - Architecture
   - Reliability
+  - SRE
   - Finance
 source:
   repo: zh

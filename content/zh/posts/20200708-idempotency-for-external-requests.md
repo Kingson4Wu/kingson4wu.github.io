@@ -6,6 +6,8 @@ type: post
 slug: '20200708'
 tags:
   - Architecture
+  - Transactions
+  - Security
 source:
   repo: zh
   path: source/_posts/20200708-外网请求如何保证幂等.md

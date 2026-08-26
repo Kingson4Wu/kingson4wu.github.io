@@ -13,6 +13,7 @@ description: >-
 tags:
   - AI
   - Finance
+  - Economics
 source:
   repo: en
   path: src/content/blog/ai-structural-distribution-imbalance.md

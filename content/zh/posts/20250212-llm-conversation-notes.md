@@ -7,6 +7,7 @@ slug: '20250212'
 tags:
   - AI
   - LLM
+  - Prompt Engineering
 source:
   repo: zh
   path: source/_posts/20250212-大语言模型对话记录与思考备忘录.md

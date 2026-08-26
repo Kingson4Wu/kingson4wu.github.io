@@ -6,6 +6,7 @@ type: post
 slug: 20200714-3
 tags:
   - Architecture
+  - Reliability
   - Career
 source:
   repo: zh

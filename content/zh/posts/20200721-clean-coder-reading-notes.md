@@ -5,6 +5,8 @@ lang: zh
 type: post
 slug: '20200721'
 tags:
+  - Testing
+  - Career
   - Reading
 source:
   repo: zh

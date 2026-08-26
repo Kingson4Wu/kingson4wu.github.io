@@ -10,6 +10,7 @@ tags:
   - Agent
   - MCP
   - Prompt Engineering
+  - API Design
 source:
   repo: zh
   path: source/_posts/20251212-大模型中的-Function-Calling-与工具模式-机制、区别与本质.md

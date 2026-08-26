@@ -5,7 +5,9 @@ lang: zh
 type: post
 slug: '20210813'
 tags:
+  - Finance
   - Reading
+  - Life
 source:
   repo: zh
   path: source/_posts/20210813-《小狗钱钱》-笔记.md

@@ -7,6 +7,7 @@ slug: '20250213'
 tags:
   - AI
   - LLM
+  - Career
 source:
   repo: zh
   path: source/_posts/20250213-关于AI替代人类工作的问题.md

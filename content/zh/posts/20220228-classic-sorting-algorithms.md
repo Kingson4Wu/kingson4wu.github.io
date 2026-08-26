@@ -5,7 +5,9 @@ lang: zh
 type: post
 slug: '20220228'
 tags:
+  - Programming Languages
   - Algorithms
+  - Learning
 source:
   repo: zh
   path: source/_posts/20220228-经典排序算法.md

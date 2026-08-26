@@ -8,6 +8,7 @@ description: >-
   从许冠文谈死亡与《破·地狱》出发，整理“沿途风景”、宗教信念、临终选择与怎样活的问题：死亡提醒人提前表达爱、投入热爱、处理关系，并用能安顿自己的信念面对未知。
 tags:
   - Life
+  - Philosophy
 source:
   repo: zh
   path: CodeFarmer2024.github.io/source/_posts/用信念安顿未知，让精神回到沿途风景.md

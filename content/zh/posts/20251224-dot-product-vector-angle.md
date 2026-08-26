@@ -6,6 +6,7 @@ type: post
 slug: '20251224'
 tags:
   - Deep Learning
+  - Transformer
   - Math
 source:
   repo: zh

@@ -6,6 +6,8 @@ type: post
 slug: '20201018'
 tags:
   - Reading
+  - Learning
+  - Science
 source:
   repo: zh
   path: source/_posts/20201018-【计算机科学速成课】笔记.md

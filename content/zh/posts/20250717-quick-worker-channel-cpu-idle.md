@@ -5,8 +5,9 @@ lang: zh
 type: post
 slug: 20250717-quick-worker-channel-cpu
 tags:
-  - Go
+  - Reliability
   - Programming Languages
+  - Go
 source:
   repo: zh
   path: source/_posts/20250717-quick-worker-项目分析：基于-Channel-的高效异步批处理与-CPU-空转问题解析.md

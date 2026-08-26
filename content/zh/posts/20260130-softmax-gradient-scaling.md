@@ -5,10 +5,11 @@ lang: zh
 type: post
 slug: 20260130-softmax
 tags:
+  - AI
   - LLM
   - Deep Learning
-  - Math
   - Transformer
+  - Math
 source:
   repo: zh
   path: source/_posts/20260130-为什么点积太大会导致-softmax-梯度问题，以及这个问题是如何被解决的.md

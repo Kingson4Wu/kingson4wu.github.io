@@ -6,6 +6,8 @@ type: post
 slug: 20200716-2
 tags:
   - Reliability
+  - SRE
+  - Observability
 source:
   repo: zh
   path: source/_posts/20200716-监控告警要留意哪些点？.md

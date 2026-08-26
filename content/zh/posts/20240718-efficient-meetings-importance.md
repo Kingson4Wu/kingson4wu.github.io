@@ -6,6 +6,8 @@ type: post
 slug: '20240718'
 tags:
   - Career
+  - Management
+  - Communication
 source:
   repo: zh
   path: source/_posts/20240718-高效会议的重要性.md

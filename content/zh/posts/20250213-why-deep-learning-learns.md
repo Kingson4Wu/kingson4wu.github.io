@@ -7,6 +7,7 @@ slug: 20250213-2
 tags:
   - AI
   - Deep Learning
+  - Learning
 source:
   repo: zh
   path: source/_posts/20250213-深度学习为什么能学习并做对.md

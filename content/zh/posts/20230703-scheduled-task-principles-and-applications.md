@@ -5,9 +5,12 @@ lang: zh
 type: post
 slug: '20230703'
 tags:
-  - Networking
-  - Go
+  - Architecture
+  - Distributed Systems
+  - Reliability
+  - Scheduling
   - Programming Languages
+  - Go
 source:
   repo: zh
   path: source/_posts/20230703-谈谈定时任务的原理和应用.md
@@ -126,4 +129,3 @@ func NotifyServe() {
 ```
 
 + windows 平台没有uds，可以使用普通的HTTP接口代替
-

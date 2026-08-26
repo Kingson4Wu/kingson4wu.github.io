@@ -6,6 +6,7 @@ type: post
 slug: 20260203-transformer-sgd-adamw
 description: 梳理神经网络优化器从 SGD 到 AdamW 的演化路径，以及 Transformer 训练中常见选择的原因。
 tags:
+  - AI
   - LLM
   - Deep Learning
   - Transformer

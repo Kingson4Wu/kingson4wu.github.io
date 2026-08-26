@@ -8,6 +8,7 @@ tags:
   - AI
   - Skill
   - MCP
+  - Automation
 source:
   repo: en
   path: src/content/notes/mcp-and-skills-solve-different-problems.md

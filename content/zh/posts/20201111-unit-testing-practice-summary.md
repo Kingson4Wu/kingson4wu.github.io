@@ -5,6 +5,9 @@ lang: zh
 type: post
 slug: '20201111'
 tags:
+  - Tooling
+  - Programming Languages
+  - Java
   - Testing
 source:
   repo: zh

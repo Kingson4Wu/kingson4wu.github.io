@@ -7,7 +7,11 @@ slug: '20200705'
 tags:
   - Architecture
   - Distributed Systems
+  - Microservices
+  - RPC
+  - Transactions
   - Database
+  - API Design
 source:
   repo: zh
   path: source/_posts/20200705-RPC可以和事务绑定吗.md

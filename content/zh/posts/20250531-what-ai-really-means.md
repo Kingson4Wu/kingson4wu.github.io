@@ -6,6 +6,8 @@ type: post
 slug: '20250531'
 tags:
   - AI
+  - Philosophy
+  - Thinking
 source:
   repo: zh
   path: source/_posts/20250531-“人工智能”一词是否准确？一次关于AI本质的反思.md

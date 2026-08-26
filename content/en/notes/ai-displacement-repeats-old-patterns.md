@@ -6,6 +6,7 @@ type: note
 slug: ai-displacement-repeats-old-patterns
 tags:
   - AI
+  - Economics
   - Career
 source:
   repo: en

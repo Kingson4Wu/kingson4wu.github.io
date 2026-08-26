@@ -5,6 +5,8 @@ lang: zh
 type: post
 slug: '20240507'
 tags:
+  - Product
+  - Business
   - Career
 source:
   repo: zh

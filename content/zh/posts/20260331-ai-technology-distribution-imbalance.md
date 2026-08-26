@@ -9,6 +9,7 @@ tags:
   - AI
   - LLM
   - Finance
+  - Economics
 source:
   repo: zh
   path: source/_posts/20260331-技术进步与分配失衡：AI时代的结构性矛盾.md

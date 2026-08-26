@@ -7,6 +7,7 @@ slug: '20200709'
 tags:
   - Reading
   - Life
+  - Philosophy
 source:
   repo: zh
   path: source/_posts/20200709-《一只特里独行的猪》摘要.md

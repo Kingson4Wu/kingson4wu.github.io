@@ -7,6 +7,7 @@ slug: '20200831'
 tags:
   - Architecture
   - Database
+  - Cache
 source:
   repo: zh
   path: source/_posts/20200831-使用Redis实现榜单.md

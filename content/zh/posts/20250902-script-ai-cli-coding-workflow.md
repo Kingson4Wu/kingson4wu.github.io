@@ -7,8 +7,10 @@ slug: 20250902-ai
 tags:
   - AI
   - Prompt Engineering
-  - Python
+  - Automation
+  - Tooling
   - Programming Languages
+  - Python
 source:
   repo: zh
   path: source/_posts/20250902-用脚本-AI-CLI半自动写代码：实践经验分享.md

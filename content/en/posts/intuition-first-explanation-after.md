@@ -11,6 +11,7 @@ description: >-
 tags:
   - AI
   - LLM
+  - Philosophy
 source:
   repo: en
   path: src/content/blog/intuition-first-explanation-after.md

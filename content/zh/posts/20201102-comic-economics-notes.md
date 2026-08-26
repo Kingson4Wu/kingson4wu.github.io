@@ -5,8 +5,9 @@ lang: zh
 type: post
 slug: '20201102'
 tags:
-  - Reading
   - Finance
+  - Economics
+  - Reading
 source:
   repo: zh
   path: source/_posts/20201102-《半小时漫画经济学》-笔记.md

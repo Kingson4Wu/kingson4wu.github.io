@@ -7,6 +7,8 @@ slug: '20220220'
 tags:
   - Go
   - Programming Languages
+  - Algorithms
+  - Math
   - Sports
 source:
   repo: zh

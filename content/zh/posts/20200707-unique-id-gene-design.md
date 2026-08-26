@@ -6,6 +6,8 @@ type: post
 slug: '20200707'
 tags:
   - Architecture
+  - Distributed Systems
+  - Database
 source:
   repo: zh
   path: source/_posts/20200707-唯一ID的基因.md

@@ -7,6 +7,7 @@ slug: ai-is-combinational-not-conceptual
 tags:
   - AI
   - LLM
+  - Thinking
 source:
   repo: en
   path: src/content/notes/ai-is-combinational-not-conceptual.md

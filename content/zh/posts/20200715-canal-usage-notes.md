@@ -5,7 +5,9 @@ lang: zh
 type: post
 slug: '20200715'
 tags:
+  - Distributed Systems
   - Database
+  - Messaging
 source:
   repo: zh
   path: source/_posts/20200715-canal使用总结.md

@@ -5,8 +5,9 @@ lang: zh
 type: post
 slug: 20251223-python-web
 tags:
-  - Python
+  - Architecture
   - Programming Languages
+  - Python
 source:
   repo: zh
   path: source/_posts/20251223-Python-运行内幕-深度解析底层执行机制与现代-Web-架构.md

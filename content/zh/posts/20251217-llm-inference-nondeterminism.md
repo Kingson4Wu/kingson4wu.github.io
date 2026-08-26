@@ -7,6 +7,8 @@ slug: '20251217'
 tags:
   - AI
   - LLM
+  - Eval
+  - Architecture
 source:
   repo: zh
   path: source/_posts/20251217-大模型推理的不确定性：从浮点运算到工程实现.md

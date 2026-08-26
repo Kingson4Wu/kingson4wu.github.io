@@ -5,7 +5,9 @@ lang: zh
 type: post
 slug: '20250709'
 tags:
+  - Programming Languages
   - Algorithms
+  - Learning
 source:
   repo: zh
   path: source/_posts/20250709-刷leetcode总结的算法基础和套路.md

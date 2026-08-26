@@ -7,6 +7,8 @@ slug: '20250108'
 tags:
   - Architecture
   - Algorithms
+  - Product
+  - Business
 source:
   repo: zh
   path: source/_posts/20250108-算法在实际业务场景中并非完全无用.md

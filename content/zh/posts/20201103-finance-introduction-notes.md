@@ -5,6 +5,8 @@ lang: zh
 type: post
 slug: '20201103'
 tags:
+  - Finance
+  - Economics
   - Reading
 source:
   repo: zh

@@ -6,6 +6,8 @@ type: post
 slug: '20191228'
 tags:
   - Life
+  - Sports
+  - Music
 source:
   repo: zh
   path: source/_posts/20191228-《天下足球》曲目.md

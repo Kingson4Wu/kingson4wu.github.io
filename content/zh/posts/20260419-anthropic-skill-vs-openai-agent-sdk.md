@@ -9,6 +9,7 @@ tags:
   - LLM
   - Agent
   - Skill
+  - MCP
 source:
   repo: zh
   path: source/_posts/20260419-Skill-机制与编排流程深度解析：Anthropic-vs-OpenAI-Agent-SDK-对比.md

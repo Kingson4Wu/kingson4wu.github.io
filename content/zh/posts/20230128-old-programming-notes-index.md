@@ -5,6 +5,8 @@ lang: zh
 type: post
 slug: '20230128'
 tags:
+  - Transactions
+  - Database
   - Programming Languages
   - Reading
 source:

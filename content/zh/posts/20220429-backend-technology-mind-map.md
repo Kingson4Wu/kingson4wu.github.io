@@ -6,6 +6,8 @@ type: post
 slug: '20220429'
 tags:
   - Architecture
+  - Programming Languages
+  - Learning
 source:
   repo: zh
   path: source/_posts/20220429-后端技术思维导图.md

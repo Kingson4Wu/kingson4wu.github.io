@@ -6,6 +6,11 @@ type: post
 slug: '20240528'
 tags:
   - Architecture
+  - Distributed Systems
+  - Database
+  - Cache
+  - Product
+  - Business
 source:
   repo: zh
   path: source/_posts/20240528-也谈谈feed流的设计.md

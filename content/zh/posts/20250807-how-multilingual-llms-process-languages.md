@@ -7,6 +7,7 @@ slug: '20250807'
 tags:
   - AI
   - LLM
+  - Programming Languages
 source:
   repo: zh
   path: source/_posts/20250807-多语言大模型如何处理不同语言？是翻译成英语后再推理的吗？.md

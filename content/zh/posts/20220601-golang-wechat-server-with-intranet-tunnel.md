@@ -5,8 +5,11 @@ lang: zh
 type: post
 slug: '20220601'
 tags:
-  - Go
+  - DevOps
+  - Tooling
+  - Networking
   - Programming Languages
+  - Go
 source:
   repo: zh
   path: source/_posts/20220601-个人golang项目简要描述.md

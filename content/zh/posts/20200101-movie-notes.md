@@ -5,7 +5,9 @@ lang: zh
 type: post
 slug: '20200101'
 tags:
+  - Reading
   - Life
+  - Movies
 source:
   repo: zh
   path: source/_posts/20200101-电影摘要.md

@@ -6,10 +6,10 @@ type: post
 slug: 20260825-logic-reasoning-and-fallacies
 description: 整理逻辑论证、演绎推理、概率推理、因果推理、常见逻辑谬误和认知偏差，重点不是学会争辩，而是学会判断一个结论到底是怎么被推出的。
 tags:
+  - Learning
+  - Philosophy
   - Logic
   - Thinking
-  - Philosophy
-  - Learning
 ---
 
 逻辑推理和逻辑谬误本身不是新概念，很多内容也来自逻辑学、批判性思维和概率判断中的常见框架。真正值得整理的地方在于：现实讨论里，错误往往不是出在某个孤立概念上，而是出在“事实如何变成结论”的链路上。

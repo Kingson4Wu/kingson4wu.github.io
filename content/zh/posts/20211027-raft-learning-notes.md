@@ -6,6 +6,8 @@ type: post
 slug: '20211027'
 tags:
   - Distributed Systems
+  - Reliability
+  - Learning
 source:
   repo: zh
   path: source/_posts/20211027-raft学习笔记.md

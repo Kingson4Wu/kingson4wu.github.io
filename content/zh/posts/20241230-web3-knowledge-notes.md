@@ -6,6 +6,8 @@ type: post
 slug: '20241230'
 tags:
   - Finance
+  - Web3
+  - Learning
 source:
   repo: zh
   path: source/_posts/20241230-Web3相关知识记录.md

@@ -6,6 +6,8 @@ type: post
 slug: 20200719-2
 tags:
   - Career
+  - Management
+  - Communication
 source:
   repo: zh
   path: source/_posts/20200719-如何预估开发时间.md

@@ -6,6 +6,8 @@ type: post
 slug: '20250101'
 tags:
   - AI
+  - Automation
+  - Tooling
 source:
   repo: zh
   path: source/_posts/20250101-使用AI总结了这个网站的内容.md

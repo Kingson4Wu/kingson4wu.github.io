@@ -8,6 +8,7 @@ tags:
   - AI
   - LLM
   - RAG
+  - Retrieval
 source:
   repo: zh
   path: source/_posts/20250220-基于大模型的RAG应用开发要点记录.md

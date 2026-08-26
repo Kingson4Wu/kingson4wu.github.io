@@ -5,8 +5,9 @@ lang: zh
 type: post
 slug: '20220705'
 tags:
-  - Java
+  - Architecture
   - Programming Languages
+  - Java
 source:
   repo: zh
   path: source/_posts/20220705-Java跨平台能完全做到一次编写到处运行？.md

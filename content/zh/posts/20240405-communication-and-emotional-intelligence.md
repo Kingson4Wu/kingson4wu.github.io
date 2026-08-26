@@ -6,6 +6,8 @@ type: post
 slug: '20240405'
 tags:
   - Career
+  - Management
+  - Communication
 source:
   repo: zh
   path: source/_posts/20240405-职场中的“善于沟通”和“高情商”.md

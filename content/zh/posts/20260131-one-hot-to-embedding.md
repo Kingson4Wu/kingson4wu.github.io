@@ -6,8 +6,10 @@ type: post
 slug: 20260131-one-hot-embedding
 description: 从 one-hot 表示讲到分布式表示，解释词向量如何通过语料、损失函数与梯度下降学习得到。
 tags:
+  - AI
   - LLM
   - Deep Learning
+  - Transformer
 source:
   repo: zh
   path: source/_posts/20260131-从-One-hot-到-Embedding：词的分布式表示是如何从语料中学习得到的.md

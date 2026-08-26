@@ -5,7 +5,9 @@ lang: zh
 type: post
 slug: '20200712'
 tags:
+  - Architecture
   - Security
+  - API Design
 source:
   repo: zh
   path: source/_posts/20200712-使用回调机制提高接口安全性.md

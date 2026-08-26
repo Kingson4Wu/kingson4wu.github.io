@@ -6,6 +6,8 @@ type: post
 slug: 20200719-3
 tags:
   - Career
+  - Management
+  - Communication
 source:
   repo: zh
   path: source/_posts/20200719-职场生存小小总结.md

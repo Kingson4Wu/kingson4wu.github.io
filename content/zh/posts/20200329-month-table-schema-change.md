@@ -6,6 +6,7 @@ type: post
 slug: 20200329-2
 tags:
   - Architecture
+  - Transactions
   - Database
 source:
   repo: zh

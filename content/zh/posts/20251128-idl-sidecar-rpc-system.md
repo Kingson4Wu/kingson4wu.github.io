@@ -5,7 +5,11 @@ lang: zh
 type: post
 slug: 20251128-idl-sidecar
 tags:
+  - Architecture
   - Distributed Systems
+  - Microservices
+  - RPC
+  - API Design
 source:
   repo: zh
   path: source/_posts/20251128-构建统一前后端（与服务间）RPC体系：从-IDL-设计到多协议适配与-Sidecar-部署的工程实践.md

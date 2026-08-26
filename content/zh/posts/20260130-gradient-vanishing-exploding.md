@@ -5,6 +5,7 @@ lang: zh
 type: post
 slug: 20260130-0
 tags:
+  - AI
   - Deep Learning
   - Math
 source:

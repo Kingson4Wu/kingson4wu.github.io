@@ -5,8 +5,9 @@ lang: zh
 type: post
 slug: '20220208'
 tags:
-  - Java
+  - Architecture
   - Programming Languages
+  - Java
 source:
   repo: zh
   path: source/_posts/20220208-Java11基础原理和实践.md

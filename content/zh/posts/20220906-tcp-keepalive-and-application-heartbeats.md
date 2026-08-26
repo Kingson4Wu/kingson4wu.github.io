@@ -5,7 +5,9 @@ lang: zh
 type: post
 slug: '20220906'
 tags:
+  - Reliability
   - Networking
+  - TCP
 source:
   repo: zh
   path: source/_posts/20220906-有了TCP的keepalive，应用层还需要实现保活逻辑吗？.md

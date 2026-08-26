@@ -6,8 +6,9 @@ type: post
 slug: 20260823-consciousness-death-meaning
 description: 从意识终止这件难以想象的事出发，讨论死亡、第一视角、加缪的荒诞，以及人生意义为什么更应该回到具体生活中寻找。
 tags:
-  - Philosophy
   - Life
+  - Philosophy
+  - Science
 ---
 
 最近重新想到一个很普通、但很难真正想明白的问题：如果人死后大脑停止活动，意识也随之停止，那“我不存在”到底是什么状态？

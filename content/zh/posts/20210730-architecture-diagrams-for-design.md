@@ -6,6 +6,8 @@ type: post
 slug: '20210730'
 tags:
   - Architecture
+  - Product
+  - Communication
 source:
   repo: zh
   path: source/_posts/20210730-方案设计时应该画什么图？.md

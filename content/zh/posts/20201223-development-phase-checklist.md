@@ -7,6 +7,8 @@ slug: '20201223'
 tags:
   - Architecture
   - Reliability
+  - Testing
+  - DevOps
 source:
   repo: zh
   path: source/_posts/20201223-开发阶段checklist.md

@@ -5,7 +5,11 @@ lang: zh
 type: post
 slug: '20230704'
 tags:
+  - Architecture
   - Distributed Systems
+  - Microservices
+  - RPC
+  - API Design
 source:
   repo: zh
   path: source/_posts/20230704-我接触过的几种服务发现和rpc.md

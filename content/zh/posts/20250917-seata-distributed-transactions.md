@@ -5,7 +5,9 @@ lang: zh
 type: post
 slug: 20250917-seata
 tags:
+  - Architecture
   - Distributed Systems
+  - Transactions
 source:
   repo: zh
   path: source/_posts/20250917-Seata-与分布式事务的本质解析.md

@@ -9,6 +9,7 @@ tags:
   - AI
   - Agent
   - Skill
+  - Prompt Engineering
   - Architecture
 source:
   repo: zh

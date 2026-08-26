@@ -6,6 +6,8 @@ type: post
 slug: 20210813-3
 tags:
   - Career
+  - Management
+  - Learning
 source:
   repo: zh
   path: source/_posts/20210813-个人管理经验总结.md

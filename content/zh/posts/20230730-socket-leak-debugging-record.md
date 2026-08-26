@@ -5,7 +5,9 @@ lang: zh
 type: post
 slug: 20230730-2
 tags:
+  - Reliability
   - Networking
+  - TCP
 source:
   repo: zh
   path: source/_posts/20230730-记一次socket泄露问题排查记录.md

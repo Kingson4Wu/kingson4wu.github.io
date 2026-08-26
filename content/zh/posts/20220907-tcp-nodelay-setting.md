@@ -6,6 +6,8 @@ type: post
 slug: 20220907-2
 tags:
   - Networking
+  - HTTP
+  - TCP
 source:
   repo: zh
   path: source/_posts/20220907-你记得设置TCP-NODEPLAY吗？.md

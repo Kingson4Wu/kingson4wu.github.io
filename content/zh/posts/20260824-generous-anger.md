@@ -6,8 +6,9 @@ type: post
 slug: 20260824-generous-anger
 description: "面对不公时，反抗者很容易把自己的代价理解成别人欠下的债；但也可以从加缪式荒诞意识出发，把反抗理解为一种不索取回报、仍然倾尽当下的慷慨之怒。"
 tags:
-  - Philosophy
   - Life
+  - Philosophy
+  - Thinking
 ---
 
 面对不公时，人很容易产生一种委屈。

@@ -5,6 +5,7 @@ lang: zh
 type: post
 slug: '20200719'
 tags:
+  - Communication
   - Reading
   - Life
 source:

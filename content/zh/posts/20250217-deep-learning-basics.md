@@ -7,6 +7,7 @@ slug: '20250217'
 tags:
   - AI
   - Deep Learning
+  - Learning
 source:
   repo: zh
   path: source/_posts/20250217-深度学习基础入门备忘.md

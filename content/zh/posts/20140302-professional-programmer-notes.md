@@ -5,8 +5,9 @@ lang: zh
 type: post
 slug: '20140302'
 tags:
-  - Reading
+  - Testing
   - Career
+  - Reading
 source:
   repo: zh
   path: source/_posts/20140302-程序员的职业素养-摘要.md

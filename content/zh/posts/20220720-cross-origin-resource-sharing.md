@@ -5,7 +5,10 @@ lang: zh
 type: post
 slug: '20220720'
 tags:
+  - Security
+  - API Design
   - Networking
+  - HTTP
 source:
   repo: zh
   path: source/_posts/20220720-谈谈跨域.md

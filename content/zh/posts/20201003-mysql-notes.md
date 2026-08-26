@@ -5,7 +5,9 @@ lang: zh
 type: post
 slug: '20201003'
 tags:
+  - Transactions
   - Database
+  - Learning
 source:
   repo: zh
   path: source/_posts/20201003-MySQL笔记.md

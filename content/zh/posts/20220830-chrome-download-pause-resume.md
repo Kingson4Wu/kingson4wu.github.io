@@ -6,6 +6,8 @@ type: post
 slug: '20220830'
 tags:
   - Networking
+  - HTTP
+  - TCP
 source:
   repo: zh
   path: source/_posts/20220830-Chrome下载文件时暂停和继续是什么原理？.md

@@ -8,6 +8,9 @@ description: 详细介绍如何使用ThreadContext缓存RPC结果以避免重复
 tags:
   - Architecture
   - Distributed Systems
+  - RPC
+  - Cache
+  - Java
 source:
   repo: zh
   path: source/_posts/20200706-使用ThreadContext缓存RPC结果.md

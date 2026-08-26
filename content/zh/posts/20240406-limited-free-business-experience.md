@@ -6,6 +6,8 @@ type: post
 slug: '20240406'
 tags:
   - Architecture
+  - Product
+  - Business
 source:
   repo: zh
   path: source/_posts/20240406-记录限免业务的经验.md

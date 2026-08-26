@@ -6,6 +6,8 @@ type: post
 slug: 20200709-2
 tags:
   - Architecture
+  - Transactions
+  - Security
 source:
   repo: zh
   path: source/_posts/20200709-关于幂等的若干问题.md

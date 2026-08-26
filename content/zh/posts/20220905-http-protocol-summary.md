@@ -6,6 +6,8 @@ type: post
 slug: '20220905'
 tags:
   - Networking
+  - HTTP
+  - TCP
 source:
   repo: zh
   path: source/_posts/20220905-关于HTTP相关协议的一些总结.md

@@ -5,7 +5,9 @@ lang: zh
 type: post
 slug: '20251219'
 tags:
+  - Architecture
   - Distributed Systems
+  - Transactions
   - Reliability
   - Database
   - Finance

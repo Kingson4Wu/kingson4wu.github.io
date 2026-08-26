@@ -5,7 +5,9 @@ lang: zh
 type: post
 slug: 20210813-2
 tags:
+  - Career
   - Reading
+  - Learning
 source:
   repo: zh
   path: source/_posts/20210813-《深度工作：如何有效使用每一点脑力》-笔记.md

@@ -6,6 +6,8 @@ type: post
 slug: '20200326'
 tags:
   - Architecture
+  - Database
+  - Product
 source:
   repo: zh
   path: source/_posts/20200326-移动端下一种折中分页方法.md

@@ -5,8 +5,9 @@ lang: zh
 type: post
 slug: '20210817'
 tags:
-  - Java
+  - Reliability
   - Programming Languages
+  - Java
 source:
   repo: zh
   path: source/_posts/20210817-Java垃圾回收总结.md

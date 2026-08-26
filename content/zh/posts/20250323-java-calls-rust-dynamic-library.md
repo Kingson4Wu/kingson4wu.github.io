@@ -5,9 +5,9 @@ lang: zh
 type: post
 slug: '20250323'
 tags:
+  - Programming Languages
   - Java
   - Rust
-  - Programming Languages
 source:
   repo: zh
   path: source/_posts/20250323-使用Java调用Rust构建的动态库.md

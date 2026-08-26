@@ -6,9 +6,9 @@ type: post
 slug: 20260826-yale-death-course-shelly-kagan
 description: 基于耶鲁大学公开课《死亡》整理 Shelly Kagan 对灵魂、物理主义、人格同一性、死亡的坏处、永生、恐惧与自杀问题的系统论证，并延伸比较加缪的荒诞哲学。
 tags:
-  - Philosophy
-  - Life
   - Reading
+  - Life
+  - Philosophy
 ---
 
 耶鲁大学 Shelly Kagan 的公开课《死亡》，不是一门关于悲伤辅导、临终心理或宗教安慰的课程。它更像一场冷峻的哲学长征：用形而上学和价值理论，系统拆解我们关于灵魂、死亡、永生和有限生命的直觉。

@@ -7,6 +7,7 @@ slug: expression-is-cheap-taste-is-edge
 tags:
   - AI
   - Life
+  - Thinking
 source:
   repo: en
   path: src/content/notes/expression-is-cheap-taste-is-the-edge.md

@@ -7,6 +7,8 @@ slug: '20240717'
 tags:
   - Programming Languages
   - Life
+  - Science
+  - Thinking
 source:
   repo: zh
   path: source/_posts/20240717-看似理科实则文科，看似文科实则理科.md

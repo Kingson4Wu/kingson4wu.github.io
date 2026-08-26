@@ -6,6 +6,8 @@ type: post
 slug: 20250817-socks5
 tags:
   - Networking
+  - TCP
+  - Proxy
 source:
   repo: zh
   path: source/_posts/20250817-深入理解-SOCKS5-正向代理原理.md

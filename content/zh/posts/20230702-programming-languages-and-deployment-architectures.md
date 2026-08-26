@@ -5,9 +5,11 @@ lang: zh
 type: post
 slug: '20230702'
 tags:
+  - Architecture
+  - DevOps
+  - Programming Languages
   - Java
   - Go
-  - Programming Languages
 source:
   repo: zh
   path: source/_posts/20230702-对工作中接触过的几种编程语言及其部署架构的看法.md

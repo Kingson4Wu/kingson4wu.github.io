@@ -7,6 +7,7 @@ slug: '20241226'
 tags:
   - AI
   - LLM
+  - Deep Learning
 source:
   repo: zh
   path: source/_posts/20241226-LLM相关技术简单了解.md

@@ -5,7 +5,9 @@ lang: zh
 type: post
 slug: '20220402'
 tags:
+  - Product
   - Career
+  - Management
 source:
   repo: zh
   path: source/_posts/20220402-Scrum笔记.md

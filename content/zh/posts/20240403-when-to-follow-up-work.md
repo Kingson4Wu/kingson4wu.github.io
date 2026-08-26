@@ -6,6 +6,8 @@ type: post
 slug: '20240403'
 tags:
   - Career
+  - Management
+  - Communication
 source:
   repo: zh
   path: source/_posts/20240403-这件事情你需要跟进吗？.md

@@ -15,6 +15,7 @@ tags:
   - LLM
   - Agent
   - Skill
+  - MCP
   - Architecture
 source:
   repo: en

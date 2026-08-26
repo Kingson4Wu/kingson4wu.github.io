@@ -6,6 +6,8 @@ type: post
 slug: '20201219'
 tags:
   - Reading
+  - Life
+  - Science
 source:
   repo: zh
   path: source/_posts/20201219-《枪炮、病菌与钢铁：人类社会的命运》-笔记.md

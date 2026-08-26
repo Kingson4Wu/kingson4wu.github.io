@@ -6,6 +6,8 @@ type: post
 slug: '20220223'
 tags:
   - Architecture
+  - Logic
+  - Thinking
 source:
   repo: zh
   path: source/_posts/20220223-理解状态机原理及实践.md

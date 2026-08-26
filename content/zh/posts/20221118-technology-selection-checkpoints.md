@@ -6,6 +6,8 @@ type: post
 slug: '20221118'
 tags:
   - Architecture
+  - Product
+  - Business
 source:
   repo: zh
   path: source/_posts/20221118-技术选型要注意什么.md

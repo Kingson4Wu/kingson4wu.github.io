@@ -9,7 +9,9 @@ tags:
   - AI
   - Agent
   - MCP
+  - Automation
   - Architecture
+  - Tooling
 source:
   repo: zh
   path: source/_posts/20260312-浏览器自动化技术全景：CDP、Playwright-与-AI-Agent-的架构关系.md

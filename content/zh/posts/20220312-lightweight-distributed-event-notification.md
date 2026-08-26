@@ -5,7 +5,9 @@ lang: zh
 type: post
 slug: '20220312'
 tags:
+  - Architecture
   - Distributed Systems
+  - Messaging
 source:
   repo: zh
   path: source/_posts/20220312-关于轻量级分布式事件通知的思考.md

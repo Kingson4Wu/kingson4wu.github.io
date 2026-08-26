@@ -5,7 +5,12 @@ lang: zh
 type: post
 slug: '20200926'
 tags:
+  - Reliability
   - Networking
+  - HTTP
+  - TCP
+  - Programming Languages
+  - Java
 source:
   repo: zh
   path: source/_posts/20200926-关于CLOSE-WAIT和HttpClient的使用.md

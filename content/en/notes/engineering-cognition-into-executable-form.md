@@ -8,6 +8,7 @@ tags:
   - AI
   - Agent
   - Prompt Engineering
+  - Automation
 source:
   repo: en
   path: src/content/notes/engineering-cognition-into-executable-form.md

@@ -6,6 +6,8 @@ type: post
 slug: '20241203'
 tags:
   - AI
+  - LLM
+  - Learning
 source:
   repo: zh
   path: source/_posts/20241203-人工智能相关技术简要总结记录.md

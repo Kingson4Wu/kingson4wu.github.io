@@ -5,7 +5,9 @@ lang: zh
 type: post
 slug: '20220805'
 tags:
+  - Distributed Systems
   - Networking
+  - Messaging
 source:
   repo: zh
   path: source/_posts/20220805-推送技术总结.md

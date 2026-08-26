@@ -6,6 +6,8 @@ type: post
 slug: 20210917-2
 tags:
   - Distributed Systems
+  - Transactions
+  - Reliability
 source:
   repo: zh
   path: source/_posts/20210917-通过判断订单状态是否可以避免并发导致的问题？.md

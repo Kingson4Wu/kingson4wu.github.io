@@ -6,6 +6,9 @@ type: post
 slug: '20240425'
 tags:
   - Architecture
+  - Database
+  - Product
+  - Business
 source:
   repo: zh
   path: source/_posts/20240425-业务开发中使用BI的海量数据处理能力.md

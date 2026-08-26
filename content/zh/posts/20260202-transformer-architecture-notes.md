@@ -6,9 +6,11 @@ type: post
 slug: 20260202-transformer
 description: 从 Attention、FFN 与 Multi-Head 三个核心抽象出发，梳理 Transformer 的组件、机制与设计思路。
 tags:
+  - AI
   - LLM
   - Deep Learning
   - Transformer
+  - Architecture
 source:
   repo: zh
   path: source/_posts/20260202-Transformer-架构笔记：组件、机制与设计思路.md

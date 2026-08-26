@@ -5,6 +5,8 @@ lang: zh
 type: post
 slug: '20201101'
 tags:
+  - Architecture
+  - Programming Languages
   - Reading
 source:
   repo: zh

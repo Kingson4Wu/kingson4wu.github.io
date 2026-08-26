@@ -6,6 +6,7 @@ type: note
 slug: ai-is-reshaping-social-learning
 tags:
   - AI
+  - Learning
   - Life
 source:
   repo: en

@@ -7,6 +7,7 @@ slug: '20210706'
 tags:
   - Architecture
   - Life
+  - Philosophy
 source:
   repo: zh
   path: source/_posts/20210706-IT中的生活哲学.md

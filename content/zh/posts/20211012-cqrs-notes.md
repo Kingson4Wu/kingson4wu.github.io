@@ -5,7 +5,9 @@ lang: zh
 type: post
 slug: '20211012'
 tags:
+  - Architecture
   - Distributed Systems
+  - Database
 source:
   repo: zh
   path: source/_posts/20211012-CQRS笔记.md

@@ -6,6 +6,8 @@ type: post
 slug: '20241022'
 tags:
   - Career
+  - Management
+  - Learning
 source:
   repo: zh
   path: source/_posts/20241022-简单记录我在几家公司的经历.md

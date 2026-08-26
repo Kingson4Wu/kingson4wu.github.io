@@ -7,6 +7,7 @@ slug: generative-ai-does-not-think
 tags:
   - AI
   - LLM
+  - Philosophy
 source:
   repo: en
   path: src/content/notes/generative-ai-does-not-think.md

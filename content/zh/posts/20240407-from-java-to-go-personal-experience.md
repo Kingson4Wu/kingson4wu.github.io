@@ -5,9 +5,9 @@ lang: zh
 type: post
 slug: '20240407'
 tags:
+  - Programming Languages
   - Java
   - Go
-  - Programming Languages
 source:
   repo: zh
   path: source/_posts/20240407-从Java转Go的个人体会.md

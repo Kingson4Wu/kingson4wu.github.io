@@ -6,8 +6,9 @@ type: post
 slug: 20250716-quickit
 tags:
   - Reliability
-  - Java
+  - Tooling
   - Programming Languages
+  - Java
 source:
   repo: zh
   path: source/_posts/20250716-QuicKit：高效并发任务管理工具库详解.md

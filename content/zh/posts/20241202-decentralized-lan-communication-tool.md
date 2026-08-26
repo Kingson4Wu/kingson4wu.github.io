@@ -5,9 +5,10 @@ lang: zh
 type: post
 slug: '20241202'
 tags:
+  - Distributed Systems
   - Networking
-  - Rust
   - Programming Languages
+  - Rust
 source:
   repo: zh
   path: source/_posts/20241202-一个无中心节点的局域网通信工具.md

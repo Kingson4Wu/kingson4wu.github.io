@@ -5,7 +5,10 @@ lang: zh
 type: post
 slug: '20220506'
 tags:
+  - Architecture
+  - Reliability
   - Networking
+  - TCP
 source:
   repo: zh
   path: source/_posts/20220506-长连接服务需注意什么？.md

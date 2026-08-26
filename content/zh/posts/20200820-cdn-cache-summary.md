@@ -5,7 +5,11 @@ lang: zh
 type: post
 slug: '20200820'
 tags:
+  - Architecture
+  - Cache
   - Networking
+  - HTTP
+  - CDN
 source:
   repo: zh
   path: source/_posts/20200820-关于CDN缓存.md

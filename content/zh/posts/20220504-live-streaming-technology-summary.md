@@ -5,8 +5,9 @@ lang: zh
 type: post
 slug: '20220504'
 tags:
-  - Media
+  - Architecture
   - Networking
+  - Media
 source:
   repo: zh
   path: source/_posts/20220504-直播相关技术梳理总结.md

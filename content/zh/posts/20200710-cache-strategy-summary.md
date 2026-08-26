@@ -7,6 +7,7 @@ slug: '20200710'
 tags:
   - Architecture
   - Database
+  - Cache
 source:
   repo: zh
   path: source/_posts/20200710-缓存策略简单总结.md

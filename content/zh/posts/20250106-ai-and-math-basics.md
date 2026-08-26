@@ -6,6 +6,7 @@ type: post
 slug: '20250106'
 tags:
   - AI
+  - Deep Learning
   - Math
 source:
   repo: zh

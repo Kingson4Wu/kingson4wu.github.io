@@ -6,6 +6,8 @@ type: post
 slug: '20241231'
 tags:
   - AI
+  - Finance
+  - Economics
 source:
   repo: zh
   path: source/_posts/20241231-AI工业革命下的若干思考.md

@@ -6,8 +6,9 @@ type: post
 slug: '20220117'
 tags:
   - Networking
-  - Java
+  - TCP
   - Programming Languages
+  - Java
 source:
   repo: zh
   path: source/_posts/20220117-NIO总结笔记.md

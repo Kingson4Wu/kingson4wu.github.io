@@ -7,7 +7,9 @@ slug: '20250219'
 tags:
   - AI
   - LLM
+  - RAG
   - Agent
+  - Prompt Engineering
 source:
   repo: zh
   path: source/_posts/20250219-LangChain要点记录.md

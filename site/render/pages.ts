@@ -63,9 +63,22 @@ function formatDate(date: Date, lang: Lang): string {
   }).format(date);
 }
 
-function renderPostList(posts: Post[]): string {
+function formatCompactDate(date: Date, lang: Lang): string {
+  return new Intl.DateTimeFormat(lang === 'zh' ? 'zh-CN' : 'en-US', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    timeZone: 'UTC',
+  }).format(date);
+}
+
+function renderPostList(posts: Post[], options: { grouped?: boolean } = {}): string {
   if (posts.length === 0) {
     return '<p class="muted">No posts yet.</p>';
+  }
+
+  if (options.grouped) {
+    return renderGroupedPostList(posts);
   }
 
   return `<ol class="post-list">
@@ -80,6 +93,42 @@ ${posts.map((post) => `    <li>
       </div>
     </li>`).join('\n')}
   </ol>`;
+}
+
+function renderGroupedPostList(posts: Post[]): string {
+  const groups = new Map<number, Post[]>();
+
+  for (const post of posts) {
+    const year = post.date.getUTCFullYear();
+    const group = groups.get(year) ?? [];
+    group.push(post);
+    groups.set(year, group);
+  }
+
+  return `<div class="archive-groups">
+${[...groups.entries()].map(([year, yearPosts]) => `    <section class="archive-year" aria-labelledby="archive-year-${year}">
+      <h2 id="archive-year-${year}">${escapeHtml(String(year))}</h2>
+${renderPostList(yearPosts)}
+    </section>`).join('\n')}
+  </div>`;
+}
+
+function renderFeaturedPost(post: Post, lang: Lang): string {
+  const label = lang === 'zh' ? '最新文章' : 'Featured latest';
+  const openLabel = lang === 'zh' ? '阅读全文' : 'Read article';
+
+  return `<article class="featured-post">
+      <div class="featured-post-meta">
+        <span>${escapeHtml(label)}</span>
+        <time datetime="${escapeHtml(post.date.toISOString())}">${escapeHtml(formatDate(post.date, lang))}</time>
+      </div>
+      <h2><a href="${escapeHtml(post.url)}">${escapeHtml(post.title)}</a></h2>
+      <p>${escapeHtml(post.excerpt)}</p>
+      <div class="featured-post-footer">
+        ${post.tags.slice(0, 3).map((tag) => `<a href="/${escapeHtml(lang)}/tags/${escapeHtml(encodeURIComponent(tag))}/">${escapeHtml(tag)}</a>`).join('')}
+        <a class="featured-post-link" href="${escapeHtml(post.url)}">${escapeHtml(openLabel)}</a>
+      </div>
+    </article>`;
 }
 
 function renderNoteFeed(posts: Post[], lang: Lang): string {
@@ -232,14 +281,23 @@ export function renderHomePage({ lang, posts, canonicalPath }: RenderHomePageOpt
   const intro = lang === 'zh'
     ? '软件架构、AI 系统、工程经验与阅读笔记。'
     : 'Software architecture, AI systems, engineering notes, and reading.';
+  const featuredPost = posts[0];
+  const recentPosts = featuredPost ? posts.slice(1, 13) : posts;
+  const allPostsLabel = lang === 'zh' ? '查看全部文章' : 'View all writing';
+  const allPostsHref = `/${lang}/posts/`;
   const body = `    <section class="page-heading">
       <p class="eyebrow">${escapeHtml(language.title)}</p>
       <h1>${escapeHtml(signature)}</h1>
       <p>${escapeHtml(intro)}</p>
     </section>
+${featuredPost ? `    <section class="home-feature" aria-labelledby="featured-post">
+      <h2 id="featured-post" class="section-title">${escapeHtml(lang === 'zh' ? '编辑推荐' : 'Editor pick')}</h2>
+${renderFeaturedPost(featuredPost, lang)}
+    </section>` : ''}
     <section aria-labelledby="latest-posts">
       <h2 id="latest-posts" class="section-title">${escapeHtml(heading)}</h2>
-${renderPostList(posts)}
+${renderPostList(recentPosts)}
+      <p class="home-more"><a href="${escapeHtml(allPostsHref)}">${escapeHtml(allPostsLabel)}</a></p>
     </section>`;
 
   return renderLayout({
@@ -253,7 +311,7 @@ ${renderPostList(posts)}
 
 export function renderListPage({ lang, title, type, posts, canonicalPath }: RenderListPageOptions): string {
   const language = siteConfig.languages[lang];
-  const listHtml = type === 'note' ? renderNoteFeed(posts, lang) : renderPostList(posts);
+  const listHtml = type === 'note' ? renderNoteFeed(posts, lang) : renderPostList(posts, { grouped: true });
   const body = `    <section class="page-heading">
       <h1>${escapeHtml(title)}</h1>
       <p>${escapeHtml(language.description)}</p>
@@ -273,8 +331,12 @@ export function renderArticlePage({ post, previous, next }: RenderArticlePageOpt
   const description = post.description ?? post.excerpt;
   const body = `    <article class="article">
       <header class="article-header">
+        <div class="article-kicker">
+          <time datetime="${escapeHtml(post.date.toISOString())}">${escapeHtml(formatDate(post.date, post.lang))}</time>
+          ${post.tags[0] ? `<span>${escapeHtml(post.tags[0])}</span>` : ''}
+        </div>
         <h1>${escapeHtml(post.title)}</h1>
-        <time datetime="${escapeHtml(post.date.toISOString())}">${escapeHtml(formatDate(post.date, post.lang))}</time>
+        <p class="article-dek">${escapeHtml(description)}</p>
 ${renderTags(post.tags, post.lang)}
       </header>
       <div class="prose">
@@ -315,6 +377,10 @@ export function renderSearchPage({ lang }: RenderSearchPageOptions): string {
         <label>
           <span>${escapeHtml(queryLabel)}</span>
           <span class="search-input-wrap">
+            <svg class="search-icon" aria-hidden="true" viewBox="0 0 24 24">
+              <circle cx="11" cy="11" r="7"></circle>
+              <path d="m16.5 16.5 4 4"></path>
+            </svg>
             <input type="search" data-search-input autocomplete="off" placeholder="${escapeHtml(placeholder)}">
             <button type="button" data-search-clear aria-label="${escapeHtml(clearLabel)}">&times;</button>
           </span>

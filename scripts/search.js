@@ -37,6 +37,32 @@
     return String(value || '').toLowerCase();
   }
 
+  function formatDate(value) {
+    if (!value) {
+      return '';
+    }
+
+    var date = new Date(value);
+    if (Number.isNaN(date.getTime())) {
+      return '';
+    }
+
+    return new Intl.DateTimeFormat(lang === 'zh' ? 'zh-CN' : 'en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      timeZone: 'UTC',
+    }).format(date);
+  }
+
+  function typeLabel(type) {
+    if (lang === 'zh') {
+      return type === 'note' ? '笔记' : '文章';
+    }
+
+    return type === 'note' ? 'Note' : 'Post';
+  }
+
   function matches(item, query, lang) {
     if (item.lang !== lang) {
       return false;
@@ -68,8 +94,12 @@
     heading.appendChild(link);
 
     var meta = document.createElement('p');
-    meta.className = 'muted';
-    meta.textContent = [item.lang, item.type, item.date].filter(Boolean).join(' · ');
+    meta.className = 'search-result-meta';
+    meta.textContent = [
+      typeLabel(item.type),
+      formatDate(item.date),
+      Array.isArray(item.tags) ? item.tags[0] : '',
+    ].filter(Boolean).join(' · ');
 
     var excerpt = document.createElement('p');
     excerpt.textContent = item.excerpt || '';

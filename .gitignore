@@ -5,3 +5,22 @@ coverage/
 *.log
 docs/superpowers/
 .superpowers/
+
+# Generated site output. GitHub Pages publishes the workflow artifact from dist/.
+/ai-profile.json
+/assets/
+/en/
+/favicon.svg
+/feed.xml
+/index.html
+/llms-full.txt
+/llms.txt
+/robots.txt
+/rss.xml
+/scripts/
+/search/
+/search-index.json
+/sitemap.xml
+/styles/
+/vendor/
+/zh/

@@ -106,6 +106,17 @@ describe('page rendering', () => {
     expect(html).not.toContain('/scripts/article-toc.js');
   });
 
+  it('labels adjacent Chinese articles by time direction', () => {
+    const html = renderArticlePage({
+      post: { ...note, lang: 'zh' },
+      previous: { ...note, title: '旧笔记', url: '/zh/notes/old/' },
+      next: { ...note, title: '新笔记', url: '/zh/notes/new/' },
+    });
+
+    expect(html).toContain('<span>较早一篇</span>旧笔记');
+    expect(html).toContain('<span>较新一篇</span>新笔记');
+  });
+
   it('escapes post titles in lists and article headings', () => {
     const unsafePost = { ...post, title: 'Hello <script>alert("x")</script>' };
 

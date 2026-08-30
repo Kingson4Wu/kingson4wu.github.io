@@ -170,6 +170,12 @@ function renderAdjacentLink(label: string, post: Post | undefined): string {
   return `<a href="${escapeHtml(post.url)}"><span>${escapeHtml(label)}</span>${escapeHtml(post.title)}</a>`;
 }
 
+function adjacentLabels(lang: Lang): { previous: string; next: string } {
+  return lang === 'zh'
+    ? { previous: '较早一篇', next: '较新一篇' }
+    : { previous: 'Older', next: 'Newer' };
+}
+
 function renderShareActions(post: Post): string {
   const url = absoluteUrl(siteConfig.siteUrl, post.url);
   const shareUrl = new URL('https://twitter.com/intent/tweet');
@@ -329,6 +335,7 @@ ${listHtml}`;
 
 export function renderArticlePage({ post, previous, next }: RenderArticlePageOptions): string {
   const description = post.description ?? post.excerpt;
+  const adjacent = adjacentLabels(post.lang);
   const body = `    <article class="article">
       <header class="article-header">
         <div class="article-kicker">
@@ -346,8 +353,8 @@ ${renderShareActions(post)}
     </article>
 ${renderArticleToc(post)}
     <nav class="article-nav" aria-label="Adjacent posts">
-      ${renderAdjacentLink('Previous', previous)}
-      ${renderAdjacentLink('Next', next)}
+      ${renderAdjacentLink(adjacent.previous, previous)}
+      ${renderAdjacentLink(adjacent.next, next)}
     </nav>
 ${renderComments(post)}`;
 

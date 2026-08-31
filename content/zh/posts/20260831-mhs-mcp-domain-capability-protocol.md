@@ -33,38 +33,24 @@ MHS 官方定位是硬件标准。它面向的是显微镜、移液工作站、�
 
 它要解决的不是“AI 能不能调用一个函数”，而是更底层的集成问题：
 
-```text
-大量设备供应商
-  ↓
-能力相似但接口不同
-  ↓
-说明书、SDK、状态、安全限制分散
-  ↓
-人工适配成本高
-  ↓
-Agent 需要动态发现、理解、组合和操作
-```
+<figure>
+  <img src="/assets/zh/posts/20260831-mhs-mcp-domain-capability-protocol/mhs-integration-pain.svg" alt="MHS 要解决的硬件集成问题：大量设备供应商、能力相似但接口不同、说明书和安全限制分散，导致人工适配成本高，Agent 还需要动态理解和组合">
+  <figcaption>MHS 要处理的不是单个函数调用，而是硬件语义分散、供应商接口不同和重复适配的问题。</figcaption>
+</figure>
 
 MHS 的做法是引入标准化 Driver。这个 Driver 位于厂商接口和上层 Agent 之间。它不是替代设备厂商的底层协议，而是把厂商 SDK、设备接口和硬件状态翻译成上层可以稳定理解的表示：
 
-```text
-Physical Device
-  ↓
-Vendor SDK / Device Interface
-  ↓
-MHS Driver
-  ↓
-Standard Device Representation
-  ↓
-Agent / Program
-```
+<figure>
+  <img src="/assets/zh/posts/20260831-mhs-mcp-domain-capability-protocol/mhs-driver-stack.svg" alt="MHS Driver 位于物理设备、厂商 SDK、标准设备表示和上层 Agent 或程序之间">
+  <figcaption>MHS Driver 的作用是把厂商 SDK 和设备接口翻译成上层可以稳定使用的设备表示。</figcaption>
+</figure>
 
 MHS Driver 使用简单 primitive，例如 `read` 和 `write`。官方举的例子是：
 
-```text
-read: get temperature
-write: set temperature
-```
+<figure>
+  <img src="/assets/zh/posts/20260831-mhs-mcp-domain-capability-protocol/mhs-read-write.svg" alt="MHS Driver 的 read 和 write primitive：read 用于 get temperature，write 用于 set temperature">
+  <figcaption>`read` 和 `write` 本身很简单，关键仍然是它们背后的设备语义、状态和安全约束。</figcaption>
+</figure>
 
 这看起来像接口统一，但更关键的是设备表示统一。
 
@@ -84,39 +70,12 @@ Anthropic 官方文章提到，很多信息过去存在纸质说明书、用户�
 
 这也解释了为什么它不只是“方便调用”。如果没有这层结构化表示，业务方即使通过 MCP 暴露硬件工具，也常常要在 tool description、prompt 或额外文档里反复解释设备说明、厂商差异、单位换算和安全规则。标准化之后，这些内容可以作为设备模型的一部分被查询和复用，上层 MCP Tool 可以主要保留和当前业务任务直接相关的说明。
 
-例如不同机械臂厂商可能提供不同接口：
+例如不同机械臂厂商可能提供不同接口。上层更需要的是统一的设备能力模型，而不是这些厂商函数名：
 
-```text
-ABB:
-moveJoint()
-
-Fanuc:
-jointMove()
-
-KUKA:
-PTP()
-```
-
-上层更需要的是统一的设备能力模型，而不是这些厂商函数名：
-
-```text
-Device:
-  RobotArm
-
-Capabilities:
-  move
-  grasp
-
-State:
-  position
-  load
-  health
-
-Constraints:
-  workspace
-  max_payload
-  safety_limits
-```
+<figure>
+  <img src="/assets/zh/posts/20260831-mhs-mcp-domain-capability-protocol/hardware-capability-model.svg" alt="不同机械臂厂商接口被抽象成统一 RobotArm 能力模型，包括 move、grasp、position、load、workspace 和 safety limits">
+  <figcaption>标准化的重点不是让函数名看起来一样，而是让设备能力、状态和约束有共同语义。</figcaption>
+</figure>
 
 设备表示统一以后，上层才有可能做多设备编排。Agent 可以读取各个设备的运行状态，按照实验或生产流程安排步骤，监控结果变化，并在条件变化时调整参数。对于长时间运行或需要稳定执行的任务，Agent 也可以把一组设备命令写成确定性脚本，让设备按脚本执行，而不是每一步都依赖模型在线推理。
 
@@ -128,15 +87,12 @@ MCP（Model Context Protocol）是 Anthropic 在 2024 年 11 月开源的标准�
 
 MCP 的结构大概是：
 
-```text
-MCP Client
-  ↓
-MCP Server
-  ↓
-Data / Tool / Workflow
-```
+<figure>
+  <img src="/assets/zh/posts/20260831-mhs-mcp-domain-capability-protocol/mcp-basic-shape.svg" alt="MCP 的基本结构：MCP Client 通过 MCP Server 连接 Data、Tool 和 Workflow">
+  <figcaption>MCP 解决的是 AI 应用如何连接外部系统，并发现和使用数据源、工具与工作流。</figcaption>
+</figure>
 
-MCP 解决的是 AI 应用如何连接外部系统，并在这些系统里发现和使用数据源、工具与工作流。本文重点讨论其中的 Tool，因为 MHS 接到 Agent 时，最容易和 MCP Tool 混在一起。
+本文重点讨论其中的 Tool，因为 MHS 接到 Agent 时，最容易和 MCP Tool 混在一起。
 
 当前 MCP 规范里的 Tool 会有 `name`、`description`、`inputSchema`，也可以有 `outputSchema`；工具结果可以是文本、图片、音频、资源链接，也可以包含 `structuredContent`。
 
@@ -144,39 +100,26 @@ MCP 解决的是 AI 应用如何连接外部系统，并在这些系统里发现
 
 但 MCP 不负责替具体领域建立领域模型。它可以告诉 Agent：
 
-```text
-这里有一个 tool
-这个 tool 叫什么
-参数 schema 是什么
-调用结果是什么
-```
+- 这里有一个 tool；
+- 这个 tool 叫什么；
+- 参数 schema 是什么；
+- 调用结果是什么。
 
 它不会天然告诉 Agent：
 
-```text
-显微镜应该有哪些状态
-移液工作站有哪些安全限制
-离心机的转速和离心力如何换算
-机械臂的工作空间和负载边界是什么
-```
+- 显微镜应该有哪些状态；
+- 移液工作站有哪些安全限制；
+- 离心机的转速和离心力如何换算；
+- 机械臂的工作空间和负载边界是什么。
 
 这些属于 MHS 要解决的问题。
 
 两者的关系更适合这样理解：
 
-```text
-AI Model
-  ↓
-Agent
-  ↓
-MCP / CLI / code files / APIs
-  ↓
-MHS
-  ↓
-MHS Driver
-  ↓
-Physical Device
-```
+<figure>
+  <img src="/assets/zh/posts/20260831-mhs-mcp-domain-capability-protocol/mcp-mhs-layering.svg" alt="MCP 与 MHS 的分层关系：AI Agent 通过 MCP、CLI、code files 或业务 API 访问 MHS，MHS 再通过 Driver 连接具体硬件">
+  <figcaption>MCP 是 Agent 接入外部系统的一种入口；MHS 位于更底层，负责把硬件设备表示成可发现、可读取、可约束的能力模型。</figcaption>
+</figure>
 
 MHS 是 model-agnostic 的。官方资料里也提到，agent harness 可以通过标准协议访问 MHS，例如 MCP；也可以通过命令行接口和 code files（APIs）控制硬件。
 
@@ -192,17 +135,10 @@ MHS 提供的是硬件侧的标准能力层。它让不同厂商设备用相对�
 
 更合理的集成关系是：
 
-```text
-业务目标 / 实验流程 / 生产流程
-  ↓
-业务方自己的 MCP Tools / CLI / code files / APIs
-  ↓
-MHS 标准设备表示
-  ↓
-不同厂商设备 Driver
-  ↓
-具体硬件
-```
+<figure>
+  <img src="/assets/zh/posts/20260831-mhs-mcp-domain-capability-protocol/business-access-stack.svg" alt="业务目标通过业务方自己的 MCP Tools、CLI、code files 或 APIs 接入 MHS 标准设备表示，再连接不同厂商设备 Driver 和具体硬件">
+  <figcaption>业务方设计上层工具和流程，MHS 负责让底层硬件能力更稳定地被替换和复用。</figcaption>
+</figure>
 
 这样分层以后，业务方可以根据自身需求定义上层工具。例如同样是显微镜，科研实验可能暴露 `capture_cell_image`，质检系统可能暴露 `inspect_surface_defect`。这两个工具的业务含义不同，但底层都可以依赖 MHS 提供的标准设备能力。
 
@@ -229,16 +165,14 @@ centrifuge.spin()
 
 如果没有 MHS，每个 MCP Server 都要自己决定：
 
-```text
-设备叫什么
-能力怎么命名
-状态怎么表达
-参数单位是什么
-安全限制放在哪里
-错误如何分类
-哪些操作需要人确认
-多个设备如何互相发现和协作
-```
+- 设备叫什么；
+- 能力怎么命名；
+- 状态怎么表达；
+- 参数单位是什么；
+- 安全限制放在哪里；
+- 错误如何分类；
+- 哪些操作需要人确认；
+- 多个设备如何互相发现和协作。
 
 结果很可能是每个团队都做出一套自己的“硬件 MCP”。表面上 Agent 都能调用工具，实际上工具背后的设备模型、状态语义、安全约束各不相同。Agent 换一个实验室、换一批设备、换一个供应商，就又要重新理解一遍。
 
@@ -268,16 +202,14 @@ Agent 模式不同。Agent 面对的是更动态的环境。它可能不知道�
 
 Agent 需要知道：
 
-```text
-有哪些设备？
-哪个设备可以拍摄？
-哪个设备可以加液？
-哪个设备可以离心？
-参数范围是什么？
-安全边界是什么？
-执行顺序是什么？
-失败后能否恢复？
-```
+- 有哪些设备；
+- 哪个设备可以拍摄；
+- 哪个设备可以加液；
+- 哪个设备可以离心；
+- 参数范围是什么；
+- 安全边界是什么；
+- 执行顺序是什么；
+- 失败后能否恢复。
 
 所以 AI 放大的不是“多几个 API”这个需求，而是“机器必须理解能力语义”这个需求。
 
@@ -289,27 +221,18 @@ MHS 的价值正是在这里。它把过去由人读说明书、写适配、记�
 
 这里的“业务”不是狭义的企业管理系统，而是一个领域里反复出现、可以被抽象和复用的工作模式。实验室自动化就是一种业务。制造现场也是一种业务。它们都有稳定对象、流程和约束：
 
-```text
-对象：设备、样本、工单、物料、实验、产线
-能力：测量、移动、加液、加工、检测、回滚
-状态：空闲、运行中、失败、完成、待确认
-约束：安全、容量、权限、物理边界、工艺要求
-流程：计划、执行、监控、调整、验证
-```
+- 对象：设备、样本、工单、物料、实验、产线；
+- 能力：测量、移动、加液、加工、检测、回滚；
+- 状态：空闲、运行中、失败、完成、待确认；
+- 约束：安全、容量、权限、物理边界、工艺要求；
+- 流程：计划、执行、监控、调整、验证。
 
 MHS 的官方范围是硬件，但它给出的抽象方式可以往外看：
 
-```text
-现实世界业务领域
-  ↓
-领域模型（Domain Model）
-  ↓
-能力模型（Capability Model）
-  ↓
-标准化 Adapter / Driver
-  ↓
-具体实现：软件、硬件、服务、人
-```
+<figure>
+  <img src="/assets/zh/posts/20260831-mhs-mcp-domain-capability-protocol/domain-capability-layers.svg" alt="从现实世界业务领域到领域模型、能力模型、标准化 Adapter 或 Driver，再到软件、硬件、服务和人">
+  <figcaption>把硬件领域的做法往外看，就会回到领域模型、能力模型和标准化适配层这些老问题。</figcaption>
+</figure>
 
 把 MHS 往外推，不是说“业务领域比硬件高一层”，而是说硬件只是一个领域。未来如果有类似标准，更可能表现为智能家居、支付、游戏、制造、物流、医疗、能源这些领域各自的能力模型，和硬件领域平级。
 
@@ -319,63 +242,18 @@ MHS 的官方范围是硬件，但它给出的抽象方式可以往外看：
 
 如果把这个思路类比成一个假设的 Model Payment Standard，重点不是让 Agent 绕过业务规则直接发起扣款、退款等动作，而是把支付领域里相对稳定的对象、能力和约束抽出来。如果叫 Model Finance Standard，范围会更大，还会涉及账户、资产、授信、风控、清结算等更多对象，支付只是其中一部分。
 
-```text
-Payment:
-  objects:
-    - payment_order
-    - refund
-    - settlement
-    - dispute
-
-  capabilities:
-    - authorize
-    - capture
-    - pay
-    - refund
-    - query_status
-    - reconcile
-
-  constraints:
-    - currency
-    - region
-    - risk_control
-    - compliance
-    - user_confirmation
-```
-
 这样上层 AI 电商、客服 Agent 或运营系统关心的是“创建支付单”“查询支付状态”“发起退款”“对账异常处理”这些业务语义，以及每个动作需要满足的确认、权限、风控和合规条件。底层到底是支付宝、微信支付，还是海外信用卡通道，由 Adapter 处理。换支付方式时，上层流程就有机会保持稳定。
 
 游戏平台也是类似问题。Steam、PlayStation、Xbox、App Store、Google Play 或不同游戏发行平台，都可能涉及账号、支付、库存、成就、订阅、退款、反作弊、家长控制等能力。这里更准确地说，是假设有一个面向游戏平台服务的标准，而不是统一游戏玩法或游戏引擎。它的重点也不是统一几个 API 名字，而是把这些平台服务抽象成稳定对象和能力：
 
-```text
-GamePlatform:
-  objects:
-    - player
-    - entitlement
-    - inventory
-    - achievement
-    - purchase
-    - subscription
-
-  capabilities:
-    - login
-    - grant_item
-    - revoke_item
-    - unlock_achievement
-    - verify_purchase
-    - refund
-
-  constraints:
-    - platform_policy
-    - region
-    - age_rating
-    - anti_fraud
-    - parental_control
-```
-
 这些名字都只是为了说明抽象方向，不是说已经有这样的官方标准。这里要说明的是：当一个领域存在大量异构实现、类似能力、频繁替换和组合，上层又希望 Agent 或业务系统快速接入时，就可能出现类似 MHS 的标准化诉求。
 
 智能家居也可以放在同一类里看。一个家庭里可能同时有不同厂商的灯、门锁、空调、摄像头、窗帘、传感器，也可能接入 HomeKit、米家、Google Home、Home Assistant 这类平台。用户真正关心的不是“调用某个灯泡 API”，而是“我回家了”“我要睡觉了”“家里没人了”“发现异常移动”这些场景。这里需要统一理解的是房间、人员、设备、传感器、占用状态、权限、安全和隐私约束。底层设备来自哪个厂商，可以交给 Adapter 或 Driver 处理；上层关心的是场景目标和动作组合。
+
+<figure>
+  <img src="/assets/zh/posts/20260831-mhs-mcp-domain-capability-protocol/domain-examples.svg" alt="支付、游戏平台服务和智能家居的领域能力模型类比，展示对象、能力、约束和异构实现">
+  <figcaption>支付、游戏平台服务和智能家居只是类比，用来说明其他领域也可能出现类似的能力模型和标准化适配层。</figcaption>
+</figure>
 
 是否值得做这种标准，关键看五件事：
 

@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="620" viewBox="0 0 920 620" role="img" aria-labelledby="title desc">
+  <title id="title">亚伯拉罕诸教人物关系</title>
+  <desc id="desc">亚伯拉罕到以撒、以实玛利、雅各、摩西、大卫、耶稣和穆罕默德的人物关系图。</desc>
+  <rect width="920" height="620" fill="#fbf7ef"/>
+  <style>
+    .title{font:700 30px Georgia,"Times New Roman","Noto Serif CJK SC",serif;fill:#173f63}
+    .node{fill:#fffdf8;stroke:#173f63;stroke-width:1.4;rx:8}
+    .node-green{fill:#eef6f1;stroke:#1f7a57;stroke-width:1.4;rx:8}
+    .node-blue{fill:#eff6fb;stroke:#173f63;stroke-width:1.4;rx:8}
+    .node-red{fill:#f8efed;stroke:#9a3b2f;stroke-width:1.4;rx:8}
+    .label{font:700 17px -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans CJK SC",sans-serif;fill:#173f63}
+    .small{font:13px -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans CJK SC",sans-serif;fill:#425a6d}
+    .line{stroke:#173f63;stroke-width:1.6;fill:none}
+    .dashed{stroke:#6f7f8d;stroke-width:1.5;stroke-dasharray:5 5;fill:none}
+    .tag{font:13px -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans CJK SC",sans-serif;fill:#6f7f8d}
+  </style>
+  <text x="460" y="48" text-anchor="middle" class="title">亚伯拉罕诸教人物关系</text>
+
+  <rect x="370" y="82" width="180" height="62" class="node-green"/>
+  <text x="460" y="108" text-anchor="middle" class="label">亚伯拉罕</text>
+  <text x="460" y="129" text-anchor="middle" class="small">Abraham / Ibrahim</text>
+
+  <path d="M460 144V178M460 178H255M460 178H665M255 178V206M665 178V206" class="line"/>
+
+  <rect x="165" y="206" width="180" height="62" class="node"/>
+  <text x="255" y="232" text-anchor="middle" class="label">以撒</text>
+  <text x="255" y="253" text-anchor="middle" class="small">Isaac：犹太、基督教路线</text>
+
+  <rect x="575" y="206" width="180" height="62" class="node"/>
+  <text x="665" y="232" text-anchor="middle" class="label">以实玛利</text>
+  <text x="665" y="253" text-anchor="middle" class="small">Ishmael：阿拉伯传统</text>
+
+  <path d="M255 268V304" class="line"/>
+  <rect x="165" y="304" width="180" height="62" class="node"/>
+  <text x="255" y="330" text-anchor="middle" class="label">雅各 / 以色列</text>
+  <text x="255" y="351" text-anchor="middle" class="small">Jacob / Israel</text>
+
+  <path d="M255 366V402" class="line"/>
+  <rect x="165" y="402" width="180" height="62" class="node-blue"/>
+  <text x="255" y="428" text-anchor="middle" class="label">以色列十二支派</text>
+  <text x="255" y="449" text-anchor="middle" class="small">犹太民族传统</text>
+
+  <path d="M255 464V500" class="line"/>
+  <rect x="80" y="500" width="150" height="58" class="node"/>
+  <text x="155" y="524" text-anchor="middle" class="label">摩西</text>
+  <text x="155" y="545" text-anchor="middle" class="small">律法 / 出埃及</text>
+
+  <rect x="280" y="500" width="150" height="58" class="node"/>
+  <text x="355" y="524" text-anchor="middle" class="label">大卫</text>
+  <text x="355" y="545" text-anchor="middle" class="small">王朝 / 弥赛亚期待</text>
+
+  <rect x="480" y="500" width="150" height="58" class="node-red"/>
+  <text x="555" y="524" text-anchor="middle" class="label">耶稣</text>
+  <text x="555" y="545" text-anchor="middle" class="small">Christ / 基督</text>
+
+  <path d="M230 529H280M430 529H480" class="line"/>
+
+  <path d="M665 268V500" class="dashed"/>
+  <rect x="655" y="500" width="185" height="58" class="node-green"/>
+  <text x="747.5" y="524" text-anchor="middle" class="label">穆罕默德</text>
+  <text x="747.5" y="545" text-anchor="middle" class="small">Muhammad：伊斯兰传统</text>
+
+  <text x="120" y="586" class="tag">实线：犹太教与基督教叙事主线</text>
+  <text x="530" y="586" class="tag">虚线：阿拉伯与伊斯兰传统关联</text>
+</svg>

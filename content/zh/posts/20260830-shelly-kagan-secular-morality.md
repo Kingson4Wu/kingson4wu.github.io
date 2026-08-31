@@ -8,6 +8,8 @@ description: "整理谢利·卡根与威廉·巷·克雷格关于上帝、客观
 tags:
   - Philosophy
   - Life
+  - Religion
+  - Thinking
 ---
 
 这是一篇关于谢利·卡根（Shelly Kagan）与威廉·巷·克雷格（William Lane Craig）辩论的整理笔记。主题是：上帝是否为客观道德的必要条件。

@@ -85,7 +85,7 @@ function renderPostList(posts: Post[], options: { grouped?: boolean } = {}): str
 ${posts.map((post) => `    <li>
       <div class="post-meta">
         <time datetime="${escapeHtml(post.date.toISOString())}">${escapeHtml(formatDate(post.date, post.lang))}</time>
-        ${post.tags[0] ? `<span>${escapeHtml(post.tags[0])}</span>` : ''}
+        ${renderPostMetaTags(post)}
       </div>
       <div class="post-summary">
         <h2><a href="${escapeHtml(post.url)}">${escapeHtml(post.title)}</a></h2>
@@ -93,6 +93,13 @@ ${posts.map((post) => `    <li>
       </div>
     </li>`).join('\n')}
   </ol>`;
+}
+
+function renderPostMetaTags(post: Post): string {
+  return post.tags
+    .slice(0, 3)
+    .map((tag) => `<span>${escapeHtml(tag)}</span>`)
+    .join('');
 }
 
 function renderGroupedPostList(posts: Post[]): string {

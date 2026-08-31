@@ -7,6 +7,12 @@ slug: 20260831-mhs-mcp-domain-capability-protocol
 description: "从 MHS 和 MCP 的区别出发，理解 AI Agent 时代为什么更需要领域能力模型，以及复杂业务领域如何通过标准化抽象层让 Agent 理解并操作现实世界。"
 tags:
   - AI
+  - MHS
+  - Agent
+  - MCP
+  - Architecture
+  - Tooling
+  - Engineering
 ---
 
 Anthropic 在 2026 年 8 月 27 日发布了 MHS（Model Hardware Standard）的 research preview。按照官方定义，MHS 是一个让 AI Agent 安全操作物理设备的共享规范，第一批面向科学实验室和先进制造场景。它现在还不是一个成熟的公共标准，而是先开放给一部分合作方试用，官方也明确说是在开源之前先做安全评估和最佳实践探索。

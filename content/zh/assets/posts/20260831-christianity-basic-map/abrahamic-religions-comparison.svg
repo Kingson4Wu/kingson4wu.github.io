@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="500" viewBox="0 0 920 500" role="img" aria-labelledby="title desc">
+  <title id="title">三大亚伯拉罕宗教核心区别</title>
+  <desc id="desc">犹太教、基督教和伊斯兰教在耶稣、三位一体、穆罕默德和核心经典上的区别。</desc>
+  <rect width="920" height="500" fill="#fbf7ef"/>
+  <style>
+    .title{font:700 30px Georgia,"Times New Roman","Noto Serif CJK SC",serif;fill:#173f63}
+    .card{fill:#fffdf8;stroke:#173f63;stroke-width:1.4;rx:8}
+    .card-green{fill:#eef6f1;stroke:#1f7a57;stroke-width:1.4;rx:8}
+    .card-red{fill:#f8efed;stroke:#9a3b2f;stroke-width:1.4;rx:8}
+    .h{font:700 22px -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans CJK SC",sans-serif;fill:#173f63}
+    .label{font:700 14px -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans CJK SC",sans-serif;fill:#6f7f8d}
+    .text{font:15px -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans CJK SC",sans-serif;fill:#173f63}
+    .line{stroke:#89a6bd;stroke-width:1}
+  </style>
+  <text x="460" y="48" text-anchor="middle" class="title">三大亚伯拉罕宗教核心区别</text>
+
+  <rect x="60" y="90" width="240" height="330" class="card"/>
+  <text x="180" y="128" text-anchor="middle" class="h">犹太教</text>
+  <path d="M86 150H274" class="line"/>
+  <text x="90" y="184" class="label">上帝</text>
+  <text x="160" y="184" class="text">一个神</text>
+  <text x="90" y="230" class="label">耶稣</text>
+  <text x="160" y="230" class="text">不承认救世主</text>
+  <text x="90" y="276" class="label">三位一体</text>
+  <text x="160" y="276" class="text">否</text>
+  <text x="90" y="322" class="label">穆罕默德</text>
+  <text x="160" y="322" class="text">否</text>
+  <text x="90" y="368" class="label">核心经典</text>
+  <text x="160" y="368" class="text">塔纳赫</text>
+
+  <rect x="340" y="90" width="240" height="330" class="card-red"/>
+  <text x="460" y="128" text-anchor="middle" class="h">基督教</text>
+  <path d="M366 150H554" class="line"/>
+  <text x="370" y="184" class="label">上帝</text>
+  <text x="440" y="184" class="text">一个神</text>
+  <text x="370" y="230" class="label">耶稣</text>
+  <text x="440" y="230" class="text">神的儿子、救世主</text>
+  <text x="370" y="276" class="label">三位一体</text>
+  <text x="440" y="276" class="text">是</text>
+  <text x="370" y="322" class="label">穆罕默德</text>
+  <text x="440" y="322" class="text">否</text>
+  <text x="370" y="368" class="label">核心经典</text>
+  <text x="440" y="368" class="text">圣经</text>
+
+  <rect x="620" y="90" width="240" height="330" class="card-green"/>
+  <text x="740" y="128" text-anchor="middle" class="h">伊斯兰教</text>
+  <path d="M646 150H834" class="line"/>
+  <text x="650" y="184" class="label">上帝</text>
+  <text x="720" y="184" class="text">一个神</text>
+  <text x="650" y="230" class="label">耶稣</text>
+  <text x="720" y="230" class="text">伟大先知</text>
+  <text x="650" y="276" class="label">三位一体</text>
+  <text x="720" y="276" class="text">否</text>
+  <text x="650" y="322" class="label">穆罕默德</text>
+  <text x="720" y="322" class="text">最后先知</text>
+  <text x="650" y="368" class="label">核心经典</text>
+  <text x="720" y="368" class="text">古兰经</text>
+
+  <text x="460" y="462" text-anchor="middle" class="text">关键分歧集中在：耶稣是谁、是否接受三位一体、承认哪套经典与先知权威。</text>
+</svg>

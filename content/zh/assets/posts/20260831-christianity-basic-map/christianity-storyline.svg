@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="520" viewBox="0 0 920 520" role="img" aria-labelledby="title desc">
+  <title id="title">基督教叙事主线</title>
+  <desc id="desc">从创造、堕落、亚伯拉罕、以色列、摩西、大卫、耶稣到世界更新的基督教叙事流程。</desc>
+  <rect width="920" height="520" fill="#fbf7ef"/>
+  <style>
+    .title{font:700 30px Georgia,"Times New Roman","Noto Serif CJK SC",serif;fill:#173f63}
+    .subtitle{font:16px -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans CJK SC",sans-serif;fill:#6f7f8d}
+    .box{fill:#fffdf8;stroke:#173f63;stroke-width:1.4;rx:8}
+    .box-accent{fill:#eef6f1;stroke:#1f7a57;stroke-width:1.4;rx:8}
+    .box-red{fill:#f8efed;stroke:#9a3b2f;stroke-width:1.4;rx:8}
+    .label{font:700 18px -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans CJK SC",sans-serif;fill:#173f63}
+    .small{font:14px -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans CJK SC",sans-serif;fill:#425a6d}
+    .line{stroke:#173f63;stroke-width:1.8;fill:none;marker-end:url(#arrow)}
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0L10 5L0 10z" fill="#173f63"/>
+    </marker>
+  </defs>
+  <text x="460" y="44" text-anchor="middle" class="title">基督教叙事主线</text>
+  <text x="460" y="72" text-anchor="middle" class="subtitle">创造、堕落、盟约、律法、救世主、救赎、最终更新</text>
+
+  <rect x="58" y="118" width="170" height="74" class="box-accent"/>
+  <text x="143" y="150" text-anchor="middle" class="label">创造世界</text>
+  <text x="143" y="174" text-anchor="middle" class="small">世界有秩序，人有价值</text>
+
+  <path d="M228 155H285" class="line"/>
+  <rect x="292" y="118" width="170" height="74" class="box-red"/>
+  <text x="377" y="150" text-anchor="middle" class="label">人类背离</text>
+  <text x="377" y="174" text-anchor="middle" class="small">罪进入世界</text>
+
+  <path d="M462 155H519" class="line"/>
+  <rect x="526" y="118" width="170" height="74" class="box"/>
+  <text x="611" y="150" text-anchor="middle" class="label">亚伯拉罕之约</text>
+  <text x="611" y="174" text-anchor="middle" class="small">土地、后代、祝福</text>
+
+  <path d="M611 192V241" class="line"/>
+  <rect x="526" y="248" width="170" height="74" class="box"/>
+  <text x="611" y="280" text-anchor="middle" class="label">以色列民族</text>
+  <text x="611" y="304" text-anchor="middle" class="small">救赎计划进入民族史</text>
+
+  <path d="M526 285H469" class="line"/>
+  <rect x="292" y="248" width="170" height="74" class="box"/>
+  <text x="377" y="280" text-anchor="middle" class="label">摩西与律法</text>
+  <text x="377" y="304" text-anchor="middle" class="small">出埃及、十诫、西奈山</text>
+
+  <path d="M292 285H235" class="line"/>
+  <rect x="58" y="248" width="170" height="74" class="box"/>
+  <text x="143" y="280" text-anchor="middle" class="label">大卫王朝</text>
+  <text x="143" y="304" text-anchor="middle" class="small">形成救世主期待</text>
+
+  <path d="M143 322V371" class="line"/>
+  <rect x="58" y="378" width="170" height="74" class="box-accent"/>
+  <text x="143" y="410" text-anchor="middle" class="label">耶稣出现</text>
+  <text x="143" y="434" text-anchor="middle" class="small">基督徒认为其为基督</text>
+
+  <path d="M228 415H285" class="line"/>
+  <rect x="292" y="378" width="170" height="74" class="box-red"/>
+  <text x="377" y="410" text-anchor="middle" class="label">死亡与复活</text>
+  <text x="377" y="434" text-anchor="middle" class="small">赎罪，恢复关系</text>
+
+  <path d="M462 415H519" class="line"/>
+  <rect x="526" y="378" width="170" height="74" class="box-accent"/>
+  <text x="611" y="410" text-anchor="middle" class="label">传播与更新</text>
+  <text x="611" y="434" text-anchor="middle" class="small">教会扩展，最终更新世界</text>
+</svg>

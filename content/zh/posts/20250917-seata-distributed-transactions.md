@@ -13,7 +13,7 @@ source:
   path: source/_posts/20250917-Seata-与分布式事务的本质解析.md
 ---
 
->> 旧文：[分布式事务简要总结](https://kingson4wu.github.io/2020/09/12/20200912-fen-bu-shi-shi-wu-jian-yao-zong-jie/)
+>> 旧文：[分布式事务简要总结](/zh/posts/20200912-2/)
 
 # Seata 与分布式事务的本质解析
 

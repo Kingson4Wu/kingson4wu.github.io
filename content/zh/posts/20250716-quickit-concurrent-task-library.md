@@ -13,7 +13,7 @@ source:
   repo: zh
   path: source/_posts/20250716-QuicKit：高效并发任务管理工具库详解.md
 ---
-在现代软件开发中，高效的任务管理与并发处理是提升系统性能的关键。**QuicKit** 是一个基于 Java 的工具库，专注于并发任务调度、执行控制、重试机制等通用能力的封装。本文将深入介绍 QuicKit 的核心功能及其实现原理。
+延迟执行、批量限速、并行处理、失败重试和共享数据保护，都与“并发”有关，却分别需要处理触发时间、执行频率、线程资源、失败条件和锁的边界。**QuicKit** 将这些常见需求封装成 Java 工具。选择其中的工具时，先要确认自己遇到的是哪一类问题，再看封装是否适合当前的任务量和失败语义。
 
 ---
 
@@ -85,13 +85,8 @@ source:
 
 ## 总结
 
-**QuicKit** 通过提供一系列高性能并发工具，极大简化了任务调度、线程管理与错误恢复的复杂性。无论你在构建分布式系统、服务中间件，还是日常业务逻辑开发，QuicKit 都是一个值得使用的并发基础组件库。
+这些工具减少了重复编写调度和同步代码的工作，但封装不能替使用方决定任务是否允许丢失、重试是否幂等，以及线程池和锁会不会成为瓶颈。选用时应从具体场景出发，核对触发条件、失败处理和资源开销，再决定是否引入相应组件。
 
 ---
 
-📦 **项目地址**：
-👉 [https://github.com/Kingson4Wu/QuicKit](https://github.com/Kingson4Wu/QuicKit)
-
-📚 **文档地址**：
-👉 [https://deepwiki.com/Kingson4Wu/QuicKit](https://deepwiki.com/Kingson4Wu/QuicKit)
-
+实现细节可查看 [QuicKit 项目仓库](https://github.com/Kingson4Wu/QuicKit)及其[项目文档](https://deepwiki.com/Kingson4Wu/QuicKit)。

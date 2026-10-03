@@ -46,7 +46,7 @@ source:
     9. Transformer：基于 Attention 构成；基于 Attention 构成    
 
 
-+ 《深度学习入门：强化学习》：https://github.com/Kingson4Wu/Reinforcement-Learning
++ 《深度学习入门：强化学习》：
     1. 机器学习（按学习方法划分）：监督学习(supervised learning)、无监督学习(unsupervised learning)、强化学习(reinforcement learning)
         1. 监督学习：给正确答案打标签；输入的数据由“老师”打标签
         2. 无监督学习：无“正确答案标签”；没有 “老师”的存在；主要目标是找到隐藏在数据中的结构和模式；分组(聚类)、特征提取、降维

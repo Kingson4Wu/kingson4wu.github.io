@@ -153,7 +153,7 @@ Translate the following text into Chinese:
 * [Massively Multilingual Models (mT5)](https://arxiv.org/abs/2010.11934)
 * [BLOOM: a 176B Multilingual LLM](https://huggingface.co/bigscience/bloom)
 * [XGLM: Multilingual Autoregressive Language Model](https://arxiv.org/abs/2201.10005)
-* [OpenAI: Language models as multilingual translators](https://openai.com/research/multilingual)
+* [OpenAI GPT-4 技术报告：多语言 MMLU 评估](https://cdn.openai.com/papers/gpt-4.pdf)
 
 
 ====

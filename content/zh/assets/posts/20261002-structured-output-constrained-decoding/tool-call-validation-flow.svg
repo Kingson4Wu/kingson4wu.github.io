@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="675" viewBox="0 0 520 675" role="img" aria-labelledby="title desc">
+  <title id="title">工具调用的决策、参数约束与执行校验</title>
+  <desc id="desc">模型先理解任务并决定是否调用及选择工具，再生成受结构约束的工具名与参数；应用核对参数的语义、业务条件和权限，最后执行工具并检查结果。工具名与参数结构合法不等于调用决定正确或任务完成。</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10Z" fill="#173f63"/></marker>
+  </defs>
+  <style>
+    .title { font: 700 26px Georgia,"Noto Serif CJK SC","Songti SC",serif; fill: #173f63; }
+    .step { font: 700 21px -apple-system,BlinkMacSystemFont,"Noto Sans CJK SC","PingFang SC",sans-serif; fill: #173f63; }
+    .body { font: 18px -apple-system,BlinkMacSystemFont,"Noto Sans CJK SC","PingFang SC",sans-serif; fill: #425a6d; }
+    .tag { font: 16px -apple-system,BlinkMacSystemFont,"Noto Sans CJK SC","PingFang SC",sans-serif; fill: #6f7f8d; }
+    .foot { font: 16px -apple-system,BlinkMacSystemFont,"Noto Sans CJK SC","PingFang SC",sans-serif; fill: #9a3b2f; }
+    .card { fill: #fffdf8; stroke: #173f63; stroke-width: 1.4; }
+    .constrained { fill: #edf4f7; stroke: #173f63; stroke-width: 1.4; }
+    .check { fill: #f0f6f0; stroke: #1f7a57; stroke-width: 1.4; }
+    .line { stroke: #173f63; stroke-width: 1.6; fill: none; marker-end: url(#arrow); }
+  </style>
+  <rect width="520" height="675" fill="#fbf7ef"/>
+  <text x="260" y="49" text-anchor="middle" class="title">工具调用在哪些环节受约束</text>
+
+  <rect x="42" y="86" width="436" height="106" rx="12" class="card"/>
+  <text x="67" y="123" class="step">任务理解与工具选择</text>
+  <text x="67" y="154" class="body">是否调用工具？</text>
+  <text x="67" y="180" class="body">应该调用哪一个？</text>
+  <text x="455" y="123" text-anchor="end" class="tag">模型决策</text>
+
+  <path d="M260 192 V212" class="line"/>
+  <rect x="42" y="219" width="436" height="106" rx="12" class="constrained"/>
+  <text x="67" y="256" class="step">生成工具调用</text>
+  <text x="67" y="287" class="body">工具名限定在可用集合</text>
+  <text x="67" y="313" class="body">参数遵循对应 Schema</text>
+  <text x="455" y="256" text-anchor="end" class="tag">结构约束</text>
+
+  <path d="M260 325 V345" class="line"/>
+  <rect x="42" y="352" width="436" height="106" rx="12" class="check"/>
+  <text x="67" y="389" class="step">执行前校验</text>
+  <text x="67" y="420" class="body">核对目标、业务规则</text>
+  <text x="67" y="446" class="body">以及当前用户权限</text>
+  <text x="455" y="389" text-anchor="end" class="tag">应用校验</text>
+
+  <path d="M260 458 V478" class="line"/>
+  <rect x="42" y="485" width="436" height="106" rx="12" class="card"/>
+  <text x="67" y="522" class="step">执行并检查结果</text>
+  <text x="67" y="553" class="body">确认操作是否成功</text>
+  <text x="67" y="579" class="body">任务是否真正完成</text>
+  <text x="455" y="522" text-anchor="end" class="tag">结果验证</text>
+
+  <text x="260" y="637" text-anchor="middle" class="foot">名称与参数合法，不能证明工具选对或操作成功</text>
+</svg>

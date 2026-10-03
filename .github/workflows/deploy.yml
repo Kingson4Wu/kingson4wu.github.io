@@ -1,6 +1,7 @@
 name: Check Blog
 
 on:
+  pull_request:
   push:
     branches:
       - main
@@ -8,16 +9,139 @@ on:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
-  group: check-blog
+  group: check-blog-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  build:
+  validate:
     runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Test
+        run: npm test
+
+      - name: Type check
+        run: npm run typecheck
+
+      - name: Check content
+        run: npm run check
+
+      - name: Evaluate changed articles
+        shell: bash
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          HEAD_SHA: ${{ github.sha }}
+        run: |
+          base="$BASE_SHA"
+          if [ -z "$base" ] || ! git cat-file -e "$base^{commit}" 2>/dev/null; then
+            base="$(git rev-parse "$HEAD_SHA^" 2>/dev/null || true)"
+          fi
+          args=(--changed-only --report "$RUNNER_TEMP/blog-eval-report.json")
+          if [ -n "$base" ]; then
+            args+=(--base-ref "$base")
+          fi
+          : > "$RUNNER_TEMP/changed-content.txt"
+          if [ -n "$base" ]; then
+            git diff --name-only -z --diff-filter=AMR "$base" "$HEAD_SHA" > "$RUNNER_TEMP/changed-content.txt"
+            while IFS= read -r -d '' file; do
+              [[ "$file" =~ ^content/(zh|en)/(posts|notes)/[^/]+\.md$ ]] || continue
+              if git cat-file -e "$base:$file" 2>/dev/null; then
+                args+=(--changed-file "$file")
+              else
+                args+=(--new-file "$file")
+              fi
+            done < "$RUNNER_TEMP/changed-content.txt"
+          fi
+          npm run eval -- "${args[@]}"
+
+      - name: Upload evaluation report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: blog-evaluation-report
+          path: ${{ runner.temp }}/blog-eval-report.json
+          if-no-files-found: warn
+
+      - name: Build site
+        run: npm run build
+
+      - name: Check generated site
+        run: npm run check:site
+
+      - name: Install browser for smoke checks
+        run: npx playwright install --with-deps chromium
+
+      - name: Check rendered pages
+        shell: bash
+        env:
+          BLOG_BROWSER_SCREENSHOTS: ${{ runner.temp }}/blog-browser-screenshots
+        run: |
+          args=()
+          while IFS= read -r -d '' file; do
+            [[ "$file" =~ ^content/(zh|en)/(posts|notes)/[^/]+\.md$ ]] || continue
+            [ -f "$file" ] || continue
+            args+=(--changed-file "$file")
+          done < "$RUNNER_TEMP/changed-content.txt"
+          npm run check:browser -- "${args[@]}"
+
+      - name: Upload visual review snapshots
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: blog-browser-screenshots
+          path: ${{ runner.temp }}/blog-browser-screenshots
+          if-no-files-found: ignore
+          retention-days: 14
+
+      - name: Record verified release paths
+        if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || github.event_name == 'workflow_dispatch'
+        shell: bash
+        run: |
+          args=(--commit "$GITHUB_SHA")
+          while IFS= read -r -d '' file; do
+            [[ "$file" =~ ^content/(zh|en)/(posts|notes)/[^/]+\.md$ ]] || continue
+            [ -f "$file" ] || continue
+            args+=(--changed-file "$file")
+          done < "$RUNNER_TEMP/changed-content.txt"
+          npm run manifest:release -- "${args[@]}"
+
+      - name: Upload verified release manifest
+        if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || github.event_name == 'workflow_dispatch'
+        uses: actions/upload-artifact@v7
+        with:
+          name: verified-release-manifest
+          path: dist/release-manifest.json
+          if-no-files-found: error
+
+      - name: Upload verified Pages artifact
+        if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || github.event_name == 'workflow_dispatch'
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: dist
+
+  deploy:
+    if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || github.event_name == 'workflow_dispatch'
+    needs: validate
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -33,36 +157,60 @@ jobs:
           build_type="$(gh api "repos/${REPOSITORY}/pages" --jq '.build_type')"
           if [ "$build_type" != "workflow" ]; then
             echo "GitHub Pages build_type is '$build_type', expected 'workflow'."
-            echo "Set Settings -> Pages -> Build and deployment -> Source to GitHub Actions."
             exit 1
           fi
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v5
-        with:
-          node-version: '24'
-          cache: npm
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Test
-        run: npm test
-
-      - name: Check content
-        run: npm run check
-
-      - name: Build site
-        run: npm run build
 
       - name: Configure Pages
         uses: actions/configure-pages@v6
 
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v5
-        with:
-          path: dist
-
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5
+
+      - name: Download verified release manifest
+        uses: actions/download-artifact@v8
+        with:
+          name: verified-release-manifest
+          path: ${{ runner.temp }}/verified-release
+
+      - name: Check live pages
+        shell: bash
+        env:
+          PAGE_URL: ${{ steps.deployment.outputs.page_url }}
+        run: |
+          base="${PAGE_URL%/}"
+          if [ -z "$base" ]; then
+            echo "Pages deployment returned no URL."
+            exit 1
+          fi
+          manifest="$RUNNER_TEMP/release-manifest.json"
+          for attempt in 1 2 3 4 5 6; do
+            if curl --fail --silent --show-error --location --max-time 15 --output "$manifest" "$base/release-manifest.json" \
+              && cmp -s "$RUNNER_TEMP/verified-release/release-manifest.json" "$manifest" \
+              && jq -e --arg sha "$GITHUB_SHA" '.commit == $sha and (.pages | length > 0)' "$manifest" > /dev/null; then
+              break
+            fi
+            if [ "$attempt" -eq 6 ]; then
+              echo "Live release manifest does not match commit $GITHUB_SHA"
+              exit 1
+            fi
+            sleep 5
+          done
+          while IFS=$'\t' read -r route expected; do
+            matched=0
+            for attempt in 1 2 3 4 5 6; do
+              if curl --fail --silent --show-error --location --max-time 15 --output "$RUNNER_TEMP/live-response" "$base$route"; then
+                actual="$(sha256sum "$RUNNER_TEMP/live-response" | cut -d ' ' -f 1)"
+                if [ "$actual" = "$expected" ]; then
+                  matched=1
+                  break
+                fi
+              fi
+              sleep 5
+            done
+            if [ "$matched" -ne 1 ]; then
+              echo "Live content differs from verified build: $base$route"
+              exit 1
+            fi
+            echo "Live content matches: $base$route"
+          done < <(jq -r '.pages[] | [.route, .sha256] | @tsv' "$manifest")

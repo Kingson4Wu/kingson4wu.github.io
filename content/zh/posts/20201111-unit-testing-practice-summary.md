@@ -179,7 +179,7 @@ public class StringUtilsTest {
 + `ReflectionTestUtils.setField(config, "id", id);`
 + `Mockito.reset(test);`
 + `@VisibleForTesting`
-+ Mocking a method in the same test class using - Mockito:<https://towardsdatascience.com/mocking-a-method-in-the-same-test-class-using-mockito-b8f997916109>
++ [Mockito 官方文档：spy 与部分模拟](https://site.mockito.org/javadoc/current/org/mockito/Mockito.html)
 
 ```java
   public class PersonTest{

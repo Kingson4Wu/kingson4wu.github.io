@@ -43,4 +43,4 @@ source:
 
 ## Reference
 + [DNS、CDN加速和域名解析之间的关系](https://cloud.tencent.com/developer/article/2000101)
-+ [关于CDN缓存总结摘要](https://kingson4wu.github.io/2020/08/20/20200820-%E5%85%B3%E4%BA%8ECDN%E7%BC%93%E5%AD%98/)
++ [关于CDN缓存总结摘要](/zh/posts/20200820/)

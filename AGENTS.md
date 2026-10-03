@@ -63,7 +63,10 @@ After adding or editing content, run:
 
 ```bash
 npm run check
+npm run eval -- --changed-only --changed-file content/zh/posts/<slug>.md
 npm run build
 ```
+
+For a new article, replace `--changed-file` with `--new-file`. See `evals/README.md` and `docs/content-quality.md` for the evaluation scope. The eval command checks publication errors and reports editorial suggestions without auto-rewriting prose.
 
 `npm run build` regenerates the public output under `zh/`, `en/`, and `dist/`.

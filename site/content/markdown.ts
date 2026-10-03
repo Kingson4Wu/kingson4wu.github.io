@@ -9,6 +9,7 @@ const md = new MarkdownIt({
   linkify: true,
   typographer: true,
 });
+md.linkify.set({ fuzzyLink: false });
 
 md.block.ruler.before('fence', 'math_block', mathBlock, {
   alt: ['paragraph', 'reference', 'blockquote', 'list'],

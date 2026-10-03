@@ -322,4 +322,4 @@ $$
 ---
 
 ## Reference
-+ [简单研究一下人工智能和数学](https://kingson4wu.github.io/2025/01/06/20250106-jian-dan-yan-jiu-yi-xia-ren-gong-zhi-neng-he-shu-xue/)
++ [简单研究一下人工智能和数学](/zh/posts/20250106/)

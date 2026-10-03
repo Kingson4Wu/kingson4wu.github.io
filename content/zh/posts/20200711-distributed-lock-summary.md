@@ -165,7 +165,7 @@ https://redis.io/topics/distlock
 
 ### Reference
 
-1. [分布式锁的实现](https://yq.aliyun.com/articles/60663)
+1. [Redis 官方文档：分布式锁](https://redis.io/docs/latest/develop/use/patterns/distributed-locks/)
 2. [使用Redis作为分布式锁的一些注意点](https://www.cnblogs.com/gxyandwmm/p/9588383.html)
 3. [如何实现靠谱的分布式锁？](https://mp.weixin.qq.com/s?__biz=MzUzMjkwMjg3Mg==&mid=2247484843&amp;idx=1&amp;sn=549ed30972eea76d5e7a0a9e1cfaf321&source=41#wech)
 4. [分布式锁用Redis还是Zookeeper？](https://mp.weixin.qq.com/s?__biz=MjM5ODI5Njc2MA==&mid=2655825455&idx=1&sn=53e7043d76c0a39cf1b0d3be7a384ade&chksm=bd74e3f88a036aee104a1ec6001379d2238db2fde913b889b42138316e84ce9ed5e1ec271a10&mpshare=1&scene=1&srcid=0715ZMUAKOiQLNOSllsVZVKW%23rd)
@@ -175,5 +175,4 @@ https://redis.io/topics/distlock
 8. [细说Redis分布式锁](https://mp.weixin.qq.com/s/6bE5WmDubFCcSIMFuEqxEQ)
 10. [分布式锁用 Redis 好，还是 ZooKeeper 好？](https://mp.weixin.qq.com/s/1TsBsaItcZ6fOg-bo2tGww)
 11. [使用Redis实现分布式锁和ZK实现分布式锁有什么区别，分别有哪些场景?](https://www.zhihu.com/question/452803310/answer/1931377239)
-
 

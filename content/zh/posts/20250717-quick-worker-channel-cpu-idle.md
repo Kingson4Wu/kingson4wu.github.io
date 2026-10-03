@@ -12,13 +12,7 @@ source:
   repo: zh
   path: source/_posts/20250717-quick-worker-项目分析：基于-Channel-的高效异步批处理与-CPU-空转问题解析.md
 ---
-[`quick_worker`](https://github.com/Kingson4Wu/quick_worker) 是一个用 Go 实现的轻量级异步批处理框架。它通过 channel 和 goroutine 构建了一个高效的生产者-消费者模型，支持按批量大小或超时触发数据处理，适合高并发、吞吐敏感的场景。
-
-本文将围绕其核心并发模型进行分析，重点讨论：
-
-* 是否存在 CPU 空转（Busy Waiting）问题
-* `select` 和 channel 的阻塞特性
-* 在什么情况下应考虑使用 `sync.Cond` 替代主动轮询
+[`quick_worker`](https://github.com/Kingson4Wu/quick_worker) 用 channel 接收任务，由消费者 goroutine 按批量大小或等待时间触发处理。看到它的 `for` + `select` 循环，容易担心消费者会持续轮询、占用 CPU；关键要看没有任务时 `select` 是否会阻塞，以及定时器会怎样唤醒它。弄清这一点后，才能判断这里是否需要 `sync.Cond`，还是现有的 channel 已经满足等待与通知的需求。
 
 ---
 
@@ -171,4 +165,3 @@ mu.Unlock()
 * Go 的 channel 和 timer 本身就是高效的阻塞机制，只要 select 内有阻塞分支，goroutine 就不会占用 CPU。
 * 只有在使用 `for + 条件判断` 等原始自旋方式等待状态时，才需要引入 `sync.Cond`。
 * `sync.Cond` 更适合资源池、复杂状态条件协作等无法使用 channel 描述的场景。
-

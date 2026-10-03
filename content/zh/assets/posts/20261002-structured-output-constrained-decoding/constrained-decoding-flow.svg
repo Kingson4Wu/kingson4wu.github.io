@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="675" viewBox="0 0 520 675" role="img" aria-labelledby="title desc">
+  <title id="title">约束解码的逐 token 生成流程</title>
+  <desc id="desc">模型根据已有前缀计算候选 token 分数；约束状态排除不合法候选；解码策略从剩余候选中选择 token；输出 token 后更新前缀与约束状态，并继续下一步。</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10Z" fill="#173f63"/></marker>
+    <marker id="loop-arrow" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10Z" fill="#89a6bd"/></marker>
+  </defs>
+  <style>
+    .title { font: 700 26px Georgia,"Noto Serif CJK SC","Songti SC",serif; fill: #173f63; }
+    .step { font: 700 21px -apple-system,BlinkMacSystemFont,"Noto Sans CJK SC","PingFang SC",sans-serif; fill: #173f63; }
+    .body { font: 18px -apple-system,BlinkMacSystemFont,"Noto Sans CJK SC","PingFang SC",sans-serif; fill: #425a6d; }
+    .number { font: 700 16px Georgia,serif; fill: #173f63; }
+    .small { font: 16px -apple-system,BlinkMacSystemFont,"Noto Sans CJK SC","PingFang SC",sans-serif; fill: #6f7f8d; }
+    .card { fill: #fffdf8; stroke: #173f63; stroke-width: 1.4; }
+    .active { fill: #edf4f7; stroke: #173f63; stroke-width: 1.4; }
+    .line { stroke: #173f63; stroke-width: 1.6; fill: none; marker-end: url(#arrow); }
+  </style>
+  <rect width="520" height="675" fill="#fbf7ef"/>
+  <text x="260" y="49" text-anchor="middle" class="title">约束解码怎样逐步生成</text>
+
+  <rect x="42" y="86" width="436" height="106" rx="12" class="card"/>
+  <circle cx="72" cy="120" r="17" fill="#e5eef3"/>
+  <text x="72" y="126" text-anchor="middle" class="number">01</text>
+  <text x="101" y="126" class="step">模型预测</text>
+  <text x="101" y="155" class="body">根据已有前缀，计算下一 token</text>
+  <text x="101" y="179" class="body">的候选分数</text>
+
+  <path d="M260 192 V212" class="line"/>
+  <rect x="42" y="219" width="436" height="106" rx="12" class="active"/>
+  <circle cx="72" cy="253" r="17" fill="#d4e4ed"/>
+  <text x="72" y="259" text-anchor="middle" class="number">02</text>
+  <text x="101" y="259" class="step">约束筛选</text>
+  <text x="101" y="288" class="body">按 Schema / 语法状态筛选，</text>
+  <text x="101" y="312" class="body">排除不合法的 token</text>
+
+  <path d="M260 325 V345" class="line"/>
+  <rect x="42" y="352" width="436" height="106" rx="12" class="card"/>
+  <circle cx="72" cy="386" r="17" fill="#e5eef3"/>
+  <text x="72" y="392" text-anchor="middle" class="number">03</text>
+  <text x="101" y="392" class="step">解码选择</text>
+  <text x="101" y="421" class="body">从剩余候选中采样，或选择</text>
+  <text x="101" y="445" class="body">分数最高的 token</text>
+
+  <path d="M260 458 V478" class="line"/>
+  <rect x="42" y="485" width="436" height="106" rx="12" class="card"/>
+  <circle cx="72" cy="519" r="17" fill="#e5eef3"/>
+  <text x="72" y="525" text-anchor="middle" class="number">04</text>
+  <text x="101" y="525" class="step">输出并更新状态</text>
+  <text x="101" y="554" class="body">写入 token，推进前缀</text>
+  <text x="101" y="578" class="body">与约束状态</text>
+
+  <path d="M478 538 H500 V139 H484" stroke="#89a6bd" stroke-width="1.5" fill="none" marker-end="url(#loop-arrow)"/>
+  <text x="260" y="637" text-anchor="middle" class="small">每生成一个 token，就重复同一过程</text>
+</svg>

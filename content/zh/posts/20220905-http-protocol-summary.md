@@ -153,7 +153,7 @@ source:
 + 总之，HTTP的Keep-Alive和TCP的KeepAlive不是一回事。
    
 ### Chrome中HTTP下载续传原理
-+ [Chrome下载文件时暂停和继续是什么原理？](HTTPs://kingson4wu.github.io/2022/08/30/20220830-Chrome%E4%B8%8B%E8%BD%BD%E6%96%87%E4%BB%B6%E6%97%B6%E6%9A%82%E5%81%9C%E5%92%8C%E7%BB%A7%E7%BB%AD%E6%98%AF%E4%BB%80%E4%B9%88%E5%8E%9F%E7%90%86%EF%BC%9F/)
++ [Chrome下载文件时暂停和继续是什么原理？](/zh/posts/20220830/)
 
 ### HTTP连接复用时，同一个连接上的多个请求和响应如何对应上？
 + “队头堵塞”（Head-of-line blocking）：所有的请求-响应都是按序进行的（HTTP）
@@ -212,7 +212,7 @@ HTTP/3 就是一个这样的例子，它会使用基于 UDP 的 QUIC 协议进�
 </pre>
 
 ## Reference
-+ [HTTP协议篇(一)：多路复用、数据流](HTTPs://www.cnblogs.com/XiongMaoMengNan/p/8425724.html)
++ [MDN：HTTP 消息与 HTTP/2 多路复用](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Messages)
 + [HTTP管线化(HTTP pipelining)](HTTPs://developer.aliyun.com/article/436989)
 + [HTTP/2 资料汇总](HTTPs://imququ.com/post/HTTP2-resource.html)
 + [HTTP，HTTPs，spdy，HTTP2等协议的主要区别详解](HTTPs://www.codetd.com/article/10088188)

@@ -108,6 +108,6 @@ No cluster leader
 ### Reference
 + 刘杰：分布式原理介绍
 + [分布式系统理论之Quorum机制](https://www.cnblogs.com/hapjin/p/5626889.html)
-+ [关于MHA_Consul_MySQL高可用方案的简单总结和思考](https://kingson4wu.gitee.io/2020/08/31/20200831-%E5%85%B3%E4%BA%8EMHA-Consul-MySQL%E9%AB%98%E5%8F%AF%E7%94%A8%E6%96%B9%E6%A1%88%E7%9A%84%E7%AE%80%E5%8D%95%E6%80%BB%E7%BB%93%E5%92%8C%E6%80%9D%E8%80%83/)
++ [关于MHA_Consul_MySQL高可用方案的简单总结和思考](/zh/posts/20200831-consul/)
 + [MySQL · 引擎特性 · Group Replication内核解析](http://mysql.taobao.org/monthly/2017/08/01/)
 + [我们听到的TiDB到底是什么？](https://zhuanlan.zhihu.com/p/71073707)

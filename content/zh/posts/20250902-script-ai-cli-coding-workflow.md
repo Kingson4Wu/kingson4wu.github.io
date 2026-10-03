@@ -43,7 +43,7 @@ source:
   ```bash
   git clone git@github.com:Kingson4Wu/ts-playground.git
   ```
-* 参考已有项目文档，比如我用的 [cpp-linux-playground](https://github.com/Kingson4Wu/cpp-linux-playground/blob/main/PROJECT.md)，根据 TypeScript 项目的需求，改写成自己的 `PROJECT.md`。
+* 参考已有项目的约定，比如 [cpp-linux-playground 的 `AGENTS.md`](https://github.com/Kingson4Wu/cpp-linux-playground/blob/main/AGENTS.md)，再根据 TypeScript 项目的需求写自己的 `PROJECT.md`。
 * 规划好：
 
   * 技术栈（语言、工具链、标准）

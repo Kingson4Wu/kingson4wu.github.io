@@ -50,4 +50,13 @@ describe('markdown rendering', () => {
   it('creates a clean text excerpt', () => {
     expect(createExcerpt('<p>Hello <strong>world</strong>. This is enough.</p>', 11)).toBe('Hello world...');
   });
+
+  it('does not turn filenames into external links while retaining explicit URLs', () => {
+    const html = renderMarkdown('AGENTS.md / SYSTEM.md / PROJECT.md / setup.py\n\nSee https://example.com/docs.');
+    expect(html).not.toContain('href="http://AGENTS.md"');
+    expect(html).not.toContain('href="http://SYSTEM.md"');
+    expect(html).not.toContain('href="http://PROJECT.md"');
+    expect(html).not.toContain('href="http://setup.py"');
+    expect(html).toContain('href="https://example.com/docs"');
+  });
 });

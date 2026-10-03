@@ -45,7 +45,7 @@ source:
 
 + 无论是2PC还是3PC都无法彻底解决分布式的一致性问题。Google Chubby的作者Mike Burrows说过， ”there is only one consensus protocol, and that’s Paxos” – all other approaches are just broken versions of Paxos。意即世上只有一种一致性算法，那就是Paxos，所有其他一致性算法都是Paxos算法的不完整版。
 
-+ 详情看：[分布式一致性协议概览](https://kingson4wu.gitee.io/2020/09/12/20200912-%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%80%E8%87%B4%E6%80%A7%E5%8D%8F%E8%AE%AE/)
++ 详情看：[分布式一致性协议概览](/zh/posts/20200912/)
 
 ### DTP(Distributed Transaction Processing)
 + DTP（Distributed Transaction Processing Reference Model）：分布式事务处理模型。TM、RM、AP等角色的分布式事务的模型。

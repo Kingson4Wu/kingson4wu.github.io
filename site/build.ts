@@ -133,7 +133,7 @@ async function renderPages(posts: Post[]): Promise<void> {
 
     for (const tag of tags) {
       const taggedPosts = byLang[lang].filter((post) => post.tags.includes(tag.name));
-      await writeDistFile(`${lang}/tags/${encodeURIComponent(tag.name)}/index.html`, renderTagPage({
+      await writeDistFile(`${lang}/tags/${tag.name}/index.html`, renderTagPage({
         lang,
         tag: tag.name,
         posts: taggedPosts,

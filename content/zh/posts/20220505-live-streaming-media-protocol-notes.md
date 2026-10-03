@@ -69,9 +69,9 @@ source:
 
 ## 即构
 + <https://doc-zh.zego.im/article/5416>
-+ 语聊房:<https://doc-zh.zego.im/article/4903>
++ 语聊房混流：<https://doc-zh.zego.im/real-time-voice-android/live-streaming/stream-mixing>
 	- 麦上用户可以发起混流，即把多路音频流混合成单流。推流后混流，麦下用户在拉流时只需要拉一路流即可收听所上麦上用户的互动音频，降低开发实现上的复杂性以及对设备的性能要求。
-+ 秀场直播:<https://doc-zh.zego.im/article/11202>
++ 秀场直播：<https://www.zego.im/solution/sociallivestreaming>
 
 ## 声网
 + 互动直播：<https://www.agora.io/cn/interactive-live-streaming-premium>

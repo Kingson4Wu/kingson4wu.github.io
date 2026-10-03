@@ -116,7 +116,7 @@ source:
         + 自注意力机制
             - 它的核心思想是模仿人类的注意力，即在处理大量信息时，能够聚焦于当前任务最相关的部分，而忽略其他不太重要的信息
 + [大模型Prompt技巧全解析](https://mp.weixin.qq.com/s/u-79q3R0l01oO-7WWUNF2A)            
-+ [LLM相关技术简单了解](https://kingson4wu.github.io/2024/12/26/20241226-llm-xiang-guan-ji-zhu-jian-dan-liao-jie/)
++ [LLM相关技术简单了解](/zh/posts/20241226/)
 + [大型语言模型的提示注入](https://mp.weixin.qq.com/s/q2iMW0t5456btmIPS1ba6Q)
     - 三种防范此类漏洞的方法
         - 可以在提示中添加指令

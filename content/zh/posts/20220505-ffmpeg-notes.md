@@ -58,7 +58,7 @@ source:
   
 ### rtmp推流
 + `ffmpeg -re -i 1.mp4 -c copy -f flv rtmp://127.0.0.1:1935/live/movie`
-+ [如何开发一款H5小程序直播](https://juejin.cn/post/690947934664628634ing3)
++ [如何开发一款H5小程序直播](https://juejin.cn/post/6909479346646286343)
 + [利用ffmpeg实现rtmp推流](https://www.jianshu.com/p/c141fc7881e7)
 + [ffmpeg的RTMP推流](https://zhuanlan.zhihu.com/p/73984438)
 

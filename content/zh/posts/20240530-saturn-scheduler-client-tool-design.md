@@ -13,7 +13,7 @@ source:
   repo: zh
   path: source/_posts/20240530-基于Saturn定时任务的客户端工具设计.md
 ---
-+ 基于之前写的这篇[谈谈定时任务的原理和应用](https://kingson4wu.github.io/2023/07/03/20230703-tan-tan-ding-shi-ren-wu-de-yuan-li-he-ying-yong/)继续聊。
++ 基于之前写的这篇[谈谈定时任务的原理和应用](/zh/posts/20230703/)继续聊。
 
 <figure>
   <img src="/assets/zh/posts/20240530/saturn_uds.drawio.png" alt="saturn uds">

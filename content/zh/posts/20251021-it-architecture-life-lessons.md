@@ -12,7 +12,7 @@ source:
   repo: zh
   path: source/_posts/20251021-生活中的-IT-哲学：从技术架构看人生智慧.md
 ---
->> 内容观点由 [IT中的生活哲学](https://kingson4wu.github.io/2021/07/06/20210706-it-zhong-de-sheng-huo-zhe-xue/)启发
+>> 内容观点由 [IT中的生活哲学](/zh/posts/20210706/)启发
 
 读《SRE：Google 运维解密》之后，我一直有个感觉：很多 IT 里的设计原则，放到生活和组织里也能讲得通。
 

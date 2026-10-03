@@ -14,6 +14,8 @@ source:
 ---
 # 一、为什么选择java11
 
+> 这部分记录的是 2022 年从 Java 8 升级时的选型背景，并非当前新项目的版本推荐。今天选 JDK 应重新核对依赖兼容性、维护期限和发行商支持政策；Java 17、21、25 等后续 LTS 版本也应纳入比较。可参考 [Oracle Java SE 支持路线图](https://www.oracle.com/java/technologies/java-se-support-roadmap.html)。
+
 Java 11 是 Java 8 之后的首个 LTS 版本（Long-term support 长期支持版本），所以有不少开发者表示会选择升级至 Java 11。
 
 <figure>
@@ -21,7 +23,7 @@ Java 11 是 Java 8 之后的首个 LTS 版本（Long-term support 长期支持�
   <figcaption>图：java11</figcaption>
 </figure>
 
-1、目前相对来说，Java 8 太旧，Java 17 太新，Java11 刚刚好；
+1、从当时项目的依赖和迁移成本看，先从 Java 8 升到 Java 11 比直接跨到 Java 17 更容易控制风险；这只是当时的工程判断；
 2、支持以类路径方式运行，适合过渡阶段升级；
 3、其他原因（下文会说明）
 
@@ -356,10 +358,6 @@ return super.loadClass(name, resolve);
 }
 }
 ```
-（2）java9之后
-
-TODO
-
 ## 2、扩展机制
 
 （1）版本9之前的Java SE允许扩展机制，可以通过将JAR放置在系统属性java.ext.dirs指定的目录中来扩展运行时映像。 如果未设置此系统属性，则使用jre\lib\ext目录作为其默认值。 该机制通过扩展类加载器（这是引导类加载器的子类）和系统类加载器的父级加载了该目录中的所有JAR。 它加载所有应用程序类。 这些JAR的内容对于在此运行时映像上编译或运行的所有应用程序都可见。
@@ -588,15 +586,15 @@ gradle对混合两种（类路径和模块系统）的支持不足
 ### 2、Spring Boot 2.5.5是Spring Boot 第一个支持Java 17的版本
 
 # 其他
-+ 新版本jdk现在基本都是规定时间内免费，比如半年或三年，一般情况下直接用openjdk就足够了。
++ JDK 的免费使用、更新和商业支持期限随发行商与版本而不同；选型时应逐一核对许可证和维护承诺，不能只按“OpenJDK”或“Oracle JDK”的名称判断。
 + [OpenJDK和Oracle JDK有什么区别和联系](https://cloud.tencent.com/developer/article/1598291)
 + [openjdk与Oraclejdk的区别](https://www.fokyl.com/news/openjdk%20oracle%20jdk%20.html)
 	- 在2006年11月13日的JavaOne大会上，Sun公司（当时还没被收购）宣布计划要把Java开源，在随后的一年多时间内，它陆续地将JDK的各个部分在GPL v2（GNU General Public License v2）协议下公开了源码，并建立了OpenJDK组织对这些源码进行独立管理。除了极少量的产权代码（Encumbered Code，这部分代码所有权不属于Sun公司，Sun本身也无权进行开源处理）外，OpenJDK几乎拥有了当时SunJDK 的全部代码。
-	- 但是随着JDK版本的不断发布，Oracle失去了维护OpenJDK的耐心，因为不赚钱啊。RedHat从Oracle手上接过OpenJDK的管理权利和维护职责。
+	- OpenJDK 是开放的项目与代码基础，不同厂商基于它提供各自的构建和维护服务；不宜把整个项目的维护归属概括为某一家厂商“接手”。
 + <https://www.zhihu.com/question/19646618>
 + <https://www.zhihu.com/question/353325963>
-	- OpenJDK 实际上不适合拿来和 OracleJDK 进行对比，OpenJDK 不提供 LTS 服务，而 OracleJDK 每三年都会推出一个 LTS 版进行长期支持。
-+ 从 11+ 版本开始 -XX:+UseContainerSupport 已经自动开启, 可以自适应内存pod的内存限制,不用通过`-Xms -Xmx` 来设置
+	- 长期支持取决于具体发行版和提供商；不能说基于 OpenJDK 的发行版一概没有 LTS。Oracle JDK 的许可与支持期限也应按具体版本核对。
++ Java 11 已默认启用容器感知，但这不等于生产环境无需设置堆大小或其他内存参数；应结合 Pod 限额、非堆内存和 GC 行为确定配置。
 
 # Reference
 + [Java 9模块化开发_核心原则与实践]
@@ -611,8 +609,6 @@ gradle对混合两种（类路径和模块系统）的支持不足
 + [聊聊java9的classloader](https://juejin.cn/post/6844903666932006926)
 + [JVM_类加载机制详解](https://segmentfault.com/a/1190000020110723)
 + [新一代垃圾回收器ZGC的探索与实践](https://mp.weixin.qq.com/s/ag5u2EPObx7bZr7hkcrOTg)
-
-
 
 
 

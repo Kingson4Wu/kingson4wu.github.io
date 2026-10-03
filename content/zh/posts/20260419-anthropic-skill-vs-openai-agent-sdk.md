@@ -24,7 +24,7 @@ source:
 
 两家的设计范式也相同：延迟加载（只读 frontmatter，不读完整内容）、模型自主决定调用时机、无固定编排模式（没有写死 ReAct 或 Plan-and-Execute）、控制逻辑全在 prompt 里，不在代码里。
 
-从这个角度看，两者的差异像同一个函数用不同语言实现——结果一样，路径不同。真正的差异在 **`surrounding infrastructure`**：权限模型、架构形态、扩展机制。这是设计哲学的选择，不是实现细节。
+从这个角度看，两者有共同的目标，但内容交付、权限控制和运行环境各有实现方式。以下主要比较 Claude Code CLI 与文中展示的 OpenAI Python Agents SDK `SandboxAgent` + `Skills` 组合；不能把某个组合的实现细节当作整个 SDK 的能力边界。
 
 ## Anthropic 的路径
 
@@ -81,7 +81,7 @@ CLI 启动时扫描 5 个来源（managed → user → project → additional �
 
 ### 架构：开放的框架
 
-OpenAI Agents SDK 是纯 Python 框架，没有 CLI 中间层，编排逻辑全在 Python 代码里，开发者可以直接改。
+本文使用的是 OpenAI Agents SDK 的 Python 实现。它在应用代码中组织 agent 与运行流程，不依赖 Claude Code 这样的 CLI 中间层；Agents SDK 同时也提供 TypeScript 实现。
 
 ```
 你的代码 → Python 库 → 直接 HTTP → OpenAI API
@@ -111,7 +111,7 @@ agent = SandboxAgent(
   <figcaption>图：OpenAI Skill System - Unified</figcaption>
 </figure>
 
-> Phase 1: Capability plugin + lazy index (frontmatter only) + system prompt injection. Phase 2: model calls load_skill() → _LoadSkillTool copies files → returns {"status": "loaded"} → model explicitly calls Read() from sandbox workspace. Key: no contextModifier equivalent — content is model-pulled, permissions are static.
+> 图示的是本文讨论的 `SandboxAgent` + `Skills` 路径：先注册 Skill 索引，调用 `load_skill()` 后把文件放入 sandbox workspace，再由模型读取。这里没有与 `contextModifier` 一一对应的 Skill 授权步骤；这不代表 Agents SDK 的工具集只能静态启用。
 
 ### Skill 执行：模型 pull，两步流程
 
@@ -142,7 +142,7 @@ agent = SandboxAgent(
 
 ### 差异 1：内容交付——推送 vs 拉取
 
-这是 Skill 机制上**唯一真正的行为差异**。
+这是本文比较的两条 Skill 加载路径中最直观的行为差异。
 
 Anthropic：模型调用 Skill → 编排层读完整内容 → 通过 `newMessages` 直接注入对话 → 模型下一轮直接看到（透明，模型不知道文件系统）
 
@@ -150,15 +150,15 @@ OpenAI：模型调用 load_skill → 编排层只复制文件 → 返回 `{"stat
 
 从信息量看两者等价，只是路径不同：一个是工具副作用路径，一个是工具返回值路径。这个差异的本质是内容交付的抽象层级不同，不是控制权不同。
 
-### 差异 2：权限模型——运行时授予 vs 静态定义
+### 差异 2：Skill 授权与工具可用性
 
 这是架构层面的真正差异。
 
 Anthropic 的 Skill 可以在 frontmatter 声明 `allowed_tools`，调用后通过 `contextModifier` 动态更新 `alwaysAllowRules`。同一 agent 在不同 skill 调用期间可以拥有不同工具权限，权限与 skill 生命周期绑定，对模型透明——模型不需要知道权限变了，只管调用工具，权限检查在编排层自动处理。
 
-OpenAI 没有等价的运行时权限授予机制。工具权限由 `Agent.tools` 和 guardrails 静态定义，agent 的工具集在创建时确定。guardrails 可以限制工具使用，但不支持 skill 级别的动态授权。
+在这里展示的 OpenAI `Skills` 路径中，加载 Skill 的过程没有与上述 `contextModifier` 一一对应的自动授权步骤。不过，这不等于 Agents SDK 的工具集在运行时不可变化：Python SDK 的工具和 handoff 都可使用 `is_enabled` 根据上下文动态启停。动态启停工具也不等于已经完成权限校验；如果需要按 Skill 授予某项操作权限，仍要在应用侧明确校验条件和生命周期。
 
-这个差异的本质是：Anthropic 把权限视为 skill 的副作用，OpenAI 把权限视为 agent 的静态属性。不是实现方式不同，是安全模型的根本选择。
+因此，更准确的差异是**本文所比较的两条 Skill 加载路径如何处理授权**，而不是“Anthropic 动态、OpenAI 静态”的平台级判断。[OpenAI 工具参考文档](https://openai.github.io/openai-agents-python/ref/tool/)和 [handoff 文档](https://openai.github.io/openai-agents-python/handoffs/)给出了运行时启停的接口。
 
 ### 差异 3：架构形态——产品 vs 框架
 
@@ -166,7 +166,7 @@ OpenAI 没有等价的运行时权限授予机制。工具权限由 `Agent.tools
 
 Anthropic 走封闭产品化路线：编排逻辑在 CLI 二进制内部，Python SDK 只负责转发，开发者无法直接修改编排行为。好的一面是可以做激进的内部优化（自定义上下文压缩、工具分区），坏的一面是没配置空间。
 
-OpenAI 走开放框架化路线：编排逻辑全在 Python 代码，开发者可以直接改 agent 配置、覆盖默认行为、组合 Capability。控制权大，但框架没法替你做太多黑盒优化。
+OpenAI 走框架化路线：在这里使用的 Python SDK 中，开发者可以配置 agent、组合能力，并在应用代码中决定如何编排。这个比较针对 Python 实现；Agents SDK 也有 [TypeScript 版本](https://openai.github.io/openai-agents-js/)，不能概括为“纯 Python”产品。
 
 这是产品化和框架化的取舍。Anthropic 像一个开箱即用的产品，OpenAI 像一个灵活组合的框架。
 
@@ -178,13 +178,13 @@ OpenAI 用 Capability 插件：Skills、Shell、Filesystem 都是 Capability，�
 
 两者没有高下之分，只是抽象方式适合不同场景。
 
-### 差异 5：子 Agent——嵌套隔离 vs 状态切换
+### 差异 5：子 Agent 的两种编排方式
 
 Anthropic 的 AgentTool 触发 `runAgent()`，创建独立的子会话（独立上下文状态、readFileState、abortController、工具权限），父会话等待子会话完成后合并结果。真正的嵌套隔离——新进程 + 独立状态，不是变量替换。
 
-OpenAI 的 Handoff 切换 `current_agent` 变量，在同一会话中继续执行，没有独立的会话生命周期。状态切换，不是嵌套。
+OpenAI 的 Handoff 会把当前轮次的控制权交给另一个 agent；这条路径更接近任务转交。但 Agents SDK 也支持把 agent 暴露为工具，由管理 agent 调用子 agent 并接收结果，因此不能把 OpenAI 子 Agent 能力概括为“只有状态切换”。两条路径的上下文、控制权和隔离程度都需要分别配置与评估。
 
-前者适合强隔离场景，后者适合共享上下文场景。
+选择时要先分清诉求：需要管理 agent 保留最终控制权，可用 agent-as-tool；希望专门 agent 接管当前对话，可用 Handoff；需要更强的文件系统或执行隔离，还得看 sandbox 等运行环境配置。[Agents SDK 编排文档](https://openai.github.io/openai-agents-python/multi_agent/)对两种模式有明确区分。
 
 ## 有些事不是差异
 
@@ -202,23 +202,23 @@ OpenAI 的 Handoff 切换 `current_agent` 变量，在同一会话中继续执�
 
 两者本质相同：Skill 是一段 SKILL.md 文本，延迟加载到模型上下文；编排哲学是极简循环加模型自主 tool-use；决策主体是模型，不是代码。
 
-真正不同的就一件事——**设计哲学导致的基础设施选择**：
+在本文比较的实现中，主要差异可以归纳为：
 
 | | Anthropic | OpenAI |
 |---|-----------|--------|
 | 内容交付 | 推送（newMessages 注入） | 拉取（Read 从 workspace 读） |
-| 权限模型 | 运行时动态授予 | 静态定义 |
-| 架构形态 | CLI 中间层，封闭 | 纯 Python，开放 |
+| Skill 与权限 | 本文所述路径中，Skill 调用可更新授权规则 | 本文所述路径中，Skill 加载本身不自动授予同类权限；工具可按上下文启停 |
+| 架构形态 | 此处通过 Claude Code CLI 运行 | 此处使用 Python SDK 组合运行时能力；另有 TypeScript SDK |
 | 扩展机制 | Hook 事件系统 | Capability 插件 |
-| 子 Agent | 嵌套隔离 | 状态切换 |
+| 子 Agent | 本文所述 AgentTool 路径提供子会话 | Handoff 可转交控制权；agent-as-tool 可嵌套调用 |
 
-Anthropic 选了封闭产品化路径，OpenAI 选了开放框架化路径。两条路都走得通，代价不同，适合不同场景。
+两条路径的区别需要落实到具体版本和配置：Skill 何时进入上下文、何时获得工具能力、子任务由谁持有控制权。这样比较，才不会把局部实现误写成某个平台永远不具备的能力。
 
 ---
 
 ## 参考
 
 - [Anthropic — Agent SDK Overview](https://platform.claude.com/docs/en/agent-sdk/overview)
-- [From Custom Agents to Agent Runtime + Skill: Convergence in AI System Architecture](https://kingson4wu.github.io/en/blog/agent-runtime-and-skill-convergence/)
+- [From Custom Agents to Agent Runtime + Skill: Convergence in AI System Architecture](/en/posts/agent-runtime-and-skill-convergence/)
 - [OpenAI — The Next Evolution of the Agents SDK](https://openai.com/index/the-next-evolution-of-the-agents-sdk/)
 - [OpenAI Agents SDK — Sandboxes](https://developers.openai.com/api/docs/guides/agents/sandboxes)

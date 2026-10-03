@@ -16,7 +16,7 @@ source:
 >> 编程语言是程序员接触和使用最多的工具
 >> 后端技术基础的深度是快速学习和适应新语言的关键
 
-+ 基于[对工作中接触过的几种编程语言及其部署架构的看法](https://kingson4wu.github.io/2023/07/02/20230702-dui-gong-zuo-zhong-jie-hong-guo-de-ji-chong-bian-cheng-yu-yan-ji-qi-bu-shu-jia-gou-de-kan-fa/)继续聊。
++ 基于[对工作中接触过的几种编程语言及其部署架构的看法](/zh/posts/20230702/)继续聊。
 
 + 截至目前，职业生涯五分之四的时间都是在使用Java。出于个人意愿和兴趣，以及行业的发展形势，也系统的自学了Go语言，并在个人的小项目实践。在一次意外的组织变动中，我转岗到了新团队，并开始使用Go，由于之前自己的自学基础，基本是无缝切换到新语言。可能是由于团队人员大部分是从Lua或PHP开始转Go的，在那里甚至感觉自己稍稍领先。
 
@@ -46,7 +46,7 @@ source:
 
 
 ## 扩展
-+ [体验Graalvm+SpringBoot+Java21构建原生程序](https://github.com/Kingson4Wu/graalvm_demo)
++ [Spring Boot 官方的 GraalVM Native Image 入门](https://docs.spring.io/spring-boot/reference/packaging/native-image/introducing-graalvm-native-images.html)
 + 在内存利用效率上，Go语言确实比Java做得更好，在4个不同的角度来总结
     - [Golang与Java全方位对比总结](https://mp.weixin.qq.com/s/-N4eqdXb9a93uvOWfE4ScQ)
     1. Java的JIT策略比Golang的AOT策略
@@ -65,5 +65,4 @@ source:
     - [为什么要用Go重写Dubbo？](https://mp.weixin.qq.com/s/ZKL-M54IBx9CSkYKoLdsUA)
     - 相较于 Java，Go 在启动速度、编译速度、内存使用和高并发（如协程）方面都有明显优势。所以，那些已经采用 Java 的公司现在也在考虑引入 Go。但要注意的是，目前这样的公司仍然是少数。另外，一些公司并没有严格规定技术栈的选择，因此新成立的部门或新业务团队可以自由选择，而他们可能更倾向于选择 Go 作为开发语言。
     - 小结: 总的来说，无论是选择 Java 还是 Go，都是有其合理性的。一家公司同时选择这两种语言也同样合理。尽管这样的公司占比不大，但 Java 与 Go 之间的交流需求仍然存在。
-
 

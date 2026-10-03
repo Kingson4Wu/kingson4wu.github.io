@@ -89,4 +89,4 @@ source:
 
 
 ## Reference
-+ [个人管理经验总结](https://kingson4wu.github.io/2021/08/13/20210813-ge-ren-guan-li-jing-yan-zong-jie/)
++ [个人管理经验总结](/zh/posts/20210813-3/)

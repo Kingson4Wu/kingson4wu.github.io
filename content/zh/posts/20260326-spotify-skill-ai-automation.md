@@ -20,7 +20,7 @@ source:
 ---
 > 一个真实发布场景里的分层、快路径、自愈闭环与业务状态验证
 
-上一篇《[将执行路径固化为资产：一种面向长期运行的 AI 架构](https://kingson4wu.github.io/2026/02/26/20260226-jiang-zhi-xing-lu-jing-gu-hua-wei-zi-chan-yi-chong-mian-xiang-chang-qi-yun-xing-de-ai-jia-gou/)》主要讲理论，这篇直接讲实战，拿 [`labali-spotify-publish-episode`](https://github.com/Kingson4Wu/labali-skills/tree/main/skills/public/labali-spotify-publish-episode) 这个 skill 来拆。
+上一篇《[将执行路径固化为资产：一种面向长期运行的 AI 架构](/zh/posts/20260226-ai/)》主要讲理论，这篇直接讲实战，拿 [`labali-spotify-publish-episode`](https://github.com/Kingson4Wu/labali-skills/tree/main/skills/public/labali-spotify-publish-episode) 这个 skill 来拆。
 
 这个 skill 的代码就在 `labali-skills/skills/public/labali-spotify-publish-episode/`，目标也很直接：在 Spotify for Creators 里通过浏览器自动化发布播客单集。
 
@@ -161,4 +161,4 @@ policy executor 的失败处理也不是“多试几次”那么简单。它的�
 落到 `labali-spotify-publish-episode` 这个 skill 上，答案也很清楚：稳定的是 `Policy` 里的语义目标，`deterministic` 只是加速，自愈闭环负责把快路径修回来，业务状态验证负责定义什么叫真的完成。Spotify 只是案例，方法才是重点。
 
 ## 扩展
-补充一句，写这个 skill 的过程中，我还用了 [`skill-judge`](https://github.com/shareAI-lab/shareAI-skills/blob/main/skills/skill-judge/SKILL.md) 来做评估，我个人很推荐。它的价值不在于“打分”，而在于它基于 17 个以上官方示例总结出了一套更像样的 Skill 判断标准，能帮助你区分哪些内容是真正沉淀下来的知识，哪些只是模型本来就会的废话。
+补充一句，写这个 skill 的过程中，我还用了 [`skill-judge`](https://github.com/shareAI-lab/lab-skills/blob/main/agent-development/skill-judge/SKILL.md) 来做评估，我个人很推荐。它的价值不在于“打分”，而在于参考公开规范和示例形成了一套实用的 Skill 判断标准，能帮助你区分哪些内容是真正沉淀下来的知识，哪些只是模型本来就会的废话。

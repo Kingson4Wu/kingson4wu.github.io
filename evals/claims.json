@@ -109,6 +109,215 @@
       "reviewedAt": "2026-10-03",
       "reviewBy": "2027-01-03",
       "sectionDigest": "084ee0f65bdb3418a66f6dbf535b99ae1c282c3a994cdaff56e10afff5aa8398"
+    },
+    {
+      "id": "embedding-is-not-encryption",
+      "heading": "向量不是密文",
+      "anchor": "把明文转换成向量，不等于把数据加密",
+      "expectation": "文本向量保留信息，特定模型与短文本研究展示了输入和个人信息重建；向量化不提供密码学保密。",
+      "boundary": "不能把特定实验推广成所有向量都可完整还原，也不能将不能唯一还原当成加密保证。",
+      "sources": [
+        "https://aclanthology.org/2023.emnlp-main.765/"
+      ],
+      "sourceLocators": [
+        "Abstract: embedding inversion and clinical-note personal information recovery; results are specific to evaluated embeddings and 32-token inputs"
+      ],
+      "path": "content/zh/posts/20261004-confidential-ai-privacy-tee-fhe.md",
+      "reviewedAt": "2026-10-04",
+      "sectionDigest": "9a919e13cd200df738e4dfcf7c1252d948b6ecb3a132ce4421866e3b161dcc50",
+      "sourceHeading": "参考资料"
+    },
+    {
+      "id": "confidential-gpu-vm-is-not-any-model-api",
+      "heading": "硬件与云平台",
+      "anchor": "任意托管模型 API 都支持客户证明",
+      "expectation": "Azure、Google Cloud 和阿里云文档给出特定机密 GPU VM 部署能力；实例能力不能自动证明托管模型 API 的完整数据流。",
+      "boundary": "必须保留实例、地区、供应方式与集群限制的产品条件，不把虚拟机支持推广成所有模型 API 支持。",
+      "sources": [
+        "https://learn.microsoft.com/en-us/azure/virtual-machines/sizes/gpu-accelerated/nccadsh100v5-series",
+        "https://docs.cloud.google.com/confidential-computing/confidential-vm/docs/create-a-confidential-vm-instance-with-gpu",
+        "https://www.alibabacloud.com/help/en/ecs/user-guide/build-a-heterogeneous-confidential-computing-environment"
+      ],
+      "sourceLocators": [
+        "Opening description: TEE spans confidential CPU VM and attached H100 GPU",
+        "Opening GPU combinations and provisioning: H100 with Intel TDX; RTX PRO 6000 with AMD SEV; A3 Spot/Flex-start and G4 STANDARD/Spot/Flex-start",
+        "Create a heterogeneous confidential computing instance: gn8v-tee, China Beijing Zone L, Alibaba Cloud Linux; opening CPU-GPU protection description"
+      ],
+      "reviewBy": "2027-01-04",
+      "path": "content/zh/posts/20261004-confidential-ai-privacy-tee-fhe.md",
+      "reviewedAt": "2026-10-04",
+      "sectionDigest": "f857abd8e738096b0311442e3083df00b22288df0c45041e68ab12300577d722",
+      "sourceHeading": "参考资料"
+    },
+    {
+      "id": "privatemode-manifest-updates-change-trust",
+      "heading": "专门服务",
+      "anchor": "更新策略",
+      "expectation": "Privatemode 默认接受当前发布的 manifest 并记录日志；固定 manifest 不匹配则拒绝。NEAR 直接 completions 验证为实验能力。",
+      "boundary": "不能把默认随厂商更新的参考值说成客户已经独立批准每个版本，也不能把 NEAR 网关验证能力推广到所有端点。",
+      "sources": [
+        "https://docs.privatemode.ai/security/attestation/manifest/",
+        "https://docs.near.ai/cloud/verification"
+      ],
+      "sourceLocators": [
+        "Change visibility: Pinned manifest vs Default mode; independently reproducible manifest",
+        "NEAR AI Cloud Gateway section: direct completions verification is experimental"
+      ],
+      "reviewBy": "2027-01-04",
+      "path": "content/zh/posts/20261004-confidential-ai-privacy-tee-fhe.md",
+      "reviewedAt": "2026-10-04",
+      "sectionDigest": "d629b78a13b1b0ec72ac266b54f50c2a675760c68c92a750a0c228c818ba1185",
+      "sourceHeading": "参考资料"
+    },
+    {
+      "id": "zdr-safety-processing-is-not-full-inference-attestation",
+      "heading": "普通 API 与 FHE 服务",
+      "anchor": "该机制覆盖的是安全审查",
+      "expectation": "OpenAI PSP 对相关安全记录使用机密运行时，覆盖安全审查而非原始模型完整推理链；API用途与保留承诺也须按模型、接口和功能判断。",
+      "boundary": "不能从安全处理或保留承诺推出客户可验证完整 GPU 推理链，也不能把 API 零保留推广至所有模型、接口和功能。",
+      "sources": [
+        "https://openai.com/index/offering-zero-data-retention-for-frontier-models/",
+        "https://platform.claude.com/docs/en/manage-claude/api-and-data-retention",
+        "https://developers.openai.com/api/docs/guides/private-safety-processing"
+      ],
+      "sourceLocators": [
+        "Update on September 22, 2026; How Private Safety Processing works and customer-controlled storage/keys",
+        "Opening processor distinction; How Anthropic approaches data retention Covered Models; feature eligibility and What ZDR covers",
+        "Built with Three Principles; API Request and Retention; Asynchronous Safety Pipeline; Customer Content Encryption: hardware-attested safety runtime, customer storage, 30-day TTL and EKM"
+      ],
+      "reviewBy": "2027-01-04",
+      "path": "content/zh/posts/20261004-confidential-ai-privacy-tee-fhe.md",
+      "reviewedAt": "2026-10-04",
+      "sectionDigest": "c064b44aad24a86f0d44f1a097b01ef7c73166099b41a04b76b78bb63ebec8d6",
+      "sourceHeading": "参考资料"
+    },
+    {
+      "id": "attestation-must-cover-loaded-workloads",
+      "path": "content/zh/posts/20261004-confidential-ai-privacy-tee-fhe.md",
+      "heading": "软件指纹为什么不能随便伪造",
+      "anchor": "后来加载的模型、插件和配置",
+      "expectation": "启动测量与后来加载的工作负载完整性是不同环节，需要获准加载逻辑校验对象并维护完整性；Privatemode 的策略与权重校验展示了这条关系。",
+      "boundary": "不能把硬件启动证明当成之后加载的任意模型和代码已经被批准。",
+      "sources": [
+        "https://docs.privatemode.ai/security/attestation/manifest/"
+      ],
+      "sourceLocators": [
+        "Manifest construction: workload policy and model weight dm-verity root digest"
+      ],
+      "reviewedAt": "2026-10-04",
+      "sectionDigest": "3b8fd7e9ada1bbb251f674aec120bd59ef5ea05fe1b48a4d04e4c37e295e0804",
+      "sourceHeading": "参考资料"
+    },
+    {
+      "id": "fhe-decryption-feedback-needs-protocol-security",
+      "path": "content/zh/posts/20261004-confidential-ai-privacy-tee-fhe.md",
+      "heading": "现实限制：成本高，完整流程也要安全",
+      "anchor": "恶意服务器还可能利用解密反馈获取信息",
+      "expectation": "SEAL 密文不自动认证；解密结果和依赖私钥的诊断反馈跨越边界可能导致密钥泄露。",
+      "boundary": "不能从私钥留在客户端推出协议可抵御任意主动服务端攻击。",
+      "sources": [
+        "https://github.com/microsoft/SEAL/blob/main/SECURITY.md"
+      ],
+      "sourceLocators": [
+        "Security boundaries: unauthenticated ciphertexts, decryption results and secret-key-dependent diagnostics"
+      ],
+      "reviewedAt": "2026-10-04",
+      "sectionDigest": "30343eadad14bde29d2bea616b1f9ca23b90e86728f15d7b388340adb69e4827",
+      "sourceHeading": "参考资料"
+    },
+    {
+      "id": "attestation-measurement-is-not-caller-supplied-hash",
+      "path": "content/zh/posts/20261004-confidential-ai-privacy-tee-fhe.md",
+      "heading": "软件指纹为什么不能随便伪造",
+      "anchor": "“被硬件签名”不等于“被硬件测量”",
+      "expectation": "SEV-SNP 安全处理器根据实际加载的页及元数据维护启动测量值，报告认证该值；REPORT_DATA 则允许来宾提供数据，两者不能混同。",
+      "boundary": "不将启动测量推广为每次请求扫描全部运行软件，不把调用方提供的 hash 视作硬件核实的软件身份。",
+      "sources": [
+        "https://www.amd.com/content/dam/amd/en/documents/developer/lss-snp-attestation.pdf"
+      ],
+      "sourceLocators": [
+        "Slides 12, 15 and 17: launch digest from pages and metadata; MEASUREMENT versus guest-provided REPORT_DATA; signed report"
+      ],
+      "reviewedAt": "2026-10-04",
+      "sectionDigest": "3b8fd7e9ada1bbb251f674aec120bd59ef5ea05fe1b48a4d04e4c37e295e0804",
+      "sourceHeading": "参考资料"
+    },
+    {
+      "id": "hardware-attestation-certificate-is-not-a-website-certificate",
+      "path": "content/zh/posts/20261004-confidential-ai-privacy-tee-fhe.md",
+      "heading": "硬件身份靠证书链，连接对象也要核对",
+      "anchor": "证书和公钥可以公开复制",
+      "expectation": "AMD VCEK 证明使用根证书、中间证书、VCEK 证书与报告签名链；NVIDIA 验证设备证书、参考值和撤销状态。证书链认证来源，测量、状态、策略和通道还要独立检查。",
+      "boundary": "不将公开证书等同于私钥，不把厂商根证书当成任意服务端给出的信任根，也不从合法证书推出软件安全或整条推理链获批。",
+      "sources": [
+        "https://www.amd.com/content/dam/amd/en/documents/developer/lss-snp-attestation.pdf",
+        "https://docs.nvidia.com/attestation/quick-start-guide/latest/architecture.html"
+      ],
+      "sourceLocators": [
+        "Attestation report signature chain: AMD Root CA, AMD SEV CA, VCEK and report",
+        "Architecture: device attestation, golden measurements, certificate revocation service"
+      ],
+      "reviewedAt": "2026-10-04",
+      "sectionDigest": "2f22f91c09aff00fb275c889e81baa1302631cd0ca6e1d37d86b1e41eeed49fb",
+      "sourceHeading": "参考资料"
+    },
+    {
+      "id": "fhe-encrypted-token-selection-does-not-require-decryption",
+      "heading": "下一 token 怎么生成，全程不解密怎么继续",
+      "anchor": "服务器直接计算出所选 token 的密文，无需先知道编号，也无需解密后重新加密",
+      "expectation": "加密比较输出加密布尔值，条件选择输出选中值的密文；同态运算无需服务端先解密，不能将其误说成每步公钥重新加密。",
+      "boundary": "概念上的全密文生成电路不代表已验证某个具体完整LLM的性能；精度、编码、误差、缓存与隐藏访问仍需工程实现。",
+      "sources": [
+        "https://docs.zama.org/tfhe-rs/references/fine-grained-apis/boolean"
+      ],
+      "sourceLocators": [
+        "Encrypted comparison and if_then_else examples"
+      ],
+      "path": "content/zh/posts/20261004-confidential-ai-privacy-tee-fhe.md",
+      "reviewedAt": "2026-10-04",
+      "sectionDigest": "7b8531ed172f13c58e7c2d04b6ca8cae77675123b3132cfcbe89c2904d499ad0",
+      "sourceHeading": "参考资料"
+    },
+    {
+      "id": "third-party-tee-inference-is-not-universally-unverifiable",
+      "path": "content/zh/posts/20261004-confidential-ai-privacy-tee-fhe.md",
+      "heading": "专门服务",
+      "sourceHeading": "参考资料",
+      "anchor": "部分专门服务已经提供软件审查与运行验证能力",
+      "expectation": "Privatemode 文档列出开源 vLLM、公开可信组件、可复现构建和固定部署策略，提供在声明范围内自主核对工作负载的路径。",
+      "boundary": "不将供应商文档等同于已独立审计，不声称全部硬件和固件公开或完全无需信任，也不把此能力推广到任意闭源模型接口。",
+      "sources": [
+        "https://docs.privatemode.ai/security/attestation/manifest/"
+      ],
+      "sourceLocators": [
+        "Attestation scope: vLLM and trusted containers; Change visibility: pinned versus default manifests; Transparency and reproducibility: public source and reproducible reference values"
+      ],
+      "reviewedAt": "2026-10-04",
+      "reviewBy": "2027-01-04",
+      "sectionDigest": "d629b78a13b1b0ec72ac266b54f50c2a675760c68c92a750a0c228c818ba1185"
+    },
+    {
+      "id": "fhe-safety-classification-does-not-reveal-the-verdict-by-itself",
+      "path": "content/zh/posts/20261004-confidential-ai-privacy-tee-fhe.md",
+      "heading": "看不到原文，也可以限制模型滥用",
+      "sourceHeading": "参考资料",
+      "anchor": "服务器不会因此自动知道用户是否违规",
+      "expectation": "同态分类能产生加密判定，加密条件选择可以将允许条件与结果门控组合；厂商读取判定则需要额外的受限披露协议。",
+      "boundary": "概念上的审核机制不代表已部署的完整产品；不保证分类准确、恶意客户端不可绕过或提前节省生成计算；还需同输入绑定、安全输出与受限结论披露。",
+      "sources": [
+        "https://arxiv.org/abs/1908.06972",
+        "https://docs.zama.org/tfhe-rs/references/fine-grained-apis/boolean",
+        "https://petsymposium.org/popets/2023/popets-2023-0060.pdf",
+        "https://github.com/microsoft/SEAL/blob/main/SECURITY.md"
+      ],
+      "sourceLocators": [
+        "Abstract: homomorphic inference on encrypted text with a plaintext classifier",
+        "Boolean MUX: server-side encrypted conditional evaluation, client decrypts output",
+        "Sections 5.1, 6 and 8: classification, responses, false positives and privacy tradeoffs",
+        "Ciphertexts do not include authentication; circuit privacy not automatic, decrypted or secret-dependent feedback needs separate security design"
+      ],
+      "reviewedAt": "2026-10-04",
+      "sectionDigest": "81fcaaa2465663c41419ec23dd51c9ccd4641b35554aa3e1fcfa281b4e3339ca"
     }
   ]
 }

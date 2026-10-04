@@ -7,6 +7,7 @@ export interface ClaimCase {
   id: string;
   path: string;
   heading: string;
+  sourceHeading?: string;
   anchor: string;
   expectation: string;
   boundary: string;
@@ -50,9 +51,11 @@ export function evaluateClaims(posts: Post[], cases: ClaimCase[], root: string, 
     }
     const line = (post.body.slice(0, section.start).match(/\n/g) ?? []).length + 1;
     if (!section.text.includes(item.anchor)) report('claim-anchor', 'Anchor text is absent from the named section', line);
+    const sourceSection = item.sourceHeading == null ? section : findSection(post.body, item.sourceHeading);
+    if (sourceSection == null) report('claim-source-heading', `Source heading does not exist: ${item.sourceHeading}`, line);
     for (const source of item.sources) {
-      if (!/^https?:\/\//.test(source) || !section.text.includes(source)) {
-        report('claim-source', `Cited source is absent from the named section: ${source}`, line);
+      if (!/^https?:\/\//.test(source) || !sourceSection?.text.includes(source)) {
+        report('claim-source', `Cited source is absent from the source section: ${source}`, line);
       }
     }
     if (sectionDigest(section.text) !== item.sectionDigest) {
@@ -84,6 +87,7 @@ function isClaimCase(value: unknown): value is ClaimCase {
       && !Number.isNaN(Date.parse(item.reviewBy)) && new Date(item.reviewBy).toISOString().slice(0, 10) === item.reviewBy
       && item.reviewBy > item.reviewedAt))
     && typeof item.sectionDigest === 'string'
+    && (item.sourceHeading == null || (typeof item.sourceHeading === 'string' && item.sourceHeading.trim().length > 0))
     && /^[a-f0-9]{64}$/.test(item.sectionDigest);
 }
 

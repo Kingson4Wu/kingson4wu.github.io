@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="560" height="1200" viewBox="0 0 560 1200" role="img" aria-labelledby="title desc">
+<title id="title">企业使用大模型的数据保护总览</title>
+<desc id="desc">自部署与第三方服务都先控制数据外发，再根据明文读取要求选择普通 API、TEE 加远程证明、FHE 或 MPC。普通 API 主要依赖协议和审计；TEE 验证环境但仍信任边界内软件；FHE 或 MPC 使用专门协议保护输入。公开代码、构建和运行身份需要关联，日志及故障切换同样遵守保护边界。</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10Z" fill="#89a6bd"/></marker></defs>
+<style>
+text { font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC",sans-serif; fill:#173f63; }
+.title { font-size:28px; font-weight:700; }
+.heading { font-size:24px; font-weight:700; }
+.body { font-size:22px; }
+.note { font-size:20px; fill:#52697b; }
+.card { fill:#fffdf8; stroke:#89a6bd; stroke-width:1.3; }
+.link { fill:none; stroke:#89a6bd; stroke-width:1.6; marker-end:url(#arrow); }
+</style>
+<rect width="560" height="1200" rx="16" fill="#fbf7ef"/>
+
+<text x="280" y="48" class="title" text-anchor="middle">企业大模型 · 数据保护总览</text>
+<text x="280" y="82" class="note" text-anchor="middle">部署方式 ≠ 保密能力</text>
+<rect x="24" y="106" width="248" height="128" rx="12" class="card"/>
+<rect x="288" y="106" width="248" height="128" rx="12" class="card"/>
+<text x="148" y="143" class="heading" text-anchor="middle">自己部署</text>
+<text x="148" y="179" class="note" text-anchor="middle">控制软件与数据出口</text>
+<text x="148" y="211" class="note" text-anchor="middle">承担算力与安全运维</text>
+<text x="412" y="143" class="heading" text-anchor="middle">第三方服务</text>
+<text x="412" y="179" class="note" text-anchor="middle">获取模型能力与弹性</text>
+<text x="412" y="211" class="note" text-anchor="middle">核对接口的实际保证</text>
+<path d="M148 234 V260 H280 V276" class="link"/>
+<path d="M412 234 V260 H288" class="link"/>
+<rect x="24" y="286" width="512" height="118" rx="12" class="card" style="fill:#edf4f7"/>
+<text x="280" y="324" class="heading" text-anchor="middle">共同起点：先控制发出去什么</text>
+<text x="280" y="358" class="body" text-anchor="middle">数据分类 → 最小化 → 必要脱敏</text>
+<text x="280" y="388" class="note" text-anchor="middle">不允许外发的内容留在内部</text>
+<path d="M280 404 V438" class="link"/>
+<text x="280" y="472" class="heading" text-anchor="middle">按“谁可以读取明文”选技术</text>
+<text x="280" y="504" class="note" text-anchor="middle">以下三条按场景选择，也可组合</text>
+<rect x="24" y="530" width="512" height="154" rx="12" class="card" style="fill:#fffdf8"/>
+<text x="46" y="566" class="heading">普通 API + 隐私控制</text>
+<text x="46" y="604" class="body">接受供应商处理明文</text>
+<text x="46" y="639" class="note">不训练 / 保留配置 / 权限控制</text>
+<text x="46" y="669" class="note">后台履约主要依赖协议与审计</text>
+<rect x="24" y="704" width="512" height="154" rx="12" class="card" style="fill:#edf4f7"/>
+<text x="46" y="740" class="heading">TEE + 远程证明</text>
+<text x="46" y="778" class="body">允许获准软件读取，限制基础设施</text>
+<text x="46" y="813" class="note">边界内明文；验证环境与会话</text>
+<text x="46" y="843" class="note">仍信任硬件、证明体系及可信软件</text>
+<rect x="24" y="878" width="512" height="154" rx="12" class="card" style="fill:#eef5ef"/>
+<text x="46" y="914" class="heading">FHE / 安全多方计算</text>
+<text x="46" y="952" class="body">不让外部计算方直接获得输入明文</text>
+<text x="46" y="987" class="note">密文计算或多方协议；明确安全假设</text>
+<text x="46" y="1017" class="note">专门适配；评估性能、精度与协议</text>
+<rect x="24" y="1058" width="512" height="112" rx="12" class="card"/>
+<text x="280" y="1092" class="heading" text-anchor="middle">验证身份，不等于证明行为安全</text>
+<text x="280" y="1126" class="note" text-anchor="middle">审查对象 → 构建与完整性 → 运行证明</text>
+<text x="280" y="1157" class="note" text-anchor="middle">日志、结果、重试也必须守住边界</text>
+</svg>

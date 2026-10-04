@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="1168" viewBox="0 0 480 1168" role="img" aria-labelledby="title desc"><title id="title">企业 AI 网关 · 按策略分流</title><desc id="desc">企业网关执行身份、权限、任务、外发许可与 DLP 检查。不允许外发的任务留在内部，允许外发的任务最小化后路由到批准服务，两路结果都要检查。</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 10 5 0 10Z" fill="#89a6bd"/></marker></defs>
+<style>text{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC",sans-serif;fill:#173f63}.title{font-family:Georgia,"Songti SC",serif;font-size:27px;font-weight:700}.label{font-size:24px;font-weight:600}.note{font-size:22px;fill:#52697b}.card{fill:#fffdf8;stroke:#89a6bd;stroke-width:1.3}.arrow{fill:none;stroke:#89a6bd;stroke-width:1.8;marker-end:url(#arrow)}</style>
+<rect width="480" height="1168" rx="16" fill="#fbf7ef"/>
+<text x="240" y="46" class="title" text-anchor="middle">企业 AI 网关 · 按策略分流</text>
+<rect x="28" y="82" width="424" height="76" rx="12" fill="#fffdf8" stroke="#89a6bd" stroke-width="1.3"/>
+<text x="240.0" y="113" class="label" text-anchor="middle">企业应用</text>
+<text x="240.0" y="142" class="note" text-anchor="middle">提交任务与上下文</text>
+<path d="M240 158 V182" class="arrow"/>
+<rect x="28" y="194" width="424" height="76" rx="12" fill="#fffdf8" stroke="#89a6bd" stroke-width="1.3"/>
+<text x="240.0" y="225" class="label" text-anchor="middle">统一调用入口</text>
+<text x="240.0" y="254" class="note" text-anchor="middle">身份验证 / 权限 / 任务策略</text>
+<path d="M240 270 V294" class="arrow"/>
+<rect x="28" y="306" width="424" height="76" rx="12" fill="#fffdf8" stroke="#89a6bd" stroke-width="1.3"/>
+<text x="240.0" y="337" class="label" text-anchor="middle">分类与外发许可</text>
+<text x="240.0" y="366" class="note" text-anchor="middle">数据等级 / 外发与泄露检查</text>
+<path d="M240 382 V412" class="arrow"/>
+<rect x="28" y="426" width="424" height="134" rx="12" fill="#edf4f7" stroke="#89a6bd" stroke-width="1.3"/>
+<text x="240" y="460" class="label" text-anchor="middle">不允许外发 → 留在内部</text>
+<text x="240" y="497" class="note" text-anchor="middle">企业控制的模型与推理环境</text>
+<text x="240" y="533" class="note" text-anchor="middle">内部完成计算</text>
+<path d="M240 382 H464 V422" fill="none" stroke="#89a6bd" stroke-width="1.8"/>
+<path d="M464 422 V610 H240 V616" class="arrow"/>
+<text x="240" y="600" class="label" text-anchor="middle" style="fill:#1f7a57">允许外发 → 以下路径</text>
+<rect x="28" y="624" width="424" height="76" rx="12" fill="#fffdf8" stroke="#89a6bd" stroke-width="1.3"/>
+<text x="240.0" y="655" class="label" text-anchor="middle">先减少外发内容</text>
+<text x="240.0" y="684" class="note" text-anchor="middle">只发必要内容 / 脱敏 / 身份替换</text>
+<path d="M240 700 V725" class="arrow"/>
+<rect x="28" y="738" width="424" height="76" rx="12" fill="#fffdf8" stroke="#89a6bd" stroke-width="1.3"/>
+<text x="240.0" y="769" class="label" text-anchor="middle">选择批准的供应商</text>
+<text x="240.0" y="798" class="note" text-anchor="middle">数据等级 / 能力 / 地区 / 成本</text>
+<path d="M240 814 V839" class="arrow"/>
+<rect x="28" y="852" width="424" height="112" rx="12" fill="#fffdf8" stroke="#89a6bd" stroke-width="1.3"/>
+<text x="240" y="884" class="label" text-anchor="middle">选择适用的推理服务</text>
+<text x="240" y="918" class="note" text-anchor="middle">普通 API / 经验证的 TEE 服务</text>
+<text x="240" y="946" class="note" text-anchor="middle">或满足要求的 FHE 服务</text>
+<path d="M240 964 V990" class="arrow"/>
+<path d="M28 560 H12 V1060 H26" class="arrow"/>
+<rect x="28" y="1004" width="424" height="92" rx="12" fill="#fffdf8" stroke="#89a6bd" stroke-width="1.3"/>
+<text x="240.0" y="1035" class="label" text-anchor="middle">返回结果检查</text>
+<text x="240.0" y="1064" class="note" text-anchor="middle">必要时在内部恢复身份映射</text>
+<text x="240" y="1137" class="note" text-anchor="middle">重试、日志与故障切换遵守同一策略</text>
+</svg>

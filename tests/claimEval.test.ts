@@ -25,6 +25,25 @@ describe('evaluateClaims', () => {
     expect(evaluateClaims([post], [claim], '/repo')).toEqual([]);
   });
 
+  it('allows an explicitly bound bibliography while keeping the claim section checked', () => {
+    const prose = '## Boundary\n\nA valid JSON object may still contain a wrong age.\n\n';
+    const bibliography = '\n## References\n\n[Source](https://example.org/source)';
+    const revised = { ...post, body: prose + '## Next\n\nOther text.' + bibliography };
+    const bound = { ...claim, sourceHeading: 'References', sectionDigest: createHash('sha256').update(prose).digest('hex') };
+    expect(evaluateClaims([revised], [bound], '/repo')).toEqual([]);
+    expect(evaluateClaims([revised], [{ ...bound, sourceHeading: undefined }], '/repo'))
+      .toContainEqual(expect.objectContaining({ rule: 'claim-source' }));
+    expect(evaluateClaims([{ ...revised, body: revised.body.replace('https://example.org/source', 'https://other.org') }], [bound], '/repo'))
+      .toContainEqual(expect.objectContaining({ rule: 'claim-source' }));
+    expect(evaluateClaims([{ ...revised, body: revised.body.replace('wrong age.', 'wrong answer.') }], [bound], '/repo'))
+      .toContainEqual(expect.objectContaining({ rule: 'claim-section-changed' }));
+  });
+
+  it('rejects a nonexistent source heading', () => {
+    expect(evaluateClaims([post], [{ ...claim, sourceHeading: 'Missing references' }], '/repo'))
+      .toContainEqual(expect.objectContaining({ rule: 'claim-source-heading' }));
+  });
+
   it('flags a changed section even when the anchor remains', () => {
     const changed = { ...post, body: body.replace('[Source]', '[Official source]') };
     expect(evaluateClaims([changed], [claim], '/repo')).toContainEqual(expect.objectContaining({ rule: 'claim-section-changed', line: 1 }));

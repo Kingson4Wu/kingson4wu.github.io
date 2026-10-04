@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="660" viewBox="0 0 480 660" role="img" aria-labelledby="title desc"><title id="title">FHE · 服务端只计算密文</title><desc id="desc">企业在本地加密输入，服务器同态计算密文并返回密文结果，企业使用秘密密钥解密。</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 10 5 0 10Z" fill="#89a6bd"/></marker></defs>
+<style>text{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans CJK SC",sans-serif;fill:#173f63}.title{font-family:Georgia,"Songti SC",serif;font-size:27px;font-weight:700}.label{font-size:24px;font-weight:600}.note{font-size:22px;fill:#52697b}.card{fill:#fffdf8;stroke:#89a6bd;stroke-width:1.3}.arrow{fill:none;stroke:#89a6bd;stroke-width:1.8;marker-end:url(#arrow)}</style>
+<rect width="480" height="660" rx="16" fill="#fbf7ef"/>
+<text x="240" y="46" class="title" text-anchor="middle">FHE · 服务端只计算密文</text>
+<rect x="28" y="82" width="424" height="76" rx="12" fill="#fffdf8" stroke="#89a6bd" stroke-width="1.3"/>
+<text x="240.0" y="113" class="label" text-anchor="middle">企业端：准备并加密</text>
+<text x="240.0" y="142" class="note" text-anchor="middle">秘密解密密钥留在企业端</text>
+<path d="M90 158 V210" class="arrow"/>
+<text x="240" y="195" class="note" text-anchor="middle" style="fill:#1f7a57">密文输入</text>
+<rect x="20" y="224" width="440" height="248" rx="12" fill="#edf4f7" stroke="#89a6bd" stroke-width="1.3" stroke-dasharray="6 5"/>
+<text x="240" y="259" class="label" text-anchor="middle">服务端 · 无须解密输入</text>
+<rect x="40" y="280" width="400" height="76" rx="12" fill="#fffdf8" stroke="#89a6bd" stroke-width="1.3"/>
+<text x="240.0" y="311" class="label" text-anchor="middle">同态计算</text>
+<text x="240.0" y="340" class="note" text-anchor="middle">使用获准公开的求值材料</text>
+<path d="M240 356 V383" class="arrow"/>
+<text x="240" y="423" class="label" text-anchor="middle">输出仍为密文</text>
+<path d="M90 472 V524" class="arrow"/>
+<text x="240" y="511" class="note" text-anchor="middle" style="fill:#1f7a57">密文结果</text>
+<rect x="28" y="538" width="424" height="76" rx="12" fill="#fffdf8" stroke="#89a6bd" stroke-width="1.3"/>
+<text x="240.0" y="569" class="label" text-anchor="middle">企业端：解密并使用</text>
+<text x="240.0" y="598" class="note" text-anchor="middle">结果处理与反馈遵守安全协议</text>
+</svg>

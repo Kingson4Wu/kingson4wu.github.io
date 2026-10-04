@@ -10,7 +10,7 @@
       "sources": ["https://developers.openai.com/api/docs/guides/structured-outputs"],
       "sourceLocators": ["JSON Schema constrains output structure; it does not verify extracted facts against the input"],
       "reviewedAt": "2026-10-04",
-      "sectionDigest": "07b6bd357559dfec6e439ac237d30f9d13de0b8cdce1e38a85b91f699cb297f0"
+      "sectionDigest": "32e8d0ceb622b070af4d9fe762ac3a5da880c537240381750d0ada1c6b4d97d0"
     },
     {
       "id": "tool-parameters-do-not-authorize-execution",
@@ -22,7 +22,7 @@
       "sources": ["https://platform.claude.com/docs/en/agents-and-tools/tool-use/strict-tool-use", "https://genai.owasp.org/llmrisk/llm062025-excessive-agency/"],
       "sourceLocators": ["Strict tool use: schema-conformant tool inputs", "Excessive Agency: excessive functionality, permissions and autonomy"],
       "reviewedAt": "2026-10-04",
-      "sectionDigest": "b24348b7a394c5404a33d69ade1e54624956f9c8fcff9a6617e9b332d310b42c"
+      "sectionDigest": "7284f52296185d08dbd4f7c7eda7cc8ad395da5a64e65733c79839720ff572b4"
     },
     {
       "id": "chinese-room-does-not-settle-ai-understanding",

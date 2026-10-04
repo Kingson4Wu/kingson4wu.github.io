@@ -3,26 +3,26 @@
     {
       "id": "schema-validity-is-not-factual-accuracy",
       "path": "content/zh/posts/20261002-structured-output-constrained-decoding.md",
-      "heading": "三、格式正确离答案正确还有多远",
+      "heading": "二、什么时候更稳，什么时候更容易答错",
       "anchor": "这份结果可以通过语法和字段类型检查，但年龄仍然错了。",
       "expectation": "结构合法与从原文提取的事实正确是不同的判断。",
       "boundary": "不能暗示通过 Schema 校验就证明结果符合输入证据。",
       "sources": ["https://developers.openai.com/api/docs/guides/structured-outputs"],
       "sourceLocators": ["JSON Schema constrains output structure; it does not verify extracted facts against the input"],
-      "reviewedAt": "2026-10-03",
-      "sectionDigest": "084ee0f65bdb3418a66f6dbf535b99ae1c282c3a994cdaff56e10afff5aa8398"
+      "reviewedAt": "2026-10-04",
+      "sectionDigest": "07b6bd357559dfec6e439ac237d30f9d13de0b8cdce1e38a85b91f699cb297f0"
     },
     {
       "id": "tool-parameters-do-not-authorize-execution",
       "path": "content/zh/posts/20261002-structured-output-constrained-decoding.md",
-      "heading": "四、工具调用把问题推到了执行层",
+      "heading": "五、质量重要，还是格式可用重要",
       "anchor": "参数结构没有问题，但也许用户问的是订单 132，甚至没有权限查看订单 123。",
       "expectation": "参数结构约束不替代工具选择、业务检查与授权。",
       "boundary": "不能暗示生成合法工具参数就完成了安全、正确的工具执行。",
       "sources": ["https://platform.claude.com/docs/en/agents-and-tools/tool-use/strict-tool-use", "https://genai.owasp.org/llmrisk/llm062025-excessive-agency/"],
       "sourceLocators": ["Strict tool use: schema-conformant tool inputs", "Excessive Agency: excessive functionality, permissions and autonomy"],
-      "reviewedAt": "2026-10-03",
-      "sectionDigest": "32cd448135a6014b505fd25f5f0ebc9127b31d6d7fef57fc3e77f8d53ace4015"
+      "reviewedAt": "2026-10-04",
+      "sectionDigest": "b24348b7a394c5404a33d69ade1e54624956f9c8fcff9a6617e9b332d310b42c"
     },
     {
       "id": "chinese-room-does-not-settle-ai-understanding",
@@ -88,27 +88,27 @@
     {
       "id": "constraint-tax-is-small-model-specific",
       "path": "content/zh/posts/20261002-structured-output-constrained-decoding.md",
-      "heading": "五、格式更稳，会不会让答案变差",
+      "heading": "三、公开实验到底支持什么结论",
       "anchor": "硬约束把 Schema 有效率从 61.5% 提到 100%，答案准确率却从 19.7% 降到 11.0%",
       "expectation": "论文在所测小模型和任务上观察到结构有效率提高、答案准确率降低。",
       "boundary": "不能把这些数字推广到所有模型、所有任务，或推断硬约束总会损害准确率。",
       "sources": ["https://arxiv.org/abs/2605.26128"],
       "sourceLocators": ["Abstract: 15,000 small-model generations and validity–accuracy tradeoff"],
-      "reviewedAt": "2026-10-03",
-      "sectionDigest": "4190903f3cca860ceb71c56d5992272ced9018e61dca992a4b6982571dd254e6"
+      "reviewedAt": "2026-10-04",
+      "sectionDigest": "ce29bae3c161fd8d901fe70446c532229214422667db7eadb31425797f0ac99a"
     },
     {
       "id": "provider-schema-support-needs-rechecking",
       "path": "content/zh/posts/20261002-structured-output-constrained-decoding.md",
-      "heading": "三、格式正确离答案正确还有多远",
+      "heading": "四、现在的接口能保证到哪一步",
       "anchor": "写了 Schema，也要确认服务商实际支持哪些约束。",
       "expectation": "服务商和 SDK 对 JSON Schema 的支持范围不同，最终结果仍需按业务规则校验。",
       "boundary": "不能把当前文档列出的约束能力视为永久不变，或把某个 SDK helper 的行为归于全部接口。",
       "sources": ["https://developers.openai.com/api/docs/guides/structured-outputs", "https://platform.claude.com/docs/en/build-with-claude/structured-outputs"],
       "sourceLocators": ["Supported schemas: required fields and additionalProperties false", "Supported schemas and SDK transformation of unsupported constraints"],
-      "reviewedAt": "2026-10-03",
+      "reviewedAt": "2026-10-04",
       "reviewBy": "2027-01-03",
-      "sectionDigest": "084ee0f65bdb3418a66f6dbf535b99ae1c282c3a994cdaff56e10afff5aa8398"
+      "sectionDigest": "157b680ae3b5d8cba9a70e76f11ce94a1d57f52730e8549e11fc122d92df00f1"
     },
     {
       "id": "embedding-is-not-encryption",

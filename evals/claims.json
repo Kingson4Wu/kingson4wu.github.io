@@ -318,6 +318,391 @@
       ],
       "reviewedAt": "2026-10-04",
       "sectionDigest": "81fcaaa2465663c41419ec23dd51c9ccd4641b35554aa3e1fcfa281b4e3339ca"
+    },
+    {
+      "id": "nat-mapping-filtering-are-independent",
+      "path": "content/zh/posts/20261102-nat-traversal-p2p-tailscale.md",
+      "heading": "同一对设备，为什么换个网络就不行了",
+      "anchor": "映射决定地址如何转换",
+      "expectation": "映射复用与入站源过滤是不同维度，APDF的出站条件属于对应内部端点和有效状态。",
+      "boundary": "不能把EIF理解成越过全部防火墙，也不能从单一NAT标签判断所有路径。",
+      "sources": [
+        "https://www.rfc-editor.org/rfc/rfc4787.html#section-5"
+      ],
+      "sourceLocators": [
+        "Section 5 filtering definitions; Sections 3 and 4.1 contrast old cone labels and mapping reuse"
+      ],
+      "reviewedAt": "2026-11-03",
+      "sectionDigest": "2233433968a92481b7556d5fe1bdbb7ae4bab926a2d3475ef4bf769585fcc01e",
+      "sourceHeading": "参考资料"
+    },
+    {
+      "id": "udp-hole-punch-example-has-explicit-preconditions",
+      "path": "content/zh/posts/20261102-nat-traversal-p2p-tailscale.md",
+      "heading": "三、一次 UDP 打洞是怎样完成的",
+      "anchor": "各自路由器仍使用图中的外部地址和端口",
+      "expectation": "示例以发往服务器和对端时复用同一外部映射、必要UDP可达及有效状态为前提，通过探测与重试验证双向直接路径。",
+      "boundary": "不能把向服务器观察到的映射当成对所有目标可用，也不能承诺发包即打洞成功。",
+      "sources": [
+        "https://www.rfc-editor.org/rfc/rfc5128.html#section-3.3.1"
+      ],
+      "sourceLocators": [
+        "Section 3.3.1: rendezvous server, preserved internal endpoint, EIM-NAT and peer-directed messages"
+      ],
+      "reviewedAt": "2026-11-03",
+      "sectionDigest": "4a65ec8b31b0b0ab76baf53526612766928aa3bae7a3849019fe3223abfa2399",
+      "sourceHeading": "参考资料"
+    },
+    {
+      "id": "stun-is-more-than-public-address-lookup",
+      "path": "content/zh/posts/20261102-nat-traversal-p2p-tailscale.md",
+      "heading": "STUN、ICE 和 TURN 怎样配合",
+      "anchor": "STUN 也可以用于端点之间的连通性检查和保活",
+      "expectation": "STUN提供地址观察、连通性检查及保活工具，而非独立完整的P2P方案。",
+      "boundary": "服务器观察端点不保证对其他目标有效；STUN不替代信令、身份及完整路径管理。",
+      "sources": [
+        "https://www.rfc-editor.org/rfc/rfc8489.html"
+      ],
+      "sourceLocators": [
+        "Abstract and Section 3: NAT allocated endpoint, connectivity checks, keep-alive and tool/usage distinction"
+      ],
+      "reviewedAt": "2026-11-02",
+      "sectionDigest": "773b8547c40a7c84cb5c8abd6e072aacde4feb0d3fec9b64532d4b5d2c617ba0",
+      "sourceHeading": "参考资料"
+    },
+    {
+      "id": "tcp-simultaneous-open-state-sequence",
+      "path": "content/zh/posts/20261102-nat-traversal-p2p-tailscale.md",
+      "heading": "TCP 打洞为什么需要额外的配合",
+      "anchor": "各自回复 SYN+ACK",
+      "expectation": "按RFC9293 Figure7的简化同时打开序列，双方交错SYN后交换SYN+ACK并进入ESTABLISHED。",
+      "boundary": "不把普通三次握手机械套入，也不宣称实际抓包固定四个报文或NAT必然支持。",
+      "sources": [
+        "https://www.rfc-editor.org/rfc/rfc9293.html#section-3.5"
+      ],
+      "sourceLocators": [
+        "Section 3.5 Figure 7: simultaneous connection synchronization and state transitions"
+      ],
+      "reviewedAt": "2026-11-02",
+      "sectionDigest": "cb181065d485443b29a6bf5b13dc4aeec82c432dbab26753b47d36b4cf5e9790",
+      "sourceHeading": "参考资料"
+    },
+    {
+      "id": "tailscale-derp-and-direct-discovery-can-overlap",
+      "path": "content/zh/posts/20261102-nat-traversal-p2p-tailscale.md",
+      "heading": "新路径怎样建立，又怎样切换",
+      "anchor": "同时探测可能的 UDP 直接路径",
+      "expectation": "典型未知路径借DERP协商/初始承载并探测直接端点；已可信路径可复用。",
+      "boundary": "不是先打洞全失败才接入DERP，也不是DERP业务完成后才探测；每条应用TCP连接不必重复发现。",
+      "sources": [
+        "https://tailscale.com/docs/reference/connection-types#how-tailscale-establishes-connections",
+        "https://github.com/tailscale/tailscale/blob/v1.104.4/wgengine/magicsock/endpoint.go"
+      ],
+      "sourceLocators": [
+        "How Tailscale establishes connections: initial relay and upgrade",
+        "endpoint.send and sendDiscoPingsLocked trigger asynchronous direct probes alongside DERP; addrForSendLocked reuses trusted bestAddr"
+      ],
+      "reviewedAt": "2026-11-02",
+      "sectionDigest": "d2cffec0d72825a18795adc753c78bf4a08ca14016e5572dbdb089a63b6209ed",
+      "reviewBy": "2027-02-02",
+      "sourceHeading": "参考资料"
+    },
+    {
+      "id": "tailscale-peer-relay-needs-udp-reachability",
+      "path": "content/zh/posts/20261102-nat-traversal-p2p-tailscale.md",
+      "heading": "Peer Relay 与 DERP 分别适合什么网络",
+      "anchor": "客户端完全无法使用 UDP 时，这条路径也无法成立",
+      "expectation": "PeerRelay是显式配置并授权的中继，双方都需要以UDP到达指定服务端口。",
+      "boundary": "不能以普通tailnet成员身份替代relay capability，也不能把PeerRelay视为完全禁UDP的TCP兜底。",
+      "sources": [
+        "https://tailscale.com/docs/features/peer-relay"
+      ],
+      "sourceLocators": [
+        "How it works, Prerequisites, Security and access control: designated UDP port and tailscale.com/cap/relay grants"
+      ],
+      "reviewedAt": "2026-11-02",
+      "sectionDigest": "8e6a4aa5f3f548403e8b104598f57b06021d866fe64c4e61a49d5df0718ebcab",
+      "reviewBy": "2027-02-02",
+      "sourceHeading": "参考资料"
+    },
+    {
+      "id": "tailscale-port-default-varies-by-distribution",
+      "path": "content/zh/posts/20261102-nat-traversal-p2p-tailscale.md",
+      "heading": "第三步：用 netcheck 了解本地网络",
+      "anchor": "实际本地端口会受平台、发行方式和配置影响",
+      "expectation": "41641是常见配置，实际本地端口受平台、发行方式和配置影响，外部端口还可能由NAT改写。",
+      "boundary": "不能推广所有GUI/平台或认为本地端口等于公网映射与对端端口。",
+      "sources": [
+        "https://tailscale.com/docs/reference/faq/firewall-ports"
+      ],
+      "sourceLocators": [
+        "Confirm or change the UDP port: configured local port, automatic/random selection and firewall direction; NAT may rewrite external endpoints"
+      ],
+      "reviewedAt": "2026-11-02",
+      "sectionDigest": "0448266a933ea4e10d7f07af86a7a6b733fc4e971343deeeabcda499ed7011a4",
+      "reviewBy": "2027-02-02",
+      "sourceHeading": "参考资料"
+    },
+    {
+      "id": "connected-udp-does-not-prove-peer-reachability",
+      "path": "content/zh/posts/20261102-nat-traversal-p2p-tailscale.md",
+      "heading": "端口、Socket、业务流与路径",
+      "anchor": "这个调用不执行 TCP 式握手",
+      "expectation": "UDP connect设置本地默认对端及相关状态，不执行TCP式网络握手。",
+      "boundary": "Linux接收限制不能推广所有系统；默认对端成功关联不证明路径可达。",
+      "sources": [
+        "https://man7.org/linux/man-pages/man7/udp.7.html",
+        "https://man7.org/linux/man-pages/man2/connect.2.html"
+      ],
+      "sourceLocators": [
+        "DESCRIPTION: UDP connectionless service, bind/autobind and default destination",
+        "DESCRIPTION: SOCK_DGRAM default send destination and only receive peer"
+      ],
+      "reviewedAt": "2026-11-02",
+      "sectionDigest": "20277e2db34fde0f67e1af574e6c6a7c4f618eb2e9335ae1a8b6b68353aaa903",
+      "sourceHeading": "参考资料"
+    },
+    {
+      "id": "outer-udp-flow-does-not-automatically-scale-rss",
+      "path": "content/zh/posts/20261102-nat-traversal-p2p-tailscale.md",
+      "heading": "并发存在，瓶颈也可能存在",
+      "anchor": "网卡可能将它们作为一个流处理",
+      "expectation": "应用业务并发不保证内核收发处理并行；相同外层流可能映射到一个RSS接收队列。",
+      "boundary": "不将网卡多队列或异步I/O当作单Socket自动用满多核的证明；依硬件/软件流分发。",
+      "sources": [
+        "https://docs.kernel.org/networking/scaling.html"
+      ],
+      "sourceLocators": [
+        "RSS: header hash and queue indirection; RPS: flow hash and per-flow CPU steering"
+      ],
+      "reviewedAt": "2026-11-02",
+      "sectionDigest": "832cf2d6fe9b057a48d93f6e3d202ee936e119e75b04f5fcb0536b2f7521337f",
+      "sourceHeading": "参考资料"
+    },
+    {
+      "id": "tailscale-disco-ping-is-not-service-validation",
+      "path": "content/zh/posts/20261102-nat-traversal-p2p-tailscale.md",
+      "heading": "第二步：把路径探测与业务验证分开",
+      "anchor": "默认 `tailscale ping` 使用 DISCO",
+      "expectation": "默认DISCO验证发现路径；TSMP穿过WireGuard但绕过对端OS IP栈；服务需实际请求。",
+      "boundary": "ICMP成功不证明TCP端口允许；ICMP失败也不单独证明服务不可达。",
+      "sources": [
+        "https://tailscale.com/docs/reference/ping-types",
+        "https://tailscale.com/docs/reference/troubleshooting/network-configuration/tcp-connection-two-devices"
+      ],
+      "sourceLocators": [
+        "DISCO, TSMP and ICMP sections distinguish probe layers",
+        "TCP connection troubleshooting: ping layers, host firewalls and target service"
+      ],
+      "reviewedAt": "2026-11-02",
+      "sectionDigest": "681f0324ba77ef2f5807c1e341fc18af46f48ab868f1476f96c278cd4bf4381a",
+      "reviewBy": "2027-02-02",
+      "sourceHeading": "参考资料"
+    },
+    {
+      "id": "udp-tunnel-congestion-control-is-conditional",
+      "path": "content/zh/posts/20261102-nat-traversal-p2p-tailscale.md",
+      "heading": "把恢复和资源限制纳入第一版设计",
+      "anchor": "通常可以依靠内层对拥塞作出反应",
+      "expectation": "承载已拥塞控制IP流量且外层发送量对应载荷的隧道，与一般UDP应用有不同外层拥塞要求。",
+      "boundary": "不能把此条件推广为所有UDP无须拥塞控制，或把重传等同于完整可靠传输设计。",
+      "sources": [
+        "https://www.rfc-editor.org/rfc/rfc8085.html#section-3.1.11"
+      ],
+      "sourceLocators": [
+        "Section 3.1.11 numbered tunnel cases: proportional IP congestion-controlled payload vs other payload/volume behavior"
+      ],
+      "reviewedAt": "2026-11-02",
+      "sectionDigest": "e055efdfa61b75d78639e0e58550c7b3884e866005882bad3aa090ed92752d7c",
+      "sourceHeading": "参考资料"
+    },
+    {
+      "id": "nat-core-model-separates-translation-filter-and-receiver",
+      "path": "content/zh/posts/20261102-nat-traversal-p2p-tailscale.md",
+      "heading": "一、直接通信需要怎样的接收路径",
+      "sourceHeading": "参考资料",
+      "anchor": "地址转换解决“转给谁”，过滤规则解决“允许谁通过”。",
+      "expectation": "在明确限定的IPv4 NAT网络中，映射提供反向转换目标，过滤决定来源是否允许，主机还需有接收程序。",
+      "boundary": "不能将所有路由都视为NAT，不能从映射存在推出网络放行或应用服务可用。",
+      "sources": [
+        "https://www.rfc-editor.org/rfc/rfc3022.html#section-2.2",
+        "https://www.rfc-editor.org/rfc/rfc4787.html#section-5",
+        "https://man7.org/linux/man-pages/man7/udp.7.html"
+      ],
+      "sourceLocators": [
+        "Section 2.2 and 3.1: NAPT private/public endpoint translation and reverse lookup",
+        "Section 5: filtering criteria independent of mapping reuse",
+        "DESCRIPTION: UDP socket local address/port binding and receiving datagrams"
+      ],
+      "reviewedAt": "2026-11-03",
+      "sectionDigest": "af071c11ed8e6f041eac59f002882c6a11914cef7f8709adb7f843fd8af1a306"
+    },
+    {
+      "id": "udp-probe-replies-are-not-required-udp-acks",
+      "path": "content/zh/posts/20261102-nat-traversal-p2p-tailscale.md",
+      "heading": "双方先向公网服务器发送数据",
+      "sourceHeading": "参考资料",
+      "anchor": "它不提供交付确认，也不要求应用逐包应答。",
+      "expectation": "UDP没有交付确认；打洞程序为验证路径自行设计探测和应答。",
+      "boundary": "不能把路径检查的应答推广为UDP协议要求，或要求所有UDP应用逐包确认。",
+      "sources": [
+        "https://www.rfc-editor.org/rfc/rfc768.html",
+        "https://www.rfc-editor.org/rfc/rfc5128.html#section-3.3.1"
+      ],
+      "sourceLocators": [
+        "Introduction: minimal datagram mechanism with no guaranteed delivery or duplicate protection",
+        "Section 3.3.1: peer-directed messages used for establishing direct communication"
+      ],
+      "reviewedAt": "2026-11-03",
+      "sectionDigest": "673f6e9017efbc6e05e48fd7c8f3901f21692db97198bc57bf6c1e83bc85fd21"
+    },
+    {
+      "id": "one-reachable-peer-does-not-require-two-sided-hole-punching",
+      "path": "content/zh/posts/20261102-nat-traversal-p2p-tailscale.md",
+      "heading": "已经能直接访问，就使用已有路径",
+      "sourceHeading": "参考资料",
+      "anchor": "业务由谁发起，与底层连接由谁主动建立，不必相同。",
+      "expectation": "一方可接受连接时，可由另一方主动建连；协调通道可传递业务发起意图。",
+      "boundary": "双方对发不是全部通信的必要前提；外端可达及应用协议配合仍是该方法的条件。",
+      "sources": [
+        "https://www.rfc-editor.org/rfc/rfc5128.html#section-3.2"
+      ],
+      "sourceLocators": [
+        "Section 3.2 Connection Reversal: public peer, private peer and rendezvous signaling"
+      ],
+      "reviewedAt": "2026-11-03",
+      "sectionDigest": "d2de6a56763c193eec12d121ee71311fb06588f533c34fecf4f09e11d4962f2a"
+    },
+    {
+      "id": "port-forwarding-is-not-firewall-or-service-validation",
+      "path": "content/zh/posts/20261102-nat-traversal-p2p-tailscale.md",
+      "heading": "让路由器明确转发到内部设备",
+      "sourceHeading": "参考资料",
+      "anchor": "目标程序仍需在对应端口接收",
+      "expectation": "端口转发配置转换目的；业务可用还需相关过滤允许和目标程序接收。",
+      "boundary": "一些产品会自动同时配置放行，不能反称全部设备都必须再手工单独配置，也不能宣称转发成功即业务可用。",
+      "sources": [
+        "https://www.rfc-editor.org/rfc/rfc3022.html#section-2.2",
+        "https://www.rfc-editor.org/rfc/rfc4787.html#section-5",
+        "https://man7.org/linux/man-pages/man7/socket.7.html"
+      ],
+      "sourceLocators": [
+        "Section 2.2: static service-to-private-address port mapping",
+        "Section 5: inbound filtering criteria",
+        "Socket layer functions and local address/port receive endpoints"
+      ],
+      "reviewedAt": "2026-11-03",
+      "sectionDigest": "623fbf6ffc45645ab58aa3e29f4621934931305821b0a021af1a987338c4e5dd"
+    },
+    {
+      "id": "nat-mapping-reuse-depends-on-exact-destination-rule",
+      "path": "content/zh/posts/20261102-nat-traversal-p2p-tailscale.md",
+      "heading": "同一对设备，为什么换个网络就不行了",
+      "sourceHeading": "参考资料",
+      "anchor": "目标 IP 相同则复用，目标 IP 改变则使用不同映射",
+      "expectation": "ADM以目标IP区分，APDM以目标IP和端口区分。",
+      "boundary": "规则以同一本地端点、传输协议及有效映射为前提。",
+      "sources": [
+        "https://www.rfc-editor.org/rfc/rfc4787.html#section-4.1"
+      ],
+      "sourceLocators": [
+        "Primary-source definitions and implementation locations recorded in docs/research/20261103-nat-full-protocol-review.md and docs/research/20261103-nat-full-product-review.md"
+      ],
+      "reviewedAt": "2026-11-03",
+      "sectionDigest": "2233433968a92481b7556d5fe1bdbb7ae4bab926a2d3475ef4bf769585fcc01e"
+    },
+    {
+      "id": "tailscale-virtual-address-does-not-require-direct-endpoint",
+      "path": "content/zh/posts/20261102-nat-traversal-p2p-tailscale.md",
+      "heading": "应用使用虚拟地址，底层寻找实际地址",
+      "sourceHeading": "参考资料",
+      "anchor": "走中继时，则使用可达的中继及其转发信息",
+      "expectation": "虚拟IP标识目标；直接路径与中继路径使用不同外层目标。",
+      "boundary": "中继可用不要求已经找到对端可达的直接端点。",
+      "sources": [
+        "https://tailscale.com/docs/reference/connection-types#how-tailscale-establishes-connections"
+      ],
+      "sourceLocators": [
+        "Primary-source definitions and implementation locations recorded in docs/research/20261103-nat-full-protocol-review.md and docs/research/20261103-nat-full-product-review.md"
+      ],
+      "reviewedAt": "2026-11-03",
+      "sectionDigest": "c85397f27c0393416fa77adbd49b716afb61a6243c236c6a9c5bfc1d2f537b9f"
+    },
+    {
+      "id": "tailscale-netcheck-ipv4-and-control-port-scope",
+      "path": "content/zh/posts/20261102-nat-traversal-p2p-tailscale.md",
+      "heading": "第三步：用 netcheck 了解本地网络",
+      "sourceHeading": "参考资料",
+      "anchor": "访问不同 IPv4 STUN 目标时",
+      "expectation": "MappingVariesByDestIP统计IPv4 STUN结果；控制连接有加密TCP80路径和443回退。",
+      "boundary": "不能推广IPv6统计或把控制连接与DERP端口行为合并。",
+      "sources": [
+        "https://github.com/tailscale/tailscale/blob/v1.104.4/net/netcheck/netcheck.go",
+        "https://github.com/tailscale/tailscale/blob/v1.104.4/control/controlhttp/client.go",
+        "https://tailscale.com/docs/reference/faq/firewall-ports"
+      ],
+      "sourceLocators": [
+        "Report.MappingVariesByDestIP and reportState.addNodeLatency IPv4 branch",
+        "Dial and dialHostOpt encrypted HTTP upgrade and HTTPS fallback",
+        "Control coordination encrypted TCP80 preference and HTTPS443 fallback"
+      ],
+      "reviewedAt": "2026-11-03",
+      "sectionDigest": "0448266a933ea4e10d7f07af86a7a6b733fc4e971343deeeabcda499ed7011a4"
+    },
+    {
+      "id": "multipath-capacity-depends-on-shared-bottlenecks",
+      "path": "content/zh/posts/20261102-nat-traversal-p2p-tailscale.md",
+      "heading": "多路径怎样增加可用带宽",
+      "sourceHeading": "参考资料",
+      "anchor": "路径不必全程独立",
+      "expectation": "额外可用容量与共享瓶颈决定多路径吞吐机会。",
+      "boundary": "多Socket不会增加已饱和共同链路的容量，但处理优化可能提高实测吞吐。",
+      "sources": [
+        "https://www.rfc-editor.org/rfc/rfc6356.html#section-2",
+        "https://www.rfc-editor.org/rfc/rfc8684.html"
+      ],
+      "sourceLocators": [
+        "Section 2: goals and shared bottleneck fairness",
+        "Multipath TCP subflows and connection-level transport"
+      ],
+      "reviewedAt": "2026-11-03",
+      "sectionDigest": "a40dbbc8f6c4a472c2464c01572058c2ffef1b7a9a361c383c49cde0485b135c"
+    },
+    {
+      "id": "tailscale-system-ssh-example-excludes-ssh-interception",
+      "path": "content/zh/posts/20261102-nat-traversal-p2p-tailscale.md",
+      "heading": "应用使用虚拟地址，底层寻找实际地址",
+      "sourceHeading": "参考资料",
+      "anchor": "未启用 Tailscale SSH 接管",
+      "expectation": "系统SSH服务示例经内核协议栈交付；Tailscale SSH接管Tailscale IP端口22流量。",
+      "boundary": "普通系统网络模式不自动保证流量交给系统sshd。",
+      "sources": [
+        "https://tailscale.com/docs/features/tailscale-ssh"
+      ],
+      "sourceLocators": [
+        "Advertise SSH on the host: tailscaled intercepts tailnet traffic routed to port 22 on the Tailscale IP"
+      ],
+      "reviewedAt": "2026-11-03",
+      "sectionDigest": "c85397f27c0393416fa77adbd49b716afb61a6243c236c6a9c5bfc1d2f537b9f"
+    },
+    {
+      "id": "udp-summary-keeps-traversal-tunnel-and-webrtc-separate",
+      "path": "content/zh/posts/20261102-nat-traversal-p2p-tailscale.md",
+      "heading": "小结",
+      "sourceHeading": "参考资料",
+      "anchor": "在映射适用于对端、过滤规则允许的条件下",
+      "expectation": "UDP无握手便于探测，不保证打洞；IP隧道与WebRTC协议栈分别承载业务。",
+      "boundary": "不是所有打洞都要求EIM，不把WebRTC当成TCP隧道，不把端口号当带宽或并发上限。",
+      "sources": [
+        "https://www.rfc-editor.org/rfc/rfc5128.html#section-3.3.1",
+        "https://www.rfc-editor.org/rfc/rfc8831.html"
+      ],
+      "sourceLocators": [
+        "UDP hole punching assumptions and restrictions",
+        "Introduction and Section 5: SRTP media and SCTP over DTLS data channels, UDP port multiplexing"
+      ],
+      "reviewedAt": "2026-11-03",
+      "sectionDigest": "169b2c26decb4b694f9b26e291f9ddd67fc225e99b4ce1e3a6ecf09b08be9460"
     }
   ]
 }
